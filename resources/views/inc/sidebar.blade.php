@@ -18,14 +18,14 @@
                     </div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('leaveapplication','') ? 'show' : '' }}" id="leaveSubmenu">
+            {{-- <ul class="collapse list-unstyled {{ request()->is('leaveapplication','') ? 'show' : '' }}" id="leaveSubmenu">
                 <li class="{{ request()->is('leaveapplication') ? 'active' : '' }}">
                     <a href="{{ route('leaveapplication') }}">Leave Application</a>
                 </li>
                 <li class="{{ request()->is('') ? 'active' : '' }}">
                     <a href="{{ route('leaveapplication') }}">Leave History</a>
                 </li>
-            </ul>
+            </ul> --}}
         </li>
         @else
 
