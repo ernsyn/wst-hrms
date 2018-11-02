@@ -11,18 +11,9 @@
 |
 */
 
-// Route::get('/', function () {
-//     // return view('welcome');
-//     return 'Hello';
-// });
-
-// Route::get('/user/{id}/{name}', function($id,$name) {
-//     return 'This is user '.$id." and name ".$name.".";
-// });
-
-Route::get('/','PagesController@index');
-Route::get('/about','PagesController@about');
-Route::get('/services','PagesController@services');
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Auth::routes();
 
