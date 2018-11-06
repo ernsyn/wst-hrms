@@ -66,7 +66,7 @@ class CreateInitialHrmsTables extends Migration
             $table->timestamps();
 		});
 
-        // TABLE: (NEW) employee_info
+        // TABLE: (NEW) employee
         Schema::create('employees', function(Blueprint $table)
 		{
             $table->increments('id');
@@ -446,7 +446,147 @@ class CreateInitialHrmsTables extends Migration
             $table->softDeletes();
             $table->string('created_by', 100)->nullable();
             $table->timestamps();
-		});
+        });
+
+        Schema::create('leave_types' ,function(Blueprint $table){
+            $table->increments('id');
+            $table->string('code',50)->nullable();
+            $table->string('name',50)->nullable();
+            $table->integer('apply_before_days')->nullable();
+            $table->integer('increment_per_year')->nullable();
+            $table->integer('approval_level')->nullable();
+            $table->integer('carry_forward')->nullable();
+            $table->integer('carry_forward_expiry_months')->nullable();
+            $table->integer('divide_method')->nullable();
+            $table->integer('allow_carry_forward')->nullable();
+            $table->string('status',50)->nullable();
+
+            $table->softDeletes();
+            $table->string('created_by', 100)->nullable();
+            $table->timestamps();
+
+
+        });
+
+        Schema::create('leave_type_user_groups', function (Blueprint $table) {
+            $table->increments('id');
+            
+            $table->unsignedInteger('id_employee_grade', false);
+            $table->foreign('id_employee_grade')->references('id')->on('employee_grades');
+
+            $table->unsignedInteger('id_leave_type'.false);
+            $table->foreign('id_leave_type')->references('id')->on('leave_types');
+            $table->integer('balance')->nullable();
+            $table->integer('year')->nullable();
+            $table->integer('carry_forward')->nullable();
+          
+            $table->softDeletes();
+            $table->string('created_by', 100)->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('leave_employees', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('user_id', false);
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->unsignedInteger('id_leave_type'.false);
+            $table->foreign('id_leave_type')->references('id')->on('leave_types');
+
+            $table->integer('start_balance')->nullable();
+            $table->integer('carry_forward')->nullable();
+
+            $table->date('start_period')->nullable();
+            $table->string('leave_status')->nullablle();
+            $table->integer('year_start')->nullable();
+            $table->integer('divide')->nullable();
+          
+            $table->softDeletes();
+            $table->string('created_by', 100)->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('leave_employees_requests', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->unsignedInteger('user_id', false);
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->unsignedInteger('id_leave_type'.false);
+            $table->foreign('id_leave_type')->references('id')->on('leave_types');
+
+
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+
+            $table->integer('total_days')->nullable();
+            $table->unsignedInteger('id_attachment_media',false);
+            $table->foreign('id_attachment_media')->references('id')->on('medias');
+
+            $table->text('note')->nullable();
+            $table->string('status',50)->nullable();
+          
+            $table->softDeletes();
+            $table->string('created_by', 100)->nullable();
+            $table->timestamps();
+        });
+
+
+        Schema::create('leave_trx', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->unsignedInteger('id_leave_employees', false);
+            $table->foreign('id_leave_employees')->references('id')->on('leave_employees');
+
+            $table->string('type',50)->nullable();
+            $table->integer('amount')->nullable();
+
+            $table->text('note')->nullable();
+          
+            $table->softDeletes();
+            $table->string('created_by', 100)->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('leave_balance', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->unsignedInteger('user_id', false);
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->unsignedInteger('id_leave_type'.false);
+            $table->foreign('id_leave_type')->references('id')->on('leave_types');
+
+
+            $table->integer('balance')->nullable();
+            $table->integer('year')->nullable();
+
+            $table->integer('carry_forward')->nullable();
+          
+            $table->softDeletes();
+            $table->string('created_by', 100)->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('employee_attendances', function (Blueprint $table) {
+
+            $table->increments('id');
+
+            $table->unsignedInteger('user_id', false);
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->enum('type', ['IN', 'OUT'])->nullable();
+          
+            $table->unsignedInteger('user_media_id', false);
+            $table->foreign('user_media_id')->references('id')->on('medias');
+          
+            $table->softDeletes();
+            $table->string('created_by', 100)->nullable();
+            $table->timestamps();
+        });
+        
+
+        
     }
 
     /**
@@ -455,7 +595,14 @@ class CreateInitialHrmsTables extends Migration
      * @return void
      */
     public function down()
-    {
+
+    {   Schema::dropIfExists('employee_attendances');
+        Schema::dropIfExists('leave_trx');
+        Schema::dropIfExists('leave_balance');
+        Schema::dropIfExists('leave_employees');
+        Schema::dropIfExists('leave_employees_requests');
+        Schema::dropIfExists('leave_type_user_groups');
+        Schema::dropIfExists('leave_types');
         Schema::dropIfExists('employee_working_days');
         Schema::dropIfExists('employee_skills');
         Schema::dropIfExists('employee_visas');
