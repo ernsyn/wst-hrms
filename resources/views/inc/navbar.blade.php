@@ -1,8 +1,9 @@
 <nav class="navbar navbar-expand navbar-dark navbar-laravel sticky-top">
         <div class="container-fluid mx-3 w-100">
-            <a class="navbar-brand d-flex justify-content-start" href="{{ url('/') }}">
+            <div class="float-left"> <a href="#" class="button-left "><span class="fa fa-lg fa-bars "></span></a> </div>
+            {{-- <a class="navbar-brand d-flex justify-content-start" href="{{ url('/') }}">
               {{ config('app.name') }}
-            </a>
+            </a> --}}
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">

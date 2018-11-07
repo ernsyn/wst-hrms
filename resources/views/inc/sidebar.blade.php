@@ -64,31 +64,8 @@
                 </li>               
             </ul>
         </li>
-        {{-- setup --}}
-        <li class="{{ request()->is('setup/company','setup/job-configure') ? 'active' : '' }}">
-            <a href="#setupSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                <div class="row">
-                    <div class="col-1">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                    <div class="col-10">
-                        NEW EMPLOYEE
-                    </div>
-                </div>
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('setup/company','setup/job-configure') ? 'show' : '' }}" id="setupSubmenu">
-                <li class="{{ request()->is('setup/company') ? 'active' : '' }}">
-                    <a href="/setup/company">Company</a>
-                </li>
-                <li class="{{ request()->is('setup/job-configure') ? 'active' : '' }}">
-                    <a href="/setup/job-configure">Job Configure</a>
-                </li>
-             
-            </ul>
-        </li>        
-        
         {{-- eleave --}}
-        <li class="{{ request()->is('leaveapplication','admin/leavetype') ? 'active' : '' }}">
+        <li class="{{ request()->is('admin/leaverequest','admin/leaveholiday','','admin/leavebalance','admin/leavetype') ? 'active' : '' }}">
             <a href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 <div class="row">
                     <div class="col-1">
@@ -99,7 +76,7 @@
                     </div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('leaveapplication','admin/leavetype') ? 'show' : '' }}" id="leaveSubmenu">
+            <ul class="collapse list-unstyled {{ request()->is('admin/leaverequest','admin/leaveholiday','','admin/leavebalance','admin/leavetype') ? 'show' : '' }}" id="leaveSubmenu">
                 <li class="{{ request()->is('admin/leaverequest') ? 'active' : '' }}">
                     <a href="{{ route('admin/leaverequest') }}">Leave Request</a>
                 </li>

@@ -36,12 +36,17 @@ import 'jquery-mousewheel';
 //     el: '#app'
 // });
 
+if(performance.navigation.type == 2){
+    location.reload(true);
+}
+
 $('.button-left').click(function(){
     $('#sidebar').toggleClass('fliph');
     $('.content').toggleClass('content-active');
 });
 
 $(".card").fadeIn();
+
 
 
 $('.scrollable').mousewheel(function (e, delta) {
