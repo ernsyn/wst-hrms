@@ -1,7 +1,6 @@
 @extends('layouts.base')
 @section('pageTitle', 'Company') 
 @section('content')
-<div id="loading"></div>
 <div class="row ">
     {{--
     <nav class="col-6 pr-0">
@@ -15,7 +14,7 @@
 </div>
 
 <div class="p-4">
-    <div class="card py-4">
+    <div class="card p-4">
         <div class="card-body">
             <div class="row pb-3">
                 <div class="col-auto mr-auto"></div>
@@ -28,7 +27,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="float-right tableTools-container"></div>
-                    <table class="table display compact table-striped table-bordered table-hover" id="setupCompanyTable">
+                    <table class="table display compact table-striped table-bordered table-hover w-100" id="setupCompanyTable">
                         <thead>
                             <tr>
                                 <th>No</th>
