@@ -1,5 +1,4 @@
 @extends('layouts.base')
-
 @section('content')
 
 <div class="p-4">
@@ -28,7 +27,7 @@
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$row['emp_id']}}</td>
                                 <td>{{$row['name']}}</td>
-                                <td>{{$row['category_name']}}</td>
+                                <td>{{$row['cost_centre']}}</td>
                                 <td>{{$row['department_name']}}</td>
                                 <td>{{$row['position_name']}}</td>
                                 <td>{{$row['start_date']}}</td>

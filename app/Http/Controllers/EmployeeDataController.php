@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Countries;
+use App\Country;
 use App\Department;
+use App\Roles;
 use App\EmployeeMainPosition;
+use App\User;
 use Illuminate\Support\Facades\Input;
 use DB;
 use Carbon\Carbon;
-use App\Roles;
+use Hash;
+
 
 
 class EmployeeDataController extends Controller
@@ -21,75 +24,41 @@ class EmployeeDataController extends Controller
 
     public function addEmployee()
     {   
-        $countries = Countries::all();
+        $countries = Country::all();
         $roles = Roles::all();
 
         return view('pages.admin.register-employee', compact('countries','roles'));
     }
    
+    public function index(Request $request)
+    {
+        $data = User::orderBy('id','DESC')->paginate(5);
+        return view('pages.admin.user-list',compact('data'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
+    }
+
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => 'required|string|max:250',
             'email' => 'required|string|email|max:255|unique:employee_info',
             'contact_no' => 'required|string|max:30',
-            'address' => 'required|max:250',
-            'ic_no' => 'required|string|max:20',
-            'gender' => 'required',
-            'maritial_status' => 'required',
-            'race' => 'required|string|30',
-            'countries' => 'required',
-            'total_child' => 'required|numeric',
-            'driver_license_number' => 'required|max:50',
-            'epf_no' => 'required|max:50',
-            'roles' => 'required',
-            'tax_no' => 'required|max:50',
+            'roles' => 'required'
         ]);
     }
   
     protected function insert(Request $request)
     {                
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $contact_no = $request->input('contact_no');
-        $address = $request->input('address');
-        $ic_no = $request->input('ic_no');
-        $gender = $request->input('gender');        
-        $dob = date('Y-m-d', strtotime(str_replace('-', '/', $request->input('dobDate'))));
-        $license_expiry_date= date('Y-m-d', strtotime(str_replace('-', '/', $request->input('licenseExpiryDate'))));  
-        $marital_status = $request->input('marital_status');
-        $race = $request->input('race');
-        $total_child = $request->input('total_child');
-        $driver_license_number = $request->input('driver_license_number');
-        $epf_no = $request->input('epf_no');
-        $tax_no = $request->input('tax_no');
-        $role_id = Input::get('roles');        
-        $citizenship = Input::get('countries');
-        $created_by = auth()->user()->id;
+        $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
 
-        DB::insert('insert into employee_info 
-        (name, email, contact_no, 
-        address, ic_no, gender, dob, 
-        marital_status, race, citizenship, 
-        total_child,license_expiry_date, driver_license_number,  
-        epf_no, tax_no, role_id, 
-        created_by) 
-        values
-        (?,?,?,
-        ?,?,?,?,
-        ?,?,?,
-        ?,?,?,
-        ?,?,?,
-        ?)',
-        [$name, $email, $contact_no, 
-        $address, $ic_no, $gender, $dob, 
-        $marital_status, $race, $citizenship,
-         $total_child, $license_expiry_date, $driver_license_number,  
-         $epf_no, $tax_no, $role_id, 
-         $created_by]);
 
-        echo "Record inserted successfully<br/>";
-        echo '<a href = "/insert">Click Here</a> to go back.';
+        $user = User::create($input);
+        $user->assignRole($request->input('roles'));
+
+
+        return view('home');
 
     }
 

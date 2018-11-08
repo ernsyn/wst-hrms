@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\EmergencyContact;
 use App\EmployeeDependent;
-use App\EmployeeImmigrationOrVisa;
+use App\EmployeeImmigration;
+use App\EmployeeVisa;
 use App\EmployeeSkills;
 use App\EmployeeEducation;
 use App\EmployeeExperience;
-use App\EmployeeBank;
+use App\EmployeeBankAccount;
 use App\EmployeeJob;
 use App\EmployeeReportTo;
 use App\EventLog;
 use App\User;
 use App\EmployeeAttachment;
-use App\EmployeeInfo;
+use App\Employee;
 use DB;
 use Auth;
 use Log;
@@ -31,15 +32,15 @@ class EmployeeController extends Controller
 
     public function displayProfile()
     {
-        $user = EmployeeInfo::join('users','users.emp_id','=','employee_info.emp_id')
-        ->join('countries','countries.id','=','employee_info.citizenship')
-        ->join('employee_job','employee_job.emp_id','=','employee_info.emp_id')
-        //->join('employee_grade','employee_job.id_grade','=','employee_grade.id')
-        ->select('employee_info.name','users.email', 'employee_info.contact_no', 'employee_info.address', 
-        'employee_info.ic_no', 'employee_info.gender', 'employee_info.dob',
-        'employee_info.marital_status', 'employee_info.race', 'employee_info.total_child', 
-        'employee_info.driver_license_number', 'employee_info.license_expiry_date','users.emp_id',
-        'employee_info.epf_no','employee_info.tax_no','employee_info.basic_salary','countries.citizenship')
+        $user = Employee::join('users','users.id','=','employees.user_id')
+  
+        ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
+        //->join('employee_grade','employee_jobs.id_grade','=','employee_grade.id')
+        ->select('users.name','users.email', 'employees.contact_no', 'employees.address', 
+        'employees.ic_no', 'employees.gender', 'employees.dob',
+        'employees.marital_status', 'employees.race', 'employees.total_children as total_child', 
+        'employees.driver_license_no as driver_license_number', 'employees.driver_license_expiry_date as license_expiry_date','users.id',
+        'employees.epf_no','employees.tax_no','employees.basic_salary')
         ->where('users.id', auth()->user()->id)
         ->first();
         return view('pages.employee.profile')->with('user',$user);
@@ -92,19 +93,19 @@ class EmployeeController extends Controller
 
     public function displayBank()
     {       
-        $banks = EmployeeBank::where('emp_id', auth()->user()->id)->get();
+        $banks = EmployeeBankAccount::where('emp_id', auth()->user()->id)->get();
         // return view('pages.employee.bank', ['banks'=>$banks]);
         return DataTables::of($banks)->make(true);
     }
 
     public function displayJob()
     {       
-        $data = EmployeeJob::join('department','employee_job.id_department','=','department.id')
-        ->join('employee_main_position','employee_job.id_main_position','=','employee_main_position.id')
-        ->join('employee_team','employee_job.id_team','=','employee_team.id')
-        ->join('employee_grade','employee_job.id_grade','=','employee_grade.id')
-        ->join('employee_category','employee_job.id_category','=','employee_category.id')
-        ->select('employee_job.created_on','employee_main_position.name AS positionname','department.name AS departname','employee_team.team_name AS teamname','employee_category.category_name AS categoryname','employee_grade.name AS gradename','employee_job.basic_salary','employee_job.status')
+        $data = EmployeeJob::join('departments','employee_jobs.department_id','=','departments.id')
+        ->join('employee_positions','employee_jobs.emp_mainposition_id','=','employee_positions.id')
+        ->join('teams','employee_jobs.team_id','=','teams.id')
+        ->join('employee_grades','employee_jobs.emp_grade_id','=','employee_grades.id')
+        ->join('cost_centres','employee_jobs.cost_centre_id','=','cost_centres.id')
+        ->select('employee_jobs.created_by','employee_positions.name AS positionname','departments.name AS departname','teams.name AS teamname','cost_centres.name AS categoryname','employee_grades.name AS gradename','employee_jobs.basic_salary','employee_jobs.status')
         ->where('emp_id', auth()->user()->id)
         ->get();
        
@@ -116,8 +117,8 @@ class EmployeeController extends Controller
 
     public function displayReportTo()
     {
-        $data = EmployeeReportTo::join('employee_info','employee_info.emp_id','=','employee_report_to.report_id_emp_master')
-        ->select('employee_info.name','employee_report_to.type','employee_report_to.note','employee_report_to.kpi_proposer')
+        $data = EmployeeReportTo::join('employees','employees.emp_id','=','employee_report_to.report_id_emp_master')
+        ->select('employees.name','employee_report_to.type','employee_report_to.note','employee_report_to.kpi_proposer')
         ->where('employee_report_to.emp_id', auth()->user()->id)
         ->get();
 
@@ -129,8 +130,8 @@ class EmployeeController extends Controller
 
     public function displayHistory()
     {       
-        $history = EventLog::join('employee_info','employee_info.emp_id','=','event_log.created_by')
-        ->select('employee_info.name','event_log.type','event_log.note','event_log.created_on')
+        $history = EventLog::join('employees','employees.emp_id','=','event_log.created_by')
+        ->select('employees.name','event_log.type','event_log.note','event_log.created_on')
         ->where('event_log.emp_id', auth()->user()->id)
         ->get();
         // return view('pages.employee.history', ['history'=>$history]);

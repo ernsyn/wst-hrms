@@ -58,7 +58,7 @@
                             @foreach($team as $row)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{$row['team_name']}}</td>
+                                <td>{{$row['name']}}</td>
                                 <td>Action</td>
                             </tr>
                             @endforeach

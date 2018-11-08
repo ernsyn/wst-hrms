@@ -26,6 +26,9 @@ use App\Team;
 use App\LeaveRequest;
 use App\LeaveType;
 use App\LeaveBalance;
+use App\Country;
+use App\Employee;
+use App\Holiday;
 
 use DB;
 use App\User;
@@ -52,7 +55,7 @@ class AdminController extends Controller
         'companies.logo_media_id as image','companies.tax_no as tax_no',
         'companies.epf_no as epf_no',
         'companies.socso_no as socso_no','companies.eis_no as eis_no',
-        'companies.updated_at as updated_on',
+        'companies.updated_at as updated_at',
         'companies.status as status')
         ->get();
 
@@ -68,42 +71,43 @@ class AdminController extends Controller
     {
         $name = $request->input('name');
         $url = $request->input('url');       
-        $registration_number = $request->input('registration_number');
+        $registration_no = $request->input('registration_no');
         $description = $request->input('description');
         $address = $request->input('address');       
         $phone = $request->input('phone');
-        $tax_number = $request->input('tax_number');
-        $epf_number = $request->input('epf_number');       
-        $socso_number = $request->input('socso_number');
-        $eis_number = $request->input('eis_number');
+        $tax_no = $request->input('tax_no');
+        $epf_no = $request->input('epf_no');       
+        $socso_no = $request->input('socso_no');
+        $eis_no = $request->input('eis_no');
         $status = Input::get('status');
         $created_by = auth()->user()->id;
         $code = $request->input('code');
+        $updated_by =$request->input('updated_by');
         
        
         DB::insert('insert into companies
-        (code, name, url, registration_number,
+        (code, name, url, registration_no,
         description, address, phone,
-        tax_number, epf_number, socso_number,
-        eis_number, status, created_by,
-        updated_by) 
+        tax_no, epf_no, socso_no,
+        eis_no, status, created_by,
+        updated_by,gst_no) 
         values
         (?,?,?,?,
         ?,?,?,
         ?,?,?,
         ?,?,?,
-        ?)',
-        [$code, $name, $url, $registration_number,
+        ?,?)',
+        [$code, $name, $url, $registration_no,
         $description, $address, $phone,
-        $tax_number, $epf_number, $socso_number,
-        $eis_number, $status, $created_by,
-        $created_by]);
+        $tax_no, $epf_no, $socso_no,
+        $eis_no,'Active', $created_by,
+        $created_by,'none']);
 
-        $company = CompanyInfo::join('employees','employees.id','=','companies.updated_by')
+        $company = Company::join('employees','employees.id','=','companies.updated_by')
         ->join('users','users.id','=','employees.id')
-        ->select('companies.name as name','companies.description as description','companies.image as image','companies.tax_number as tax_number',
-        'companies.epf_number as epf_number','companies.socso_number as socso_number','companies.eis_number as eis_number',
-        'companies.updated_on as updated_on','users.name as EmpName','companies.status as status')
+        ->select('companies.name as name','companies.description as description','companies.logo_media_id as image','companies.tax_no as tax_number',
+        'companies.epf_no as epf_number','companies.socso_no as socso_number','companies.eis_no as eis_number',
+        'companies.updated_at as updated_on','users.name as EmpName','companies.status as status')
         ->get();
 
         return view('pages.admin.setup.company', ['company'=>$company]);
@@ -131,13 +135,30 @@ class AdminController extends Controller
     }
     public function displayLeaveHoliday()
     {    
-        $leaveholiday = LeaveHoliday::all();
+        $leaveholiday = Holiday::all();
         return view('pages.admin.leave-holiday', ['leaveholiday'=>$leaveholiday]);
 
         
     }
 
-    
+    public function addHoliday(Request $request)
+    {            
+        $name = $request->input('name');
+        $startDate = $request->input('startDate');      
+        $endDate = $request->input('endDate');
+        $datetime1 = strtotime($startDate);
+        $datetime2 = strtotime($endDate);     
+        $created_by = auth()->user()->id;
+        $interval =  $datetime2 - $datetime1;
+        $days = floor($interval/(60*60*24)) + 1;
+        DB::insert('insert into holidays
+        (name,start_date,end_date, created_by,total_days) 
+        values
+        (?,?,?,?,?)',
+        [$name, $startDate,$endDate, $created_by,$days]);
+        $leaveholiday = Holiday::all();  
+        return view('pages.admin.leave-holiday', ['leaveholiday'=>$leaveholiday]);
+    }
     
     
 
@@ -245,24 +266,7 @@ class AdminController extends Controller
         return view('pages.admin.employee-dependent', ['dependents'=>$dependents->sortByDesc('id')]);
     }
 
-    public function addHoliday(Request $request)
-    {            
-        $name = $request->input('name');
-        $startDate = $request->input('startDate');      
-        $endDate = $request->input('endDate');
-        $datetime1 = strtotime($startDate);
-        $datetime2 = strtotime($endDate);     
-        $created_by = auth()->user()->id;
-        $interval =  $datetime2 - $datetime1;
-        $days = floor($interval/(60*60*24)) + 1;
-        DB::insert('insert into holiday_master
-        (name,start_date,end_date, created_by,total_days) 
-        values
-        (?,?,?,?,?)',
-        [$name, $startDate,$endDate, $created_by,$days]);
-        $leaveholiday = leaveHoliday::all();  
-        return view('pages.admin.leave-holiday', ['leaveholiday'=>$leaveholiday]);
-    }
+
 
     public function editEmployeeDependent(Request $request)
     {          
@@ -455,11 +459,11 @@ class AdminController extends Controller
     public function displayAllEmployee()
     {
         $employees = EmployeeJob::leftjoin('employees','employees.id','=','employee_jobs.emp_id')
-        ->join('users','users.id','=','employees.id')
+        ->join('users','users.id','=','employees.user_id')
         ->join('cost_centres','cost_centres.id','=','employee_jobs.cost_centre_id')
         ->join('departments','departments.id','=','employee_jobs.department_id')
         ->join('employee_positions','employee_positions.id','=','employee_jobs.emp_mainposition_id')  
-        ->select('employee_jobs.emp_id', 'users.name', 'cost_centres.name', 'departments.name as department_name',
+        ->select('employee_jobs.emp_id', 'users.name as name', 'cost_centres.name as cost_centre', 'departments.name as department_name',
         'employee_positions.name as position_name', 'employee_jobs.start_date')    
         ->get();
 
@@ -470,9 +474,9 @@ class AdminController extends Controller
     {
 
         Session::put('user_id', $id);
-        $user = User::join('employees','employees.user_id','=','users.id')
-        ->join('countries','countries.country_code','=','employees.nationality')
-        ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
+        $user = Employee::join('users','employees.user_id','=','users.id')
+        // ->join('countries','countries.country_code','=','employees.nationality')
+        // ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
         ->select('users.name as name','users.email as email', 
         'employees.contact_no as contact_no', 'employees.address as address', 
         'employees.ic_no as ic_no', 'employees.gender as gender', 
@@ -480,9 +484,8 @@ class AdminController extends Controller
         'employees.race as race', 'employees.total_children as total_child', 
         'employees.driver_license_no as driver_license_no', 
         'employees.driver_license_expiry_date as _license_expiry_date',
-        'users.id as id','employees.epf_no as epf_no',
-        'employees.tax_no as tax_no ','employees.basic_salary',
-        'countries.citizenship as citizsenship')
+        'users.id as user_id','employees.epf_no as epf_no',
+        'employees.tax_no as tax_no ','employees.basic_salary as basic_salary')
         ->where('users.id',$id)
         ->first();
 
@@ -713,9 +716,9 @@ class AdminController extends Controller
         $created_by = auth()->user()->id;
        
         DB::insert('insert into cost_centres
-        (name, seniority_pay, payroll_type, created_by) 
+        (name, seniority_pay, payroll_type, created_by,amount) 
         values
-        (?,?,?,?)',
+        (?,?,?,?,50)',
         [$category_name, $seniority_pay, $payroll_type, $created_by]);
 
         $costs = CostCentre::all();
@@ -769,7 +772,7 @@ class AdminController extends Controller
         $created_by = auth()->user()->id;
        
         DB::insert('insert into teams
-        (team_name, created_by) 
+        (name, created_by) 
         values
         (?,?)',
         [$team_name, $created_by]);
@@ -810,7 +813,7 @@ class AdminController extends Controller
         $name = $request->input('name');
         $created_by = auth()->user()->id;
        
-        DB::insert('insert into employee_grade
+        DB::insert('insert into employee_grades
         (name, created_by) 
         values
         (?,?)',

@@ -47757,7 +47757,7 @@ $('#employeeJobTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "bankdata",
+    "ajax": "jobdata",
     "columns": [{
         render: function render(data, type, row, meta) {
             return meta.row + meta.settings._iDisplayStart + 1;
@@ -47772,7 +47772,7 @@ $('#employeeBankTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "jobdata",
+    "ajax": "bankdata",
     "columns": [{
         render: function render(data, type, row, meta) {
             return meta.row + meta.settings._iDisplayStart + 1;

@@ -1,16 +1,6 @@
 @extends('layouts.app') 
 @section('pageTitle', 'Leave Application') 
 @section('content')
-<div class="row">
-    <nav class="col-6 pr-0">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item font-weight-bold h3" aria-current="page">{{ ($breadcrumb = Breadcrumbs::current()) ? $breadcrumb->title : 'Fallback Title' }}</li>
-        </ol>
-    </nav>
-    <nav class="col-6 pl-0 justify-end">
-        {{ Breadcrumbs::render('leaveapplication') }}
-    </nav>
-</div>
 <div class="p-4">
     <div class="row">
         <div class="col-xl-8">
