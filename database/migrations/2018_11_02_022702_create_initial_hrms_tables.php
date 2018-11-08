@@ -205,7 +205,7 @@ class CreateInitialHrmsTables extends Migration
             $table->foreign('emp_grade_id')->references('id')->on('employee_grades');
 
             $table->date('start_date');
-            $table->date('end_date');
+            $table->date('end_date')->nullable;
             $table->decimal('basic_salary', 10, 2);
             $table->text('specification');
             

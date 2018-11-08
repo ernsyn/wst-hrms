@@ -263,6 +263,7 @@ $('#employeeBankTable').DataTable({
     "serverSide": true,
     "bStateSave": true,
     "ajax": "",
+    // "ajax": "bankdata",
     "columns": [
         {
             render: function (data, type, row, meta) {

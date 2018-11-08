@@ -42,7 +42,7 @@
                 <div class="col-auto mr-auto"></div>
                 <div class="col-auto">
                     <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addGradePopup">
-                        Add Position
+                        Add Grade
                     </button>
                 </div>
             </div>

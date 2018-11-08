@@ -1,16 +1,6 @@
 @extends('layouts.app') 
 @section('pageTitle', 'Job Configure') 
 @section('content')
-<div class="row">
-    <nav class="col-6 pr-0">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item font-weight-bold h3" aria-current="page">{{ ($breadcrumb = Breadcrumbs::current()) ? $breadcrumb->title : 'Fallback Title' }}</li>
-        </ol>
-    </nav>
-    <nav class="col-6 pl-0 justify-end">
-        {{ Breadcrumbs::render('setup/job-configure') }}
-    </nav>
-</div>
 <div class="p-4">
     <div class="card py-4">
         <div class="card-body">

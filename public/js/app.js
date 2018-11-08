@@ -47773,6 +47773,7 @@ $('#employeeBankTable').DataTable({
     "serverSide": true,
     "bStateSave": true,
     "ajax": "",
+    // "ajax": "bankdata",
     "columns": [{
         render: function render(data, type, row, meta) {
             return meta.row + meta.settings._iDisplayStart + 1;

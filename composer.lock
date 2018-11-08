@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "87657309d0ddfdbbe5c8161eb482efc3",
+    "content-hash": "b2bc1c124e50dad1d9d354aa54f88255",
     "packages": [
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
@@ -868,6 +868,7 @@
                 "storage"
             ],
             "time": "2018-10-15T13:53:10+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "league/fractal",
@@ -1093,6 +1094,8 @@
                 "mathematics"
             ],
             "time": "2018-10-13T23:28:42+00:00"
+=======
+>>>>>>> d75e876daceb5c60950d93f9290cab277aaf4e75
         },
         {
             "name": "monolog/monolog",
@@ -2864,6 +2867,7 @@
             "time": "2018-07-29T20:33:41+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "yajra/laravel-datatables",
             "version": "v1.2.0",
             "source": {
@@ -3153,6 +3157,8 @@
             "time": "2018-11-03T04:21:45+00:00"
         },
         {
+=======
+>>>>>>> d75e876daceb5c60950d93f9290cab277aaf4e75
             "name": "yajra/laravel-datatables-oracle",
             "version": "v8.9.2",
             "source": {

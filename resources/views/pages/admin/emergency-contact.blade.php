@@ -1,7 +1,3 @@
-@extends('layouts.base')
-
-@section('content')
-
 <!-- ADD -->
 <div class="modal fade" id="emergencyContactPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -26,7 +22,7 @@
                             </span>
                             @endif
                         </div>    
-                            <label class="col-md-2 col-form-label">Relationship*</label>
+                            <label class="col-md-8 col-form-label">Relationship*</label>
                             <div class="col-md-10">
                                 <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" placeholder="Farther, Son, etc" name="relationship" value="{{ old('relationship') }}" required>
                                 @if ($errors->has('relationship'))
@@ -115,7 +111,7 @@
         </div>
 </div>
 
-<div class="p-4">
+{{-- <div class="p-4">
     <div class="card py-4">
         <div class="card-body">
                 <div class="row pb-3">
@@ -160,6 +156,28 @@
         </div>
     </div>
 </div>
-            
+             --}}
 
-@endsection
+
+
+<div class="tab-pane fade show p-3" id="nav-emergency" role="tabpanel" aria-labelledby="nav-emergency-tab">
+        <div class="row pb-3">
+                <div class="col-auto mr-auto"></div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#emergencyContactPopup">
+                        Add Contact
+                    </button>
+                </div>
+            </div>
+    <table class="table table-bordered table-hover w-100" id="emergencyContactTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Relationship</th>
+                <th>Contact Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+</div>
