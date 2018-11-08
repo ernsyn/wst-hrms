@@ -7,7 +7,7 @@ use App\EmployeeAttachment;
 use App\EmployeeBankAccount;
 use App\EmployeeDependent;
 use App\EmployeeEducation;
-use App\EmergencyContact;
+use App\EmployeeEmergencyContact;
 use App\Experience;
 use App\EmployeeGrade;
 use App\EmployeeImmigration;
@@ -37,6 +37,7 @@ use Session;
 use Illuminate\Support\Facades\Input;
 use \DateTime;
 use Carbon\Carbon;
+use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
@@ -178,29 +179,48 @@ class AdminController extends Controller
 
     public function displayEmergencyContact()
     {
-        $id = Session::get('employee_id');
+        $id = Session::get('user_id');
 
-        $contacts = EmergencyContact::where('emp_id',$id)->get();
-        return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
+        $contacts = EmployeeEmergencyContact::where('emp_id',$id)->get();
+        // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
+        return DataTables::of($contacts)->make(true);
     }
 
     public function addEmergencyContact(Request $request)
     {          
-        $emp_id = Session::get('employee_id');
+        $emp_id = Session::get('user_id');
         $name = $request->input('name');
         $relationship = $request->input('relationship');       
         $contact_number = $request->input('contact_number');
         $created_by = auth()->user()->id;
        
-        DB::insert('insert into employee_emergencycontact
-        (emp_id, contact_name, relationship, contact_number, created_by) 
+        DB::insert('insert into employee_emergency_contacts
+        (emp_id, name, relationship, contact_no, created_by) 
         values
         (?,?,?,?,?)',
         [$emp_id, $name, $relationship, $contact_number, $created_by]);
 
+        // $contacts = EmployeeEmergencyContact::where('emp_id',$emp_id)->get();  
 
-        $contacts = EmergencyContact::where('emp_id',$emp_id)->get();  
-        return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
+        // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
+
+        $user = User::join('employees','employees.user_id','=','users.id')
+        ->join('countries','countries.id','=','employees.nationality')
+        ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
+        ->select('users.name as name','users.email as email', 
+        'employees.contact_no as contact_no', 'employees.address as address', 
+        'employees.ic_no as ic_no', 'employees.gender as gender', 
+        'employees.dob as dob','employees.marital_status as marital_status',
+        'employees.race as race', 'employees.total_children as total_child', 
+        'employees.driver_license_no as driver_license_no', 
+        'employees.driver_license_expiry_date as _license_expiry_date',
+        'users.id as id','employees.epf_no as epf_no',
+        'employees.tax_no as tax_no ','employees.basic_salary',
+        'countries.citizenship as citizsenship')
+        ->where('users.id',$emp_id)
+        ->first();
+
+        return view('pages.admin.profile-employee',['user'=>$user]); 
     }
 
     public function editEmergencyContact(Request $request)

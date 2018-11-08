@@ -93,10 +93,10 @@ Breadcrumbs::for('admin/employee_list', function ($trail) {
     $trail->push('Employee List', route('admin/employee_list'));
 });
 
-// Home > Admin > Profile
+// Home > Admin > Employee List > Profile
 Breadcrumbs::for('admin/profile-employee/{id}', function ($trail) {
-    $trail->parent('admin.home');
-    $trail->push('Employee', route('admin/profile-employee/{id}', 1));
+    $trail->parent('admin/employee_list');
+    $trail->push('Employee Profile', route('admin/profile-employee/{id}', ''));
 });
 
 // Home > Admin > Leave Type
@@ -111,6 +111,11 @@ Breadcrumbs::for('admin/leaveapplication', function ($trail) {
     $trail->push('Leave Type', route('admin/leaveapplication'));
 });
 
+// Home > Admin > Employee List > Profile
+Breadcrumbs::for('add_emergency_contact', function ($trail) {
+    $trail->parent('admin/employee_list');
+    $trail->push('Employee Profile', route('add_emergency_contact'));
+});
 
 
 // // Home > Blog > [Category]

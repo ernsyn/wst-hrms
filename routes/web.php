@@ -37,7 +37,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::get('home', 'HomeController@index')->name('admin.home');
 
     Route::get('/employee/add', 'EmployeeDataController@addEmployee')->name('employee/add');
-    Route::get('emergencycontact', 'AdminController@displayEmergencyContact')->name('admin/emergencycontact');
+    Route::get('profile-employee/emergencycontact', 'AdminController@displayEmergencyContact')->name('admin/emergencycontact');
     Route::get('employee_dependent', 'AdminController@displayEmployeeDependent')->name('admin/employee_dependent');
     Route::get('employeeimmigration', 'AdminController@displayEmployeeImmigration')->name('admin/employeeimmigration');
     Route::get('employeevisa', 'AdminController@displayEmployeeVisa')->name('admin/employeevisa');

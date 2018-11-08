@@ -148,7 +148,7 @@ $('#emergencyContactTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "emergencycontactdata",
+    "ajax": "emergencycontact",
     "columns": [
         {
             render: function (data, type, row, meta) {
@@ -236,7 +236,7 @@ $('#employeeJobTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "bankdata",
+    "ajax": "jobdata",
     "columns": [
         {
             render: function (data, type, row, meta) {
@@ -262,7 +262,7 @@ $('#employeeBankTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "jobdata",
+    "ajax": "",
     "columns": [
         {
             render: function (data, type, row, meta) {

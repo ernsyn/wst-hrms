@@ -44,7 +44,7 @@
                 <div class="row">
                     {{-- Tab List --}}
                     <nav class="col-sm-12">
-                        <div class="nav nav-tabs font-weight-bold scrollable d-flex flex-nowrap tabbable" id="nav-tab" role="tablist">
+                        <div class="nav nav-tabs font-weight-bold scrollable d-flex flex-nowrap tabbable text-nowrap" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile"
                                 aria-selected="false">Profile</a>
                             <a class="nav-item nav-link" id="nav-emergency-tab" data-toggle="tab" href="#nav-emergency" role="tab" aria-controls="nav-emergency"
@@ -61,13 +61,13 @@
                             <a class="nav-item nav-link" id="nav-attachment-tab" data-toggle="tab" href="#nav-attachment" role="tab" aria-controls="nav-attachment"
                                 aria-selected="true">Attachment</a>
                             <a class="nav-item nav-link" id="nav-workdays-tab" data-toggle="tab" href="#nav-workdays" role="tab" aria-controls="nav-workdays"
-                                aria-selected="false">WorkDays</a>
+                                aria-selected="false">Work Days</a>
                             <a class="nav-item nav-link" id="nav-reportto-tab" data-toggle="tab" href="#nav-reportto" role="tab" aria-controls="nav-reportto"
-                                aria-selected="true">ReportTo</a>
+                                aria-selected="true">Report To</a>
                             <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history"
                                 aria-selected="false">History</a>
                             <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"
-                                aria-selected="true">SecurityGroup</a>
+                                aria-selected="true">Security Group</a>
                         </div>
                     </nav>
                     {{-- Tab Content --}}
@@ -182,7 +182,7 @@
                             </form>
                         </div>
                         {{-- Emergency --}}
-                        @include('pages.employee.emergency-contact')
+                        @include('pages.admin.emergency-contact')
                         {{-- Dependent --}}
                         @include('pages.employee.employee-dependent')
                         {{-- Immigration --}}
