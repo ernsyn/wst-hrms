@@ -1,15 +1,10 @@
 @extends('layouts.app')
 
 @section('app-content')
-    {{-- @include('inc.navbar')
-    <div class="container">
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div> --}}
     @include('inc.sidebar')
-    <div id="content">
+    <div class="content">
         @include('inc.navbar')
+        {{ Breadcrumbs::render() }}
         @yield('content')
     </div>
 @endsection

@@ -12,10 +12,14 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('/');;
 
 Auth::routes();
+
+
+Route::get('setup', 'AdminController@displaySetupCompany')->name('setup');
+Route::get('setup', 'AdminController@displaySetupCompany')->name('setup');
 
 Route::group(['prefix' => 'setup', 'middleware' => ['role:super-admin|admin']], function() {
     Route::get('company', 'AdminController@displaySetupCompany')->name('admin/setup/company');
@@ -30,55 +34,54 @@ Route::group(['prefix' => 'setup', 'middleware' => ['role:super-admin|admin']], 
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], function() {
-Route::get('home', 'HomeController@index')->name('admin.home');
+    Route::get('home', 'HomeController@index')->name('admin.home');
+
+    Route::get('/employee/add', 'EmployeeDataController@addEmployee')->name('employee/add');
+    Route::get('emergencycontact', 'AdminController@displayEmergencyContact')->name('admin/emergencycontact');
+    Route::get('employee_dependent', 'AdminController@displayEmployeeDependent')->name('admin/employee_dependent');
+    Route::get('employeeimmigration', 'AdminController@displayEmployeeImmigration')->name('admin/employeeimmigration');
+    Route::get('employeevisa', 'AdminController@displayEmployeeVisa')->name('admin/employeevisa');
+    Route::get('employee_bank', 'AdminController@displayEmployeeBank')->name('admin/employee_bank');
+    Route::get('employee-qualification','AdminController@displayQualification')->name('admin/employee-qualification');
+    Route::get('employee_list', 'AdminController@displayAllEmployee')->name('admin/employee_list');
+    Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
+    Route::get('/admin/history', 'AdminController@displayHistory')->name('admin/history');
+    Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('/admin/employee-profile/{id}');
+
+    Route::post('edit_employee_dependent','AdminController@editEmployeeDependent')->name('edit_employee_dependent');
+    Route::post('edit_emergency_contact','AdminController@editEmergencyContact')->name('edit_emergency_contact');
+    Route::post('edit_immigration','AdminController@editEmployeeImmigration')->name('edit_immigration');
+    Route::post('edit_visa','AdminController@editEmployeeVisa')->name('edit_visa');
+    Route::post('edit_bank','AdminController@editEmployeeBank')->name('edit_bank');
+    Route::post('edit_qualification_company','AdminController@editQualificationCompany')->name('edit_qualification_company');
+    Route::post('edit_qualification_education','AdminController@editQualificationEducation')->name('edit_qualification_education');
+    Route::post('edit_qualification_skills','AdminController@editQualificationSkills')->name('edit_qualification_skills');
+    Route::post('edit_cost_centre','AdminController@editCostCentre')->name('edit_cost_centre');
 
 
-Route::get('/employee/add', 'EmployeeDataController@addEmployee')->name('employee/add');
-Route::get('emergencycontact', 'AdminController@displayEmergencyContact')->name('admin/emergencycontact');
-Route::get('employee_dependent', 'AdminController@displayEmployeeDependent')->name('admin/employee_dependent');
-Route::get('employeeimmigration', 'AdminController@displayEmployeeImmigration')->name('admin/employeeimmigration');
-Route::get('employeevisa', 'AdminController@displayEmployeeVisa')->name('admin/employeevisa');
-Route::get('employee_bank', 'AdminController@displayEmployeeBank')->name('admin/employee_bank');
-Route::get('employee-qualification','AdminController@displayQualification')->name('admin/employee-qualification');
-Route::get('employee_list', 'AdminController@displayAllEmployee')->name('admin/employee_list');
-Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
-Route::get('/admin/history', 'AdminController@displayHistory')->name('admin/history');
-Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('/admin/employee-profile/{id}');
+    Route::post('add_emergency_contact','AdminController@addEmergencyContact')->name('add_emergency_contact');
+    Route::post('add_employee_dependent','AdminController@addEmployeeDependent')->name('add_employee_dependent');
+    Route::post('add_employee_immigration','AdminController@addEmployeeImmigration')->name('add_employee_immigration');
+    Route::post('add_employee_visa','AdminController@addEmployeeVisa')->name('add_employee_visa');
+    Route::post('add_employee_bank','AdminController@addEmployeeBank')->name('add_employee_bank');
+    Route::post('add_qualification_experience','AdminController@addQualificationCompany')->name('add_qualification_experience');
+    Route::post('add_qualification_education','AdminController@addQualificationEducation')->name('add_qualification_education');
+    Route::post('add_qualification_skills','AdminController@addQualificationSkills')->name('add_qualification_skills');
+    Route::post('add_report_to','AdminController@addReportTo')->name('add_report_to');
+    Route::post('add_cost_centre','AdminController@addCostCentre')->name('add_cost_centre');
+    Route::post('add_department','AdminController@addDepartment')->name('add_department');
+    Route::post('add_team','AdminController@addTeam')->name('add_team');
+    Route::post('add_position','AdminController@addPosition')->name('add_position');
+    Route::post('add_grade','AdminController@addGrade')->name('add_grade');
+    Route::post('add_company','AdminController@addSetupCompany')->name('add_company');
+    Route::post('add_holiday','AdminController@addHoliday')->name('add_holiday');
+    Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
 
-Route::post('edit_employee_dependent','AdminController@editEmployeeDependent')->name('edit_employee_dependent');
-Route::post('edit_emergency_contact','AdminController@editEmergencyContact')->name('edit_emergency_contact');
-Route::post('edit_immigration','AdminController@editEmployeeImmigration')->name('edit_immigration');
-Route::post('edit_visa','AdminController@editEmployeeVisa')->name('edit_visa');
-Route::post('edit_bank','AdminController@editEmployeeBank')->name('edit_bank');
-Route::post('edit_qualification_company','AdminController@editQualificationCompany')->name('edit_qualification_company');
-Route::post('edit_qualification_education','AdminController@editQualificationEducation')->name('edit_qualification_education');
-Route::post('edit_qualification_skills','AdminController@editQualificationSkills')->name('edit_qualification_skills');
-Route::post('edit_cost_centre','AdminController@editCostCentre')->name('edit_cost_centre');
-
-
-Route::post('add_emergency_contact','AdminController@addEmergencyContact')->name('add_emergency_contact');
-Route::post('add_employee_dependent','AdminController@addEmployeeDependent')->name('add_employee_dependent');
-Route::post('add_employee_immigration','AdminController@addEmployeeImmigration')->name('add_employee_immigration');
-Route::post('add_employee_visa','AdminController@addEmployeeVisa')->name('add_employee_visa');
-Route::post('add_employee_bank','AdminController@addEmployeeBank')->name('add_employee_bank');
-Route::post('add_qualification_experience','AdminController@addQualificationCompany')->name('add_qualification_experience');
-Route::post('add_qualification_education','AdminController@addQualificationEducation')->name('add_qualification_education');
-Route::post('add_qualification_skills','AdminController@addQualificationSkills')->name('add_qualification_skills');
-Route::post('add_report_to','AdminController@addReportTo')->name('add_report_to');
-Route::post('add_cost_centre','AdminController@addCostCentre')->name('add_cost_centre');
-Route::post('add_department','AdminController@addDepartment')->name('add_department');
-Route::post('add_team','AdminController@addTeam')->name('add_team');
-Route::post('add_position','AdminController@addPosition')->name('add_position');
-Route::post('add_grade','AdminController@addGrade')->name('add_grade');
-Route::post('add_company','AdminController@addSetupCompany')->name('add_company');
-Route::post('add_holiday','AdminController@addHoliday')->name('add_holiday');
-Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
-
-Route::get('leaveapplication','PagesController@leaveapplication')->name('admin/leaveapplication');
-Route::get('leavetype','AdminController@displayEmployeeLeave')->name('admin/leavetype');
-Route::get('leaverequest','AdminController@displayLeaveRequest')->name('admin/leaverequest');
-Route::get('leavebalance','AdminController@displayLeaveBalance')->name('admin/leavebalance');
-Route::get('leaveholiday','AdminController@displayLeaveHoliday')->name('admin/leaveholiday');
+    Route::get('leaveapplication','PagesController@leaveapplication')->name('admin/leaveapplication');
+    Route::get('leavetype','AdminController@displayEmployeeLeave')->name('admin/leavetype');
+    Route::get('leaverequest','AdminController@displayLeaveRequest')->name('admin/leaverequest');
+    Route::get('leavebalance','AdminController@displayLeaveBalance')->name('admin/leavebalance');
+    Route::get('leaveholiday','AdminController@displayLeaveHoliday')->name('admin/leaveholiday');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], function() {
