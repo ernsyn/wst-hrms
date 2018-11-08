@@ -47702,7 +47702,7 @@ $('#emergencyContactTable').DataTable({
         render: function render(data, type, row, meta) {
             return meta.row + meta.settings._iDisplayStart + 1;
         }
-    }, { "data": "contact_name" }, { "data": "relationship" }, { "data": "contact_number" }, {
+    }, { "data": "name" }, { "data": "relationship" }, { "data": "contact_no" }, {
         "data": null, // can be null or undefined
         "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#emergencyModal"><i class="far fa-edit"></i></button>'
     }]

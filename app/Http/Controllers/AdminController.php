@@ -200,18 +200,27 @@ class AdminController extends Controller
     {
         $id = Session::get('user_id');
 
-        $contacts = EmployeeEmergencyContact::where('emp_id',$id)->get();
+        $user = Employee::where('user_id', $id)->first();
+        $contacts = EmployeeEmergencyContact::where('emp_id',$user->id)->get();
+
         // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
         return DataTables::of($contacts)->make(true);
     }
+
+    // public function displayEmployeeEmergencyContact()
+    // {
+    //     $id = Session::get('user_id');
+
+    //     $contacts = EmployeeEmergencyContact::where('emp_id',$id)->get();
+    //     // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
+    //     return DataTables::of($contacts)->make(true);
+    // }
 
     public function addEmergencyContact(Request $request)
     {          
         $user_id = Session::get('user_id');
 
-        $user = User::find($user_id);
-
-
+        $user = Employee::where('user_id', $user_id)->first();
       
         $name = $request->input('name');
         $relationship = $request->input('relationship');       
@@ -222,7 +231,7 @@ class AdminController extends Controller
         (emp_id, name, relationship, contact_no, created_by) 
         values
         (?,?,?,?,?)',
-        [$user, $name, $relationship, $contact_number, $created_by]);
+        [$user->id, $name, $relationship, $contact_number, $created_by]);
 
         // $contacts = EmployeeEmergencyContact::where('emp_id',$emp_id)->get();  
 
@@ -243,7 +252,7 @@ class AdminController extends Controller
         'employees.driver_license_expiry_date as _license_expiry_date',
         'users.id as user_id','employees.epf_no as epf_no',
         'employees.tax_no as tax_no ','employees.basic_salary as basic_salary')
-        ->where('users.id',$id)
+        ->where('users.id',$user_id)
         ->first();
 
         return view('pages.admin.profile-employee',['user'=>$user]); 
@@ -516,8 +525,8 @@ class AdminController extends Controller
 
     public function displayProfile2($id)
     {
-
         Session::put('user_id', $id);
+
         $user = User::join('employees','employees.user_id','=','users.id')
         ->join('countries','countries.id','=','employees.nationality')
         ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
@@ -535,6 +544,7 @@ class AdminController extends Controller
         'employees.tax_no as tax_no ','employees.basic_salary as basic_salary')
         ->where('users.id',$id)
         ->first();
+
 
         return view('pages.admin.profile-employee',['user'=>$user]);        
     }
