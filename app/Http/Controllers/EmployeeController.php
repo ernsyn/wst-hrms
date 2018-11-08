@@ -16,6 +16,7 @@ use App\EventLog;
 use App\User;
 use App\EmployeeAttachment;
 use App\EmployeeInfo;
+use App\LeaveType;
 use DB;
 use Auth;
 use Log;
@@ -156,5 +157,11 @@ class EmployeeController extends Controller
         }
 
         return $result;
+    }
+
+    public function displayLeaveApplication()
+    {        
+        $types = LeaveType::all();
+        return view('pages.leaveapplication', ['types'=>$types]);
     }
 }

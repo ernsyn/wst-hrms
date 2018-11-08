@@ -46,7 +46,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::get('employee_list', 'AdminController@displayAllEmployee')->name('admin/employee_list');
     Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
     Route::get('/admin/history', 'AdminController@displayHistory')->name('admin/history');
-    Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('/admin/employee-profile/{id}');
+    Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('admin/profile-employee/{id}');
 
     Route::post('edit_employee_dependent','AdminController@editEmployeeDependent')->name('edit_employee_dependent');
     Route::post('edit_emergency_contact','AdminController@editEmergencyContact')->name('edit_emergency_contact');
@@ -77,7 +77,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('add_holiday','AdminController@addHoliday')->name('add_holiday');
     Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
 
-    Route::get('leaveapplication','PagesController@leaveapplication')->name('admin/leaveapplication');
+    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
     Route::get('leavetype','AdminController@displayEmployeeLeave')->name('admin/leavetype');
     Route::get('leaverequest','AdminController@displayLeaveRequest')->name('admin/leaverequest');
     Route::get('leavebalance','AdminController@displayLeaveBalance')->name('admin/leavebalance');
@@ -101,4 +101,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
 
 });
+
+Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function() {
+    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
+});
+
+
 Route::get('home', 'HomeController@index')->name('home');

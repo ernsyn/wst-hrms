@@ -1,7 +1,7 @@
-@extends('layouts.app') 
+@extends('layouts.base') 
 @section('pageTitle', 'Leave Application') 
 @section('content')
-<div class="row">
+{{-- <div class="row">
     <nav class="col-6 pr-0">
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-weight-bold h3" aria-current="page">{{ ($breadcrumb = Breadcrumbs::current()) ? $breadcrumb->title : 'Fallback Title' }}</li>
@@ -10,7 +10,7 @@
     <nav class="col-6 pl-0 justify-end">
         {{ Breadcrumbs::render('leaveapplication') }}
     </nav>
-</div>
+</div> --}}
 <div class="p-4">
     <div class="row">
         <div class="col-xl-8">
@@ -30,10 +30,9 @@
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Leave Type</label>
                                 <div class="col-sm-8">
-                                    <select name="type" id="type" onchange="document.getElementById('department-form').submit()" class="custom-select" required data-required-message="Please select leave type">
-                               
+                                    <select name="type" id="type" onchange="document.getElementById('department-form').submit()" class="custom-select" required data-required-message="Please select leave type">                               
                                         <option selected disabled>Select Leave</option>
-                                        @foreach($type as $type)
+                                        @foreach($types as $type)
                                         <option value="{{$type->id}}">{{$type->name}}</option>
                                         @endforeach
                                     </select>

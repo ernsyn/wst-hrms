@@ -26,6 +26,8 @@ use App\Team;
 use App\LeaveRequest;
 use App\LeaveType;
 use App\LeaveBalance;
+use App\LeaveHoliday;
+
 
 use DB;
 use App\User;
@@ -255,7 +257,7 @@ class AdminController extends Controller
         $created_by = auth()->user()->id;
         $interval =  $datetime2 - $datetime1;
         $days = floor($interval/(60*60*24)) + 1;
-        DB::insert('insert into holiday_master
+        DB::insert('insert into holidays
         (name,start_date,end_date, created_by,total_days) 
         values
         (?,?,?,?,?)',
@@ -471,8 +473,8 @@ class AdminController extends Controller
 
         Session::put('user_id', $id);
         $user = User::join('employees','employees.user_id','=','users.id')
-        ->join('countries','countries.country_code','=','employees.nationality')
-        ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
+        // ->join('countries','countries.country_code','=','employees.nationality')
+        ->join('employee_jobs','employee_jobs.emp_id','=','employees.user_id')
         ->select('users.name as name','users.email as email', 
         'employees.contact_no as contact_no', 'employees.address as address', 
         'employees.ic_no as ic_no', 'employees.gender as gender', 
@@ -481,8 +483,8 @@ class AdminController extends Controller
         'employees.driver_license_no as driver_license_no', 
         'employees.driver_license_expiry_date as _license_expiry_date',
         'users.id as id','employees.epf_no as epf_no',
-        'employees.tax_no as tax_no ','employees.basic_salary',
-        'countries.citizenship as citizsenship')
+        'employees.tax_no as tax_no ','employees.basic_salary')
+        // 'countries.citizenship as citizsenship')
         ->where('users.id',$id)
         ->first();
 

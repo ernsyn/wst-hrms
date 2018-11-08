@@ -4,15 +4,14 @@ Breadcrumbs::for('/', function ($trail) {
     $trail->push('Home', route('/'));
 });
 
+// Login
+Breadcrumbs::for('login', function ($trail) {
+    $trail->push('Login', route('login'));
+});
+
 // Home
 Breadcrumbs::for('home', function ($trail) {
     $trail->push('Home', route('home'));
-});
-
-// Home > Employee List
-Breadcrumbs::for('admin/employee_list', function ($trail) {
-    $trail->parent('home');
-    $trail->push('Employee List', route('admin/employee_list'));
 });
 
 // Home > Setup
@@ -75,16 +74,41 @@ Breadcrumbs::for('admin/leaveholiday', function ($trail) {
     $trail->push('Leave Holiday', route('admin/leaveholiday'));
 });
 
+// Home > Admin > Leave Holiday
+Breadcrumbs::for('add_holiday', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Holiday', route('add_holiday'));
+});
+
 // Home > Admin > Leave Balance
 Breadcrumbs::for('admin/leavebalance', function ($trail) {
     $trail->parent('admin.home');
     $trail->push('Leave Balance', route('admin/leavebalance'));
 });
 
+
+// Home > Admin > Employee List
+Breadcrumbs::for('admin/employee_list', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Employee List', route('admin/employee_list'));
+});
+
+// Home > Admin > Profile
+Breadcrumbs::for('admin/profile-employee/{id}', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Employee', route('admin/profile-employee/{id}', 1));
+});
+
 // Home > Admin > Leave Type
 Breadcrumbs::for('admin/leavetype', function ($trail) {
     $trail->parent('admin.home');
     $trail->push('Leave Type', route('admin/leavetype'));
+});
+
+// Home > Admin > Leave Type
+Breadcrumbs::for('admin/leaveapplication', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Type', route('admin/leaveapplication'));
 });
 
 

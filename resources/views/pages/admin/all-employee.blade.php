@@ -20,7 +20,7 @@
                         </tr>
 
                         @foreach($employees as $row)
-                        <tr onclick="window.location='{{ url('/admin/employee-profile/'.$row['emp_id']) }}';">
+                        <tr onclick="window.location='{{ url('/admin/profile-employee/'.$row['emp_id']) }}';">
                             {{--
                             <tr onclick="window.location='{{ route('/admin/employee-profile',['course_id' => Crypt::encrypt('1') ]) }}';">
                             --}}
