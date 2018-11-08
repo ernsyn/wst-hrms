@@ -1,17 +1,6 @@
 @extends('layouts.app')
 @section('pageTitle', 'Qualification')
 @section('content')
-{{-- <div class="row ">
-    <nav class="col-6 pr-0">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item font-weight-bold" aria-current="page">{{ ($breadcrumb = Breadcrumbs::current()) ? $breadcrumb->title : 'Fallback Title' }}</li>
-        </ol>
-    </nav>
-    <nav class="col-6 pl-0 justify-end">
-        {{ Breadcrumbs::render('qualification') }}
-    </nav>
-</div> --}}
-
 <!-- ADD EXPERIENCES -->
 <div class="modal fade" id="addCompanyPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

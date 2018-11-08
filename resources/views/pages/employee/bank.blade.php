@@ -10,18 +10,6 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    {{--
-                                    <tbody>
-                                        @foreach($banks as $row)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{$row['bank_code']}}</td>
-                                            <td>{{$row['acc_no']}}</td>
-                                            <td>{{$row['status']}}</td>
-                                            <td>Action</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody> --}}
                                 </table>
                                 <!-- Modal -->
                                 <div class="modal fade" id="bankModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

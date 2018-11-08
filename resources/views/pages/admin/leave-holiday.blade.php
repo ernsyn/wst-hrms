@@ -1,16 +1,6 @@
-@extends('layouts.app') 
-@section('pageTitle', 'Holiday Setup') 
+@extends('layouts.base') 
+
 @section('content')
-<div class="row">
-    <nav class="col-6 pr-0">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item font-weight-bold h3" aria-current="page">{{ ($breadcrumb = Breadcrumbs::current()) ? $breadcrumb->title : 'Fallback Title' }}</li>
-        </ol>
-    </nav>
-    <nav class="col-6 pl-0 justify-end">
-        {{ Breadcrumbs::render('leaveholiday') }}
-    </nav>
-</div>
 <!-- ADD -->
 <div class="modal fade" id="addHolidayPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

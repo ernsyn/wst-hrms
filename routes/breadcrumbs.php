@@ -4,6 +4,14 @@ Breadcrumbs::for('/', function ($trail) {
     $trail->push('Home', route('/'));
 });
 
+// Login
+Breadcrumbs::for('login', function ($trail) {
+    $trail->push('Login', route('login'));
+});
+Breadcrumbs::for('profile', function ($trail) {
+    $trail->push('Profile', route('profile'));
+});
+
 // Home
 Breadcrumbs::for('home', function ($trail) {
     $trail->push('Home', route('home'));
@@ -15,6 +23,16 @@ Breadcrumbs::for('admin/employee_list', function ($trail) {
     $trail->push('Employee List', route('admin/employee_list'));
 });
 
+Breadcrumbs::for('register_employee', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Employee List', route('register_employee'));
+});
+
+
+Breadcrumbs::for('employee/add', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Employee Add', route('employee/add'));
+});
 // Home > Setup
 Breadcrumbs::for('setup', function ($trail) {
     $trail->parent('home');
@@ -25,6 +43,10 @@ Breadcrumbs::for('setup', function ($trail) {
 Breadcrumbs::for('admin/setup/company', function ($trail) {
     $trail->parent('setup');
     $trail->push('Company', route('admin/setup/company'));
+});
+Breadcrumbs::for('admin/setup/add-company', function ($trail) {
+    $trail->parent('setup');
+    $trail->push('Company', route('admin/setup/add-company'));
 });
 
 // Home > Setup > Cost-Centre
@@ -56,6 +78,10 @@ Breadcrumbs::for('setup/grade', function ($trail) {
     $trail->parent('setup');
     $trail->push('Grade', route('setup/grade'));
 });
+Breadcrumbs::for('setup/branch', function ($trail) {
+    $trail->parent('setup');
+    $trail->push('Branch', route('setup/branch'));
+});
 
 // Home > Admin
 Breadcrumbs::for('admin.home', function ($trail) {
@@ -86,6 +112,44 @@ Breadcrumbs::for('admin/leavetype', function ($trail) {
     $trail->parent('admin.home');
     $trail->push('Leave Type', route('admin/leavetype'));
 });
+
+
+Breadcrumbs::for('add_grade', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Add Grade', route('add_grade'));
+});
+Breadcrumbs::for('add_position', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Add Position', route('add_position'));
+});
+
+Breadcrumbs::for('add_team', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Add Team', route('add_team'));
+});
+
+
+
+Breadcrumbs::for('add_holiday', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Holiday Setup', route('add_holiday'));
+});
+
+Breadcrumbs::for('add_company', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Company Setup', route('add_company'));
+});
+
+
+Breadcrumbs::for('add_department', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Department Setup', route('add_department'));
+});
+Breadcrumbs::for('add_cost_centre', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Cost Centre Setup', route('add_cost_centre'));
+});
+
 
 
 

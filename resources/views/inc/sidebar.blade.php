@@ -24,6 +24,11 @@
             <a href="{{ route('admin/employee_list') }}">Employee List</a>
         </li>              
             </ul>
+            <ul class="collapse list-unstyled {{ request()->is('admin/employee/add') ? 'show' : '' }}" id="employeeSetup">
+                <li class="{{ request()->is('admin/employee/add') ? 'active' : '' }}">
+                <a href="{{ route('employee/add') }}">Employee Add</a>
+            </li>              
+                </ul>            
         </li>
         {{-- Admin Setup --}}
         <li class="{{ request()->is('setup/company','setup/cost-centre','setup/department','setup/branch','setup/team','setup/position','setup/grade') ? 'active' : '' }}">
@@ -117,6 +122,7 @@
                     <a href="{{ route('admin/leaveapplication') }}">Leave History</a>
                 </li>
             </ul>
+            
         </li>
 @endif
 </nav>

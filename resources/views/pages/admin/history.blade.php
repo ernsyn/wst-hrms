@@ -1,16 +1,6 @@
 @extends('layouts.app')
 @section('pageTitle', 'History')
 @section('content')
-{{-- <div class="row ">
-    <nav class="col-6 pr-0">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item font-weight-bold" aria-current="page">{{ ($breadcrumb = Breadcrumbs::current()) ? $breadcrumb->title : 'Fallback Title' }}</li>
-        </ol>
-    </nav>
-    <nav class="col-6 pl-0 justify-end">
-        {{ Breadcrumbs::render('history') }}
-    </nav>
-</div> --}}
 <div class="p-4">
     <div class="card py-4">
         <div class="card-body">
