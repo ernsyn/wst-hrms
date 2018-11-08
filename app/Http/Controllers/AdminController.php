@@ -457,11 +457,11 @@ class AdminController extends Controller
     public function displayAllEmployee()
     {
         $employees = EmployeeJob::leftjoin('employees','employees.id','=','employee_jobs.emp_id')
-        ->join('users','users.id','=','employees.id')
+        ->join('users','users.id','=','employees.user_id')
         ->join('cost_centres','cost_centres.id','=','employee_jobs.cost_centre_id')
         ->join('departments','departments.id','=','employee_jobs.department_id')
         ->join('employee_positions','employee_positions.id','=','employee_jobs.emp_mainposition_id')  
-        ->select('employee_jobs.emp_id', 'users.name', 'cost_centres.name', 'departments.name as department_name',
+        ->select('employee_jobs.emp_id','employees.user_id as user_id', 'users.name', 'cost_centres.name', 'departments.name as department_name',
         'employee_positions.name as position_name', 'employee_jobs.start_date')    
         ->get();
 
@@ -473,8 +473,8 @@ class AdminController extends Controller
 
         Session::put('user_id', $id);
         $user = User::join('employees','employees.user_id','=','users.id')
-        // ->join('countries','countries.country_code','=','employees.nationality')
-        ->join('employee_jobs','employee_jobs.emp_id','=','employees.user_id')
+        ->join('countries','countries.id','=','employees.nationality')
+        ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
         ->select('users.name as name','users.email as email', 
         'employees.contact_no as contact_no', 'employees.address as address', 
         'employees.ic_no as ic_no', 'employees.gender as gender', 
@@ -483,8 +483,8 @@ class AdminController extends Controller
         'employees.driver_license_no as driver_license_no', 
         'employees.driver_license_expiry_date as _license_expiry_date',
         'users.id as id','employees.epf_no as epf_no',
-        'employees.tax_no as tax_no ','employees.basic_salary')
-        // 'countries.citizenship as citizsenship')
+        'employees.tax_no as tax_no ','employees.basic_salary',
+        'countries.citizenship as citizsenship')
         ->where('users.id',$id)
         ->first();
 

@@ -20,13 +20,13 @@
                         </tr>
 
                         @foreach($employees as $row)
-                        <tr onclick="window.location='{{ url('/admin/profile-employee/'.$row['emp_id']) }}';">
+                        <tr onclick="window.location='{{ url('/admin/profile-employee/'.$row['user_id']) }}';">
                             {{--
                             <tr onclick="window.location='{{ route('/admin/employee-profile',['course_id' => Crypt::encrypt('1') ]) }}';">
                             --}}
 
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$row['emp_id']}}</td>
+                                <td>{{$row['user_id']}}</td>
                                 <td>{{$row['name']}}</td>
                                 <td>{{$row['category_name']}}</td>
                                 <td>{{$row['department_name']}}</td>

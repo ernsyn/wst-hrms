@@ -107,7 +107,7 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">Nationality</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->citizenship}}">
+                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->nationality}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Number of Child</label>
                                                     <div class="col-lg-7">
