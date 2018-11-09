@@ -111,55 +111,6 @@
         </div>
 </div>
 
-{{-- <div class="p-4">
-    <div class="card py-4">
-        <div class="card-body">
-                <div class="row pb-3">
-                        <div class="col-auto mr-auto"></div>
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#emergencyContactPopup">
-                                Add Contact
-                            </button>
-                        </div>
-                    </div>
-                <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-bordered table-hover">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Relationship</th>
-                                    <th>Contact Number</th>
-                                    <th>Action</th>
-                                </tr>
-                    
-                                @foreach($contacts as $row)
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$row['contact_name']}}</td>
-                                    <td>{{$row['relationship']}}</td>
-                                    <td>{{$row['contact_number']}}</td>
-                                    <td>
-                                        <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                        data-contact-id="{{$row['id']}}"
-                                        data-contact-name="{{$row['contact_name']}}"                
-                                        data-contact-relationship="{{$row['relationship']}}"
-                                        data-contact-number="{{$row['contact_number']}}"
-                                        data-target="#updateContactPopup">EDIT
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </table>
-                        </div>
-                </div>
-        </div>
-    </div>
-</div>
-             --}}
-
-
-
 <div class="tab-pane fade show p-3" id="nav-emergency" role="tabpanel" aria-labelledby="nav-emergency-tab">
         <div class="row pb-3">
                 <div class="col-auto mr-auto"></div>

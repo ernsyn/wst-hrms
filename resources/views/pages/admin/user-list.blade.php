@@ -1,59 +1,50 @@
 @extends('layouts.base')
-
-
+@section('pageTitle', 'User List') 
 @section('content')
-<div class="row">
-    <div class="col-lg-12 margin-tb">
-        <div class="pull-left">
-            <h2>Users Management</h2>
-        </div>
-        <div class="pull-right">
-            <a class="btn btn-success" href=""> Create New User</a>
+
+<div class="p-4">
+        <div class="card p-4">
+            <div class="card-body">
+                <div class="row pb-3">
+                    <div class="col-auto mr-auto"></div>
+            </div>
+            <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right tableTools-container"></div>
+                        <table class="table display compact table-striped table-bordered table-hover w-100" id="setupUserTable">
+                            <thead>
+                                <tr>
+                                        <th>No</th>
+                                        <th>User Id</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Action</th>     
+                            </tr>
+                        </thead>
+                        <tbody>
+                                @foreach($userlist as $row)
+                                <tr>
+                                    {{--
+                                    <tr onclick="window.location='{{ route('/admin/employee-profile',['course_id' => Crypt::encrypt('1') ]) }}';">
+                                    --}}
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td>{{$row['id']}}</td>
+                                        <td>{{$row['name']}}</td>
+                                        <td>{{$row['email']}}</td>
+                                  
+                                        <td>
+                                                <button onclick="window.location='{{ url('/admin/profile-employee/'.$row['id']) }}';" class="btn btn-default">View</button>
+                                                <button onclick="window.location='{{ url('/admin/edit-employee/'.$row['id']) }}';" class="btn btn-default">Edit</button>
+                                        
+                                        </td>
+                                </tr>
+                                @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-
-@if ($message = Session::get('success'))
-<div class="alert alert-success">
-  <p>{{ $message }}</p>
-</div>
-@endif
-
-
-<table class="table table-bordered">
- <tr>
-   <th>No</th>
-   <th>Name</th>
-   <th>Email</th>
-   <th>Roles</th>
-   <th width="280px">Action</th>
- </tr>
- @foreach ($data as $key => $user)
-  <tr>
-    <td>{{ ++$i }}</td>
-    <td>{{ $user->name }}</td>
-    <td>{{ $user->email }}</td>
-    <td>
-      @if(!empty($user->getRoleNames()))
-        @foreach($user->getRoleNames() as $v)
-           <label class="badge badge-success">{{ $v }}</label>
-        @endforeach
-      @endif
-    </td>
-    <td>
-       <a class="btn btn-info" href="">Show</a>
-       <a class="btn btn-primary" href="">Edit</a>
-       {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
-       {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-   {!! Form::close() !!}
-</td>
-</tr>
-@endforeach
-</table>
-
-
-{!! $data->render() !!}
-
-
 @endsection
