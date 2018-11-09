@@ -19,10 +19,13 @@ use App\EmployeeAttachment;
 use App\EmployeeInfo;
 use App\LeaveType;
 use App\Employee;
+use App\LeaveBalance;
 use DB;
 use Auth;
 use Log;
+use Session;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Input;
 
 class EmployeeController extends Controller
 {
@@ -34,19 +37,26 @@ class EmployeeController extends Controller
 
     public function displayProfile()
     {
+       $user = Auth::user();
+       
+        $userEmail = $user->id;
+        
         $user = Employee::join('users','users.id','=','employees.user_id')
-  
-        ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
+        //   ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
         //->join('employee_grade','employee_jobs.id_grade','=','employee_grade.id')
-        ->select('users.name','users.email', 'employees.contact_no', 'employees.address', 
+        ->select('users.name as name','users.email as email', 'employees.contact_no as contact_no', 'employees.address', 
         'employees.ic_no', 'employees.gender', 'employees.dob',
         'employees.marital_status', 'employees.race', 'employees.total_children as total_child', 
-        'employees.driver_license_no as driver_license_number', 'employees.driver_license_expiry_date as license_expiry_date','users.id',
+        'employees.driver_license_no as driver_license_number', 'employees.driver_license_expiry_date as license_expiry_date',
         'employees.epf_no','employees.tax_no','employees.basic_salary')
-        ->where('users.id', auth()->user()->id)
+        ->where('users.id',$userEmail)
         ->first();
+  
+
         return view('pages.employee.profile')->with('user',$user);
     }
+
+
 
     public function displayEmergencyContact()
     {
@@ -162,8 +172,76 @@ class EmployeeController extends Controller
     }
 
     public function displayLeaveApplication()
-    {        
-        $types = LeaveType::all();
-        return view('pages.leaveapplication', ['types'=>$types]);
+    {      
+        $leave = LeaveBalance::join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->select('leave_types.id','leave_types.name','leave_balance.balance')
+        ->where('leave_balance.user_id', Auth::user()->id)
+        ->get();
+
+        //$types = LeaveType::all();
+
+        return view('pages.leaveapplication', ['leave'=>$leave]);
+    }
+
+    public function displayLeaveBalance()
+    {
+         $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->join('users','users.id','=','employees.user_id')
+        ->select('users.name as name',
+        'leave_balance.balance as balance',
+        'leave_balance.carry_forward as carry',
+        'leave_types.name as leave')
+        ->where('users.id', auth()->user()->id)
+        ->get();
+        return view('pages.employee.leave-balance', ['leavebalance'=>$leavebalance]);
+       
+    }
+
+
+    public function addLeaveApplication(Request $request)
+    {            
+        $type =  $request->input('leave_type_id');  
+        $type_id = LeaveType::where('id','=',$type)->get();
+
+        $startDate = $request->input('startDate');      
+        $endDate = $request->input('endDate');
+
+        $leave_status = "Pending";
+        $reason = $request->input('reason');
+        $totalLeave = $request->input('totalLeave');
+        $created_by = Auth::user()->id;
+
+        DB::insert('insert into leave_employees
+        (user_id,id_leave_type,
+        leave_status,created_by) 
+        values
+        (?,?,
+        ?,?)',
+        [$created_by, $type_id,
+         $leave_status,$created_by]);
+
+        DB::insert('insert into leave_employees_requests
+        (user_id,id_leave_type,start_date,
+        end_date, total_days,
+        note, status, created_by) 
+        values
+        (?,?,?,
+        ?,?,
+        ?,?,?)',
+        [$created_by, $type_id, $startDate,
+        $endDate, $totalLeave,
+        $reason, $leave_status, $created_by]);
+
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->join('users','users.id','=','employees.user_id')
+        ->select('users.name as name',
+        'leave_balance.balance as balance',
+        'leave_balance.carry_forward as carry',
+        'leave_types.name as leave')
+        ->where('users.id', auth()->user()->id)
+        ->get();
+        return view('pages.employee.leave-balance', ['leavebalance'=>$leavebalance]);
     }
 }

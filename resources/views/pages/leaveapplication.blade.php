@@ -16,18 +16,20 @@
             <div class="card">
                 <div class="card-body">
                     <div class="container-fluid">
-                        <form id="leaveform" data-parsley-validate>
+                        <form  method="POST" action="{{ route('add_leave_application') }}" id="add_leave_application" data-parsley-validate>
+                            @csrf
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Leave Type</label>
                                 <div class="col-sm-8">
                                     <select name="type" id="type" onchange="document.getElementById('department-form').submit()" class="custom-select" required data-required-message="Please select leave type">                               
                                         <option selected disabled>Select Leave</option>
-                                        @foreach($types as $type)
-                                        <option value="{{$type->id}}">{{$type->name}}</option>
+                                        @foreach($leave as $type)
+                                        <option value='{"balance":{{$type['balance']}}, "id":{{$type['id']}}}''>{{$type['name']}}</option>
                                         @endforeach
                                     </select>
+                                    <input type="text" class="form-control" id="leave_type_id" name="leave_type_id" hidden>
                                 </div>
-                                <div class="col-sm-4"><span><b>5</b> days available</span></div>
+                                <div class="leavedays col-sm-4"><span><b>0.0</b> days available</span></div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 px-0">
@@ -45,33 +47,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-12 col-form-label">Period</label>
+                            <div class="form-group row" id="selectPeriod">
                                 <div class="col-sm-12">
-                                    <select class="custom-select" required>
-                                        <option selected disabled>Select Period</option>
-                                        <option value="1">Full Day</option>
-                                        <option value="2">AM</option>
-                                        <option value="3">PM</option>
-                                    </select>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" id="leaveFullDay" class="btn btn-outline-primary">Full Day</button>
+                                        <button type="button" id="leaveHalfDay" class="btn btn-outline-primary">AM</button>
+                                        <button type="button" id="leaveHalfDay" class="btn btn-outline-primary">PM</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Reason</label>
                                 <div class="col-sm-12">
-                                    <textarea class="form-control" name="reason" id="" rows="5" required oninvalid="this.setCustomValidity('Please Enter valid reason')"
+                                    <textarea class="form-control" name="reason" id="reason" rows="5" required oninvalid="this.setCustomValidity('Please Enter valid reason')"
                                         oninput="setCustomValidity('')"></textarea>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Attachment</label>
                                 <div class="col-sm-12">
-                                    <input type="file" class="form-control-file" required>
+                                    <input type="file" class="form-control-file">
                                 </div>
                             </div>
+                            <input type="text" class="form-control" id="totalLeave" name="totalLeave" hidden>
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Apply</button>
+                                    <button type="submit" class="btn btn-primary btn-block">Apply for
+                                               <span class="font-weight-bold totaldays">0.0</span> days
+                                    </button>
                                 </div>
                             </div>
                         </form>
