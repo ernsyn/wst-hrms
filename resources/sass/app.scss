@@ -1,6 +1,6 @@
-
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+// @import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
 
 // Variables
 @import 'variables';
@@ -8,7 +8,30 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+//NODE MODULES
+//Font Awesome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/scss/brands.scss";
+@import "~@fortawesome/fontawesome-free/scss/regular.scss";
+$fa-font-path: "../webfonts" !default;
+
+//datepicker
+@import "~jquery-ui/themes/base/all.css";
+
+//fullcalendar
+@import "~fullcalendar/dist/fullcalendar.min.css";
+
+//datatables
+@import "~datatables.net-bs4/css/dataTables.bootstrap4.min.css";
+@import "~datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css";
+
+//sweet alert 2
+@import "~sweetalert2/dist/sweetalert2.min.css";
+
+//parsleyjs
+@import "~parsleyjs/src/parsley.css";
+
+//Custom
+@import 'login';
+@import 'component';

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.base')
 
 @section('content')
     <div class="row justify-content-center">
@@ -14,6 +14,12 @@
                     @endif
 
                     You are logged in!
+
+                     @hasrole('super-admin')
+                        <div>I am a super admin!</div> 
+                    @else
+                        <div>I am not a super admin...</div>
+                    @endhasrole
                 </div>
             </div>
         </div>
