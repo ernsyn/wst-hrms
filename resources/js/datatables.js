@@ -25,12 +25,12 @@ $('#emergencyContactTable').DataTable({
         }
     ]
 });
-$('#employeeDependentTable').DataTable({
+$('#dependentTable').DataTable({
     "bInfo": true,
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "dependentdata",
+    "ajax": "emergencycontact",
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
@@ -43,11 +43,11 @@ $('#employeeDependentTable').DataTable({
             "data": "relationship"
         },
         {
-            "data": "dob"
+            "data": "contact_no"
         },
         {
             "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#dependentModal"><i class="far fa-edit"></i></button>'
+            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#emergencyModal"><i class="far fa-edit"></i></button>'
         }
     ]
 });

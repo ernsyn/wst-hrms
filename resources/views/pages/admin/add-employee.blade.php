@@ -55,6 +55,35 @@
                                 aria-selected="false">Profile</a>
                             <a class="nav-item nav-link" id="nav-company-tab" data-toggle="tab" href="#nav-company" role="tab" aria-controls="nav-company"
                                 aria-selected="true">Company</a>
+                                {{-- <a class="nav-item nav-link" id="nav-emergency-tab" data-toggle="tab" href="#nav-emergency" role="tab" aria-controls="nav-emergency"
+                                aria-selected="true">Emergency Contact</a>
+                                <a class="nav-item nav-link" id="nav-dependent-tab" data-toggle="tab" href="#nav-dependent" role="tab" aria-controls="nav-dependent"
+                                aria-selected="true">Dependent</a>
+
+
+                                <a class="nav-item nav-link" id="nav-immigration-tab" data-toggle="tab" href="#nav-immigration" role="tab" aria-controls="nav-immigration"
+                                aria-selected="true">Immigration</a>
+                                <a class="nav-item nav-link" id="nav-visa-tab" data-toggle="tab" href="#nav-visa" role="tab" aria-controls="nav-visa"
+                                aria-selected="true">Visa</a>
+                                <a class="nav-item nav-link" id="nav-job-tab" data-toggle="tab" href="#nav-job" role="tab" aria-controls="nav-job"
+                                aria-selected="true">Job</a>
+
+                                <a class="nav-item nav-link" id="nav-immigration-tab" data-toggle="tab" href="#nav-immigration" role="tab" aria-controls="nav-immigration"
+                                aria-selected="true">Bank</a>
+                                <a class="nav-item nav-link" id="nav-visa-tab" data-toggle="tab" href="#nav-visa" role="tab" aria-controls="nav-visa"
+                                aria-selected="true">Qualification</a>
+                                <a class="nav-item nav-link" id="nav-job-tab" data-toggle="tab" href="#nav-job" role="tab" aria-controls="nav-job"
+                                aria-selected="true">Attachment</a>
+
+                                <a class="nav-item nav-link" id="nav-immigration-tab" data-toggle="tab" href="#nav-immigration" role="tab" aria-controls="nav-immigration"
+                                aria-selected="true">Working Days</a>
+                                <a class="nav-item nav-link" id="nav-visa-tab" data-toggle="tab" href="#nav-visa" role="tab" aria-controls="nav-visa"
+                                aria-selected="true">Report To</a>
+                                <a class="nav-item nav-link" id="nav-job-tab" data-toggle="tab" href="#nav-job" role="tab" aria-controls="nav-job"
+                                aria-selected="true">History</a>
+
+                                <a class="nav-item nav-link" id="nav-job-tab" data-toggle="tab" href="#nav-job" role="tab" aria-controls="nav-job"
+                                aria-selected="true">Security</a> --}}
                         </div>
                     </nav>
                     {{-- Profile --}}

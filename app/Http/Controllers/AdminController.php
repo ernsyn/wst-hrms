@@ -372,7 +372,15 @@ class AdminController extends Controller
     }
 
 
+    public function displayEmployeeDependent()
+    {       
+        $id = Session::get('user_id');
+        $user = Employee::where('user_id', $id)->first();
+        $dependents = EmployeeDependent::where('emp_id',$user->id)->get();
+          return DataTables::of($dependents)->make(true);
 
+
+    }
     public function addEmergencyContact(Request $request)
     {          
         $user_id = Session::get('user_id');
@@ -418,38 +426,31 @@ class AdminController extends Controller
         $contact_number = $request->input('contact_number');       
        
         EmergencyContact::where('id',$emp_con_id)->update(array('contact_name' => $name,'relationship' => $relationship, 'contact_number' => $contact_number));
-        $contacts = EmergencyContact::where('emp_id',$emp_id)->get();  
+        $contacts = EmergencyContact::where('users.id',$user_id)->get();  
         return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
     }
 
-    public function displayEmployeeDependent()
-    {       
-        $id = Session::get('employee_id');
 
-        $dependents = Dependent::where('emp_id',$id)->get();
-        return view('pages.admin.employee-dependent', ['dependents'=>$dependents->sortByDesc('id')]);
-    }
 
     public function addEmployeeDependent(Request $request)
     {          
-        $emp_id = Session::get('employee_id');        
+
+        $user_id = Session::get('user_id');
+        $user = Employee::where('user_id', $user_id)->first();       
         $name = $request->input('name');
         $relationship = $request->input('relationship');      
-        $time = $request->input('altdobDate');
+        $altdobDate = $request->input('altdobDate');
         $created_by = auth()->user()->id;
 
-        echo '<script>';
-        echo 'console.log('. $date_of_birth  .')';
-        echo '</script>';
-       
-        DB::insert('insert into employee_dependent
-        (emp_id, dependent_name, dependent_relationship, date_of_birth, created_by) 
+         
+        DB::insert('insert into employee_dependents
+        (emp_id, name, relationship, dob, created_by) 
         values
         (?,?,?,?,?)',
-        [$emp_id, $name, $relationship, $time, $created_by]);
+        [$user->id, $name, $relationship, $altdobDate, $created_by]);
 
-        $dependents = Dependent::where('emp_id',$emp_id)->get();  
-        return view('pages.admin.employee-dependent', ['dependents'=>$dependents->sortByDesc('id')]);
+        $dependents = EmployeeDependent::where('emp_id',$user_id)->get();  
+        return view('pages.admin.profile-employee',['user'=>$user]); 
     }
 
     public function editEmployeeDependent(Request $request)

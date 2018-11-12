@@ -184,7 +184,7 @@
                         {{-- Emergency --}}
                         @include('pages.admin.emergency-contact')
                         {{-- Dependent --}}
-                        @include('pages.employee.employee-dependent')
+                        @include('pages.admin.employee-dependent')
                         {{-- Immigration --}}
                         @include('pages.employee.employee-immigration')
                         {{-- Visa --}}
