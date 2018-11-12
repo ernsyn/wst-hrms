@@ -8,7 +8,7 @@
                     <div class="card-body">
                         <i class="fas fa-user fa-4x float-right text-white"></i>
                         <h6 class="text-white text-capitalize">Total Employee</h6>
-                        <h1 class="text-white counter">187</h1>
+                        <h1 class="text-white">187</h1>
                     </div>
                 </div>
             </a>
@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <i class="fas fa-user-plus fa-4x float-right text-white"></i>
                         <h6 class="text-white text-capitalize">Joined This Month</h6>
-                        <h1 class="text-white counter">7</h1>
+                        <h1 class="text-white">7</h1>
                     </div>
                 </div>
             </a>
@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <i class="fas fa-calendar-check fa-4x float-right text-white"></i>
                         <h6 class="text-white text-capitalize">Leave Request</h6>
-                        <h1 class="text-white counter">9</h1>
+                        <h1 class="text-white">9</h1>
                     </div>
                 </div>
             </a>
@@ -41,7 +41,7 @@
                     <div class="card-body">
                         <i class="fas fa-map-marker-alt fa-4x float-right text-white"></i>
                         <h6 class="text-white text-capitalize">Total Branch</h6>
-                        <h1 class="text-white counter">13</h1>
+                        <h1 class="text-white">13</h1>
                     </div>
                 </div>
             </a>
