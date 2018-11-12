@@ -97,9 +97,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 });
 
 Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], function() {
-    Route::get('', function () {
-        return view('home');
-    })->name('home');
+    Route::get('', 'HomeController@index')->name('home');
     Route::get('/employee','EmployeeController@displayProfile')->name('employee');
     Route::get('profile','EmployeeController@displayProfile')->name('profile');
     Route::get('emergencycontactdata','EmployeeController@displayEmergencyContact')->name('emergencycontactdata');
@@ -135,5 +133,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function(
 });
 
 
-Route::get('home', 'HomeController@index')->name('home');
+
 
