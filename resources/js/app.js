@@ -22,6 +22,9 @@ import swal from 'sweetalert2';
 import 'parsleyjs';
 import 'jquery-mousewheel';
 
+import 'waypoints/lib/jquery.waypoints.min.js';
+import 'counterup/jquery.counterup.min.js';
+
 // window.Vue = require('vue');
 
 /**
@@ -47,6 +50,10 @@ $('.button-left').click(function(){
 
 $(".card").fadeIn();
 
+$('.counter').counterUp({
+    delay: 10,
+    time: 1000
+});
 
 
 $('.scrollable').mousewheel(function (e, delta) {
@@ -56,7 +63,7 @@ $('.scrollable').mousewheel(function (e, delta) {
 
 
 
-$("#leaveform").parsley({
+$("#form_validate").parsley({
     errorClass: 'is-invalid',
     successClass: 'is-valid', // Comment this option if you don't want the field to become green when valid. Recommended in Google material design to prevent too many hints for user experience. Only report when a field is wrong.
     errorsWrapper: '<span class="form-text text-danger"></span>',
@@ -88,11 +95,48 @@ $('#endDate').datepicker({
     minDate: today,
     onSelect: function (selectedDate) {
         $("#startDate").datepicker("option", "maxDate", selectedDate);
+
+        var start = $("#startDate").datepicker("getDate");
+        var end = $("#endDate").datepicker("getDate");
+        var days = ((end - start) / (1000 * 60 * 60 * 24))+1;
+        $( "span.totaldays").replaceWith( "<span class='totaldays'><b>"+days+"</b> days</span>" );
+        $("#totalLeave").val(days);
+
+        if(days>1)
+        {
+            $("#selectPeriod").hide();
+        }
+        else
+        {
+            $("#selectPeriod").show();
+        }
+
     },
     onClose: function () {
         $(this).parsley().validate();
     }
 });
+//change day according to selected value
+$('#type').on('change', function() {
+
+    var txt = this.value;
+    var obj = JSON.parse(txt);
+
+    $( "div.leavedays" ).replaceWith( "<div class='leavedays col-sm-4'><b>"+ obj.balance +"</b> days available</span></div>" );
+    $("#leaveTypeId").val(obj.id);
+    $("#leaveBalance").val(obj.balance);
+});
+
+$("#leaveHalfDay").click(function(){  
+        $( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
+        $("#totalLeave").val(0.5);
+});
+
+$("#leaveFullDay").click(function(){  
+    $( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
+    $("#totalLeave").val(1);
+});
+
 $('#dobDate').datepicker({
     altField: "#altdobDate",
     altFormat: 'yy-mm-dd',
@@ -535,6 +579,15 @@ $('#dependentupdate').click(function () {
     })
 });
 
+$('#updateCostCentre').click(function () {
+    swal({
+        title: 'Success!',
+        text: 'Change has been saved.',
+        type: 'success',
+        confirmButtonText: 'Cool'
+    })
+});
+
 //update employee dependent
 $('#updateDependentPopup').on('show.bs.modal', function (event) {
 
@@ -706,7 +759,6 @@ $('#updateCostCentrePopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #payroll_type').val(payroll_type)
 })
 
-
 $('#updateGradePopup').on('show.bs.modal', function (event) {
 
     var button = $(event.relatedTarget)
@@ -820,4 +872,3 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #phone').val(phone)
 
 })
-

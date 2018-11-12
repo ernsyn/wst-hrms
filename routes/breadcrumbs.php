@@ -17,6 +17,18 @@ Breadcrumbs::for('home', function ($trail) {
     $trail->push('Home', route('home'));
 });
 
+// Home > Employee > Application Leave
+Breadcrumbs::for('employee/leaveapplication', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Application', route('employee/leaveapplication'));
+});
+
+// Home > Employee > Application Leave
+Breadcrumbs::for('employee/leavebalance', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Balance', route('employee/leavebalance'));
+});
+
 // Home > Employee List
 Breadcrumbs::for('admin/employee_list', function ($trail) {
     $trail->parent('home');
@@ -42,6 +54,7 @@ Breadcrumbs::for('employee/add', function ($trail) {
     $trail->parent('home');
     $trail->push('User Add', route('employee/add'));
 });
+
 // Home > Setup
 Breadcrumbs::for('setup', function ($trail) {
     $trail->parent('home');
@@ -156,6 +169,12 @@ Breadcrumbs::for('admin/leaveholiday', function ($trail) {
 Breadcrumbs::for('add_holiday', function ($trail) {
     $trail->parent('admin.home');
     $trail->push('Leave Holiday', route('add_holiday'));
+});
+
+// Home > Admin > Leave Application
+Breadcrumbs::for('add_leave_application', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Application', route('add_leave_application'));
 });
 
 // Home > Admin > Leave Balance
