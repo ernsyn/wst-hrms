@@ -1,6 +1,3 @@
-@extends('layouts.app') 
-@section('content')
-
 <!-- ADD -->
 <div class="modal fade" id="addDependentPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -111,15 +108,13 @@
     </div>
 </div>
 
-<div class="p-4">
-    <div class="card py-4">
-        <div class="card-body">
-            <div class="row pb-3">
+<div class="tab-pane fade show p-3" id="nav-emergency" role="tabpanel" aria-labelledby="nav-dependent-tab">
+        <div class="row pb-3">
                 <div class="col-auto mr-auto"></div>
                 <div class="col-auto">
                     <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addDependentPopup">
-                                    Add Dependent
-                                </button>
+                        Add Dependent
+                    </button>
                 </div>
             </div>
             <div class="row">
@@ -132,22 +127,6 @@
                             <th>Date of Birth</th>
                             <th>Action</th>
                         </tr>
-
-                        @foreach($dependents as $row)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{$row['dependent_name']}}</td>
-                            <td>{{$row['dependent_relationship']}}</td>
-                            <td>{{$row['date_of_birth']}}</td>
-                            <td><button class="btn btn-outline-primary waves-effect" data-toggle="modal" data-dependent-id="{{$row['id']}}"
-                                    data-dependent-name="{{$row['dependent_name']}}" data-dependent-relationship="{{$row['dependent_relationship']}}"
-                                    data-date-of-birth="{{$row['date_of_birth']}}" data-target="#updateDependentPopup">EDIT</button></td>
-                        </tr>
-                        @endforeach
-                    </table>
-                </div>
+                    </thead>
+                </table>
             </div>
-        </div>
-    </div>
-</div>
-@endsection
