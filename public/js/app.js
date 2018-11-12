@@ -47637,11 +47637,44 @@ $('#endDate').datepicker({
     minDate: today,
     onSelect: function onSelect(selectedDate) {
         $("#startDate").datepicker("option", "maxDate", selectedDate);
+
+        var start = $("#startDate").datepicker("getDate");
+        var end = $("#endDate").datepicker("getDate");
+        var days = (end - start) / (1000 * 60 * 60 * 24) + 1;
+        $("span.totaldays").replaceWith("<span class='totaldays'><b>" + days + "</b> days</span>");
+        $("#totalLeave").val(days);
+
+        if (days > 1) {
+            $("#selectPeriod").hide();
+        } else {
+            $("#selectPeriod").show();
+        }
     },
     onClose: function onClose() {
         $(this).parsley().validate();
     }
 });
+//change day according to selected value
+$('#type').on('change', function () {
+
+    var txt = this.value;
+    var obj = JSON.parse(txt);
+
+    $("div.leavedays").replaceWith("<div class='leavedays col-sm-4'><b>" + obj.balance + "</b> days available</span></div>");
+    $("#leaveTypeId").val(obj.id);
+    $("#leaveBalance").val(obj.balance);
+});
+
+$("#leaveHalfDay").click(function () {
+    $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
+    $("#totalLeave").val(0.5);
+});
+
+$("#leaveFullDay").click(function () {
+    $("span.totaldays").replaceWith("<span class='totaldays'><b>1</b> days</span>");
+    $("#totalLeave").val(1);
+});
+
 $('#dobDate').datepicker({
     altField: "#altdobDate",
     altFormat: 'yy-mm-dd',

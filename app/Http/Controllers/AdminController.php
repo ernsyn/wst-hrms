@@ -130,16 +130,14 @@ class AdminController extends Controller
         'leave_balance.carry_forward as carry',
         'leave_types.name as leave')
         ->get();
-        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance]);
-
-        
+        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance]);        
     }
+
+
     public function displayLeaveHoliday()
     {    
         $leaveholiday = Holiday::all();
         return view('pages.admin.leave-holiday', ['leaveholiday'=>$leaveholiday]);
-
-        
     }
 
     public function addHoliday(Request $request)
@@ -497,11 +495,11 @@ class AdminController extends Controller
     {
         
         $user = Employee::join('users','users.emp_id','=','employees.id')
-        ->join('countries','countries.id','=','employee.citizenship')
+        // ->join('countries','countries.id','=','employee.citizenship')
         ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
         //->join('employee_grade','employee_jobs.id_grade','=','employee_grade.id')
         ->select('employee.name','users.email', 'employees.contact_no', 'employees.address', 'employees.ic_no', 'employees.gender', 'employees.dob',
-        'employees.marital_status', 'employees.race', 'employees.total_child', 'employees.driver_license_number', 'employees.license_expiry_date','users.emp_id',
+        'employees.marital_status', 'employees.race', 'employees.total_children as total_child', 'employees.driver_license_number', 'employees.license_expiry_date','users.emp_id',
         'employees.epf_no','employees.tax_no','employees.basic_salary','countries.citizenship')
         ->where('users.id', auth()->user()->id)
         ->first();
