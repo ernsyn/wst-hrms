@@ -19,12 +19,7 @@
                     <div class="col-xl-8">
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }} form-control-lg font-weight-bold" placeholder="Name" name="name" value="{{ old('name') }}" required>
-                                @if ($errors->has('name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
-                                </span>
-                                @endif                            
+                                    <input type="text" readonly class="text-capitalize form-control-plaintext form-control-lg font-weight-bold" value="{{$user->name}}">                         
                             </div>
                         </div>
 

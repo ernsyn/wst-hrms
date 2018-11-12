@@ -191,14 +191,21 @@ class AdminController extends Controller
     }
 
     public function displayAddEmployeeProfile($id)
-    {
+    {        $user_id = Session::get('user_id');
         $countries = Country::all();
         $departments = Department::all();
         $position = EmployeePosition::all();
         $companies = Company::all();
+        //$users = User::where('id', $id)->first();
+
+        $user = User::select('users.name as name')
+        ->where('users.id',$user_id)
+        ->first();
+
+
         Session::put('user_id', $id);
 
-        return view('pages.admin.add-employee', ['countries'=>$countries, 'departments'=>$departments, 'position'=>$position,'companies'=>$companies]);
+        return view('pages.admin.add-employee', ['countries'=>$countries, 'departments'=>$departments, 'position'=>$position,'companies'=>$companies,'user'=>$user]);
     }
 
     
@@ -270,7 +277,8 @@ class AdminController extends Controller
 
     public function displayUserList()
     {       
-        $userlist = User::orderBy('id', 'Desc')->get();
+       // $userlist = User::orderBy('id', 'Desc')->get();
+        $userlist =User::whereHas("roles", function($q){ $q->where("name", "employee"); })->get();
         
         return view('pages.admin.user-list', ['userlist'=>$userlist]);
     }
@@ -363,14 +371,7 @@ class AdminController extends Controller
         return DataTables::of($contacts)->make(true);
     }
 
-    // public function displayEmployeeEmergencyContact()
-    // {
-    //     $id = Session::get('user_id');
 
-    //     $contacts = EmployeeEmergencyContact::where('emp_id',$id)->get();
-    //     // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
-    //     return DataTables::of($contacts)->make(true);
-    // }
 
     public function addEmergencyContact(Request $request)
     {          
