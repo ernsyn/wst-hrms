@@ -116,8 +116,8 @@ $('#type').on('change', function() {
     var obj = JSON.parse(txt);
 
     $( "div.leavedays" ).replaceWith( "<div class='leavedays col-sm-4'><b>"+ obj.balance +"</b> days available</span></div>" );
-    $("#totalLeave").val(obj.balance);
-    $("#leave_type_id").val(obj.id);
+    $("#leaveTypeId").val(obj.id);
+    $("#leaveBalance").val(obj.balance);
 });
 
 $("#leaveHalfDay").click(function(){  

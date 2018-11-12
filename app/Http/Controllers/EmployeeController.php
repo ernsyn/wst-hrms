@@ -201,7 +201,7 @@ class EmployeeController extends Controller
 
     public function addLeaveApplication(Request $request)
     {            
-        $type =  $request->input('leave_type_id');  
+        $type =  $request->input('leaveTypeId');  
         $type_id = LeaveType::where('id','=',$type)->first();
 
         $startDate = $request->input('altStart');      
@@ -209,16 +209,17 @@ class EmployeeController extends Controller
 
         $leave_status = "Pending";
         $reason = $request->input('reason');
+        $leaveBalance = $request->input('leaveBalance');
         $totalLeave = $request->input('totalLeave');
         $created_by = Auth::user()->id;
 
         DB::insert('insert into leave_employees
-        (user_id,id_leave_type,
+        (user_id,id_leave_type,start_balance,
         leave_status,created_by) 
         values
-        (?,?,
+        (?,?,?,
         ?,?)',
-        [$created_by, $type_id->id,
+        [$created_by, $type_id->id, $leaveBalance,
          $leave_status,$created_by]);
 
         DB::insert('insert into leave_employees_requests

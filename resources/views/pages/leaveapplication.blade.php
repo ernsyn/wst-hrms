@@ -27,7 +27,8 @@
                                         <option value='{"balance":{{$type['balance']}}, "id":{{$type['id']}}}''>{{$type['name']}}</option>
                                         @endforeach
                                     </select>
-                                    <input type="text" class="form-control" id="leave_type_id" name="leave_type_id" hidden>
+                                    <input type="text" class="form-control" id="leaveTypeId" name="leaveTypeId" hidden>
+                                    <input type="text" class="form-control" id="leaveBalance" name="leaveBalance" hidden>
                                 </div>
                                 <div class="leavedays col-sm-4"><span><b>0.0</b> days available</span></div>
                             </div>
@@ -36,14 +37,14 @@
                                     <label class="col-sm-12 col-form-label">Start Date</label>
                                     <div class="col-sm-12">
                                         <input type="text" class="form-control" id="startDate" readonly required data-parsley-error-message="Please choose Start Date">
-                                        <input type="text" class="form-control" name="altStart" id="altStart">
+                                        <input type="text" class="form-control" name="altStart" id="altStart" hidden>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 px-0">
                                     <label class="col-sm-12 col-form-label">End Date</label>
                                     <div class="col-sm-12">
                                         <input type="text" class="form-control" id="endDate" readonly required>
-                                        <input type="text" class="form-control" name="altEnd" id="altEnd">
+                                        <input type="text" class="form-control" name="altEnd" id="altEnd" hidden>
                                     </div>
                                 </div>
                             </div>
