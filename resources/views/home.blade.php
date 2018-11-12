@@ -60,24 +60,7 @@
             <div class="card">
                 <div class="card-header">Recent Leave Request</div>
                 <div class="card-body bulletin p-4">
-                    {{-- @foreach($leaverequest as $row)
-                    <div class="row">
-                        <div class="col-auto">
-                            <div class="float-right">{{$loop->iteration}}.</div>
-                        </div>
-                        <div class="col">
-                            <div>{{$row['name']}}</div>
-                            <div>{{$row['leave_type']}}</div>
-                            {{--
-                            <div>{{$row['start_date']}} - {{$row['end_date']}}</div> --}}
-                            {{-- <div>{{$row['total_days']}} days</div>
-                            <div>{{$row['status']}}</div>
-                            <div class="dropdown-divider"></div>
-                        </div>
-                    </div> --}}
-
-                    {{-- @endforeach --}}
-                                </div>
+                </div>
             </div>
         </div>
     </div>

@@ -32,5 +32,9 @@ $fa-font-path: "../webfonts" !default;
 // SECTION: App Styles
 @import 'global';
 
+@import 'sidebar';
+@import 'navbar';
+@import 'breadcrumbs';
+
 @import 'login';
 @import 'component';

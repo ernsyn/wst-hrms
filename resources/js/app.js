@@ -48,7 +48,7 @@ if (performance.navigation.type == 2) {
     location.reload(true);
 }
 
-$('.button-left').click(function () {
+$('#btn-toggle-menu').click(function () {
     $('#sidebar').toggleClass('fliph');
     $('.content').toggleClass('content-active');
 });
