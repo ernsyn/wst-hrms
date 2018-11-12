@@ -17598,6 +17598,10 @@ select:-webkit-autofill:focus {
   padding: 0px 7px;
 }
 
+#page-title {
+  font-weight: 600;
+}
+
 #page-login {
   min-height: 100%;
   width: 100%;
@@ -17706,6 +17710,7 @@ ol.breadcrumb {
   border-radius: 0;
   padding: 18px;
   height: 60px;
+  font-weight: 600;
 }
 
 .justify-end ol.breadcrumb {
