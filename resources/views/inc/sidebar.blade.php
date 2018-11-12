@@ -30,6 +30,33 @@
             </li>              
                 </ul>            
         </li>
+        <!-- Payroll -->
+        <li class="{{ request()->is('') ? 'active' : '' }}">
+            <a href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <div class="row">
+                    <div class="col-1">
+                        <i class="far fa-credit-card"></i>
+                    </div>
+                    <div class="col-10">
+                        PAYROLL
+                    </div>
+                </div>
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('') ? 'show' : '' }}" id="payrollSubmenu">
+                <li class="{{ request()->is('') ? 'active' : '' }}">
+                    <a href="">Payroll</a>
+                </li>
+                <li class="{{ request()->is('') ? 'active' : '' }}">
+                    <a href="">Government Reports</a>
+                </li>
+                <li class="{{ request()->is('') ? 'active' : '' }}">
+                    <a href="">Reports</a>
+                </li>
+                <li class="{{ request()->is('') ? 'active' : '' }}">
+                    <a href="">Payroll Setup</a>
+                </li>
+            </ul>
+        </li>
         {{-- Admin Setup --}}
         <li class="{{ request()->is('setup/company','setup/cost-centre','setup/department','setup/branch','setup/team','setup/position','setup/grade') ? 'active' : '' }}">
             <a href="#setupSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
