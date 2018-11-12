@@ -116,7 +116,7 @@
                     <div class="col-auto mr-auto"></div>
                     <div class="col-auto">
                         <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#dependentPopup">
-                            Add Contact
+                            Add Dependent
                         </button>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     <th>No</th>
                     <th>Name</th>
                     <th>Relationship</th>
-                    <th>Contact Number</th>
+                    <th>Dob</th>
                     <th>Action</th>
                 </tr>
             </thead>

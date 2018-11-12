@@ -30,7 +30,7 @@ $('#dependentTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "emergencycontact",
+    "ajax": "dependent",
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
@@ -43,11 +43,11 @@ $('#dependentTable').DataTable({
             "data": "relationship"
         },
         {
-            "data": "contact_no"
+            "data": "dob"
         },
         {
             "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#emergencyModal"><i class="far fa-edit"></i></button>'
+            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#dependentModal"><i class="far fa-edit"></i></button>'
         }
     ]
 });
