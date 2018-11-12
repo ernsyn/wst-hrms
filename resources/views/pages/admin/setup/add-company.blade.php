@@ -1,11 +1,10 @@
-@extends('layouts.app') 
-@section('pageTitle', 'Employee Registration') 
+@extends('layouts.app')
 @section('content')
 <div class="p-4">
     <div class="card py-4 shadow-sm">
         <div class="card-body">
             <div class="container-fluid">
-                <form method="POST" action="{{ route('add_company') }}" id="register_employee">
+                <form method="POST" action="{{ route('add_company') }}" id="form_validate"  data-parsley-validate>
                     @csrf
                     <div class="row">
                         <div class="col-xl-8">

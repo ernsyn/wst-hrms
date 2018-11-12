@@ -52,10 +52,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::get('employee_bank', 'AdminController@displayEmployeeBank')->name('admin/employee_bank');
     Route::get('employee-qualification','AdminController@displayQualification')->name('admin/employee-qualification');
     Route::get('employee_list', 'AdminController@displayAllEmployee')->name('admin/employee_list');
-    Route::get('user_list', 'EmployeeDataController@index')->name('admin/user_list');
+    // Route::get('user_list', 'EmployeeDataController@index')->name('admin/user_list');
     Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
     Route::get('/admin/history', 'AdminController@displayHistory')->name('admin/history');
     Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('admin/profile-employee/{id}');
+    Route::get('user-list', 'AdminController@displayUserList')->name('admin/user_list');
+    Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
+    
 
     Route::post('edit_employee_dependent','AdminController@editEmployeeDependent')->name('edit_employee_dependent');
     Route::post('edit_emergency_contact','AdminController@editEmergencyContact')->name('edit_emergency_contact');
@@ -66,6 +69,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('edit_qualification_education','AdminController@editQualificationEducation')->name('edit_qualification_education');
     Route::post('edit_qualification_skills','AdminController@editQualificationSkills')->name('edit_qualification_skills');
     Route::post('edit_cost_centre','AdminController@editCostCentre')->name('edit_cost_centre');
+    Route::post('edit_grade','AdminController@editGrade')->name('edit_grade');
+    Route::post('edit_position','AdminController@editPosition')->name('edit_position');
+    Route::post('edit_department','AdminController@editDepartment')->name('edit_department');
+    Route::post('edit_team','AdminController@editTeam')->name('edit_team');
+    Route::post('edit_branch','AdminController@editBranch')->name('edit_branch');
+    Route::post('edit_company','AdminController@editCompany')->name('edit_company');
 
 
     Route::post('add_emergency_contact','AdminController@addEmergencyContact')->name('add_emergency_contact');
@@ -79,12 +88,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('add_report_to','AdminController@addReportTo')->name('add_report_to');
     Route::post('add_cost_centre','AdminController@addCostCentre')->name('add_cost_centre');
     Route::post('add_department','AdminController@addDepartment')->name('add_department');
+    Route::post('add_branch','AdminController@addBranch')->name('add_branch');
     Route::post('add_team','AdminController@addTeam')->name('add_team');
     Route::post('add_position','AdminController@addPosition')->name('add_position');
     Route::post('add_grade','AdminController@addGrade')->name('add_grade');
     Route::post('add_company','AdminController@addSetupCompany')->name('add_company');
     Route::post('add_holiday','AdminController@addHoliday')->name('add_holiday');
-    Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
+    Route::post('register_employee','AdminController@addProfile')->name('register_employee');
 
     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
     Route::get('leavetype','AdminController@displayEmployeeLeave')->name('admin/leavetype');

@@ -20,16 +20,19 @@
                 </div>
             </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/employee_list') ? 'show' : '' }}" id="employeeSetup">
-            <li class="{{ request()->is('admin/employee_list') ? 'active' : '' }}">
-            <a href="{{ route('admin/employee_list') }}">Employee List</a>
-        </li>              
-            </ul>
-            <ul class="collapse list-unstyled {{ request()->is('admin/employee/add') ? 'show' : '' }}" id="employeeSetup">
+
+
                 <li class="{{ request()->is('admin/employee/add') ? 'active' : '' }}">
-                <a href="{{ route('employee/add') }}">Employee Add</a>
-            </li>              
-                </ul>            
+                    <a href="{{ route('employee/add') }}">Employee Add</a>
+                </li>
+        
+                <li class="{{ request()->is('admin/user-list') ? 'active' : '' }}">
+                    <a href="{{ route('admin/user_list') }}">User List</a>
+                </li>            
+            </ul>
+          
         </li>
+        
         {{-- Admin Setup --}}
         <li class="{{ request()->is('setup/company','setup/cost-centre','setup/department','setup/branch','setup/team','setup/position','setup/grade') ? 'active' : '' }}">
             <a href="#setupSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
