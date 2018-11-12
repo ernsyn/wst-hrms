@@ -17,6 +17,15 @@ class UsersTableSeeder extends Seeder
             'email' => 'superadmin@wisetech.com',
         ]);
 
-   
+        $user->assignRole('super-admin');
+
+        $user = App\User::create([
+            'name' => 'SyaShaFaLani',
+            'password' => bcrypt('mimisyasyafalani'),
+            'email' => 'sha_cyril@wisetech.com',
+        ]);
+
+        $user->assignRole('employee');
+
     }
 }

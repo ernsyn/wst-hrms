@@ -11,10 +11,8 @@
                             <th>No</th>
                             <th>Employee ID</th>
                             <th>Full Name</th>
-                            <th>Cost Centre</th>
-                            <th>Department</th>
-                            <th>Position</th>
-                            <th>Joined Date</th>
+                            <th>Contact Number</th>
+                            <th>Email</th>
                             <th>Action</th>
                         </tr>
 
@@ -27,11 +25,9 @@
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$row['user_id']}}</td>
                                 <td>{{$row['name']}}</td>
-                                <td>{{$row['cost_centre']}}</td>
-                                <td>{{$row['department_name']}}</td>
-                                <td>{{$row['position_name']}}</td>
-                                <td>{{$row['start_date']}}</td>
-                                <td>Action</td>
+                                <td>{{$row['contact_no']}}</td>
+                                <td>{{$row['email']}}</td>
+                                <td> <button onclick="window.location='{{ url('/admin/profile-employee/'.$row['id']) }}';" class="btn btn-default">Edit</button></td>
                             </tr>
                             @endforeach
                     </table>

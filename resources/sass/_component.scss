@@ -160,6 +160,11 @@ table.dataTable {
         background-color: $blue;
         white-space: nowrap;
     }
+}
 
+//10. bulletin
+.bulletin {
+    overflow-y: scroll;
+    height: 400px;
 }
 
