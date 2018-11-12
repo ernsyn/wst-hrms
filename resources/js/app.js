@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -12,15 +11,26 @@ import 'fullcalendar';
 import 'datatables.net-bs4';
 import 'datatables.net-buttons-bs4';
 import 'datatables.net-responsive-bs4';
-
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import 'datatables.net-buttons/js/buttons.colVis.js';
 import 'datatables.net-buttons/js/buttons.print.js';
 import 'datatables.net-buttons/js/buttons.flash.js';
 import 'datatables.net-buttons/js/buttons.html5.js';
 
+
+
+
 import swal from 'sweetalert2';
 import 'parsleyjs';
 import 'jquery-mousewheel';
+
+import 'waypoints/lib/jquery.waypoints.min.js';
+import 'counterup/jquery.counterup.min.js';
+
+import 'moment'
+import Chart from 'chart.js';
 
 // window.Vue = require('vue');
 
@@ -36,18 +46,21 @@ import 'jquery-mousewheel';
 //     el: '#app'
 // });
 
-if(performance.navigation.type == 2){
+if (performance.navigation.type == 2) {
     location.reload(true);
 }
 
-$('.button-left').click(function(){
+$('.button-left').click(function () {
     $('#sidebar').toggleClass('fliph');
     $('.content').toggleClass('content-active');
 });
 
 $(".card").fadeIn();
 
-
+$('.counter').counterUp({
+    delay: 10,
+    time: 1000
+});
 
 $('.scrollable').mousewheel(function (e, delta) {
     this.scrollLeft -= (delta * 40);
@@ -149,15 +162,20 @@ $('#emergencyContactTable').DataTable({
     "serverSide": true,
     "bStateSave": true,
     "ajax": "emergencycontact",
-    "columns": [
-        {
+    "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
-        { "data": "name" },
-        { "data": "relationship" },
-        { "data": "contact_no" },
+        {
+            "data": "name"
+        },
+        {
+            "data": "relationship"
+        },
+        {
+            "data": "contact_no"
+        },
         {
             "data": null, // can be null or undefined
             "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#emergencyModal"><i class="far fa-edit"></i></button>'
@@ -170,15 +188,20 @@ $('#employeeDependentTable').DataTable({
     "serverSide": true,
     "bStateSave": true,
     "ajax": "dependentdata",
-    "columns": [
-        {
+    "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
-        { "data": "name" },
-        { "data": "relationship" },
-        { "data": "dob" },
+        {
+            "data": "name"
+        },
+        {
+            "data": "relationship"
+        },
+        {
+            "data": "dob"
+        },
         {
             "data": null, // can be null or undefined
             "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#dependentModal"><i class="far fa-edit"></i></button>'
@@ -191,17 +214,26 @@ $('#employeeImmiTable').DataTable({
     "serverSide": true,
     "bStateSave": true,
     "ajax": "employeeimmigrationdata",
-    "columns": [
-        {
+    "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
-        { "data": "document" },
-        { "data": "passport_no" },
-        { "data": "issued_by" },
-        { "data": "issued_date" },
-        { "data": "expiry_date" },
+        {
+            "data": "document"
+        },
+        {
+            "data": "passport_no"
+        },
+        {
+            "data": "issued_by"
+        },
+        {
+            "data": "issued_date"
+        },
+        {
+            "data": "expiry_date"
+        },
         {
             "data": null, // can be null or undefined
             "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#immigrationModal"><i class="far fa-edit"></i></button>'
@@ -214,17 +246,26 @@ $('#employeeVisaTable').DataTable({
     "serverSide": true,
     "bStateSave": true,
     "ajax": "employeevisadata",
-    "columns": [
-        {
+    "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
-        { "data": "visa_number" },
-        { "data": "family_members" },
-        { "data": "issued_by" },
-        { "data": "issued_date" },
-        { "data": "expiry_date" },
+        {
+            "data": "visa_number"
+        },
+        {
+            "data": "family_members"
+        },
+        {
+            "data": "issued_by"
+        },
+        {
+            "data": "issued_date"
+        },
+        {
+            "data": "expiry_date"
+        },
         {
             "data": null, // can be null or undefined
             "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#visaModal"><i class="far fa-edit"></i></button>'
@@ -237,20 +278,35 @@ $('#employeeJobTable').DataTable({
     "serverSide": true,
     "bStateSave": true,
     "ajax": "jobdata",
-    "columns": [
-        {
+    "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
-        { "data": "created_on" },
-        { "data": "positionname" },
-        { "data": "departname" },
-        { "data": "teamname" },
-        { "data": "categoryname" },
-        { "data": "gradename" },
-        { "data": "basic_salary" },
-        { "data": "status" },
+        {
+            "data": "created_on"
+        },
+        {
+            "data": "positionname"
+        },
+        {
+            "data": "departname"
+        },
+        {
+            "data": "teamname"
+        },
+        {
+            "data": "categoryname"
+        },
+        {
+            "data": "gradename"
+        },
+        {
+            "data": "basic_salary"
+        },
+        {
+            "data": "status"
+        },
         {
             "data": null, // can be null or undefined
             "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#jobModal"><i class="far fa-edit"></i></button>'
@@ -264,15 +320,20 @@ $('#employeeBankTable').DataTable({
     "bStateSave": true,
     "ajax": "",
     // "ajax": "bankdata",
-    "columns": [
-        {
+    "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
-        { "data": "bank_code" },
-        { "data": "acc_no" },
-        { "data": "status" },
+        {
+            "data": "bank_code"
+        },
+        {
+            "data": "acc_no"
+        },
+        {
+            "data": "status"
+        },
         {
             "data": null, // can be null or undefined
             "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#bankModal"><i class="far fa-edit"></i></button>'
@@ -313,34 +374,55 @@ $('#employeeHistoryTable').DataTable();
 // Datatables Setup
 $('#setupCompanyTable').DataTable({
     responsive: true,
-    stateSave:true,
+    stateSave: true,
     dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
+        "<'row'<'col-md-6'><'col-md-6'>>" +
+        "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
+    buttons: [{
             extend: 'copy',
             text: '<i class="fas fa-copy fa-fw"></i>',
             className: 'btn-outline-danger',
-            titleAttr: 'Copy'
+            titleAttr: 'Copy',
+            exportOptions: {
+                columns: ':visible'
+            }
         },
         {
             extend: 'colvis',
             text: '<i class="fas fa-search fa-fw"></i>',
             className: 'clearfix btn-outline-primary rounded-0',
-            titleAttr: 'Show/Hide Column'
+            titleAttr: 'Show/Hide Column',
+            exportOptions: {
+                columns: ':visible'
+            }
         },
         {
             extend: 'csv',
             text: '<i class="fas fa-file-alt fa-fw"></i>',
             className: 'btn-outline-success',
-            titleAttr: 'Export CSV'
+            titleAttr: 'Export CSV',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            download: 'open',
+            exportOptions: {
+                columns: ':visible'
+            },
+            text: '<i class="fas fa-file-pdf fa-fw"></i>',
+            className: 'btn-outline-danger',
+            titleAttr: 'Export PDF'
         },
         {
             extend: 'print',
             text: '<i class="fas fa-print fa-fw"></i>',
             className: 'btn-outline-info',
-            titleAttr: 'Print'
+            titleAttr: 'Print',
+            exportOptions: {
+                columns: ':visible'
+            }
         },
     ]
 
@@ -349,12 +431,11 @@ $('#setupCompanyTable').DataTable({
 
 $('#setupJobconfigureCostCentreTable').DataTable({
     responsive: true,
-    stateSave:true,
+    stateSave: true,
     dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
+        "<'row'<'col-md-6'><'col-md-6'>>" +
+        "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
+    buttons: [{
             extend: 'copy',
             text: '<i class="fas fa-copy fa-fw"></i>',
             className: 'btn-outline-danger',
@@ -381,13 +462,13 @@ $('#setupJobconfigureCostCentreTable').DataTable({
     ]
 
 });
-$('#setupJobconfigureDeptTable').DataTable( { responsive: true,
-    stateSave:true,
+$('#setupJobconfigureDeptTable').DataTable({
+    responsive: true,
+    stateSave: true,
     dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
+        "<'row'<'col-md-6'><'col-md-6'>>" +
+        "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
+    buttons: [{
             extend: 'copy',
             text: '<i class="fas fa-copy fa-fw"></i>',
             className: 'btn-outline-danger',
@@ -414,13 +495,13 @@ $('#setupJobconfigureDeptTable').DataTable( { responsive: true,
     ]
 
 });
-$('#setupJobconfigureTeamTable').DataTable({ responsive: true,
-    stateSave:true,
+$('#setupJobconfigureTeamTable').DataTable({
+    responsive: true,
+    stateSave: true,
     dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
+        "<'row'<'col-md-6'><'col-md-6'>>" +
+        "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
+    buttons: [{
             extend: 'copy',
             text: '<i class="fas fa-copy fa-fw"></i>',
             className: 'btn-outline-danger',
@@ -449,13 +530,13 @@ $('#setupJobconfigureTeamTable').DataTable({ responsive: true,
 });
 $('#setupJobconfigurePositionTable').DataTable();
 $('#setupJobconfigureGradeTable').DataTable();
-$('#setupUserTable').DataTable({ responsive: true,
-    stateSave:true,
+$('#setupUserTable').DataTable({
+    responsive: true,
+    stateSave: true,
     dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
+        "<'row'<'col-md-6'><'col-md-6'>>" +
+        "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
+    buttons: [{
             extend: 'copy',
             text: '<i class="fas fa-copy fa-fw"></i>',
             className: 'btn-outline-danger',
@@ -482,13 +563,13 @@ $('#setupUserTable').DataTable({ responsive: true,
     ]
 
 });
-$('#setupBranchTable').DataTable( { responsive: true,
-    stateSave:true,
+$('#setupBranchTable').DataTable({
+    responsive: true,
+    stateSave: true,
     dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
+        "<'row'<'col-md-6'><'col-md-6'>>" +
+        "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
+    buttons: [{
             extend: 'copy',
             text: '<i class="fas fa-copy fa-fw"></i>',
             className: 'btn-outline-danger',
@@ -682,7 +763,7 @@ $('#updateTeamPopup').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
     var id = button.data('team-id')
     var team_name = button.data('name')
-    
+
     var modal = $(this)
 
     modal.find('.modal-body #team_id').val(id)
@@ -791,13 +872,13 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     var epf_no = button.data('company-epf-no')
     var socso_no = button.data('company-socso-no')
     var eis_no = button.data('company-eis-no')
-  
+
     var url = button.data('company-url')
     var address = button.data('company-address')
     var code = button.data('company-code')
     var registration_no = button.data('company-registration')
     var phone = button.data('company-phone')
-  
+
 
 
     var modal = $(this)
@@ -811,7 +892,7 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #epf_no').val(epf_no)
 
     modal.find('.modal-body #socso_no').val(socso_no)
-    modal.find('.modal-body #eis_no').val(eis_no) 
+    modal.find('.modal-body #eis_no').val(eis_no)
 
     modal.find('.modal-body #code').val(code)
     modal.find('.modal-body #registration_no').val(registration_no)
@@ -821,3 +902,40 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
 
 })
 
+new Chart($("#myChart"), {
+    type: 'bar',
+    data: {
+        labels: ["AL", "SL", "UL", "HL", "ML", "MTL"],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Monthly Leave Statistics'
+        },
+        legend: {
+            display: false
+        }
+
+    }
+});

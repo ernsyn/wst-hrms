@@ -22,6 +22,8 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.4.2",
+        "chart.js": "^2.7.3",
+        "counterup": "^1.0.2",
         "datatables.net-bs4": "^1.10.19",
         "datatables.net-buttons-bs4": "^1.5.4",
         "datatables.net-dt": "^1.10.19",
@@ -29,7 +31,10 @@
         "fullcalendar": "^3.9.0",
         "jquery-mousewheel": "^3.1.13",
         "jquery-ui": "^1.12.1",
+        "moment": "^2.22.2",
         "parsleyjs": "^2.8.1",
-        "sweetalert2": "^7.28.8"
+        "pdfmake": "^0.1.39",
+        "sweetalert2": "^7.28.8",
+        "waypoint": "^0.2.8"
     }
 }
