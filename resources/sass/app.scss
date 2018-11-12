@@ -32,6 +32,8 @@ $fa-font-path: "../webfonts" !default;
 //parsleyjs
 @import "~parsleyjs/src/parsley.css";
 
-//Custom
+// SECTION: App Styles
+@import 'global';
+
 @import 'login';
 @import 'component';

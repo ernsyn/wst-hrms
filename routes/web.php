@@ -94,10 +94,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('leaveholiday','AdminController@displayLeaveHoliday')->name('admin/leaveholiday');
 });
 
-Route::group(['middleware' => ['auth', 'role:employee']], function() {
+Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], function() {
     Route::get('', function () {
         return view('home');
-    })->name('dashboard');
+    })->name('home');
     Route::get('/employee','EmployeeController@displayProfile')->name('employee');
     Route::get('profile','EmployeeController@displayProfile')->name('profile');
     Route::get('emergencycontactdata','EmployeeController@displayEmergencyContact')->name('emergencycontactdata');

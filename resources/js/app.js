@@ -45,7 +45,10 @@ $('.button-left').click(function(){
     $('.content').toggleClass('content-active');
 });
 
-$(".card").fadeIn();
+// $(function() {
+//     $(".card").fadeIn();
+// })
+
 
 
 

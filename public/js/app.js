@@ -47600,7 +47600,10 @@ $('.button-left').click(function () {
     $('.content').toggleClass('content-active');
 });
 
-$(".card").fadeIn();
+// $(function() {
+//     $(".card").fadeIn();
+// })
+
 
 $('.scrollable').mousewheel(function (e, delta) {
     this.scrollLeft -= delta * 40;
