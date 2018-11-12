@@ -12,7 +12,7 @@
           </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_cost_centre') }}" id="add_cost_centre">
+                <form method="POST" action="{{ route('add_cost_centre') }}" id="form_validate" data-parsley-validate>
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -47,11 +47,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                                 {{ __('Submit') }}
                             </button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -60,24 +60,24 @@
 
 <!-- UPDATE -->
 <div class="modal fade" id="updateCostCentrePopup" tabindex="-1" role="dialog" aria-labelledby="updateCostCentreLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="updateCostCentreLabel">Edit Cost Centre</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="updateCostCentreLabel">Edit Cost Centre</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_cost_centre') }}" id="edit_visa">
+                <form method="POST" action="{{ route('edit_cost_centre') }}" id="">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
                             <div class="col-6">
                                 <input id="cost_id" name="cost_id" type="text" hidden>
                                 <label class="col-md-12 col-form-label">Name*</label>
-                                <div class="col-md-12">                                    
-                                    <input class="form-control" id="category_name" name="category_name" type="text">
+                                <div class="col-md-12">
+                                    <input class="form-control" id="category_name" name="category_name" type="text" readonly>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -91,7 +91,7 @@
                             </div>
                         </div>
                         <div class="form-group row w-100">
-                            <div class="col-12">     
+                            <div class="col-12">
                                 <label class="col-md-12 col-form-label">Payroll Type*</label>
                                 <div class="col-md-12">
                                     <select class="form-control" id="payroll_type" name="payroll_type">
@@ -100,34 +100,34 @@
                                         <option value="HQ with travel allowance">HQ with travel allowance</option>                                    
                                     </select>
                                 </div>
-                            </div>                                                               
+                            </div>
                         </div>
-                    </div>     
+                    </div>
                     <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">
+                        <button type="button" id="updateCostCentre" class="btn btn-primary">
                                 {{ __('Submit') }}
                             </button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>    
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <div class="p-4">
-        <div class="card p-4">
-            <div class="card-body">
-                <div class="row pb-3">
-                    <div class="col-auto mr-auto"></div>
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addCostCentrePopup">
+    <div class="card p-4">
+        <div class="card-body">
+            <div class="row pb-3">
+                <div class="col-auto mr-auto"></div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addCostCentrePopup">
                             Add Cost Centre
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="float-right tableTools-container"></div>
-                        <table class="table display compact table-striped table-bordered table-hover w-100" id="setupJobconfigureCostCentreTable">
+                        <table class="table display compact table-striped table-bordered table-hover w-100 text-capitalize" id="setupJobconfigureCostCentreTable">
                             <thead>
                                 <tr>
                                         <th>No</th>
@@ -154,13 +154,13 @@
                                             data-cost-centre-seniority-pay="{{$row['seniority_pay']}}"
                                             data-cost-centre-payroll-type="{{$row['payroll_type']}}"
                                             data-target="#updateCostCentrePopup">EDIT</button></td>
-                                    </tr>
-                                    @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    @endsection
+</div>
+@endsection

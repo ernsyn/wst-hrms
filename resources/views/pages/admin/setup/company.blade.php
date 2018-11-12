@@ -1,5 +1,4 @@
 @extends('layouts.base')
-@section('pageTitle', 'Company') 
 @section('content')
 
 <div class="modal fade" id="addCompanyPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -12,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_company') }}" id="add_company">
+                <form method="POST" action="{{ route('add_company') }}" id="form_validate"  data-parsley-validate>
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -259,7 +258,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{$row['name']}}</td>
                                 <td>{{$row['description']}}</td>
-                                <td>{{$row['image']}}</td>
+                                <td>{{$row['registration_no']}}</td>
                                 <td>{{$row['tax_no']}}</td>
                                 <td>{{$row['epf_no']}}</td>
                                 <td>{{$row['socso_no']}}</td>

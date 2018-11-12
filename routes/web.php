@@ -85,7 +85,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('add_grade','AdminController@addGrade')->name('add_grade');
     Route::post('add_company','AdminController@addSetupCompany')->name('add_company');
     Route::post('add_holiday','AdminController@addHoliday')->name('add_holiday');
-    Route::post('register_employee','AdminController@addProfile')->name('register_employee');
+    Route::post('register_employee4','AdminController@addProfile3')->name('register_employee4');
+    Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
+
 
     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
     Route::get('leavetype','AdminController@displayEmployeeLeave')->name('admin/leavetype');
@@ -113,17 +115,25 @@ Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], func
     Route::get('historydata','EmployeeController@displayHistory')->name('history');
     Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
 
-    Route::get('leaveapplication','EmployeeController@leaveapplication')->name('employee/leaveapplication');
+    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('employee/leaveapplication');
     Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
     Route::get('leaverequest','EmployeeController@displayLeaveRequest')->name('employee/leaverequest');
     Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
     Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
 
+    Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
+
+
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function() {
+    Route::get('/', function () {
+        return view('home');
+    })->name('/');
+
     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
 });
 
 
 Route::get('home', 'HomeController@index')->name('home');
+
