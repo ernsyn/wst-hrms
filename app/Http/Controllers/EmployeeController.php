@@ -204,8 +204,8 @@ class EmployeeController extends Controller
         $type =  $request->input('leave_type_id');  
         $type_id = LeaveType::where('id','=',$type)->first();
 
-        $startDate = $request->input('startDate');      
-        $endDate = $request->input('endDate');
+        $startDate = $request->input('altStart');      
+        $endDate = $request->input('altEnd');
 
         $leave_status = "Pending";
         $reason = $request->input('reason');
