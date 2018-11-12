@@ -1,249 +1,3 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-import './bootstrap';
-import 'jquery-ui/ui/i18n/datepicker-en-GB.js';
-import 'fullcalendar';
-
-import 'datatables.net-bs4';
-import 'datatables.net-buttons-bs4';
-import 'datatables.net-responsive-bs4';
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import 'datatables.net-buttons/js/buttons.colVis.js';
-import 'datatables.net-buttons/js/buttons.print.js';
-import 'datatables.net-buttons/js/buttons.flash.js';
-import 'datatables.net-buttons/js/buttons.html5.js';
-
-import 'parsleyjs';
-import 'jquery-mousewheel';
-
-import 'moment'
-import Chart from 'chart.js';
-
-
-
-import './datatables';
-import './modal';
-
-// window.Vue = require('vue');
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-// Vue.component('example-component', require('./components/ExampleComponent.vue'));
-
-// const app = new Vue({
-//     el: '#app'
-// });
-
-if (performance.navigation.type == 2) {
-    location.reload(true);
-}
-
-$('.button-left').click(function () {
-    $('#sidebar').toggleClass('fliph');
-    $('.content').toggleClass('content-active');
-});
-
-// $(function() {
-//     $(".card").fadeIn();
-// })
-
-$('.scrollable').mousewheel(function (e, delta) {
-    this.scrollLeft -= (delta * 40);
-    e.preventDefault();
-});
-
-
-
-$("#form_validate").parsley({
-    errorClass: 'is-invalid',
-    successClass: 'is-valid', // Comment this option if you don't want the field to become green when valid. Recommended in Google material design to prevent too many hints for user experience. Only report when a field is wrong.
-    errorsWrapper: '<span class="form-text text-danger"></span>',
-    errorTemplate: '<small class="font-italic"></small>',
-    trigger: 'change'
-});
-
-
-
-// datepicker
-var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-
-$("#startDate").datepicker({
-    altField: "#altStart",
-    altFormat: "yy-mm-dd",
-    format: "dd/mm/yy",
-    minDate: today,
-    onSelect: function (selectedDate) {
-        $("#endDate").datepicker("option", "minDate", selectedDate);
-    },
-    onClose: function () {
-        $(this).parsley().validate();
-    }
-});
-$('#endDate').datepicker({
-    altField: "#altEnd",
-    altFormat: 'yy-mm-dd',
-    format: 'dd/mm/yy',
-    minDate: today,
-    onSelect: function (selectedDate) {
-        $("#startDate").datepicker("option", "maxDate", selectedDate);
-
-        var start = $("#startDate").datepicker("getDate");
-        var end = $("#endDate").datepicker("getDate");
-        var days = ((end - start) / (1000 * 60 * 60 * 24))+1;
-        $( "span.totaldays").replaceWith( "<span class='totaldays'><b>"+days+"</b> days</span>" );
-        $("#totalLeave").val(days);
-
-        if(days>1)
-        {
-            $("#selectPeriod").hide();
-        }
-        else
-        {
-            $("#selectPeriod").show();
-        }
-
-    },
-    onClose: function () {
-        $(this).parsley().validate();
-    }
-});
-//change day according to selected value
-$('#type').on('change', function() {
-
-    var txt = this.value;
-    var obj = JSON.parse(txt);
-
-    $( "div.leavedays" ).replaceWith( "<div class='leavedays col-sm-4'><b>"+ obj.balance +"</b> days available</span></div>" );
-    $("#leaveTypeId").val(obj.id);
-    $("#leaveBalance").val(obj.balance);
-});
-
-$("#leaveHalfDay").click(function(){  
-        $( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
-        $("#totalLeave").val(0.5);
-});
-
-$("#leaveFullDay").click(function(){  
-    $( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
-    $("#totalLeave").val(1);
-});
-
-$('#dobDate').datepicker({
-    altField: "#altdobDate",
-    altFormat: 'yy-mm-dd',
-    format: 'dd/mm/yy'
-});
-$('#editDobDate').datepicker({
-    format: 'dd/mm/yyyy',
-    uiLibrary: 'bootstrap4',
-    iconsLibrary: 'fontawesome'
-});
-$('#licenseExpiryDate').datepicker({
-    altField: "#altlicenseExpiryDate",
-    altFormat: 'yy-mm-dd',
-    format: 'dd/mm/yy'
-});
-$('#startYear').datepicker({
-    changeMonth: true,
-    changeYear: true,
-    showButtonPanel: true,
-    dateFormat: 'MM yy',
-    onClose: function (dateText, inst) {
-        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-        $(this).datepicker('setDate', new Date(year, month, 1));
-    }
-});
-$("#startYear").on('focus blur click', function () {
-    $(".ui-datepicker-calendar").hide();
-});
-$('#endYear').datepicker({
-    changeMonth: true,
-    changeYear: true,
-    showButtonPanel: true,
-    dateFormat: 'MM yy',
-    onClose: function (dateText, inst) {
-        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-        $(this).datepicker('setDate', new Date(year, month, 1));
-    }
-});
-$("#endYear").on('focus blur click', function () {
-    $(".ui-datepicker-calendar").hide();
-});
-
-// fullcalendar.io
-$('#calendar').fullCalendar({
-    // put your options and callbacks here
-})
-
-
-new Chart($("#myChart"), {
-    type: 'bar',
-    data: {
-        labels: ["AL", "SL", "UL", "HL", "ML", "MTL"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: 'Monthly Leave Statistics'
-        },
-        legend: {
-            display: false
-        }
-
-    }
-});
-
-$('#updateCostCentre').click(function () {
-    swal({
-        title: 'Success!',
-        text: 'Change has been saved.',
-        type: 'success',
-        confirmButtonText: 'Cool'
-    })
-});
-
-$('#updateCostCentre').click(function () {
-    swal({
-        title: 'Success!',
-        text: 'Change has been saved.',
-        type: 'success',
-        confirmButtonText: 'Cool'
-    })
-});
-
 //update employee dependent
 $('#updateDependentPopup').on('show.bs.modal', function (event) {
 
@@ -391,7 +145,7 @@ $('#updateTeamPopup').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
     var id = button.data('team-id')
     var team_name = button.data('name')
-    
+
     var modal = $(this)
 
     modal.find('.modal-body #team_id').val(id)
@@ -414,6 +168,7 @@ $('#updateCostCentrePopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #seniority_pay').val(seniority_pay)
     modal.find('.modal-body #payroll_type').val(payroll_type)
 })
+
 
 $('#updateGradePopup').on('show.bs.modal', function (event) {
 
@@ -499,13 +254,13 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     var epf_no = button.data('company-epf-no')
     var socso_no = button.data('company-socso-no')
     var eis_no = button.data('company-eis-no')
-  
+
     var url = button.data('company-url')
     var address = button.data('company-address')
     var code = button.data('company-code')
-    var registration_no = button.data('company-registration-no')
+    var registration_no = button.data('company-registration')
     var phone = button.data('company-phone')
-  
+
 
 
     var modal = $(this)
@@ -519,7 +274,7 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #epf_no').val(epf_no)
 
     modal.find('.modal-body #socso_no').val(socso_no)
-    modal.find('.modal-body #eis_no').val(eis_no) 
+    modal.find('.modal-body #eis_no').val(eis_no)
 
     modal.find('.modal-body #code').val(code)
     modal.find('.modal-body #registration_no').val(registration_no)

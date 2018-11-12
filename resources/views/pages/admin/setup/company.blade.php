@@ -258,7 +258,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{$row['name']}}</td>
                                 <td>{{$row['description']}}</td>
-                                <td>{{$row['image']}}</td>
+                                <td>{{$row['registration_no']}}</td>
                                 <td>{{$row['tax_no']}}</td>
                                 <td>{{$row['epf_no']}}</td>
                                 <td>{{$row['socso_no']}}</td>

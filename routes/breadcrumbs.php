@@ -44,6 +44,10 @@ Breadcrumbs::for('register_employee', function ($trail) {
     $trail->parent('home');
     $trail->push('Employee List', route('register_employee'));
 });
+Breadcrumbs::for('register_employee4', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Employee List', route('register_employee'));
+});
 
 
 Breadcrumbs::for('employee/add', function ($trail) {
