@@ -11,17 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-})->name('/');;
+// Route::get('/', function () {
+//     return view('home');
+// })->name('/');;
 
 Auth::routes();
 
 
 Route::get('setup', 'AdminController@displaySetupCompany')->name('setup');
-Route::get('setup', 'AdminController@displaySetupCompany')->name('setup');
 
-Route::group(['prefix' => 'setup', 'middleware' => ['role:super-admin|admin']], function() {
+Route::group(['prefix' => 'setup', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
     Route::get('company', 'AdminController@displaySetupCompany')->name('admin/setup/company');
     Route::get('add-company', 'AdminController@displayAddCompany')->name('admin/setup/add-company');
     Route::get('job-configure', 'AdminController@displaySetupJob')->name('admin/setup/job-configure');
@@ -33,7 +32,7 @@ Route::group(['prefix' => 'setup', 'middleware' => ['role:super-admin|admin']], 
     Route::get('branch', 'AdminController@displaySetupBranch')->name('setup/branch');
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
     Route::get('home', 'HomeController@index')->name('admin.home');
 
     Route::get('/employee/add', 'EmployeeDataController@addEmployee')->name('employee/add');
@@ -95,7 +94,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::get('leaveholiday','AdminController@displayLeaveHoliday')->name('admin/leaveholiday');
 });
 
-Route::group(['prefix' => 'employee', 'middleware' => ['role:employee']], function() {
+Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], function() {
+    Route::get('', function () {
+        return view('home');
+    })->name('home');
     Route::get('/employee','EmployeeController@displayProfile')->name('employee');
     Route::get('profile','EmployeeController@displayProfile')->name('profile');
     Route::get('emergencycontactdata','EmployeeController@displayEmergencyContact')->name('emergencycontactdata');
