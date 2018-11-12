@@ -86,7 +86,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('add_grade','AdminController@addGrade')->name('add_grade');
     Route::post('add_company','AdminController@addSetupCompany')->name('add_company');
     Route::post('add_holiday','AdminController@addHoliday')->name('add_holiday');
-    Route::post('register_employee','AdminController@addProfile')->name('register_employee');
+    Route::post('register_employee4','AdminController@addProfile3')->name('register_employee4');
+    Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
+
 
     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
     Route::get('leavetype','AdminController@displayEmployeeLeave')->name('admin/leavetype');
@@ -125,3 +127,4 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function(
 
 
 Route::get('home', 'HomeController@index')->name('home');
+

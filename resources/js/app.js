@@ -795,7 +795,7 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     var url = button.data('company-url')
     var address = button.data('company-address')
     var code = button.data('company-code')
-    var registration_no = button.data('company-registration')
+    var registration_no = button.data('company-registration-no')
     var phone = button.data('company-phone')
   
 

@@ -10,7 +10,7 @@
         </div>
         @endif
         <div class="container-fluid">
-            <form method="POST" action="{{ route('register_employee') }}" id="register_employee">
+            <form method="POST" action="{{ route('register_employee4') }}" id="register_employee4">
                 @csrf
                 <div class="row">
                     <div class="col-xl-2 d-flex justify-content-center">

@@ -60,6 +60,72 @@ class AdminController extends Controller
         return view('pages.home')->with('user_count',$user_count);
 
     }
+
+    public function addProfile3(Request $request)
+    {
+        $user_id = Session::get('user_id');
+
+        $contact_no = $request->input('contact_no');       
+        $address = $request->input('address');
+        $company_id = $request->input('companies');
+        $dob = $request->input('dob');       
+        $gender = $request->input('gender');
+        $race = $request->input('race');
+        $nationality = $request->input('nationality');       
+        $marital_status = $request->input('marital_status');
+        $total_children = $request->input('total_children');
+        $ic_no = $request->input('ic_no');       
+        $tax_no = $request->input('tax_no');
+        $epf_no = $request->input('epf_no');
+        $socso_no = $request->input('socso_no');       
+        $insurance_no = $request->input('insurance_no');
+        $pcb_group = $request->input('pcb_group');
+        $driver_license_no = $request->input('driver_license_no');       
+        $driver_license_expiry_date = $request->input('driver_license_expiry_date');
+        $basic_salary = $request->input('basic_salary');
+        $confirmed_date = $request->input('confirmed_date');         
+        $created_by = auth()->user()->id;
+        $code = $request->input('code');
+        $updated_by =$request->input('updated_by');
+        
+       
+        DB::insert('insert into employees
+        (user_id,contact_no,address,
+        company_id,dob,gender,race,
+        nationality, marital_status, total_children,
+        ic_no, tax_no, epf_no,
+        socso_no, insurance_no, pcb_group,
+        driver_license_no, driver_license_expiry_date, basic_salary,
+        confirmed_date, created_by) 
+        values
+        (?,?,?,
+        ?,?,?,?,
+        ?,?,?,
+        ?,?,?,
+        ?,?,?,
+        ?,?,?,
+        ?,?
+        )',
+        [$user_id,$contact_no,$address,
+        $company_id,$dob,$gender,$race,
+        $nationality, $marital_status, $total_children,
+        $ic_no, $tax_no, $epf_no,
+        $socso_no, $insurance_no, $pcb_group,
+        $driver_license_no, $driver_license_expiry_date, $basic_salary,
+        $confirmed_date, $created_by]);
+
+
+        $employees = Employee::join('users','users.id','=','employees.user_id')
+        ->join('companies','companies.id','=','employees.company_id')
+        ->select('companies.name as name_company','employees.user_id as user_id',
+        'employees.contact_no as contact_no',
+        'users.email as email','users.name as name')
+        ->get();
+
+        return view('pages.admin.all-employee')->with('employees',$employees);
+    }
+
+
     public function addProfile(Request $request)
     {
         $user_id = Session::get('user_id');
@@ -189,7 +255,7 @@ class AdminController extends Controller
         ->join('users','users.id','=','employees.id')
         ->select('companies.name as name','companies.description as description','companies.logo_media_id as image','companies.tax_no as tax_number',
         'companies.epf_no as epf_number','companies.socso_no as socso_number','companies.eis_no as eis_number',
-        'companies.updated_at as updated_on','users.name as EmpName','companies.status as status')
+        'companies.updated_at as updated_on','users.name as EmpName','companies.status as status,')
         ->get();
 
         $company = Company::all();
@@ -204,7 +270,8 @@ class AdminController extends Controller
 
     public function displayUserList()
     {       
-        $userlist = User::all();
+        $userlist = User::orderBy('id', 'Desc')->get();
+        
         return view('pages.admin.user-list', ['userlist'=>$userlist]);
     }
 
