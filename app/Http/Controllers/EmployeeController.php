@@ -241,7 +241,7 @@ class EmployeeController extends Controller
         'leave_balance.balance as balance',
         'leave_balance.carry_forward as carry',
         'leave_types.name as leave')
-        ->where('users.id', auth()->user()->id)
+        ->where('users.id', Auth::user()->id)
         ->get();
         return view('pages.employee.leave-balance', ['leavebalance'=>$leavebalance]);
     }
