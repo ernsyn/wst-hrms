@@ -17530,25 +17530,36 @@ select:-webkit-autofill:focus {
      object-fit: contain;
 }
 
-#sidebar #hrms-mode {
-  margin: 10px 10px 10px 10px;
-  color: #c8d9fd;
-  background-attachment: fixed;
+#sidebar #hrms-mode-container {
+  padding: 10px 10px 10px 10px;
   font-size: 10pt;
   font-weight: 600;
+  color: #c8d9fd;
 }
 
-#sidebar #hrms-mode div {
+#sidebar #hrms-mode-container #hrms-mode div {
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
-#sidebar #hrms-mode #label {
+#sidebar #hrms-mode-container #hrms-mode #label {
   background-color: #0842be;
+  border-radius: 5px 0px 0px 5px;
 }
 
-#sidebar #hrms-mode #value {
+#sidebar #hrms-mode-container #hrms-mode #value {
   background-color: #073aa5;
+  border-radius: 0px 5px 5px 0px;
+}
+
+#sidebar #hrms-mode-container #mode-options {
+  background-color: #052975;
+  border-radius: 0px 0px 5px 5px;
+}
+
+#sidebar #hrms-mode-container #mode-options .option {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 #sidebar #menu-container {
@@ -17557,8 +17568,8 @@ select:-webkit-autofill:focus {
 
 #sidebar #menu-container .menu-section .info {
   padding: 8px 20px;
-  font-size: 1.0em;
-  font-weight: 500;
+  font-size: 10pt;
+  font-weight: 600;
   display: block;
   color: #c8d9fd;
 }
