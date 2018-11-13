@@ -44,7 +44,7 @@ class EmployeeDataController extends Controller
             'name' => 'required|string|max:250',
             'email' => 'required|string|email|max:255|unique:employee_info',
             'contact_no' => 'required|string|max:30',
-            'roles' => 'required'
+           
         ]);
     }
   
@@ -55,7 +55,7 @@ class EmployeeDataController extends Controller
 
 
         $user = User::create($input);
-        $user->assignRole($request->input('roles'));
+        $user->assignRole('employee');
 
 
         return view('home');

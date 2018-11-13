@@ -182,28 +182,28 @@
                             </form>
                         </div>
                         {{-- Emergency --}}
-                        @include('pages.admin.emergency-contact')
+                        @include('pages.admin.emergency-contact', ['user' => $user])
                         {{-- Dependent --}}
-                        @include('pages.employee.employee-dependent')
+                        @include('pages.admin.employee-dependent')
                         {{-- Immigration --}}
-                        @include('pages.employee.employee-immigration')
+                        @include('pages.admin.employee-immigration')
                         {{-- Visa --}}
-                        @include('pages.employee.employee-visa')
+                        @include('pages.admin.employee-visa')
                         {{-- Job --}}
-                        @include('pages.employee.job')
+                        @include('pages.admin.job')
                         {{-- Bank --}}
-                        @include('pages.employee.bank')
+                        @include('pages.admin.employee-bank')
                         {{-- Qualification --}}
-                        @include('pages.employee.qualification')
+                        @include('pages.admin.qualification')
                         {{-- Attachment --}}
-                        @include('pages.employee.attachment')
+                        @include('pages.admin.attachment')
                         {{-- Work Days --}}
                         <div class="tab-pane fade show p-3" id="nav-workdays" role="tabpanel" aria-labelledby="nav-workdays-tab">
                         </div>
                         {{-- Report To --}}
-                        @include('pages.employee.report-to')
+                        @include('pages.admin.report-to')
                         {{-- History --}}
-                        @include('pages.employee.history')
+                        @include('pages.admin.history')
                         {{-- Security Group --}}
                         <div class="tab-pane fade show p-3" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
                         </div>

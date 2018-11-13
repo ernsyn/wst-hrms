@@ -248,7 +248,8 @@
                                 <th>Socso No</th>
                                 <th>EIS No</th>
                                 <th>Last Updated</th>
-                                <th>Status</th>
+                  
+                                <th>Account Number</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -264,7 +265,8 @@
                                 <td>{{$row['socso_no']}}</td>
                                 <td>{{$row['eis_no']}}</td>
                                 <td>Update by: {{$row['updated_by']}}<br><br> Updated on: {{$row['updated_by updated_at']}}</td>
-                                <td>{{$row['status']}}</td>
+                        
+                                <td>          <button onclick="window.location='{{ url('/admin/company-edit/'.$row['id']) }}';" class="btn btn-default">View</button></td>
                                 <td><button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     data-company-id="{{$row['id']}}"
                                     data-company-name="{{$row['name']}}"

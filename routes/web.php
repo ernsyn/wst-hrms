@@ -45,11 +45,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
 
     Route::get('/employee/add', 'EmployeeDataController@addEmployee')->name('employee/add');
     Route::get('profile-employee/emergencycontact', 'AdminController@displayEmergencyContact')->name('admin/emergencycontact');
-    Route::get('employee_dependent', 'AdminController@displayEmployeeDependent')->name('admin/employee_dependent');
-    Route::get('employeeimmigration', 'AdminController@displayEmployeeImmigration')->name('admin/employeeimmigration');
-    Route::get('employeevisa', 'AdminController@displayEmployeeVisa')->name('admin/employeevisa');
-    Route::get('employee_bank', 'AdminController@displayEmployeeBank')->name('admin/employee_bank');
-    Route::get('employee-qualification','AdminController@displayQualification')->name('admin/employee-qualification');
+    Route::get('profile-employee/dependent', 'AdminController@displayEmployeeDependent')->name('admin/dependent');
+    Route::get('profile-employee/employeeimmigration', 'AdminController@displayEmployeeImmigration')->name('admin/employeeimmigration');
+    Route::get('profile-employee/employeevisa', 'AdminController@displayEmployeeVisa')->name('admin/employeevisa');
+    Route::get('profile-employee/employeebank', 'AdminController@displayEmployeeBank')->name('admin/employeebank');
+    Route::get('profile-employee/employeejob', 'AdminController@displayEmployeeJob')->name('admin/employeejob');
+    Route::get('profile-employee/employee_experience', 'AdminController@displayQualificationExperience')->name('admin/employee_bank');
+    Route::get('profile-employee/employee_education', 'AdminController@displayQualificationEducation')->name('admin/employee_bank');
+    Route::get('profile-employee/employee_skill', 'AdminController@displayQualificationSkill')->name('admin/employee_bank');
+    Route::get('profile-employee/attachment', 'AdminController@displayAttachment')->name('admin/attachment');
     Route::get('employee_list', 'AdminController@displayAllEmployee')->name('admin/employee_list');
     // Route::get('user_list', 'EmployeeDataController@index')->name('admin/user_list');
     Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');

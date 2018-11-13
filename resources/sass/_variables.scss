@@ -1,6 +1,6 @@
 
 // Body
-$body-bg: rgb(233, 233, 233);
+$body-bg: rgb(245, 244, 244);
 
 // Typography
 $font-family-sans-serif: 'Open Sans', sans-serif;
@@ -26,5 +26,9 @@ $oppobackground: darken($sidebarbackground, 5%);
 $detailscolor: #15A4FA;
 
 
-$app-primary: #1644a8;
+$app-primary: #06318d; //#124acc
 $app-secondary: rgb(48, 236, 80);
+
+$app-primary-darkened: darken($app-primary, 5%); 
+
+$app-textcolor-light: lighten($app-primary, 60%);

@@ -35,6 +35,12 @@ Breadcrumbs::for('admin/employee_list', function ($trail) {
     $trail->push('Employee List', route('admin/employee_list'));
 });
 
+
+
+Breadcrumbs::for('add_employee_dependent', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Employee Dependent', route('add_employee_dependent'));
+});
 Breadcrumbs::for('admin/user_list', function ($trail) {
     $trail->parent('home');
     $trail->push('User List', route('admin/user_list'));
