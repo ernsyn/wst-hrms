@@ -486,15 +486,15 @@ class AdminController extends Controller
         $user = Employee::where('user_id', $user_id)->first();     
         $passport_no = $request->input('passport_no'); 
         $issued_by = $request->input('issued_by');     
-        $altexpiryDate = $request->input('altexpiryDate');
-        $altlicenseExpiryDate = $request->input('altlicenseExpiryDate');        
+        $altissuedDate = $request->input('altissuedDate');
+        $altexpiryDate = $request->input('altexpiryDate');        
         $created_by = auth()->user()->id;
        
         DB::insert('insert into employee_immigrations
         (emp_id, passport_no, issued_by, issued_date, expiry_date, created_by) 
         values
         (?,?,?,?,?,?)',
-        [$user->id, $passport_no, $issued_by, $altexpiryDate, $altlicenseExpiryDate, $created_by]);
+        [$user->id, $passport_no, $issued_by, $altissuedDate, $altexpiryDate, $created_by]);
 
 
         $immigrations = EmployeeImmigration::where('emp_id',$user_id)->get();  

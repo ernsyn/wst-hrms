@@ -168,6 +168,11 @@ $('#issueDate').datepicker({
     altFormat: 'yy-mm-dd',
     format: 'dd/mm/yy'
 });
+$('#issuedDate').datepicker({
+    altField: "#altissuedDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
 $('#startYear').datepicker({
     changeMonth: true,
     changeYear: true,

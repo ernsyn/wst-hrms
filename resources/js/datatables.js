@@ -63,9 +63,6 @@ $('#employeeImmigrationTable').DataTable({
             }
         },
         {
-            "data": "document_media_id"
-        },
-        {
             "data": "passport_no"
         },
         {
@@ -76,6 +73,9 @@ $('#employeeImmigrationTable').DataTable({
         },
         {
             "data": "expiry_date"
+        },
+        {
+            "data": "document_media_id"
         },
         {
             "data": null, // can be null or undefined
@@ -98,7 +98,10 @@ $('#employeeVisaTable').DataTable({
             "data": "visa_number"
         },
         {
-            "data": "family_members"
+            "data": "type"
+        },
+        {
+            "data": "passport_number"
         },
         {
             "data": "issued_by"
@@ -108,6 +111,9 @@ $('#employeeVisaTable').DataTable({
         },
         {
             "data": "expiry_date"
+        },
+        {
+            "data": "document_media_id"
         },
         {
             "data": null, // can be null or undefined
