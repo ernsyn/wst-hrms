@@ -279,8 +279,9 @@
                                     data-company-url="{{$row['url']}}"
                                     data-company-address="{{$row['address']}}"
                                     data-company-phone="{{$row['phone']}}"
-
-                                    data-target="#updateCompanyPopup">EDIT</button></td>
+                                    data-target="#updateCompanyPopup">EDIT</button>
+                                    <button onclick="window.location='{{ url('admin/setup/company-details/'.$row['id']) }}';">VIEW</button>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

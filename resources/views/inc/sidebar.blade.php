@@ -122,8 +122,11 @@
                     <a href="{{ route('employee/leaveapplication') }}">Leave Application</a>
                 </li>
                 <li class="{{ request()->is('') ? 'active' : '' }}">
-                    <a href="{{ route('employee/leavebalance') }}">Leave History</a>
+                    <a href="{{ route('employee/leavebalance') }}">Leave Balance</a>
                 </li>
+                <li class="{{ request()->is('') ? 'active' : '' }}">
+                        <a href="{{ route('employee/leaverequest') }}">Leave Request</a>
+                    </li>
             </ul>
             
         </li>

@@ -29,7 +29,12 @@ use App\LeaveBalance;
 use App\Country;
 use App\Employee;
 use App\Holiday;
-
+use App\CompanyBank;
+use App\SecurityGroup;
+use App\Addition;
+use App\Deduction;
+use App\Bank;
+use App\EaForm;
 
 use DB;
 use App\User;
@@ -280,15 +285,79 @@ class AdminController extends Controller
 
     public function displayLeaveBalance()
     {
-         $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
         ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
         ->join('users','users.id','=','employees.id')
-        ->select('users.name as name',
-        'leave_balance.balance as balance',
+        ->select('users.name as name','users.id as user_id',
+        'leave_balance.balance as balance','leave_balance.id as balance_id',
         'leave_balance.carry_forward as carry',
-        'leave_types.name as leave')
+        'leave_types.name as leave','leave_types.id as type_id')
         ->get();
-        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance]);        
+
+        $users = User::all();
+        $types = LeaveType::all();
+
+        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]);        
+    }
+
+    public function addLeaveBalance(Request $request)
+    {            
+        $user_id = Input::get('users');
+        $types = Input::get('types');      
+        $leave_balance = $request->input('leave_balance');
+        $carry_forward = $request->input('carry_forward');
+        $now = Carbon::now();
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into leave_balance
+        (user_id, id_leave_type, balance,
+        year, carry_forward, created_by) 
+        values
+        (?,?,?,
+        ?,?,?)',
+        [$user_id, $types, $leave_balance,
+        $now->year, $carry_forward, $created_by]);
+
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->join('users','users.id','=','employees.id')
+        ->select('users.name as name','users.id as user_id',
+        'leave_balance.balance as balance','leave_balance.id as balance_id',
+        'leave_balance.carry_forward as carry',
+        'leave_types.name as leave','leave_types.id as type_id')
+        ->get();
+
+        $users = User::all();
+        $types = LeaveType::all();
+
+        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]); 
+    }
+
+    public function editLeaveBalance(Request $request)
+    {  
+        $balance_id = $request->input('balance_id');          
+        $user_id = Input::get('users');
+        $types = Input::get('types');      
+        $leave_balance = $request->input('leave_balance');
+        $carry_forward = $request->input('carry_forward');
+       
+        LeaveBalance::where('id',$balance_id)->update(array('user_id' => $user_id,
+        'id_leave_type' => $types,'balance' => $leave_balance,'carry_forward' => $carry_forward));
+
+
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->join('users','users.id','=','employees.id')
+        ->select('users.name as name','users.id as user_id',
+        'leave_balance.balance as balance','leave_balance.id as balance_id',
+        'leave_balance.carry_forward as carry',
+        'leave_types.name as leave','leave_types.id as type_id')
+        ->get();
+
+        $users = User::all();
+        $types = LeaveType::all();
+
+        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]); 
     }
 
 
@@ -362,15 +431,6 @@ class AdminController extends Controller
         // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
         return DataTables::of($contacts)->make(true);
     }
-
-    // public function displayEmployeeEmergencyContact()
-    // {
-    //     $id = Session::get('user_id');
-
-    //     $contacts = EmployeeEmergencyContact::where('emp_id',$id)->get();
-    //     // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
-    //     return DataTables::of($contacts)->make(true);
-    // }
 
     public function addEmergencyContact(Request $request)
     {          
@@ -580,7 +640,7 @@ class AdminController extends Controller
         $id = Session::get('employee_id');
 
         $banks = EmployeeBank::where('emp_id',$id)->orderBy('id', 'DESC')->get();
-        $bank_list = BankCode::all();        
+        $bank_list = Bank::all();        
         
         return view('pages.admin.employee-bank', ['banks'=>$banks,'bank_list'=>$bank_list]);
     }
@@ -601,7 +661,7 @@ class AdminController extends Controller
         [$emp_id, $type, $bank_code, $acc_no, $status, $created_by]);
 
         $banks = EmployeeBank::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();
-        $bank_list = BankCode::all();        
+        $bank_list = Bank::all();        
         
         return view('pages.admin.employee-bank', ['banks'=>$banks,'bank_list'=>$bank_list]);
     }
@@ -617,10 +677,8 @@ class AdminController extends Controller
        
         EmployeeBank::where('id',$bank_id)->update(array('bank_code' => $bank_code,
         'acc_no' => $acc_no,'acc_status' => $acc_status,));
-        $banks = EmployeeBank::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();
-        $bank_list = BankCode::all();        
-        
-        return view('pages.admin.employee-bank', ['banks'=>$banks,'bank_list'=>$bank_list]); 
+
+        return redirect()->route('/setup/company-details/{id}', ['id' => $emp_id]);
     }
     
     public function displayProfile()
@@ -1232,6 +1290,197 @@ class AdminController extends Controller
 
         return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
     }
+
+    public function displayCompanyDetails($id)
+    {       
+        Session::put('company_id', $id);
+
+        $bank = CompanyBank::join('bank_code','bank_code.bank_code','=','company_bank.bank_code')
+        ->select('company_bank.id as id', 'company_bank.account_name','bank_code.name as bank_code_name','company_bank.status','bank_code.id as bank_id','bank_code.bank_code as bank_code')
+        ->where('company_bank.id_company_master', $id)
+        ->get();
+
+        $security = SecurityGroup::where('company_id', $id)->get();
+        $additions = Addition::where('id_company_master', $id)->get();
+        $deductions = Deduction::where('id_company_master', $id)->get();       
+
+        $bank_list = Bank::all();
+        $ea_form = EaForm::all();
+        $tags = CostCentre::all();
+
+        return view('pages.admin.setup.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list,
+        'security'=>$security, 'additions'=>$additions, 'deductions'=>$deductions, 'ea_form'=>$ea_form, 'tags'=>$tags]);
+    }
+
+    public function addCompanyBank(Request $request)
+    {         
+        $company_id = Session::get('company_id');
+        $account_name = $request->input('account_name');
+        $bank_list = Input::get('bank_list');   
+        $status = Input::get('status');
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into company_bank
+        (id_company_master, account_name, bank_code, status, created_by) 
+        values
+        (?,?,?,?,?)',
+        [$company_id, $account_name, $bank_list, $status, $created_by]);
+       
+        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+    }
+
+    public function editCompanyBank(Request $request)
+    {          
+        $company_id = Session::get('company_id');
+
+        $company_bank_id = $request->input('company_bank_id');        
+        $account_name = $request->input('account_name');
+        $bank_list = Input::get('bank_list');   
+        $status = Input::get('status');
+       
+        CompanyBank::where('id',$company_bank_id)->update(
+            array('account_name' => $account_name,
+            'bank_code' => $bank_list,
+            'status' => $status));
+
+            return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+    }
+
+    public function addSecurityGroup(Request $request)
+    {         
+        $company_id = Session::get('company_id');
+
+        $name = $request->input('name');
+        $description =  $request->input('description');   
+        $status = Input::get('status');
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into security_groups
+        (company_id, name, description, status, created_by, updated_by) 
+        values
+        (?,?,?,?,?,?)',
+        [$company_id, $name, $description, $status, $created_by, $created_by]);
+
+        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+    }
+
+    public function editSecurityGroup(Request $request)
+    {          
+        $company_id = Session::get('company_id');
+
+        $security_group_id = $request->input('security_group_id');  
+        $name = $request->input('name');
+        $description =  $request->input('description');   
+        $status = Input::get('status');
+        $updated_by = auth()->user()->id;
+              
+        SecurityGroup::where('id',$security_group_id)->update(
+            array('name' => $name,
+            'description' => $description,
+            'status' => $status,
+            'updated_by' => $updated_by
+        ));
+
+        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+    }
+
+    public function addCompanyAddition(Request $request)
+    {         
+        $company_id = Session::get('company_id');
+
+        $code = $request->input('code');
+        $name = $request->input('name');
+        $type = Input::get('type');
+        $amount = $request->input('amount');
+        $statutory = implode(",", $request->get('statutory'));
+        $ea_form = Input::get('ea_form');
+        $status = Input::get('status');
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into additions
+        (id_company_master, code, name, type, amount, statutory, id_EaForm, status, created_by) 
+        values
+        (?,?,?,?,?,?,?,?,?)',
+        [$company_id, $code, $name, $type, $amount, $statutory, $ea_form, $status, $created_by]);
+
+        //---- view -------
+        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+    }
+
+    public function editCompanyAddition(Request $request)
+    {          
+        $company_id = Session::get('company_id');
+        $company_addition_id = $request->input('company_addition_id');  
+        $code = $request->input('code');
+        $name = $request->input('name');
+        $type = Input::get('type');
+        $amount = $request->input('amount');
+        $statutory = implode(",", $request->get('statutory'));
+        $ea_form = Input::get('ea_form');
+        $status = Input::get('status');
+
+        Addition::where('id',$company_addition_id)->update(
+            array(
+            'code' => $code,
+            'name' => $name,
+            'type' => $type,
+            'amount' => $amount,
+            'statutory' => $statutory,
+            'id_EaForm' => $ea_form,
+            'status' => $status,
+        ));
+
+        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+    }
+
+    public function addCompanyDeduction(Request $request)
+    {         
+        $company_id = Session::get('company_id');
+
+        $code = $request->input('code');
+        $name = $request->input('name');
+        $type = Input::get('type');
+        $amount = $request->input('amount');
+        $statutory = implode(",", $request->get('statutory'));
+        $status = Input::get('status');
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into deductions
+        (id_company_master, code, name, type, amount, statutory, status, created_by) 
+        values
+        (?,?,?,?,?,?,?,?)',
+        [$company_id, $code, $name, $type, $amount, $statutory, $status, $created_by]);
+
+        //---- view -------
+        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+    }
+
+
+    public function editCompanyDeduction(Request $request)
+    {          
+        $company_id = Session::get('company_id');
+        $company_deduction_id = $request->input('company_deduction_id');  
+        $code = $request->input('code');
+        $name = $request->input('name');
+        $type = Input::get('type');
+        $amount = $request->input('amount');
+        $statutory = implode(",", $request->get('statutory'));
+        $status = Input::get('status');
+
+        Deduction::where('id',$company_deduction_id)->update(
+            array(
+            'code' => $code,
+            'name' => $name,
+            'type' => $type,
+            'amount' => $amount,
+            'statutory' => $statutory,
+            'status' => $status,
+        ));
+
+        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+    }
+
+   
 
 
 }

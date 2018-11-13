@@ -302,9 +302,23 @@ $('#setupJobconfigureCostCentreTable').DataTable({
             className: 'btn-outline-info',
             titleAttr: 'Print'
         },
-    ]
-
+    ],
+    initComplete: function () {
+        this.api().columns(1).every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+    }
 });
+
+
+
 $('#setupJobconfigureDeptTable').DataTable({
     responsive: true,
     stateSave: true,
@@ -439,3 +453,4 @@ $('#setupBranchTable').DataTable({
     ]
 
 });
+$('#leaveBalanceTable').DataTable();

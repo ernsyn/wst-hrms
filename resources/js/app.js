@@ -542,3 +542,126 @@ $('#disapproveLeaverequest').on('show.bs.modal', function (event) {
     var modal = $(this)
     modal.find('.modal-body #req_id').val(id)
 })
+
+//edit leave balance
+$('#updateLeaveBalance').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget)
+    var id = button.data('balance-id')
+    var emp_id = button.data('balance-emp-id')
+    var balance_leave = button.data('balance-leave')
+    var carry = button.data('balance-carry')
+    var type_id = button.data('balance-type-id')
+
+    var modal = $(this)
+
+    modal.find('.modal-body #balance_id').val(id)
+    modal.find('.modal-body #users').val(emp_id)
+    modal.find('.modal-body #leave_balance').val(balance_leave)
+    modal.find('.modal-body #carry_forward').val(carry)
+    modal.find('.modal-body #types').val(type_id)
+
+})
+
+
+//update company
+$('#editCompanyBankPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget)
+    var id = button.data('bank-id')
+    var bank_code = button.data('bank-code')
+    var account_name = button.data('bank-accout-name')
+    var status = button.data('bank-status')
+
+    var modal = $(this)
+
+    modal.find('.modal-body #company_bank_id').val(id)
+    modal.find('.modal-body #bank_list').val(bank_code)
+    modal.find('.modal-body #account_name').val(account_name)
+    modal.find('.modal-body #status').val(status)
+})
+
+//update company
+$('#editSecurityGroupPopup').on('show.bs.modal', function (event) {
+
+var button = $(event.relatedTarget)
+var id = button.data('security-id')
+var security_name = button.data('security-name')
+var security_description = button.data('security-description')
+var security_status = button.data('security-status')
+
+var modal = $(this)
+
+modal.find('.modal-body #security_group_id').val(id)
+modal.find('.modal-body #name').val(security_name)
+modal.find('.modal-body textarea#description').val(security_description)
+modal.find('.modal-body #status').val(security_status)
+})
+
+//update addition
+$('#editCompanyAdditionPopup').on('show.bs.modal', function (event) {
+
+var button = $(event.relatedTarget)
+var id = button.data('addition-id')    
+var code = button.data('addition-code')
+var name = button.data('addition-name')
+var type = button.data('addition-type')    
+var amount = button.data('addition-amount')
+var statutory = button.data('addition-statutory')
+var eaform = button.data('addition-eaform')
+var status = button.data('addition-status')
+
+var modal = $(this)
+
+modal.find('.modal-body #company_addition_id').val(id)
+modal.find('.modal-body #code').val(code)
+modal.find('.modal-body #name').val(name)
+modal.find('.modal-body #type').val(type)
+modal.find('.modal-body #amount').val(amount)
+modal.find('.modal-body #statutory').val(statutory)
+modal.find('.modal-body #ea_form').val(eaform)
+modal.find('.modal-body #status').val(status)
+})
+
+//update deduction
+$('#editCompanyDeductionPopup').on('show.bs.modal', function (event) {
+
+var button = $(event.relatedTarget)
+var id = button.data('deduction-id')    
+var code = button.data('deduction-code')
+var name = button.data('deduction-name')
+var type = button.data('deduction-type')    
+var amount = button.data('deduction-amount')
+var statutory = button.data('deduction-statutory')
+var status = button.data('deduction-status')
+
+var modal = $(this)
+
+modal.find('.modal-body #company_deduction_id').val(id)
+modal.find('.modal-body #code').val(code)
+modal.find('.modal-body #name').val(name)
+modal.find('.modal-body #type').val(type)
+modal.find('.modal-body #amount').val(amount)
+modal.find('.modal-body #statutory').val(statutory)
+modal.find('.modal-body #status').val(status)
+})
+
+
+$('#check_cost_centre').change(function() {
+    if(this.checked) {
+        $('#cost_centre').prop('readonly', false);
+    }
+    else{
+        $('#cost_centre').prop('readonly', true);
+    }
+});
+
+$('#check_job_grade').change(function() {
+    if(this.checked) {
+        $('#job_grade').prop('readonly', false);
+    }
+    else{
+        $('#job_grade').prop('readonly', true);
+    }
+});
+
