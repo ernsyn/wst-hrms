@@ -1,6 +1,3 @@
-@extends('layouts.app') 
-@section('content')
-
 <!-- ADD -->
 <div class="modal fade" id="addDependentPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -18,14 +15,14 @@
                         <div class="col-xl-8">
                             <label class="col-md-5 col-form-label">Report To*</label>
                             <div class="col-md-7">
-                                <select class="form-control{{ $errors->has('employees') ? ' is-invalid' : '' }}" name="employees" id="employees">
+                                {{-- <select class="form-control{{ $errors->has('employees') ? ' is-invalid' : '' }}" name="employees" id="employees">
                                       @foreach($employees as $item)
                                       <option value="{{ $item->emp_id }}">{{ $item->name }}</option>
                                       @endforeach
                                     </select> @if ($errors->has('employees'))
                                 <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('employees') }}</strong>
-                                </span> @endif
+                                </span> @endif --}}
                             </div>
                             <label class="col-md-2 col-form-label">Type*</label>
                             <div class="col-md-10">
@@ -56,51 +53,33 @@
         </div>
     </div>
 </div>
-
-<div class="p-4">
-    <div class="card py-4">
-        <div class="card-body">
-            <div class="row pb-3">
-                <div class="col-auto mr-auto"></div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addDependentPopup">
-                        Add Report To
-                    </button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Full Name</th>
-                                <th>Type</th>
-                                <th>Note</th>
-                                <th>KPI Proposer</th>
-                                <th>Action</th>                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($reports as $row)
-                            <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$row['name']}}</td>
-                                <td>{{$row['type']}}</td>
-                                <td>{{$row['note']}}</td>
-                                @if($row['kpi_proposer']==1)
-                                <td><i class="fas fa-check"></i></td>
-                                @else
-                                <td><i class="fas fa-times"></i></td>
-                                @endif
-                                <td>Delete</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="tab-pane fade show p-3" id="nav-reportto" role="tabpanel" aria-labelledby="nav-reportto-tab">
+    <table class="table table-bordered table-hover" id="employeeReporttoTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Full Name</th>
+                <th>Type</th>
+                <th>Note</th>
+                <th>KPI Proposer</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        {{--
+        <tbody>
+            @foreach($reports as $row)
+            <tr>
+                <td>{{$loop->iteration}}</td>
+                <td>{{$row['name']}}</td>
+                <td>{{$row['type']}}</td>
+                <td>{{$row['note']}}</td>
+                @if($row['kpi_proposer']==1)
+                <td><i class="fas fa-check"></i></td>
+                @else
+                <td><i class="fas fa-times"></i></td>
+                @endif
+            </tr>
+            @endforeach
+        </tbody> --}}
+    </table>
 </div>
-@endsection

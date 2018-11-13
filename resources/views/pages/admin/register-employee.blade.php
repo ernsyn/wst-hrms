@@ -50,7 +50,7 @@
 
                             </div>
 
-                            <div class="form-group row">
+                            {{-- <div class="form-group row">
                                 <label class="col-md-2 col-form-label">Role</label>
                                 <div class="col-md-7">
                                     <select class="form-control{{ $errors->has('roles') ? ' is-invalid' : '' }}" name="roles" id="roles">
@@ -63,7 +63,7 @@
                                                   </span> @endif
                                 </div>
 
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
