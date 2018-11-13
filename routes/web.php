@@ -95,6 +95,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('add_holiday','AdminController@addHoliday')->name('add_holiday');
     Route::post('register_employee4','AdminController@addProfile3')->name('register_employee4');
     Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
+    Route::post('approve_leave', 'AdminController@approvedLeaveRequest')->name('approve_leave');
+    Route::post('disapprove_leave', 'AdminController@disapprovedLeaveRequest')->name('disapprove_leave');
+
 
 
     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');

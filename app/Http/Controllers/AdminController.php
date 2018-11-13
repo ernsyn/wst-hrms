@@ -326,7 +326,7 @@ class AdminController extends Controller
         ->join('users','users.id','=','leave_employees_requests.user_id')
         // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
         ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
-        ->select('leave_employees_requests.start_date as start_date',
+        ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
         'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
         'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
         'leave_employees_requests.status as status')
@@ -1154,6 +1154,83 @@ class AdminController extends Controller
 
         $grade = EmployeeGrade::all();
         return view('pages.admin.setup.grade', ['grade'=>$grade]);
+    }
+
+    public function approvedLeave()
+    {
+        $req_id = $_GET['id'];
+
+        LeaveRequest::where('id',$req_id)->update(array('status' => 'Approved'));
+        
+
+        $result = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
+        ->join('users','users.id','=','leave_employees_requests.user_id')
+        // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
+        ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
+        ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
+        'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
+        'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
+        'leave_employees_requests.status as status')
+        ->get();
+
+        // $test = new TestModel();
+        // $result = $test->getData($id);
+
+        foreach($result as $row)
+        {
+            $html =
+              '<tr>
+                 <td>' . $row->request_id . '</td>' .
+                 '<td>' . $row->name . '</td>' .
+                 '<td>' . $row->leave_type . '</td>' .
+                 '<td>' . $row->start_date . '</td>' .
+                 '<td>' . $row->end_date . '</td>' .
+                 '<td>' . $row->total_days . '</td>' .
+                 '<td>' . $row->status . '</td>' .
+                 '<td></td>' .
+              '</tr>';
+        }
+        return $html;
+
+        // return View::make('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
+    }
+
+    public function approvedLeaveRequest(Request $request)
+    {          
+       
+        $req_id = $request->input('req_id');
+        LeaveRequest::where('id',$req_id)->update(array('status' => 'Approved'));
+       
+        $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
+        ->join('users','users.id','=','leave_employees_requests.user_id')
+        // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
+        ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
+        ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
+        'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
+        'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
+        'leave_employees_requests.status as status')
+        ->get();
+
+        return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
+    }
+
+    public function disapprovedLeaveRequest(Request $request)
+    {          
+       
+        $req_id = $request->input('req_id');
+        LeaveRequest::where('id',$req_id)->update(array('status' => 'Disapproved'));
+       
+        $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
+        ->join('users','users.id','=','leave_employees_requests.user_id')
+        // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
+        ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
+        ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
+        'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
+        'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
+        'leave_employees_requests.status as status')
+        ->get();
+
+        return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
     }
 
 

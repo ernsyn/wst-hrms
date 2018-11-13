@@ -528,3 +528,17 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #phone').val(phone)
 
 })
+
+//approved leave
+$('#approveLeaverequest').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var id = button.data('leaverequest-id')
+    var modal = $(this)
+    modal.find('.modal-body #req_id').val(id)
+})
+$('#disapproveLeaverequest').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var id = button.data('leaverequest-id')
+    var modal = $(this)
+    modal.find('.modal-body #req_id').val(id)
+})

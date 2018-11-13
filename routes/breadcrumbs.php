@@ -177,6 +177,18 @@ Breadcrumbs::for('add_leave_application', function ($trail) {
     $trail->push('Leave Application', route('add_leave_application'));
 });
 
+// Home > Admin > Leave Approve
+Breadcrumbs::for('approve_leave', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Request', route('approve_leave'));
+});
+
+// Home > Admin > Leave Disapprove
+Breadcrumbs::for('disapprove_leave', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Request', route('disapprove_leave'));
+});
+
 // Home > Admin > Leave Balance
 Breadcrumbs::for('admin/leavebalance', function ($trail) {
     $trail->parent('admin.home');
