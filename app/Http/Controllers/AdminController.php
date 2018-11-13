@@ -281,13 +281,11 @@ class AdminController extends Controller
     }
 
 
-      
-
     public function displayLeaveBalance()
     {
-        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        $leavebalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
         ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
-        ->join('users','users.id','=','employees.id')
+        ->join('users','users.id','=','employees.user_id')
         ->select('users.name as name','users.id as user_id',
         'leave_balance.balance as balance','leave_balance.id as balance_id',
         'leave_balance.carry_forward as carry',
@@ -318,19 +316,7 @@ class AdminController extends Controller
         [$user_id, $types, $leave_balance,
         $now->year, $carry_forward, $created_by]);
 
-        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
-        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
-        ->join('users','users.id','=','employees.id')
-        ->select('users.name as name','users.id as user_id',
-        'leave_balance.balance as balance','leave_balance.id as balance_id',
-        'leave_balance.carry_forward as carry',
-        'leave_types.name as leave','leave_types.id as type_id')
-        ->get();
-
-        $users = User::all();
-        $types = LeaveType::all();
-
-        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]); 
+        return redirect()->route('admin/leavebalance');
     }
 
     public function editLeaveBalance(Request $request)
@@ -345,19 +331,7 @@ class AdminController extends Controller
         'id_leave_type' => $types,'balance' => $leave_balance,'carry_forward' => $carry_forward));
 
 
-        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
-        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
-        ->join('users','users.id','=','employees.id')
-        ->select('users.name as name','users.id as user_id',
-        'leave_balance.balance as balance','leave_balance.id as balance_id',
-        'leave_balance.carry_forward as carry',
-        'leave_types.name as leave','leave_types.id as type_id')
-        ->get();
-
-        $users = User::all();
-        $types = LeaveType::all();
-
-        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]); 
+        return redirect()->route('admin/leavebalance');
     }
 
 
@@ -386,11 +360,9 @@ class AdminController extends Controller
         return view('pages.admin.leave-holiday', ['leaveholiday'=>$leaveholiday]);
     }
     
-    
 
     public function displayLeaveRequest()
     {       
-
         $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
         ->join('users','users.id','=','leave_employees_requests.user_id')
         // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
