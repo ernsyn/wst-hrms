@@ -110,7 +110,6 @@
                 <div class="col-1">
                     <i class="far fa-calendar-alt"></i>
                 </div>
-<<<<<<< HEAD
                 <div class="col-10">
                     E-Leave
                 </div>
@@ -128,21 +127,3 @@
     </li>
     @endif
 </nav>
-=======
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('employee/leaveapplication','') ? 'show' : '' }}" id="leaveSubmenu">
-                <li class="{{ request()->is('employee/leaveapplication') ? 'active' : '' }}">
-                    <a href="{{ route('employee/leaveapplication') }}">Leave Application</a>
-                </li>
-                <li class="{{ request()->is('') ? 'active' : '' }}">
-                    <a href="{{ route('employee/leavebalance') }}">Leave Balance</a>
-                </li>
-                <li class="{{ request()->is('') ? 'active' : '' }}">
-                        <a href="{{ route('employee/leaverequest') }}">Leave Request</a>
-                    </li>
-            </ul>
-            
-        </li>
-@endif
-</nav>
->>>>>>> 12bed9ffb87ae67443b78499a5c1fe8f91a32257

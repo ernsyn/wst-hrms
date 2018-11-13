@@ -61,9 +61,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('admin/profile-employee/{id}');
     Route::get('user-list', 'AdminController@displayUserList')->name('admin/user_list');
     Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
-<<<<<<< HEAD
-  
-=======
 
     //--setup company--
     Route::get('/setup/company-details/{id}','AdminController@displayCompanyDetails')->name('/setup/company-details/{id}');
@@ -73,7 +70,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('add_company_addition','AdminController@addCompanyAddition')->name('add_company_addition');
     Route::post('add_company_deduction','AdminController@addCompanyDeduction')->name('add_company_deduction');
 
->>>>>>> 12bed9ffb87ae67443b78499a5c1fe8f91a32257
 
     Route::post('edit_employee_dependent','AdminController@editEmployeeDependent')->name('edit_employee_dependent');
     Route::post('edit_emergency_contact','AdminController@editEmergencyContact')->name('edit_emergency_contact');

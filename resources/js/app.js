@@ -25,7 +25,7 @@ import 'jquery-mousewheel';
 import 'moment'
 import Chart from 'chart.js';
 
-
+import 'chosen-js/chosen.jquery.min.js';
 
 import './datatables';
 import './modal';

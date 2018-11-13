@@ -281,15 +281,9 @@
                                     data-company-url="{{$row['url']}}"
                                     data-company-address="{{$row['address']}}"
                                     data-company-phone="{{$row['phone']}}"
-<<<<<<< HEAD
-
                                     data-target="#updateCompanyPopup">EDIT</button>
-                          </td>
-=======
-                                    data-target="#updateCompanyPopup">EDIT</button>
-                                    <button onclick="window.location='{{ url('admin/setup/company-details/'.$row['id']) }}';">VIEW</button>
+                                    <button class="btn btn-outline-success waves-effect" onclick="window.location='{{ url('admin/setup/company-details/'.$row['id']) }}';">VIEW</button>
                                 </td>
->>>>>>> 12bed9ffb87ae67443b78499a5c1fe8f91a32257
                             </tr>
                             @endforeach
                         </tbody>
