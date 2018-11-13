@@ -28,6 +28,27 @@
         }
     }
 
+    #hrms-mode {
+        margin: 10px 10px 10px 10px;
+        color: $app-textcolor-light;
+        // background-color: lighten($app-primary-darkened, 10%);
+        background-attachment: fixed;
+        font-size: 10pt;
+        font-weight: 600;
+
+        div {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        #label {
+            background-color: lighten($app-primary-darkened, 15%);
+        }
+        #value {
+            background-color: lighten($app-primary-darkened, 10%);
+        }
+    }
+
     #menu-container {
         padding: 20px 0;
         .menu-section {

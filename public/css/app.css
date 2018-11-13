@@ -17530,6 +17530,27 @@ select:-webkit-autofill:focus {
      object-fit: contain;
 }
 
+#sidebar #hrms-mode {
+  margin: 10px 10px 10px 10px;
+  color: #c8d9fd;
+  background-attachment: fixed;
+  font-size: 10pt;
+  font-weight: 600;
+}
+
+#sidebar #hrms-mode div {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#sidebar #hrms-mode #label {
+  background-color: #0842be;
+}
+
+#sidebar #hrms-mode #value {
+  background-color: #073aa5;
+}
+
 #sidebar #menu-container {
   padding: 20px 0;
 }

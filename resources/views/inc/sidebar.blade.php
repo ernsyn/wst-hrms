@@ -2,6 +2,14 @@
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/oppologo.png')}}">
     </div>
+    <div id="hrms-mode" class="row">
+        <div id="label" class="col-4 text-center">
+            Mode
+        </div>
+        <div id="value" class="col-8 text-center">
+            Employee
+        </div>
+    </div>
     <ul id="menu-container" class="list-unstyled">
         @hasanyrole('super-admin|admin')
         {{-- SECTION: Employee --}}
