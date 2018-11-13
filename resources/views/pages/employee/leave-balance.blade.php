@@ -15,7 +15,7 @@
                                 <th>Leave Balance</th>
                                 <th>Carry Forward</th>
                                 <th>Leave Type</th>
-                                <th>Action</th>
+    
                             </tr>
                         </thead>
 
@@ -27,7 +27,7 @@
                                 <td>{{$row['balance']}}</td>
                                 <td>{{$row['carry']}}</td>
                                 <td>{{$row['leave']}}</td>
-                                <td>Action</td>
+               
                             </tr>
                             @endforeach
                         </tbody>
