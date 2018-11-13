@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "content-hash": "c3e2ee805be60a9b1285d4000b66a9a3",
@@ -4063,16 +4063,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v3.12.7",
+            "version": "v3.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "50be05aeb281fb5009a27d3aecb6df2633095e68"
+                "reference": "1c3c2ef2e88f965ad62fe21b98daac99f77151b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/50be05aeb281fb5009a27d3aecb6df2633095e68",
-                "reference": "50be05aeb281fb5009a27d3aecb6df2633095e68",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/1c3c2ef2e88f965ad62fe21b98daac99f77151b2",
+                "reference": "1c3c2ef2e88f965ad62fe21b98daac99f77151b2",
                 "shasum": ""
             },
             "require": {
@@ -4118,7 +4118,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2018-11-03T04:21:45+00:00"
+            "time": "2018-11-10T05:15:10+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
