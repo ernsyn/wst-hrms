@@ -1,5 +1,4 @@
 @extends('layouts.base')
-@section('pageTitle', 'Company') 
 @section('content')
 
 <div class="modal fade" id="addCompanyPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -12,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_company') }}" id="add_company">
+                <form method="POST" action="{{ route('add_company') }}" id="form_validate"  data-parsley-validate>
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -249,7 +248,8 @@
                                 <th>Socso No</th>
                                 <th>EIS No</th>
                                 <th>Last Updated</th>
-                                <th>Status</th>
+                  
+                                <th>Account Number</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -259,13 +259,14 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{$row['name']}}</td>
                                 <td>{{$row['description']}}</td>
-                                <td>{{$row['image']}}</td>
+                                <td>{{$row['registration_no']}}</td>
                                 <td>{{$row['tax_no']}}</td>
                                 <td>{{$row['epf_no']}}</td>
                                 <td>{{$row['socso_no']}}</td>
                                 <td>{{$row['eis_no']}}</td>
                                 <td>Update by: {{$row['updated_by']}}<br><br> Updated on: {{$row['updated_by updated_at']}}</td>
-                                <td>{{$row['status']}}</td>
+                        
+                                <td>          <button onclick="window.location='{{ url('/admin/company-edit/'.$row['id']) }}';" class="btn btn-default">View</button></td>
                                 <td><button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     data-company-id="{{$row['id']}}"
                                     data-company-name="{{$row['name']}}"
@@ -281,7 +282,8 @@
                                     data-company-address="{{$row['address']}}"
                                     data-company-phone="{{$row['phone']}}"
 
-                                    data-target="#updateCompanyPopup">EDIT</button></td>
+                                    data-target="#updateCompanyPopup">EDIT</button>
+                          </td>
                             </tr>
                             @endforeach
                         </tbody>

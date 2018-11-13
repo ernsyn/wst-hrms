@@ -1,7 +1,71 @@
-.bg-login {
-    vertical-align: middle;
-    border-style: none;
+#page-login {
+    min-height: 100%;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    background-color: rgba(darken($app-primary, 32%), .7);
+    background-image: url('/img/login-background.jpg');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    background-blend-mode: overlay;
+
+    #login-container {
+
+        &::before {
+            content: "";
+            flex-shrink: 0;
+            height: 70px;
+        }
+
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        min-height: 500px;
+        width: 400px;
+        margin: 0px auto;
+
+        header {
+            text-align: center;
+            // display: flex;
+            // flex-direction: column;
+            // justify-content: center;
+
+            #logo {
+                width: 260px;
+                margin: 0px auto;
+
+                img {
+                    display: block;
+                    width: 100%;
+                    height: auto;
+                    object-fit: contain;
+                }
+            }
+
+            #app-title {
+                margin-top: 30px;
+                color: #f5f5f5; //lighten($app-primary, 50%);
+
+                h4 {
+                    font-weight: 400;
+                    letter-spacing: 1px;
+                }
+
+                // text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        #login-card {
+            margin-top: 50px;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 10px;
+        }
+
+        footer {
+            color: #f5f5f5; // lighten($app-primary, 50%);
+            padding-bottom: 32px;
+            text-align: center;
+            margin: auto 0px 0px;
+        }
+    }
 }

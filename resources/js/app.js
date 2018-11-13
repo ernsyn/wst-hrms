@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -12,15 +11,24 @@ import 'fullcalendar';
 import 'datatables.net-bs4';
 import 'datatables.net-buttons-bs4';
 import 'datatables.net-responsive-bs4';
-
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import 'datatables.net-buttons/js/buttons.colVis.js';
 import 'datatables.net-buttons/js/buttons.print.js';
 import 'datatables.net-buttons/js/buttons.flash.js';
 import 'datatables.net-buttons/js/buttons.html5.js';
 
-import swal from 'sweetalert2';
 import 'parsleyjs';
 import 'jquery-mousewheel';
+
+import 'moment'
+import Chart from 'chart.js';
+
+
+
+import './datatables';
+import './modal';
 
 // window.Vue = require('vue');
 
@@ -36,18 +44,18 @@ import 'jquery-mousewheel';
 //     el: '#app'
 // });
 
-if(performance.navigation.type == 2){
+if (performance.navigation.type == 2) {
     location.reload(true);
 }
 
-$('.button-left').click(function(){
+$('#btn-toggle-menu').click(function () {
     $('#sidebar').toggleClass('fliph');
     $('.content').toggleClass('content-active');
 });
 
-$(".card").fadeIn();
-
-
+// $(function() {
+//     $(".card").fadeIn();
+// })
 
 $('.scrollable').mousewheel(function (e, delta) {
     this.scrollLeft -= (delta * 40);
@@ -56,7 +64,7 @@ $('.scrollable').mousewheel(function (e, delta) {
 
 
 
-$("#leaveform").parsley({
+$("#form_validate").parsley({
     errorClass: 'is-invalid',
     successClass: 'is-valid', // Comment this option if you don't want the field to become green when valid. Recommended in Google material design to prevent too many hints for user experience. Only report when a field is wrong.
     errorsWrapper: '<span class="form-text text-danger"></span>',
@@ -88,11 +96,53 @@ $('#endDate').datepicker({
     minDate: today,
     onSelect: function (selectedDate) {
         $("#startDate").datepicker("option", "maxDate", selectedDate);
+
+        var start = $("#startDate").datepicker("getDate");
+        var end = $("#endDate").datepicker("getDate");
+        var days = ((end - start) / (1000 * 60 * 60 * 24))+1;
+        $( "span.totaldays").replaceWith( "<span class='totaldays'><b>"+days+"</b> days</span>" );
+        $("#totalLeave").val(days);
+
+        if(days>1)
+        {
+            $("#selectPeriod").hide();
+        }
+        else
+        {
+            $("#selectPeriod").show();
+        }
+
     },
     onClose: function () {
         $(this).parsley().validate();
     }
 });
+//change day according to selected value
+$('#type').on('change', function() {
+
+    var txt = this.value;
+    var obj = JSON.parse(txt);
+
+    $( "div.leavedays" ).replaceWith( "<div class='leavedays col-sm-4'><b>"+ obj.balance +"</b> days available</span></div>" );
+    $("#leaveTypeId").val(obj.id);
+    $("#leaveBalance").val(obj.balance);
+});
+
+$("#leaveHalfDay").click(function(){  
+        $( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
+        $("#totalLeave").val(0.5);
+});
+
+$("#leaveFullDay").click(function(){  
+    $( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
+    $("#totalLeave").val(1);
+});
+$('#expiryDate').datepicker({
+    altField: "#altexpiryDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+
 $('#dobDate').datepicker({
     altField: "#altdobDate",
     altFormat: 'yy-mm-dd',
@@ -105,6 +155,16 @@ $('#editDobDate').datepicker({
 });
 $('#licenseExpiryDate').datepicker({
     altField: "#altlicenseExpiryDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#expDate').datepicker({
+    altField: "#altexpDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#issueDate').datepicker({
+    altField: "#altissueDate",
     altFormat: 'yy-mm-dd',
     format: 'dd/mm/yy'
 });
@@ -142,391 +202,46 @@ $('#calendar').fullCalendar({
     // put your options and callbacks here
 })
 
-// Datatables Employee
-$('#emergencyContactTable').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "emergencycontact",
-    "columns": [
-        {
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
+
+new Chart($("#myChart"), {
+    type: 'bar',
+    data: {
+        labels: ["AL", "SL", "UL", "HL", "ML", "MTL"],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Monthly Leave Statistics'
         },
-        { "data": "name" },
-        { "data": "relationship" },
-        { "data": "contact_no" },
-        {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#emergencyModal"><i class="far fa-edit"></i></button>'
+        legend: {
+            display: false
         }
-    ]
-});
-$('#employeeDependentTable').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "dependentdata",
-    "columns": [
-        {
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        { "data": "name" },
-        { "data": "relationship" },
-        { "data": "dob" },
-        {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#dependentModal"><i class="far fa-edit"></i></button>'
-        }
-    ]
-});
-$('#employeeImmiTable').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "employeeimmigrationdata",
-    "columns": [
-        {
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        { "data": "document" },
-        { "data": "passport_no" },
-        { "data": "issued_by" },
-        { "data": "issued_date" },
-        { "data": "expiry_date" },
-        {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#immigrationModal"><i class="far fa-edit"></i></button>'
-        }
-    ]
-});
-$('#employeeVisaTable').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "employeevisadata",
-    "columns": [
-        {
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        { "data": "visa_number" },
-        { "data": "family_members" },
-        { "data": "issued_by" },
-        { "data": "issued_date" },
-        { "data": "expiry_date" },
-        {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#visaModal"><i class="far fa-edit"></i></button>'
-        }
-    ]
-});
-$('#employeeJobTable').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "jobdata",
-    "columns": [
-        {
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        { "data": "created_on" },
-        { "data": "positionname" },
-        { "data": "departname" },
-        { "data": "teamname" },
-        { "data": "categoryname" },
-        { "data": "gradename" },
-        { "data": "basic_salary" },
-        { "data": "status" },
-        {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#jobModal"><i class="far fa-edit"></i></button>'
-        }
-    ]
-});
-$('#employeeBankTable').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "",
-    // "ajax": "bankdata",
-    "columns": [
-        {
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        { "data": "bank_code" },
-        { "data": "acc_no" },
-        { "data": "status" },
-        {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#bankModal"><i class="far fa-edit"></i></button>'
-        }
-    ]
-});
-// $('#leaveTypeTable').DataTable({
-//     'bDestroy': true,
-//     "bInfo": true,
-//     "bDeferRender": true,
-//     "serverSide": true,
-//     "bStateSave": true,
-//     "ajax":"leavetypedata",
-//     "columns": [{
-//         render: function render(data, type, row, meta) {
-//             return meta.row + meta.settings._iDisplayStart + 1;
-//         }
-//     }, 
-//     { "data": "code" }, 
-//     { "data": "name" }, 
-//     { "data": "apply_before_days" }, 
-//     {
-//         "data": null, // can be null or undefined
-//         "defaultContent": '<div class="btn-group"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal"><i class="far fa-edit"></i></button><button type="button" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i></button></div>'
-//     }]
-// });
-$('#leaveTypeTable').DataTable();
-$('#leaveRequestTable').DataTable();
-$('#employeeDependentTable').DataTable();
-$('#employeeImmiTable').DataTable();
-$('#employeeQualCompanyTable').DataTable();
-$('#employeeQualEduTable').DataTable();
-$('#employeeQualSkillTable').DataTable();
-$('#employeeAttachmentTable').DataTable();
-$('#employeeReporttoTable').DataTable();
-$('#employeeHistoryTable').DataTable();
 
-// Datatables Setup
-$('#setupCompanyTable').DataTable({
-    responsive: true,
-    stateSave:true,
-    dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
-            extend: 'copy',
-            text: '<i class="fas fa-copy fa-fw"></i>',
-            className: 'btn-outline-danger',
-            titleAttr: 'Copy'
-        },
-        {
-            extend: 'colvis',
-            text: '<i class="fas fa-search fa-fw"></i>',
-            className: 'clearfix btn-outline-primary rounded-0',
-            titleAttr: 'Show/Hide Column'
-        },
-        {
-            extend: 'csv',
-            text: '<i class="fas fa-file-alt fa-fw"></i>',
-            className: 'btn-outline-success',
-            titleAttr: 'Export CSV'
-        },
-        {
-            extend: 'print',
-            text: '<i class="fas fa-print fa-fw"></i>',
-            className: 'btn-outline-info',
-            titleAttr: 'Print'
-        },
-    ]
-
+    }
 });
 
-
-$('#setupJobconfigureCostCentreTable').DataTable({
-    responsive: true,
-    stateSave:true,
-    dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
-            extend: 'copy',
-            text: '<i class="fas fa-copy fa-fw"></i>',
-            className: 'btn-outline-danger',
-            titleAttr: 'Copy'
-        },
-        {
-            extend: 'colvis',
-            text: '<i class="fas fa-search fa-fw"></i>',
-            className: 'clearfix btn-outline-primary rounded-0',
-            titleAttr: 'Show/Hide Column'
-        },
-        {
-            extend: 'csv',
-            text: '<i class="fas fa-file-alt fa-fw"></i>',
-            className: 'btn-outline-success',
-            titleAttr: 'Export CSV'
-        },
-        {
-            extend: 'print',
-            text: '<i class="fas fa-print fa-fw"></i>',
-            className: 'btn-outline-info',
-            titleAttr: 'Print'
-        },
-    ]
-
-});
-$('#setupJobconfigureDeptTable').DataTable( { responsive: true,
-    stateSave:true,
-    dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
-            extend: 'copy',
-            text: '<i class="fas fa-copy fa-fw"></i>',
-            className: 'btn-outline-danger',
-            titleAttr: 'Copy'
-        },
-        {
-            extend: 'colvis',
-            text: '<i class="fas fa-search fa-fw"></i>',
-            className: 'clearfix btn-outline-primary rounded-0',
-            titleAttr: 'Show/Hide Column'
-        },
-        {
-            extend: 'csv',
-            text: '<i class="fas fa-file-alt fa-fw"></i>',
-            className: 'btn-outline-success',
-            titleAttr: 'Export CSV'
-        },
-        {
-            extend: 'print',
-            text: '<i class="fas fa-print fa-fw"></i>',
-            className: 'btn-outline-info',
-            titleAttr: 'Print'
-        },
-    ]
-
-});
-$('#setupJobconfigureTeamTable').DataTable({ responsive: true,
-    stateSave:true,
-    dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
-            extend: 'copy',
-            text: '<i class="fas fa-copy fa-fw"></i>',
-            className: 'btn-outline-danger',
-            titleAttr: 'Copy'
-        },
-        {
-            extend: 'colvis',
-            text: '<i class="fas fa-search fa-fw"></i>',
-            className: 'clearfix btn-outline-primary rounded-0',
-            titleAttr: 'Show/Hide Column'
-        },
-        {
-            extend: 'csv',
-            text: '<i class="fas fa-file-alt fa-fw"></i>',
-            className: 'btn-outline-success',
-            titleAttr: 'Export CSV'
-        },
-        {
-            extend: 'print',
-            text: '<i class="fas fa-print fa-fw"></i>',
-            className: 'btn-outline-info',
-            titleAttr: 'Print'
-        },
-    ]
-
-});
-$('#setupJobconfigurePositionTable').DataTable();
-$('#setupJobconfigureGradeTable').DataTable();
-$('#setupUserTable').DataTable({ responsive: true,
-    stateSave:true,
-    dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
-            extend: 'copy',
-            text: '<i class="fas fa-copy fa-fw"></i>',
-            className: 'btn-outline-danger',
-            titleAttr: 'Copy'
-        },
-        {
-            extend: 'colvis',
-            text: '<i class="fas fa-search fa-fw"></i>',
-            className: 'clearfix btn-outline-primary rounded-0',
-            titleAttr: 'Show/Hide Column'
-        },
-        {
-            extend: 'csv',
-            text: '<i class="fas fa-file-alt fa-fw"></i>',
-            className: 'btn-outline-success',
-            titleAttr: 'Export CSV'
-        },
-        {
-            extend: 'print',
-            text: '<i class="fas fa-print fa-fw"></i>',
-            className: 'btn-outline-info',
-            titleAttr: 'Print'
-        },
-    ]
-
-});
-$('#setupBranchTable').DataTable( { responsive: true,
-    stateSave:true,
-    dom: "<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-    "<'row'<'col-md-6'><'col-md-6'>>" +
-    "<'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
-    buttons: [
-        {
-            extend: 'copy',
-            text: '<i class="fas fa-copy fa-fw"></i>',
-            className: 'btn-outline-danger',
-            titleAttr: 'Copy'
-        },
-        {
-            extend: 'colvis',
-            text: '<i class="fas fa-search fa-fw"></i>',
-            className: 'clearfix btn-outline-primary rounded-0',
-            titleAttr: 'Show/Hide Column'
-        },
-        {
-            extend: 'csv',
-            text: '<i class="fas fa-file-alt fa-fw"></i>',
-            className: 'btn-outline-success',
-            titleAttr: 'Export CSV'
-        },
-        {
-            extend: 'print',
-            text: '<i class="fas fa-print fa-fw"></i>',
-            className: 'btn-outline-info',
-            titleAttr: 'Print'
-        },
-    ]
-
-});
-
-//sweet alert2
-$('#emergencyupdate').click(function () {
-    swal({
-        title: 'Success!',
-        text: 'Change has been saved.',
-        type: 'success',
-        confirmButtonText: 'Cool'
-    })
-});
-
-$('#dependentupdate').click(function () {
+$('#updateCostCentre').click(function () {
     swal({
         title: 'Success!',
         text: 'Change has been saved.',
@@ -706,7 +421,6 @@ $('#updateCostCentrePopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #payroll_type').val(payroll_type)
 })
 
-
 $('#updateGradePopup').on('show.bs.modal', function (event) {
 
     var button = $(event.relatedTarget)
@@ -795,7 +509,7 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     var url = button.data('company-url')
     var address = button.data('company-address')
     var code = button.data('company-code')
-    var registration_no = button.data('company-registration')
+    var registration_no = button.data('company-registration-no')
     var phone = button.data('company-phone')
   
 
@@ -820,4 +534,3 @@ $('#updateCompanyPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #phone').val(phone)
 
 })
-

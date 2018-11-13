@@ -1,6 +1,6 @@
 
 // Body
-$body-bg: #D6DAE6;
+$body-bg: rgb(245, 244, 244);
 
 // Typography
 $font-family-sans-serif: 'Open Sans', sans-serif;
@@ -14,12 +14,21 @@ $purple: #9561e2;
 $pink: #f66D9b;
 $red: #e3342f;
 $orange: #f6993f;
-$yellow: #ffed4a;
+$yellow: #ffc107;
 $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
+$enable-gradients:true;
 
 $sidebarbackground:#1e3565;
 $oppobackground: darken($sidebarbackground, 5%);
 
 $detailscolor: #15A4FA;
+
+
+$app-primary: #06318d; //#124acc
+$app-secondary: rgb(48, 236, 80);
+
+$app-primary-darkened: darken($app-primary, 5%); 
+
+$app-textcolor-light: lighten($app-primary, 60%);

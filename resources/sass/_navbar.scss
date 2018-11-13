@@ -1,0 +1,12 @@
+#navbar {
+    background-color: $app-primary;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+
+    padding-top: 3px;
+    padding-bottom: 3px;
+
+    #btn-toggle-menu {
+        color: $app-textcolor-light;
+        padding: 0px 7px;
+    }
+}
