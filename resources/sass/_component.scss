@@ -1,14 +1,3 @@
-html{
-    overflow-x:hidden;
-    height: 100%;
-    width: 100%;
-}
-
-body {
-    height: inherit;
-    width: inherit;
-}
-
 //1.Container
 .content {
     width: calc(100% - 230px);
@@ -16,10 +5,13 @@ body {
     top: 0;
     right: 0;
 }
+
 .content-active {
     width: calc(100%);
+
     table.dataTable {
-        width: calc(100%);}
+        width: calc(100%);
+    }
 }
 
 //2.Scrollbar
@@ -34,124 +26,50 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: black; 
+    background: black;
     border-radius: 10px;
 }
 
-//3.Header
-.navbar-laravel{
-    background-color: $sidebarbackground;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-.navbar-title {
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
-//4.Sidebar
-#sidebar {
-    box-shadow: inset 0px 1px 10px rgba(0, 0, 0, 0.274);
-    overflow-y:scroll;
-    width: 230px;
-    position: fixed;
-    height: 100%;
-    background: $sidebarbackground;
-    color: #fff;
-    transition: all 0.3s;  
-    letter-spacing: 0.7px;  
-    .sidebar-header {
-        padding: 18px;
-        background: $oppobackground;
-        img {
-            object-fit: contain;
-        }
-    }
-    .dropdown-toggle::after {    
-        display: block;
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
-    }
-    ul.components {
-        padding: 20px 0;
-    }
-    ul li {
-        ul a {            
-            // border-left: 5px solid #f0f0f0;
-            font-size: 0.9em !important;
-            padding-left: 50px !important;
-            background: $sidebarbackground;
-            color: #ffffffd3;
-            font-weight: 300;
-        }
-        a {
-            padding: 8px 20px;
-            font-size: 1.0em;
-            font-weight: 600;
-            display: block;
-            color: #ffffffb7;
-        }
-        a:hover {
-            background: $oppobackground;
-            // border-left: 5px solid #ffffff;
-            // font-weight: 600;
-            
-        }
-    }
-    a,
-    a:hover,
-    a:focus {
-        color: inherit;
-        text-decoration: none;
-        transition: all 0.3s;      
-    }
-    // ul li.active>a,
-    // a[aria-expanded="true"] {
-    //     background: $oppobackground;  
-    //     // font-weight: 600;
-    //     border-left: 5px solid #ffffff;
-    // }
-    a[data-toggle="collapse"] {
-        position: relative;
-    }
-    
-}
-.fliph { 
+.fliph {
     display: none;
 }
 
 //5.Breadcrumb
-ol.breadcrumb{
+ol.breadcrumb {
     border-radius: 0;
     padding: 18px;
     height: 60px;
+    font-weight: 600;
 }
-.justify-end ol.breadcrumb{
+
+.justify-end ol.breadcrumb {
     display: flex;
     justify-content: flex-end;
 }
 
 //6.Tabs
 .nav-tabs {
-    overflow-y:hidden;
+    overflow-y: hidden;
 }
+
 .nav-tabs .nav-link {
     border: none;
 }
-.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
     background-color: transparent;
     border-bottom: 3px solid $detailscolor;
 }
 
 //7.preloader
-.card {
-	display:none;
-}
+// .card {
+// 	display:none;
+// }
 
 //8.remove caret
 button.dropdown-toggle::after {
-    display:none;
+    display: none;
 }
 
 //9.datatable styling
@@ -160,6 +78,16 @@ table.dataTable {
         background-color: $blue;
         white-space: nowrap;
     }
-
 }
 
+//10. bulletin
+.bulletin {
+    overflow-y: scroll;
+    height: 400px;
+}
+
+//10. bulletin
+.bulletin {
+    overflow-y: scroll;
+    height: 400px;
+}

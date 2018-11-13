@@ -1,6 +1,3 @@
-@extends('layouts.app')
-@section('pageTitle', 'Qualification')
-@section('content')
 <!-- ADD EXPERIENCES -->
 <div class="modal fade" id="addCompanyPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -397,174 +394,52 @@
 </div>
 
 
-<div class="p-4">
-   <div class="card py-4">
-    <div class="card-body">
-        <div class="container-fluid">
-            <div class="row">
-                <nav class="col-sm-12">
-                    <div class="nav nav-tabs font-weight-bold" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-company" role="tab" aria-controls="nav-company"
-                            aria-selected="false">Company</a>
-                        <a class="nav-item nav-link" id="nav-company-tab" data-toggle="tab" href="#nav-education" role="tab" aria-controls="nav-education"
-                            aria-selected="true">Education</a>
-                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-skill" role="tab" aria-controls="nav-skill"
-                            aria-selected="false">Skill</a>
-                    </div>
-                </nav>
-                <div class="tab-content col-sm-12 text-justify pt-4" id="nav-tabContent">
-                    {{-- Company --}}
-                    <div class="tab-pane fade show active" id="nav-company" role="tabpanel" aria-labelledby="nav-company-tab">
-                        <!-- Open add company experience --> 
-                        <div class="row pb-3">
-                            <div class="col-auto mr-auto"></div>
-                            <div class="col-auto">
-                                <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addCompanyPopup">
-                                    Add Experience
-                                </button>
-                            </div>
-                        </div>               
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered table-hover" id="employeeQualCompanyTable">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Company</th>
-                                            <th>Position</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Note</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($companies as $row)
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>{{$row['previous_company']}}</td>
-                                            <td>{{$row['previous_position']}}</td>
-                                            <td>{{$row['start_date']}}</td>
-                                            <td>{{$row['end_date']}}</td>
-                                            <td>{{$row['note']}}</td>
-                                            <td><button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                data-company-id="{{$row['id']}}"          
-                                                data-company-previous-company="{{$row['previous_company']}}"
-                                                data-company-previous-position="{{$row['previous_position']}}"
-                                                data-company-start-date="{{$row['start_date']}}"
-                                                data-company-end-date="{{$row['end_date']}}"
-                                                data-company-note="{{$row['note']}}"                                                
-                                                data-target="#updateCompanyPopup">EDIT</button></td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- Education --}}
-                    <div class="tab-pane fade" id="nav-education" role="tabpanel" aria-labelledby="nav-education-tab">
-                        <!-- Open add education -->
-                        <div class="row pb-3">
-                                <div class="col-auto mr-auto"></div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addEducationPopup">
-                                        Add Education
-                                    </button>
-                                </div>
-                            </div>   
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered table-hover" id="employeeQualEduTable">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Degree</th>
-                                            <th>Field of Study</th>
-                                            <th>Start Year</th>
-                                            <th>End Year</th>
-                                            <th>GPA</th>
-                                            <th>School</th>
-                                            <th>Description</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($educations as $row)
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>{{$row['level']}}</td>
-                                            <td>{{$row['major']}}</td>
-                                            <td>{{$row['start_year']}}</td>
-                                            <td>{{$row['end_year']}}</td>
-                                            <td>{{$row['gpa']}}</td>
-                                            <td>{{$row['school']}}</td>
-                                            <td>{{$row['description']}}</td>
-                                            <td><button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                data-education-id="{{$row['id']}}"          
-                                                data-education-level="{{$row['level']}}"
-                                                data-education-major="{{$row['major']}}"
-                                                data-education-start-year="{{$row['start_year']}}"
-                                                data-education-end-year="{{$row['end_year']}}"
-                                                data-education-gpa="{{$row['gpa']}}"
-                                                data-education-school="{{$row['school']}}"
-                                                data-education-description="{{$row['description']}}"                                             
-                                                data-target="#updateEducationPopup">EDIT</button></td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- Skill --}}
-                    <div class="tab-pane fade" id="nav-skill" role="tabpanel" aria-labelledby="nav-skill-tab">
-                        <!-- Open add skills -->
-                        <div class="row pb-3">
-                                <div class="col-auto mr-auto"></div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addSkillsPopup">
-                                        Add Skill
-                                    </button>
-                                </div>
-                            </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered table-hover" id="employeeQualSkillTable">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Skill Name</th>
-                                            <th>Year Experience</th>
-                                            <th>Competency</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($skills as $row)
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>{{$row['emp_skill']}}</td>
-                                            <td>{{$row['year_experience']}}</td>
-                                            <td>{{$row['competency']}}</td>
-                                            <td><button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                data-skill-id="{{$row['id']}}"          
-                                                data-skill-name="{{$row['emp_skill']}}"
-                                                data-skill-experience="{{$row['year_experience']}}"
-                                                data-skill-competency="{{$row['competency']}}"                                                                                            
-                                                data-target="#updateSkillsPopup">EDIT</button></td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div></div>
-@endsection
+<div class="tab-pane fade show p-3" id="nav-qualification" role="tabpanel" aria-labelledby="nav-qualification-tab">
+    {{-- Company --}}
+    <div class="col-md-12">COMPANY</div>
+    <table class="table table-bordered table-hover w-100" id="employeeQualCompanyTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Company</th>
+                <th>Position</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Note</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="dropdown-divider pb-3"></div>
+    {{-- Education --}}
+    <div class="col-md-12">EDUCATION</div>
+    <table class="table table-bordered table-hover w-100" id="employeeQualEduTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Degree</th>
+                <th>Field of Study</th>
+                <th>Start Year</th>
+                <th>End Year</th>
+                <th>GPA</th>
+                <th>School</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="dropdown-divider pb-3"></div>
+    {{-- Skill --}}
+    <div class="col-md-12">SKILL</div>
+    <table class="table table-bordered table-hover w-100" id="employeeQualSkillTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Skill Name</th>
+                <th>Year Experience</th>
+                <th>Competency</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+</div>
