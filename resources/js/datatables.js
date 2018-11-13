@@ -63,7 +63,7 @@ $('#employeeImmigrationTable').DataTable({
             }
         },
         {
-            "data": "document"
+            "data": "document_media_id"
         },
         {
             "data": "passport_no"
@@ -146,7 +146,7 @@ $('#employeeBankTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "dependent",
+    "ajax": "employeebank",
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;

@@ -182,7 +182,7 @@
                             </form>
                         </div>
                         {{-- Emergency --}}
-                        @include('pages.admin.emergency-contact')
+                        @include('pages.admin.emergency-contact', ['user' => $user])
                         {{-- Dependent --}}
                         @include('pages.admin.employee-dependent')
                         {{-- Immigration --}}

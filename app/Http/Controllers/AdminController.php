@@ -417,22 +417,8 @@ class AdminController extends Controller
         (?,?,?,?,?)',
         [$user->id, $name, $relationship, $contact_number, $created_by]);
 
-        $user = User::join('employees','employees.user_id','=','users.id')
-        ->join('countries','countries.id','=','employees.nationality')
-        ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
-        ->select('users.name as name','users.email as email', 
-        'employees.contact_no as contact_no', 'employees.address as address', 
-        'employees.ic_no as ic_no', 'employees.gender as gender', 
-        'employees.dob as dob','employees.marital_status as marital_status',
-        'employees.race as race', 'employees.total_children as total_child', 
-        'employees.driver_license_no as driver_license_no', 
-        'employees.driver_license_expiry_date as _license_expiry_date',
-        'users.id as user_id','employees.epf_no as epf_no',
-        'employees.tax_no as tax_no ','employees.basic_salary as basic_salary')
-        ->where('users.id',$user_id)
-        ->first();
 
-        return view('pages.admin.profile-employee',['user'=>$user]); 
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);  
     }
 
     public function editEmergencyContact(Request $request)
@@ -445,8 +431,7 @@ class AdminController extends Controller
         $contact_number = $request->input('contact_number');       
        
         EmergencyContact::where('id',$emp_con_id)->update(array('contact_name' => $name,'relationship' => $relationship, 'contact_number' => $contact_number));
-        $contacts = EmergencyContact::where('users.id',$user_id)->get();  
-        return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
 
@@ -470,7 +455,7 @@ class AdminController extends Controller
 
         $dependents = EmployeeDependent::where('emp_id',$user_id)->get();  
         
-        return view('pages.admin.profile-employee',['user'=>$user_id]); 
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function editEmployeeDependent(Request $request)
@@ -483,14 +468,11 @@ class AdminController extends Controller
        
         Dependent::where('id',$emp_dep_id)->update(array('dependent_name' => $name,'dependent_relationship' => $relationship));
 
-        $dependents = Dependent::where('emp_id',$emp_id)->get();  
-        return view('pages.admin.employee-dependent', ['dependents'=>$dependents->sortByDesc('id')]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function displayEmployeeImmigration()
     {       
-
-
         $id = Session::get('user_id');
         $user = Employee::where('user_id', $id)->first();
         $immigrations = EmployeeImmigration::where('emp_id',$user->id)->get();
@@ -504,19 +486,19 @@ class AdminController extends Controller
         $user = Employee::where('user_id', $user_id)->first();     
         $passport_no = $request->input('passport_no'); 
         $issued_by = $request->input('issued_by');     
-        $dobDate = $request->input('dobDate');
-        $licenseExpiryDate = $request->input('licenseExpiryDate');        
+        $altexpiryDate = $request->input('altexpiryDate');
+        $altlicenseExpiryDate = $request->input('altlicenseExpiryDate');        
         $created_by = auth()->user()->id;
        
         DB::insert('insert into employee_immigrations
         (emp_id, passport_no, issued_by, issued_date, expiry_date, created_by) 
         values
         (?,?,?,?,?,?)',
-        [$user->id, $passport_no, $issued_by, $dobDate, $licenseExpiryDate, $created_by]);
+        [$user->id, $passport_no, $issued_by, $altexpiryDate, $altlicenseExpiryDate, $created_by]);
 
 
-        $immigrations = EmployeeImmigration::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();  
-        return view('pages.admin.employee-immigration', ['immigrations'=>$immigrations]);
+        $immigrations = EmployeeImmigration::where('emp_id',$user_id)->get();  
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function editEmployeeImmigration(Request $request)
@@ -529,8 +511,7 @@ class AdminController extends Controller
         $issued_by = $request->input('issued_by');       
        
         EmployeeImmigration::where('id',$img_id)->update(array('document' => $document,'passport_no' => $passport_no, 'issued_by' => $issued_by));
-        $immigrations = EmployeeImmigration::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();  
-        return view('pages.admin.employee-immigration', ['immigrations'=>$immigrations]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function displayEmployeeVisa()
@@ -562,8 +543,6 @@ class AdminController extends Controller
     }
 
     public function addEmployeeVisa(Request $request)
-
-
     {
         
         $user_id = Session::get('user_id');
@@ -573,20 +552,17 @@ class AdminController extends Controller
         $visa_number = $request->input('visa_number');     
         $issued_date = $request->input('issued_date');
         $expiry_date = $request->input('expiry_date');        
-        $issued = $request->input('issued_date');
-        $expiry = $request->input('expiry_date');        
+        $issued = $request->input('altissueDate');
+        $expiry = $request->input('altexpDate');        
         $created_by = auth()->user()->id;
        
         DB::insert('insert into employee_visas
         (emp_id, visa_number,family_members, issued_date, expiry_date, created_by) 
         values
         (?,?,?,?,?,?)',
-         [$user->id, $visa_number,$family_members, $issued_date, $expiry_date, $created_by]);
-
-
-        $visa = EmployeeVisa::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();  
+         [$user->id, $visa_number,$family_members, $issued, $expiry, $created_by]);
         
-        return view('pages.admin.employee-visa', ['visa'=>$visa]); 
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function editEmployeeVisa(Request $request)
@@ -599,8 +575,8 @@ class AdminController extends Controller
         $family_members = $request->input('family_members');    
        
         EmployeeVisa::where('id',$visa_id)->update(array('type' => $type, 'visa_number' => $visa_number,'family_members' => $family_members));
-        $visa = EmployeeVisa::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();  
-        return view('pages.admin.employee-visa', ['visa'=>$visa]); 
+         
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     // public function displayEmployeeBank()
@@ -615,23 +591,23 @@ class AdminController extends Controller
 
     public function addEmployeeBank(Request $request)
     {          
-        $emp_id = Session::get('employee_id');    
+        $user_id = Session::get('user_id');
+        $user = Employee::where('user_id', $user_id)->first();   
+
+        
         $type = $request->input('type');             
         $bank_code = Input::get('bank_list');
         $acc_no = $request->input('acc_no'); 
         $status = Input::get('status');        
         $created_by = auth()->user()->id;
        
-        DB::insert('insert into employee_bank
+        DB::insert('insert into employee_bank_accounts
         (emp_id, type, bank_code, acc_no, acc_status, created_by) 
         values
         (?,?,?,?,?,?)',
         [$emp_id, $type, $bank_code, $acc_no, $status, $created_by]);
 
-        $banks = EmployeeBank::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();
-        $bank_list = BankCode::all();        
-        
-        return view('pages.admin.employee-bank', ['banks'=>$banks,'bank_list'=>$bank_list]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function editEmployeeBank(Request $request)
@@ -645,10 +621,7 @@ class AdminController extends Controller
        
         EmployeeBank::where('id',$bank_id)->update(array('bank_code' => $bank_code,
         'acc_no' => $acc_no,'acc_status' => $acc_status,));
-        $banks = EmployeeBank::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();
-        $bank_list = BankCode::all();        
-        
-        return view('pages.admin.employee-bank', ['banks'=>$banks,'bank_list'=>$bank_list]); 
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);  
     }
     
     public function displayProfile()
@@ -748,7 +721,7 @@ class AdminController extends Controller
 
     public function addQualificationCompany(Request $request)
     {          
-        $emp_id = Session::get('employee_id');
+        $user_id = Session::get('employee_id');
 
         $company = $request->input('company');
         $position = $request->input('position');      
@@ -764,11 +737,7 @@ class AdminController extends Controller
         (?,?,?,?,?,?,?)',
         [$emp_id, $company, $position, $start_date, $end_date, $note, $created_by]);
 
-        $companies = EmployeeExperience::where('emp_id', $emp_id)->get();
-        $educations = EmployeeEducation::where('emp_id', $emp_id)->get();
-        $skills = EmployeeSkills::where('emp_id', $emp_id)->get();
-        
-        return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function addQualificationEducation(Request $request)
@@ -790,11 +759,7 @@ class AdminController extends Controller
         (?,?,?,?,?,?,?,?,?)',
         [$emp_id, $level, $major, $start_year, $end_year, $gpa, $school, $description, $created_by]);
 
-        $companies = EmployeeExperience::where('emp_id', $emp_id)->get();
-        $educations = EmployeeEducation::where('emp_id', $emp_id)->get();
-        $skills = EmployeeSkills::where('emp_id', $emp_id)->get();
-        
-        return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function addQualificationSkills(Request $request)
@@ -812,11 +777,7 @@ class AdminController extends Controller
         (?,?,?,?,?)',
         [$emp_id, $emp_skill, $year_experience, $competency, $created_by]);
 
-        $companies = EmployeeExperience::where('emp_id', $emp_id)->get();
-        $educations = EmployeeEducation::where('emp_id', $emp_id)->get();
-        $skills = EmployeeSkills::where('emp_id', $emp_id)->get();
-        
-        return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function editQualificationCompany(Request $request)
@@ -837,11 +798,7 @@ class AdminController extends Controller
         'end_date' => $end_date,
         'note' => $note));
        
-        $companies = EmployeeExperience::where('emp_id', $emp_id)->get();
-        $educations = EmployeeEducation::where('emp_id', $emp_id)->get();
-        $skills = EmployeeSkills::where('emp_id', $emp_id)->get();
-        
-        return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function editQualificationEducation(Request $request)
@@ -866,11 +823,7 @@ class AdminController extends Controller
         'school' => $school,
         'description' => $description));
        
-        $companies = EmployeeExperience::where('emp_id', $emp_id)->get();
-        $educations = EmployeeEducation::where('emp_id', $emp_id)->get();
-        $skills = EmployeeSkills::where('emp_id', $emp_id)->get();
-        
-        return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function editQualificationSkills(Request $request)
@@ -887,11 +840,7 @@ class AdminController extends Controller
             'year_experience' => $year_experience,
             'competency' => $competency));
 
-        $companies = EmployeeExperience::where('emp_id', $emp_id)->get();
-        $educations = EmployeeEducation::where('emp_id', $emp_id)->get();
-        $skills = EmployeeSkills::where('emp_id', $emp_id)->get();
-        
-        return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+            return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function displayAttachment()
@@ -935,14 +884,7 @@ class AdminController extends Controller
         (?,?,?,?,?,?)',
         [$emp_id, $report_to_id, $type, $kpi_proposer, $note, $created_by]);
 
-        $employees = EmployeeInfo::all();       
-
-        $reports = EmployeeReportTo::join('employee','employee.emp_id','=','employee_report_to.report_id_emp_master')
-        ->select('employee.name','employee_report_to.type', 'employee_report_to.note', 'employee_report_to.kpi_proposer')
-        ->where('employee_report_to.emp_id', $emp_id)
-        ->get();
-
-        return view('pages.admin.report-to', ['reports'=>$reports->sortByDesc('id'), 'employees'=>$employees]);
+       return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
     public function displayHistory()

@@ -137,7 +137,11 @@ $("#leaveFullDay").click(function(){
     $( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
     $("#totalLeave").val(1);
 });
-
+$('#expiryDate').datepicker({
+    altField: "#altexpiryDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
 
 $('#dobDate').datepicker({
     altField: "#altdobDate",
@@ -151,6 +155,16 @@ $('#editDobDate').datepicker({
 });
 $('#licenseExpiryDate').datepicker({
     altField: "#altlicenseExpiryDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#expDate').datepicker({
+    altField: "#altexpDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#issueDate').datepicker({
+    altField: "#altissueDate",
     altFormat: 'yy-mm-dd',
     format: 'dd/mm/yy'
 });

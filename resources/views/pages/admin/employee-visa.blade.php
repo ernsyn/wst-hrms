@@ -34,8 +34,8 @@
 
                             <label class="col-md-5 col-form-label">Expiry Date*</label>
                             <div class="col-md-7">
-                                <input id="altdobDate" name ="altdobDate" type="text" class="form-control" hidden> 
-                                <input name="dobDate" id="dobDate" type="text" class="form-control" readonly>                                            
+                                <input id="altexpDate" name ="altexpDate" type="text" class="form-control" hidden> 
+                                <input name="expDate" id="expDate" type="text" class="form-control" readonly>                                            
                             </div>
                     
                             <label class="col-md-5 col-form-label">Issued By*</label>
@@ -49,9 +49,9 @@
                             </div> 
                             <label class="col-md-5 col-form-label">Issued Date*</label>
                             <div class="col-md-7">
-                                <input id="licenseExpiryDate" type="text" class="form-control" readonly>           
-                                <input id="altdobDate" name ="altdobDate" type="text" class="form-control" hidden> 
-                                <input name="dobDate" id="dobDate" type="text" class="form-control" readonly>                                      
+                                <input id="issueDate" type="text" class="form-control" readonly>           
+                                <input id="altissueDate" name ="altissueDate" type="text" class="form-control" hidden> 
+                                    
                             </div>  
                     </div>
                 </div>     
