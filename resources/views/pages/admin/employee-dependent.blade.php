@@ -9,7 +9,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_emergency_contact') }}" id="add_emergency_contact">
+                <form method="POST" action="{{ route('add_employee_dependent') }}" id="add_employee_dependent">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -31,15 +31,11 @@
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-5 col-form-label">Contact Number*</label>
+                                <label class="col-md-5 col-form-label">Date Of Birth*</label>
                                 <div class="col-md-7">
-                                    <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" placeholder="+60123456789" name="contact_number" value="{{ old('contact_number') }}" required>
-                                    @if ($errors->has('contact_number'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('contact_number') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>                       
+                                    <input id="altdobDate" name ="altdobDate" type="text" class="form-control" hidden> 
+                                    <input name="dobDate" id="dobDate" type="text" class="form-control" readonly>                                              
+                                </div>                     
                         </div>
                     </div>     
                     <div class="modal-footer">
@@ -88,12 +84,12 @@
                                         </span>
                                         @endif
                                     </div>
-                                    <label class="col-md-2 col-form-label">Contact Number*</label>
+                                    <label class="col-md-2 col-form-label">Date Of Birth*</label>
                                     <div class="col-md-10">
-                                        <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" name="contact_number" value="{{ old('contact_number') }}" required>
-                                        @if ($errors->has('contact_number'))
+ <input id="dob" type="text" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ old('dob') }}" required>
+                                        @if ($errors->has('dob'))
                                         <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('contact_number') }}</strong>
+                                            <strong>{{ $errors->first('dob') }}</strong>
                                         </span>
                                         @endif
                                     </div>                       
@@ -126,7 +122,7 @@
                     <th>No</th>
                     <th>Name</th>
                     <th>Relationship</th>
-                    <th>Dob</th>
+                    <th>Date Of Birth</th>
                     <th>Action</th>
                 </tr>
             </thead>

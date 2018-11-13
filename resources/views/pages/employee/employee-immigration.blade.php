@@ -1,5 +1,5 @@
 <div class="tab-pane fade show p-3" id="nav-immigration" role="tabpanel" aria-labelledby="nav-immigration-tab">
-    <table class="table table-bordered table-hover w-100" id="employeeImmiTable">
+    <table class="table table-bordered table-hover w-100" id="employeeImmigrationTable">
         <thead>
             <tr>
                 <th>No</th>

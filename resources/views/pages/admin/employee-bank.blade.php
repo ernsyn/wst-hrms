@@ -1,51 +1,55 @@
-@extends('layouts.app')
-
-@section('content')
-
-<!-- Modal -->
-<div class="modal fade" id="addBankPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- ADD -->
+<div class="modal fade" id="employeeBankPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Bank Details</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Add Bank</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{{ route('add_employee_bank') }}" id="add_emergency_contact">
+            <form method="POST" action="{{ route('add_employee_immigration') }}" id="add_employee_immigration">
                 @csrf
                 <div class="row pb-5">
                     <div class="col-xl-8">
-                        <label class="col-md-5 col-form-label">Bank*</label>
+                        <label class="col-md-5 col-form-label">Name*</label>
                         <div class="col-md-7">
-                            <select class="form-control{{ $errors->has('bank_list') ? ' is-invalid' : '' }}" name="bank_list" id="bank_list">
-                                @foreach($bank_list as $item)
-                                <option value="{{ $item->name }}">{{ $item->name }}</option>
-                                @endforeach
-                              </select>                                
-                              @if ($errors->has('bank_list'))
-                                  <span class="invalid-feedback" role="alert">
-                                      <strong>{{ $errors->first('bank_list') }}</strong>
-                                  </span>
-                              @endif
+                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name here" name="name" value="{{ old('name') }}" required>
+                            @if ($errors->has('name'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
+                            @endif
                         </div>    
-                            <label class="col-md-2 col-form-label">Account Number*</label>
+                            <label class="col-md-8 col-form-label">Passport No*</label>
                             <div class="col-md-10">
-                                <input id="acc_no" type="text" class="form-control{{ $errors->has('acc_no') ? ' is-invalid' : '' }}" placeholder="123123" name="acc_no" value="{{ old('acc_no') }}" required>
-                                @if ($errors->has('acc_no'))
+                                <input id="passport_no" type="text" class="form-control{{ $errors->has('passport_no') ? ' is-invalid' : '' }}"  name="passport_no" value="{{ old('passport_no') }}" required>
+                                @if ($errors->has('passport_no'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('acc_no') }}</strong>
+                                    <strong>{{ $errors->first('passport_no') }}</strong>
                                 </span>
                                 @endif
                             </div>
-                            <label class="col-md-5 col-form-label">Status*</label>
+
+                            <label class="col-md-5 col-form-label">Expiry Date*</label>
                             <div class="col-md-7">
-                                <select class ="form-control" id="status" name="status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                               </select>
-                            </div>                     
+                                <input id="altdobDate" name ="dobDate" type="text" class="form-control" readonly>                                            
+                            </div>
+                    
+                            <label class="col-md-5 col-form-label">Issued By*</label>
+                            <div class="col-md-7">
+                                <input id="issued_by" type="text" class="form-control{{ $errors->has('issued_by') ? ' is-invalid' : '' }}" name="issued_by" value="{{ old('issued_by') }}" required>
+                                @if ($errors->has('issued_by'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('issued_by') }}</strong>
+                                </span>
+                                @endif
+                            </div> 
+                            <label class="col-md-5 col-form-label">Issued Date*</label>
+                            <div class="col-md-7">
+                                <input id="licenseExpiryDate" type="text" class="form-control" readonly>                                            
+                            </div>  
                     </div>
                 </div>     
                 <div class="modal-footer">
@@ -58,48 +62,51 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 
-<!-- UPDATE -->
-<div class="modal fade" id="updateBankPopup" tabindex="-1" role="dialog" aria-labelledby="updateBankLabel" aria-hidden="true">
+ <!-- UPDATE -->
+<div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="updateBankLabel">Edit Bank</h5>
+              <h5 class="modal-title" id="updateContactLabel">Edit Employee Bank</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_bank') }}" id="edit_visa">
+                <form method="POST" action="{{ route('edit_immigration') }}" id="edit_immigration">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
-                            <input id="bank_id" name="bank_id" type="hidden">                       
-                            <label class="col-md-5 col-form-label">Bank*</label>
+                            <input id="emp_con_id" name="emp_con_id" type="hidden">                       
+                            <label class="col-md-5 col-form-label">Name*</label>
                             <div class="col-md-7">
-                                    <select class="form-control{{ $errors->has('bank_list') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code">
-                                        @foreach($bank_list as $item)
-                                        <option value="{{ $item->name }}">{{ $item->name }}</option>
-                                        @endforeach
-                                    </select>  
+                                <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" required>
+                                @if ($errors->has('name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                                @endif
                             </div>    
-                                <label class="col-md-2 col-form-label">Account Number*</label>
+                                <label class="col-md-2 col-form-label">Relationship*</label>
                                 <div class="col-md-10">
-                                    <input id="acc_no" type="text" class="form-control{{ $errors->has('acc_no') ? ' is-invalid' : '' }}" name="acc_no" value="{{ old('acc_no') }}" required>
-                                    @if ($errors->has('acc_no'))
+                                    <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" name="relationship" value="{{ old('relationship') }}" required>
+                                    @if ($errors->has('relationship'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('acc_no') }}</strong>
+                                        <strong>{{ $errors->first('relationship') }}</strong>
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-5 col-form-label">Status*</label>
-                            <div class="col-md-7">
-                                <select class ="form-control" id="acc_status" name="acc_status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                               </select>
-                            </div>                            
+                                <label class="col-md-2 col-form-label">Contact Number*</label>
+                                <div class="col-md-10">
+                                    <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" name="contact_number" value="{{ old('contact_number') }}" required>
+                                    @if ($errors->has('contact_number'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('contact_number') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>                       
                         </div>
                     </div>     
                     <div class="modal-footer">
@@ -108,55 +115,32 @@
                             </button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
-    
                 </form>
             </div>
           </div>
         </div>
-      </div>
-      
-      <div class="p-4">
-            <div class="card py-4">
-                <div class="card-body">
-                        <div class="row pb-3">
-                                <div class="col-auto mr-auto"></div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addBankPopup">
-                                        Add Bank Info
-                                    </button>
-                                </div>
-                            </div>
-                        <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-bordered table-hover">
-                                      <tr>
-                                          <th>No</th>
-                                          <th>Bank</th>
-                                          <th>Account Number</th>
-                                          <th>Status</th>
-                                          <th>Action</th>
-                                      </tr>
-                              
-                                      @foreach($banks as $row)
-                                      <tr>
-                                          <td>{{ $loop->iteration }}</td>
-                                          <td>{{$row['bank_code']}}</td>
-                                          <td>{{$row['acc_no']}}</td>
-                                          <td>{{$row['acc_status']}}</td>
-                                          <td><button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                              data-bank-id="{{$row['id']}}"
-                                              data-bank-code="{{$row['bank_code']}}"        
-                                              data-bank-acc-no="{{$row['acc_no']}}"             
-                                              data-bank-acc-status="{{$row['acc_status']}}"
-                                              data-target="#updateBankPopup">EDIT</button></td>
-                                      </tr>
-                                      @endforeach
-                                    </table>
-                                </div>
-                              </div>
-                              
-                </div>
-            </div>
-      </div>
+</div>
 
-@endsection
+<div class="tab-pane fade show p-3" id="nav-bank" role="tabpanel" aria-labelledby="nav-bank-tab">
+    <div class="row pb-3">
+        <div class="col-auto mr-auto"></div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#employeeBankPopup">
+                Add Bank
+            </button>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover w-100" id="employeeBankTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Document</th>
+                <th>Passport No</th>
+                <th>Issued By</th>
+                {{-- <th>Issued Date</th>
+                <th>Expiry Date</th> --}}
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+</div>

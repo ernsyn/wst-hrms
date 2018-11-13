@@ -138,6 +138,7 @@ $("#leaveFullDay").click(function(){
     $("#totalLeave").val(1);
 });
 
+
 $('#dobDate').datepicker({
     altField: "#altdobDate",
     altFormat: 'yy-mm-dd',

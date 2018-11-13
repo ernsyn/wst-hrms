@@ -51,12 +51,12 @@ $('#dependentTable').DataTable({
         }
     ]
 });
-$('#employeeImmiTable').DataTable({
+$('#employeeImmigrationTable').DataTable({
     "bInfo": true,
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "employeeimmigrationdata",
+    "ajax": "employeeimmigration",
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
@@ -88,7 +88,7 @@ $('#employeeVisaTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "employeevisadata",
+    "ajax": "employeevisa",
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
@@ -120,36 +120,21 @@ $('#employeeJobTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "jobdata",
+    "ajax": "employeejob",
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
         {
-            "data": "created_on"
+            "data": "start_date"
         },
         {
-            "data": "positionname"
-        },
-        {
-            "data": "departname"
-        },
-        {
-            "data": "teamname"
-        },
-        {
-            "data": "categoryname"
-        },
-        {
-            "data": "gradename"
+            "data": "end_date"
         },
         {
             "data": "basic_salary"
-        },
-        {
-            "data": "status"
-        },
+        },        
         {
             "data": null, // can be null or undefined
             "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#jobModal"><i class="far fa-edit"></i></button>'
@@ -161,8 +146,7 @@ $('#employeeBankTable').DataTable({
     "bDeferRender": true,
     "serverSide": true,
     "bStateSave": true,
-    "ajax": "",
-    // "ajax": "bankdata",
+    "ajax": "dependent",
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
@@ -175,7 +159,7 @@ $('#employeeBankTable').DataTable({
             "data": "acc_no"
         },
         {
-            "data": "status"
+            "data": "acc_status"
         },
         {
             "data": null, // can be null or undefined
@@ -206,11 +190,129 @@ $('#employeeBankTable').DataTable({
 $('#leaveTypeTable').DataTable();
 $('#leaveRequestTable').DataTable();
 $('#employeeDependentTable').DataTable();
-$('#employeeImmiTable').DataTable();
-$('#employeeQualCompanyTable').DataTable();
-$('#employeeQualEduTable').DataTable();
-$('#employeeQualSkillTable').DataTable();
-$('#employeeAttachmentTable').DataTable();
+// $('#employeeImmiTable').DataTable();
+$('#employeeQualCompanyTable').DataTable({
+    "bInfo": true,
+    "bDeferRender": true,
+    "serverSide": true,
+    "bStateSave": true,
+    "ajax": "employee_experience",
+    "columns": [{
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            }
+        },
+        {
+            "data": "company"
+        },
+        {
+            "data": "position"
+        },
+        {
+            "data": "start_date"
+        },
+        {
+            "data": "end_date"
+        },
+        {
+            "data": "notes"
+        },
+        {
+            "data": null, // can be null or undefined
+            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#experienceModal"><i class="far fa-edit"></i></button>'
+        }
+    ]
+});
+$('#employeeQualEduTable').DataTable({
+    "bInfo": true,
+    "bDeferRender": true,
+    "serverSide": true,
+    "bStateSave": true,
+    "ajax": "employee_education",
+    "columns": [{
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            }
+        },
+        {
+            "data": "institution"
+        },
+        {
+            "data": "start_year"
+        },
+        {
+            "data": "end_year"
+        },
+        {
+            "data": "level"
+        },
+        {
+            "data": "major"
+        },
+        {
+            "data": "gpa"
+        },
+        {
+            "data": "description"
+        },
+        {
+            "data": null, // can be null or undefined
+            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#educationModal"><i class="far fa-edit"></i></button>'
+        }
+    ]
+});
+$('#employeeQualSkillTable').DataTable({
+    "bInfo": true,
+    "bDeferRender": true,
+    "serverSide": true,
+    "bStateSave": true,
+    "ajax": "employee_skill",
+    "columns": [{
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            }
+        },
+        {
+            "data": "name"
+        },
+        {
+            "data": "years_of_experience"
+        },
+        {
+            "data": "competency"
+        },
+        {
+            "data": null, // can be null or undefined
+            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#skillModal"><i class="far fa-edit"></i></button>'
+        }
+    ]
+});
+$('#employeeAttachmentTable').DataTable({
+    "bInfo": true,
+    "bDeferRender": true,
+    "serverSide": true,
+    "bStateSave": true,
+    "ajax": "attachment",
+    "columns": [{
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            }
+        },
+        {
+            "data": "name"
+        },
+        {
+            "data": "notes"
+        },
+        {
+            "data": "media_id"
+        },
+        {
+            "data": null, // can be null or undefined
+            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#skillAttachment"><i class="far fa-edit"></i></button>'
+        }
+    ]
+});
 $('#employeeReporttoTable').DataTable();
 $('#employeeHistoryTable').DataTable();
 
