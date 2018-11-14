@@ -9,28 +9,27 @@
                 Mode
             </div>
             <div id="value" class="col-8 text-center" data-toggle="collapse" href="#mode-options">
-                <div class="row py-0">
-                    <div class="col-9 pl-2 pr-0 py-0 text-center">
-                        Employee
+                    <div class="row py-0" >
+                        <div class="col-9 pl-2 pr-0 py-0 text-center">
+                            Super Admin
+                        </div>
+                        <div class="col-3 px-0 py-0">
+                            <i class="fas fa-angle-down"></i>
+                        </div>
                     </div>
-                    <div class="col-3 px-0 py-0">
-                        <i class="fas fa-angle-down"></i>
-                    </div>
-                </div>
             </div>
         </div>
         <div id="mode-options" class="collapse">
-            @hasrole('super-admin')
-            <div class="option row col mx-0">
-                <a href="{{ route('super-admin.dashboard') }}">
-                    Super Admin
-                </a>
-            </div>
-            @endhasrole 
             @hasrole('admin')
             <div class="option row col mx-0">
                 <a href="{{ route('admin.dashboard') }}">
                     Admin
+                </a>
+            </div>
+            @endhasrole @hasrole('employee')
+            <div class="option row col mx-0">
+                <a href="{{ route('home') }}">
+                    Employee
                 </a>
             </div>
             @endhasrole

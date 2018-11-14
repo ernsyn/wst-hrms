@@ -9,14 +9,14 @@
                 Mode
             </div>
             <div id="value" class="col-8 text-center" data-toggle="collapse" href="#mode-options">
-                <div class="row py-0">
-                    <div class="col-9 pl-2 pr-0 py-0 text-center">
-                        Employee
+                    <div class="row py-0" >
+                        <div class="col-9 pl-2 pr-0 py-0 text-center">
+                            Admin
+                        </div>
+                        <div class="col-3 px-0 py-0">
+                            <i class="fas fa-angle-down"></i>
+                        </div>
                     </div>
-                    <div class="col-3 px-0 py-0">
-                        <i class="fas fa-angle-down"></i>
-                    </div>
-                </div>
             </div>
         </div>
         <div id="mode-options" class="collapse">
@@ -27,10 +27,10 @@
                 </a>
             </div>
             @endhasrole 
-            @hasrole('admin')
+            @hasrole('employee')
             <div class="option row col mx-0">
-                <a href="{{ route('admin.dashboard') }}">
-                    Admin
+                <a href="{{ route('home') }}">
+                    Employee
                 </a>
             </div>
             @endhasrole

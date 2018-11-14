@@ -17562,6 +17562,11 @@ select:-webkit-autofill:focus {
   padding-bottom: 10px;
 }
 
+#sidebar #hrms-mode-container #mode-options .option a {
+  text-decoration: none;
+  color: #c8d9fd;
+}
+
 #sidebar #menu-container {
   padding: 20px 0;
 }

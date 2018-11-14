@@ -32,7 +32,13 @@ Route::group(['prefix' => 'setup', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('branch', 'AdminController@displaySetupBranch')->name('setup/branch');
 });
 
+Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+    Route::get('', 'SuperAdmin\DashboardController@index')->name('super-admin.dashboard');
+});
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+    Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
+
     Route::get('home', 'HomeController@index')->name('admin.home');
 
     Route::get('/employee/add', 'EmployeeDataController@addEmployee')->name('employee/add');
@@ -128,13 +134,13 @@ Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], func
 
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function() {
-    Route::get('/', function () {
-        return view('home');
-    })->name('/');
+// Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function() {
+//     Route::get('/', function () {
+//         return view('home');
+//     })->name('/');
 
-    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
-});
+//     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
+// });
 
 
 
