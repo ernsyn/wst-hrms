@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Employee;
+use App\Country;
+use App\Roles;
 
 class EmployeeController extends Controller
 {
@@ -26,7 +28,7 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.index', ['employees'=> $employees]);
     }
 
-    public function displayEmployee($id)
+    public function display($id)
     {
         // $user = User::join('employees','employees.user_id','=','users.id')
         // // ->join('countries','countries.id','=','employees.nationality')
@@ -43,9 +45,17 @@ class EmployeeController extends Controller
         // ->where('employees.id',$id)
         // ->first();
 
-        $employee = Employee::find($id);
+        $employee = Employee::with('user', 'employee_jobs')->find($id);
 
 
         return view('pages.admin.employees.id', ['employee' => $employee]);        
+    }
+
+    public function add()
+    {   
+        $countries = Country::all();
+        $roles = Roles::all();
+
+        return view('pages.admin.employees.add', compact('countries','roles'));
     }
 }

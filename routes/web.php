@@ -59,9 +59,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
 
     // Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('admin/profile-employee/{id}');
-    Route::get('employees/{id}','Admin\EmployeeController@displayEmployee')->name('admin.employees.id');
+    Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
     
-    Route::get('employees/add', 'EmployeeDataController@addEmployee')->name('admin.employee.add');
+    Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add');
+
     // Route::get('employee/emergency-contact', 'Admin\EmployeeController@displayEmergencyContact')->name('admin/emergencycontact');
     // Route::get('profile-employee/emergencycontact', 'AdminController@displayEmergencyContact')->name('admin/emergencycontact');
 
@@ -76,7 +77,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('profile-employee/employee_education', 'AdminController@displayQualificationEducation')->name('admin/employee_bank');
     Route::get('profile-employee/employee_skill', 'AdminController@displayQualificationSkill')->name('admin/employee_bank');
     Route::get('profile-employee/attachment', 'AdminController@displayAttachment')->name('admin/attachment');
-    Route::get('employee_list', 'AdminController@displayAllEmployee')->name('admin/employee_list');
+    // Route::get('employee_list', 'AdminController@displayAllEmployee')->name('admin/employee_list');
     // Route::get('user_list', 'EmployeeDataController@index')->name('admin/user_list');
     Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
     Route::get('/admin/history', 'AdminController@displayHistory')->name('admin/history');

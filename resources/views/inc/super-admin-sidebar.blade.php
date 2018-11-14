@@ -39,14 +39,14 @@
 
     <ul id="menu-container" class="list-unstyled">
         @hasanyrole('super-admin|admin') {{-- SECTION: Employee --}}
-        <li class="menu-section {{ request()->is('admin/employee_list') ? 'active' : '' }}">
+        <li class="menu-section {{ request()->is('admin.employees') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#employee-setup" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1"><i class="fas fa-users"></i></div>
                     <div class="col-10">Employee</div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('admin/employee_list') ? 'show' : '' }}" id="employee-setup">
+            <ul class="collapse list-unstyled {{ request()->is('admin.employees') ? 'show' : '' }}" id="employee-setup">
                 {{-- OPTION: Add Employee --}}
                 <li class="menu-option {{ request()->is('admin/employee/add') ? 'active' : '' }}">
                     <a href="{{ route('employee/add') }}">Add Employee</a>

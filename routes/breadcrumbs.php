@@ -77,9 +77,9 @@ Breadcrumbs::for('register_employee4', function ($trail) {
     $trail->push('Employee List', route('register_employee'));
 });
 
-Breadcrumbs::for('admin.employee.add', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('User Add', route('admin.employee.add'));
+Breadcrumbs::for('admin.employees.add', function ($trail) {
+    $trail->parent('admin.employees');
+    $trail->push('Add Employee', route('admin.employees.add'));
 });
 
 // Home > Setup

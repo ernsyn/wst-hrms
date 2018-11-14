@@ -1,5 +1,5 @@
 @extends('layouts.admin-base') 
-@section('pageTitle', 'Home - DEPRECATED') 
+@section('pageTitle', 'Employee Profile') 
 @section('content')
 <div class="p-4">
     <div class="card py-4 shadow-sm">
@@ -83,23 +83,23 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">IC No</label>
                                                     <div class="col-lg-7 text-lowercase">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->ic_no}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->ic_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Gender</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->gender}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->gender}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Date of Birth</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->dob}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->dob}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Marital Status</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->marital_status}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->marital_status}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Race</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->race}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->race}}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,19 +107,19 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">Nationality</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->nationality}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->nationality}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Number of Child</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->total_child}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->total_child}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Driver License No</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->driver_license_number}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->driver_license_number}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">License Expiry Date</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->license_expiry_date}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->license_expiry_date}}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -131,23 +131,23 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">Employee ID</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$employee->id}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->id}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Department</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="IT Department">
+                                                        <input type="text" readonly class="form-control-plaintext" value="IT Department">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">EPF No</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->epf_no}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$user->epf_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Confirmation Date</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="10-1-2019">
+                                                        <input type="text" readonly class="form-control-plaintext" value="10-1-2019">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Basic Salary</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->basic_salary}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$user->basic_salary}}">
                                                     </div>
                                                 </div>
                                             </div> --}}
@@ -155,19 +155,19 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">Position</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="Executive">
+                                                        <input type="text" readonly class="form-control-plaintext" value="Executive">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Tax No</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->tax_no}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$user->tax_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Joined Date</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="09-09-2018">
+                                                        <input type="text" readonly class="form-control-plaintext" value="09-09-2018">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Resignation Date</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="-">
+                                                        <input type="text" readonly class="form-control-plaintext" value="-">
                                                     </div>
                                                 </div>
                                             </div> --}}

@@ -40,22 +40,22 @@
 
     <ul id="menu-container" class="list-unstyled">
         @hasanyrole('super-admin|admin') {{-- SECTION: Employee --}}
-        <li class="menu-section {{ request()->is('admin/employee_list') ? 'active' : '' }}">
+        <li class="menu-section {{ request()->is('admin/employees*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#employee-setup" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1"><i class="fas fa-users"></i></div>
                     <div class="col-10">Employee</div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('admin/employee_list') ? 'show' : '' }}" id="employee-setup">
+            <ul class="collapse list-unstyled {{ request()->is('admin/employees*') ? 'show' : '' }}" id="employee-setup">
                 {{-- OPTION: Add Employee --}}
-                <li class="menu-option {{ request()->is('admin.employee.add') ? 'active' : '' }}">
-                    <a href="{{ route('admin.employee.add') }}">Add Employee</a>
+                <li class="menu-option {{ request()->is('admin/employees/add') ? 'active' : '' }}">
+                    <a href="{{ route('admin.employees.add') }}">Add Employee</a>
                 </li>
 
                 {{-- OPTION: Employee List --}}
-                <li class="menu-option {{ request()->is('admin/user-list') ? 'active' : '' }}">
-                    <a href="{{ route('admin.employees') }}">User List</a>
+                <li class="menu-option {{ request()->is('admin/employees') ? 'active' : '' }}">
+                    <a href="{{ route('admin.employees') }}">Employee List</a>
                 </li>
             </ul>
         </li>
