@@ -896,19 +896,19 @@ class AdminController extends Controller
     //     return DataTables::of($attachments)->make(true);
     // }
 
-    public function displayReportTo()
-    {       
-        $id = Session::get('employee_id');
+    // public function displayReportTo()
+    // {       
+    //     $id = Session::get('employee_id');
 
-        $employees = EmployeeInfo::all();       
+    //     $employees = EmployeeInfo::all();       
 
-        $reports = EmployeeReportTo::join('employee','employee.emp_id','=','employee_report_to.report_id_emp_master')
-        ->select('employee.name','employee_report_to.type', 'employee_report_to.note', 'employee_report_to.kpi_proposer')
-        ->where('employee_report_to.emp_id', $id)
-        ->get();
+    //     $reports = EmployeeReportTo::join('employee','employee.emp_id','=','employee_report_to.report_id_emp_master')
+    //     ->select('employee.name','employee_report_to.type', 'employee_report_to.note', 'employee_report_to.kpi_proposer')
+    //     ->where('employee_report_to.emp_id', $id)
+    //     ->get();
 
-        return view('pages.admin.report-to', ['reports'=>$reports->sortByDesc('id'), 'employees'=>$employees]);
-    }
+    //     return view('pages.admin.report-to', ['reports'=>$reports->sortByDesc('id'), 'employees'=>$employees]);
+    // }
 
     public function addReportTo(Request $request)
     {          

@@ -25,15 +25,15 @@
 //         "defaultContent": '<div class="btn-group"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal"><i class="far fa-edit"></i></button><button type="button" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i></button></div>'
 //     }]
 // });
-$('#leaveTypeTable').DataTable();
-$('#leaveRequestTable').DataTable();
-$('#employeeDependentTable').DataTable();
+// $('#leaveTypeTable').DataTable();
+// $('#leaveRequestTable').DataTable();
+// $('#employeeDependentTable').DataTable();
 // $('#employeeImmiTable').DataTable();
 
 
 
-$('#employeeReporttoTable').DataTable();
-$('#employeeHistoryTable').DataTable();
+// $('#employeeReporttoTable').DataTable();
+// $('#employeeHistoryTable').DataTable();
 
 // Datatables Setup
 $('#setupCompanyTable').DataTable({
