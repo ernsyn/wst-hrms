@@ -165,6 +165,11 @@ Breadcrumbs::for('admin/leaverequest', function ($trail) {
     $trail->push('Leave Request', route('admin/leaverequest'));
 });
 
+Breadcrumbs::for('employee/leaverequest', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Leave Request', route('employee/leaverequest'));
+});
+
 // Home > Admin > Leave Holiday
 Breadcrumbs::for('admin/leaveholiday', function ($trail) {
     $trail->parent('admin.home');
@@ -183,10 +188,34 @@ Breadcrumbs::for('add_leave_application', function ($trail) {
     $trail->push('Leave Application', route('add_leave_application'));
 });
 
+// Home > Admin > Leave Approve
+Breadcrumbs::for('approve_leave', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Request', route('approve_leave'));
+});
+
+// Home > Admin > Leave Disapprove
+Breadcrumbs::for('disapprove_leave', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Request', route('disapprove_leave'));
+});
+
 // Home > Admin > Leave Balance
 Breadcrumbs::for('admin/leavebalance', function ($trail) {
     $trail->parent('admin.home');
     $trail->push('Leave Balance', route('admin/leavebalance'));
+});
+
+// Home > Admin > Leave Holiday
+Breadcrumbs::for('add_leave_balance', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Balance', route('add_leave_balance'));
+});
+
+// Home > Admin > Leave Holiday
+Breadcrumbs::for('edit_leave_balance', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Leave Balance', route('edit_leave_balance'));
 });
 
 
@@ -270,9 +299,32 @@ Breadcrumbs::for('super-admin.dashboard', function ($trail) {
     $trail->push('Super Admin Dashboard', route('super-admin.dashboard'));
 });
 
+<<<<<<< HEAD
 Breadcrumbs::for('admin.dashboard', function ($trail) {
     $trail->push('Admin Dashboard', route('admin.dashboard'));
 });
+=======
+//--- setup company ----
+// Home > Admin > Employee List > Profile
+Breadcrumbs::for('/setup/company-details/{id}', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Company Details', route('/setup/company-details/{id}', ''));
+});
+
+// Home > Admin > Employee List > Profile
+Breadcrumbs::for('edit_company_bank', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Company Details', route('edit_company_bank'));
+});
+
+// Home > Admin > Employee List > Profile
+Breadcrumbs::for('add_company_bank', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Company Details', route('add_company_bank'));
+});
+
+
+>>>>>>> new-develop
 
 
 
