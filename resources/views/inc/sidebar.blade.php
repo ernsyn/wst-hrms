@@ -26,16 +26,16 @@
         </li>
 		
 		{{-- SECTION: Payroll --}}
-        <li class="menu-section {{ request()->is('') ? 'active' : '' }}">
+        <li class="menu-section {{ request()->is('payroll') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1"><i class="fas fa-dollar-sign"></i></div>
                     <div class="col-10">PAYROLL</div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('') ? 'show' : '' }}" id="payrollSubmenu">
+            <ul class="collapse list-unstyled {{ request()->is('payroll') ? 'show' : '' }}" id="payrollSubmenu">
                 <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                    <a href="">Payroll</a>
+                    <a href="{{ route('payroll') }}">Payroll</a>
                 </li>
                 <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                     <a href="">Government Reports</a>

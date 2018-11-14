@@ -335,3 +335,12 @@ Breadcrumbs::for('errors.404', function ($trail) {
     $trail->parent('home');
     $trail->push('Page Not Found');
 });
+Breadcrumbs::for('payroll', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Payroll', route('payroll'));
+});
+
+Breadcrumbs::for('payroll.create', function ($trail) {
+    $trail->parent('payroll');
+    $trail->push('Payroll', route('payroll.create'));
+});

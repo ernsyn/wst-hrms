@@ -1029,6 +1029,112 @@
             "time": "2015-04-20T18:58:01+00:00"
         },
         {
+            "name": "konekt/enum",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artkonekt/enum.git",
+                "reference": "ab37d89e1a6f88a76f25c6dd88b56b8892de86f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artkonekt/enum/zipball/ab37d89e1a6f88a76f25c6dd88b56b8892de86f2",
+                "reference": "ab37d89e1a6f88a76f25c6dd88b56b8892de86f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "6.2 - 7.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Konekt\\Enum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Attila Fulop",
+                    "homepage": "https://github.com/fulopattila122"
+                }
+            ],
+            "description": "SPL inspired PHP enum class implementation",
+            "keywords": [
+                "artkonekt",
+                "enum",
+                "konekt"
+            ],
+            "time": "2018-06-09T13:03:01+00:00"
+        },
+        {
+            "name": "konekt/enum-eloquent",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artkonekt/enum-eloquent.git",
+                "reference": "666c682b0d99f3fa6c07cfde6d7933bbd4fe8e41"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artkonekt/enum-eloquent/zipball/666c682b0d99f3fa6c07cfde6d7933bbd4fe8e41",
+                "reference": "666c682b0d99f3fa6c07cfde6d7933bbd4fe8e41",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.*",
+                "konekt/enum": "^2.0.2",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "illuminate/events": "5.*",
+                "phpunit/phpunit": "6.3 - 7.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Konekt\\Enum\\Eloquent\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Attila Fulop",
+                    "homepage": "https://github.com/fulopattila122"
+                }
+            ],
+            "description": "Enum attribute casting for Eloquent models",
+            "keywords": [
+                "artkonekt",
+                "eloquent",
+                "enum",
+                "konekt",
+                "laravel"
+            ],
+            "time": "2018-11-04T15:16:42+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v5.7.13",
             "source": {

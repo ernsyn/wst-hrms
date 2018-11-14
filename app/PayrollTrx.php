@@ -8,7 +8,7 @@ class PayrollTrx extends Model
 {
     protected $table = 'payroll_trx';
     protected $fillable = [
-        'employee_info_id', 
+        'employee_id', 
         'payroll_master_id', 
         'employee_epf', 
         'employee_eis',
@@ -20,9 +20,9 @@ class PayrollTrx extends Model
         'seniority_pay',
         'basic_salary',
         'created_by',
-        'created_on',
+        'created_at',
         'updated_by',
-        'updated_on'
+        'updated_at'
     ];
     
     public function payrollMaster()

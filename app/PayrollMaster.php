@@ -17,8 +17,8 @@ class PayrollMaster extends Model
         return $this->hasMany('App\PayrollTrx');
     }
     
-    public function companyInfo()
+    public function company()
     {
-        return $this->belongsTo('App\CompanyInfo');
+        return $this->belongsTo('App\Company');
     }
 }
