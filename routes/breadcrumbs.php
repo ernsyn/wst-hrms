@@ -299,11 +299,9 @@ Breadcrumbs::for('super-admin.dashboard', function ($trail) {
     $trail->push('Super Admin Dashboard', route('super-admin.dashboard'));
 });
 
-<<<<<<< HEAD
 Breadcrumbs::for('admin.dashboard', function ($trail) {
     $trail->push('Admin Dashboard', route('admin.dashboard'));
 });
-=======
 //--- setup company ----
 // Home > Admin > Employee List > Profile
 Breadcrumbs::for('/setup/company-details/{id}', function ($trail) {
@@ -324,7 +322,6 @@ Breadcrumbs::for('add_company_bank', function ($trail) {
 });
 
 
->>>>>>> new-develop
 
 
 
