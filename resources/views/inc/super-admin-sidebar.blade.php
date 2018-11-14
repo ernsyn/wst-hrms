@@ -53,8 +53,8 @@
                 </li>
 
                 {{-- OPTION: Employee List --}}
-                <li class="menu-option {{ request()->is('admin/user-list') ? 'active' : '' }}">
-                    <a href="{{ route('admin/user_list') }}">User List</a>
+                <li class="menu-option {{ request()->is('admin.employees') ? 'active' : '' }}">
+                    <a href="{{ route('admin.employees') }}">Employee List</a>
                 </li>
             </ul>
         </li>

@@ -3,7 +3,7 @@
 <div class="p-4">
     <div class="row">
         <div class="p-2 col-xl-3 col-lg-6">
-            <a href="{{ route('admin/user_list') }}">
+            <a href="{{ route('admin.employees') }}">
                 <div class="card border-0 bg-gradient-primary">
                     <div class="card-body">
                         <i class="fas fa-user fa-4x float-right text-white"></i>
@@ -14,7 +14,7 @@
             </a>
         </div>
         <div class="p-2 col-xl-3 col-lg-6">
-            <a href="{{ route('admin/user_list') }}">
+            <a href="{{ route('admin.employees') }}">
                 <div class="card border-0 bg-gradient-info">
                     <div class="card-body">
                         <i class="fas fa-user-plus fa-4x float-right text-white"></i>
@@ -25,7 +25,7 @@
             </a>
         </div>
         <div class="p-2 col-xl-3 col-lg-6">
-            <a href="{{ route('admin/user_list') }}">
+            <a href="{{ route('admin.employees') }}">
                 <div class="card border-0 bg-gradient-success">
                     <div class="card-body">
                         <i class="fas fa-calendar-check fa-4x float-right text-white"></i>

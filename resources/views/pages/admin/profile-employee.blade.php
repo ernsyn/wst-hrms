@@ -1,5 +1,5 @@
 @extends('layouts.base') 
-@section('pageTitle', 'Home') 
+@section('pageTitle', 'Home - DEPRECATED') 
 @section('content')
 <div class="p-4">
     <div class="card py-4 shadow-sm">

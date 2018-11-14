@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('pageTitle', 'User List') 
+@section('pageTitle', 'User List - DEPRECATED') 
 @section('content')
 
 <div class="p-4">

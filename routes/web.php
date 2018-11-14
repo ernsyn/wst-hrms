@@ -21,31 +21,52 @@ Route::group(['middleware' => ['guest']], function () {
 Auth::routes();
 
 
-Route::get('setup', 'AdminController@displaySetupCompany')->name('setup');
+// MODE: Employee
+Route::group(['middleware' => ['auth', 'role:super-admin|employee']], function() {
+    Route::get('', 'HomeController@index')->name('home');
+    
+    Route::get('/employee','EmployeeController@displayProfile')->name('employee');
+    Route::get('profile','EmployeeController@displayProfile')->name('profile');
+    Route::get('emergencycontact','EmployeeController@displayEmergencyContact')->name('emergencycontactdata');
+    Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
+    Route::get('employeeimmigrationdata','EmployeeController@displayImmigration')->name('immigration');
+    Route::get('qualificationcompaniesdata','EmployeeController@displayQualificationCompanies')->name('companies');
+    Route::get('qualificationeducationsdata','EmployeeController@displayQualificationEducations')->name('educations');
+    Route::get('qualificationskillsdata','EmployeeController@displayQualificationSkills')->name('skills');
+    Route::get('employeevisadata','EmployeeController@displayVisa')->name('visa');
+    Route::get('employeebankdata','EmployeeController@displayBank')->name('bank');
+    Route::get('jobdata','EmployeeController@displayJob')->name('job');
+    Route::get('reporttodata','EmployeeController@displayReportTo')->name('reportto');
+    Route::get('historydata','EmployeeController@displayHistory')->name('history');
+    Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
 
-Route::group(['prefix' => 'setup', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
-    Route::get('company', 'AdminController@displaySetupCompany')->name('admin/setup/company');
-    Route::get('add-company', 'AdminController@displayAddCompany')->name('admin/setup/add-company');
-    Route::get('job-configure', 'AdminController@displaySetupJob')->name('admin/setup/job-configure');
-    Route::get('cost-centre', 'AdminController@displayCostCentre')->name('admin/setup/cost-centre');
-    Route::get('department', 'AdminController@displayDepartment')->name('admin/setup/department');
-    Route::get('team', 'AdminController@displayTeam')->name('admin/setup/team');
-    Route::get('position', 'AdminController@displayPosition')->name('admin/setup/position');
-    Route::get('grade', 'AdminController@displayGrade')->name('setup/grade');
-    Route::get('branch', 'AdminController@displaySetupBranch')->name('setup/branch');
+    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('employee/leaveapplication');
+    Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
+    Route::get('leaverequest','EmployeeController@displayLeaveRequest')->name('employee/leaverequest');
+    Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
+    Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
+
+    Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
 });
 
-Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
-    Route::get('', 'SuperAdmin\DashboardController@index')->name('super-admin.dashboard');
-});
+
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
     Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
+    // Admin: Employee
+    
+    // Route::get('user-list', 'AdminController@displayUserList')->name('admin/user_list');
+    Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
 
-    Route::get('home', 'HomeController@index')->name('admin.home');
+    // Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('admin/profile-employee/{id}');
+    Route::get('employees/{id}','Admin\EmployeeController@displayEmployee')->name('admin.employees.id');
+    
+    Route::get('employees/add', 'EmployeeDataController@addEmployee')->name('admin.employee.add');
+    // Route::get('employee/emergency-contact', 'Admin\EmployeeController@displayEmergencyContact')->name('admin/emergencycontact');
+    // Route::get('profile-employee/emergencycontact', 'AdminController@displayEmergencyContact')->name('admin/emergencycontact');
 
-    Route::get('/employee/add', 'EmployeeDataController@addEmployee')->name('employee/add');
-    Route::get('profile-employee/emergencycontact', 'AdminController@displayEmergencyContact')->name('admin/emergencycontact');
+
+
     Route::get('profile-employee/dependent', 'AdminController@displayEmployeeDependent')->name('admin/dependent');
     Route::get('profile-employee/employeeimmigration', 'AdminController@displayEmployeeImmigration')->name('admin/employeeimmigration');
     Route::get('profile-employee/employeevisa', 'AdminController@displayEmployeeVisa')->name('admin/employeevisa');
@@ -59,8 +80,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     // Route::get('user_list', 'EmployeeDataController@index')->name('admin/user_list');
     Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
     Route::get('/admin/history', 'AdminController@displayHistory')->name('admin/history');
-    Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('admin/profile-employee/{id}');
-    Route::get('user-list', 'AdminController@displayUserList')->name('admin/user_list');
     Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
 
     //--setup company--
@@ -125,42 +144,23 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('leaveholiday','AdminController@displayLeaveHoliday')->name('admin/leaveholiday');
 });
 
-Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], function() {
-    Route::get('', 'HomeController@index')->name('home');
-    Route::get('/employee','EmployeeController@displayProfile')->name('employee');
-    Route::get('profile','EmployeeController@displayProfile')->name('profile');
-    Route::get('emergencycontact','EmployeeController@displayEmergencyContact')->name('emergencycontactdata');
-    Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
-    Route::get('employeeimmigrationdata','EmployeeController@displayImmigration')->name('immigration');
-    Route::get('qualificationcompaniesdata','EmployeeController@displayQualificationCompanies')->name('companies');
-    Route::get('qualificationeducationsdata','EmployeeController@displayQualificationEducations')->name('educations');
-    Route::get('qualificationskillsdata','EmployeeController@displayQualificationSkills')->name('skills');
-    Route::get('employeevisadata','EmployeeController@displayVisa')->name('visa');
-    Route::get('employeebankdata','EmployeeController@displayBank')->name('bank');
-    Route::get('jobdata','EmployeeController@displayJob')->name('job');
-    Route::get('reporttodata','EmployeeController@displayReportTo')->name('reportto');
-    Route::get('historydata','EmployeeController@displayHistory')->name('history');
-    Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
-
-    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('employee/leaveapplication');
-    Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
-    Route::get('leaverequest','EmployeeController@displayLeaveRequest')->name('employee/leaverequest');
-    Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
-    Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
-
-    Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
 
 
+Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+    Route::get('', 'SuperAdmin\DashboardController@index')->name('super-admin.dashboard');
 });
 
-// Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function() {
-//     Route::get('/', function () {
-//         return view('home');
-//     })->name('/');
 
-//     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
-// });
+Route::get('setup', 'AdminController@displaySetupCompany')->name('setup');
 
-
-
-
+Route::group(['prefix' => 'setup', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+    Route::get('company', 'AdminController@displaySetupCompany')->name('admin/setup/company');
+    Route::get('add-company', 'AdminController@displayAddCompany')->name('admin/setup/add-company');
+    Route::get('job-configure', 'AdminController@displaySetupJob')->name('admin/setup/job-configure');
+    Route::get('cost-centre', 'AdminController@displayCostCentre')->name('admin/setup/cost-centre');
+    Route::get('department', 'AdminController@displayDepartment')->name('admin/setup/department');
+    Route::get('team', 'AdminController@displayTeam')->name('admin/setup/team');
+    Route::get('position', 'AdminController@displayPosition')->name('admin/setup/position');
+    Route::get('grade', 'AdminController@displayGrade')->name('setup/grade');
+    Route::get('branch', 'AdminController@displaySetupBranch')->name('setup/branch');
+});

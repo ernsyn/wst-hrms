@@ -16,18 +16,19 @@
                             <th>Action</th>
                         </tr>
 
-                        @foreach($employees as $row)
-                        <tr onclick="window.location='{{ url('/admin/profile-employee/'.$row['user_id']) }}';">
+                        @foreach($employees as $employee)
+                        {{-- <tr onclick="window.location='{{ url('/admin/profile-employee/'.$employee['user_id']) }}';"> --}}
+                        <tr onclick="window.location='{{ route('admin.employees.id', ['id' => $employee['id]); }}';">
                             {{--
                             <tr onclick="window.location='{{ route('/admin/employee-profile',['course_id' => Crypt::encrypt('1') ]) }}';">
                             --}}
 
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$row['user_id']}}</td>
-                                <td>{{$row['name']}}</td>
-                                <td>{{$row['contact_no']}}</td>
-                                <td>{{$row['email']}}</td>
-                                <td> <button onclick="window.location='{{ url('/admin/profile-employee/'.$row['id']) }}';" class="btn btn-default">Edit</button></td>
+                                <td>{{$employee['user_id']}}</td>
+                                <td>{{$employee['name']}}</td>
+                                <td>{{$employee['contact_no']}}</td>
+                                <td>{{$employee['email']}}</td>
+                                <td> <button onclick="window.location='{{ url('/admin/profile-employee/'.$employee['id']) }}';" class="btn btn-default">Edit</button></td>
                             </tr>
                             @endforeach
                     </table>
