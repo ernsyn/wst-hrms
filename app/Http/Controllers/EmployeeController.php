@@ -20,6 +20,7 @@ use App\EmployeeInfo;
 use App\LeaveType;
 use App\Employee;
 use App\LeaveBalance;
+use App\LeaveRequest;
 use DB;
 use Auth;
 use Log;
@@ -183,6 +184,23 @@ class EmployeeController extends Controller
         return view('pages.leaveapplication', ['leave'=>$leave]);
     }
 
+    public function displayLeaveRequest()
+    {       
+
+        $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
+        ->join('users','users.id','=','leave_employees_requests.user_id')
+        // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
+        ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
+        ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
+        'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
+        'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
+        'leave_employees_requests.status as status')
+        ->where('leave_employees_requests.user_id' ,Auth::user()->id)
+        ->get();
+
+        return view('pages.employee.leave-request', ['leaverequest'=>$leaverequest]);
+    }
+
     public function displayLeaveBalance()
     {
          $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
@@ -241,7 +259,7 @@ class EmployeeController extends Controller
         'leave_balance.balance as balance',
         'leave_balance.carry_forward as carry',
         'leave_types.name as leave')
-        ->where('users.id', auth()->user()->id)
+        ->where('users.id', Auth::user()->id)
         ->get();
         return view('pages.employee.leave-balance', ['leavebalance'=>$leavebalance]);
     }

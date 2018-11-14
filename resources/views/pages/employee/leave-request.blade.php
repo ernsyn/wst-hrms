@@ -64,7 +64,6 @@
                 <div class="row pb-3">
                     <div class="col-auto mr-auto"></div>
                     <div class="col-auto">
-
                     </div>
                 </div>
                 <div class="row">
@@ -80,7 +79,7 @@
                                             <th>End Date</th>
                                             <th>Total Days</th>      
                                             <th>Status</th>                              
-                                            <th>Action</th>
+                          
                                         </tr>
                             </thead>
                             <tbody>
@@ -93,22 +92,7 @@
                                         <td>{{$row['end_date']}}</td>
                                         <td>{{$row['total_days']}}</td>
                                         <td>{{$row['status']}}</td>
-                                        <td>
-                                            @if ($row['status'] == 'Pending')
-                                            
-                                                <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                data-leaverequest-id="{{$row['request_id']}}"
-                                                data-target="#approveLeaverequest"><span class="fas fa-check-circle"></span></button>
-                                                <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                                data-leaverequest-id="{{$row['request_id']}}"
-                                                data-target="#disapproveLeaverequest"><span class="fas fa-times-circle"></span></button>                                            
-                                            @else
-                                                <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                disabled><span class="fas fa-check-circle"></span></button>
-                                                <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                                disabled><span class="fas fa-times-circle"></span></button>                                            
-                                            @endif                                                                                        
-                                        </td>
+
                                     </tr>
                                     @endforeach
                             </tbody>
