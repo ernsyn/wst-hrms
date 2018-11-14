@@ -623,13 +623,8 @@ class AdminController extends Controller
     // {       
     //     $id = Session::get('employee_id');
 
-<<<<<<< HEAD
     //     $banks = EmployeeBank::where('emp_id',$id)->orderBy('id', 'DESC')->get();
     //     $bank_list = BankCode::all();        
-=======
-        $banks = EmployeeBank::where('emp_id',$id)->orderBy('id', 'DESC')->get();
-        $bank_list = Bank::all();        
->>>>>>> 12bed9ffb87ae67443b78499a5c1fe8f91a32257
         
     //     return view('pages.admin.employee-bank', ['banks'=>$banks,'bank_list'=>$bank_list]);
     // }
@@ -718,8 +713,8 @@ class AdminController extends Controller
         Session::put('user_id', $id);
 
         $user = User::join('employees','employees.user_id','=','users.id')
-        // ->join('countries','countries.id','=','employees.nationality')
-        //->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
+        ->leftjoin('countries','countries.id','=','employees.nationality')
+        ->leftjoin('employee_jobs','employee_jobs.emp_id','=','employees.id')
         ->select('users.name as name','users.email as email', 
         'employees.contact_no as contact_no', 'employees.address as address', 
         'employees.ic_no as ic_no', 'employees.gender as gender', 
