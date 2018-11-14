@@ -401,46 +401,46 @@ class AdminController extends Controller
         return view('pages.admin.setup.branch', ['branch'=>$branch]);
     }
 
-    public function displayEmergencyContact()
-    {
-        $id = Session::get('user_id');
+    // public function displayEmergencyContact()
+    // {
+    //     $id = Session::get('user_id');
 
-        $user = Employee::where('user_id', $id)->first();
-        $contacts = EmployeeEmergencyContact::where('emp_id',$user->id)->get();
+    //     $user = Employee::where('user_id', $id)->first();
+    //     $contacts = EmployeeEmergencyContact::where('emp_id',$user->id)->get();
 
-        // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
-        return DataTables::of($contacts)->make(true);
-    }
-
-
-    public function displayEmployeeDependent()
-    {       
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();
-        $dependents = EmployeeDependent::where('emp_id',$user->id)->get();
-          return DataTables::of($dependents)->make(true);
+    //     // return view('pages.admin.emergency-contact', ['contacts'=>$contacts->sortByDesc('id')]);
+    //     return DataTables::of($contacts)->make(true);
+    // }
 
 
-    }
-
-    public function displayEmployeeBank()
-    {       
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();
-        $banks = EmployeeBankAccount::where('emp_id',$user->id)->get();
-        return DataTables::of($banks)->make(true);
+    // public function displayEmployeeDependent()
+    // {       
+    //     $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();
+    //     $dependents = EmployeeDependent::where('emp_id',$user->id)->get();
+    //       return DataTables::of($dependents)->make(true);
 
 
-    }
-    public function displayEmployeeJob()
-    {       
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();
-        $job = EmployeeJob::where('emp_id',$user->id)->get();
-          return DataTables::of($job)->make(true);
+    // }
+
+    // public function displayEmployeeBank()
+    // {       
+    //     $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();
+    //     $banks = EmployeeBankAccount::where('emp_id',$user->id)->get();
+    //     return DataTables::of($banks)->make(true);
 
 
-    }
+    // }
+    // public function displayEmployeeJob()
+    // {       
+    //     $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();
+    //     $job = EmployeeJob::where('emp_id',$user->id)->get();
+    //       return DataTables::of($job)->make(true);
+
+
+    // }
     public function addEmergencyContact(Request $request)
     {          
         $user_id = Session::get('user_id');
@@ -512,13 +512,13 @@ class AdminController extends Controller
         return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
-    public function displayEmployeeImmigration()
-    {       
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();
-        $immigrations = EmployeeImmigration::where('emp_id',$user->id)->get();
-          return DataTables::of($immigrations)->make(true);
-    }
+    // public function displayEmployeeImmigration()
+    // {       
+    //     $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();
+    //     $immigrations = EmployeeImmigration::where('emp_id',$user->id)->get();
+    //       return DataTables::of($immigrations)->make(true);
+    // }
 
     public function addEmployeeImmigration(Request $request)
     {          
@@ -555,15 +555,15 @@ class AdminController extends Controller
         return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
-    public function displayEmployeeVisa()
-    {       
+    // public function displayEmployeeVisa()
+    // {       
 
 
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();
-        $visa = EmployeeVisa::where('emp_id',$user->id)->get();
-          return DataTables::of($visa)->make(true);
-    }
+    //     $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();
+    //     $visa = EmployeeVisa::where('emp_id',$user->id)->get();
+    //       return DataTables::of($visa)->make(true);
+    // }
 
     public function displayLeaveTypeList(){
 
@@ -729,36 +729,36 @@ class AdminController extends Controller
         return view('pages.admin.profile-employee',['user'=>$user]);        
     }
 
-    public function displayQualificationExperience()
-    {   
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();            
+    // public function displayQualificationExperience()
+    // {   
+    //     $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();            
         
-        $experiences = EmployeeExperience::where('emp_id', $user->id)->get();
+    //     $experiences = EmployeeExperience::where('emp_id', $user->id)->get();
         
-        // return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
-        return DataTables::of($experiences)->make(true);
-    }
+    //     // return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+    //     return DataTables::of($experiences)->make(true);
+    // }
 
-    public function displayQualificationEducation()
-    {   $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();            
+    // public function displayQualificationEducation()
+    // {   $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();            
         
-        $educations = EmployeeEducation::where('emp_id', $user->id)->get();
+    //     $educations = EmployeeEducation::where('emp_id', $user->id)->get();
         
-        // return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
-        return DataTables::of($educations)->make(true);
-    }
+    //     // return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+    //     return DataTables::of($educations)->make(true);
+    // }
 
-    public function displayQualificationSkill()
-    {   $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();            
+    // public function displayQualificationSkill()
+    // {   $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();            
         
-        $skills = EmployeeSkill::where('emp_id', $user->id)->get();
+    //     $skills = EmployeeSkill::where('emp_id', $user->id)->get();
         
-        // return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
-        return DataTables::of($skills)->make(true);
-    }
+    //     // return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+    //     return DataTables::of($skills)->make(true);
+    // }
     
 
     public function addQualificationCompany(Request $request)
@@ -885,16 +885,16 @@ class AdminController extends Controller
             return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     }
 
-    public function displayAttachment()
-    {
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();            
+    // public function displayAttachment()
+    // {
+    //     $id = Session::get('user_id');
+    //     $user = Employee::where('user_id', $id)->first();            
         
-        $attachments = EmployeeAttachment::where('emp_id', $user->id)->get();
+    //     $attachments = EmployeeAttachment::where('emp_id', $user->id)->get();
         
-        // return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
-        return DataTables::of($attachments)->make(true);
-    }
+    //     // return view('pages.admin.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
+    //     return DataTables::of($attachments)->make(true);
+    // }
 
     public function displayReportTo()
     {       

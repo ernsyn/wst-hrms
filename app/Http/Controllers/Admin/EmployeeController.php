@@ -5,9 +5,22 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Employee;
+use Yajra\DataTables\Facades\DataTables;
+
 use App\Country;
 use App\Roles;
+
+use App\Employee;
+use App\EmployeeDependent;
+use App\EmployeeAttachment;
+use App\EmployeeBankAccount;
+use App\EmployeeEducation;
+use App\EmployeeExperience;
+use App\EmployeeImmigration;
+use App\EmployeeJob;
+use App\EmployeeSkill;
+use App\EmployeeVisa;
+use App\EmployeeEmergencyContact;
 
 class EmployeeController extends Controller
 {
@@ -57,5 +70,68 @@ class EmployeeController extends Controller
         $roles = Roles::all();
 
         return view('pages.admin.employees.add', compact('countries','roles'));
+    }
+
+
+    // SECTION: Data Tables
+
+    public function getDataTableDependents($id)
+    {       
+        $dependents = EmployeeDependent::where('emp_id', $id)->get();
+        return DataTables::of($dependents)->make(true);
+    }
+
+    public function getDataTableImmigrations($id)
+    {       
+        $immigrations = EmployeeImmigration::where('emp_id', $id)->get();
+        return DataTables::of($immigrations)->make(true);
+    }
+
+    public function getDataTableVisas($id)
+    {       
+        $visa = EmployeeVisa::where('emp_id', $id)->get();
+        return DataTables::of($visa)->make(true);
+    }
+
+    public function getDataTableBankAccounts($id)
+    {       
+        $banks = EmployeeBankAccount::where('emp_id', $id)->get();
+        return DataTables::of($banks)->make(true);
+    }
+
+    public function getDataTableJobs($id)
+    {       
+        $job = EmployeeJob::where('emp_id', $id)->get();
+        return DataTables::of($job)->make(true);
+    }
+
+    public function getDataTableExperiences($id)
+    {   
+        $experiences = EmployeeExperience::where('emp_id', $id)->get();
+        return DataTables::of($experiences)->make(true);
+    }
+
+    public function getDataTableEducation($id)
+    {   
+        $educations = EmployeeEducation::where('emp_id', $id)->get();
+        return DataTables::of($educations)->make(true);
+    }
+
+    public function getDataTableSkills($id)
+    {   
+        $skills = EmployeeSkill::where('emp_id', $id)->get();
+        return DataTables::of($skills)->make(true);
+    }
+
+    public function getDataTableAttachments($id)
+    {
+        $attachments = EmployeeAttachment::where('emp_id', $id)->get();
+        return DataTables::of($attachments)->make(true);
+    }
+
+    public function getDataTableEmergencyContacts($id)
+    {
+        $contacts = EmployeeEmergencyContact::where('emp_id', $id)->get();
+        return DataTables::of($contacts)->make(true);
     }
 }

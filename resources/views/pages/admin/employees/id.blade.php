@@ -58,7 +58,7 @@
                             <a class="nav-item nav-link" id="nav-bank-tab" data-toggle="tab" href="#nav-bank" role="tab" aria-controls="nav-bank" aria-selected="true">Bank</a>
                             <a class="nav-item nav-link" id="nav-qualification-tab" data-toggle="tab" href="#nav-qualification" role="tab" aria-controls="nav-qualification"
                                 aria-selected="false">Qualification</a>
-                            <a class="nav-item nav-link" id="nav-attachment-tab" data-toggle="tab" href="#nav-attachment" role="tab" aria-controls="nav-attachment"
+                            <a class="nav-item nav-link" id="nav-attachments-tab" data-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-attachments"
                                 aria-selected="true">Attachment</a>
                             <a class="nav-item nav-link" id="nav-workdays-tab" data-toggle="tab" href="#nav-workdays" role="tab" aria-controls="nav-workdays"
                                 aria-selected="false">Work Days</a>
@@ -126,7 +126,7 @@
                                         </div>
                                         <div class="dropdown-divider pb-3"></div>
                                         <div class="col-md-12">COMPANY</div>
-                                        {{-- <div class="row p-3">
+                                        <div class="row p-3">
                                             <div class="col-md-6">
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">Employee ID</label>
@@ -139,7 +139,7 @@
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">EPF No</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext" value="{{$user->epf_no}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->epf_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Confirmation Date</label>
                                                     <div class="col-lg-7">
@@ -147,11 +147,11 @@
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Basic Salary</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext" value="{{$user->basic_salary}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->basic_salary}}">
                                                     </div>
                                                 </div>
-                                            </div> --}}
-                                            {{-- <div class="col-md-6">
+                                            </div>
+                                            <div class="col-md-6">
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">Position</label>
                                                     <div class="col-lg-7">
@@ -159,7 +159,7 @@
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Tax No</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext" value="{{$user->tax_no}}">
+                                                        <input type="text" readonly class="form-control-plaintext" value="{{$employee->tax_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Joined Date</label>
                                                     <div class="col-lg-7">
@@ -170,7 +170,7 @@
                                                         <input type="text" readonly class="form-control-plaintext" value="-">
                                                     </div>
                                                 </div>
-                                            </div> --}}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-1">
@@ -182,28 +182,28 @@
                             </form>
                         </div>
                         {{-- Emergency --}}
-                        {{-- @include('pages.admin.emergency-contact', ['user' => $user]) --}}
+                        @include('pages.admin.employees.id.emergency-contacts', ['id' => $employee->id])
                         {{-- Dependent --}}
-                        {{-- @include('pages.admin.employee-dependent') --}}
+                        @include('pages.admin.employees.id.dependents', ['id' => $employee->id])
                         {{-- Immigration --}}
-                        {{-- @include('pages.admin.employee-immigration') --}}
+                        @include('pages.admin.employees.id.immigrations', ['id' => $employee->id])
                         {{-- Visa --}}
-                        {{-- @include('pages.admin.employee-visa') --}}
+                        @include('pages.admin.employees.id.visas', ['id' => $employee->id])
                         {{-- Job --}}
-                        {{-- @include('pages.admin.job') --}}
+                        @include('pages.admin.employees.id.jobs', ['id' => $employee->id])
                         {{-- Bank --}}
-                        {{-- @include('pages.admin.employee-bank') --}}
+                        @include('pages.admin.employees.id.bank-accounts', ['id' => $employee->id])
                         {{-- Qualification --}}
-                        {{-- @include('pages.admin.qualification') --}}
+                        @include('pages.admin.employees.id.qualifications', ['id' => $employee->id])
                         {{-- Attachment --}}
-                        {{-- @include('pages.admin.attachment') --}}
+                        @include('pages.admin.employees.id.attachments', ['id' => $employee->id])
                         {{-- Work Days --}}
                         <div class="tab-pane fade show p-3" id="nav-workdays" role="tabpanel" aria-labelledby="nav-workdays-tab">
                         </div>
                         {{-- Report To --}}
-                        {{-- @include('pages.admin.report-to') --}}
+                        @include('pages.admin.employees.id.report-to', ['id' => $employee->id])
                         {{-- History --}}
-                        {{-- @include('pages.admin.history') --}}
+                        @include('pages.admin.employees.id.history', ['id' => $employee->id])
                         {{-- Security Group --}}
                         <div class="tab-pane fade show p-3" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
                         </div>
