@@ -34,9 +34,10 @@
     </div>
 
 
+    <!--government report form-->
     <div class="row">
         <div class="col-md-12">
-            <div class="card text-center">
+            <div id="borangE" class="card text-center collapse show" >
                 <div class="card-header">
                     LHDN Borang E
                 </div>
@@ -50,6 +51,48 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-12">
+            <div id="cp21" class="card text-center collapse">
+                <div class="card-header">
+                    LHDN CP21
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="button" class="btn btn-primary" value="Generate">
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    Lembaga Hasil Dalam Negeri
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="cp22" class="card text-center collapse">
+                <div class="card-header">
+                    LHDN CP22
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="button" class="btn btn-primary" value="Generate">
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    Lembaga Hasil Dalam Negeri
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+<script>
+    // accordion fix
+    $('.port-item').click(function () {
+        $('.collapse').collapse('hide');
+    })
+</script>
+
 @endsection
