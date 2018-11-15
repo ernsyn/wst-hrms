@@ -20,8 +20,16 @@ $('#emergencyContactTable').DataTable({
             "data": "contact_no"
         },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#emergencyModal"><i class="far fa-edit"></i></button>'
+            "data": function (data, type, dataToSet) {
+                return '<button type="button" class="btn btn-success btn-sm" '+
+                              'data-toggle="modal" class="btn btn-outline-primary waves-effect" '+
+                              'data-contact-id="'+data.id+'" '+
+                              'data-contact-name="'+data.name+'" '+              
+                              'data-contact-relationship="'+data.relationship+'" '+
+                              'data-contact-number="'+data.contact_no+'" '+
+                              'data-target="#updateContactPopup">'+
+                              '<i class="far fa-edit"></i></button>';
+            }
         }
     ]
 });
@@ -46,8 +54,16 @@ $('#dependentTable').DataTable({
             "data": "dob"
         },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#dependentModal"><i class="far fa-edit"></i></button>'
+            "data":function (data, type, dataToSet) {
+                return '<button type="button" class="btn btn-success btn-sm" '+
+                              'data-toggle="modal" class="btn btn-outline-primary waves-effect" '+
+                              'data-dependent-id="'+data.id+'" '+
+                              'data-dependent-name="'+data.name+'" '+              
+                              'data-dependent-relationship="'+data.relationship+'" '+
+                              'data-dependent-date-of-birth="'+data.dob+'" '+
+                              'data-target="#updateDependentPopup">'+
+                              '<i class="far fa-edit"></i></button>';
+            }
         }
     ]
 });
@@ -78,8 +94,19 @@ $('#employeeImmigrationTable').DataTable({
             "data": "document_media_id"
         },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#immigrationModal"><i class="far fa-edit"></i></button>'
+            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#immigrationModal"><i class="far fa-edit"></i></button>',
+            "data": function (data, type, dataToSet) {
+                return '<button type="button" class="btn btn-success btn-sm" '+
+                              'data-toggle="modal" class="btn btn-outline-primary waves-effect" '+
+                              'data-immigration-id="'+data.id+'" '+
+                              'data-immigration-document="'+data.document_media_id+'" '+              
+                              'data-immigration-passport-no="'+data.passport_no+'" '+
+                              'data-immigration-issued-by="'+data.issued_by+'" '+
+                              'data-immigration-issued-date="'+data.issued_date+'" '+
+                              'data-immigration-expiry-date="'+data.expiry_date+'" '+
+                              'data-target="#updateImmigrationPopup">'+
+                              '<i class="far fa-edit"></i></button>';
+            }
         }
     ]
 });
@@ -95,16 +122,13 @@ $('#employeeVisaTable').DataTable({
             }
         },
         {
-            "data": "visa_number"
-        },
-        {
             "data": "type"
         },
         {
-            "data": "passport_number"
+            "data": "visa_number"
         },
         {
-            "data": "issued_by"
+            "data": "family_members"
         },
         {
             "data": "issued_date"
@@ -116,8 +140,19 @@ $('#employeeVisaTable').DataTable({
             "data": "document_media_id"
         },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#visaModal"><i class="far fa-edit"></i></button>'
+            "data": function (data, type, dataToSet) {
+                return '<button type="button" class="btn btn-success btn-sm" '+
+                              'data-toggle="modal" class="btn btn-outline-primary waves-effect" '+
+                              'data-visa-id="'+data.id+'" '+
+                              'data-visa-type="'+data.type+'" '+              
+                              'data-visa-number="'+data.visa_number+'" '+
+                              'data-visa-family-members="'+data.family_members+'" '+
+                              'data-visa-issued-date="'+data.issued_date+'" '+
+                              'data-visa-expiry-date="'+data.expiry_date+'" '+
+                              'data-visa-issued-by="'+data.issued_by+'" '+
+                              'data-target="#updateVisaPopup">'+
+                              '<i class="far fa-edit"></i></button>';
+            }
         }
     ]
 });
@@ -136,14 +171,42 @@ $('#employeeJobTable').DataTable({
             "data": "start_date"
         },
         {
-            "data": "end_date"
+            "data": "position"
         },
         {
-            "data": "basic_salary"
-        },        
+            "data": "department"
+        },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#jobModal"><i class="far fa-edit"></i></button>'
+            "data": "team"
+        },     
+        {
+            "data": "cost_centre"
+        },       
+        {
+            "data": "grade"
+        },  
+        {
+            "data": "basic_salary"
+        },  
+        {
+            "data": "status"
+        },  
+        {
+            "data": function (data, type, dataToSet) {
+                return '<button type="button" class="btn btn-success btn-sm" '+
+                              'data-toggle="modal" class="btn btn-outline-primary waves-effect" '+
+                              'data-job-id="'+data.id+'" '+
+                              'data-job-date="'+data.start_date+'" '+              
+                              'data-job-position="'+data.position_id+'" '+
+                              'data-job-department="'+data.depart_id+'" '+
+                              'data-job-team="'+data.team_id+'" '+              
+                              'data-job-cost="'+data.cost_id+'" '+
+                              'data-job-grade="'+data.grade_id+'" '+
+                              'data-job-salary="'+data.basic_salary+'" '+
+                              'data-job-status="'+data.status+'" '+
+                              'data-target="#updateJob">'+
+                              '<i class="far fa-edit"></i></button>';
+            }
         }
     ]
 });
@@ -168,8 +231,16 @@ $('#employeeBankTable').DataTable({
             "data": "acc_status"
         },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#bankModal"><i class="far fa-edit"></i></button>'
+            "data": function (data, type, dataToSet) {
+                return '<button type="button" class="btn btn-success btn-sm" '+
+                              'data-toggle="modal" class="btn btn-outline-primary waves-effect" '+
+                              'data-bank-id="'+data.id+'" '+
+                              'data-bank-code="'+data.bank_code+'" '+              
+                              'data-bank-acc-no="'+data.acc_no+'" '+
+                              'data-bank-acc-status="'+data.acc_status+'" '+
+                              'data-target="#updateBankPopup">'+
+                              '<i class="far fa-edit"></i></button>';
+            }
         }
     ]
 });
@@ -224,8 +295,16 @@ $('#employeeQualCompanyTable').DataTable({
             "data": "notes"
         },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#experienceModal"><i class="far fa-edit"></i></button>'
+            "data": function (data, type, dataToSet) {
+                return '<button type="button" class="btn btn-success btn-sm" '+
+                              'data-toggle="modal" class="btn btn-outline-primary waves-effect" '+
+                              'data-company-id="'+data.id+'" '+
+                              'data-company-previous-company="'+data.bank_code+'" '+              
+                              'data-company-previous-position="'+data.acc_no+'" '+
+                              'data-company-previous-acc-status="'+data.acc_status+'" '+
+                              'data-target="#updateBankPopup">'+
+                              '<i class="far fa-edit"></i></button>';
+            }
         }
     ]
 });
@@ -414,7 +493,7 @@ $('#setupJobconfigureCostCentreTable').DataTable({
     initComplete: function () {
         this.api().columns(1).every(function () {
             var that = this;
-            $('input', this.footer()).on('keyup change', function () {
+            $('div.dataTables_wrapper div.dataTables_filter input', this.footer()).on('keyup change', function () {
                 if (that.search() !== this.value) {
                     that
                         .search(this.value)
