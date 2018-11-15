@@ -35,11 +35,12 @@ Route::group(['prefix' => 'setup', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('branch', 'AdminController@displaySetupBranch')->name('setup/branch');
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], function() {
+Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+    Route::get('', 'SuperAdmin\DashboardController@index')->name('super-admin.dashboard');
+});
 
-    Route::get('/', function () {
-        return view('home');
-    })->name('/');
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+    Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
 
     Route::get('home', 'HomeController@index')->name('admin.home');
 
@@ -61,6 +62,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('admin/profile-employee/{id}');
     Route::get('user-list', 'AdminController@displayUserList')->name('admin/user_list');
     Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
+    Route::get('edit-employee', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee');
 
     //--setup company--
     Route::get('/setup/company-details/{id}','AdminController@displayCompanyDetails')->name('/setup/company-details/{id}');
@@ -92,6 +94,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('edit_company_addition','AdminController@editCompanyAddition')->name('edit_company_addition');
     Route::post('edit_company_deduction','AdminController@editCompanyDeduction')->name('edit_company_deduction');
 
+    Route::post('edit_employee_popup','AdminController@editEmployeeProfileBasic')->name('edit_employee_popup');
+    Route::post('edit_profile_popup','AdminController@editProfilePopup')->name('edit_profile_popup');
+    Route::post('edit_company_popup','AdminController@editCompanyPopup')->name('edit_company_popup');
+    
+    
     Route::post('add_emergency_contact','AdminController@addEmergencyContact')->name('add_emergency_contact');
     Route::post('add_employee_dependent','AdminController@addEmployeeDependent')->name('add_employee_dependent');
     Route::post('add_employee_immigration','AdminController@addEmployeeImmigration')->name('add_employee_immigration');
@@ -152,13 +159,13 @@ Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], func
 
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function() {
-    Route::get('/', function () {
-        return view('home');
-    })->name('/');
+// Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function() {
+//     Route::get('/', function () {
+//         return view('home');
+//     })->name('/');
 
-    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
-});
+//     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
+// });
 
 Route::resource('payroll', 'Payroll\PayrollController');
 Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');

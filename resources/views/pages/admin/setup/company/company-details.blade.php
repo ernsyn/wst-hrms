@@ -113,8 +113,8 @@
                                     </div>
                                 </div>
                             </div>
+                
 
-                            {{-- ADDITION --}}
                             <div class="tab-pane fade" id="nav-addition" role="tabpanel" aria-labelledby="nav-addition-tab">
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
@@ -200,6 +200,19 @@
                             </div>
 
                             
+                                {{-- TRAVEL ALLOWANCE --}}
+                                <div class="tab-pane fade show active" id="nav-travel" role="tabpanel" aria-labelledby="nav-travel-tab">
+                                    <div class="row pb-3">
+                                        <div class="col-auto mr-auto"></div>
+                                        <div class="col-auto">
+                                            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addCompanyBankPopup">
+                                              Under Maintenance
+                                            </button>
+                                        </div>
+                                    </div>
+
+                            </div>
+                        {{-- ADDITION --}}
                             {{--
                             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                                 This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.

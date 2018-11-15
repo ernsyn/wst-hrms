@@ -11,31 +11,39 @@
             <div class="modal-body">
                 <form method="POST" action="{{ route('add_employee_dependent') }}" id="add_employee_dependent">
                     @csrf
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <label class="col-md-5 col-form-label">Name*</label>
-                            <div class="col-md-7">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name here" name="name" value="{{ old('name') }}" required>
-                                @if ($errors->has('name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
-                                </span>
-                                @endif
-                            </div>    
-                                <label class="col-md-8 col-form-label">Relationship*</label>
-                                <div class="col-md-10">
-                                    <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" placeholder="Farther, Son, etc" name="relationship" value="{{ old('relationship') }}" required>
+                    <div class="row p-3">
+                        <div class="form-group row w-100">
+                            <div class="col-12">
+                                <label class="col-md-12 col-form-label">Name*</label>
+                                <div class="col-md-12">
+                                    <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name here" name="name" value="{{ old('name') }}" required>
+                                    @if ($errors->has('name'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="form-group row w-100">
+                            <div class="col-6">
+                                <label class="col-md-12 col-form-label">Relationship*</label>
+                                <div class="col-md-12">
+                                    <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" placeholder="Farther/Son/etc" name="relationship" value="{{ old('relationship') }}" required>
                                     @if ($errors->has('relationship'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('relationship') }}</strong>
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-5 col-form-label">Date Of Birth*</label>
-                                <div class="col-md-7">
+                            </div>
+                            <div class="col-6">
+                                <label class="col-md-12 col-form-label">Date Of Birth*</label>
+                                <div class="col-md-12">
                                     <input id="altdobDate" name ="altdobDate" type="text" class="form-control" hidden> 
-                                    <input name="dobDate" id="dobDate" type="text" class="form-control" readonly>                                              
-                                </div>                     
+                                    <input name="dobDate" id="dobDate" type="text" placeholder="Enter Date" class="form-control" readonly>                                              
+                                </div> 
+                            </div>                    
                         </div>
                     </div>     
                     <div class="modal-footer">

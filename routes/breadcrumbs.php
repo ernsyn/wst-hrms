@@ -237,6 +237,10 @@ Breadcrumbs::for('admin/edit-employee/{id}', function ($trail) {
     $trail->push('Add Employee', route('admin/edit-employee/{id}', ''));
 });
 
+Breadcrumbs::for('admin/edit-employee', function ($trail) {
+    $trail->parent('admin/employee_list');
+    $trail->push('Add Employee', route('admin/edit-employee', ''));
+});
 
 // Home > Admin > Leave Type
 Breadcrumbs::for('admin/leavetype', function ($trail) {
@@ -295,18 +299,13 @@ Breadcrumbs::for('add_cost_centre', function ($trail) {
 
 
 
-// // Home > Blog > [Category]
-// Breadcrumbs::for('category', function ($trail, $category) {
-//     $trail->parent('blog');
-//     $trail->push($category->title, route('category', $category->id));
-// });
+Breadcrumbs::for('super-admin.dashboard', function ($trail) {
+    $trail->push('Super Admin Dashboard', route('super-admin.dashboard'));
+});
 
-// // Home > Blog > [Category] > [Post]
-// Breadcrumbs::for('post', function ($trail, $post) {
-//     $trail->parent('category', $post->category);
-//     $trail->push($post->title, route('post', $post->id));
-// });
-
+Breadcrumbs::for('admin.dashboard', function ($trail) {
+    $trail->push('Admin Dashboard', route('admin.dashboard'));
+});
 //--- setup company ----
 // Home > Admin > Employee List > Profile
 Breadcrumbs::for('/setup/company-details/{id}', function ($trail) {
@@ -332,7 +331,6 @@ Breadcrumbs::for('add_company_bank', function ($trail) {
 
 // Error 404
 Breadcrumbs::for('errors.404', function ($trail) {
-    $trail->parent('home');
     $trail->push('Page Not Found');
 });
 Breadcrumbs::for('payroll', function ($trail) {

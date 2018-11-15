@@ -28,13 +28,53 @@
         }
     }
 
+    #hrms-mode-container {
+        padding: 10px 10px 10px 10px;
+        font-size: 10pt;
+        font-weight: 600;
+        color: $app-textcolor-light;
+        #hrms-mode {
+            // background-color: lighten($app-primary-darkened, 10%);
+            // background-attachment: fixed;
+    
+            div {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+    
+            #label {
+                background-color: lighten($app-primary-darkened, 15%);
+                border-radius: 5px 0px 0px 5px;
+            }
+            #value {
+                background-color: lighten($app-primary-darkened, 10%);
+                border-radius: 0px 5px 5px 0px;
+            }
+        }
+
+        #mode-options {
+            background-color: $app-primary-darkened;
+            border-radius: 0px 0px 5px 5px;
+            .option {
+                padding-top: 10px;
+                padding-bottom: 10px;
+
+                a {
+                    text-decoration: none;
+                    color: $app-textcolor-light;
+                }
+            }
+        }
+    }
+    
+
     #menu-container {
         padding: 20px 0;
         .menu-section {
             .info {
                 padding: 8px 20px;
-                font-size: 1.0em;
-                font-weight: 500;
+                font-size: 10pt;
+                font-weight: 600;
                 display: block;
                 color: $app-textcolor-light;
 
