@@ -48,18 +48,6 @@ class EmployeeDataController extends Controller
         ]);
     }
   
-    protected function insert(Request $request)
-    {                
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
 
-
-        $user = User::create($input);
-        $user->assignRole('employee');
-
-
-        return view('home');
-
-    }
 
 }

@@ -16,7 +16,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{{ route('add_employee_visa') }}">
+            <form method="POST" action="{{ route('admin.employees.visas.post', ['id' => $id]) }}">
                 @csrf
                 <div class="row">
                     <div class="col-xl-8">

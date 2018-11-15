@@ -6,7 +6,7 @@
     <div class="card py-4 shadow-sm">
         <div class="card-body">
             <div class="container-fluid">
-                <form method="POST" action="{{ route('register_employee') }}" id="register_employee">
+                <form method="POST" action="{{ route('admin.employees.add') }}" id="register_employee">
                     @csrf
                     <div class="row">
                         <div class="col-xl-2 d-flex justify-content-center">

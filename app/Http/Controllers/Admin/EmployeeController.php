@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Hash;
+use DB;
 
 use Yajra\DataTables\Facades\DataTables;
 
 use App\Country;
 use App\Roles;
 
+use App\User;
 use App\Employee;
 use App\EmployeeDependent;
 use App\EmployeeAttachment;
@@ -133,5 +136,283 @@ class EmployeeController extends Controller
     {
         $contacts = EmployeeEmergencyContact::where('emp_id', $id)->get();
         return DataTables::of($contacts)->make(true);
+    }
+
+
+    protected function postAdd(Request $request)
+    {                
+        $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
+
+        $user = User::create($input);
+        $user->assignRole('employee');
+
+        return redirect()->route('admin.dashboard')->with('status', 'Employee successfully added!');
+
+    }
+
+
+    // SECTION: Add
+
+    public function postEmergencyContact(Request $request, $id)
+    {          
+        $name = $request->input('name');
+        $relationship = $request->input('relationship');       
+        $contact_number = $request->input('contact_number');
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into employee_emergency_contacts
+        (emp_id, name, relationship, contact_no, created_by) 
+        values
+        (?,?,?,?,?)',
+        [$id, $name, $relationship, $contact_number, $created_by]);
+
+        return redirect()->route('admin.employees.id', ['id' => $id]); 
+    }
+
+    public function postDependent(Request $request, $id)
+    {              
+        $name = $request->input('name');
+        $relationship = $request->input('relationship');      
+        $altDobDate = $request->input('altdobDate');
+        $created_by = auth()->user()->id;
+
+         
+        DB::insert('insert into employee_dependents
+        (emp_id, name, relationship, dob, created_by) 
+        values
+        (?,?,?,?,?)',
+        [$id, $name, $relationship, $altDobDate, $created_by]);
+
+        // $dependents = EmployeeDependent::where('emp_id', $id)->get();  
+        
+        return redirect()->route('admin.employees.id', ['id' => $id]); 
+    }
+
+    public function postImmigration(Request $request, $id)
+    {           
+        $passport_no = $request->input('passport_no'); 
+        $issued_by = $request->input('issued_by');     
+        $altexpiryDate = $request->input('altexpiryDate');
+        $altlicenseExpiryDate = $request->input('altlicenseExpiryDate');        
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into employee_immigrations
+        (emp_id, passport_no, issued_by, issued_date, expiry_date, created_by) 
+        values
+        (?,?,?,?,?,?)',
+        [$id, $passport_no, $issued_by, $altexpiryDate, $altlicenseExpiryDate, $created_by]);
+
+
+        // $immigrations = EmployeeImmigration::where('emp_id',$user_id)->get();  
+
+        return redirect()->route('admin.employees.id', ['id' => $id]);  
+    }
+
+    public function postVisa(Request $request, $id)
+    {
+        $family_members = $request->input('family_members'); 
+        $visa_number = $request->input('visa_number');     
+        $issued_date = $request->input('issued_date');
+        $expiry_date = $request->input('expiry_date');        
+        $issued = $request->input('altissueDate');
+        $expiry = $request->input('altexpDate');        
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into employee_visas
+        (emp_id, visa_number,family_members, issued_date, expiry_date, created_by) 
+        values
+        (?,?,?,?,?,?)',
+         [$id, $visa_number,$family_members, $issued, $expiry, $created_by]);
+        
+         return redirect()->route('admin.employees.id', ['id' => $id]); 
+    }
+
+    public function postBankAccount(Request $request, $id)
+    {          
+        $type = $request->input('type');             
+        $bank_code = Input::get('bank_list');
+        $acc_no = $request->input('acc_no'); 
+        $status = Input::get('status');        
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into employee_bank_accounts
+        (emp_id, type, bank_code, acc_no, acc_status, created_by) 
+        values
+        (?,?,?,?,?,?)',
+        [$id, $type, $bank_code, $acc_no, $status, $created_by]);
+
+        return redirect()->route('admin.employees.id', ['id' => $id]); 
+    }
+
+    public function postCompany(Request $request, $id)
+    {          
+        $company = $request->input('company');
+        $position = $request->input('position');      
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');   
+        $note = $request->input('notes');   
+        
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into employee_experience
+        (emp_id, previous_company, previous_position, start_date, end_date, note, created_by) 
+        values
+        (?,?,?,?,?,?,?)',
+        [$id, $company, $position, $start_date, $end_date, $note, $created_by]);
+
+        return redirect()->route('admin.employees.id', ['id' => $id]);  
+    }
+
+    public function postEducation(Request $request, $id)
+    {          
+        $level = $request->input('level');
+        $major = $request->input('major');      
+        $start_year = $request->input('start_year');
+        $end_year = $request->input('end_year');   
+        $gpa = $request->input('gpa');
+        $school = $request->input('school');
+        $description = $request->input('description');                
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into employee_education
+        (emp_id, level, major, start_year, end_year, gpa, school, description, created_by) 
+        values
+        (?,?,?,?,?,?,?,?,?)',
+        [$id, $level, $major, $start_year, $end_year, $gpa, $school, $description, $created_by]);
+
+        return redirect()->route('admin.employees.id', ['id' => $id]); 
+    }
+
+    public function postSkill(Request $request, $id)
+    {          
+        $emp_skill = $request->input('skills');
+        $year_experience = $request->input('year_experience');      
+        $competency = Input::get('competency');            
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into employee_skills
+        (emp_id, emp_skill, year_experience, competency, created_by) 
+        values
+        (?,?,?,?,?)',
+        [$id, $emp_skill, $year_experience, $competency, $created_by]);
+
+        return redirect()->route('admin.employees.id', ['id' => $id]); 
+    }
+
+    // SECTION: Edit
+
+    public function postEditDependent(Request $request, $emp_id, $id)
+    {          
+        $name = $request->input('name');
+        $relationship = $request->input('relationship');
+       
+        Dependent::where('id', $id)->update(array('dependent_name' => $name,'dependent_relationship' => $relationship));
+
+        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]); 
+    }
+
+    public function postEditEmergencyContact(Request $request, $emp_id, $id)
+    {          
+        $name = $request->input('name');
+        $relationship = $request->input('relationship');    
+        $contact_number = $request->input('contact_number');       
+       
+        EmergencyContact::where('id', $id)->update(array('contact_name' => $name,'relationship' => $relationship, 'contact_number' => $contact_number));
+
+        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+    }
+
+    public function postEditImmigration(Request $request, $emp_id, $id)
+    {          
+        $document = $request->input('document');
+        $passport_no = $request->input('passport_no');    
+        $issued_by = $request->input('issued_by');       
+       
+        EmployeeImmigration::where('id', $id)->update(array('document' => $document,'passport_no' => $passport_no, 'issued_by' => $issued_by));
+
+        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+    }
+
+    public function postEditVisa(Request $request, $emp_id, $id)
+    {    
+        $type = $request->input('type');    
+        $visa_number = $request->input('visa_number');
+        $family_members = $request->input('family_members');    
+       
+        EmployeeVisa::where('id', $id)->update(array('type' => $type, 'visa_number' => $visa_number,'family_members' => $family_members));
+         
+        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+    }
+
+    public function postEditBankAccount(Request $request, $emp_id, $id)
+    {          
+        $bank_code = Input::get('bank_code');
+        $acc_no = $request->input('acc_no'); 
+        $acc_status = Input::get('acc_status');      
+       
+        EmployeeBank::where('id', $id)->update(array(
+            'bank_code' => $bank_code,
+            'acc_no' => $acc_no,
+            'acc_status' => $acc_status
+        ));
+
+        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+    }
+
+    public function postEditCompany(Request $request, $emp_id, $id)
+    {          
+        $previous_company = $request->input('previous_company');
+        $previous_position = $request->input('previous_position');      
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');   
+        $note = $request->input('note');           
+
+        EmployeeExperience::where('id', $id)->update(array(
+            'previous_company' => $previous_company,
+            'previous_position' => $previous_position,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'note' => $note
+        ));
+        
+        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+    }
+
+    public function postEditEducation(Request $request, $emp_id, $id)
+    {          
+        $level = $request->input('level');
+        $major = $request->input('major');      
+        $start_year = $request->input('start_year');
+        $end_year = $request->input('end_year');   
+        $gpa = $request->input('gpa');
+        $school = $request->input('school');
+        $description = $request->input('description');   
+
+        EmployeeEducation::where('id', $id)->update(array(
+            'level' => $level,
+            'major' => $major,
+            'start_year' => $start_year,
+            'end_year' => $end_year,
+            'gpa' => $gpa,
+            'school' => $school,
+            'description' => $description
+        ));
+       
+        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+    }
+
+    public function postEditSkill(Request $request, $emp_id, $id)
+    {               
+        $emp_skill = $request->input('emp_skill');
+        $year_experience = $request->input('year_experience');      
+        $competency = Input::get('competency');   
+       
+        EmployeeSkills::where('id',$skill_id)->update(
+            array('emp_skill' => $emp_skill,
+            'year_experience' => $year_experience,
+            'competency' => $competency));
+
+        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
     }
 }

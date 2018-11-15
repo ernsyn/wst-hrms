@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_qualification_experience') }}" id="add_qualification_experience">
+                <form method="POST" action="{{ route('admin.employees.companies.post', ['id' => $id]) }}" id="add_qualification_experience">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -76,7 +76,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_qualification_education') }}" id="add_qualification_education">
+                <form method="POST" action="{{ route('admin.employees.education.post', ['id' => $id]) }}" id="add_qualification_education">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -159,7 +159,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_qualification_skills') }}" id="add_qualification_education">
+                <form method="POST" action="{{ route('admin.employees.skills.post', ['id' => $id]) }}" id="add_qualification_skills">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -218,7 +218,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_qualification_company') }}" id="edit_qualification_company">
+                <form method="POST" action="{{ route('admin.employees.companies.edit', ['emp_id' => $id, 'id' => 1]) }}" id="edit_qualification_company">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -285,7 +285,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_qualification_education') }}" id="update_qualification_education">
+                <form method="POST" action="{{ route('admin.employees.education.edit', ['emp_id' => $id, 'id' => 1]) }}" id="update_qualification_education">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -370,7 +370,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_qualification_skills') }}" id="edit_qualification_skills">
+                <form method="POST" action="{{ route('admin.employees.immigrations.edit', ['emp_id' => $id, 'id' => 1]) }}" id="edit_qualification_skills">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">

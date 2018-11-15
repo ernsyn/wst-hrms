@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_emergency_contact') }}" id="add_emergency_contact">
+                <form method="POST" action="{{ route('admin.employees.emergency-contacts.post', ['id' => $id]) }}" id="add_emergency_contact">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -72,7 +72,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_emergency_contact') }}" id="edit_emergency_contact">
+                <form method="POST" action="{{ route('admin.employees.emergency-contacts.edit', ['emp_id' => $id, 'id' => 1]) }}" id="edit_emergency_contact">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">

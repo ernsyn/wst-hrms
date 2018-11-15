@@ -45,7 +45,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_department') }}" id="edit_visa">
+                <form method="POST" action="{{ route('admin.employees.visas.edit', ['emp_id' => $id, 'id' => 1]) }}" id="edit_visa">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">

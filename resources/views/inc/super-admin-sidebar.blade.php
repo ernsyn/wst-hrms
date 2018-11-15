@@ -49,7 +49,7 @@
             <ul class="collapse list-unstyled {{ request()->is('admin.employees') ? 'show' : '' }}" id="employee-setup">
                 {{-- OPTION: Add Employee --}}
                 <li class="menu-option {{ request()->is('admin/employee/add') ? 'active' : '' }}">
-                    <a href="{{ route('employee/add') }}">Add Employee</a>
+                    <a href="{{ route('admin.employees.add') }}">Add Employee</a>
                 </li>
 
                 {{-- OPTION: Employee List --}}

@@ -25,10 +25,10 @@ Breadcrumbs::for('profile', function ($trail) {
 
 
 // TODO: To split for employee and admin
-Breadcrumbs::for('add_employee_dependent', function ($trail) {
-    $trail->parent('home');
-    $trail->push('Employee Dependent', route('add_employee_dependent'));
-});
+// Breadcrumbs::for('add_employee_dependent', function ($trail) {
+//     $trail->parent('home');
+//     $trail->push('Employee Dependent', route('add_employee_dependent'));
+// });
 
 Breadcrumbs::for('employee/leaverequest', function ($trail) {
     $trail->parent('home');
@@ -68,10 +68,10 @@ Breadcrumbs::for('admin.employees', function ($trail) {
     $trail->push('Employees', route('admin.employees'));
 });
 
-Breadcrumbs::for('register_employee', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Employee List', route('register_employee'));
-});
+// Breadcrumbs::for('register_employee', function ($trail) {
+//     $trail->parent('admin.dashboard');
+//     $trail->push('Employee List', route('register_employee'));
+// });
 Breadcrumbs::for('register_employee4', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Employee List', route('register_employee'));
@@ -285,19 +285,19 @@ Breadcrumbs::for('admin/leaveapplication', function ($trail) {
 });
 
 // Home > Admin > Employee List > Profile
-Breadcrumbs::for('add_emergency_contact', function ($trail) {
-    $trail->parent('admin.employees');
-    $trail->push('Employee Profile', route('add_emergency_contact'));
-});
+// Breadcrumbs::for('add_emergency_contact', function ($trail) {
+//     $trail->parent('admin.employees');
+//     $trail->push('Employee Profile', route('add_emergency_contact'));
+// });
 
-Breadcrumbs::for('add_grade', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Add Grade', route('add_grade'));
-});
-Breadcrumbs::for('add_position', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Add Position', route('add_position'));
-});
+// Breadcrumbs::for('add_grade', function ($trail) {
+//     $trail->parent('admin.dashboard');
+//     $trail->push('Add Grade', route('add_grade'));
+// });
+// Breadcrumbs::for('add_position', function ($trail) {
+//     $trail->parent('admin.dashboard');
+//     $trail->push('Add Position', route('add_position'));
+// });
 
 Breadcrumbs::for('add_team', function ($trail) {
     $trail->parent('admin.dashboard');
