@@ -25,7 +25,7 @@ import 'jquery-mousewheel';
 import 'moment'
 import Chart from 'chart.js';
 
-import 'chosen-js/chosen.jquery.min.js';
+// import 'chosen-js/chosen.jquery.min.js';
 
 import './datatables';
 import './modal';
@@ -142,6 +142,11 @@ $('#expiryDate').datepicker({
     altFormat: 'yy-mm-dd',
     format: 'dd/mm/yy'
 });
+$('#dobDateEdit').datepicker({
+    altField: "#altdobDateEdit",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
 
 $('#dobDate').datepicker({
     altField: "#altdobDate",
@@ -152,6 +157,12 @@ $('#editDobDate').datepicker({
     format: 'dd/mm/yyyy',
     uiLibrary: 'bootstrap4',
     iconsLibrary: 'fontawesome'
+});
+
+$('#licenseExpiryDateAddition').datepicker({
+    altField: "#altlicenseExpiryDateAddition",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
 });
 $('#licenseExpiryDate').datepicker({
     altField: "#altlicenseExpiryDate",
