@@ -36,7 +36,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-7 col-form-label">Date Of Birth*</label>
+                                <label class="col-md-12 col-form-label">Date Of Birth*</label>
                                 <div class="col-md-7">
                                     <input id="altdobDate" name ="altdobDate" type="text" class="form-control" hidden> 
                                     <input name="dobDate" id="dobDate" type="text" placeholder="Enter Date" class="form-control" readonly>                                              

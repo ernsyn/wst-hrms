@@ -598,7 +598,7 @@ class AdminController extends Controller
         $user = Employee::where('user_id', $user_id)->first();     
         $passport_no = $request->input('passport_no'); 
         $issued_by = $request->input('issued_by');     
-        $altissuedDate = $request->input('altissuedDate');
+        $altissuedDate = $request->input('altlicenseExpiryDate');
         $altexpiryDate = $request->input('altexpiryDate');        
         $created_by = auth()->user()->id;
        

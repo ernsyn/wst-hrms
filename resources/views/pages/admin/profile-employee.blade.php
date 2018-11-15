@@ -379,7 +379,7 @@
                  
                     <label class="col-md-10 col-form-label">SOCSO No*</label>
                     <div class="col-md-7">
-                        <input id="socso_no" name="socso_no" type="text" class="form-control{{ $errors->has('socso_no') ? ' is-invalid' : '' }}" value="{{$user->socso_no}}" required>                          
+                        <input id="socso_no" name="socso_no" type="text" class="form-control{{ $errors->has('socso_no') ? ' is-invalid' : '' }}" value="{{$user->eis_no}}" required>                          
                     </div>
                 </div>
                 </div>  

@@ -36,7 +36,7 @@
                                 </span>
                                 @endif
                             </div>
-                            <label class="col-md-5 col-form-label">Contact Number*</label>
+                            <label class="col-md-12 col-form-label">Contact Number*</label>
                             <div class="col-md-7">
                                 <input id="contact_number" type="text" class="phone-format form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" placeholder="+60123456789" name="contact_number" value="{{ old('contact_number') }}" required>
                                 @if ($errors->has('contact_number'))
