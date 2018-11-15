@@ -1,44 +1,51 @@
 <!-- ADD -->
-<div class="modal fade" id="employeeVisaPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Visa</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form method="POST" action="{{ route('add_employee_visa') }}" id="add_employee_visa">
-                @csrf
-                <div class="row pb-5">
-                    <div class="col-xl-8">
-                        <label class="col-md-5 col-form-label">Name*</label>
-                        <div class="col-md-7">
-                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name here" name="name" value="{{ old('name') }}" required>
-                            @if ($errors->has('name'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('name') }}</strong>
-                            </span>
-                            @endif
-                        </div>    
-                            <label class="col-md-8 col-form-label">Passport No*</label>
-                            <div class="col-md-10">
-                                <input id="passport_no" type="text" class="form-control{{ $errors->has('passport_no') ? ' is-invalid' : '' }}"  name="passport_no" value="{{ old('passport_no') }}" required>
-                                @if ($errors->has('passport_no'))
+<div class="modal fade" id="addVisaPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Visa</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('add_employee_visa') }}">
+                    @csrf
+                    <div class="row pb-5">
+                        <div class="col-xl-8">
+                            <label class="col-md-5 col-form-label">Type*</label>
+                            <div class="col-md-7">
+                                <input id="type" type="text" class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" placeholder="type here" name="type" value="{{ old('type') }}" required>
+                                @if ($errors->has('type'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('passport_no') }}</strong>
+                                    <strong>{{ $errors->first('type') }}</strong>
                                 </span>
                                 @endif
-                            </div>
-
-                            <label class="col-md-5 col-form-label">Expiry Date*</label>
-                            <div class="col-md-7">
-                                <input id="altexpDate" name ="altexpDate" type="text" class="form-control" hidden> 
-                                <input name="expDate" id="expDate" type="text" class="form-control" readonly>                                            
-                            </div>
-                    
-                            <label class="col-md-5 col-form-label">Issued By*</label>
+                            </div>    
+                                <label class="col-md-8 col-form-label">Visa Number*</label>
+                                <div class="col-md-10">
+                                    <input id="visa_number" type="text" class="form-control{{ $errors->has('visa_number') ? ' is-invalid' : '' }}" placeholder="WG675FE" name="visa_number" value="{{ old('visa_number') }}" required>
+                                    @if ($errors->has('visa_number'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('visa_number') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                                <label class="col-md-7 col-form-label">Relation*</label>
+                                <div class="col-md-10">
+                                    <input id="family_members" type="text" class="form-control{{ $errors->has('family_members') ? ' is-invalid' : '' }}" placeholder="Farther, Son, etc" name="family_members" value="{{ old('family_members') }}" required>
+                                    @if ($errors->has('family_members'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('family_members') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                                <label class="col-md-5 col-form-label">Issued Date*</label>
+                                <div class="col-md-7">
+                                    <input id="visaissueDate" autocomplete="off" type="text" class="form-control" readonly>
+                                    <input name="issued_date" id="altvisaissueDate" type="text" class="form-control" hidden>   
+                                </div>
+								<label class="col-md-5 col-form-label">Issued By*</label>
                             <div class="col-md-7">
                                 <input id="issued_by" type="text" class="form-control{{ $errors->has('issued_by') ? ' is-invalid' : '' }}" name="issued_by" value="{{ old('issued_by') }}" required>
                                 @if ($errors->has('issued_by'))
@@ -47,24 +54,23 @@
                                 </span>
                                 @endif
                             </div> 
-                            <label class="col-md-5 col-form-label">Issued Date*</label>
-                            <div class="col-md-7">
-                                <input id="issueDate" type="text" class="form-control" readonly>           
-                                <input id="altissueDate" name ="altissueDate" type="text" class="form-control" hidden> 
-                                    
-                            </div>  
-                    </div>
-                </div>     
-                <div class="modal-footer">
+                                <label class="col-md-5 col-form-label">Expiry Date*</label>
+                                <div class="col-md-7">
+                                    <input id="visaexpDate" autocomplete="off" type="text" class="form-control" readonly>
+                                    <input name="expiry_date" id="altvisaexpDate" type="text" class="form-control" hidden>          
+                                </div>                       
+                        </div>
+                    </div>     
+                    <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">
                             {{ __('Submit') }}
                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-            </form>
+                    </div>    
+                </form>
+            </div>            
+          </div>
         </div>
-      </div>
-    </div>
 </div>
 
  <!-- UPDATE -->
@@ -82,36 +88,55 @@
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
-                            <input id="emp_con_id" name="emp_con_id" type="hidden">                       
-                            <label class="col-md-5 col-form-label">Name*</label>
+                            <input id="visa_id" name="visa_id" type="text" hidden>   
+                            <label class="col-md-5 col-form-label">Type*</label>
                             <div class="col-md-7">
-                                <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" required>
-                                @if ($errors->has('name'))
+                                <input id="type" type="text" class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" placeholder="type here" name="type" value="{{ old('type') }}" required>
+                                @if ($errors->has('type'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
+                                    <strong>{{ $errors->first('type') }}</strong>
                                 </span>
                                 @endif
                             </div>    
-                                <label class="col-md-2 col-form-label">Relationship*</label>
+                                <label class="col-md-8 col-form-label">Visa Number*</label>
                                 <div class="col-md-10">
-                                    <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" name="relationship" value="{{ old('relationship') }}" required>
-                                    @if ($errors->has('relationship'))
+                                    <input id="visa_number" type="text" class="form-control{{ $errors->has('visa_number') ? ' is-invalid' : '' }}" placeholder="WG675FE" name="visa_number" value="{{ old('visa_number') }}" required>
+                                    @if ($errors->has('visa_number'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('relationship') }}</strong>
+                                        <strong>{{ $errors->first('visa_number') }}</strong>
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-2 col-form-label">Contact Number*</label>
+                                <label class="col-md-7 col-form-label">Relation*</label>
                                 <div class="col-md-10">
-                                    <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" name="contact_number" value="{{ old('contact_number') }}" required>
-                                    @if ($errors->has('contact_number'))
+                                    <input id="family_members" type="text" class="form-control{{ $errors->has('family_members') ? ' is-invalid' : '' }}" placeholder="Farther, Son, etc" name="family_members" value="{{ old('family_members') }}" required>
+                                    @if ($errors->has('family_members'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('contact_number') }}</strong>
+                                        <strong>{{ $errors->first('family_members') }}</strong>
                                     </span>
                                     @endif
+                                </div>
+                                <label class="col-md-5 col-form-label">Issued Date*</label>
+                                <div class="col-md-7">
+                                    <input id="visaUpissueDate" autocomplete="off" type="text" class="form-control" readonly>
+                                    <input name="issued_date" id="altvisaUpissueDate" type="text" class="form-control" hidden>   
+                                </div>
+								<label class="col-md-5 col-form-label">Issued By*</label>
+                            <div class="col-md-7">
+                                <input id="issued_by" type="text" class="form-control{{ $errors->has('issued_by') ? ' is-invalid' : '' }}" name="issued_by" value="{{ old('issued_by') }}" required>
+                                @if ($errors->has('issued_by'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('issued_by') }}</strong>
+                                </span>
+                                @endif
+                            </div> 
+                                <label class="col-md-5 col-form-label">Expiry Date*</label>
+                                <div class="col-md-7">
+                                    <input id="visaUpexpDate" autocomplete="off" type="text" class="form-control" readonly>
+                                    <input name="expiry_date" id="altvisaUpexpDate" type="text" class="form-control" hidden>          
                                 </div>                       
                         </div>
-                    </div>     
+                    </div>    
                     <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">
                                 {{ __('Submit') }}
@@ -128,7 +153,7 @@
     <div class="row pb-3">
             <div class="col-auto mr-auto"></div>
             <div class="col-auto">
-                <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#employeeVisaPopup">
+                <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addVisaPopup">
                     Add Visa
                 </button>
             </div>
@@ -137,9 +162,9 @@
     <thead>
         <tr>
                 <th>No</th>
-                <th>Document</th>
-                <th>Passport No</th>
-                <th>Issued By</th>
+                <th>Type</th>
+                <th>Visa No</th>
+                <th>Relation</th>
                 <th>Issued Date</th>
                 <th>Expiry Date</th>
                 <th>Action</th>

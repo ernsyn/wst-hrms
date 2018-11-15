@@ -117,6 +117,29 @@ $('#endDate').datepicker({
         $(this).parsley().validate();
     }
 });
+
+$("#skillStartDate").datepicker({
+    altField: "#altskillStartDate",
+    altFormat: "yy-mm-dd",
+    format: "dd/mm/yy",
+    onSelect: function (selectedDate) {
+        $("#endDate").datepicker("option", "minDate", selectedDate);
+    },
+    onClose: function () {
+        $(this).parsley().validate();
+    }
+});
+$('#skillEndDate').datepicker({
+    altField: "#altskillEndDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy',
+    onSelect: function (selectedDate) {
+        $("#startDate").datepicker("option", "maxDate", selectedDate);
+    },
+    onClose: function () {
+        $(this).parsley().validate();
+    }
+});
 //change day according to selected value
 $('#type').on('change', function() {
 
@@ -140,13 +163,34 @@ $("#leaveFullDay").click(function(){
 $('#expiryDate').datepicker({
     altField: "#altexpiryDate",
     altFormat: 'yy-mm-dd',
-    format: 'dd/mm/yy'
+    format: 'dd/mm/yy',
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "-10:+20"
 });
-
+$('#expiryDate2').datepicker({
+    altField: "#altexpiryDate2",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy',
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "-10:+20"
+});
 $('#dobDate').datepicker({
     altField: "#altdobDate",
     altFormat: 'yy-mm-dd',
-    format: 'dd/mm/yy'
+    format: 'dd/mm/yy',
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "-80:+0"
+});
+$('#updatedobDate').datepicker({
+    altField: "#altupdobDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy',
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "-80:+0"
 });
 $('#editDobDate').datepicker({
     format: 'dd/mm/yyyy',
@@ -155,6 +199,11 @@ $('#editDobDate').datepicker({
 });
 $('#licenseExpiryDate').datepicker({
     altField: "#altlicenseExpiryDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#licenseExpiryDate2').datepicker({
+    altField: "#altlicenseExpiryDate2",
     altFormat: 'yy-mm-dd',
     format: 'dd/mm/yy'
 });
@@ -168,11 +217,43 @@ $('#issueDate').datepicker({
     altFormat: 'yy-mm-dd',
     format: 'dd/mm/yy'
 });
+$('#visaexpDate').datepicker({
+    altField: "#altvisaexpDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#visaissueDate').datepicker({
+    altField: "#altvisaissueDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#visaUpexpDate').datepicker({
+    altField: "#altvisaUpexpDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#visaUpissueDate').datepicker({
+    altField: "#altvisaUpissueDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#jobDate').datepicker({
+    altField: "#altjobDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
+$('#editjobDate').datepicker({
+    altField: "#alteditjobDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
 $('#startYear').datepicker({
     changeMonth: true,
     changeYear: true,
     showButtonPanel: true,
     dateFormat: 'MM yy',
+    altField: "#altStartYear",
+    altFormat: 'yy',
     onClose: function (dateText, inst) {
         var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
         var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
@@ -187,6 +268,8 @@ $('#endYear').datepicker({
     changeYear: true,
     showButtonPanel: true,
     dateFormat: 'MM yy',
+    altField: "#altEndYear",
+    altFormat: 'yy',
     onClose: function (dateText, inst) {
         var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
         var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
@@ -241,24 +324,6 @@ new Chart($("#myChart"), {
     }
 });
 
-$('#updateCostCentre').click(function () {
-    swal({
-        title: 'Success!',
-        text: 'Change has been saved.',
-        type: 'success',
-        confirmButtonText: 'Cool'
-    })
-});
-
-$('#updateCostCentre').click(function () {
-    swal({
-        title: 'Success!',
-        text: 'Change has been saved.',
-        type: 'success',
-        confirmButtonText: 'Cool'
-    })
-});
-
 //update employee dependent
 $('#updateDependentPopup').on('show.bs.modal', function (event) {
 
@@ -266,14 +331,14 @@ $('#updateDependentPopup').on('show.bs.modal', function (event) {
     var id = button.data('dependent-id')
     var name = button.data('dependent-name')
     var relationship = button.data('dependent-relationship')
-    var dob = button.data('date-of-birth')
+    var dob = button.data('dependent-date-of-birth')
 
     var modal = $(this)
 
     modal.find('.modal-body #emp_dep_id').val(id)
     modal.find('.modal-body #name').val(name)
     modal.find('.modal-body #relationship').val(relationship)
-    modal.find('.modal-body #dobDate').val(dob)
+    modal.find('.modal-body #updatedobDate').val(dob)
 
 })
 //update emergency contact
@@ -291,6 +356,29 @@ $('#updateContactPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #relationship').val(relationship)
     modal.find('.modal-body #contact_number').val(contact_number)
 })
+// $("input[name='contact_number']").keyup(function() {
+//     $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d)+$/, "($1)$2-$3"));
+// });
+$(".phone-format").keypress(function (e) {
+    if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+      return false;
+    }
+    var curchr = this.value.length;
+    var curval = $(this).val();
+    if (curchr == 3 && curval.indexOf("(") <= -1) {
+      $(this).val("(" + curval + ")" + "-");
+    } else if (curchr == 4 && curval.indexOf("(") > -1) {
+      $(this).val(curval + ")-");
+    } else if (curchr == 5 && curval.indexOf(")") > -1) {
+      $(this).val(curval + "-");
+    } else if (curchr == 9) {
+      $(this).val(curval + " ");
+      $(this).attr('maxlength', '14');
+    }
+  });
+
+
+  
 //update employee immigration
 $('#updateImmigrationPopup').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
@@ -298,6 +386,8 @@ $('#updateImmigrationPopup').on('show.bs.modal', function (event) {
     var document = button.data('immigration-document')
     var passport_no = button.data('immigration-passport-no')
     var issued_by = button.data('immigration-issued-by')
+    var issued_date = button.data('immigration-issued-date')
+    var expiry_date = button.data('immigration-expiry-date')
 
     var modal = $(this)
 
@@ -305,6 +395,8 @@ $('#updateImmigrationPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #document').val(document)
     modal.find('.modal-body #passport_no').val(passport_no)
     modal.find('.modal-body #issued_by').val(issued_by)
+    modal.find('.modal-body #expiryDate2').val(issued_date)
+    modal.find('.modal-body #licenseExpiryDate2').val(expiry_date)
 })
 //update employee visa
 $('#updateVisaPopup').on('show.bs.modal', function (event) {
@@ -313,6 +405,9 @@ $('#updateVisaPopup').on('show.bs.modal', function (event) {
     var type = button.data('visa-type')
     var visa_number = button.data('visa-number')
     var family_members = button.data('visa-family-members')
+    var issued_date = button.data('visa-issued-date')
+    var expiry_date = button.data('visa-expiry-date')
+    var issued_by = button.data('visa-issued-by')
 
     var modal = $(this)
 
@@ -320,6 +415,9 @@ $('#updateVisaPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #type').val(type)
     modal.find('.modal-body #visa_number').val(visa_number)
     modal.find('.modal-body #family_members').val(family_members)
+    modal.find('.modal-body #visaUpissueDate').val(issued_date)
+    modal.find('.modal-body #visaUpexpDate').val(expiry_date)
+    modal.find('.modal-body #issued_by').val(issued_by)
 })
 //update employee bank
 $('#updateBankPopup').on('show.bs.modal', function (event) {
@@ -661,22 +759,108 @@ modal.find('.modal-body #statutory').val(statutory)
 modal.find('.modal-body #status').val(status)
 })
 
+//update job
+$('#updateJob').on('show.bs.modal', function (event) {
 
+    var button = $(event.relatedTarget)
+    var id = button.data('job-id')    
+    var date = button.data('job-date')
+    var position = button.data('job-position')
+    var department = button.data('job-department')    
+    var team = button.data('job-team')
+    var cost = button.data('job-cost')
+    var grade = button.data('job-grade')
+    var salary = button.data('job-salary')
+    var status = button.data('job-status')
+    
+    var modal = $(this)
+    
+    modal.find('.modal-body #job_id').val(id)
+    modal.find('.modal-body #date').val(date)
+    modal.find('.modal-body #position').val(position)
+    modal.find('.modal-body #department').val(department)
+    modal.find('.modal-body #team').val(team)
+    modal.find('.modal-body #cost_centre').val(cost)
+    modal.find('.modal-body #grade').val(grade)
+    modal.find('.modal-body #basic_salary').val(salary)
+    modal.find('.modal-body #emp_status').val(status)
+
+    })
+
+//----ADDITION----
+//---- ADD -----
 $('#check_cost_centre').change(function() {
     if(this.checked) {
-        $('#cost_centre').prop('readonly', false);
+        $('#cost_centre').prop('disabled', false);
     }
     else{
-        $('#cost_centre').prop('readonly', true);
+        $('#cost_centre').prop('disabled', true);
     }
 });
 
 $('#check_job_grade').change(function() {
     if(this.checked) {
-        $('#job_grade').prop('readonly', false);
+        $('#job_grade').prop('disabled', false);
     }
     else{
-        $('#job_grade').prop('readonly', true);
+        $('#job_grade').prop('disabled', true);
     }
 });
 
+//----- EDIT --------
+$('#check_cost_centre_a').change(function() {
+    if(this.checked) {
+        $('#cost_centre_a').prop('disabled', false);
+    }
+    else{
+        $('#cost_centre_a').prop('disabled', true);
+    }
+});
+
+$('#check_job_grade_a').change(function() {
+    if(this.checked) {
+        $('#job_grade_a').prop('disabled', false);
+    }
+    else{
+        $('#job_grade_a').prop('disabled', true);
+    }
+});
+
+//---- DEDUCTION ----
+//---- ADD -----
+$('#check_cost_centre_d').change(function() {
+    if(this.checked) {
+        $('#cost_centre_d').prop('disabled', false);
+    }
+    else{
+        $('#cost_centre_d').prop('disabled', true);
+    }
+});
+
+$('#check_job_grade_d').change(function() {
+    if(this.checked) {
+        $('#job_grade_d').prop('disabled', false);
+    }
+    else{
+        $('#job_grade_d').prop('disabled', true);
+    }
+});
+
+//----- EDIT -----
+$('#check_cost_centre_de').change(function() {
+    if(this.checked) {
+        $('#cost_centre_de').prop('disabled', false);
+    }
+    else{
+        $('#cost_centre_de').prop('disabled', true);
+    }
+});
+
+$('#check_job_grade_de').change(function() {
+    if(this.checked) {
+        $('#job_grade_de').prop('disabled', false);
+    }
+    else{
+        $('#job_grade_de').prop('disabled', true);
+    }
+});

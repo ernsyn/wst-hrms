@@ -9,8 +9,7 @@
                     <div class="row">
                         <div class="col-xl-2 d-flex justify-content-center">
                             <i class="fas fa-user-circle fa-10x text-info"></i>
-                        </div>
-                      
+                        </div>                      
                         <div class="col-md-8">
                             <div class="form-group row">
                                 <div class="col-lg-12">
@@ -32,8 +31,7 @@
                                         </textarea>
                                 </div>
                             </div>
-                        </div>
-                
+                        </div>                
                         <div class="col-md-2">
                             <button type="button" class="btn btn-primary rounded">
                                 Edit <i class="fas fa-pen"></i>
@@ -83,7 +81,7 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">IC No</label>
                                                     <div class="col-lg-7 text-lowercase">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->ic_no}}">
+                                                    <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->ic_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Gender</label>
                                                     <div class="col-lg-7">
@@ -115,11 +113,11 @@
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Driver License No</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->driver_license_number}}">
+                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->driver_license_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">License Expiry Date</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->license_expiry_date}}">
+                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->driver_license_expiry_date}}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -131,11 +129,11 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-5 col-form-label">Employee ID</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->emp_id}}">
+                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->user_id}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Department</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="IT Department">
+                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->name}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">EPF No</label>
                                                     <div class="col-lg-7">
@@ -143,7 +141,7 @@
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Confirmation Date</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="10-1-2019">
+                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->name}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Basic Salary</label>
                                                     <div class="col-lg-7">
@@ -163,7 +161,7 @@
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Joined Date</label>
                                                     <div class="col-lg-7">
-                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="09-09-2018">
+                                                        <input type="text" readonly class="text-capitalize form-control-plaintext" value="{{$user->driver_license_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Resignation Date</label>
                                                     <div class="col-lg-7">
@@ -174,7 +172,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-1">
-                                        <button type="button" class="btn btn-primary rounded-circle">
+                                        <button type="button" class="btn btn-primary rounded-circle" data-toggle="modal" data-target="#editProfile">
                                             <i class="fas fa-pen"></i>
                                         </button>
                                     </div>
@@ -209,6 +207,119 @@
                         </div>
                     </div>
                 </div>
+                
+<div class="modal fade" id="editProfile" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateContactLabel">Edit Profile</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('edit_emergency_contact') }}" id="edit_emergency_contact">
+                    @csrf
+                    <div class="row pb-5">
+                        <div class="col-xl-8">                      
+                            <label class="col-md-10 col-form-label">Name*</label>
+                            <div class="col-md-7">
+                                <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" required>                          
+                            </div>  
+                            <label class="col-md-10 col-form-label">Email*</label>
+                            <div class="col-md-7">
+                                <input id="email" name="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" required>                          
+                            </div>  
+                            <label class="col-md-10 col-form-label">Mobile No*</label>
+                            <div class="col-md-7">
+                                <input id="mobile" name="mobile" type="text" class="phone-format form-control{{ $errors->has('mobile') ? ' is-invalid' : '' }}" value="{{ old('mobile') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Address</label> 
+                            <div class="col-md-10">                                     
+                                <textarea name="address" class="form-control"></textarea>
+                            </div>    
+                            <label class="col-md-10 col-form-label">IC No*</label>
+                            <div class="col-md-7">
+                                <input id="ic_no" name="ic_no" type="text" class="form-control{{ $errors->has('ic_no') ? ' is-invalid' : '' }}" value="{{ old('ic_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Nationality*</label>
+                            <div class="col-md-7">
+                                <input id="ic_no" name="ic_no" type="text" class="form-control{{ $errors->has('ic_no') ? ' is-invalid' : '' }}" value="{{ old('ic_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Gender*</label>
+                            <div class="col-md-7">
+                                <input id="ic_no" name="ic_no" type="text" class="form-control{{ $errors->has('ic_no') ? ' is-invalid' : '' }}" value="{{ old('ic_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Number of Child*</label>
+                            <div class="col-md-7">
+                                <input id="no_child" name="no_child" type="number" class="form-control{{ $errors->has('no_child') ? ' is-invalid' : '' }}" value="{{ old('no_child') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Date of Birth*</label>
+                            <div class="col-md-7">
+                                <input id="no_child" name="no_child" type="number" class="form-control{{ $errors->has('no_child') ? ' is-invalid' : '' }}" value="{{ old('no_child') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Driver License No*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Maritual Status*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">License Expiry Date*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Race*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <hr>
+                            <label class="col-md-10 col-form-label">Position*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Department*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Tax No*</label>
+                            <div class="col-md-7">
+                                <input id="tax_no" name="tax_no" type="text" class="form-control{{ $errors->has('tax_no') ? ' is-invalid' : '' }}" value="{{ old('tax_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">EPF No*</label>
+                            <div class="col-md-7">
+                                <input id="epf_no" name="epf_no" type="text" class="form-control{{ $errors->has('epf_no') ? ' is-invalid' : '' }}" value="{{ old('epf_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Joined Date*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Confirmation Date*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Resignation Date*</label>
+                            <div class="col-md-7">
+                                <input id="license_no" name="license_no" type="text" class="form-control{{ $errors->has('license_no') ? ' is-invalid' : '' }}" value="{{ old('license_no') }}" required>                          
+                            </div>
+                            <label class="col-md-10 col-form-label">Basic Salary*</label>
+                            <div class="col-md-7">
+                                <input id="basic_salary" name="basic_salary" type="number" class="form-control{{ $errors->has('basic_salary') ? ' is-invalid' : '' }}" value="{{ old('basic_salary') }}" required>                          
+                            </div>
+                        </div>
+                    </div>     
+                    <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('Submit') }}
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                </form>
+            </div>
+          </div>
+        </div>
+</div>
             </div>
         </div>
     </div>

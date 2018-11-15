@@ -33,7 +33,7 @@
                             </div>
                             <label class="col-md-5 col-form-label">Contact Number*</label>
                             <div class="col-md-7">
-                                <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" placeholder="+60123456789" name="contact_number" value="{{ old('contact_number') }}" required>
+                                <input id="contact_number" type="text" class="phone-format form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" placeholder="+60123456789" name="contact_number" value="{{ old('contact_number') }}" required>
                                 @if ($errors->has('contact_number'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('contact_number') }}</strong>
@@ -79,7 +79,7 @@
                                 </span>
                                 @endif
                             </div>    
-                                <label class="col-md-2 col-form-label">Relationship*</label>
+                                <label class="col-md-7 col-form-label">Relationship*</label>
                                 <div class="col-md-10">
                                     <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" name="relationship" value="{{ old('relationship') }}" required>
                                     @if ($errors->has('relationship'))
@@ -88,9 +88,9 @@
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-2 col-form-label">Contact Number*</label>
+                                <label class="col-md-7 col-form-label">Contact Number*</label>
                                 <div class="col-md-10">
-                                    <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" name="contact_number" value="{{ old('contact_number') }}" required>
+                                    <input id="contact_number" type="text" class="phone-format form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" name="contact_number" value="{{ old('contact_number') }}" required>
                                     @if ($errors->has('contact_number'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('contact_number') }}</strong>
@@ -115,7 +115,7 @@
         <div class="row pb-3">
                 <div class="col-auto mr-auto"></div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#emergencyContactPopup">
+                    <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#emergencyContactPopup">
                         Add Contact
                     </button>
                 </div>

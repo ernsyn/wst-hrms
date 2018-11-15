@@ -61,7 +61,7 @@
             <div class="row pb-3">
                 <div class="col-auto mr-auto"></div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addHolidayPopup">
+                    <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addHolidayPopup">
                                     Add Holiday
                                 </button>
                 </div>

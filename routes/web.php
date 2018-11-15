@@ -61,6 +61,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::get('/profile-employee/{id}','AdminController@displayProfile2')->name('admin/profile-employee/{id}');
     Route::get('user-list', 'AdminController@displayUserList')->name('admin/user_list');
     Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
+    Route::get('resign', 'AdminController@employeeResign')->name('resign');
+
 
     //--setup company--
     Route::get('/setup/company-details/{id}','AdminController@displayCompanyDetails')->name('/setup/company-details/{id}');
@@ -91,6 +93,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('edit_security_group','AdminController@editSecurityGroup')->name('edit_security_group');
     Route::post('edit_company_addition','AdminController@editCompanyAddition')->name('edit_company_addition');
     Route::post('edit_company_deduction','AdminController@editCompanyDeduction')->name('edit_company_deduction');
+    Route::post('edit_job','AdminController@editJob')->name('edit_job');
+
 
     Route::post('add_emergency_contact','AdminController@addEmergencyContact')->name('add_emergency_contact');
     Route::post('add_employee_dependent','AdminController@addEmployeeDependent')->name('add_employee_dependent');
@@ -114,6 +118,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:super-admin|admin']], 
     Route::post('approve_leave', 'AdminController@approvedLeaveRequest')->name('approve_leave');
     Route::post('disapprove_leave', 'AdminController@disapprovedLeaveRequest')->name('disapprove_leave');
     Route::post('add_leave_balance','AdminController@addLeaveBalance')->name('add_leave_balance');
+    Route::post('add_job','AdminController@addJob')->name('add_job');
 
 
 

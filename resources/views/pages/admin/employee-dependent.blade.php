@@ -3,7 +3,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Add Emergency Contact</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Add New Dependent</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -31,7 +31,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-5 col-form-label">Date Of Birth*</label>
+                                <label class="col-md-7 col-form-label">Date Of Birth*</label>
                                 <div class="col-md-7">
                                     <input id="altdobDate" name ="altdobDate" type="text" class="form-control" hidden> 
                                     <input name="dobDate" id="dobDate" type="text" class="form-control" readonly>                                              
@@ -51,21 +51,21 @@
     </div>
     
      <!-- UPDATE -->
-    <div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel" aria-hidden="true">
+    <div class="modal fade" id="updateDependentPopup" tabindex="-1" role="dialog" aria-labelledby="updateDependentLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="updateContactLabel">Edit Emergency Contact</h5>
+                  <h5 class="modal-title" id="updateDependentLabel">Edit Dependent</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('edit_emergency_contact') }}" id="edit_emergency_contact">
+                    <form method="POST" action="{{ route('edit_employee_dependent') }}" id="edit_emergency_contact">
                         @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
-                                <input id="emp_con_id" name="emp_con_id" type="hidden">                       
+                                <input id="emp_dep_id" name="emp_dep_id" type="hidden">                       
                                 <label class="col-md-5 col-form-label">Name*</label>
                                 <div class="col-md-7">
                                     <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" required>
@@ -75,7 +75,7 @@
                                     </span>
                                     @endif
                                 </div>    
-                                    <label class="col-md-2 col-form-label">Relationship*</label>
+                                    <label class="col-md-7 col-form-label">Relationship*</label>
                                     <div class="col-md-10">
                                         <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" name="relationship" value="{{ old('relationship') }}" required>
                                         @if ($errors->has('relationship'))
@@ -84,14 +84,10 @@
                                         </span>
                                         @endif
                                     </div>
-                                    <label class="col-md-2 col-form-label">Date Of Birth*</label>
+                                    <label class="col-md-7 col-form-label">Date Of Birth*</label>
                                     <div class="col-md-10">
- <input id="dob" type="text" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ old('dob') }}" required>
-                                        @if ($errors->has('dob'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('dob') }}</strong>
-                                        </span>
-                                        @endif
+                                        <input id="altupdobDate" name ="altdobDate" type="text" class="form-control" hidden> 
+                                        <input name="dobDate" id="updatedobDate" type="text" class="form-control" readonly>   
                                     </div>                       
                             </div>
                         </div>     
@@ -111,7 +107,7 @@
             <div class="row pb-3">
                     <div class="col-auto mr-auto"></div>
                     <div class="col-auto">
-                        <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#dependentPopup">
+                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#dependentPopup">
                             Add Dependent
                         </button>
                     </div>
