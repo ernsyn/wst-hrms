@@ -69,7 +69,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_cost_centre') }}" id="">
+                <form method="POST" action="{{ route('edit_cost_centre') }}" id="edit_cost_centre">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="updateCostCentre" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                                 {{ __('Submit') }}
                             </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -120,7 +120,7 @@
             <div class="row pb-3">
                 <div class="col-auto mr-auto"></div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addCostCentrePopup">
+                    <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCostCentrePopup">
                             Add Cost Centre
                     </div>
                 </div>
@@ -134,8 +134,7 @@
                                         <th>Name</th>
                                         <th>Seniority Pay</th>
                                         <th>Amount</th>
-                                        <th>Payroll Type</th>
-                                   
+                                        <th>Payroll Type</th>                                   
                                         <th>Action</th>
                                 </tr>
                             </thead>
