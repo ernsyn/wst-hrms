@@ -26,7 +26,7 @@
                     Super Admin
                 </a>
             </div>
-            @endhasrole 
+            @endhasrole
             @hasrole('admin')
             <div class="option row col mx-0">
                 <a href="{{ route('admin.dashboard') }}">
@@ -59,7 +59,7 @@
                 </li>
             </ul>
         </li>
-		
+
 		{{-- SECTION: Payroll --}}
         <li class="menu-section {{ request()->is('payroll') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
@@ -73,7 +73,7 @@
                     <a href="{{ route('payroll') }}">Payroll</a>
                 </li>
                 <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                    <a href="">Government Reports</a>
+                    <a href="{{ route('payroll/government_report') }}">Government Reports</a>
                 </li>
                 <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                     <a href="">Reports</a>

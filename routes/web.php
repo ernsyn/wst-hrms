@@ -97,8 +97,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('edit_employee_popup','AdminController@editEmployeeProfileBasic')->name('edit_employee_popup');
     Route::post('edit_profile_popup','AdminController@editProfilePopup')->name('edit_profile_popup');
     Route::post('edit_company_popup','AdminController@editCompanyPopup')->name('edit_company_popup');
-    
-    
+
+
     Route::post('add_emergency_contact','AdminController@addEmergencyContact')->name('add_emergency_contact');
     Route::post('add_employee_dependent','AdminController@addEmployeeDependent')->name('add_employee_dependent');
     Route::post('add_employee_immigration','AdminController@addEmployeeImmigration')->name('add_employee_immigration');
@@ -167,6 +167,10 @@ Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], func
 //     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
 // });
 
+/**
+ * Payroll related route
+ */
+
 Route::resource('payroll', 'Payroll\PayrollController');
 Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');
 Route::post('payroll/store', 'Payroll\PayrollController@store')->name('payroll.store');
@@ -174,6 +178,8 @@ Route::get('/payroll/show/{id}', 'Payroll\PayrollController@show')->name('payrol
 Route::post('/payroll/status/{id}', 'Payroll\PayrollController@updatePayrollStatus')->name('payroll.status.update');
 Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
 Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
+
+Route::get('government_report','payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
 
 
 

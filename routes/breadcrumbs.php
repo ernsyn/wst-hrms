@@ -333,6 +333,14 @@ Breadcrumbs::for('add_company_bank', function ($trail) {
 Breadcrumbs::for('errors.404', function ($trail) {
     $trail->push('Page Not Found');
 });
+
+
+/**
+ * Payroll Breadcrumbs
+ *
+ * All payroll related stuff will be under here
+ */
+
 Breadcrumbs::for('payroll', function ($trail) {
     $trail->parent('home');
     $trail->push('Payroll', route('payroll'));
@@ -347,9 +355,14 @@ Breadcrumbs::for('payroll.show', function ($trail) {
     $trail->parent('payroll');
     $trail->push('Payroll Month', route('payroll.show'));
 });
-    
+
 Breadcrumbs::for('payroll/show/{id}', function ($trail) {
     $trail->parent('payroll');
     $trail->push('Payroll Month', route('payroll/show/{id}', ''));
+});
+
+Breadcrumbs::for('payroll/government_report', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Government Reports', route('payroll/government_report'));
 });
 
