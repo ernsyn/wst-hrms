@@ -344,3 +344,14 @@ Breadcrumbs::for('payroll.create', function ($trail) {
     $trail->parent('payroll');
     $trail->push('Payroll', route('payroll.create'));
 });
+
+Breadcrumbs::for('payroll.show', function ($trail) {
+    $trail->parent('payroll');
+    $trail->push('Payroll Month', route('payroll.show'));
+});
+    
+Breadcrumbs::for('payroll/show/{id}', function ($trail) {
+    $trail->parent('payroll');
+    $trail->push('Payroll Month', route('payroll/show/{id}', ''));
+});
+

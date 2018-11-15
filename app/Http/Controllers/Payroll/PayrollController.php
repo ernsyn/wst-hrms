@@ -8,11 +8,13 @@ use App\Epf;
 use App\PayrollMaster;
 use App\PayrollTrx;
 use App\Enums\PayrollPeriodEnum;
+use App\Helpers\DateHelper;
 use App\Helpers\PayrollHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PayrollRequest;
 use App\Repositories\Repository;
 use App\Repositories\Payroll\AdditionRepository;
+use App\Repositories\Payroll\DeductionRepository;
 use App\Repositories\Payroll\EisRepository;
 use App\Repositories\Payroll\EpfRepository;
 use App\Repositories\Payroll\PayrollTrxRepository;
@@ -20,14 +22,13 @@ use App\Repositories\Payroll\PcbRepository;
 use App\Repositories\Payroll\SocsoRepository;
 use App\Services\PayrollService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\Payroll\DeductionRepository;
+use App\Enums\PayrollStatus;
 
 class PayrollController extends Controller
 {
 
-    protected $model;
+    protected $payrollMaster;
     protected $payrollService;
     protected $epfRepository;
     protected $eisRepository;
@@ -43,7 +44,7 @@ class PayrollController extends Controller
     {
         $this->middleware('auth');
         // set the model
-        $this->model = new Repository($payrollMaster);
+        $this->payrollMaster = new Repository($payrollMaster);
         $this->payrollService = $payrollService;
         $this->epfRepository = $epfRepository;
         $this->eisRepository = $eisRepository;
@@ -61,13 +62,15 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        // //todo: pagination
-        // $payroll = PayrollMaster::leftJoin('company_info', 'company_info.id', '=', 'payroll_master.company_info_id')
-        // ->select('payroll_master.*','company_info.name')
-        // ->paginate(10); //todo: .env
+        // TODO: pagination
+//         $payroll = $this->payrollMaster->with('Company');
+        
+        $payroll = PayrollMaster::leftJoin('companies', 'companies.id', '=', 'payroll_master.company_id')
+        ->select('payroll_master.*','companies.name')->get();
+//         ->paginate(10); //todo: .env
+//         dd($payroll);
+
         $period = PayrollPeriodEnum::choices();
-        // todo: pagination
-        $payroll = $this->model->all();
         return view('pages.payroll.index', compact('payroll', 'period'));
     }
 
@@ -100,15 +103,15 @@ class PayrollController extends Controller
         // ['year_month', $validated['year_month'].'-01'],
         // ['period', $validated['period']]
         // ])->exists();
-        // todo: refactor to service
+        // TODO: refactor to service
         $data = array_add([
             'year_month' => $request->input('year_month') . '-01'
         ], 'period', $request->input('period'));
 
         $payrollPeriodExists = $this->payrollService->isPayrollExists($data);
         if ($payrollPeriodExists) {
-            $msg = $validated['year_month'] . ' payroll has already been created.';
-            return $msg;
+            $msg = 'Payroll month ' . $validated['year_month'] . ' has already been created.';
+            return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
         }
         // dd($payrollPeriodExists);
 
@@ -124,8 +127,8 @@ class PayrollController extends Controller
             $payroll->year_month = $validated['year_month'] . '-01';
             $payroll->period = $validated['period'];
             // $payroll->created_on = Carbon::now();
-            $payroll->created_by = 1; // todo: integrate auth to get current login user
-            $payroll->updated_by = 1; // todo: integrate auth to get current login user
+            $payroll->created_by = 1; // TODO: integrate auth to get current login user
+            $payroll->updated_by = 1; // TODO: integrate auth to get current login user
                                       // $payroll->updated_on = Carbon::now();
             $payroll->save();
 
@@ -233,10 +236,8 @@ class PayrollController extends Controller
             }
         }
         DB::commit();
+        return redirect('/payroll')->with('success', 'Payroll month has been added');
 
-        $msg = 'Successfully created payroll';
-
-        return $msg;
     }
 
     /**
@@ -245,12 +246,13 @@ class PayrollController extends Controller
      * @param \App\PayrollMaster $payrollMaster
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
-        // todo: show by security group and report to
-        $request->request->add([
-            'payroll_id' => $id
-        ]);
+        // TODO: show by security group and report to
+//         $request[];
+//         $request->request->add([
+//             'payroll_id' => $id
+//         ]);
         $forms = [
             'employee_id',
             'full_name',
@@ -272,14 +274,14 @@ class PayrollController extends Controller
         $viewerEmployeeId = @$request['viewer_employee_id'];
         $companyId = @$request['company_id'];
 
-        $list = PayrollTrx::join('payroll_master as PM', 'PM.id', '=', 'payroll_trx.payroll_master_id')->join('employee_info as EM', 'EM.emp_id', '=', 'payroll_trx.employee_info_id')
-            ->join('users as U', 'U.emp_id', '=', 'EM.emp_id') 
+        $list = PayrollTrx::join('payroll_master as PM', 'PM.id', '=', 'payroll_trx.payroll_master_id')->join('employees as EM', 'EM.id', '=', 'payroll_trx.employee_id')
+            ->join('users as U', 'U.id', '=', 'EM.user_id') 
         /* ->join('countries as C', 'C.id', '=', 'EM.citizenship')  */
-        ->join('employee_job as EJ', function ($join) {
-            $join->on('EJ.emp_id', '=', 'EM.emp_id')
-                ->on('EJ.default', '=', DB::raw('"1"'));
+        ->join('employee_jobs as EJ', function ($join) {
+            $join->on('EJ.emp_id', '=', 'EM.id');
+//                 ->on('EJ.default', '=', DB::raw('"1"'));
         })
-            ->join('job_master as JM', 'JM.id', '=', 'EJ.id_mainposition')
+            ->join('cost_centres as JM', 'JM.id', '=', 'EJ.emp_mainposition_id')
         /* ->join('job_master as JM2', 'JM2.id', '=', 'EJ.id_category')  */
         // ->leftjoin('EmployeeGroup as EG', 'EG.id_EmployeeMaster', '=', 'EM.id')
         /* ->leftjoin('employee_bank as EB', function($join){
@@ -326,7 +328,7 @@ class PayrollController extends Controller
                 $id
             ]
         ])->first();
-        $title = 'Payroll (' . @$payroll->year_month . ')';
+        $title = 'Payroll Month (' . @$payroll->year_month . ')';
         return view('pages.payroll.show', compact('id', 'title', 'payroll', 'forms', 'list'));
     }
 
@@ -372,6 +374,7 @@ class PayrollController extends Controller
                 $id
             ]
         ])->get();
+//             dd($info);
         if (! @$info)
             return redirect($request->server('HTTP_REFERER'))->with('error', 'Payroll not found.');
 
@@ -379,10 +382,9 @@ class PayrollController extends Controller
         $storeData = [];
         $storeData['status'] = $request['status'];
         $storeData['updated_by'] = 1; // Auth::user()->id;
-        $storeData['updated_on'] = Carbon::now();
         PayrollMaster::where('id', $id)->update($storeData);
         DB::commit();
 
-        return redirect($request->server('HTTP_REFERER'))->with('success', 'Updated.');
+        return redirect($request->server('HTTP_REFERER'))->with('success', 'Payroll month '.DateHelper::dateWithFormat($info[0]->year_month, 'Y-m').' is '. strtolower(new PayrollStatus($request['status'])).'.');
     }
 }

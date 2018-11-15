@@ -25,7 +25,7 @@ class PayrollRequest extends FormRequest
     {
         return [
             'year_month' => 'date_format:"Y-m"|required',
-            'period' => 'required' //todo: validate enum value
+            'period' => 'required' //TODO: validate enum value
         ];
     }
     
@@ -37,7 +37,7 @@ class PayrollRequest extends FormRequest
     public function messages()
     {
         return [
-            'year_month.required' => 'Year-Month is required!',
+            'year_month.required' => 'Payroll month is required!',
             'period.required' => 'Period is required!'
         ];
     }

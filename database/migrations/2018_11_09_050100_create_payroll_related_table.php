@@ -110,13 +110,15 @@ class CreatePayrollRelatedTable extends Migration {
 		
 		Schema::create('payroll_master', function (Blueprint $table) {
 		    $table->bigIncrements('id');
-		    $table->integer('company_id');
+		    $table->unsignedInteger('company_id', false);
 		    $table->date('year_month');
 		    $table->smallInteger('period');
 		    $table->smallInteger('status')->default(1);
 		    $table->integer('created_by');
 		    $table->integer('updated_by')->nullable();
 		    $table->timestamps();
+		    
+		    $table->foreign('company_id')->references('id')->on('companies');
 		});
 		
 	    Schema::create('payroll_trx', function (Blueprint $table) {

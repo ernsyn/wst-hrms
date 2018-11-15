@@ -1,4 +1,9 @@
-
+@extends('layouts.base') 
+@section('pageTitle', 'Payroll')
+@section('content')
+<div class="p-4">
+	<div class="card p-4">
+		<div class="card-body">
 <div class="row">
     <div class="col-xs-12">
         <div class="table-responsive table-bordered" style="border-radius: 10px 10px 0px 0px;">
@@ -61,3 +66,5 @@
         </div>
     </div>
 </div>
+</div></div></div>
+@endsection

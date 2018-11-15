@@ -160,13 +160,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:employee']], function(
     Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
 });
 
-// Route::resource('payroll', 'Payroll\PayrollController@index')->name('payroll');
+Route::resource('payroll', 'Payroll\PayrollController');
 Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');
 Route::post('payroll/store', 'Payroll\PayrollController@store')->name('payroll.store');
-Route::get('payroll.show', 'Payroll\PayrollController@show')->name('payroll.show');
-Route::post('/payroll/status/{id}', 'PayrollController@updatePayrollStatus')->name('payroll.status.update');
-Route::get('/payroll/trx/{id}', 'PayrollController@showPayrollTrx')->name('payroll.trx.show');
-Route::post('/payroll/trx/{id}', 'PayrollController@updatePayrollTrx')->name('payroll.trx.update');
+Route::get('/payroll/show/{id}', 'Payroll\PayrollController@show')->name('payroll/show/{id}');
+Route::post('/payroll/status/{id}', 'Payroll\PayrollController@updatePayrollStatus')->name('payroll.status.update');
+Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
+Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
 
 
 

@@ -12,10 +12,10 @@ class PayrollMaster extends Model
      * Get payroll trx
      * one-to-many relationship
      */ 
-    public function payrollTrx()
+    /* public function payrollTrx()
     {
         return $this->hasMany('App\PayrollTrx');
-    }
+    } */
     
     public function company()
     {
