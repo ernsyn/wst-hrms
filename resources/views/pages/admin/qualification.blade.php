@@ -22,7 +22,7 @@
                             </span>
                             @endif
                         </div>    
-                        <label class="col-md-2 col-form-label">Position*</label>
+                        <label class="col-md-7 col-form-label">Position*</label>
                         <div class="col-md-10">
                                 <input id="position" type="text" class="form-control{{ $errors->has('position') ? ' is-invalid' : '' }}" placeholder="Farther, Son, etc" name="position" value="{{ old('position') }}" required>
                                 @if ($errors->has('position'))
@@ -33,13 +33,13 @@
                         </div>
                         <label class="col-md-5 col-form-label">Start Date*</label>
                                 <div class="col-md-7">
-                                    <input id="dobDate" autocomplete="off" type="text" class="form-control">
-                                    <input name="start_date" id="altdobDate" type="text" class="form-control" hidden>   
+                                    <input id="skillStartDate" autocomplete="off" type="text" class="form-control">
+                                    <input name="start_date" id="altskillStartDate" type="text" class="form-control" hidden>   
                                 </div>
                                 <label class="col-md-5 col-form-label">End Date*</label>
                                 <div class="col-md-7">
-                                    <input id="licenseExpiryDate" autocomplete="off" type="text" class="form-control">
-                                    <input name="end_date" id="altlicenseExpiryDate" type="text" class="form-control" hidden>          
+                                    <input id="skillEndDate" autocomplete="off" type="text" class="form-control">
+                                    <input name="end_date" id="altskillEndDate" type="text" class="form-control" hidden>          
                                 </div>        
                         <label class="col-md-5 col-form-label">Note</label> 
                         <div class="col-md-10">                                     
@@ -83,7 +83,7 @@
                                 </span>
                                 @endif
                             </div>    
-                            <label class="col-md-2 col-form-label">Field of Study*</label>
+                            <label class="col-md-7 col-form-label">Field of Study*</label>
                             <div class="col-md-10">
                                 <input id="major" type="text" class="form-control{{ $errors->has('major') ? ' is-invalid' : '' }}" placeholder="etc" name="major" value="{{ old('major') }}" required>
                                 @if ($errors->has('major'))
@@ -94,15 +94,15 @@
                             </div>
                             <label class="col-md-5 col-form-label">Start Year*</label>
                                 <div class="col-md-7">
-                                    <input id="startYear" name="start_year" autocomplete="off" type="text" class="form-control">
-                                    <input id="altStartYear" type="text" class="form-control" hidden>   
+                                    <input id="startYear" autocomplete="off" type="text" class="form-control">
+                                    <input id="altStartYear" name="start_year" type="text" class="form-control" hidden>   
                                 </div>
                             <label class="col-md-5 col-form-label">End Date*</label>
                                 <div class="col-md-7">
-                                    <input id="endYear" name="end_year" autocomplete="off" type="text" class="form-control">
-                                    <input id="altEndYear" type="text" class="form-control" hidden>          
+                                    <input id="endYear" autocomplete="off" type="text" class="form-control">
+                                    <input id="altEndYear" name="end_year" type="text" class="form-control" hidden>          
                                 </div>     
-                            <label class="col-md-2 col-form-label">GPA*</label>
+                            <label class="col-md-7 col-form-label">GPA*</label>
                                 <div class="col-md-10">
                                     <input id="gpa" type="number" min="0" max="4" class="form-control{{ $errors->has('gpa') ? ' is-invalid' : '' }}" placeholder="etc" name="gpa" value="{{ old('gpa') }}" required>
                                         @if ($errors->has('gpa'))
@@ -111,7 +111,7 @@
                                         </span>
                                         @endif
                                 </div>
-                            <label class="col-md-2 col-form-label">School*</label>
+                            <label class="col-md-7 col-form-label">School*</label>
                             <div class="col-md-10">
                                 <input id="school" type="text" class="form-control{{ $errors->has('school') ? ' is-invalid' : '' }}" placeholder="etc" name="school" value="{{ old('school') }}" required>
                                 @if ($errors->has('school'))
@@ -162,7 +162,7 @@
                                 </span>
                                 @endif
                             </div>    
-                            <label class="col-md-2 col-form-label">Year Experience*</label>
+                            <label class="col-md-7 col-form-label">Year Experience*</label>
                             <div class="col-md-10">
                                 <input id="year_experience" type="text" class="form-control{{ $errors->has('year_experience') ? ' is-invalid' : '' }}" name="year_experience" value="{{ old('year_experience') }}" required>
                                 @if ($errors->has('year_experience'))
@@ -171,7 +171,7 @@
                                 </span>
                                 @endif
                             </div>
-                            <label class="col-md-2 col-form-label">Competency</label>
+                            <label class="col-md-7 col-form-label">Competency</label>
                             <div class="col-md-10">
                                 <select name="competency" id="competency" class ="form-control">
                                     <option value="Beginner">Beginner</option>
@@ -219,7 +219,7 @@
                                 </span>
                                 @endif
                             </div>    
-                                <label class="col-md-2 col-form-label">Position*</label>
+                                <label class="col-md-7 col-form-label">Position*</label>
                                 <div class="col-md-10">
                                     <input id="previous_position" type="text" class="form-control{{ $errors->has('previous_position') ? ' is-invalid' : '' }}" placeholder="etc" name="previous_position" value="{{ old('previous_position') }}" required>
                                     @if ($errors->has('previous_position'))
@@ -281,7 +281,7 @@
                             </span>
                             @endif
                         </div>    
-                        <label class="col-md-2 col-form-label">Field of Study*</label>
+                        <label class="col-md-7 col-form-label">Field of Study*</label>
                         <div class="col-md-10">
                             <input id="major" type="text" class="form-control{{ $errors->has('major') ? ' is-invalid' : '' }}" placeholder="etc" name="major" value="{{ old('major') }}" required>
                             @if ($errors->has('major'))
@@ -300,7 +300,7 @@
                                 <input id="endYear" name="end_year" autocomplete="off" type="text" class="form-control">
                                 <input id="altEndYear" type="text" class="form-control" hidden>          
                             </div>     
-                        <label class="col-md-2 col-form-label">GPA*</label>
+                        <label class="col-md-7 col-form-label">GPA*</label>
                             <div class="col-md-10">
                                 <input id="gpa" type="number" min="0" max="4" class="form-control{{ $errors->has('gpa') ? ' is-invalid' : '' }}" placeholder="etc" name="gpa" value="{{ old('gpa') }}" required>
                                     @if ($errors->has('gpa'))
@@ -309,7 +309,7 @@
                                     </span>
                                     @endif
                             </div>
-                        <label class="col-md-2 col-form-label">School*</label>
+                        <label class="col-md-7 col-form-label">School*</label>
                         <div class="col-md-10">
                             <input id="school" type="text" class="form-control{{ $errors->has('school') ? ' is-invalid' : '' }}" placeholder="etc" name="school" value="{{ old('school') }}" required>
                             @if ($errors->has('school'))
@@ -361,7 +361,7 @@
                                 </span>
                                 @endif
                             </div>    
-                            <label class="col-md-2 col-form-label">Year Experience*</label>
+                            <label class="col-md-7 col-form-label">Year Experience*</label>
                             <div class="col-md-10">
                                 <input id="year_experience" type="text" class="form-control{{ $errors->has('year_experience') ? ' is-invalid' : '' }}" name="year_experience" value="{{ old('year_experience') }}" required>
                                 @if ($errors->has('year_experience'))
@@ -370,7 +370,7 @@
                                 </span>
                                 @endif
                             </div>
-                            <label class="col-md-2 col-form-label">Competency</label>
+                            <label class="col-md-7 col-form-label">Competency</label>
                             <div class="col-md-10">
                                 <select name="competency" id="competency" class ="form-control">
                                     <option value="Beginner">Beginner</option>
@@ -396,7 +396,14 @@
 
 <div class="tab-pane fade show p-3" id="nav-qualification" role="tabpanel" aria-labelledby="nav-qualification-tab">
     {{-- Company --}}
-    <div class="col-md-12">COMPANY</div>
+    <div class="row pb-3">
+        <div class="col-auto mr-auto">COMPANY</div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyPopup">
+                Add Experience
+            </button>
+        </div>
+    </div>       
     <table class="table table-bordered table-hover w-100" id="employeeQualCompanyTable">
         <thead>
             <tr>
@@ -411,8 +418,15 @@
         </thead>
     </table>
     <div class="dropdown-divider pb-3"></div>
-    {{-- Education --}}
-    <div class="col-md-12">EDUCATION</div>
+    {{-- Education --}}    
+    <div class="row pb-3">
+            <div class="col-auto mr-auto">EDUCATION</div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addEducationPopup">
+                    Add Education
+                </button>
+            </div>
+    </div>
     <table class="table table-bordered table-hover w-100" id="employeeQualEduTable">
         <thead>
             <tr>
@@ -429,8 +443,15 @@
         </thead>
     </table>
     <div class="dropdown-divider pb-3"></div>
-    {{-- Skill --}}
-    <div class="col-md-12">SKILL</div>
+    {{-- Skill --}}   
+    <div class="row pb-3">
+            <div class="col-auto mr-auto">SKILL</div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addSkillsPopup">
+                    Add Skill
+                </button>
+            </div>
+        </div>
     <table class="table table-bordered table-hover w-100" id="employeeQualSkillTable">
         <thead>
             <tr>

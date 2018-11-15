@@ -63,6 +63,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('user-list', 'AdminController@displayUserList')->name('admin/user_list');
     Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
     Route::get('edit-employee', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee');
+    Route::get('resign', 'AdminController@employeeResign')->name('resign');
+
 
     //--setup company--
     Route::get('/setup/company-details/{id}','AdminController@displayCompanyDetails')->name('/setup/company-details/{id}');
@@ -93,6 +95,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('edit_security_group','AdminController@editSecurityGroup')->name('edit_security_group');
     Route::post('edit_company_addition','AdminController@editCompanyAddition')->name('edit_company_addition');
     Route::post('edit_company_deduction','AdminController@editCompanyDeduction')->name('edit_company_deduction');
+    Route::post('edit_job','AdminController@editJob')->name('edit_job');
+
 
     Route::post('edit_employee_popup','AdminController@editEmployeeProfileBasic')->name('edit_employee_popup');
     Route::post('edit_profile_popup','AdminController@editProfilePopup')->name('edit_profile_popup');
@@ -121,6 +125,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('approve_leave', 'AdminController@approvedLeaveRequest')->name('approve_leave');
     Route::post('disapprove_leave', 'AdminController@disapprovedLeaveRequest')->name('disapprove_leave');
     Route::post('add_leave_balance','AdminController@addLeaveBalance')->name('add_leave_balance');
+    Route::post('add_job','AdminController@addJob')->name('add_job');
 
 
 
