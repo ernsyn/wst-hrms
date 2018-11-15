@@ -11,48 +11,69 @@
         <div class="modal-body">
             <form method="POST" action="{{ route('add_employee_immigration') }}" id="add_employee_immigration">
                 @csrf
-                <div class="row pb-5">
-                    <div class="col-xl-8">
-                        <label class="col-md-5 col-form-label">Name*</label>
-                        <div class="col-md-7">
-                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name here" name="name" value="{{ old('name') }}" required>
-                            @if ($errors->has('name'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('name') }}</strong>
-                            </span>
-                            @endif
-                        </div>    
-                            <label class="col-md-8 col-form-label">Passport No*</label>
-                            <div class="col-md-10">
-                                <input id="passport_no" type="text" class="form-control{{ $errors->has('passport_no') ? ' is-invalid' : '' }}"  name="passport_no" value="{{ old('passport_no') }}" required>
+                <div class="row p-3">
+                    {{-- <div class="form-group row w-100">
+                        <div class="col-12">
+                            <label class="col-md-12 col-form-label">Name*</label>
+                            <div class="col-md-12">
+                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Enter Name" name="name" value="{{ old('name') }}" required>
+                                @if ($errors->has('name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="form-group row w-100">
+                        <div class="col-6">    
+                            <label class="col-md-12 col-form-label">Passport No*</label>
+                            <div class="col-md-12">
+                                <input id="passport_no" type="text" class="form-control{{ $errors->has('passport_no') ? ' is-invalid' : '' }}"  placeholder="Enter Passport No" name="passport_no" value="{{ old('passport_no') }}" required>
                                 @if ($errors->has('passport_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('passport_no') }}</strong>
                                 </span>
                                 @endif
                             </div>
-
-                            <label class="col-md-5 col-form-label">Expiry Date*</label>
-                            <div class="col-md-7">
+                        </div>
+                        <div class="col-6">
+                            <label class="col-md-12 col-form-label">Expiry Date*</label>
+                            <div class="col-md-12">
                                 <input id="altexpiryDate" name ="altexpiryDate" type="text" class="form-control" hidden> 
-                                <input name="expiryDate" id="expiryDate" type="text" class="form-control" readonly>                                              
+                                <input name="expiryDate" id="expiryDate" type="text" placeholder="Enter Date" class="form-control" readonly>                                              
                             </div>  
-                    
-                            <label class="col-md-5 col-form-label">Issued By*</label>
-                            <div class="col-md-7">
-                                <input id="issued_by" type="text" class="form-control{{ $errors->has('issued_by') ? ' is-invalid' : '' }}" name="issued_by" value="{{ old('issued_by') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row w-100">
+                        <div class="col-6">                    
+                            <label class="col-md-12 col-form-label">Issued By*</label>
+                            <div class="col-md-12">
+                                <input id="issued_by" type="text" placeholder="Enter Issued By" class="form-control{{ $errors->has('issued_by') ? ' is-invalid' : '' }}" name="issued_by" value="{{ old('issued_by') }}" required>
                                 @if ($errors->has('issued_by'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('issued_by') }}</strong>
                                 </span>
                                 @endif
-                            </div> 
-                            <label class="col-md-5 col-form-label">Issued Date*</label>
-
-                           <div class="col-md-7">
-                                <input id="altlicenseExpiryDate" name ="altlicenseExpiryDate" type="text" class="form-control" hidden> 
-                                <input name="licenseExpiryDate" id="licenseExpiryDate" type="text" class="form-control" readonly>                                              
                             </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="col-md-12 col-form-label">Issued Date*</label>
+
+                            <div class="col-md-12">
+                                <input id="altissuedDate" name ="altissuedDate" type="text" class="form-control" hidden> 
+                                <input name="issuedDate" id="issuedDate" type="text" placeholder="Enter Date" class="form-control" readonly>                                              
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row w-100">
+                        <div class="col-12">                    
+                            <label class="col-md-12 col-form-label">Attachment*</label>
+                            <div class="col-md-12">
+                                <input id="attachment" type="file" class="form-control-file" name="attachment" value="{{ old('attachment') }}" required>                                
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>     
                 <div class="modal-footer">
@@ -137,11 +158,11 @@
     <thead>
         <tr>
                 <th>No</th>
-                <th>Document</th>
                 <th>Passport No</th>
                 <th>Issued By</th>
                 <th>Issued Date</th>
                 <th>Expiry Date</th>
+                <th>Document</th>
                 <th>Action</th>
             </tr>
         </thead>

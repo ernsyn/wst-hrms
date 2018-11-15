@@ -77,47 +77,44 @@ class AdminController extends Controller
         $gender = $request->input('gender');
         $race = $request->input('race');
         $nationality = $request->input('nationality');       
-        $marital_status = $request->input('marital_status');
-        $total_children = $request->input('total_children');
+        $marital_status = Input::get('marital_status');
+        $total_children = $request->input('total_child');
         $ic_no = $request->input('ic_no');       
         $tax_no = $request->input('tax_no');
         $epf_no = $request->input('epf_no');
-        $socso_no = $request->input('socso_no');       
-        $insurance_no = $request->input('insurance_no');
-        $pcb_group = $request->input('pcb_group');
-        $driver_license_no = $request->input('driver_license_no');       
+        // $socso_no = $request->input('socso_no');       
+        // $insurance_no = $request->input('insurance_no');
+        // $pcb_group = $request->input('pcb_group');
+        $driver_license_no = $request->input('driver_license_number');       
         $driver_license_expiry_date = $request->input('driver_license_expiry_date');
-        $basic_salary = $request->input('basic_salary');
-        $confirmed_date = $request->input('confirmed_date');         
+        // $basic_salary = $request->input('basic_salary');
+        // $confirmed_date = $request->input('confirmed_date');         
         $created_by = auth()->user()->id;
-        $code = $request->input('code');
-        $updated_by =$request->input('updated_by');
+        // $code = $request->input('code');
+        // $updated_by =$request->input('updated_by');
         
        
         DB::insert('insert into employees
         (user_id,contact_no,address,
         company_id,dob,gender,race,
         nationality, marital_status, total_children,
-        ic_no, tax_no, epf_no,
-        socso_no, insurance_no, pcb_group,
-        driver_license_no, driver_license_expiry_date, basic_salary,
-        confirmed_date, created_by) 
+        ic_no, tax_no, epf_no,        
+        driver_license_no, driver_license_expiry_date,
+        created_by) 
         values
         (?,?,?,
         ?,?,?,?,
         ?,?,?,
         ?,?,?,
-        ?,?,?,
-        ?,?,?,
-        ?,?
+        ?,?,
+        ?
         )',
         [$user_id,$contact_no,$address,
         $company_id,$dob,$gender,$race,
         $nationality, $marital_status, $total_children,
         $ic_no, $tax_no, $epf_no,
-        $socso_no, $insurance_no, $pcb_group,
-        $driver_license_no, $driver_license_expiry_date, $basic_salary,
-        $confirmed_date, $created_by]);
+        $driver_license_no, $driver_license_expiry_date,
+        $created_by]);
 
 
         $employees = Employee::join('users','users.id','=','employees.user_id')
@@ -195,25 +192,25 @@ class AdminController extends Controller
         return view('pages.admin.all-employee')->with('employees',$employees);
     }
 
-    public function displayAddEmployeeProfile($id)
-    {   $user_id = Session::get('user_id');
+    public function displayAddEmployeeProfile()
+    {   
+        //$user_id = Session::get('user_id');
         $countries = Country::all();
         $departments = Department::all();
         $position = EmployeePosition::all();
         $companies = Company::all();
         //$users = User::where('id', $id)->first();
 
-        $user = User::select('users.name as name')
-        ->where('users.id',$user_id)
-        ->first();
+        // $user = User::select('users.name as name')
+        // ->where('users.id',$user_id)
+        // ->first();
 
 
-        Session::put('user_id', $id);
+        // Session::put('user_id', $id);
 
-        return view('pages.admin.add-employee', ['countries'=>$countries, 'departments'=>$departments, 'position'=>$position,'companies'=>$companies,'user'=>$user]);
+        return view('pages.admin.add-employee', ['countries'=>$countries, 'departments'=>$departments, 'position'=>$position,'companies'=>$companies]);
     }
 
-    
 
     public function displaySetupCompany()
     {       
@@ -274,6 +271,39 @@ class AdminController extends Controller
         return view('pages.admin.setup.company', ['company'=>$company]);
     }
 
+
+    public function editEmployeeProfile(Request $request)
+    {          
+       
+        
+        $contact_no = $request->input('contact_no');       
+        $address = $request->input('address');
+        $company_id = $request->input('companies');
+        $dob = $request->input('dob');       
+        $gender = $request->input('gender');
+        $race = $request->input('race');
+        $nationality = $request->input('nationality');       
+        $marital_status = Input::get('marital_status');
+        $total_children = $request->input('total_child');
+        $ic_no = $request->input('ic_no');       
+        $tax_no = $request->input('tax_no');
+        $epf_no = $request->input('epf_no');
+        // $socso_no = $request->input('socso_no');       
+        // $insurance_no = $request->input('insurance_no');
+        // $pcb_group = $request->input('pcb_group');
+        $driver_license_no = $request->input('driver_license_number');       
+        $driver_license_expiry_date = $request->input('driver_license_expiry_date');
+        // $basic_salary = $request->input('basic_salary');
+        // $confirmed_date = $request->input('confirmed_date');         
+        $created_by = auth()->user()->id;
+        // $code = $request->input('code');
+        // $updated_by =$request->input('updated_by');
+       
+        EmployeeBank::where('id',$bank_id)->update(array('bank_code' => $bank_code,
+        'acc_no' => $acc_no,'acc_status' => $acc_status,));
+
+        return redirect()->route('/setup/company-details/{id}', ['id' => $emp_id]);
+    }
     public function displayEmployeeLeave()
     {       
         $leavetype = LeaveType::all();
@@ -289,11 +319,13 @@ class AdminController extends Controller
     }
 
 
+      
+
     public function displayLeaveBalance()
     {
-        $leavebalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
         ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
-        ->join('users','users.id','=','employees.user_id')
+        ->join('users','users.id','=','employees.id')
         ->select('users.name as name','users.id as user_id',
         'leave_balance.balance as balance','leave_balance.id as balance_id',
         'leave_balance.carry_forward as carry',
@@ -324,7 +356,19 @@ class AdminController extends Controller
         [$user_id, $types, $leave_balance,
         $now->year, $carry_forward, $created_by]);
 
-        return redirect()->route('admin/leavebalance');
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->join('users','users.id','=','employees.id')
+        ->select('users.name as name','users.id as user_id',
+        'leave_balance.balance as balance','leave_balance.id as balance_id',
+        'leave_balance.carry_forward as carry',
+        'leave_types.name as leave','leave_types.id as type_id')
+        ->get();
+
+        $users = User::all();
+        $types = LeaveType::all();
+
+        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]); 
     }
 
     public function editLeaveBalance(Request $request)
@@ -339,7 +383,19 @@ class AdminController extends Controller
         'id_leave_type' => $types,'balance' => $leave_balance,'carry_forward' => $carry_forward));
 
 
-        return redirect()->route('admin/leavebalance');
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->join('users','users.id','=','employees.id')
+        ->select('users.name as name','users.id as user_id',
+        'leave_balance.balance as balance','leave_balance.id as balance_id',
+        'leave_balance.carry_forward as carry',
+        'leave_types.name as leave','leave_types.id as type_id')
+        ->get();
+
+        $users = User::all();
+        $types = LeaveType::all();
+
+        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]); 
     }
 
 
@@ -368,9 +424,11 @@ class AdminController extends Controller
         return view('pages.admin.leave-holiday', ['leaveholiday'=>$leaveholiday]);
     }
     
+    
 
     public function displayLeaveRequest()
     {       
+
         $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
         ->join('users','users.id','=','leave_employees_requests.user_id')
         // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
@@ -412,35 +470,6 @@ class AdminController extends Controller
         return DataTables::of($contacts)->make(true);
     }
 
-
-    public function displayEmployeeDependent()
-    {       
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();
-        $dependents = EmployeeDependent::where('emp_id',$user->id)->get();
-          return DataTables::of($dependents)->make(true);
-
-
-    }
-
-    public function displayEmployeeBank()
-    {       
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();
-        $banks = EmployeeBankAccount::where('emp_id',$user->id)->get();
-        return DataTables::of($banks)->make(true);
-
-
-    }
-    public function displayEmployeeJob()
-    {       
-        $id = Session::get('user_id');
-        $user = Employee::where('user_id', $id)->first();
-        $job = EmployeeJob::where('emp_id',$user->id)->get();
-          return DataTables::of($job)->make(true);
-
-
-    }
     public function addEmergencyContact(Request $request)
     {          
         $user_id = Session::get('user_id');
@@ -527,15 +556,15 @@ class AdminController extends Controller
         $user = Employee::where('user_id', $user_id)->first();     
         $passport_no = $request->input('passport_no'); 
         $issued_by = $request->input('issued_by');     
-        $altexpiryDate = $request->input('altexpiryDate');
-        $altlicenseExpiryDate = $request->input('altlicenseExpiryDate');        
+        $altissuedDate = $request->input('altissuedDate');
+        $altexpiryDate = $request->input('altexpiryDate');        
         $created_by = auth()->user()->id;
        
         DB::insert('insert into employee_immigrations
         (emp_id, passport_no, issued_by, issued_date, expiry_date, created_by) 
         values
         (?,?,?,?,?,?)',
-        [$user->id, $passport_no, $issued_by, $altexpiryDate, $altlicenseExpiryDate, $created_by]);
+        [$user->id, $passport_no, $issued_by, $altissuedDate, $altexpiryDate, $created_by]);
 
 
         $immigrations = EmployeeImmigration::where('emp_id',$user_id)->get();  
@@ -648,7 +677,10 @@ class AdminController extends Controller
         (?,?,?,?,?,?)',
         [$emp_id, $type, $bank_code, $acc_no, $status, $created_by]);
 
-        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
+        $banks = EmployeeBank::where('emp_id',$emp_id)->orderBy('id', 'DESC')->get();
+        $bank_list = Bank::all();        
+        
+        return view('pages.admin.employee-bank', ['banks'=>$banks,'bank_list'=>$bank_list]);
     }
 
     public function editEmployeeBank(Request $request)
@@ -710,23 +742,44 @@ class AdminController extends Controller
     {
         Session::put('user_id', $id);
 
+   
+            //$user_id = Session::get('user_id');
+            $countries = Country::all();
+            $departments = Department::all();
+            $position = EmployeePosition::all();
+            $companies = Company::all();
+            //$users = User::where('id', $id)->first();
+    
+            // $user = User::select('users.name as name')
+            // ->where('users.id',$user_id)
+            // ->first();
+    
+    
+            // Session::put('user_id', $id);
+    
+
+        
+
         $user = User::join('employees','employees.user_id','=','users.id')
-        // ->join('countries','countries.id','=','employees.nationality')
-        //->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
+        ->leftjoin('countries','countries.id','=','employees.nationality')
+        ->leftjoin('employee_jobs','employee_jobs.emp_id','=','employees.id')
+        ->leftjoin('departments','departments.id','=','employee_jobs.department_id')
+        ->leftjoin('companies','companies.id','=','employees.company_id')
         ->select('users.name as name','users.email as email', 
         'employees.contact_no as contact_no', 'employees.address as address', 
-        'employees.ic_no as ic_no', 'employees.gender as gender', 
+        'employees.ic_no as ic_no', 'employees.gender as gender',
+        'departments.name as department_name',
         'employees.dob as dob','employees.marital_status as marital_status',
         'employees.race as race', 'employees.total_children as total_child', 
         'employees.driver_license_no as driver_license_no', 
         'employees.driver_license_expiry_date as driver_license_expiry_date',
-        'users.id as user_id','employees.epf_no as epf_no',
-        'employees.tax_no as tax_no ','employees.basic_salary as basic_salary')
+        'users.id as user_id','employees.epf_no as epf_no','employees.tax_no as tax_no','employees.socso_no as eis_no',
+        'employees.basic_salary as basic_salary','employees.user_id as user_id','companies.name as company_id','employees.created_at as joined_date')
         ->where('users.id',$id)
         ->first();
 
 
-        return view('pages.admin.profile-employee',['user'=>$user]);        
+        return view('pages.admin.profile-employee',['user'=>$user,'countries'=>$countries, 'departments'=>$departments, 'position'=>$position,'companies'=>$companies]);        
     }
 
     public function displayQualificationExperience()
@@ -1467,6 +1520,67 @@ class AdminController extends Controller
     }
 
    
+    public function editEmployeeProfileBasic(Request $request)
+    {          
+        $id = Session::get('user_id');
+
+        $email = $request->input('email');
+        $contact_no = $request->input('contact_no');
+        $address = $request->input('address');   
+
+        $name = $request->input('name');      
+
+        $created_by = auth()->user()->id;
+
+        User::where('id',$id)->update(array('email' => $email,
+        'name' => $name));
+        Employee::where('user_id',$id)->update(array('contact_no' =>$contact_no,'address'=> $address));
+       
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$id]); 
+    }
+
+    public function editProfilePopup(Request $request)
+    {          
+        $id = Session::get('user_id');
+
+        $ic_no = $request->input('ic_no');
+        $nationality = $request->input('nationality');
+        $gender = $request->input('gender');   
+
+        $no_child = $request->input('no_child');      
+        $altdobDateEdit = $request->input('altdobDateEdit');
+        $maritial_status = $request->input('maritial_status');
+        $license_no = $request->input('license_no');   
+
+        $altlicenseExpiryDateAddition = $request->input('altlicenseExpiryDateAddition');      
 
 
+        $created_by = auth()->user()->id;
+
+        Employee::where('user_id',$id)->update(array('ic_no' => $ic_no,'nationality' => $nationality,
+        'gender' => $gender,'total_children' => $no_child,
+        'dob' => $altdobDateEdit,'marital_status' => $maritial_status,
+        'driver_license_no' => $license_no,'driver_license_expiry_date' => $altlicenseExpiryDateAddition));
+
+       
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$id]); 
+    }
+
+    public function editCompanyPopup(Request $request)
+    {          
+        $id = Session::get('user_id');
+        $company_id = Input::get('company_id');
+
+        $tax_no = $request->input('tax_no');
+        $socso_no = $request->input('socso_no');
+        $epf_no = $request->input('epf_no');
+
+        Employee::where('user_id',$id)->update(array('company_id' => $company_id,'tax_no' => $tax_no,
+        'socso_no' => $socso_no,'epf_no' => $epf_no));
+
+       
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$id]); 
+    }
+
+    
 }

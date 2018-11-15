@@ -237,6 +237,10 @@ Breadcrumbs::for('admin/edit-employee/{id}', function ($trail) {
     $trail->push('Add Employee', route('admin/edit-employee/{id}', ''));
 });
 
+Breadcrumbs::for('admin/edit-employee', function ($trail) {
+    $trail->parent('admin/employee_list');
+    $trail->push('Add Employee', route('admin/edit-employee', ''));
+});
 
 // Home > Admin > Leave Type
 Breadcrumbs::for('admin/leavetype', function ($trail) {

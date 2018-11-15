@@ -36,7 +36,7 @@
                                   
                                         <td>
                                                 <button onclick="window.location='{{ url('/admin/profile-employee/'.$row['id']) }}';" class="btn btn-default">View</button>
-                                                <button onclick="window.location='{{ url('/admin/edit-employee/'.$row['id']) }}';" class="btn btn-default">Edit</button>
+                                                {{-- <button onclick="window.location='{{ url('/admin/edit-employee/'.$row['id']) }}';" class="btn btn-default">Edit</button> --}}
                                         
                                         </td>
                                 </tr>

@@ -49,8 +49,8 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/employee_list') ? 'show' : '' }}" id="employee-setup">
                 {{-- OPTION: Add Employee --}}
-                <li class="menu-option {{ request()->is('admin/employee/add') ? 'active' : '' }}">
-                    <a href="{{ route('employee/add') }}">Add Employee</a>
+                <li class="menu-option {{ request()->is('admin/edit-employee') ? 'active' : '' }}">
+                    <a href="{{ route('admin/edit-employee') }}">Add Employee</a>
                 </li>
 
                 {{-- OPTION: Employee List --}}
