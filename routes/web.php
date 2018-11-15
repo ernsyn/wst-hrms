@@ -174,7 +174,8 @@ Route::group(['middleware' => ['auth', 'role:super-admin|admin|employee']], func
 Route::resource('payroll', 'Payroll\PayrollController');
 Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');
 Route::post('payroll/store', 'Payroll\PayrollController@store')->name('payroll.store');
-Route::get('/payroll/show/{id}', 'Payroll\PayrollController@show')->name('payroll/show/{id}');
+Route::get('payroll/{id}', 'Payroll\PayrollController@show')->name('payroll.show');
+// Route::get('/payroll/show/{id}', 'Payroll\PayrollController@show')->name('payroll/show/{id}');
 Route::post('/payroll/status/{id}', 'Payroll\PayrollController@updatePayrollStatus')->name('payroll.status.update');
 Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
 Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');

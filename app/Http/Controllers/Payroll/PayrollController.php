@@ -253,9 +253,10 @@ class PayrollController extends Controller
 //         $request->request->add([
 //             'payroll_id' => $id
 //         ]);
+
         $forms = [
             'employee_id',
-            'full_name',
+            'name',
             'position',
             'joined_date',
             'cb',
@@ -281,15 +282,15 @@ class PayrollController extends Controller
             $join->on('EJ.emp_id', '=', 'EM.id');
 //                 ->on('EJ.default', '=', DB::raw('"1"'));
         })
-            ->join('cost_centres as JM', 'JM.id', '=', 'EJ.emp_mainposition_id')
+        ->join('employee_positions as JM', 'JM.id', '=', 'EJ.emp_mainposition_id')
         /* ->join('job_master as JM2', 'JM2.id', '=', 'EJ.id_category')  */
         // ->leftjoin('EmployeeGroup as EG', 'EG.id_EmployeeMaster', '=', 'EM.id')
         /* ->leftjoin('employee_bank as EB', function($join){
             $join->on('EB.emp_id', '=', 'EM.emp_id')
             ->on('EB.acc_status', '=', DB::raw('"Active"'));
         }) */
-        ->select('payroll_trx.*', 'PM.company_info_id as company_id', 'PM.year_month', 'PM.period', 'PM.status', 'EM.emp_id as employee_id', 'EM.code as employee_code', 'JM.job_name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
-                (SELECT start_date FROM employee_job WHERE emp_id = EM.emp_id ORDER BY id ASC LIMIT 1) as joined_date,
+        ->select('payroll_trx.*', 'PM.company_id as company_id', 'PM.year_month', 'PM.period', 'PM.status', 'EM.id as employee_id', 'EM.code as employee_code', 'U.name','JM.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
+                (SELECT start_date FROM employee_jobs WHERE emp_id = EM.id ORDER BY id ASC LIMIT 1) as joined_date,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
                 (SELECT SUM(amount) FROM payroll_trx_addition WHERE payroll_trx_id = payroll_trx.id) as total_addition,
@@ -315,7 +316,7 @@ class PayrollController extends Controller
         /* ->where(function($query) use($companyId){
             if($companyId) $query->where('PM.company_info_id', $companyId);
         })  */
-        ->groupby('payroll_trx.id')
+//         ->groupby('payroll_trx.id')
             ->orderby('payroll_trx.id', 'ASC')
             ->paginate(10);
 
@@ -328,7 +329,8 @@ class PayrollController extends Controller
                 $id
             ]
         ])->first();
-        $title = 'Payroll Month (' . @$payroll->year_month . ')';
+        $title = 'Payroll Month (' . DateHelper::dateWithFormat(@$payroll->year_month, 'Y-m') . ')';
+//         dd($list);
         return view('pages.payroll.show', compact('id', 'title', 'payroll', 'forms', 'list'));
     }
 
