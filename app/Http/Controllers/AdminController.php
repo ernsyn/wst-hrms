@@ -10,6 +10,7 @@ use App\EmployeeEducation;
 use App\EmployeeEmergencyContact;
 use App\EmployeeExperience;
 use App\EmployeeGrade;
+use App\EmployeeBank;
 use App\EmployeeImmigration;
 use App\EmployeeJob;
 use App\EmployeeLanguange;
@@ -77,47 +78,44 @@ class AdminController extends Controller
         $gender = $request->input('gender');
         $race = $request->input('race');
         $nationality = $request->input('nationality');       
-        $marital_status = $request->input('marital_status');
-        $total_children = $request->input('total_children');
+        $marital_status = Input::get('marital_status');
+        $total_children = $request->input('total_child');
         $ic_no = $request->input('ic_no');       
         $tax_no = $request->input('tax_no');
         $epf_no = $request->input('epf_no');
-        $socso_no = $request->input('socso_no');       
-        $insurance_no = $request->input('insurance_no');
-        $pcb_group = $request->input('pcb_group');
-        $driver_license_no = $request->input('driver_license_no');       
+        // $socso_no = $request->input('socso_no');       
+        // $insurance_no = $request->input('insurance_no');
+        // $pcb_group = $request->input('pcb_group');
+        $driver_license_no = $request->input('driver_license_number');       
         $driver_license_expiry_date = $request->input('driver_license_expiry_date');
-        $basic_salary = $request->input('basic_salary');
-        $confirmed_date = $request->input('confirmed_date');         
+        // $basic_salary = $request->input('basic_salary');
+        // $confirmed_date = $request->input('confirmed_date');         
         $created_by = auth()->user()->id;
-        $code = $request->input('code');
-        $updated_by =$request->input('updated_by');
+        // $code = $request->input('code');
+        // $updated_by =$request->input('updated_by');
         
        
         DB::insert('insert into employees
         (user_id,contact_no,address,
         company_id,dob,gender,race,
         nationality, marital_status, total_children,
-        ic_no, tax_no, epf_no,
-        socso_no, insurance_no, pcb_group,
-        driver_license_no, driver_license_expiry_date, basic_salary,
-        confirmed_date, created_by) 
+        ic_no, tax_no, epf_no,        
+        driver_license_no, driver_license_expiry_date,
+        created_by) 
         values
         (?,?,?,
         ?,?,?,?,
         ?,?,?,
         ?,?,?,
-        ?,?,?,
-        ?,?,?,
-        ?,?
+        ?,?,
+        ?
         )',
         [$user_id,$contact_no,$address,
         $company_id,$dob,$gender,$race,
         $nationality, $marital_status, $total_children,
         $ic_no, $tax_no, $epf_no,
-        $socso_no, $insurance_no, $pcb_group,
-        $driver_license_no, $driver_license_expiry_date, $basic_salary,
-        $confirmed_date, $created_by]);
+        $driver_license_no, $driver_license_expiry_date,
+        $created_by]);
 
 
         $employees = Employee::join('users','users.id','=','employees.user_id')
@@ -195,25 +193,24 @@ class AdminController extends Controller
         return view('pages.admin.all-employee')->with('employees',$employees);
     }
 
-    public function displayAddEmployeeProfile($id)
-    {   $user_id = Session::get('user_id');
+    public function displayAddEmployeeProfile()
+    {   
+        //$user_id = Session::get('user_id');
         $countries = Country::all();
         $departments = Department::all();
         $position = EmployeePosition::all();
         $companies = Company::all();
         //$users = User::where('id', $id)->first();
 
-        $user = User::select('users.name as name')
-        ->where('users.id',$user_id)
-        ->first();
+        // $user = User::select('users.name as name')
+        // ->where('users.id',$user_id)
+        // ->first();
 
 
-        Session::put('user_id', $id);
+        // Session::put('user_id', $id);
 
-        return view('pages.admin.add-employee', ['countries'=>$countries, 'departments'=>$departments, 'position'=>$position,'companies'=>$companies,'user'=>$user]);
+        return view('pages.admin.add-employee', ['countries'=>$countries, 'departments'=>$departments, 'position'=>$position,'companies'=>$companies]);
     }
-
-    
 
     public function displaySetupCompany()
     {       
@@ -274,6 +271,39 @@ class AdminController extends Controller
         return view('pages.admin.setup.company', ['company'=>$company]);
     }
 
+
+    public function editEmployeeProfile(Request $request)
+    {          
+       
+        
+        $contact_no = $request->input('contact_no');       
+        $address = $request->input('address');
+        $company_id = $request->input('companies');
+        $dob = $request->input('dob');       
+        $gender = $request->input('gender');
+        $race = $request->input('race');
+        $nationality = $request->input('nationality');       
+        $marital_status = Input::get('marital_status');
+        $total_children = $request->input('total_child');
+        $ic_no = $request->input('ic_no');       
+        $tax_no = $request->input('tax_no');
+        $epf_no = $request->input('epf_no');
+        // $socso_no = $request->input('socso_no');       
+        // $insurance_no = $request->input('insurance_no');
+        // $pcb_group = $request->input('pcb_group');
+        $driver_license_no = $request->input('driver_license_number');       
+        $driver_license_expiry_date = $request->input('driver_license_expiry_date');
+        // $basic_salary = $request->input('basic_salary');
+        // $confirmed_date = $request->input('confirmed_date');         
+        $created_by = auth()->user()->id;
+        // $code = $request->input('code');
+        // $updated_by =$request->input('updated_by');
+       
+        EmployeeBankA::where('id',$bank_id)->update(array('bank_code' => $bank_code,
+        'acc_no' => $acc_no,'acc_status' => $acc_status,));
+
+        return redirect()->route('/setup/company-details/{id}', ['id' => $emp_id]);
+    }
     public function displayEmployeeLeave()
     {       
         $leavetype = LeaveType::all();
@@ -289,11 +319,13 @@ class AdminController extends Controller
     }
 
 
+      
+
     public function displayLeaveBalance()
     {
-        $leavebalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
         ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
-        ->join('users','users.id','=','employees.user_id')
+        ->join('users','users.id','=','employees.id')
         ->select('users.name as name','users.id as user_id',
         'leave_balance.balance as balance','leave_balance.id as balance_id',
         'leave_balance.carry_forward as carry',
@@ -324,7 +356,19 @@ class AdminController extends Controller
         [$user_id, $types, $leave_balance,
         $now->year, $carry_forward, $created_by]);
 
-        return redirect()->route('admin/leavebalance');
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->join('users','users.id','=','employees.id')
+        ->select('users.name as name','users.id as user_id',
+        'leave_balance.balance as balance','leave_balance.id as balance_id',
+        'leave_balance.carry_forward as carry',
+        'leave_types.name as leave','leave_types.id as type_id')
+        ->get();
+
+        $users = User::all();
+        $types = LeaveType::all();
+
+        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]); 
     }
 
     public function editLeaveBalance(Request $request)
@@ -339,7 +383,19 @@ class AdminController extends Controller
         'id_leave_type' => $types,'balance' => $leave_balance,'carry_forward' => $carry_forward));
 
 
-        return redirect()->route('admin/leavebalance');
+        $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->join('users','users.id','=','employees.id')
+        ->select('users.name as name','users.id as user_id',
+        'leave_balance.balance as balance','leave_balance.id as balance_id',
+        'leave_balance.carry_forward as carry',
+        'leave_types.name as leave','leave_types.id as type_id')
+        ->get();
+
+        $users = User::all();
+        $types = LeaveType::all();
+
+        return view('pages.admin.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]); 
     }
 
 
@@ -368,9 +424,11 @@ class AdminController extends Controller
         return view('pages.admin.leave-holiday', ['leaveholiday'=>$leaveholiday]);
     }
     
+    
 
     public function displayLeaveRequest()
     {       
+
         $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
         ->join('users','users.id','=','leave_employees_requests.user_id')
         // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
@@ -457,6 +515,8 @@ class AdminController extends Controller
     //     values
     //     (?,?,?,?,?)',
     //     [$user->id, $name, $relationship, $contact_number, $created_by]);
+
+        // $tabName = "EmergencyContactTab";
 
 
     //     return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);  
@@ -620,6 +680,86 @@ class AdminController extends Controller
     //     return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
     // }
 
+    public function addJob(Request $request)
+    {          
+        $user_id = Session::get('user_id');
+        $user = Employee::where('user_id', $user_id)->first(); 
+
+        $basic_salary = $request->input('basic_salary');
+        $cost_centre = Input::get('cost_centre');
+        $department = Input::get('department');
+        $team = Input::get('team');
+        $position = Input::get('position');
+        $grade = Input::get('grade');
+        $branch = Input::get('branch');
+        $start_date = $request->input('jobDate');
+        $emp_status = Input::get('emp_status');
+        $created_by = auth()->user()->id;
+       
+        DB::insert('insert into employee_jobs
+        (emp_id, branch_id, specification,
+        emp_mainposition_id, department_id, team_id,
+        cost_centre_id, emp_grade_id,start_date,
+        basic_salary, status, created_by) 
+        values
+        (?,?,?,
+        ?,?,?,
+        ?,?,?,
+        ?,?,?)',
+        [$user->id, $branch, 'auto',
+        $position, $department, $team,
+        $cost_centre, $grade, $start_date,
+        $basic_salary, $emp_status, $created_by]);
+
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
+    }
+
+    public function editJob(Request $request)
+    {          
+        $user_id = Session::get('user_id');
+        $user = Employee::where('user_id', $user_id)->first(); 
+
+        $job_id = $request->input('job_id');
+        $basic_salary = $request->input('basic_salary');
+        $cost_centre = Input::get('cost_centre');
+        $department = Input::get('department');
+        $team = Input::get('team');
+        $position = Input::get('position');
+        $grade = Input::get('grade');
+        $branch = Input::get('branch');
+        $start_date = $request->input('jobDate');
+        $emp_status = Input::get('emp_status');
+        $created_by = auth()->user()->id;      
+       
+        EmployeeJob::where('id',$job_id)->update(array(
+            'branch_id' => $branch,
+            'emp_mainposition_id' => $position,
+            'department_id' => $department,
+            'team_id' => $team,
+            'cost_centre_id' => $cost_centre,
+            'emp_grade_id' => $grade,
+            'start_date' => $start_date,
+            'basic_salary' => $basic_salary,
+            'status' => $emp_status
+        ));
+
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]); 
+    }
+
+    public function employeeResign()
+    {   
+        $user_id = Session::get('user_id');
+        $user = Employee::where('user_id', $user_id)->first();
+
+        EmployeeJob::where('emp_id',$user->id)->update(array(
+            'status' => 'resign'
+        ));
+        
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);        
+    }
+
+
+
     // public function displayEmployeeBank()
     // {       
     //     $id = Session::get('employee_id');
@@ -668,7 +808,6 @@ class AdminController extends Controller
     
     public function displayProfile()
     {
-        
         $user = Employee::join('users','users.emp_id','=','employees.id')
         // ->join('countries','countries.id','=','employee.citizenship')
         ->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
@@ -706,28 +845,56 @@ class AdminController extends Controller
         return view('pages.admin.all-employee')->with('employees',$employees);
     }
 
-    public function displayProfile2($id)
-    {
-        Session::put('user_id', $id);
+    // public function displayProfile2($id)
+    // {
+    //     Session::put('user_id', $id);
 
-        $user = User::join('employees','employees.user_id','=','users.id')
-        // ->join('countries','countries.id','=','employees.nationality')
-        //->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
-        ->select('users.name as name','users.email as email', 
-        'employees.contact_no as contact_no', 'employees.address as address', 
-        'employees.ic_no as ic_no', 'employees.gender as gender', 
-        'employees.dob as dob','employees.marital_status as marital_status',
-        'employees.race as race', 'employees.total_children as total_child', 
-        'employees.driver_license_no as driver_license_no', 
-        'employees.driver_license_expiry_date as driver_license_expiry_date',
-        'users.id as user_id','employees.epf_no as epf_no',
-        'employees.tax_no as tax_no ','employees.basic_salary as basic_salary')
-        ->where('users.id',$id)
-        ->first();
+   
+    //         //$user_id = Session::get('user_id');
+    //         $countries = Country::all();
+    //         $departments = Department::all();
+    //         $position = EmployeePosition::all();
+    //         $companies = Company::all();
+    //         //$users = User::where('id', $id)->first();
+    
+    //         // $user = User::select('users.name as name')
+    //         // ->where('users.id',$user_id)
+    //         // ->first();
+    
+    
+    //         // Session::put('user_id', $id);
+    
 
+        
 
-        return view('pages.admin.profile-employee',['user'=>$user]);        
-    }
+    //     $user = User::join('employees','employees.user_id','=','users.id')
+    //     ->leftjoin('countries','countries.id','=','employees.nationality')
+    //     ->leftjoin('employee_jobs','employee_jobs.emp_id','=','employees.id')
+    //     ->leftjoin('departments','departments.id','=','employee_jobs.department_id')
+    //     ->leftjoin('companies','companies.id','=','employees.company_id')
+    //     ->select('users.name as name','users.email as email', 
+    //     'employees.contact_no as contact_no', 'employees.address as address', 
+    //     'employees.ic_no as ic_no', 'employees.gender as gender',
+    //     'departments.name as department_name',
+    //     'employees.dob as dob','employees.marital_status as marital_status',
+    //     'employees.race as race', 'employees.total_children as total_child', 
+    //     'employees.driver_license_no as driver_license_no', 
+    //     'employees.driver_license_expiry_date as driver_license_expiry_date',
+    //     'users.id as user_id','employees.epf_no as epf_no','employees.tax_no as tax_no','employees.socso_no as eis_no',
+    //     'employees.basic_salary as basic_salary','employees.user_id as user_id','companies.name as company_id','employees.created_at as joined_date')
+    //     ->where('users.id',$id)
+    //     ->first();
+
+    //     $bank_list = Bank::all();
+    //     $cost_centre = CostCentre::all();
+    //     $department = Department::all();
+    //     $team = Team::all();
+    //     $position = EmployeePosition::all();
+    //     $grade = EmployeeGrade::all();
+    //     $branch = Branch::all();
+
+    //     return view('pages.admin.profile-employee',['user'=>$user,'countries'=>$countries,'team'=>$team,'bank_list'=>$bank_list,'branch'=>$branch, 'grade'=>$grade,'department'=>$department, 'position'=>$position,'companies'=>$companies,'cost_centre'=>$cost_centre]);        
+    // }
 
     // public function displayQualificationExperience()
     // {   
@@ -1292,10 +1459,11 @@ class AdminController extends Controller
 
         $bank_list = Bank::all();
         $ea_form = EaForm::all();
-        $tags = CostCentre::all();
+        $cost_centre = CostCentre::all();
+        $grade = EmployeeGrade::all();
 
-        return view('pages.admin.setup.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list,
-        'security'=>$security, 'additions'=>$additions, 'deductions'=>$deductions, 'ea_form'=>$ea_form, 'tags'=>$tags]);
+        return view('pages.admin.setup.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
+        'security'=>$security, 'additions'=>$additions, 'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre]);
     }
 
     public function addCompanyBank(Request $request)
@@ -1379,15 +1547,21 @@ class AdminController extends Controller
         $type = Input::get('type');
         $amount = $request->input('amount');
         $statutory = implode(",", $request->get('statutory'));
+        $applies = implode(",", $request->get('applies'));
+        $cost_centre = implode(",", $request->get('cost_centre'));
+        $job_grade = implode(",", $request->get('job_grade'));
         $ea_form = Input::get('ea_form');
         $status = Input::get('status');
         $created_by = auth()->user()->id;
        
         DB::insert('insert into additions
-        (id_company_master, code, name, type, amount, statutory, id_EaForm, status, created_by) 
+        (id_company_master, code, name, type, amount, statutory, id_EaForm, status, created_by,
+        id_applies_to, id_cost_centre, id_job_master) 
         values
-        (?,?,?,?,?,?,?,?,?)',
-        [$company_id, $code, $name, $type, $amount, $statutory, $ea_form, $status, $created_by]);
+        (?,?,?,?,?,?,?,?,?,
+        ?,?,?)',
+        [$company_id, $code, $name, $type, $amount, $statutory, $ea_form, $status, $created_by,
+        $applies, $cost_centre, $job_grade]);
 
         //---- view -------
         return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
@@ -1402,6 +1576,9 @@ class AdminController extends Controller
         $type = Input::get('type');
         $amount = $request->input('amount');
         $statutory = implode(",", $request->get('statutory'));
+        $applies = implode(",", $request->get('applies'));
+        $cost_centre = implode(",", $request->get('cost_centre'));
+        $job_grade = implode(",", $request->get('job_grade'));
         $ea_form = Input::get('ea_form');
         $status = Input::get('status');
 
@@ -1414,6 +1591,9 @@ class AdminController extends Controller
             'statutory' => $statutory,
             'id_EaForm' => $ea_form,
             'status' => $status,
+            'id_applies_to' => $applies,
+            'id_cost_centre' => $cost_centre,
+            'id_job_master' => $job_grade
         ));
 
         return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
@@ -1428,14 +1608,20 @@ class AdminController extends Controller
         $type = Input::get('type');
         $amount = $request->input('amount');
         $statutory = implode(",", $request->get('statutory'));
+        $applies = implode(",", $request->get('applies'));
+        $cost_centre = implode(",", $request->get('cost_centre'));
+        $job_grade = implode(",", $request->get('job_grade'));
         $status = Input::get('status');
         $created_by = auth()->user()->id;
        
         DB::insert('insert into deductions
-        (id_company_master, code, name, type, amount, statutory, status, created_by) 
+        (id_company_master, code, name, type, amount, statutory, status, created_by,
+        id_applies_to, id_cost_centre, id_job_master) 
         values
-        (?,?,?,?,?,?,?,?)',
-        [$company_id, $code, $name, $type, $amount, $statutory, $status, $created_by]);
+        (?,?,?,?,?,?,?,?,
+        ?,?,?)',
+        [$company_id, $code, $name, $type, $amount, $statutory, $status, $created_by,
+        $applies, $cost_centre, $job_grade]);
 
         //---- view -------
         return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
@@ -1451,6 +1637,9 @@ class AdminController extends Controller
         $type = Input::get('type');
         $amount = $request->input('amount');
         $statutory = implode(",", $request->get('statutory'));
+        $applies = implode(",", $request->get('applies'));
+        $cost_centre = implode(",", $request->get('cost_centre'));
+        $job_grade = implode(",", $request->get('job_grade'));
         $status = Input::get('status');
 
         Deduction::where('id',$company_deduction_id)->update(
@@ -1461,12 +1650,77 @@ class AdminController extends Controller
             'amount' => $amount,
             'statutory' => $statutory,
             'status' => $status,
+            'id_applies_to' => $applies,
+            'id_cost_centre' => $cost_centre,
+            'id_job_master' => $job_grade
         ));
 
         return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
     }
 
    
+    public function editEmployeeProfileBasic(Request $request)
+    {          
+        $id = Session::get('user_id');
+
+        $email = $request->input('email');
+        $contact_no = $request->input('contact_no');
+        $address = $request->input('address');   
+
+        $name = $request->input('name');      
+
+        $created_by = auth()->user()->id;
+
+        User::where('id',$id)->update(array('email' => $email,
+        'name' => $name));
+        Employee::where('user_id',$id)->update(array('contact_no' =>$contact_no,'address'=> $address));
+       
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$id]); 
+    }
+
+    public function editProfilePopup(Request $request)
+    {          
+        $id = Session::get('user_id');
+
+        $ic_no = $request->input('ic_no');
+        $nationality = $request->input('nationality');
+        $gender = $request->input('gender');   
+
+        $no_child = $request->input('no_child');      
+        $altdobDateEdit = $request->input('altdobDateEdit');
+        $maritial_status = $request->input('maritial_status');
+           $license_no = $request->input('license_no');   
+           $race = $request->input('race');   
+
+        $altlicenseExpiryDateAddition = $request->input('altlicenseExpiryDateAddition');      
 
 
+        $created_by = auth()->user()->id;
+
+        Employee::where('user_id',$id)->update(array('ic_no' => $ic_no,'nationality' => $nationality,
+        'gender' => $gender,'total_children' => $no_child,'race'=>$race,
+        'dob' => $altdobDateEdit,'marital_status' => $maritial_status,
+        'driver_license_no' => $license_no,'driver_license_expiry_date' => $altlicenseExpiryDateAddition));
+
+       
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$id]); 
+    }
+
+    public function editCompanyPopup(Request $request)
+    {          
+        $id = Session::get('user_id');
+        $company_id = Input::get('company_id');
+
+        $tax_no = $request->input('tax_no');
+        $socso_no = $request->input('socso_no');
+        $epf_no = $request->input('epf_no');
+
+        Employee::where('user_id',$id)->update(array('company_id' => $company_id,'tax_no' => $tax_no,
+        'socso_no' => $socso_no,'epf_no' => $epf_no));
+
+       
+        return redirect()->route('admin/profile-employee/{id}',['id'=>$id]); 
+    }
+
+    
 }

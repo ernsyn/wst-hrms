@@ -11,6 +11,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 use App\Country;
 use App\Roles;
+use App\Bank;
+use App\CostCentre;
+use App\Department;
+use App\Branch;
+use App\Team;
+use App\EmployeePosition;
+use App\Company;
 
 use App\User;
 use App\Employee;
@@ -24,6 +31,7 @@ use App\EmployeeJob;
 use App\EmployeeSkill;
 use App\EmployeeVisa;
 use App\EmployeeEmergencyContact;
+use App\EmployeeGrade;
 
 class EmployeeController extends Controller
 {
@@ -63,8 +71,17 @@ class EmployeeController extends Controller
 
         $employee = Employee::with('user', 'employee_jobs')->find($id);
 
+        $bank_list = Bank::all();
+        $cost_centre = CostCentre::all();
+        $department = Department::all();
+        $team = Team::all();
+        $position = EmployeePosition::all();
+        $grade = EmployeeGrade::all();
+        $branch = Branch::all();
+        $countries = Country::all();
+        $companies = Company::all();
 
-        return view('pages.admin.employees.id', ['employee' => $employee]);        
+        return view('pages.admin.employees.id', ['employee' => $employee,'countries'=>$countries, 'team'=>$team,'bank_list'=>$bank_list,'branch'=>$branch, 'grade'=>$grade,'department'=>$department, 'position'=>$position,'companies'=>$companies,'cost_centre'=>$cost_centre]);        
     }
 
     public function add()
@@ -81,12 +98,18 @@ class EmployeeController extends Controller
     public function getDataTableDependents($id)
     {       
         $dependents = EmployeeDependent::where('emp_id', $id)->get();
+
+        foreach ($dependents as $dependent) {
+            $dependent->update_url = route('admin.employees.dependents.edit', ['emp_id' => $id, 'id' => $dependent->id]);
+        }
+
         return DataTables::of($dependents)->make(true);
     }
 
     public function getDataTableImmigrations($id)
     {       
         $immigrations = EmployeeImmigration::where('emp_id', $id)->get();
+        
         return DataTables::of($immigrations)->make(true);
     }
 
@@ -140,15 +163,54 @@ class EmployeeController extends Controller
 
 
     protected function postAdd(Request $request)
-    {                
+    {
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
+        $contact_no = $request->input('contact_no');       
+        $address = $request->input('address');
+        $company_id = $request->input('company_id');
+        $dob = $request->input('dob');       
+        $gender = $request->input('gender');
+        $race = $request->input('race');
+        $nationality = $request->input('nationality');       
+        $marital_status =  $request->input('marital_status');
+        $total_children = $request->input('total_child');
+        $ic_no = $request->input('ic_no');       
+        $tax_no = $request->input('tax_no');
+        $epf_no = $request->input('epf_no');
+        $driver_license_no = $request->input('driver_license_number');       
+        $driver_license_expiry_date = $request->input('driver_license_expiry_date');
+        $created_by = auth()->user()->id;
+
         $user = User::create($input);
         $user->assignRole('employee');
+        
+        $employee =  new Employee();
+        $employee->user_id = $user->id;
+        $employee->address =$address;
+        $employee->company_id =$company_id;
+        $employee->contact_no =$contact_no;
+        $employee->dob=$dob;
+        $employee->gender =$gender;
+        $employee->race =$race;
+        $employee->nationality=$nationality;
+
+        $employee->marital_status=$marital_status;
+        $employee->total_children =$total_children;
+        $employee->ic_no =$ic_no;
+        $employee->tax_no=$tax_no;
+
+
+        $employee->epf_no=$epf_no;
+        $employee->driver_license_no =$driver_license_no;
+        $employee->driver_license_expiry_date =$driver_license_expiry_date;
+        $employee->created_by=$created_by;
+        // Populate other fields
+        $employee->save();
+
 
         return redirect()->route('admin.dashboard')->with('status', 'Employee successfully added!');
-
     }
 
 
@@ -307,9 +369,9 @@ class EmployeeController extends Controller
         $name = $request->input('name');
         $relationship = $request->input('relationship');
        
-        Dependent::where('id', $id)->update(array('dependent_name' => $name,'dependent_relationship' => $relationship));
+        EmployeeDependent::where('id', $id)->update(array('name' => $name,'relationship' => $relationship));
 
-        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]); 
+        return redirect()->route('admin.employees.id', ['id' => $emp_id]);
     }
 
     public function postEditEmergencyContact(Request $request, $emp_id, $id)

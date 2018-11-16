@@ -8,6 +8,7 @@ use App\Department;
 use App\Roles;
 use App\EmployeeMainPosition;
 use App\User;
+use App\Employee;
 use Illuminate\Support\Facades\Input;
 use DB;
 use Carbon\Carbon;
@@ -49,5 +50,65 @@ class EmployeeDataController extends Controller
     }
   
 
+    protected function insert(Request $request)
+    {                
+        $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
+
+        $contact_no = $request->input('contact_no');       
+        $address = $request->input('address');
+        $company_id = Input::get('company_id');
+        $dob = $request->input('dob');       
+        $gender = $request->input('gender');
+        $race = $request->input('race');
+        $nationality = $request->input('nationality');       
+        $marital_status =  $request->input('marital_status');
+        $total_children = $request->input('total_child');
+        $ic_no = $request->input('ic_no');       
+        $tax_no = $request->input('tax_no');
+        $epf_no = $request->input('epf_no');
+        // $socso_no = $request->input('socso_no');       
+        // $insurance_no = $request->input('insurance_no');
+        // $pcb_group = $request->input('pcb_group');
+        $driver_license_no = $request->input('driver_license_number');       
+        $driver_license_expiry_date = $request->input('driver_license_expiry_date');
+        // $basic_salary = $request->input('basic_salary');
+        // $confirmed_date = $request->input('confirmed_date');         
+        $created_by = auth()->user()->id;
+        // $code = $request->input('code');
+        // $updated_by =$request->input('updated_by');
+
+
+        $user = User::create($input);
+        $user->assignRole('employee');
+        
+//$package = Packages::create($request->all());
+        $employee =  new Employee();
+$employee->user_id = $user->id;
+$employee->address =$address;
+$employee->company_id =$company_id;
+$employee->contact_no =$contact_no;
+$employee->dob=$dob;
+$employee->gender =$gender;
+$employee->race =$race;
+$employee->nationality=$nationality;
+
+$employee->marital_status=$marital_status;
+$employee->total_children =$total_children;
+$employee->ic_no =$ic_no;
+$employee->tax_no=$tax_no;
+
+
+$employee->epf_no=$epf_no;
+$employee->driver_license_no =$driver_license_no;
+$employee->driver_license_expiry_date =$driver_license_expiry_date;
+$employee->created_by=$created_by;
+// Populate other fields
+$employee->save();
+
+
+        return view('home');
+
+    }
 
 }

@@ -127,7 +127,7 @@ $('#setupJobconfigureCostCentreTable').DataTable({
     initComplete: function () {
         this.api().columns(1).every(function () {
             var that = this;
-            $('input', this.footer()).on('keyup change', function () {
+            $('div.dataTables_wrapper div.dataTables_filter input', this.footer()).on('keyup change', function () {
                 if (that.search() !== this.value) {
                     that
                         .search(this.value)

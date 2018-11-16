@@ -10,29 +10,54 @@
         </div>
         @endif
         <div class="container-fluid">
-            <form method="POST" action="{{ route('register_employee4') }}" id="register_employee4">
+            <form method="POST" action="{{ route('register_employee') }}" id="register_employee">
                 @csrf
                 <div class="row">
                     <div class="col-xl-2 d-flex justify-content-center">
                         <i class="fas fa-user-circle fa-10x text-info"></i>
                     </div>
                     <div class="col-xl-8">
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                    <input type="text" readonly class="text-capitalize form-control-plaintext form-control-lg font-weight-bold" value="{{$user->name}}">                         
-                            </div>
-                        </div>
+     
 
                        <div class="form-group row">                        
-                            <label class="col-md-2 col-form-label">Mobile No</label>
+                            <label class="col-md-2 col-form-label">Name</label>
                             <div class="col-md-10">
-                                <input id="contact_no" type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" placeholder="012-34567890" name="contact_no" value="{{ old('contact_no') }}" required>
-                                @if ($errors->has('contact_no'))
+                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="012-34567890" name="name" value="{{ old('name') }}" required>
+                                @if ($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('contact_no') }}</strong>
+                                    <strong>{{ $errors->first('name') }}</strong>
                                 </span>
                                 @endif
                             </div>
+                  <br/>
+                  <label class="col-md-2 col-form-label">Email</label>
+                  <div class="col-md-10">
+                      <input id="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="012-34567890" name="email" value="{{ old('email') }}" required>
+                      @if ($errors->has('email'))
+                      <span class="invalid-feedback" role="alert">
+                          <strong>{{ $errors->first('email') }}</strong>
+                      </span>
+                      @endif
+                  </div>
+        <br></br>
+        <label class="col-md-2 col-form-label">Password</label>
+        <div class="col-md-10">
+                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="password"
+                name="password" value="{{ old('password') }}" required>            @if ($errors->has('password'))
+            <span class="invalid-feedback" role="alert">
+            <strong>{{ $errors->first('password') }}</strong>
+        </span> @endif
+        </div>
+<br></br>
+                  <label class="col-md-2 col-form-label">Mobile No</label>
+                  <div class="col-md-10">
+                      <input id="contact_no" type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" placeholder="012-34567890" name="contact_no" value="{{ old('contact_no') }}" required>
+                      @if ($errors->has('contact_no'))
+                      <span class="invalid-feedback" role="alert">
+                          <strong>{{ $errors->first('contact_no') }}</strong>
+                      </span>
+                      @endif
+                  </div>
                   <br></br>
                             <label class="col-md-2 col-form-label">Address</label>
                             <div class="col-md-10">
@@ -44,6 +69,7 @@
                                 </span>
                                 @endif
                             </div>
+                          
                         </div>
                     </div>
                 </div>
@@ -113,7 +139,8 @@
                                         <br></br>
                                         <label class="col-md-5 col-form-label">Date of Birth:</label>
                                         <div class="col-md-7">
-                                            <input id="dobDate" type="text" class="form-control" readonly>                                            
+                                            <input id="dobDate" type="text" class="form-control" readonly>
+                                            <input id="altdobDate" type="text" class="form-control" name="dob" hidden>                                            
                                         </div>
                                         <br></br>
                                         <label class="col-md-5 col-form-label">Marital Status:</label>
@@ -121,8 +148,7 @@
                                             <select class ="form-control" id="maritial_status" name="maritial_status">
                                                 <option value="Single">Single</option>
                                                 <option value="Married">Married</option>
-                                                <option value="Widowed">Widowed</option>
-                                                <option value="Divorced">Divorced</option>
+    
                                            </select>
                                         </div>
                                         <br></br>
@@ -167,6 +193,7 @@
                                         <label class="col-md-5 col-form-label">License Expiry Date:</label>
                                         <div class="col-md-7">
                                             <input id="licenseExpiryDate" type="text" class="form-control" readonly>
+                                            <input id="altlicenseExpiryDate" type="text" class="form-control" name="driver_license_expiry_date" hidden>
                                         </div>
                                     </div>
                                 </div>
@@ -198,14 +225,14 @@
                                         <br></br>
                                         <label class="col-md-5 col-form-label">Company:</label>
                                         <div class="col-md-7">
-                                            <select class="form-control{{ $errors->has('companies') ? ' is-invalid' : '' }}" name="companies" id="companies">
+                                            <select class="form-control{{ $errors->has('company_id') ? ' is-invalid' : '' }}" name="company_id" id="company_id">
                                                 @foreach($companies as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                                 @endforeach
                                               </select>                                
-                                              @if ($errors->has('companies'))
+                                              @if ($errors->has('company_id'))
                                                   <span class="invalid-feedback" role="alert">
-                                                      <strong>{{ $errors->first('companies') }}</strong>
+                                                      <strong>{{ $errors->first('company_id') }}</strong>
                                                   </span>
                                               @endif
                                         </div>

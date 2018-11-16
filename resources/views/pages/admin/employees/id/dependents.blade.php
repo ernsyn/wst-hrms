@@ -54,7 +54,7 @@
 </div>
 
 <!-- UPDATE -->
-<div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel"
+<div class="modal fade" id="dependentModal" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -65,7 +65,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.employees.dependents.edit', ['emp_id' => $id, 'id' => 1]) }}" id="edit_emergency_contact">
+                <form method="POST"  id="edit-dependent-form">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -159,11 +159,32 @@
                 "data": "dob"
             },
             {
-                "data": null, // can be null or undefined
-                "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#dependentModal"><i class="far fa-edit"></i></button>'
+                data: "update_url",
+                render: function (data, type, row, meta) {
+                    return '<button type="button" class="open-update-dependent-modal btn btn-success btn-sm" data-toggle="modal" data-action="' + data + '" data-target="#dependentModal"><i class="far fa-edit"></i></button>' ;
+                }
             }
         ]
     });
 
+    $(function () {
+        console.log("Calling function");
+        $(document).on("click", ".open-update-dependent-modal", function () {
+            console.log("Updating route: ", $(this).data('action'));
+            $('#edit-dependent-form').attr("action", $(this).data('action'));
+            $('#dependentModal').modal('show');
+        });
+
+        $('#my_modal').on('show.bs.modal', function(e) {
+
+            //get data-id attribute of the clicked element
+            var bookId = $(e.relatedTarget).data('book-id');
+
+            //populate the textbox
+            $(e.currentTarget).find('input[name="bookId"]').val(bookId);
+        });
+    });
+
 </script>
+
 @append

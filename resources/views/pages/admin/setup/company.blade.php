@@ -229,7 +229,7 @@
             <div class="row pb-3">
                 <div class="col-auto mr-auto"></div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addCompanyPopup">
+                    <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyPopup">
                         Add Company
                 </div>
             </div>
@@ -241,15 +241,15 @@
                             <tr>
                                 <th>No</th>
                                 <th>Name</th>
-                                <th>Description</th>
-                                <th>Image</th>
+                                {{-- <th>Description</th>
+                                <th>Image</th> --}}
                                 <th>Tax No</th>
                                 <th>EPF No</th>
                                 <th>Socso No</th>
                                 <th>EIS No</th>
                                 <th>Last Updated</th>
                   
-                                <th>Account Number</th>
+                                {{-- <th>Account Number</th> --}}
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -258,15 +258,15 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{$row['name']}}</td>
-                                <td>{{$row['description']}}</td>
-                                <td>{{$row['registration_no']}}</td>
+                                {{-- <td>{{$row['description']}}</td> --}}
+                                {{-- <td>{{$row['registration_no']}}</td> --}}
                                 <td>{{$row['tax_no']}}</td>
                                 <td>{{$row['epf_no']}}</td>
                                 <td>{{$row['socso_no']}}</td>
                                 <td>{{$row['eis_no']}}</td>
                                 <td>Update by: {{$row['updated_by']}}<br><br> Updated on: {{$row['updated_by updated_at']}}</td>
                         
-                                <td>          <button onclick="window.location='{{ url('/admin/company-edit/'.$row['id']) }}';" class="btn btn-default">View</button></td>
+                                {{-- <td>          <button onclick="window.location='{{ url('/admin/company-edit/'.$row['id']) }}';" class="btn btn-default">View</button></td> --}}
                                 <td><button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     data-company-id="{{$row['id']}}"
                                     data-company-name="{{$row['name']}}"
