@@ -161,7 +161,7 @@
             {
                 data: "update_url",
                 render: function (data, type, row, meta) {
-                    return '<button type="button" class="open-update-dependent-modal btn btn-success btn-sm" data-toggle="modal" data-action="' + data + '" data-target="#dependentModal"><i class="far fa-edit"></i></button>' ;
+                    return '<button type="button" class="open-update-dependent-modal btn btn-success btn-sm" data-toggle="modal" data-action="' + encodeURI(JSON.stringify(row)) + '" data-target="#dependentModal"><i class="far fa-edit"></i></button>' ;
                 }
             }
         ]
@@ -170,7 +170,7 @@
     $(function () {
         console.log("Calling function");
         $(document).on("click", ".open-update-dependent-modal", function () {
-            console.log("Updating route: ", $(this).data('action'));
+            console.log("Updating route: ", JSON.parse(decodeURI($(this).data('action'))));
             $('#edit-dependent-form').attr("action", $(this).data('action'));
             $('#dependentModal').modal('show');
         });
