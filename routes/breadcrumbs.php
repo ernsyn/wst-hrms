@@ -70,7 +70,7 @@ Breadcrumbs::for('admin.employees.add', function ($trail) {
 // Home > Settings > Company
 Breadcrumbs::for('admin.settings.companies', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Companies Settings', route('admin.settings.companies'));
+    $trail->push('Settings: Companies', route('admin.settings.companies'));
 });
 
 // Home > Settings > Company - Add
@@ -126,6 +126,11 @@ Breadcrumbs::for('admin.settings.teams.edit', function ($trail, $id) {
 
 
 // // Home > Settings > Cost-Centre
+Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Cost Centres', route('admin.settings.cost-centres'));
+});
+
 Breadcrumbs::for('admin.settings.cost-centres.add', function ($trail) {
     $trail->parent('admin.settings.cost-centres');
     $trail->push('Add Cost-Centres', route('admin.settings.cost-centres.add'));
@@ -140,34 +145,29 @@ Breadcrumbs::for('admin.settings.cost-centres.edit', function ($trail, $id) {
 // // Home > Settings > Department
 Breadcrumbs::for('admin.settings.departments', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Departments Settings', route('admin.settings.departments'));
+    $trail->push('Settings: Departments', route('admin.settings.departments'));
 });
 
-// // Home > Settings > Cost Center
-Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Cost Center Settings', route('admin.settings.cost-centres'));
-});
 // // Home > Settings > Team
 Breadcrumbs::for('admin.settings.teams', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Teams Settings', route('admin.settings.teams'));
+    $trail->push('Settings: Teams', route('admin.settings.teams'));
 });
 
 // Home > Settings > Grade
 Breadcrumbs::for('admin.settings.grades', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Grades Settings', route('admin.settings.grades'));
+    $trail->push('Settings: Grades ', route('admin.settings.grades'));
 });
 
 Breadcrumbs::for('admin.settings.branches', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Branches Settings', route('admin.settings.branches'));
+    $trail->push('Settings: Branches', route('admin.settings.branches'));
 });
 
 Breadcrumbs::for('admin.settings.positions', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Employee Positions Settings', route('admin.settings.positions'));
+    $trail->push('Settings: Employee Positions', route('admin.settings.positions'));
 });
 
 // Home > Admin > Leave Request
