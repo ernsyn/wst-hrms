@@ -179,6 +179,8 @@ class EmployeeController extends Controller
         $user = User::create($validatedUserData);
         $user->assignRole('employee');
 
+
+        $validatedEmployeeData['user_id'] = $user->id;
         $employee = Employee::create($validatedEmployeeData);
 
         // $user->employee()->save($employee);
@@ -229,7 +231,7 @@ class EmployeeController extends Controller
         // $employee->save();
 
 
-        return redirect()->route('admin.dashboard')->with('status', 'Employee successfully added!');
+        return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
     }
 
 

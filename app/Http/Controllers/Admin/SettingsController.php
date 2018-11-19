@@ -100,29 +100,6 @@ class SettingsController extends Controller
         return view('pages.admin.settings.edit-company', ['company' => $company]);
     }
 
-    public function postEditCompany(Request $request, $id)
-    {              
-        
-        $companyData = $request->validate([
-            'name' => 'required|unique:companies,name,'.$id,
-            'url' => 'required',
-            'registration_no' => 'required',
-            'description' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-            'tax_no' => 'required',
-            'epf_no' => 'required',
-            'socso_no' => 'required',
-            'eis_no' => 'required',
-            'code' => 'required|unique:companies,code,'.$id,
-            'status' => 'required',
-        ]);
-
-
-        Company::where('id', $id)->update($companyData);
-       
-        return redirect()->route('admin.settings.companies');
-    }
 
     public function displayPositions()
     {
@@ -304,11 +281,7 @@ class SettingsController extends Controller
             return redirect()->route('admin.settings.cost-centres');
         }
 
-        public function displayDepartments()
-        {
-            $department = Department::all();
-            return view('pages.admin.settings.department', ['department'=>$department]);
-        }
+      
     
         public function addDepartment()
         {
@@ -331,22 +304,6 @@ class SettingsController extends Controller
             $costs = CostCentre::find($id);
     
             return view('pages.admin.settings.edit-department', ['costs' => $costs]);
-        }
-    
-
-        public function postEditCostCentre(Request $request,$id)
-        {              
-            
-            $costCentreData = $request->validate([
-                'name' => 'required|unique:cost_centres,name,'.$id,
-                'seniority_pay' =>'required',
-                'payroll_type' =>'required'
-    
-            ]);
-    
-            CostCentre::where('id', $id)->update($costCentreData);
-           
-            return redirect()->route('admin.settings.cost-centres');
         }
 
 
@@ -491,7 +448,7 @@ class SettingsController extends Controller
 
 
 
-    public function editDepartment(Request $request)
+    public function postEditDepartment(Request $request)
     {     
         $department_id = $request->input('department_id');          
         $department_name = Input::get('department_name');   
@@ -530,37 +487,36 @@ class SettingsController extends Controller
         return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }
 
+  
 
+    public function postEditCompany(Request $request, $id)
+    {              
+       
+        $companyData = $request->validate([
+            'name' => 'required|unique:companies,name,'.$id,
+            'url' => 'required',
+            'registration_no' => 'required',
+            'description' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'tax_no' => 'required',
+            'epf_no' => 'required',
+            'socso_no' => 'required',
+            'eis_no' => 'required',
+            'code' => 'required|unique:companies,code,'.$id,
+            'status' => 'required',
+        ]);
 
-
-
-
+        Company::where('id', $id)->update($companyData);
+       
+        return redirect()->route('admin.settings.companies');
+    }
 
     public function displayDepartments()
     {
         $departments = Department::all();
         return view('pages.admin.settings.department', ['departments'=>$departments]);
     }
-
-    public function postAddDepartment(Request $request)
-    {        
-        $name = $request->input('name');
-        $created_by = auth()->user()->id;
-       
-        DB::insert('insert into departments
-        (name, created_by) 
-        values
-        (?,?)',
-        [$name, $created_by]);
-
-        $departments = Department::all();
-        return view('pages.admin.settings.department', ['departments'=>$departments]);
-    }
-
-
-
-    
-
 
 
     public function displayCompanyDetails($id)
