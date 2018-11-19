@@ -180,14 +180,7 @@ $('#dobDateEdit').datepicker({
     format: 'dd/mm/yy'
 });
 
-$('#dobDate').datepicker({
-    altField: "#altdobDate",
-    altFormat: 'yy-mm-dd',
-    format: 'dd/mm/yy',
-    changeMonth: true,
-    changeYear: true,
-    yearRange: "-80:+0"
-});
+
 $('#updatedobDate').datepicker({
     altField: "#altupdobDate",
     altFormat: 'yy-mm-dd',

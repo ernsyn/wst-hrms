@@ -33,6 +33,8 @@ use App\EmployeeVisa;
 use App\EmployeeEmergencyContact;
 use App\EmployeeGrade;
 
+use App\Http\Requests\Admin\AddEmployee;
+
 class EmployeeController extends Controller
 {
     public function __construct()
@@ -74,7 +76,7 @@ class EmployeeController extends Controller
         $countries = Country::all();
         $roles = Roles::all();
 
-        return view('pages.admin.employees.add.post', compact('countries','roles'));
+        return view('pages.admin.employees.add', compact('countries','roles'));
     }
 
 
@@ -147,52 +149,55 @@ class EmployeeController extends Controller
     }
 
 
-    protected function postAdd(Request $request)
+    protected function postAdd(AddEmployee $request)
     {
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
+        $validatedData = $request->validated();
 
-        $contact_no = $request->input('contact_no');       
-        $address = $request->input('address');
-        $company_id = $request->input('company_id');
-        $dob = $request->input('dob');       
-        $gender = $request->input('gender');
-        $race = $request->input('race');
-        $nationality = $request->input('nationality');       
-        $marital_status =  $request->input('marital_status');
-        $total_children = $request->input('total_child');
-        $ic_no = $request->input('ic_no');       
-        $tax_no = $request->input('tax_no');
-        $epf_no = $request->input('epf_no');
-        $driver_license_no = $request->input('driver_license_number');       
-        $driver_license_expiry_date = $request->input('driver_license_expiry_date');
-        $created_by = auth()->user()->id;
 
-        $user = User::create($input);
-        $user->assignRole('employee');
+        // $input = $request->all();
+        // $input['password'] = Hash::make($input['password']);
+
+        // $contact_no = $request->input('contact_no');       
+        // $address = $request->input('address');
+        // $company_id = $request->input('company_id');
+        // $dob = $request->input('dob');       
+        // $gender = $request->input('gender');
+        // $race = $request->input('race');
+        // $nationality = $request->input('nationality');       
+        // $marital_status =  $request->input('marital_status');
+        // $total_children = $request->input('total_child');
+        // $ic_no = $request->input('ic_no');       
+        // $tax_no = $request->input('tax_no');
+        // $epf_no = $request->input('epf_no');
+        // $driver_license_no = $request->input('driver_license_number');       
+        // $driver_license_expiry_date = $request->input('driver_license_expiry_date');
+        // $created_by = auth()->user()->id;
+
+        // $user = User::create($input);
+        // $user->assignRole('employee');
         
-        $employee =  new Employee();
-        $employee->user_id = $user->id;
-        $employee->address =$address;
-        $employee->company_id =$company_id;
-        $employee->contact_no =$contact_no;
-        $employee->dob=$dob;
-        $employee->gender =$gender;
-        $employee->race =$race;
-        $employee->nationality=$nationality;
+        // $employee =  new Employee();
+        // $employee->user_id = $user->id;
+        // $employee->address =$address;
+        // $employee->company_id =$company_id;
+        // $employee->contact_no =$contact_no;
+        // $employee->dob=$dob;
+        // $employee->gender =$gender;
+        // $employee->race =$race;
+        // $employee->nationality=$nationality;
 
-        $employee->marital_status=$marital_status;
-        $employee->total_children =$total_children;
-        $employee->ic_no =$ic_no;
-        $employee->tax_no=$tax_no;
+        // $employee->marital_status=$marital_status;
+        // $employee->total_children =$total_children;
+        // $employee->ic_no =$ic_no;
+        // $employee->tax_no=$tax_no;
 
 
-        $employee->epf_no=$epf_no;
-        $employee->driver_license_no =$driver_license_no;
-        $employee->driver_license_expiry_date =$driver_license_expiry_date;
-        $employee->created_by=$created_by;
-        // Populate other fields
-        $employee->save();
+        // $employee->epf_no=$epf_no;
+        // $employee->driver_license_no =$driver_license_no;
+        // $employee->driver_license_expiry_date =$driver_license_expiry_date;
+        // $employee->created_by=$created_by;
+        // // Populate other fields
+        // $employee->save();
 
 
         return redirect()->route('admin.dashboard')->with('status', 'Employee successfully added!');

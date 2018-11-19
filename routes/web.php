@@ -21,8 +21,36 @@ Route::group(['middleware' => ['guest']], function () {
 Auth::routes();
 
 
-   // SECTION: Admin - Employee
-    Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+// MODE: Employee
+Route::group(['middleware' => ['auth', 'role:employee']], function() {
+    Route::get('', 'HomeController@index')->name('employee.dashboard');
+    
+    Route::get('/employee','EmployeeController@displayProfile')->name('employee');
+    Route::get('profile','EmployeeController@displayProfile')->name('profile');
+    Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
+    Route::get('employeeimmigrationdata','EmployeeController@displayImmigration')->name('immigration');
+    Route::get('qualificationcompaniesdata','EmployeeController@displayQualificationCompanies')->name('companies');
+    Route::get('qualificationeducationsdata','EmployeeController@displayQualificationEducations')->name('educations');
+    Route::get('qualificationskillsdata','EmployeeController@displayQualificationSkills')->name('skills');
+    Route::get('employeevisadata','EmployeeController@displayVisa')->name('visa');
+    Route::get('employeebankdata','EmployeeController@displayBank')->name('bank');
+    Route::get('jobdata','EmployeeController@displayJob')->name('job');
+    Route::get('reporttodata','EmployeeController@displayReportTo')->name('reportto');
+    Route::get('historydata','EmployeeController@displayHistory')->name('history');
+    Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
+
+    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('employee/leaveapplication');
+    Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
+    Route::get('leaverequest','EmployeeController@displayLeaveRequest')->name('employee/leaverequest');
+    Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
+    Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
+
+    Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
+});
+
+
+// MODE: Admin
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
     Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
     
     // View
@@ -43,7 +71,7 @@ Auth::routes();
 
     
     // Add / Edit
-    Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add.post');
+    Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add');
     Route::post('employees/add','Admin\EmployeeController@postAdd')->name('admin.employees.add.post');
 
     Route::post('employees/{emp_id}/emergency-contacts','Admin\EmployeeController@postEmergencyContact')->name('admin.employees.emergency-contacts.post')->where('id', '[0-9]+');
@@ -112,7 +140,7 @@ Auth::routes();
     Route::get('e-leave/apply-on-behalf','Admin\ELeaveController@displayLeaveRequest')->name('admin.e-leave.apply-on-behalf');
     Route::get('e-leave/configuration','Admin\ELeaveController@displayLeaveBalance')->name('admin.e-leave.configuration');
     Route::get('e-leave/configuration/holidays','Admin\ELeaveController@displayLeaveHoliday')->name('admin.e-leave.configuration.holidays');
-    Route::get('e-leave/configuration/leavetypes','Admin\ELeaveController@displayLeaveTypes')->name('admin.e-leave.configuration.leavetypes');
+    Route::get('e-leave/configuration/leave-types','Admin\ELeaveController@displayLeaveTypes')->name('admin.e-leave.configuration.leave-types');
     Route::get('e-leave/configuration/working-days','Admin\ELeaveController@displayLeaveHoliday')->name('admin.e-leave.configuration.working-days');
 
 //later
@@ -120,7 +148,6 @@ Auth::routes();
     Route::post('disapprove_leave', 'AdminController@disapprovedLeaveRequest')->name('disapprove_leave'); // merge
     Route::post('add_leave_balance','AdminController@addLeaveBalance')->name('add_leave_balance'); 
 
- 
 
 
 
@@ -142,63 +169,22 @@ Auth::routes();
 
 });
 
-    Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+// MODE: Super Admin
+Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin']], function() {
     Route::get('', 'SuperAdmin\DashboardController@index')->name('super-admin.dashboard');
-
-
-    //settings-view 
-    Route::get('settings/company', 'Super-admin\SettingsController@displaySetupCompany')->name('admin.settings.company');
-    Route::get('settings/add-company', 'Super-admin\SettingsController@displayAddCompany')->name('admin.settings.add-company');
-    Route::get('settings/job', 'Super-admin\SettingsController@displaySetupJob')->name('admin-settings-job');
-    Route::get('settings/cost-centre', 'Super-admin\SettingsController@displayCostCentre')->name('admin.settings.cost-centre');
-    Route::get('settings/department', 'Super-admin\SettingsController@displayDepartment')->name('admin.settings.department');
-    Route::get('settings/team', 'Super-admin\SettingsController@displayTeam')->name('admin.settings.team');
-    Route::get('settings/position', 'Super-admin\SettingsController@displayPosition')->name('admin.settings.position');
-    Route::get('settings/grade', 'Super-admin\SettingsController@displayGrade')->name('admin.settings.grade');
-    Route::get('settings/branch', 'Super-admin\SettingsController@displaySetupBranch')->name('admin.settings.branch');
-      //setting-add
-    Route::post('settings/department/add','Super-admin\SettingsController@addDepartment')->name('Super-admin.settings.department.add.post');
-    Route::post('settings/branch/add','Super-admin\SettingsController@addBranch')->name('Super-admin.settings.branch.add.post');
-    Route::post('settings/team/add','Super-admin\SettingsController@addTeam')->name('Super-admin.settings.team.add.post');
-    Route::post('settings/position/add','Super-admin\SettingsController@addPosition')->name('Super-admin.settings.position.add.post');
-    Route::post('settings/grade/add','Super-admin\SettingsController@addGrade')->name('Super-admin.settings.grade.add.post');
-    Route::post('settings/company/add','Super-admin\SettingsController@addSetupCompany')->name('Super-admin.settings.company.add.post');
-    Route::post('settings/holiday/add','Super-admin\SettingsController@addHoliday')->name('Super-admin.settings.holiday.add.post');
-    Route::post('settings/company-bank/add','Super-admin\SettingsController@addCompanyBank')->name('Super-admin.settings.company-bank.add.post');
-    Route::post('settings/security-group/add','Super-admin\SettingsController@addSecurityGroup')->name('Super-admin.settings.security-group.add.post');
-    Route::post('settings/company-addition/add','Super-admin\SettingsController@addCompanyAddition')->name('Super-admin.settings.company-addition.add.post');
-    Route::post('settings/company-deduction/add','Super-admin\SettingsController@addCompanyDeduction')->name('Super-admin.settings.company-deduction.add.post');
-    Route::post('settings/cost-centre/add','Super-admin\SettingsController@addCostCentre')->name('Super-admin.settings.cost-centre.add.post');
-     //setting-edit
-    Route::post('settings/cost-centre/edit','Super-admin\SettingsController@editCostCentre')->name('Super-admin.settings.cost_centre.edit.post');
-    Route::post('settings/grade/edit','Super-admin\SettingsController@editGrade')->name('Super-admin.settings.grade.edit.post');
-    Route::post('settings/position/edit','Super-admin\SettingsController@editPosition')->name('Super-admin.settings.position.edit.post');
-    Route::post('settings/department/edit','Super-admin\SettingsController@editDepartment')->name('Super-admin.settings.department.edit.post');
-    Route::post('settings/team/edit','Super-admin\SettingsController@editTeam')->name('Super-admin.settings.team.edit.post');
-    Route::post('settings/branch/edit','Super-admin\SettingsController@editBranch')->name('Super-admin.settings.branch.edit.post');
-    Route::post('settings/company/edit','Super-admin\SettingsController@editCompany')->name('Super-admin.settings.company.edit.post');
-    Route::post('settings/leave-balance/edit','Super-admin\SettingsController@editLeaveBalance')->name('Super-admin.settings.leave-balance.edit.post');
-    Route::post('settings/company-bank/edit','Super-admin\SettingsController@editCompanyBank')->name('Super-admin.settings.company-bank.edit.post');
-    Route::post('settings/security-group/edit','Super-admin\SettingsController@editSecurityGroup')->name('Super-admin.settings.security-group.edit.post');
-    Route::post('settings/company-addition/edit','Super-admin\SettingsController@editCompanyAddition')->name('Super-admin.settings.company-addition.edit.post');
-    Route::post('settings/company-deduction/edit','Super-admin\SettingsController@editCompanyDeduction')->name('Super-admin.settings.company-deduction.edit.post');
-     
-
 });
 
-    //manager 
-    Route::group(['prefix' => 'manager', 'middleware' => ['auth', 'role:manager']], function() {
-    Route::get('', 'Manager\DashboardController@index')->name('manager.dashboard');
-    Route::get('e-leave','Manager\ELeaveController@displayLeaveApplication')->name('admin.e-leave'); // on behalf
-    Route::get('e-leave/edit/{id}','Manager\ELeaveController@displayEmployeeLeave')->name('admin.edit');
-    Route::get('e-leave/apply-on-behalf','Manager\ELeaveController@displayLeaveRequest')->name('admin.e-leave.apply-on-behalf');
-    
-    });
+
+// MODE: Manager
+// Route::group(['prefix' => 'manager', 'middleware' => ['auth', 'role:manager']], function() {
+//     Route::get('', 'Manager\DashboardController@index')->name('manager.dashboard');
+//     Route::get('e-leave','Manager\ELeaveController@displayLeaveApplication')->name('admin.e-leave'); // on behalf
+//     Route::get('e-leave/edit/{id}','Manager\ELeaveController@displayEmployeeLeave')->name('admin.edit');
+//     Route::get('e-leave/apply-on-behalf','Manager\ELeaveController@displayLeaveRequest')->name('admin.e-leave.apply-on-behalf');
+// });
     
 // MODE: Employee
-    Route::group(['middleware' => ['auth', 'role:super-admin|employee']], function() {
-    Route::get('', 'HomeController@index')->name('home');
-    
+Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
     Route::get('/profile','Employee\EmployeeController@displayProfile')->name('profile');
 

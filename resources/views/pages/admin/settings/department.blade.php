@@ -1,4 +1,4 @@
-@extends('layouts.base') 
+@extends('layouts.admin-base') 
 @section('content')
 
 <!-- ADD -->
@@ -12,7 +12,7 @@
           </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_department') }}" id="add_department">
+                <form method="POST" action="{{ route('admin.settings.department.add.post') }}" id="add_department">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -45,7 +45,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_department') }}" id="edit_visa">
+                <form method="POST" action="{{ route('admin.settings.department.edit.post') }}" id="edit_visa">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">

@@ -107,14 +107,14 @@
             </ul>
         </li>
         {{-- SECTION: E-Leave --}}
-        <li class="menu-section {{ request()->is('admin.leaverequest','admin.e-leave.configuration.holidays','','admin.configuration','admin.configuration.leavetypes') ? 'active' : '' }}">
+        <li class="menu-section {{ request()->is('admin/e-leave*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1"><i class="far fa-calendar-alt"></i></div>
                     <div class="col-10">E-Leave</div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('admin.e-leave','admin.e-leave.configuration.holidays','','admin.configuration','admin.configuration.leavetypes') ? 'show' : '' }}"
+            <ul class="collapse list-unstyled {{ request()->is('admin/e-leave*') ? 'show' : '' }}"
                 id="leaveSubmenu">
                 {{-- OPTION: Leave Request --}}
                 <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
@@ -129,12 +129,12 @@
                     <a href="">Leave Application On Behalf</a>
                 </li>
                 {{-- OPTION: Leave Balance --}}
-                <li class="menu-option {{ request()->is('admin.configuration') ? 'active' : '' }}">
-                    <a href="{{ route('admin.configuration') }}">Leave Balance</a>
+                <li class="menu-option {{ request()->is('admin/e-leave/configuration') ? 'active' : '' }}">
+                    <a href="{{ route('admin.e-leave.configuration') }}">Leave Balance</a>
                 </li>
                 {{-- OPTION: Leave Type --}}
-                <li class="menu-option {{ request()->is('admin.configuration.leavetypes') ? 'active' : '' }}">
-                    <a href="{{ route('admin.configuration.leavetypes') }}">Leave Type</a>
+                <li class="menu-option {{ request()->is('admin.e-leave.configuration.leave-types') ? 'active' : '' }}">
+                    <a href="{{ route('admin.e-leave.configuration.leave-types') }}">Leave Type</a>
                 </li>
             </ul>
         </li>

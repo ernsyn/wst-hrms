@@ -185,7 +185,7 @@ class ELeaveController extends Controller
         $positions = EmployeePosition::all();
         $grade = EmployeeGrade::all();
         
-        return view('pages.admin.setup.job-configure', ['costs'=>$costs, 'departments'=>$departments, 'teams'=>$teams, 'positions'=>$positions, 'grade'=>$grade]);
+        return view('pages.admin.settings.job-configure', ['costs'=>$costs, 'departments'=>$departments, 'teams'=>$teams, 'positions'=>$positions, 'grade'=>$grade]);
     }
 
   

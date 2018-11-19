@@ -9,25 +9,25 @@
         </div>  
         <ul class="list-group list-group-flush">
             @if($initCheck["companiesCount"] <= 0)
-                <li class="init-warning list-group-item"><span>There should be at least one <b>Company</b> created</span><a href="{{ route('admin.settings.setting-company') }}"  class="btn btn-sm btn-primary float-right">Add Company</a></li>
+                <li class="init-warning list-group-item"><span>There should be at least one <b>Company</b> created</span><a href="{{ route('admin.settings.company') }}"  class="btn btn-sm btn-primary float-right">Add Company</a></li>
             @endif
             @if($initCheck["costCentresCount"] <= 0)
-                <li class="init-warning list-group-item"><span>There should be at least one <b>Cost Centre</b> created</span><a href="{{ route('admin.settings.setting-cost-centre') }}"  class="btn btn-sm btn-primary float-right">Add Cost Centre</a></li>
+                <li class="init-warning list-group-item"><span>There should be at least one <b>Cost Centre</b> created</span><a href="{{ route('admin.settings.cost-centre') }}"  class="btn btn-sm btn-primary float-right">Add Cost Centre</a></li>
             @endif
             @if($initCheck["departmentsCount"] <= 0)
-                <li class="init-warning list-group-item"><span>There should be at least one <b>Department</b> created</span><a href="{{ route('admin.settings.setting-department') }}"  class="btn btn-sm btn-primary float-right">Add Department</a></li>
+                <li class="init-warning list-group-item"><span>There should be at least one <b>Department</b> created</span><a href="{{ route('admin.settings.department') }}"  class="btn btn-sm btn-primary float-right">Add Department</a></li>
             @endif
             @if($initCheck["branchesCount"] <= 0)
-                <li class="init-warning list-group-item"><span>There should be at least one <b>Branch</b> created</span><a href="{{ route('admin.settings.setting-branch') }}"  class="btn btn-sm btn-primary float-right">Add Branch</a></li>
+                <li class="init-warning list-group-item"><span>There should be at least one <b>Branch</b> created</span><a href="{{ route('admin.settings.branch') }}"  class="btn btn-sm btn-primary float-right">Add Branch</a></li>
             @endif
             @if($initCheck["teamsCount"] <= 0)
-                <li class="init-warning list-group-item"><span>There should be at least one <b>Team</b> created</span><a href="{{ route('admin.settings.setting-team') }}"  class="btn btn-sm btn-primary float-right">Add Team</a></li>
+                <li class="init-warning list-group-item"><span>There should be at least one <b>Team</b> created</span><a href="{{ route('admin.settings.team') }}"  class="btn btn-sm btn-primary float-right">Add Team</a></li>
             @endif
             @if($initCheck["employeePositionsCount"] <= 0)
-                <li class="init-warning list-group-item"><span>There should be at least one <b>Employee Position</b> created</span><a href="{{ route('admin.settings.setting-position') }}"  class="btn btn-sm btn-primary float-right">Add Position</a></li>
+                <li class="init-warning list-group-item"><span>There should be at least one <b>Employee Position</b> created</span><a href="{{ route('admin.settings.position') }}"  class="btn btn-sm btn-primary float-right">Add Position</a></li>
             @endif
             @if($initCheck["employeeGradesCount"] <= 0)
-                <li class="init-warning list-group-item"><span>There should be at least one <b>Employee Grade</b> created</span><a href="{{ route('admin.settings.setting-grade') }}"  class="btn btn-sm btn-primary float-right">Add Grade</a></li>
+                <li class="init-warning list-group-item"><span>There should be at least one <b>Employee Grade</b> created</span><a href="{{ route('admin.settings.grade') }}"  class="btn btn-sm btn-primary float-right">Add Grade</a></li>
             @endif
         </ul>
     </div>

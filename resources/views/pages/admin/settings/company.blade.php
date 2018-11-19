@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.admin-base')
 @section('content')
 
 <div class="modal fade" id="addCompanyPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

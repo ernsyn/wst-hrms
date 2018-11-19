@@ -57,7 +57,7 @@ class SettingsController extends Controller
     }
 
 
-    public function displaySetupCompany()
+    public function displaySettingsCompany()
     {       
 
         $company = Company::all();
@@ -69,7 +69,7 @@ class SettingsController extends Controller
         return view('pages.admin.settings.add-company');
     }
 
-    public function addSetupCompany(Request $request)
+    public function addSettingsCompany(Request $request)
     {
         $name = $request->input('name');
         $url = $request->input('url');       
@@ -116,7 +116,7 @@ class SettingsController extends Controller
         return view('pages.admin.settings.company', ['company'=>$company]);
     }
 
-    public function displaySetupJob()
+    public function displaySettingsJob()
     {       
         $costs = EmployeeCategory::all();
         $departments = Department::all();
@@ -127,7 +127,7 @@ class SettingsController extends Controller
         return view('pages.admin.settings.job-configure', ['costs'=>$costs, 'departments'=>$departments, 'teams'=>$teams, 'positions'=>$positions, 'grade'=>$grade]);
     }
 
-    public function displaySetupBranch()
+    public function displaySettingsBranch()
     {       
         $branch = Branch::all();
         
@@ -315,6 +315,7 @@ class SettingsController extends Controller
         $team = Team::all();
         return view('pages.admin.settings.team', ['team'=>$team]);
     }
+
     public function editBranch(Request $request)
     {     
         $branch_id = $request->input('branch_id');          
@@ -512,7 +513,7 @@ class SettingsController extends Controller
         (?,?,?,?,?)',
         [$company_id, $account_name, $bank_list, $status, $created_by]);
        
-        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+        return redirect()->route('/settings/company-details/{id}', ['id' => $company_id]);
     }
 
     public function editCompanyBank(Request $request)
@@ -529,7 +530,7 @@ class SettingsController extends Controller
             'bank_code' => $bank_list,
             'status' => $status));
 
-            return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+            return redirect()->route('/settings/company-details/{id}', ['id' => $company_id]);
     }
 
 
@@ -559,7 +560,7 @@ class SettingsController extends Controller
         $applies, $cost_centre, $job_grade]);
 
         //---- view -------
-        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+        return redirect()->route('/settings/company-details/{id}', ['id' => $company_id]);
     }
 
     public function editCompanyAddition(Request $request)
@@ -591,7 +592,7 @@ class SettingsController extends Controller
             'id_job_master' => $job_grade
         ));
 
-        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+        return redirect()->route('/settings/company-details/{id}', ['id' => $company_id]);
     }
 
     public function addCompanyDeduction(Request $request)
@@ -619,7 +620,7 @@ class SettingsController extends Controller
         $applies, $cost_centre, $job_grade]);
 
         //---- view -------
-        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+        return redirect()->route('/settings/company-details/{id}', ['id' => $company_id]);
     }
 
 
@@ -650,9 +651,20 @@ class SettingsController extends Controller
             'id_job_master' => $job_grade
         ));
 
-        return redirect()->route('/setup/company-details/{id}', ['id' => $company_id]);
+        return redirect()->route('/settings/company-details/{id}', ['id' => $company_id]);
     }
 
+    public function displaySetupCompany()
+    {       
 
+        $company = Company::all();
+        return view('pages.admin.settings.company', ['company'=>$company]);
+    }
     
+    public function displaySetupBranch()
+    {       
+        $branch = Branch::all();
+        
+        return view('pages.admin.settings.branch', ['branch'=>$branch]);
+    }
 }

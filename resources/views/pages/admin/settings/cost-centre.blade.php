@@ -1,4 +1,4 @@
-@extends('layouts.base') 
+@extends('layouts.admin-base') 
 @section('content')
 
 <!-- ADD -->
@@ -12,7 +12,7 @@
           </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_cost_centre') }}" id="form_validate" data-parsley-validate>
+                <form method="POST" action="{{ route('admin.settings.cost-centre.add.post') }}" id="form_validate" data-parsley-validate>
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -69,7 +69,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_cost_centre') }}" id="edit_cost_centre">
+                <form method="POST" action="{{ route('admin.settings.cost-centre.edit.post') }}" id="edit_cost_centre">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">

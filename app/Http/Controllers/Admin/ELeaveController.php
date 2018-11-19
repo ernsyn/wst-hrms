@@ -185,7 +185,7 @@ class ELeaveController extends Controller
         $positions = EmployeePosition::all();
         $grade = EmployeeGrade::all();
         
-        return view('pages.admin.setup.job-configure', ['costs'=>$costs, 'departments'=>$departments, 'teams'=>$teams, 'positions'=>$positions, 'grade'=>$grade]);
+        return view('pages.admin.settings.job-configure', ['costs'=>$costs, 'departments'=>$departments, 'teams'=>$teams, 'positions'=>$positions, 'grade'=>$grade]);
     }
 
   
@@ -286,5 +286,15 @@ class ELeaveController extends Controller
         return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
     }
 
-    
+    public function displayLeaveApplication()
+    {      
+        $leave = LeaveBalance::join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+        ->select('leave_types.id','leave_types.name','leave_balance.balance')
+        ->where('leave_balance.user_id', Auth::user()->id)
+        ->get();
+
+        //$types = LeaveType::all();
+
+        return view('pages.leaveapplication', ['leave'=>$leave]);
+    }
 }
