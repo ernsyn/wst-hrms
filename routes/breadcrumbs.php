@@ -115,7 +115,7 @@ Breadcrumbs::for('admin.settings.grades.edit', function ($trail, $id) {
 // Home > Settings > Team - Add
 Breadcrumbs::for('admin.settings.teams.add', function ($trail) {
     $trail->parent('admin.settings.teams');
-    $trail->push('Add Grade', route('admin.settings.teams.add'));
+    $trail->push('Add Team', route('admin.settings.teams.add'));
 });
 
 // Home > Settings > Team - Edit

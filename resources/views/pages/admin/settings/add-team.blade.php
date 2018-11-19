@@ -8,9 +8,9 @@
                 <div class="row p-3">
                     <div class="row p-3">
                         <div class="form-group row w-100">
-                            <label class="col-md-12 col-form-label">Team name*</label>
+                            <label class="col-md-12 col-form-label">Team Name*</label>
                             <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name here"
+                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder=""
                                     name="name" value="{{ old('name') }}" required>
                             </div>                            
                         </div>
