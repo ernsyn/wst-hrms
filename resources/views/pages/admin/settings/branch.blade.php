@@ -12,7 +12,7 @@
           </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.settings.branch.add.post') }}" id="add_branch">
+                <form method="POST" action="{{ route('admin.settings.branches.add.post') }}" id="add_branch">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -111,7 +111,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.settings.branch.edit.post') }}" id="edit_branch">
+                <form method="POST" action="{{ route('admin.settings.branches.edit.post') }}" id="edit_branch">
                     @csrf
                     <div class="row p-3">
                             <div class="form-group row w-100">

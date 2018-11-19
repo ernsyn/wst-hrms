@@ -54,54 +54,85 @@
                     </li>
     
                     {{-- OPTION: Employee List --}}
-                    <li class="menu-option {{ request()->is('admin/user-list') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.company') }}">Employee List</a>
+                    <li class="menu-option {{ request()->is('admin/employees') ? 'active' : '' }}">
+                        <a href="{{ route('admin.employees') }}">Employee List</a>
                     </li>
                 </ul>
             </li>
             
-            
+            {{-- SECTION: E-Leave --}}
+            <li class="menu-section {{ request()->is('admin.e-leave','admin.e-leave','','admin.e-leave','admin.e-leave') ? 'active' : '' }}">
+                    <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
+                        <div class="row">
+                            <div class="col-1"><i class="far fa-calendar-alt"></i></div>
+                            <div class="col-10">E-Leave</div>
+                        </div>
+                    </a>
+                    <ul class="collapse list-unstyled {{ request()->is('admin.e-leave','admin.e-leave','','admin.e-leave','admin.e-leave') ? 'show' : '' }}"
+                        id="leaveSubmenu">
+                        {{-- OPTION: Leave Request --}}
+                        <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
+                            <a href="{{ route('admin.e-leave') }}">Leave Request</a>
+                        </li>
+                        {{-- OPTION: PH Setup --}}
+                        <li class="menu-option {{ request()->is('admin.e-leave.configuration.holidays') ? 'active' : '' }}">
+                            <a href="{{ route('admin.e-leave.configuration.holidays') }}">PH Setup</a>
+                        </li>
+                        {{-- OPTION: Leave Application On Behalf --}}
+                        <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+                            <a href="">Leave Application On Behalf</a>
+                        </li>
+                        {{-- OPTION: Leave Balance --}}
+                        <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
+                            <a href="{{ route('admin.e-leave') }}">Leave Balance</a>
+                        </li>
+                        {{-- OPTION: Leave Type --}}
+                        <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
+                            <a href="{{ route('admin.e-leave') }}">Leave Type</a>
+                        </li>
+                    </ul>
+                </li>
     
-            {{-- SECTION: Setup --}}
-            <li class="menu-section {{ request()->is('admin.settings.company','admin.settings.cost-centre') ? 'active' : '' }}">
+            {{-- SECTION: Settings --}}
+            <li class="menu-section {{ request()->is('admin/settings*') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#setupSubmenu" data-toggle="collapse" aria-expanded="false">
                     <div class="row">
                         <div class="col-1"><i class="fas fa-cog"></i></div>
-                        <div class="col-10">Setup</div>
+                        <div class="col-10">Settings</div>
                     </div>
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('admin.settings.grade') ? 'show' : '' }}"
+                <ul class="collapse list-unstyled {{ request()->is('admin/settings*') ? 'show' : '' }}"
                     id="setupSubmenu">
-                    {{-- OPTION: Company --}}
+                    {{-- OPTION: Companies --}}
                     
-                    <li class="menu-option {{ request()->is('admin.settings.company') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.company')}}">Company</a>
+                    <li class="menu-option {{ request()->is('admin/settings/companies') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.companies')}}">Companies</a>
                     </li>
 
-                    {{-- OPTION: Cost Centre --}}
-                    <li class="menu-option {{ request()->is('admin.settings.cost-centre') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.cost-centre')}}">Cost Centre</a>
+                    {{-- OPTION: Cost Centres --}}
+                    <li class="menu-option {{ request()->is('admin/settings/cost-centres') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.cost-centres')}}">Cost Centres</a>
                  
                     </li>
-                    {{-- OPTION: Department --}}
-                    <li class="menu-option {{ request()->is('admin.settings.department') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.department')}}">Department</a>
+                    {{-- OPTION: Departments --}}
+                    <li class="menu-option {{ request()->is('admin/settings/departments') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.departments')}}">Departments</a>
                     </li>
-                    {{-- OPTION: Branch --}}
-                    <li class="menu-option {{ request()->is('admin.settings.branch') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.branch')}}">Branch</a>
+                    {{-- OPTION: Branches --}}
+                    <li class="menu-option {{ request()->is('admin/settings/branches') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.branches')}}">Branches</a>
                     </li>
-                    {{-- OPTION: Team --}}
-                    <li class="menu-option {{ request()->is('admin.settings.team') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.team')}}">Team</a>
+                    {{-- OPTION: Teams --}}
+                    <li class="menu-option {{ request()->is('admin/settings/teams') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.teams')}}">Teams</a>
                     </li>
-                    {{-- OPTION: Position --}}
-                    <li class="menu-option {{ request()->is('admin.settings.position') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.position')}}">Position</a>
+                    {{-- OPTION: Positions --}}
+                    <li class="menu-option {{ request()->is('admin/settings/positions') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.positions')}}">Positions</a>
                     </li>
-                    {{-- OPTION: Grade --}}
-                    <li class="menu-option {{ request()->is('admin.settings.grade') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.grade')}}">Grade</a>
+                    {{-- OPTION: Grades --}}
+                    <li class="menu-option {{ request()->is('admin/settings/grades') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.grades')}}">Grades</a>
                     </li>
                     {{-- OPTION: General Information --}}
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
@@ -109,38 +140,7 @@
                     </li>
                 </ul>
             </li>
-            {{-- SECTION: E-Leave --}}
-            <li class="menu-section {{ request()->is('admin.e-leave','admin.e-leave','','admin.e-leave','admin.e-leave') ? 'active' : '' }}">
-                <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
-                    <div class="row">
-                        <div class="col-1"><i class="far fa-calendar-alt"></i></div>
-                        <div class="col-10">E-Leave</div>
-                    </div>
-                </a>
-                <ul class="collapse list-unstyled {{ request()->is('admin.e-leave','admin.e-leave','','admin.e-leave','admin.e-leave') ? 'show' : '' }}"
-                    id="leaveSubmenu">
-                    {{-- OPTION: Leave Request --}}
-                    <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave') }}">Leave Request</a>
-                    </li>
-                    {{-- OPTION: PH Setup --}}
-                    <li class="menu-option {{ request()->is('admin.e-leave.configuration.holidays') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave.configuration.holidays') }}">PH Setup</a>
-                    </li>
-                    {{-- OPTION: Leave Application On Behalf --}}
-                    <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                        <a href="">Leave Application On Behalf</a>
-                    </li>
-                    {{-- OPTION: Leave Balance --}}
-                    <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave') }}">Leave Balance</a>
-                    </li>
-                    {{-- OPTION: Leave Type --}}
-                    <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave') }}">Leave Type</a>
-                    </li>
-                </ul>
-            </li>
+
         </ul>
    
 </nav>

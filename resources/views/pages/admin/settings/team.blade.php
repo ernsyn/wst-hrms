@@ -12,7 +12,7 @@
           </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.settings.team.add.post') }}" id="add_team">
+                <form method="POST" action="{{ route('admin.settings.teams.add.post') }}" id="add_team">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -45,7 +45,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.settings.team.edit.post') }}" id="edit_team">
+                <form method="POST" action="{{ route('admin.settings.teams.edit.post') }}" id="edit_team">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">

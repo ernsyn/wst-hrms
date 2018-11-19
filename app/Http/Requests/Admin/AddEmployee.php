@@ -24,16 +24,18 @@ class AddEmployee extends FormRequest
     public function rules()
     {
         return [
+            'name' => 'required',
+            'email' => 'required',
             'password' => 'required',
             'contact_no' => 'required',
-            'address',
+            'address' => 'required',
             'company_id' => 'required',
             'dob' => 'required',
             'gender' => 'required',
             'race' => 'required',
             'nationality' => '',
-            'marital_status',
-            'total_child',
+            'marital_status' => '',
+            'total_children' => '',
             'ic_no' => 'required',
             'tax_no' => 'required',
             'epf_no' => 'required',

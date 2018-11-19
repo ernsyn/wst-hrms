@@ -1,9 +1,6 @@
 @extends('layouts.admin-base') 
 @section('content')
 <div class="container pb-5">
-    @foreach ($errors->all() as $error)
-    <p class="error">{{ $error }}</p>
-    @endforeach
     <div class="card">
         <form method="POST" action="{{ route('admin.employees.add') }}" id="register_employee">
             <div class="card-body">

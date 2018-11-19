@@ -12,7 +12,7 @@
           </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.settings.grade.add.post') }}" id="add_grade">
+                <form method="POST" action="{{ route('admin.settings.grades.add.post') }}" id="add_grade">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -46,7 +46,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.settings.grade.edit.post') }}" id="edit_grade">
+                <form method="POST" action="{{ route('admin.settings.grades.edit.post') }}" id="edit_grade">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">

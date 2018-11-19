@@ -12,7 +12,7 @@
           </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_position') }}" id="add_position">
+                <form method="POST" action="{{ route('admin.settings.positions.add.post') }}" id="add_position">
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -46,7 +46,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{{ route('edit_position') }}" id="edit_position">
+            <form method="POST" action="{{ route('admin.settings.positions.edit.post') }}" id="edit_position">
                 @csrf
         
                 <div class="row p-3">

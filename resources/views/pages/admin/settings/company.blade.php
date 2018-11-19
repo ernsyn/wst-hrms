@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.settings.company.add.post') }}" id="form_validate"  data-parsley-validate>
+                <form method="POST" action="{{ route('admin.settings.companies.add.post') }}" id="form_validate"  data-parsley-validate>
                     @csrf
                     <div class="row p-3">
                         <div class="form-group row w-100">
@@ -126,7 +126,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.settings.company.edit.post') }}" id="admin.settings.company.edit.post">
+                <form method="POST" action="{{ route('admin.settings.companies.edit.post') }}" id="admin.settings.companies.edit.post">
                         @csrf
                         <div class="row p-3">
                             <div class="form-group row w-100">

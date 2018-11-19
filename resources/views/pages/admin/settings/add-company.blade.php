@@ -4,7 +4,7 @@
     <div class="card py-4 shadow-sm">
         <div class="card-body">
             <div class="container-fluid">
-                <form method="POST" action="{{ route('admin.settings.company.add.post') }}" id="form_validate"  data-parsley-validate>
+                <form method="POST" action="{{ route('admin.settings.companies.add.post') }}" id="form_validate"  data-parsley-validate>
                     @csrf
                     <div class="row">
                         <div class="col-xl-8">

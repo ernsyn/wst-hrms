@@ -108,44 +108,46 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{emp_id}/skills/{id}/edit','Admin\EmployeeController@postEditSkill')->name('admin.employees.skills.edit')->where('id', '[0-9]+');
   
     //settings-view 
-    Route::get('settings/company', 'Admin\SettingsController@displaySetupCompany')->name('admin.settings.company');
-    Route::get('settings/add-company', 'Admin\SettingsController@displayAddCompany')->name('admin.settings.add-company');
-    Route::get('settings/job', 'Admin\SettingsController@displaySetupJob')->name('admin-settings-job');
-    Route::get('settings/cost-centre', 'Admin\SettingsController@displayCostCentre')->name('admin.settings.cost-centre');
-    Route::get('settings/department', 'Admin\SettingsController@displayDepartment')->name('admin.settings.department');
-    Route::get('settings/team', 'Admin\SettingsController@displayTeam')->name('admin.settings.team');
-    Route::get('settings/position', 'Admin\SettingsController@displayPosition')->name('admin.settings.position');
-    Route::get('settings/grade', 'Admin\SettingsController@displayGrade')->name('admin.settings.grade');
-    Route::get('settings/branch', 'Admin\SettingsController@displaySetupBranch')->name('admin.settings.branch');
+    Route::get('settings/companies', 'Admin\SettingsController@displayCompanies')->name('admin.settings.companies');
+    // Route::get('settings/add-company', 'Admin\SettingsController@displayAddCompany')->name('admin.settings.add-company');
+    Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');
+    Route::get('settings/cost-centres', 'Admin\SettingsController@displayCostCentres')->name('admin.settings.cost-centres');
+    Route::get('settings/departments', 'Admin\SettingsController@displayDepartments')->name('admin.settings.departments');
+    Route::get('settings/teams', 'Admin\SettingsController@displayTeams')->name('admin.settings.teams');
+    Route::get('settings/positions', 'Admin\SettingsController@displayPositions')->name('admin.settings.positions');
+    Route::get('settings/grades', 'Admin\SettingsController@displayGrades')->name('admin.settings.grades');
+    Route::get('settings/branches', 'Admin\SettingsController@displayBranches')->name('admin.settings.branches');
  
-    //setting-add
+    
+    // Settings - Add
+    Route::get('settings/companies/add','Admin\SettingsController@addCompany')->name('admin.settings.companies.add.post');
+    Route::post('settings/companies/add','Admin\SettingsController@postAddCompany')->name('admin.settings.companies.add.post');
 
-    Route::post('settings/department/add','Admin\SettingsController@addDepartment')->name('admin.settings.department.add.post');
-    Route::post('settings/branch/add','Admin\SettingsController@addBranch')->name('admin.settings.branch.add.post');
-    Route::post('settings/team/add','Admin\SettingsController@addTeam')->name('admin.settings.team.add.post');
-    Route::post('settings/position/add','Admin\SettingsController@addPosition')->name('admin.settings.position.add.post');
-    Route::post('settings/grade/add','Admin\SettingsController@addGrade')->name('admin.settings.grade.add.post');
-    Route::post('settings/company/add','Admin\SettingsController@addSetupCompany')->name('admin.settings.company.add.post');
-    Route::post('settings/holiday/add','Admin\SettingsController@addHoliday')->name('admin.settings.holiday.add.post');
-    Route::post('settings/company-bank/add','Admin\SettingsController@addCompanyBank')->name('admin.settings.company-bank.add.post');
-    Route::post('settings/security-group/add','Admin\SettingsController@addSecurityGroup')->name('admin.settings.security-group.add.post');
-    Route::post('settings/company-addition/add','Admin\SettingsController@addCompanyAddition')->name('admin.settings.company-addition.add.post');
-    Route::post('settings/company-deduction/add','Admin\SettingsController@addCompanyDeduction')->name('admin.settings.company-deduction.add.post');
-    Route::post('settings/cost-centre/add','Admin\SettingsController@addCostCentre')->name('admin.settings.cost-centre.add.post');
+    Route::post('settings/departments/add','Admin\SettingsController@postAddDepartment')->name('admin.settings.departments.add.post');
+    Route::post('settings/branches/add','Admin\SettingsController@postAddBranch')->name('admin.settings.branches.add.post');
+    Route::post('settings/teams/add','Admin\SettingsController@postAddTeam')->name('admin.settings.teams.add.post');
+    Route::post('settings/positions/add','Admin\SettingsController@postAddPosition')->name('admin.settings.positions.add.post');
+    Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
+    Route::post('settings/holidays/add','Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
+    Route::post('settings/security-groups/add','Admin\SettingsController@postAddSecurityGroup')->name('admin.settings.security-groups.add.post');
+    Route::post('settings/company-banks/add','Admin\SettingsController@postAddCompanyBank')->name('admin.settings.company-banks.add.post');
+    Route::post('settings/company-additions/add','Admin\SettingsController@postAddCompanyAddition')->name('admin.settings.company-additions.add.post');
+    Route::post('settings/company-deductions/add','Admin\SettingsController@postAddCompanyDeduction')->name('admin.settings.company-deductions.add.post');
+    Route::post('settings/cost-centres/add','Admin\SettingsController@postAddCostCentre')->name('admin.settings.cost-centres.add.post');
 
     //setting-edit
-    Route::post('settings/cost-centre/edit','Admin\SettingsController@editCostCentre')->name('admin.settings.cost-centre.edit.post');
-    Route::post('settings/grade/edit','Admin\SettingsController@editGrade')->name('admin.settings.grade.edit.post');
-    Route::post('settings/position/edit','Admin\SettingsController@editPosition')->name('admin.settings.position.edit.post');
-    Route::post('settings/department/edit','Admin\SettingsController@editDepartment')->name('admin.settings.department.edit.post');
-    Route::post('settings/team/edit','Admin\SettingsController@editTeam')->name('admin.settings.team.edit.post');
-    Route::post('settings/branch/edit','Admin\SettingsController@editBranch')->name('admin.settings.branch.edit.post');
-    Route::post('settings/company/edit','Admin\SettingsController@editCompany')->name('admin.settings.company.edit.post');
-    Route::post('settings/leave-balance/edit','Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balance.edit.post');
-    Route::post('settings/company-bank/edit','Admin\SettingsController@editCompanyBank')->name('admin.settings.company-bank.edit.post');
-    Route::post('settings/security-group/edit','Admin\SettingsController@editSecurityGroup')->name('admin.settings.security-group.edit.post');
-    Route::post('settings/company-addition/edit','Admin\SettingsController@editCompanyAddition')->name('aadmin.settings.company-addition.edit.post');
-    Route::post('settings/company-deduction/edit','Admin\SettingsController@editCompanyDeduction')->name('admin.settings.company-deduction.edit.post');
+    Route::post('settings/cost-centres/edit','Admin\SettingsController@editCostCentre')->name('admin.settings.cost-centres.edit.post');
+    Route::post('settings/grades/edit','Admin\SettingsController@editGrade')->name('admin.settings.grades.edit.post');
+    Route::post('settings/positions/edit','Admin\SettingsController@editPosition')->name('admin.settings.positions.edit.post');
+    Route::post('settings/departments/edit','Admin\SettingsController@editDepartment')->name('admin.settings.departments.edit.post');
+    Route::post('settings/teams/edit','Admin\SettingsController@editTeam')->name('admin.settings.teams.edit.post');
+    Route::post('settings/branches/edit','Admin\SettingsController@editBranch')->name('admin.settings.branches.edit.post');
+    Route::post('settings/companies/edit','Admin\SettingsController@editCompany')->name('admin.settings.companies.edit.post');
+    Route::post('settings/leave-balances/edit','Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balances.edit.post');
+    Route::post('settings/company-banks/edit','Admin\SettingsController@editCompanyBank')->name('admin.settings.company-banks.edit.post');
+    Route::post('settings/security-groups/edit','Admin\SettingsController@editSecurityGroup')->name('admin.settings.security-groups.edit.post');
+    Route::post('settings/company-additions/edit','Admin\SettingsController@editCompanyAddition')->name('aadmin.settings.company-additions.edit.post');
+    Route::post('settings/company-deductions/edit','Admin\SettingsController@editCompanyDeduction')->name('admin.settings.company-deductions.edit.post');
 
 
     //admin e-leave

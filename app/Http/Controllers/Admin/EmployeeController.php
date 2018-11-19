@@ -149,10 +149,39 @@ class EmployeeController extends Controller
     }
 
 
-    protected function postAdd(AddEmployee $request)
+    protected function postAdd(Request $request)
     {
-        $validatedData = $request->validated();
+        $validatedUserData = $request->validate([
+            'name' => 'required|min:5',
+            'email' => 'required|unique:users|email',
+            'password' => 'required',
+        ]);
 
+
+        $validatedEmployeeData = $request->validate([
+            'contact_no' => 'required',
+            'address' => 'required',
+            'company_id' => 'required',
+            'dob' => 'required',
+            'gender' => 'required',
+            'race' => 'required',
+            'nationality' => '',
+            'marital_status' => '',
+            'total_children' => '',
+            'ic_no' => 'required',
+            'tax_no' => 'required',
+            'epf_no' => 'required',
+            'driver_license_number',
+            'driver_license_expiry_date',
+        ]);
+        // dd($validatedData);
+
+        $user = User::create($validatedUserData);
+        $user->assignRole('employee');
+
+        $employee = Employee::create($validatedEmployeeData);
+
+        // $user->employee()->save($employee);
 
         // $input = $request->all();
         // $input['password'] = Hash::make($input['password']);

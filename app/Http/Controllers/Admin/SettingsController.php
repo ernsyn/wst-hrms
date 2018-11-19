@@ -56,20 +56,26 @@ class SettingsController extends Controller
         $this->middleware(['role:super-admin|admin']);
     }
 
+    // SECTION: Display
 
-    public function displaySettingsCompany()
+
+
+
+
+    // SECTION: Add
+
+    public function displayCompanies()
     {       
-
         $company = Company::all();
         return view('pages.admin.settings.company', ['company'=>$company]);
     }
 
-    public function displayAddCompany()
+    public function addCompany()
     {
         return view('pages.admin.settings.add-company');
     }
 
-    public function addSettingsCompany(Request $request)
+    public function postAddCompany(Request $request)
     {
         $name = $request->input('name');
         $url = $request->input('url');       
@@ -115,8 +121,17 @@ class SettingsController extends Controller
         $company = Company::all();
         return view('pages.admin.settings.company', ['company'=>$company]);
     }
+    
 
-    public function displaySettingsJob()
+    public function displayBranches()
+    {       
+        $branch = Branch::all();
+        
+        return view('pages.admin.settings.branch', ['branch'=>$branch]);
+    }    
+
+    
+    public function displayJobs()
     {       
         $costs = EmployeeCategory::all();
         $departments = Department::all();
@@ -127,15 +142,7 @@ class SettingsController extends Controller
         return view('pages.admin.settings.job-configure', ['costs'=>$costs, 'departments'=>$departments, 'teams'=>$teams, 'positions'=>$positions, 'grade'=>$grade]);
     }
 
-    public function displaySettingsBranch()
-    {       
-        $branch = Branch::all();
-        
-        return view('pages.admin.settings.branch', ['branch'=>$branch]);
-    }    
-
-
-    public function addJob(Request $request)
+    public function postAddJob(Request $request)
     {          
         $user_id = Session::get('user_id');
         $user = Employee::where('user_id', $user_id)->first(); 
@@ -216,13 +223,13 @@ class SettingsController extends Controller
     
         
 
-    public function displayCostCentre()
+    public function displayCostCentres()
     {
         $costs = CostCentre::all();
         return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
     }
 
-    public function addCostCentre(Request $request)
+    public function postAddCostCentre(Request $request)
     {     
         $category_name = $request->input('category_name');             
         $seniority_pay = Input::get('seniority_pay');        
@@ -239,7 +246,7 @@ class SettingsController extends Controller
         return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
     }
 
-    public function addBranch(Request $request)
+    public function postAddBranch(Request $request)
     {     
         $name = $request->input('name');             
         $contact_no_primary = Input::get('contact_no_primary');        
@@ -393,13 +400,13 @@ class SettingsController extends Controller
         return view('pages.admin.settings.grade', ['grade'=>$grade]);
     }
 
-    public function displayDepartment()
+    public function displayDepartments()
     {
         $departments = Department::all();
         return view('pages.admin.settings.department', ['departments'=>$departments]);
     }
 
-    public function addDepartment(Request $request)
+    public function postAddDepartment(Request $request)
     {        
         $name = $request->input('name');
         $created_by = auth()->user()->id;
@@ -414,13 +421,13 @@ class SettingsController extends Controller
         return view('pages.admin.settings.department', ['departments'=>$departments]);
     }
 
-    public function displayTeam()
+    public function displayTeams()
     {
         $team = Team::all();
         return view('pages.admin.settings.team', ['team'=>$team]);
     }
 
-    public function addTeam(Request $request)
+    public function postAddTeam(Request $request)
     {    
         $team_name = $request->input('team_name');
         $created_by = auth()->user()->id;
@@ -435,13 +442,13 @@ class SettingsController extends Controller
         return view('pages.admin.settings.team', ['team'=>$team]);
     }
 
-    public function displayPosition()
+    public function displayPositions()
     {
         $positions = EmployeePosition::all();
         return view('pages.admin.settings.position', ['positions'=>$positions]);
     }
 
-    public function addPosition(Request $request)
+    public function postAddPosition(Request $request)
     {          
         $name = $request->input('name');
         $created_by = auth()->user()->id;
@@ -456,13 +463,13 @@ class SettingsController extends Controller
         return view('pages.admin.settings.position', ['positions'=>$positions]);
     }
 
-    public function displayGrade()
+    public function displayGrades()
     {
         $grade = EmployeeGrade::all();
         return view('pages.admin.settings.grade', ['grade'=>$grade]);
     }
 
-    public function addGrade(Request $request)
+    public function postAddGrade(Request $request)
     {          
         $name = $request->input('name');
         $created_by = auth()->user()->id;
@@ -499,7 +506,7 @@ class SettingsController extends Controller
         'security'=>$security, 'additions'=>$additions, 'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre]);
     }
 
-    public function addCompanyBank(Request $request)
+    public function postAddCompanyBank(Request $request)
     {         
         $company_id = Session::get('company_id');
         $account_name = $request->input('account_name');
@@ -534,7 +541,7 @@ class SettingsController extends Controller
     }
 
 
-    public function addCompanyAddition(Request $request)
+    public function postAddCompanyAddition(Request $request)
     {         
         $company_id = Session::get('company_id');
 
@@ -595,7 +602,7 @@ class SettingsController extends Controller
         return redirect()->route('/settings/company-details/{id}', ['id' => $company_id]);
     }
 
-    public function addCompanyDeduction(Request $request)
+    public function postAddCompanyDeduction(Request $request)
     {         
         $company_id = Session::get('company_id');
 
@@ -654,17 +661,5 @@ class SettingsController extends Controller
         return redirect()->route('/settings/company-details/{id}', ['id' => $company_id]);
     }
 
-    public function displaySetupCompany()
-    {       
 
-        $company = Company::all();
-        return view('pages.admin.settings.company', ['company'=>$company]);
-    }
-    
-    public function displaySetupBranch()
-    {       
-        $branch = Branch::all();
-        
-        return view('pages.admin.settings.branch', ['branch'=>$branch]);
-    }
 }
