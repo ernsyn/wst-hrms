@@ -22,7 +22,7 @@ Auth::routes();
 
 
 // MODE: Employee
-Route::group(['middleware' => ['auth', 'role:super-admin|employee']], function() {
+Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('', 'HomeController@index')->name('home');
     
     Route::get('/employee','EmployeeController@displayProfile')->name('employee');
