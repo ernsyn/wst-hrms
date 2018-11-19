@@ -1,9 +1,7 @@
 @extends('layouts.admin-base') 
 @section('content')
 
-<div class="p-4">
-    <div class="card p-4">
-        <div class="card-body">
+<div class="container">
             <div class="row pb-3">
                 <div class="col-auto mr-auto"></div>
                 <div class="col-auto">
@@ -15,7 +13,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="float-right tableTools-container"></div>
-                        <table class="table display compact table-striped table-bordered table-hover w-100" id="setupJobconfigureCostCentreTable">
+                        <table class="hrms-data-table compact w-100 t-2" id="teams-table">
                             <thead>
                                     <tr>
                                             <th>No</th>
@@ -29,16 +27,55 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{$team['name']}}</td>
                                   
-  <td>       <a class="btn btn-primary" href="{{ route('admin.settings.teams.edit', ['id' => $team->id]) }}" role="button">Edit</a>
-                                           
+                                        <td>
+                                                <a class="btn btn-primary" href="{{ route('admin.settings.teams.edit', ['id' => $team->id]) }}" role="button">Edit</a>
                                         </td>
+
+                                        
                                     </tr>
                                     @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
     @endsection
+    @section('scripts')
+<script>
+    $('#teams-table').DataTable({
+        responsive: true,
+        stateSave: true,
+        dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
+        <'row'<'col-md-6'><'col-md-6'>>
+        <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
+        buttons: [{
+                extend: 'copy',
+                text: '<i class="fas fa-copy "></i>',
+                // text: '<i class="fas fa-copy "></i>',
+                className: 'btn-segment',
+                titleAttr: 'Copy'
+            },
+            {
+                extend: 'colvis',
+                text: '<i class="fas fa-search "></i>',
+                className: 'btn-segment',
+                titleAttr: 'Show/Hide Column'
+            },
+            {
+                extend: 'csv',
+                text: '<i class="fas fa-file-alt "></i>',
+                className: 'btn-segment',
+                titleAttr: 'Export CSV'
+            },
+            {
+                extend: 'print',
+                text: '<i class="fas fa-print "></i>',
+                className: 'btn-segment',
+                titleAttr: 'Print'
+            },
+        ]
+
+    });
+
+</script>
+@append
