@@ -53,7 +53,7 @@ class SettingsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-
+        $this->middleware(['role:super-admin|admin']);
     }
 
 
@@ -61,7 +61,7 @@ class SettingsController extends Controller
     {       
 
         $company = Company::all();
-        return view('pages.admin.settings.setting-company', ['company'=>$company]);
+        return view('pages.admin.settings.setting-company', ['company' => $company]);
     }
 
     public function displayAddCompany()

@@ -38,7 +38,7 @@ class EmployeeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:admin']);
+        $this->middleware(['role:super-admin|admin']);
     }
 
     public function index()
