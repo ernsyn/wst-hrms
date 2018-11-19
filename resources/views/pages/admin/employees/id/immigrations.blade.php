@@ -1,6 +1,5 @@
 <!-- ADD -->
-<div class="modal fade" id="employee-immigration-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="employee-immigration-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,53 +11,48 @@
             <div class="modal-body">
                 <form method="POST" action="{{ route('admin.employees.immigrations.post', ['id' => $id]) }}" id="add_employee_immigration">
                     @csrf
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <label class="col-md-5 col-form-label">Name*</label>
-                            <div class="col-md-7">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                                    placeholder="Name here" name="name" value="{{ old('name') }}" required>
-                                @if ($errors->has('name'))
-                                <span class="invalid-feedback" role="alert">
+                    <div class="form-group row">
+                        <label class="col-md-12 col-form-label">Name*</label>
+                        <div class="col-md-7">
+                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
+                                name="name" value="{{ old('name') }}" required> @if ($errors->has('name'))
+                            <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('name') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                            <label class="col-md-8 col-form-label">Passport No*</label>
-                            <div class="col-md-10">
-                                <input id="passport_no" type="text" class="form-control{{ $errors->has('passport_no') ? ' is-invalid' : '' }}"
-                                    name="passport_no" value="{{ old('passport_no') }}" required>
-                                @if ($errors->has('passport_no'))
-                                <span class="invalid-feedback" role="alert">
+                                </span> @endif
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-12 col-form-label">Passport No*</label>
+                        <div class="col-md-10">
+                            <input id="passport_no" type="text" class="form-control{{ $errors->has('passport_no') ? ' is-invalid' : '' }}" name="passport_no"
+                                value="{{ old('passport_no') }}" required> @if ($errors->has('passport_no'))
+                            <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('passport_no') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-
-                            <label class="col-md-5 col-form-label">Expiry Date*</label>
-                            <div class="col-md-7">
-                                <input id="altexpiryDate" name="altexpiryDate" type="text" class="form-control" hidden>
-                                <input name="expiryDate" id="expiryDate" type="text" class="form-control" readonly>
-                            </div>
-
-                            <label class="col-md-5 col-form-label">Issued By*</label>
-                            <div class="col-md-7">
-                                <input id="issued_by" type="text" class="form-control{{ $errors->has('issued_by') ? ' is-invalid' : '' }}"
-                                    name="issued_by" value="{{ old('issued_by') }}" required>
-                                @if ($errors->has('issued_by'))
-                                <span class="invalid-feedback" role="alert">
+                                </span> @endif
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-12 col-form-label">Expiry Date*</label>
+                        <div class="col-md-7">
+                            <input id="altexpiryDate" name="altexpiryDate" type="text" class="form-control" hidden>
+                            <input name="expiryDate" id="expiryDate" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-12 col-form-label">Issued By*</label>
+                        <div class="col-md-7">
+                            <input id="issued_by" type="text" class="form-control{{ $errors->has('issued_by') ? ' is-invalid' : '' }}" name="issued_by"
+                                value="{{ old('issued_by') }}" required> @if ($errors->has('issued_by'))
+                            <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('issued_by') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                            <label class="col-md-5 col-form-label">Issued Date*</label>
-
-                            <div class="col-md-7">
-                                <input id="altlicenseExpiryDate" name="altlicenseExpiryDate" type="text" class="form-control"
-                                    hidden>
-                                <input name="licenseExpiryDate" id="licenseExpiryDate" type="text" class="form-control"
-                                    readonly>
-                            </div>
+                                </span> @endif
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-12 col-form-label">Issued Date*</label>
+                        <div class="col-md-7">
+                            <input id="altlicenseExpiryDate" name="altlicenseExpiryDate" type="text" class="form-control" hidden>
+                            <input name="licenseExpiryDate" id="licenseExpiryDate" type="text" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -74,8 +68,7 @@
 </div>
 
 <!-- UPDATE -->
-<div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel"
-    aria-hidden="true">
+<div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -92,33 +85,27 @@
                             <input id="emp_con_id" name="emp_con_id" type="hidden">
                             <label class="col-md-5 col-form-label">Name*</label>
                             <div class="col-md-7">
-                                <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                                    value="{{ old('name') }}" required>
-                                @if ($errors->has('name'))
+                                <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}"
+                                    required> @if ($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('name') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                             <label class="col-md-2 col-form-label">Relationship*</label>
                             <div class="col-md-10">
-                                <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}"
-                                    name="relationship" value="{{ old('relationship') }}" required>
-                                @if ($errors->has('relationship'))
+                                <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" name="relationship"
+                                    value="{{ old('relationship') }}" required> @if ($errors->has('relationship'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('relationship') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                             <label class="col-md-2 col-form-label">Contact Number*</label>
                             <div class="col-md-10">
-                                <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}"
-                                    name="contact_number" value="{{ old('contact_number') }}" required>
-                                @if ($errors->has('contact_number'))
+                                <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" name="contact_number"
+                                    value="{{ old('contact_number') }}" required> @if ($errors->has('contact_number'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('contact_number') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                     </div>
@@ -158,14 +145,18 @@
     </table>
 </div>
 
+
+
 @section('scripts')
 <script>
+$(function() {
     $('#employeeImmigrationTable').DataTable({
         "bInfo": true,
         "bDeferRender": true,
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.immigrations', ['id' => $id]) }}",
+        
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -192,5 +183,6 @@
             }
         ]
     });
+})
 </script>
 @append

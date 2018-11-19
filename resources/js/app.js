@@ -21,12 +21,16 @@ import 'datatables.net-buttons/js/buttons.html5.js';
 
 import 'parsleyjs';
 import 'jquery-mousewheel';
-
-import 'moment'
+var moment = require('moment');
+moment().format();
 import Chart from 'chart.js';
 
 import './datatables';
 import './modal';
+
+//dropzone
+window.Dropzone = require('dropzone');
+ Dropzone.autoDiscover = false;
 
 // window.Vue = require('vue');
 
@@ -41,6 +45,13 @@ import './modal';
 // const app = new Vue({
 //     el: '#app'
 // });
+
+// var drop = new Dropzone('#file', {
+//     url: "{{ route('upload') }}",
+//     acceptedFiles: "image/*",
+//     maxFiles:1,
+//     addRemoveLinks: true,
+//   });
 
 if (performance.navigation.type == 2) {
     location.reload(true);
