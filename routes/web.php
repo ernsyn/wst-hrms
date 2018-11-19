@@ -48,6 +48,20 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
 });
 
+// MODE: Employee
+Route::group(['middleware' => ['auth', 'role:employee']], function() {
+    Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
+    Route::get('/profile','Employee\EmployeeController@displayProfile')->name('profile');
+
+    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('employee/leaveapplication');
+    Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
+    Route::get('leaverequest','EmployeeController@displayLeaveRequest')->name('employee/leaverequest');
+    Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
+    Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
+
+    Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
+});
+
 
 // MODE: Admin
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
@@ -183,19 +197,7 @@ Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-ad
 //     Route::get('e-leave/apply-on-behalf','Manager\ELeaveController@displayLeaveRequest')->name('admin.e-leave.apply-on-behalf');
 // });
     
-// MODE: Employee
-Route::group(['middleware' => ['auth', 'role:employee']], function() {
-    Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
-    Route::get('/profile','Employee\EmployeeController@displayProfile')->name('profile');
 
-    Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('employee/leaveapplication');
-    Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
-    Route::get('leaverequest','EmployeeController@displayLeaveRequest')->name('employee/leaverequest');
-    Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
-    Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
-
-    Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
-});
 
     // Route::get('setup', 'AdminController@displaySetupCompany')->name('setup');
 
