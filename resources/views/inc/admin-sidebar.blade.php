@@ -40,16 +40,16 @@
     @endhasanyrole
 
         <ul id="menu-container" class="list-unstyled">
-            <li class="menu-section {{ request()->is('admin.employees') ? 'active' : '' }}">
+            <li class="menu-section {{ request()->is('admin/employees*') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#employee-setup" data-toggle="collapse" aria-expanded="false">
                     <div class="row">
                         <div class="col-1"><i class="fas fa-users"></i></div>
                         <div class="col-10">Employee</div>
                     </div>
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('admin.employees') ? 'show' : '' }}" id="employee-setup">
+                <ul class="collapse list-unstyled {{ request()->is('admin/employees*') ? 'show' : '' }}" id="employee-setup">
                     {{-- OPTION: Add Employee --}}
-                    <li class="menu-option {{ request()->is('admin.employees.add') ? 'active' : '' }}">
+                    <li class="menu-option {{ request()->is('admin/employees/add') ? 'active' : '' }}">
                         <a href="{{ route('admin.employees.add') }}">Add Employee</a>
                     </li>
     
