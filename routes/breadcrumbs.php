@@ -85,12 +85,57 @@ Breadcrumbs::for('admin.settings.companies.edit', function ($trail, $id) {
     $trail->push('Edit Company', route('admin.settings.companies.edit', $id));
 });
 
-// // Home > Settings > Cost-Centre
-Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Cost-Centres Settings', route('admin.settings.cost-centres'));
+// Home > Settings > Position - Add
+Breadcrumbs::for('admin.settings.positions.add', function ($trail) {
+    $trail->parent('admin.settings.positions');
+    $trail->push('Add Position', route('admin.settings.positions.add'));
 });
 
+// Home > Settings > Position - Edit
+Breadcrumbs::for('admin.settings.positions.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.positions');
+    $trail->push('Edit Position', route('admin.settings.positions.edit', $id));
+});
+
+
+
+// Home > Settings > Grade - Add
+Breadcrumbs::for('admin.settings.grades.add', function ($trail) {
+    $trail->parent('admin.settings.grades');
+    $trail->push('Add Grade', route('admin.settings.grades.add'));
+});
+
+// Home > Settings > Grade - Edit
+Breadcrumbs::for('admin.settings.grades.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.grades');
+    $trail->push('Edit Grade', route('admin.settings.grades.edit', $id));
+});
+
+
+// Home > Settings > Team - Add
+Breadcrumbs::for('admin.settings.teams.add', function ($trail) {
+    $trail->parent('admin.settings.teams');
+    $trail->push('Add Grade', route('admin.settings.teams.add'));
+});
+
+// Home > Settings > Team - Edit
+Breadcrumbs::for('admin.settings.teams.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.teams');
+    $trail->push('Edit Team', route('admin.settings.teams.edit', $id));
+});
+
+
+// // Home > Settings > Cost-Centre
+Breadcrumbs::for('admin.settings.cost-centres.add', function ($trail) {
+    $trail->parent('admin.settings.cost-centres');
+    $trail->push('Add Cost-Centres', route('admin.settings.cost-centres.add'));
+});
+
+// Home > Settings > Cost-Centre - Edit
+Breadcrumbs::for('admin.settings.cost-centres.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.cost-centres');
+    $trail->push('Edit Cost-Centres', route('admin.settings.cost-centres.edit', $id));
+});
 
 // // Home > Settings > Department
 Breadcrumbs::for('admin.settings.departments', function ($trail) {
@@ -98,6 +143,11 @@ Breadcrumbs::for('admin.settings.departments', function ($trail) {
     $trail->push('Departments Settings', route('admin.settings.departments'));
 });
 
+// // Home > Settings > Cost Center
+Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Cost Center Settings', route('admin.settings.cost-centres'));
+});
 // // Home > Settings > Team
 Breadcrumbs::for('admin.settings.teams', function ($trail) {
     $trail->parent('admin.dashboard');

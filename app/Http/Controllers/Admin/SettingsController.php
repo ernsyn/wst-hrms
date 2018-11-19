@@ -58,10 +58,6 @@ class SettingsController extends Controller
 
     // SECTION: Display
 
-
-
-
-
     // SECTION: Add
 
     public function displayCompanies()
@@ -97,7 +93,222 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.companies');
     }
+
+    public function editCompany(Request $request, $id) {
+        $company = Company::find($id);
+
+        return view('pages.admin.settings.edit-company', ['company' => $company]);
+    }
+
+    public function postEditCompany(Request $request, $id)
+    {              
+        
+        $companyData = $request->validate([
+            'name' => 'required|unique:companies,name,'.$id,
+            'url' => 'required',
+            'registration_no' => 'required',
+            'description' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'tax_no' => 'required',
+            'epf_no' => 'required',
+            'socso_no' => 'required',
+            'eis_no' => 'required',
+            'code' => 'required|unique:companies,code,'.$id,
+            'status' => 'required',
+        ]);
+
+
+        Company::where('id', $id)->update($companyData);
+       
+        return redirect()->route('admin.settings.companies');
+    }
+
+    public function displayPositions()
+    {
+        $positions = EmployeePosition::all();
+        return view('pages.admin.settings.position', ['positions'=>$positions]);
+    }
+
+    public function addPosition()
+    {
+        return view('pages.admin.settings.add-position');
+    }
+
+    public function postAddPosition(Request $request)
+    {
+        $positionData = $request->validate([
+            'name' => 'required|unique:employee_positions',
+
+        ]);
+
+        EmployeePosition::create($positionData);
+
+        return redirect()->route('admin.settings.positions');
+    }
+
+    public function editPosition(Request $request, $id) {
+        $position = EmployeePosition::find($id);
+
+        return view('pages.admin.settings.edit-position', ['position' => $position]);
+    }
+
+    public function postEditPosition(Request $request, $id)
+    {              
+        
+        $positionData = $request->validate([
+            'name' => 'required|unique:employee_positions,name,'.$id,
+
+        ]);
+
+        EmployeePosition::where('id', $id)->update($positionData);
+       
+        return redirect()->route('admin.settings.positions');
+    }
+   
+    public function displayGrades()
+    {
+        $grades = EmployeeGrade::all();
+        return view('pages.admin.settings.grade', ['grades'=>$grades]);
+    }
+    public function addGrade()
+    {
+        return view('pages.admin.settings.add-grade');
+    }
+
+    public function postAddGrade(Request $request)
+    {          
+        $gradeData = $request->validate([
+            'name' => 'required|unique:employee_grades',
+
+        ]);
+
+        EmployeeGrade::create($gradeData);
+
+        return redirect()->route('admin.settings.grades');
+    }
+
+    public function editGrade(Request $request, $id) {
+        $grade = EmployeeGrade::find($id);
+
+        return view('pages.admin.settings.edit-grade', ['grade' => $grade]);
+    }
+
+    public function postEditGrade(Request $request, $id)
+    {              
+        
+        $gradeData = $request->validate([
+            'name' => 'required|unique:employee_grades,name,'.$id,
+
+        ]);
+
+        EmployeeGrade::where('id', $id)->update($gradeData);
+       
+        return redirect()->route('admin.settings.grades');
+    }
+
+
+    public function displayTeams()
+    {
+        $teams = Team::all();
+        return view('pages.admin.settings.team', ['teams'=>$teams]);
+    }
+    public function addTeam()
+    {
+        return view('pages.admin.settings.add-team');
+    }
+
+    public function postAddTeam(Request $request)
+    {          
+        $teamData = $request->validate([
+            'name' => 'required|unique:teams',
+
+        ]);
+
+        Team::create($teamData);
+
+        return redirect()->route('admin.settings.teams');
+    }
+
+    public function editTeam(Request $request, $id) {
+
+        $team = Team::find($id);
+
+        return view('pages.admin.settings.edit-team', ['team' => $team]);
+    }
+
+    public function postEditTeam(Request $request, $id)
+
+
+ 
+        {              
+            
+            $teamData = $request->validate([
+                'name' => 'required|unique:teams,name,'.$id,
     
+            ]);
+    
+            Team::where('id', $id)->update($teamData);
+           
+            return redirect()->route('admin.settings.teams');
+        }
+    
+
+
+        public function displayCostCentres()
+        {
+            $costs = CostCentre::all();
+            return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
+        }
+    
+        public function addCostCentre()
+        {
+            return view('pages.admin.settings.add-cost-centre');
+        }
+        
+        
+        public function postAddCostCentre(Request $request)
+        {     
+            $costCentreData = $request->validate([
+                'name' => 'required',    
+                'seniority_pay' =>'required',
+                
+                'payroll_type' =>'required'
+    
+            ]);
+    
+            $costCentreData['amount'] = '50.00';
+            
+            CostCentre::create($costCentreData);    
+            return redirect()->route('admin.settings.cost-centres');
+        }
+
+
+        public function editCostCentre(Request $request, $id) {
+            $costs = CostCentre::find($id);
+    
+            return view('pages.admin.settings.edit-cost-centre', ['costs' => $costs]);
+        }
+    
+
+        public function postEditCostCentre(Request $request,$id)
+        {              
+            
+            $costCentreData = $request->validate([
+                'name' => 'required|unique:cost_centres,name,'.$id,
+                'seniority_pay' =>'required',
+                'payroll_type' =>'required'
+    
+            ]);
+    
+            CostCentre::where('id', $id)->update($costCentreData);
+           
+            return redirect()->route('admin.settings.cost-centres');
+        }
+
+
+
+
 
     public function displayBranches()
     {       
@@ -199,28 +410,7 @@ class SettingsController extends Controller
     
         
 
-    public function displayCostCentres()
-    {
-        $costs = CostCentre::all();
-        return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
-    }
-
-    public function postAddCostCentre(Request $request)
-    {     
-        $category_name = $request->input('category_name');             
-        $seniority_pay = Input::get('seniority_pay');        
-        $payroll_type = Input::get('payroll_type');    
-        $created_by = auth()->user()->id;
-       
-        DB::insert('insert into cost_centres
-        (name, seniority_pay, payroll_type, created_by,amount) 
-        values
-        (?,?,?,?,50)',
-        [$category_name, $seniority_pay, $payroll_type, $created_by]);
-
-        $costs = CostCentre::all();
-        return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
-    }
+   
 
     public function postAddBranch(Request $request)
     {     
@@ -256,21 +446,6 @@ class SettingsController extends Controller
         return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }
 
-    public function editCostCentre(Request $request)
-    {     
-        $cost_id = $request->input('cost_id');          
-        $seniority_pay = Input::get('seniority_pay');   
-        $payroll_type = Input::get('payroll_type');   
-        
-        CostCentre::where('id',$cost_id)->update(
-            array('seniority_pay' => $seniority_pay,
-            'payroll_type' => $payroll_type));
-
-        $costs = CostCentre::all();
-        return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
-    }
-
-
 
 
     public function editDepartment(Request $request)
@@ -286,18 +461,7 @@ class SettingsController extends Controller
         return view('pages.admin.settings.department', ['departments'=>$departments]);
     }
 
-    public function editTeam(Request $request)
-    {     
-        $team_id = $request->input('team_id');          
-        $name = Input::get('name');   
 
-        
-        Team::where('id',$team_id)->update(
-            array('name' => $name));
-
-        $team = Team::all();
-        return view('pages.admin.settings.team', ['team'=>$team]);
-    }
 
     public function editBranch(Request $request)
     {     
@@ -323,73 +487,11 @@ class SettingsController extends Controller
         return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }
 
-    public function editCompany(Request $request, $id) {
-        $company = Company::find($id);
-
-        return view('pages.admin.settings.edit-company', ['company' => $company]);
-    }
-
-    public function postEditCompany(Request $request, $id)
-    {              
-        // $name = Input::get('name');   
-        // $registration_no = Input::get('registration_no');          
-        // $description = Input::get('description');   
-        // $url = Input::get('url');          
-        // $address = Input::get('address');   
-        // $phone = Input::get('phone');          
-        // $gst_no = Input::get('gst_no');   
-        // $tax_no =Input::get('tax_no');          
-        // $epf_no = Input::get('epf_no');   
-        // $socso_no =Input::get('socso_no');          
-        // $eis_no = Input::get('eis_no');   
-        // $code = Input::get('code');   
-
-        
-        $companyData = $request->validate([
-            'name' => 'required|unique:companies,name,'.$id,
-            'url' => 'required',
-            'registration_no' => 'required',
-            'description' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-            'tax_no' => 'required',
-            'epf_no' => 'required',
-            'socso_no' => 'required',
-            'eis_no' => 'required',
-            'code' => 'required|unique:companies,code,'.$id,
-            'status' => 'required',
-        ]);
 
 
-        Company::where('id', $id)->update($companyData);
-       
-        return redirect()->route('admin.settings.companies');
-    }
 
 
-    public function editPosition(Request $request)
-    {     
-        $position_id = $request->input('position_id');          
-        $name = Input::get('name');   
 
-        
-        EmployeePosition::where('id',$position_id)->update(array('name' => $name));
-
-        $positions = EmployeePosition::all();
-        return view('pages.admin.settings.position', ['positions'=>$positions]);
-    }
-
-    public function editGrade(Request $request)
-    {     
-        $grade_id = $request->input('grade_id');          
-        $name = Input::get('name');   
-
-        
-        EmployeeGrade::where('id',$grade_id)->update(array('name' => $name));
-
-        $grade = EmployeeGrade::all();
-        return view('pages.admin.settings.grade', ['grade'=>$grade]);
-    }
 
     public function displayDepartments()
     {
@@ -412,68 +514,11 @@ class SettingsController extends Controller
         return view('pages.admin.settings.department', ['departments'=>$departments]);
     }
 
-    public function displayTeams()
-    {
-        $team = Team::all();
-        return view('pages.admin.settings.team', ['team'=>$team]);
-    }
 
-    public function postAddTeam(Request $request)
-    {    
-        $team_name = $request->input('team_name');
-        $created_by = auth()->user()->id;
-       
-        DB::insert('insert into teams
-        (name, created_by) 
-        values
-        (?,?)',
-        [$team_name, $created_by]);
 
-        $team = Team::all();
-        return view('pages.admin.settings.team', ['team'=>$team]);
-    }
+    
 
-    public function displayPositions()
-    {
-        $positions = EmployeePosition::all();
-        return view('pages.admin.settings.position', ['positions'=>$positions]);
-    }
 
-    public function postAddPosition(Request $request)
-    {          
-        $name = $request->input('name');
-        $created_by = auth()->user()->id;
-       
-        DB::insert('insert into employee_positions
-        (name, created_by) 
-        values
-        (?,?)',
-        [$name, $created_by]);
-
-        $positions = EmployeePosition::all();
-        return view('pages.admin.settings.position', ['positions'=>$positions]);
-    }
-
-    public function displayGrades()
-    {
-        $grade = EmployeeGrade::all();
-        return view('pages.admin.settings.grade', ['grade'=>$grade]);
-    }
-
-    public function postAddGrade(Request $request)
-    {          
-        $name = $request->input('name');
-        $created_by = auth()->user()->id;
-       
-        DB::insert('insert into employee_grades
-        (name, created_by) 
-        values
-        (?,?)',
-        [$name, $created_by]);
-
-        $grade = EmployeeGrade::all();
-        return view('pages.admin.settings.grade', ['grade'=>$grade]);
-    }
 
     public function displayCompanyDetails($id)
     {       
