@@ -111,6 +111,11 @@ Breadcrumbs::for('admin.settings.grades.edit', function ($trail, $id) {
     $trail->push('Edit Grade', route('admin.settings.grades.edit', $id));
 });
 
+// Home > Settings > Department - Add
+Breadcrumbs::for('admin.settings.departments.add', function ($trail) {
+    $trail->parent('admin.settings.departments');
+    $trail->push('Add Department', route('admin.settings.departments.add'));
+});
 
 // Home > Settings > Team - Add
 Breadcrumbs::for('admin.settings.teams.add', function ($trail) {
@@ -147,6 +152,12 @@ Breadcrumbs::for('admin.settings.departments', function ($trail) {
 Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Cost Center Settings', route('admin.settings.cost-centres'));
+});
+
+// // Home > Settings > Cost Center
+Breadcrumbs::for('admin.settings.department', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Department Settings', route('admin.settings.department'));
 });
 // // Home > Settings > Team
 Breadcrumbs::for('admin.settings.teams', function ($trail) {

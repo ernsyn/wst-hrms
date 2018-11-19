@@ -296,7 +296,7 @@ class SettingsController extends Controller
     
             ]);  
             Department::create($departmentData);    
-            return redirect()->route('admin.settings.department');
+            return redirect()->route('admin.settings.departments');
         }
 
 
