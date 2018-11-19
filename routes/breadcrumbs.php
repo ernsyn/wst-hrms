@@ -99,6 +99,12 @@ Breadcrumbs::for('admin.settings.positions.edit', function ($trail, $id) {
     $trail->push('Edit Position', route('admin.settings.positions.edit', $id));
 });
 
+// Home > Settings > Branch - Add
+Breadcrumbs::for('admin.settings.branches.add', function ($trail) {
+    $trail->parent('admin.settings.branches');
+    $trail->push('Add Branch', route('admin.settings.branches.add'));
+});
+
 
 
 // Home > Settings > Grade - Add
@@ -134,6 +140,13 @@ Breadcrumbs::for('admin.settings.teams.edit', function ($trail, $id) {
 Breadcrumbs::for('admin.settings.departments.edit', function ($trail, $id) {
     $trail->parent('admin.settings.departments');
     $trail->push('Edit Team', route('admin.settings.departments.edit', $id));
+});
+
+
+// Home > Settings > Branches - Edit
+Breadcrumbs::for('admin.settings.branches.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.branches');
+    $trail->push('Edit Branch', route('admin.settings.branches.edit', $id));
 });
 
 // Home > Settings > Department - Edit

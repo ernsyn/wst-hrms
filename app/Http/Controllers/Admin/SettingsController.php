@@ -408,40 +408,32 @@ class SettingsController extends Controller
         return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);        
     }
 
-    
+    public function addBranch()
+    {
+        return view('pages.admin.settings.add-branch');
+    }
         
 
    
 
     public function postAddBranch(Request $request)
     {     
-        $name = $request->input('name');             
-        $contact_no_primary = Input::get('contact_no_primary');        
-        $contact_no_secondary = Input::get('contact_no_secondary');    
-        $contact_fax = Input::get('contact_fax');        
-        $address = Input::get('address'); 
-
-        $code = Input::get('code');        
-        $state = Input::get('state');    
-        $city = Input::get('city');        
-        $zip_code = Input::get('zip_code'); 
-        $created_by = auth()->user()->id;
        
-        DB::insert('insert into branches
-        (name, contact_no_primary,
-        contact_no_secondary, fax_no,
-        address,country_code, state,city,
-        zip_code,created_by    
-        )
-        values
-        (?,?,
-        ?,?,
-        ?,?,?,?,
-        ?,?)',
-        [$name,$contact_no_primary,
-        $contact_no_secondary,$contact_fax,
-        $address,$code,$state,$city,
-        $zip_code,$created_by]);
+        $branchData = $request->validate([
+            'name' => 'required',
+            'contact_no_primary' =>'required',
+            'contact_no_secondary' => 'required',
+            'fax_no' =>'required',
+            'address'=>'required',
+            'country_code'=> 'required',
+            'state'=> 'required',
+            'city'=>   'required',   
+            'zip_code'=> 'required'
+
+        ]);  
+        Branch::create($branchData);    
+        return redirect()->route('admin.settings.branches');
+
 
         $branch = Branch::all();
         return view('pages.admin.settings.branch', ['branch'=>$branch]);
