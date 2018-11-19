@@ -2,6 +2,7 @@
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
+
     @hasanyrole('super-admin|admin')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
@@ -37,7 +38,6 @@
         </div>
     </div>
     @endhasanyrole
-
     <ul id="menu-container" class="list-unstyled">
     </ul>
 </nav>

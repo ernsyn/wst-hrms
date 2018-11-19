@@ -1,4 +1,4 @@
-@extends('layouts.base') 
+@extends('layouts.admin-base') 
 @section('pageTitle', 'Job Configure') 
 @section('content')
 <div class="row">
