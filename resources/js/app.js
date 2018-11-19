@@ -25,7 +25,6 @@ var moment = require('moment');
 moment().format();
 import Chart from 'chart.js';
 
-import './datatables';
 import './modal';
 
 //dropzone
