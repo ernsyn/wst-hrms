@@ -259,6 +259,12 @@ class SettingsController extends Controller
         }
 
 
+        public function editBranch(Request $request, $id) {
+            $branch = Branch::find($id);
+    
+            return view('pages.admin.settings.edit-branch', ['branch' => $branch]);
+        }
+
         public function editCostCentre(Request $request, $id) {
             $costs = CostCentre::find($id);
     
@@ -456,28 +462,25 @@ class SettingsController extends Controller
     }
 
 
-    public function editBranch(Request $request)
+    public function postEditBranch(Request $request, $id)
     {     
-        $branch_id = $request->input('branch_id');          
-        $name = Input::get('name');   
-        $contact_no_primary = Input::get('contact_no_primary');          
-        $contact_no_secondary = Input::get('contact_no_secondary');   
-        $fax_no = Input::get('fax_no');          
-        $address = Input::get('address');   
-        $state = Input::get('state');          
-        $city = Input::get('city');   
-        $zip_code =Input::get('zip_code');          
-        $country_code = Input::get('country_code');   
+        $branchData = $request->validate([
+            'name' => 'required',
+            'contact_no_primary' =>'required',
+            'contact_no_secondary' => 'required',
+            'fax_no' =>'required',
+            'address'=>'required',
+            'country_code'=> 'required',
+            'state'=> 'required',
+            'city'=>   'required',   
+            'zip_code'=> 'required'  
 
-        
-        Branch::where('id',$branch_id)->update(
-            array('name' => $name,'contact_no_primary' => $contact_no_primary,
-            'contact_no_secondary' => $contact_no_secondary,'fax_no' => $fax_no,
-            'address' => $address,'state' => $state,
-            'city' => $city,'zip_code' => $zip_code,'country_code' => $country_code));
-
-        $branch = Branch::all();
-        return view('pages.admin.settings.branch', ['branch'=>$branch]);
+    
+            ]);
+    
+            Branch::where('id', $id)->update($branchData);
+           
+            return redirect()->route('admin.settings.branches');
     }
 
   
