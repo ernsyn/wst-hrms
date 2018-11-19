@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "c3e2ee805be60a9b1285d4000b66a9a3",
@@ -1630,16 +1630,16 @@
         },
         {
             "name": "league/oauth2-server",
-            "version": "7.2.0",
+            "version": "7.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-server.git",
-                "reference": "8184f771d43ea7305ddbb893d0daf6f0352ec5fd"
+                "reference": "f2cd3646ffe92a5ce83942cb487702e34b0cf504"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/8184f771d43ea7305ddbb893d0daf6f0352ec5fd",
-                "reference": "8184f771d43ea7305ddbb893d0daf6f0352ec5fd",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/f2cd3646ffe92a5ce83942cb487702e34b0cf504",
+                "reference": "f2cd3646ffe92a5ce83942cb487702e34b0cf504",
                 "shasum": ""
             },
             "require": {
@@ -1659,6 +1659,7 @@
                 "phpstan/phpstan-phpunit": "^0.9.4",
                 "phpstan/phpstan-strict-rules": "^0.9.0",
                 "phpunit/phpunit": "^6.3 || ^7.0",
+                "roave/security-advisories": "dev-master",
                 "zendframework/zend-diactoros": "^1.3.2"
             },
             "type": "library",
@@ -1676,6 +1677,12 @@
                     "name": "Alex Bilbie",
                     "email": "hello@alexbilbie.com",
                     "homepage": "http://www.alexbilbie.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andy Millington",
+                    "email": "andrew@noexceptions.io",
+                    "homepage": "https://www.noexceptions.io",
                     "role": "Developer"
                 }
             ],
@@ -1696,7 +1703,7 @@
                 "secure",
                 "server"
             ],
-            "time": "2018-06-23T16:57:59+00:00"
+            "time": "2018-11-15T22:37:18+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -1939,16 +1946,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.34.1",
+            "version": "1.35.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "19201b87f7dba2a7cbf1cccdf0e1da13c04ee9c9"
+                "reference": "5c05a2be472b22f63291d192410df9f0e0de3b19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/19201b87f7dba2a7cbf1cccdf0e1da13c04ee9c9",
-                "reference": "19201b87f7dba2a7cbf1cccdf0e1da13c04ee9c9",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/5c05a2be472b22f63291d192410df9f0e0de3b19",
+                "reference": "5c05a2be472b22f63291d192410df9f0e0de3b19",
                 "shasum": ""
             },
             "require": {
@@ -1956,8 +1963,11 @@
                 "symfony/translation": "~2.6 || ~3.0 || ~4.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "~2",
                 "phpunit/phpunit": "^4.8.35 || ^5.7"
+            },
+            "suggest": {
+                "friendsofphp/php-cs-fixer": "Needed for the `composer phpcs` command. Allow to automatically fix code style.",
+                "phpstan/phpstan": "Needed for the `composer phpstan` command. Allow to detect potential errors."
             },
             "type": "library",
             "extra": {
@@ -1990,7 +2000,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2018-11-08T13:33:47+00:00"
+            "time": "2018-11-14T21:55:58+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -3833,24 +3843,24 @@
         },
         {
             "name": "yajra/laravel-datatables",
-            "version": "v1.2.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/datatables.git",
-                "reference": "060c1ef2dc8b3e688852698ca263e6130a2239e5"
+                "reference": "f2ed8f557440a6132bd5f4f29382c64b9a2392d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/datatables/zipball/060c1ef2dc8b3e688852698ca263e6130a2239e5",
-                "reference": "060c1ef2dc8b3e688852698ca263e6130a2239e5",
+                "url": "https://api.github.com/repos/yajra/datatables/zipball/f2ed8f557440a6132bd5f4f29382c64b9a2392d4",
+                "reference": "f2ed8f557440a6132bd5f4f29382c64b9a2392d4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0",
-                "yajra/laravel-datatables-buttons": "3.*|4.*",
+                "yajra/laravel-datatables-buttons": "4.*",
                 "yajra/laravel-datatables-editor": "1.*",
                 "yajra/laravel-datatables-fractal": "1.*",
-                "yajra/laravel-datatables-html": "3.*",
+                "yajra/laravel-datatables-html": "4.*",
                 "yajra/laravel-datatables-oracle": "8.*"
             },
             "type": "library",
@@ -3875,27 +3885,27 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2018-11-02T03:53:13+00:00"
+            "time": "2018-11-14T08:42:34+00:00"
         },
         {
             "name": "yajra/laravel-datatables-buttons",
-            "version": "v4.4.0",
+            "version": "v4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-buttons.git",
-                "reference": "649f0f6c02b391e349cff3f186aa88b61fb0cdd0"
+                "reference": "95933d631df42affbaea6bc85fd0ebf5e642889a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/649f0f6c02b391e349cff3f186aa88b61fb0cdd0",
-                "reference": "649f0f6c02b391e349cff3f186aa88b61fb0cdd0",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/95933d631df42affbaea6bc85fd0ebf5e642889a",
+                "reference": "95933d631df42affbaea6bc85fd0ebf5e642889a",
                 "shasum": ""
             },
             "require": {
                 "illuminate/console": "^5.5",
                 "maatwebsite/excel": "^3.0",
                 "php": ">=7.0",
-                "yajra/laravel-datatables-html": "3.*",
+                "yajra/laravel-datatables-html": "3.*|4.*",
                 "yajra/laravel-datatables-oracle": "8.*"
             },
             "require-dev": {
@@ -3939,7 +3949,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2018-10-06T02:23:34+00:00"
+            "time": "2018-11-14T08:48:02+00:00"
         },
         {
             "name": "yajra/laravel-datatables-editor",
@@ -4005,16 +4015,16 @@
         },
         {
             "name": "yajra/laravel-datatables-fractal",
-            "version": "v1.2.1",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-fractal.git",
-                "reference": "23804250ce32ddba216295ce47f713f551dba45c"
+                "reference": "79d9e2c6c358b65b18ca392a1063c1a4631b4700"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-fractal/zipball/23804250ce32ddba216295ce47f713f551dba45c",
-                "reference": "23804250ce32ddba216295ce47f713f551dba45c",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-fractal/zipball/79d9e2c6c358b65b18ca392a1063c1a4631b4700",
+                "reference": "79d9e2c6c358b65b18ca392a1063c1a4631b4700",
                 "shasum": ""
             },
             "require": {
@@ -4059,23 +4069,24 @@
                 "fractal",
                 "laravel"
             ],
-            "time": "2018-06-12T06:23:13+00:00"
+            "time": "2018-11-15T01:09:11+00:00"
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v3.13.0",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "1c3c2ef2e88f965ad62fe21b98daac99f77151b2"
+                "reference": "85b3b065f43e246601bcfe91e8224ce1f683304b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/1c3c2ef2e88f965ad62fe21b98daac99f77151b2",
-                "reference": "1c3c2ef2e88f965ad62fe21b98daac99f77151b2",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/85b3b065f43e246601bcfe91e8224ce1f683304b",
+                "reference": "85b3b065f43e246601bcfe91e8224ce1f683304b",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "laravelcollective/html": "^5.4",
                 "php": ">=7.0",
                 "yajra/laravel-datatables-oracle": "8.*"
@@ -4087,7 +4098,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "4.0-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -4118,7 +4129,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2018-11-10T05:15:10+00:00"
+            "time": "2018-11-16T03:48:42+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
@@ -5278,16 +5289,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.4.3",
+            "version": "7.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c151651fb6ed264038d486ea262e243af72e5e64"
+                "reference": "b1be2c8530c4c29c3519a052c9fb6cee55053bbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c151651fb6ed264038d486ea262e243af72e5e64",
-                "reference": "c151651fb6ed264038d486ea262e243af72e5e64",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b1be2c8530c4c29c3519a052c9fb6cee55053bbd",
+                "reference": "b1be2c8530c4c29c3519a052c9fb6cee55053bbd",
                 "shasum": ""
             },
             "require": {
@@ -5358,7 +5369,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-10-23T05:57:41+00:00"
+            "time": "2018-11-14T16:52:02+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
