@@ -1,8 +1,12 @@
 @extends('layouts.admin-base') 
 @section('content')
 <div class="container">
+        @foreach ($errors->all() as $error)
+           <div>{{ $error }}</div>
+       @endforeach
+     
     <div class="card">
-        <form method="POST" action="{{ route('admin.settings.companies.add.post') }}" id="form_validate" data-parsley-validate>
+        <form method="POST" action="{{ route('admin.settings.companies.edit.post', ['id' => $company->id]) }}" id="form_validate" data-parsley-validate>
             <div class="card-body">
                 @csrf
                 <div class="row p-3">
@@ -92,6 +96,15 @@
                                     name="socso_no" value="{{ $company->socso_no }}" required>
                             </div>
                         </div>
+                        <div class="col-4">
+                                <div class="form-group">
+                                        <label for="companyStatus">Status</label>
+                                        <select class="form-control{{ $errors->has('status') ? ' is-invalid' : '' }}" id="companyStatus" name="status" value="{{ $company->status }}">
+                                          <option>Active</option>
+                                          <option>Inactive</option>
+                                        </select>
+                                      </div>
+                            </div>
                     </div>
                     {{--
                     <div class="form-group row w-100">
@@ -103,7 +116,7 @@
                 <button type="submit" class="btn btn-primary">
                             {{ __('Submit') }}
                             </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Close</a>
             </div>
         </form>
     </div>

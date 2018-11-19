@@ -47,7 +47,7 @@
                         
                                 {{-- <td>          <button onclick="window.location='{{ url('/admin/company-edit/'.$row['id']) }}';" class="btn btn-default">View</button></td> --}}
                                 <td>
-                                <a class="btn btn-primary" href="{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}" role="button">Edit</a>
+                                    <a class="btn btn-primary" href="{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}" role="button">Edit</a>
                                     <button class="btn btn-outline-success waves-effect" onclick="window.location='{{ url('admin/setup/company-details/'.$company['id']) }}';">VIEW</button>
                                 </td>
                             </tr>

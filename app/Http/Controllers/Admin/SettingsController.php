@@ -329,32 +329,41 @@ class SettingsController extends Controller
         return view('pages.admin.settings.edit-company', ['company' => $company]);
     }
 
-    public function postEditCompany(Request $request)
-    {     
-        $company_id = $request->input('company_id');          
-        $name = Input::get('name');   
-        $registration_no = Input::get('registration_no');          
-        $description = Input::get('description');   
-        $url = Input::get('url');          
-        $address = Input::get('address');   
-        $phone = Input::get('phone');          
-        $gst_no = Input::get('gst_no');   
-        $tax_no =Input::get('tax_no');          
-        $epf_no = Input::get('epf_no');   
-        $socso_no =Input::get('socso_no');          
-        $eis_no = Input::get('eis_no');   
-        $code = Input::get('code');   
+    public function postEditCompany(Request $request, $id)
+    {              
+        // $name = Input::get('name');   
+        // $registration_no = Input::get('registration_no');          
+        // $description = Input::get('description');   
+        // $url = Input::get('url');          
+        // $address = Input::get('address');   
+        // $phone = Input::get('phone');          
+        // $gst_no = Input::get('gst_no');   
+        // $tax_no =Input::get('tax_no');          
+        // $epf_no = Input::get('epf_no');   
+        // $socso_no =Input::get('socso_no');          
+        // $eis_no = Input::get('eis_no');   
+        // $code = Input::get('code');   
 
         
-        Company::where('id',$company_id)->update(
-            array('name' => $name,'registration_no' => $registration_no,
-            'description' => $description,'url' => $url,
-            'address' => $address,'phone' => $phone,
-            'gst_no' => $gst_no,'tax_no' => $tax_no,'epf_no' => $epf_no,
-            'socso_no' => $socso_no,'eis_no' => $eis_no,'code'=>$code));
+        $companyData = $request->validate([
+            'name' => 'required|unique:companies,name,'.$id,
+            'url' => 'required',
+            'registration_no' => 'required',
+            'description' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'tax_no' => 'required',
+            'epf_no' => 'required',
+            'socso_no' => 'required',
+            'eis_no' => 'required',
+            'code' => 'required|unique:companies,code,'.$id,
+            'status' => 'required',
+        ]);
 
-        $company = Company::all();
-        return view('pages.admin.settings.company', ['company'=>$company]);
+
+        Company::where('id', $id)->update($companyData);
+       
+        return redirect()->route('admin.settings.companies');
     }
 
 

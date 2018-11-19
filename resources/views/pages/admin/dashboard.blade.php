@@ -25,7 +25,7 @@
             </a>
         </div>
         <div class="p-2 col-xl-3 col-lg-6">
-            <a href="{{ route('admin/leaverequest') }}">
+            <a href="">
                 <div class="card border-0 bg-success">
                     <div class="card-body">
                         <i class="fas fa-calendar-check fa-4x float-right text-white"></i>
@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ route('admin/leaverequest') }}" type="button" class="btn btn-outline-primary btn-block">View All Request</a></div>
+                    <a href="" type="button" class="btn btn-outline-primary btn-block">View All Request</a></div>
             </div>
         </div>
     </div>
