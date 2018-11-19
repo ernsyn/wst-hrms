@@ -54,21 +54,6 @@ class EmployeeController extends Controller
 
     public function display($id)
     {
-        // $user = User::join('employees','employees.user_id','=','users.id')
-        // // ->join('countries','countries.id','=','employees.nationality')
-        // //->join('employee_jobs','employee_jobs.emp_id','=','employees.id')
-        // ->select('users.name as name','users.email as email', 
-        // 'employees.contact_no as contact_no', 'employees.address as address', 
-        // 'employees.ic_no as ic_no', 'employees.gender as gender', 
-        // 'employees.dob as dob','employees.marital_status as marital_status',
-        // 'employees.race as race', 'employees.total_children as total_child', 
-        // 'employees.driver_license_no as driver_license_no', 
-        // 'employees.driver_license_expiry_date as driver_license_expiry_date',
-        // 'users.id as user_id','employees.epf_no as epf_no',
-        // 'employees.tax_no as tax_no ','employees.basic_salary as basic_salary')
-        // ->where('employees.id',$id)
-        // ->first();
-
         $employee = Employee::with('user', 'employee_jobs')->find($id);
 
         $bank_list = Bank::all();
