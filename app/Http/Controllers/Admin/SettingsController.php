@@ -239,9 +239,7 @@ class SettingsController extends Controller
 
     public function postEditTeam(Request $request, $id)
 
-
- 
-        {              
+       {              
             
             $teamData = $request->validate([
                 'name' => 'required|unique:teams,name,'.$id,
@@ -288,6 +286,51 @@ class SettingsController extends Controller
             $costs = CostCentre::find($id);
     
             return view('pages.admin.settings.edit-cost-centre', ['costs' => $costs]);
+        }
+    
+
+        public function postEditCostCentre(Request $request,$id)
+        {              
+            
+            $costCentreData = $request->validate([
+                'name' => 'required|unique:cost_centres,name,'.$id,
+                'seniority_pay' =>'required',
+                'payroll_type' =>'required'
+    
+            ]);
+    
+            CostCentre::where('id', $id)->update($costCentreData);
+           
+            return redirect()->route('admin.settings.cost-centres');
+        }
+
+        public function displayDepartments()
+        {
+            $department = Department::all();
+            return view('pages.admin.settings.department', ['department'=>$department]);
+        }
+    
+        public function addDepartment()
+        {
+            return view('pages.admin.settings.add-department');
+        }
+        
+        
+        public function postAddDepartment(Request $request)
+        {     
+            $departmentData = $request->validate([
+                'name' => 'required'
+    
+            ]);  
+            Department::create($departmentData);    
+            return redirect()->route('admin.settings.department');
+        }
+
+
+        public function editDepartment(Request $request, $id) {
+            $costs = CostCentre::find($id);
+    
+            return view('pages.admin.settings.edit-department', ['costs' => $costs]);
         }
     
 
