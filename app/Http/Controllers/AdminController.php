@@ -1178,9 +1178,6 @@ class AdminController extends Controller
         return view('pages.admin.setup.cost-centre', ['costs'=>$costs]);
     }
 
-
-
-
     public function editDepartment(Request $request)
     {     
         $department_id = $request->input('department_id');          

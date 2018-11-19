@@ -74,7 +74,7 @@ class EmployeeController extends Controller
         $countries = Country::all();
         $roles = Roles::all();
 
-        return view('pages.admin.employees.add', compact('countries','roles'));
+        return view('pages.admin.employees.add.post', compact('countries','roles'));
     }
 
 

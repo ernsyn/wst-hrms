@@ -61,12 +61,12 @@ class SettingsController extends Controller
     {       
 
         $company = Company::all();
-        return view('pages.admin.settings.setting-company', ['company'=>$company]);
+        return view('pages.admin.settings.company', ['company'=>$company]);
     }
 
     public function displayAddCompany()
     {
-        return view('pages.admin.settings.setting-add-company');
+        return view('pages.admin.settings.add-company');
     }
 
     public function addSetupCompany(Request $request)
@@ -113,7 +113,7 @@ class SettingsController extends Controller
         ->get();
 
         $company = Company::all();
-        return view('pages.admin.settings.setting-company', ['company'=>$company]);
+        return view('pages.admin.settings.company', ['company'=>$company]);
     }
 
     public function displaySetupJob()
@@ -124,14 +124,14 @@ class SettingsController extends Controller
         $positions = EmployeePosition::all();
         $grade = EmployeeGrade::all();
         
-        return view('pages.admin.settings.setting-job-configure', ['costs'=>$costs, 'departments'=>$departments, 'teams'=>$teams, 'positions'=>$positions, 'grade'=>$grade]);
+        return view('pages.admin.settings.job-configure', ['costs'=>$costs, 'departments'=>$departments, 'teams'=>$teams, 'positions'=>$positions, 'grade'=>$grade]);
     }
 
     public function displaySetupBranch()
     {       
         $branch = Branch::all();
         
-        return view('pages.admin.settings.setting-branch', ['branch'=>$branch]);
+        return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }    
 
 
@@ -219,7 +219,7 @@ class SettingsController extends Controller
     public function displayCostCentre()
     {
         $costs = CostCentre::all();
-        return view('pages.admin.settings.setting-cost-centre', ['costs'=>$costs]);
+        return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
     }
 
     public function addCostCentre(Request $request)
@@ -236,7 +236,7 @@ class SettingsController extends Controller
         [$category_name, $seniority_pay, $payroll_type, $created_by]);
 
         $costs = CostCentre::all();
-        return view('pages.admin.settings.setting-cost-centre', ['costs'=>$costs]);
+        return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
     }
 
     public function addBranch(Request $request)
@@ -270,7 +270,7 @@ class SettingsController extends Controller
         $zip_code,$created_by]);
 
         $branch = Branch::all();
-        return view('pages.admin.settings.setting-branch', ['branch'=>$branch]);
+        return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }
 
     public function editCostCentre(Request $request)
@@ -284,7 +284,7 @@ class SettingsController extends Controller
             'payroll_type' => $payroll_type));
 
         $costs = CostCentre::all();
-        return view('pages.admin.settings.setting-cost-centre', ['costs'=>$costs]);
+        return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
     }
 
 
@@ -300,7 +300,7 @@ class SettingsController extends Controller
             array('name' => $department_name));
 
         $departments = Department::all();
-        return view('pages.admin.settings.setting-department', ['departments'=>$departments]);
+        return view('pages.admin.settings.department', ['departments'=>$departments]);
     }
 
     public function editTeam(Request $request)
@@ -313,7 +313,7 @@ class SettingsController extends Controller
             array('name' => $name));
 
         $team = Team::all();
-        return view('pages.admin.settings.setting-team', ['team'=>$team]);
+        return view('pages.admin.settings.team', ['team'=>$team]);
     }
     public function editBranch(Request $request)
     {     
@@ -336,7 +336,7 @@ class SettingsController extends Controller
             'city' => $city,'zip_code' => $zip_code,'country_code' => $country_code));
 
         $branch = Branch::all();
-        return view('pages.admin.settings.setting-branch', ['branch'=>$branch]);
+        return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }
 
     public function editCompany(Request $request)
@@ -364,7 +364,7 @@ class SettingsController extends Controller
             'socso_no' => $socso_no,'eis_no' => $eis_no,'code'=>$code));
 
         $company = Company::all();
-        return view('pages.admin.settings.setting-company', ['company'=>$company]);
+        return view('pages.admin.settings.company', ['company'=>$company]);
     }
 
 
@@ -377,7 +377,7 @@ class SettingsController extends Controller
         EmployeePosition::where('id',$position_id)->update(array('name' => $name));
 
         $positions = EmployeePosition::all();
-        return view('pages.admin.settings.setting-position', ['positions'=>$positions]);
+        return view('pages.admin.settings.position', ['positions'=>$positions]);
     }
 
     public function editGrade(Request $request)
@@ -389,13 +389,13 @@ class SettingsController extends Controller
         EmployeeGrade::where('id',$grade_id)->update(array('name' => $name));
 
         $grade = EmployeeGrade::all();
-        return view('pages.admin.settings.setting-grade', ['grade'=>$grade]);
+        return view('pages.admin.settings.grade', ['grade'=>$grade]);
     }
 
     public function displayDepartment()
     {
         $departments = Department::all();
-        return view('pages.admin.settings.setting-department', ['departments'=>$departments]);
+        return view('pages.admin.settings.department', ['departments'=>$departments]);
     }
 
     public function addDepartment(Request $request)
@@ -410,13 +410,13 @@ class SettingsController extends Controller
         [$name, $created_by]);
 
         $departments = Department::all();
-        return view('pages.admin.settings.setting-department', ['departments'=>$departments]);
+        return view('pages.admin.settings.department', ['departments'=>$departments]);
     }
 
     public function displayTeam()
     {
         $team = Team::all();
-        return view('pages.admin.settings.setting-team', ['team'=>$team]);
+        return view('pages.admin.settings.team', ['team'=>$team]);
     }
 
     public function addTeam(Request $request)
@@ -431,13 +431,13 @@ class SettingsController extends Controller
         [$team_name, $created_by]);
 
         $team = Team::all();
-        return view('pages.admin.settings.setting-team', ['team'=>$team]);
+        return view('pages.admin.settings.team', ['team'=>$team]);
     }
 
     public function displayPosition()
     {
         $positions = EmployeePosition::all();
-        return view('pages.admin.settings.setting-position', ['positions'=>$positions]);
+        return view('pages.admin.settings.position', ['positions'=>$positions]);
     }
 
     public function addPosition(Request $request)
@@ -452,13 +452,13 @@ class SettingsController extends Controller
         [$name, $created_by]);
 
         $positions = EmployeePosition::all();
-        return view('pages.admin.settings.setting-position', ['positions'=>$positions]);
+        return view('pages.admin.settings.position', ['positions'=>$positions]);
     }
 
     public function displayGrade()
     {
         $grade = EmployeeGrade::all();
-        return view('pages.admin.settings.setting-grade', ['grade'=>$grade]);
+        return view('pages.admin.settings.grade', ['grade'=>$grade]);
     }
 
     public function addGrade(Request $request)
@@ -473,7 +473,7 @@ class SettingsController extends Controller
         [$name, $created_by]);
 
         $grade = EmployeeGrade::all();
-        return view('pages.admin.settings.setting-grade', ['grade'=>$grade]);
+        return view('pages.admin.settings.grade', ['grade'=>$grade]);
     }
 
     public function displayCompanyDetails($id)
@@ -494,7 +494,7 @@ class SettingsController extends Controller
         $cost_centre = CostCentre::all();
         $grade = EmployeeGrade::all();
 
-        return view('pages.admin.settings.setting-company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
+        return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
         'security'=>$security, 'additions'=>$additions, 'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre]);
     }
 
