@@ -85,6 +85,8 @@ Breadcrumbs::for('admin.settings.companies.edit', function ($trail, $id) {
     $trail->push('Edit Company', route('admin.settings.companies.edit', $id));
 });
 
+
+
 // Home > Settings > Position - Add
 Breadcrumbs::for('admin.settings.positions.add', function ($trail) {
     $trail->parent('admin.settings.positions');
@@ -128,7 +130,17 @@ Breadcrumbs::for('admin.settings.teams.edit', function ($trail, $id) {
     $trail->parent('admin.settings.teams');
     $trail->push('Edit Team', route('admin.settings.teams.edit', $id));
 });
+// Home > Settings > Department - Edit
+Breadcrumbs::for('admin.settings.departments.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.departments');
+    $trail->push('Edit Team', route('admin.settings.departments.edit', $id));
+});
 
+// Home > Settings > Department - Edit
+Breadcrumbs::for('admin.settings.departments.edit.post', function ($trail, $id) {
+    $trail->parent('admin.settings.departments');
+    $trail->push('Edit Team', route('admin.settings.departments.edit.post', $id));
+});
 
 // // Home > Settings > Cost-Centre
 Breadcrumbs::for('admin.settings.cost-centres.add', function ($trail) {

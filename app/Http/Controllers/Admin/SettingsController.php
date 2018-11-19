@@ -301,12 +301,13 @@ class SettingsController extends Controller
 
 
         public function editDepartment(Request $request, $id) {
-            $costs = CostCentre::find($id);
+            $department = Department::find($id);
     
-            return view('pages.admin.settings.edit-department', ['costs' => $costs]);
+            return view('pages.admin.settings.edit-department', ['department' => $department]);
         }
 
 
+  
 
 
 
@@ -448,19 +449,19 @@ class SettingsController extends Controller
 
 
 
-    public function postEditDepartment(Request $request)
-    {     
-        $department_id = $request->input('department_id');          
-        $department_name = Input::get('department_name');   
-
+    public function postEditDepartment(Request $request,$id)
+    {              
         
-        Department::where('id',$department_id)->update(
-            array('name' => $department_name));
+        $departmentData = $request->validate([
+            'name' => 'required|unique:departments,name,'.$id
+         
 
-        $departments = Department::all();
-        return view('pages.admin.settings.department', ['departments'=>$departments]);
+        ]);
+
+        Department::where('id', $id)->update($departmentData);
+       
+        return redirect()->route('admin.settings.departments');
     }
-
 
 
     public function editBranch(Request $request)
