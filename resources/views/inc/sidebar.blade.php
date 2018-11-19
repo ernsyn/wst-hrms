@@ -61,42 +61,44 @@
         </li>
 
         {{-- SECTION: Setup --}}
-        <li class="menu-section {{ request()->is('setup/company','setup/cost-centre','setup/department','setup/branch','setup/team','setup/position','setup/grade') ? 'active' : '' }}">
+        <li class="menu-section {{ request()->is('admin.settings.setting-company','admin.settings.setting-cost-centre','admin.settings.setting-department','admin.settings.setting-branch','admin.settings.setting-team','admin.settings.setting-position','admin.settings.setting-grade') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#setupSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1"><i class="fas fa-cog"></i></div>
                     <div class="col-10">Setup</div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('setup/company','setup/cost-centre','setup/department','setup/branch','setup/team','setup/position','setup/grade') ? 'show' : '' }}"
+            <ul class="collapse list-unstyled {{ request()->is('admin.settings.setting-company',
+            'admin.settings.setting-cost-centre','admin.settings.setting-department','admin.settings.setting-branch','admin.settings.setting-team',
+            'admin.settings.setting-position','admin.settings.setting-grade') ? 'show' : '' }}"
                 id="setupSubmenu">
                 {{-- OPTION: Company --}}
-                <li class="menu-option {{ request()->is('setup/company') ? 'active' : '' }}">
-                    <a href="/setup/company">Company</a>
+                <li class="menu-option {{ request()->is('admin.settings.setting-company') ? 'active' : '' }}">
+                    <a href="admin.settings.setting-company">Company</a>
                 </li>
                 {{-- OPTION: Cost Centre --}}
-                <li class="menu-option {{ request()->is('setup/cost-centre') ? 'active' : '' }}">
-                    <a href="/setup/cost-centre">Cost Centre</a>
+                <li class="menu-option {{ request()->is('admin.settings.setting-cost-centre') ? 'active' : '' }}">
+                    <a href="admin.settings.setting-cost-centre">Cost Centre</a>
                 </li>
                 {{-- OPTION: Department --}}
-                <li class="menu-option {{ request()->is('setup/department') ? 'active' : '' }}">
-                    <a href="/setup/department">Department</a>
+                <li class="menu-option {{ request()->is('admin.settings.setting-department') ? 'active' : '' }}">
+                    <a href="admin.settings.setting-department">Department</a>
                 </li>
                 {{-- OPTION: Branch --}}
-                <li class="menu-option {{ request()->is('setup/branch') ? 'active' : '' }}">
-                    <a href="/setup/branch">Branch</a>
+                <li class="menu-option {{ request()->is('admin.settings.setting-branch') ? 'active' : '' }}">
+                    <a href="admin.settings.setting-branch">Branch</a>
                 </li>
                 {{-- OPTION: Team --}}
-                <li class="menu-option {{ request()->is('setup/team') ? 'active' : '' }}">
-                    <a href="/setup/team">Team</a>
+                <li class="menu-option {{ request()->is('admin.settings.setting-team') ? 'active' : '' }}">
+                    <a href="admin.settings.setting-team">Team</a>
                 </li>
                 {{-- OPTION: Position --}}
-                <li class="menu-option {{ request()->is('setup/position') ? 'active' : '' }}">
-                    <a href="/setup/position">Position</a>
+                <li class="menu-option {{ request()->is('admin.settings.setting-position') ? 'active' : '' }}">
+                    <a href="admin.settings.setting-position">Position</a>
                 </li>
                 {{-- OPTION: Grade --}}
-                <li class="menu-option {{ request()->is('setup/grade') ? 'active' : '' }}">
-                    <a href="/setup/grade">Grade</a>
+                <li class="menu-option {{ request()->is('admin.settings.setting-grade') ? 'active' : '' }}">
+                    <a href="admin.settings.setting-grade">Grade</a>
                 </li>
                 {{-- OPTION: General Information --}}
                 <li class="menu-option {{ request()->is('') ? 'active' : '' }}">

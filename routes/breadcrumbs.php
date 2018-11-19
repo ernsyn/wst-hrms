@@ -89,19 +89,19 @@ Breadcrumbs::for('setup', function ($trail) {
 });
 
 // Home > Setup > Company
-Breadcrumbs::for('admin/setup/company', function ($trail) {
+Breadcrumbs::for('admin.settings.setting-company', function ($trail) {
     $trail->parent('setup');
-    $trail->push('Company', route('admin/setup/company'));
+    $trail->push('Company', route('admin.settings.setting-company'));
 });
-Breadcrumbs::for('admin/setup/add-company', function ($trail) {
+Breadcrumbs::for('admin.settings.setting-add-company', function ($trail) {
     $trail->parent('setup');
-    $trail->push('Company', route('admin/setup/add-company'));
+    $trail->push('Company', route('admin.settings.setting-add-company'));
 });
 
 // Home > Setup > Cost-Centre
-Breadcrumbs::for('admin/setup/cost-centre', function ($trail) {
+Breadcrumbs::for('admin.settings.setting-cost-centre', function ($trail) {
     $trail->parent('setup');
-    $trail->push('Cost-Centre', route('admin/setup/cost-centre'));
+    $trail->push('Cost-Centre', route('admin.settings.setting-cost-centre'));
 });
 
 Breadcrumbs::for('add_branch', function ($trail) {
@@ -145,31 +145,31 @@ Breadcrumbs::for('edit_company', function ($trail) {
     $trail->push('Add Company', route('edit_company'));
 });
 // Home > Setup > Department
-Breadcrumbs::for('admin/setup/department', function ($trail) {
+Breadcrumbs::for('admin.settings.setting-department', function ($trail) {
     $trail->parent('setup');
-    $trail->push('Department', route('admin/setup/department'));
+    $trail->push('Department', route('admin.settings.setting-department'));
 });
 
 // Home > Setup > Team
-Breadcrumbs::for('admin/setup/team', function ($trail) {
+Breadcrumbs::for('admin.settings.setting-team', function ($trail) {
     $trail->parent('setup');
-    $trail->push('Team', route('admin/setup/team'));
+    $trail->push('Team', route('admin.settings.setting-team'));
 });
 
 // Home > Setup > Position
-Breadcrumbs::for('admin/setup/position', function ($trail) {
+Breadcrumbs::for('admin.settings.setting-position', function ($trail) {
     $trail->parent('setup');
-    $trail->push('Position', route('admin/setup/position'));
+    $trail->push('Position', route('admin.settings.setting-position'));
 });
 
 // Home > Setup > Grade
-Breadcrumbs::for('setup/grade', function ($trail) {
+Breadcrumbs::for('admin.settings.setting-grade', function ($trail) {
     $trail->parent('setup');
-    $trail->push('Grade', route('setup/grade'));
+    $trail->push('Grade', route('admin.settings.setting-grade'));
 });
-Breadcrumbs::for('setup/branch', function ($trail) {
+Breadcrumbs::for('admin.settings.setting-branch', function ($trail) {
     $trail->parent('setup');
-    $trail->push('Branch', route('setup/branch'));
+    $trail->push('Branch', route('admin.settings.setting-branch'));
 });
 
 // Home > Admin > Leave Request
@@ -242,9 +242,9 @@ Breadcrumbs::for('add_cost_centre', function ($trail) {
 });
 
 // Home > Admin > Employee List > Profile
-Breadcrumbs::for('/setup/company-details/{id}', function ($trail) {
+Breadcrumbs::for('/admin.settings.setting-company-details/{id}', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Company Details', route('/setup/company-details/{id}', ''));
+    $trail->push('Company Details', route('/admin.settings.setting-company-details/{id}', ''));
 });
 
 // Home > Admin > Employee List > Profile
