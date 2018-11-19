@@ -6,14 +6,6 @@
     right: 0;
 }
 
-.content-active {
-    width: calc(100%);
-
-    table.dataTable {
-        width: calc(100%);
-    }
-}
-
 //2.Scrollbar
 ::-webkit-scrollbar {
     height: 0px;
@@ -70,14 +62,6 @@ ol.breadcrumb {
 //8.remove caret
 button.dropdown-toggle::after {
     display: none;
-}
-
-//9.datatable styling
-table.dataTable {
-    thead tr {
-        background-color: $blue;
-        white-space: nowrap;
-    }
 }
 
 //10. bulletin

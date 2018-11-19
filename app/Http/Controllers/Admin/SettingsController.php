@@ -331,20 +331,7 @@ class SettingsController extends Controller
 
     public function postEditCompany(Request $request, $id)
     {              
-        // $name = Input::get('name');   
-        // $registration_no = Input::get('registration_no');          
-        // $description = Input::get('description');   
-        // $url = Input::get('url');          
-        // $address = Input::get('address');   
-        // $phone = Input::get('phone');          
-        // $gst_no = Input::get('gst_no');   
-        // $tax_no =Input::get('tax_no');          
-        // $epf_no = Input::get('epf_no');   
-        // $socso_no =Input::get('socso_no');          
-        // $eis_no = Input::get('eis_no');   
-        // $code = Input::get('code');   
-
-        
+       
         $companyData = $request->validate([
             'name' => 'required|unique:companies,name,'.$id,
             'url' => 'required',
@@ -359,7 +346,6 @@ class SettingsController extends Controller
             'code' => 'required|unique:companies,code,'.$id,
             'status' => 'required',
         ]);
-
 
         Company::where('id', $id)->update($companyData);
        
