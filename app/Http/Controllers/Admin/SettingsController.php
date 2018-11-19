@@ -66,8 +66,8 @@ class SettingsController extends Controller
 
     public function displayCompanies()
     {       
-        $company = Company::all();
-        return view('pages.admin.settings.company', ['company'=>$company]);
+        $companies = Company::all();
+        return view('pages.admin.settings.company', ['companies' => $companies]);
     }
 
     public function addCompany()
@@ -77,49 +77,25 @@ class SettingsController extends Controller
 
     public function postAddCompany(Request $request)
     {
-        $name = $request->input('name');
-        $url = $request->input('url');       
-        $registration_no = $request->input('registration_no');
-        $description = $request->input('description');
-        $address = $request->input('address');       
-        $phone = $request->input('phone');
-        $tax_no = $request->input('tax_no');
-        $epf_no = $request->input('epf_no');       
-        $socso_no = $request->input('socso_no');
-        $eis_no = $request->input('eis_no');
-        $status = Input::get('status');
-        $created_by = auth()->user()->id;
-        $code = $request->input('code');
-        $updated_by =$request->input('updated_by');
-        
-       
-        // DB::insert('insert into companies
-        // (code, name, url, registration_no,
-        // description, address, phone,
-        // tax_no, epf_no, socso_no,
-        // eis_no, status, created_by,
-        // updated_by,gst_no) 
-        // values
-        // (?,?,?,?,
-        // ?,?,?,
-        // ?,?,?,
-        // ?,?,?,
-        // ?,?)',
-        // [$code, $name, $url, $registration_no,
-        // $description, $address, $phone,
-        // $tax_no, $epf_no, $socso_no,
-        // $eis_no,'Active', $created_by,
-        // $created_by,'none']);
+        $companyData = $request->validate([
+            'name' => 'required|unique:companies',
+            'url' => 'required',
+            'registration_no' => 'required',
+            'description' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'tax_no' => 'required',
+            'epf_no' => 'required',
+            'socso_no' => 'required',
+            'eis_no' => 'required',
+            'code' => 'required|unique:companies',
+        ]);
 
-        $company = Company::join('employees','employees.id','=','companies.updated_by')
-        ->join('users','users.id','=','employees.id')
-        ->select('companies.name as name','companies.description as description','companies.logo_media_id as image','companies.tax_no as tax_number',
-        'companies.epf_no as epf_number','companies.socso_no as socso_number','companies.eis_no as eis_number',
-        'companies.updated_at as updated_on','users.name as EmpName','companies.status as status,')
-        ->get();
+        $companyData['status'] = 'active';
 
-        $company = Company::all();
-        return view('pages.admin.settings.company', ['company'=>$company]);
+        Company::create($companyData);
+
+        return redirect()->route('admin.settings.companies');
     }
     
 
@@ -347,7 +323,13 @@ class SettingsController extends Controller
         return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }
 
-    public function editCompany(Request $request)
+    public function editCompany(Request $request, $id) {
+        $company = Company::find($id);
+
+        return view('pages.admin.settings.edit-company', ['company' => $company]);
+    }
+
+    public function postEditCompany(Request $request)
     {     
         $company_id = $request->input('company_id');          
         $name = Input::get('name');   

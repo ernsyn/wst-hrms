@@ -120,7 +120,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
  
     
     // Settings - Add
-    Route::get('settings/companies/add','Admin\SettingsController@addCompany')->name('admin.settings.companies.add.post');
+    Route::get('settings/companies/add','Admin\SettingsController@addCompany')->name('admin.settings.companies.add');
     Route::post('settings/companies/add','Admin\SettingsController@postAddCompany')->name('admin.settings.companies.add.post');
 
     Route::post('settings/departments/add','Admin\SettingsController@postAddDepartment')->name('admin.settings.departments.add.post');
@@ -136,13 +136,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('settings/cost-centres/add','Admin\SettingsController@postAddCostCentre')->name('admin.settings.cost-centres.add.post');
 
     //setting-edit
+    Route::get('settings/companies/{id}/edit','Admin\SettingsController@editCompany')->name('admin.settings.companies.edit')->where('id', '[0-9]+');
+    Route::post('settings/companies/{id}/edit','Admin\SettingsController@postEditCompany')->name('admin.settings.companies.edit.post')->where('id', '[0-9]+');
+    
     Route::post('settings/cost-centres/edit','Admin\SettingsController@editCostCentre')->name('admin.settings.cost-centres.edit.post');
     Route::post('settings/grades/edit','Admin\SettingsController@editGrade')->name('admin.settings.grades.edit.post');
     Route::post('settings/positions/edit','Admin\SettingsController@editPosition')->name('admin.settings.positions.edit.post');
     Route::post('settings/departments/edit','Admin\SettingsController@editDepartment')->name('admin.settings.departments.edit.post');
     Route::post('settings/teams/edit','Admin\SettingsController@editTeam')->name('admin.settings.teams.edit.post');
     Route::post('settings/branches/edit','Admin\SettingsController@editBranch')->name('admin.settings.branches.edit.post');
-    Route::post('settings/companies/edit','Admin\SettingsController@editCompany')->name('admin.settings.companies.edit.post');
     Route::post('settings/leave-balances/edit','Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balances.edit.post');
     Route::post('settings/company-banks/edit','Admin\SettingsController@editCompanyBank')->name('admin.settings.company-banks.edit.post');
     Route::post('settings/security-groups/edit','Admin\SettingsController@editSecurityGroup')->name('admin.settings.security-groups.edit.post');

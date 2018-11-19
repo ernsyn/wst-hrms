@@ -73,7 +73,17 @@ Breadcrumbs::for('admin.settings.companies', function ($trail) {
     $trail->push('Companies Settings', route('admin.settings.companies'));
 });
 
+// Home > Settings > Company - Add
+Breadcrumbs::for('admin.settings.companies.add', function ($trail) {
+    $trail->parent('admin.settings.companies');
+    $trail->push('Add Company', route('admin.settings.companies.add'));
+});
 
+// Home > Settings > Company - Edit
+Breadcrumbs::for('admin.settings.companies.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.companies');
+    $trail->push('Edit Company', route('admin.settings.companies.edit', $id));
+});
 
 // // Home > Settings > Cost-Centre
 Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
