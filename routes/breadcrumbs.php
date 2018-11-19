@@ -85,6 +85,8 @@ Breadcrumbs::for('admin.settings.companies.edit', function ($trail, $id) {
     $trail->push('Edit Company', route('admin.settings.companies.edit', $id));
 });
 
+
+
 // Home > Settings > Position - Add
 Breadcrumbs::for('admin.settings.positions.add', function ($trail) {
     $trail->parent('admin.settings.positions');
@@ -111,6 +113,11 @@ Breadcrumbs::for('admin.settings.grades.edit', function ($trail, $id) {
     $trail->push('Edit Grade', route('admin.settings.grades.edit', $id));
 });
 
+// Home > Settings > Department - Add
+Breadcrumbs::for('admin.settings.departments.add', function ($trail) {
+    $trail->parent('admin.settings.departments');
+    $trail->push('Add Department', route('admin.settings.departments.add'));
+});
 
 // Home > Settings > Team - Add
 Breadcrumbs::for('admin.settings.teams.add', function ($trail) {
@@ -123,7 +130,17 @@ Breadcrumbs::for('admin.settings.teams.edit', function ($trail, $id) {
     $trail->parent('admin.settings.teams');
     $trail->push('Edit Team', route('admin.settings.teams.edit', $id));
 });
+// Home > Settings > Department - Edit
+Breadcrumbs::for('admin.settings.departments.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.departments');
+    $trail->push('Edit Team', route('admin.settings.departments.edit', $id));
+});
 
+// Home > Settings > Department - Edit
+Breadcrumbs::for('admin.settings.departments.edit.post', function ($trail, $id) {
+    $trail->parent('admin.settings.departments');
+    $trail->push('Edit Team', route('admin.settings.departments.edit.post', $id));
+});
 
 // // Home > Settings > Cost-Centre
 Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
