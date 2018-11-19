@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Addition extends Model
 {
     protected $table = 'additions';
+
+
     
     public function cost_centres()
     {
@@ -19,4 +21,9 @@ class Addition extends Model
         return $this->belongsToMany('App\EmployeeGrade')
         ->withTimestamps();
     }
+
+
+    protected $fillable = [
+   
+    ];
 }
