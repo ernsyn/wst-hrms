@@ -59,6 +59,10 @@ ol.breadcrumb {
 // 	display:none;
 // }
 
+.content-active {
+    width: calc(100%);
+}
+
 //8.remove caret
 button.dropdown-toggle::after {
     display: none;

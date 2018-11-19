@@ -35,9 +35,10 @@
                         <td>{{$branches['country_code']}}</td>
                         <td>{{$branches['contact_no_primary']}}</td>
                         <td>{{$branches['state']}}</td>
-                        <td> <a class="btn btn-primary" href="{{ route('admin.settings.branches.edit', ['id' => $branches->id]) }}"
-                                role="button">Edit</a>
-
+                        <td> 
+                            <button onclick="window.location='{{ route('admin.settings.branches.edit', ['id' => $branches->id]) }}';"
+                                class="round-btn btn btn-default fas fa-edit btn-segment">
+                            </button>
                         </td>
 
                     </tr>
