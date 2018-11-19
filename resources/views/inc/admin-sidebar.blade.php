@@ -1,6 +1,6 @@
 <nav id="sidebar">
     <div id="header-logo" class="sidebar-header text-center">
-        <img src="{{asset('img/oppologo.png')}}">
+        <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
         <ul id="menu-container" class="list-unstyled">
             <li class="menu-section {{ request()->is('admin.employees') ? 'active' : '' }}">

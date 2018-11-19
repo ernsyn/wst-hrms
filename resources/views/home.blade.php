@@ -36,7 +36,7 @@
             </a>
         </div>
         <div class="p-2 col-xl-3 col-lg-6">
-            <a href="{{ route('setup/branch') }}">
+            <a href="">
                 <div class="card border-0 bg-gradient-danger">
                     <div class="card-body">
                         <i class="fas fa-map-marker-alt fa-4x float-right text-white"></i>

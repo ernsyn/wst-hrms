@@ -1,6 +1,6 @@
 <nav id="sidebar">
     <div id="header-logo" class="sidebar-header text-center">
-        <img src="{{asset('img/oppologo.png')}}">
+        <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
     @hasanyrole('super-admin|admin')
     <div id="hrms-mode-container">
