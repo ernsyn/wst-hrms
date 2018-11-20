@@ -8,7 +8,7 @@
                 <form>
                     <div class="row">
                         <div class="col-xl-2 d-flex justify-content-center">
-                            <i class="fas fa-user-circle fa-10x text-info"></i>
+                            <i class="fas fa-user-circle fa-10x text-primary"></i>
                         </div>
                       
                         <div class="col-md-8">

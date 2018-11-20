@@ -156,6 +156,7 @@ class EmployeeController extends Controller
             'email' => 'required|unique:users|email',
             'password' => 'required',
         ]);
+        $validatedUserData['password'] = Hash::make($validatedUserData['password']);
 
 
         $validatedEmployeeData = $request->validate([

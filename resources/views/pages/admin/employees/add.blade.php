@@ -168,7 +168,7 @@
                                 <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
                                     <option selected disabled>Select Nationality</option>
                                     @foreach($countries as $country)
-                                    <option value="{{ $country->id }}">{{ $item->citizenship }}</option>
+                                    <option value="{{ $country->id }}">{{ $country->citizenship }}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('nationality'))
