@@ -88,9 +88,9 @@
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$row['name']}}</td>
-                                        <td>{{$row['leave_type']}}</td>                                     
-                                        <td>{{$row['start_date']}}</td>
-                                        <td>{{$row['end_date']}}</td>
+                                        <td>{{$row['leave_type']}}</td>                              
+                                        <td>{{date('d/m/Y', strtotime($row['start_date']))}}</td>
+                                        <td>{{date('d/m/Y', strtotime($row['end_date']))}}</td>
                                         <td>{{$row['total_days']}}</td>
                                         <td>{{$row['status']}}</td>
                                         <td>
