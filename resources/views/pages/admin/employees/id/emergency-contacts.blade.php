@@ -223,6 +223,10 @@
         $('#add-emergency-contact-form #name').val('');
         $('#add-emergency-contact-form #relationship').val('');
         $('#add-emergency-contact-form #contact-no').val('');
+
+        $('#add-emergency-contact-form #name').removeClass('is-invalid');
+        $('#add-emergency-contact-form #relationship').removeClass('is-invalid');
+        $('#add-emergency-contact-form #contact-no').removeClass('is-invalid');
     }
 
     function showAlert(message) {
