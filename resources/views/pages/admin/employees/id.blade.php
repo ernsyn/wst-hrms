@@ -2,6 +2,9 @@
 @section('pageTitle', 'Employee Profile') 
 @section('content')
 <div class="p-4">
+    <div id="alert-container" class="row col">
+        
+    </div>
     <div class="card py-4 shadow-sm">
         <div class="card-body">
             <div class="container-fluid font-weight-bold">

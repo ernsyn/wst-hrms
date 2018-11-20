@@ -10,59 +10,50 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.employees.emergency-contacts.post', ['id' => $id]) }}" id="add_emergency_contact">
+                <form id="add-emergency-contact-form">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <label class="col-md-5 col-form-label">Name*</label>
                             <div class="col-md-7">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                                    placeholder="Name here" name="name" value="{{ old('name') }}" required>
-                                @if ($errors->has('name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
+                                <input id="name" type="text" class="form-control" placeholder="Name" name="name" value="" required>
+                                <span id="name-error" hidden="true" class="invalid-feedback" role="alert">
+                                    
                                 </span>
-                                @endif
                             </div>
+
                             <label class="col-md-8 col-form-label">Relationship*</label>
                             <div class="col-md-10">
-                                <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}"
-                                    placeholder="Father, Son, etc" name="relationship" value="{{ old('relationship') }}"
-                                    required>
-                                @if ($errors->has('relationship'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('relationship') }}</strong>
+                                <input id="relationship" type="text" class="form-control" placeholder="Father / Son / etc" name="relationship" value="" required>
+                                <span id="relationship-error" class="invalid-feedback" role="alert">
+                                    
                                 </span>
-                                @endif
                             </div>
+
                             <label class="col-md-5 col-form-label">Contact Number*</label>
                             <div class="col-md-7">
-                                <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}"
-                                    placeholder="+60123456789" name="contact_number" value="{{ old('contact_number') }}"
-                                    required>
-                                @if ($errors->has('contact_number'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('contact_number') }}</strong>
+                                <input id="contact-no" type="text" class="form-control" placeholder="eg. 01X-XXX XXXX" name="contact_no" value="" required>
+                                <span id="contact-no-error" class="invalid-feedback" role="alert">
+                                    
                                 </span>
-                                @endif
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
+
             </div>
+            <div class="modal-footer">
+                <button id="add-submit" type="submit" class="btn btn-primary">
+                    {{ __('Submit') }}
+                </button>
+                <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>
 
 <!-- UPDATE -->
-<div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel"
-    aria-hidden="true">
+<div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -79,33 +70,27 @@
                             <input id="emp_con_id" name="emp_con_id" type="hidden">
                             <label class="col-md-5 col-form-label">Name*</label>
                             <div class="col-md-7">
-                                <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                                    value="{{ old('name') }}" required>
-                                @if ($errors->has('name'))
+                                <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}"
+                                    required> @if ($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('name') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                             <label class="col-md-2 col-form-label">Relationship*</label>
                             <div class="col-md-10">
-                                <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}"
-                                    name="relationship" value="{{ old('relationship') }}" required>
-                                @if ($errors->has('relationship'))
+                                <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" name="relationship"
+                                    value="{{ old('relationship') }}" required> @if ($errors->has('relationship'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('relationship') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                             <label class="col-md-2 col-form-label">Contact Number*</label>
                             <div class="col-md-10">
-                                <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}"
-                                    name="contact_number" value="{{ old('contact_number') }}" required>
-                                @if ($errors->has('contact_number'))
+                                <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" name="contact_number"
+                                    value="{{ old('contact_number') }}" required> @if ($errors->has('contact_number'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('contact_number') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                     </div>
@@ -143,9 +128,12 @@
     </table>
 </div>
 
+
+
+
 @section('scripts')
 <script>
-$('#emergency-contacts-table').DataTable({
+    var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
     "bInfo": true,
     "bDeferRender": true,
     "serverSide": true,
@@ -171,5 +159,80 @@ $('#emergency-contacts-table').DataTable({
         }
     ]
 });
+
+</script>
+<script type="text/javascript">
+    $(function(){
+        // ADD
+       $('#add-submit').click(function(e){
+          e.preventDefault();
+          console.log("Submit clicked!");
+          $.ajax({
+            url: "{{ route('admin.employees.emergency-contacts.post', ['id' => $id]) }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                name: $('#add-emergency-contact-form #name').val(),
+                relationship: $('#add-emergency-contact-form #relationship').val(),
+                contact_no: $('#add-emergency-contact-form #contact-no').val()
+            },
+            success: function(data) {
+                showAlert(data.success);
+                emergencyContactsTable.ajax.reload();
+                $('#add-emergency-contact-popup').modal('toggle');
+                clearAddEmergencyContactModal();
+            },
+            error: function(xhr) {
+                if(xhr.status == 422) {
+                    var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'name':
+                                        $('#add-emergency-contact-form #name').addClass('is-invalid');
+                                        $('#add-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'relationship':
+                                        $('#add-emergency-contact-form #relationship').addClass('is-invalid');
+                                        $('#add-emergency-contact-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'contact_no':
+                                        $('#add-emergency-contact-form #contact-no').addClass('is-invalid');
+                                        $('#add-emergency-contact-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                }               
+             }
+          });
+       });
+       
+
+    //    $('#add-emergency-contact-popup').on('hidden.bs.modal', function () {
+    //         $('#add-emergency-contact-form #name').removeClass('is-invalid');
+    //         $('#add-emergency-contact-form #relationship').removeClass('is-invalid');
+    //         $('#add-emergency-contact-form #contact-no').removeClass('is-invalid');
+    //     })
+        
+    });
+
+    function clearAddEmergencyContactModal() {
+        $('#add-emergency-contact-form #name').val('');
+        $('#add-emergency-contact-form #relationship').val('');
+        $('#add-emergency-contact-form #contact-no').val('');
+    }
+
+    function showAlert(message) {
+        $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    <span id="alert-message">${message}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>`)
+    }
+
 </script>
 @append
