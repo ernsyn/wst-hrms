@@ -17645,6 +17645,51 @@ select:-webkit-autofill:focus {
   font-weight: 300;
 }
 
+#employee-profile-card #employee-profile-details {
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+#employee-profile-card #employee-profile-details #profile-pic-container {
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.287);
+  width: 250px;
+}
+
+#employee-profile-card #employee-profile-details #basic-profile .header #emp-name {
+  padding-right: 20px;
+}
+
+#employee-profile-card #employee-profile-details #basic-profile .header #emp-email {
+  color: rgba(255, 255, 255, 0.507);
+}
+
+#employee-profile-card #employee-profile-details #basic-profile .details {
+  width: 300px;
+}
+
+#employee-profile-card #employee-profile-details #basic-profile .details .field {
+  font-size: 1.05em;
+  color: rgba(255, 255, 255, 0.849);
+}
+
+#employee-profile-card #employee-profile-details #basic-profile .details .field .field-name {
+  font-weight: 600;
+  display: inline-block;
+  width: 80px;
+  white-space: nowrap;
+}
+
+#employee-profile-card #employee-profile-details #basic-profile .details .field .field-value {
+  font-weight: 300;
+}
+
+#employee-profile-card #employee-profile-details #end-btn-group {
+  padding: 10px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
 #page-login {
   min-height: 100%;
   width: 100%;

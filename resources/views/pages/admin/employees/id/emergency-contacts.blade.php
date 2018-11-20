@@ -4,7 +4,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Emergency Contact</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add an Emergency Contact</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -12,7 +12,45 @@
             <div class="modal-body">
                 <form id="add-emergency-contact-form">
                     @csrf
-                    <div class="row pb-5">
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name">Name*</label>
+                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            {{-- <div class="valid-feedback">
+                            Looks good!
+                            </div> --}}
+                            <div id="name-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name">Relationship*</label>
+                            <input id="relationship" type="text" class="form-control" placeholder="eg. Father, Son" value="" required>
+                            {{-- <div class="valid-feedback">
+                            Looks good!
+                            </div> --}}
+                            <div id="relationship-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name">Contact Number*</label>
+                            <input id="contact-no" type="tel" class="form-control" placeholder="eg. 01X-XXX XXXX" value="" required>
+                            {{-- <div class="valid-feedback">
+                            Looks good!
+                            </div> --}}
+                            <div id="contact-no-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+  
+
+                    {{-- <div class="row pb-5">
                         <div class="col-xl-8">
                             <label class="col-md-5 col-form-label">Name*</label>
                             <div class="col-md-7">
@@ -38,14 +76,14 @@
                                 </span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
             </div>
             <div class="modal-footer">
                 <button id="add-submit" type="submit" class="btn btn-primary">
                     {{ __('Submit') }}
                 </button>
-                <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                {{-- <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
             </div>
             </form>
         </div>
@@ -110,7 +148,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-emergency-contact-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-emergency-contact-popup">
                 Add Contact
             </button>
         </div>
