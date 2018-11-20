@@ -6,7 +6,7 @@
 	<div class="card p-4">
 		<div class="card-body">
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-lg-12">
         <div class="table-responsive table-bordered" style="border-radius: 10px 10px 0px 0px;">
 						<table class="table" style="margin-bottom: 0px !important;">
 							<thead>
@@ -50,8 +50,7 @@
 									<td class="col-border-right">{!! (@$info->remark)? : '-' !!}</td>
 									<td><a
 										href="{{ route('payroll.trx.show', ['id'=>$info->id]) }}"
-										class="btn btn-primary btn-circle" data-lity><i
-											class="fa fa-edit"></i></a></td>
+										class="btn btn-outline-primary waves-effect" role="button">Edit</a></td>
 								</tr>
                         @endforeach
                     @else

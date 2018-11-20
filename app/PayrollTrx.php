@@ -19,6 +19,8 @@ class PayrollTrx extends Model
         'employer_socso',
         'seniority_pay',
         'basic_salary',
+        'kpi',
+        'bonus',
         'created_by',
         'created_at',
         'updated_by',

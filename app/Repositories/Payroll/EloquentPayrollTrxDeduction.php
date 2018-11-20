@@ -23,5 +23,23 @@ class EloquentPayrollTrxDeduction implements PayrollTrxDeductionRepository
     public function findByPayrollTrxId($payrolltrx_id){
         return $this->query()->where('payroll_trx_id', $payrolltrx_id)->get();
     }
+    
+    public function updateMulitpleData($request_data){
+        foreach($request_data as $key => $request) {
+            if($request == null){
+                $request = 0;
+            }
+            if(strpos($key, 'payrolltrxdeduction_id_days_') === 0){
+                $id = substr($key, 28);
+                PayrollTrxDeduction::where('id', $id)->update(['days'=>$request]);
+                continue;
+            } else if(strpos($key, 'payrolltrxdeduction_id_') === 0){
+                $id = substr($key, 23);
+                PayrollTrxDeduction::where('id', $id)->update(['amount'=>$request]);
+            }
+        }
+        
+        return;
+    }
 }
 

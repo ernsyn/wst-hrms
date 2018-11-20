@@ -7,5 +7,7 @@ interface PayrollTrxRepository
     
     public function find($id);
     
+    public function findNext($id, $payroll_id);
+    
 }
 

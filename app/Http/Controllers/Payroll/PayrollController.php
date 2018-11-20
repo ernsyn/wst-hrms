@@ -21,13 +21,13 @@ use App\Repositories\Payroll\DeductionRepository;
 use App\Repositories\Payroll\EisRepository;
 use App\Repositories\Payroll\EpfRepository;
 use App\Repositories\Payroll\PayrollTrxAdditionRepository;
+use App\Repositories\Payroll\PayrollTrxDeductionRepository;
 use App\Repositories\Payroll\PayrollTrxRepository;
 use App\Repositories\Payroll\PcbRepository;
 use App\Repositories\Payroll\SocsoRepository;
 use App\Services\PayrollService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\Payroll\PayrollTrxDeductionRepository;
 
 class PayrollController extends Controller
 {
@@ -430,14 +430,14 @@ class PayrollController extends Controller
         $info->is_in_charge = $isKpiProposer;
 //         dd($isKpiProposer);
         $employee = $this->employeeRepository->find($info->employee_id)->first();
-        $payrolltrx_additionList = $this->payrollTrxAdditionRepository->findByPayrollTrxId($id);
-        $payrolltrx_deductionList = $this->payrollTrxDeductionRepository->findByPayrollTrxId($id);
-        
+        $payrolltrx_additionForm = $this->payrollTrxAdditionRepository->findByPayrollTrxId($id);
+        $payrolltrx_deductionForm = $this->payrollTrxDeductionRepository->findByPayrollTrxId($id);
+//         dd($payrolltrx_additionForm);
         $employee_forms = ['employee_id', 'full_name', 'joined_date', 'resignation_date', 'confirmation_date', 'increment_date'];
         $salary_form;// = $this->payrolltrx->salary_form(@$info);
         $bonus_form;// = $this->payrolltrx->bonus_form(@$info);
-        $payrolltrx_additionForm;// = $this->payrolltrx->addition_form($payrolltrx_additionList);
-        $payrolltrx_deductionForm;// = $this->payrolltrx->deduction_form($payrolltrx_deductionList);
+//         $payrolltrx_additionForm = $this->payrollTrx->addition_form($payrolltrx_additionList);
+//         $payrolltrx_deductionForm;// = $this->payrolltrx->deduction_form($payrolltrx_deductionList);
         $employeeContribution_form;// = $this->payrolltrx->employeeContribution_form(@$info);
         $employerContribution_form;// = $this->payrolltrx->employerContribution_form(@$info);
         
@@ -454,7 +454,70 @@ class PayrollController extends Controller
             $different_of_dates = date_diff(date_create($start_date), date_create($joined_date));
             $total_days = $total_days - $different_of_dates->format('%a')+1;
         }
-        
+// dd($info);
         return view('pages.payroll.show-payroll-trx', compact('id', 'payroll_id', 'title', 'employee_forms', 'salary_form', 'bonus_form', 'payrolltrx_additionForm', 'payrolltrx_deductionForm', 'employeeContribution_form', 'employerContribution_form', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 'year_month', 'total_days', 'is_in_charge'));
+    }
+    
+    public function updatePayrollTrx(Request $request, $id)
+    {
+//         dd($request->all());
+        $info = $this->payrollTrx->find($id)->first();
+        if(!@$info) return redirect($request->server('HTTP_REFERER'))->with('error', 'Payroll not found.');
+        
+        //update KPI
+        DB::beginTransaction();
+        if(isset($request['saveKpi'])){
+            $storeData = [];
+            $storeData['kpi'] = $request['kpi'];
+            $storeData['bonus'] = $request['bonus'];
+            PayrollTrx::where('id', $id)->update($storeData);
+        }else{
+            $this->payrollTrxAdditionRepository->updateMulitpleData($request->input());
+            $this->payrollTrxDeductionRepository->updateMulitpleData($request->input());
+            $storeData = [];
+            $storeData['take_home_pay'] = $request['take_home_pay'];
+            $storeData['total_addition'] = $request['total_addition'];
+            $storeData['total_deduction'] = $request['total_deduction'];
+            PayrollTrx::where('id', $id)->update($storeData);
+//             dd($info);
+            $next = $this->payrollTrx->findNext($id, $info->payroll_master_id);
+            $save_n_next = $request->input('save_n_next');
+        }
+        DB::commit();
+        
+//         return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully updated payroll.');
+        
+        if(!@$save_n_next) return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully updated payroll.');
+        return (@$next)? redirect()->route('payroll.trx.show', ['id'=>$next->id])->with('success', 'Successfully updated payroll.') : redirect('/payroll/'.$request->input('payroll_id'))->with('success', 'All employees updated.');
+        
+        
+        
+//         DB::beginTransaction();
+//         $is_in_charge = $this->employeereportto->find_employee_in_charge($info->employee_id, Auth::user()->id);
+        
+//         // if(!@$is_in_charge && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Superadmin'))) {
+//         if(Auth::user()->id != $info->user_id && ($info->status !== 'Locked') && !@$is_in_charge) {
+//             $this->payrolltrx_addition->updateMulitpleData($request->input());
+//             $this->payrolltrx_deduction->updateMulitpleData($request->input());
+            
+//             $calculate_result = $this->calculate($request->input(), $info);
+//             $request->request->add(['final_payment'=>$calculate_result['net_pay']]);
+//             $this->payrolltrx->update($id, $request->input());
+            
+//             // 20181011 Lin : Calculate the additions & deductions which affect the contributions
+            
+            
+//             // 20180919 Lin : Find next payroll trx
+//             $payroll_id = $request->input('payroll_id');
+//             $next = $this->payrolltrx->find_next($id, $request->input('payroll_id'), $request->input('payroll_type'));
+//             $save_n_next = $request->input('save_n_next');
+//         } else {
+//             // Only able to update bonus
+//             $this->payrolltrx->update($id, $request->input());
+//         }
+//         DB::commit();
+        
+//         if(!@$save_n_next) return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully updated payroll.');
+//         return (@$next)? redirect()->route('payroll.trx.show', ['id'=>$next->id])->with('success', 'Successfully updated payroll.') : redirect('/payroll/'.$request->input('payroll_id'))->with('success', 'All employees updated.');
     }
 }

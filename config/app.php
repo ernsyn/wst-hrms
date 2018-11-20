@@ -212,6 +212,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 		'PayrollPeriodEnum' => App\Enums\PayrollPeriodEnum::class,
         'DateHelper' => App\Helpers\DateHelper::class,
+        'PayrollHelper' => App\Helpers\PayrollHelper::class,
 
     ],
 

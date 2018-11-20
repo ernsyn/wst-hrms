@@ -115,8 +115,9 @@ class CreatePayrollRelatedTable extends Migration {
             $table->bigIncrements('id');
             $table->bigInteger('payroll_trx_id');
             $table->bigInteger('addition_master_id');
-            $table->decimal('amount', 9);
-            $table->integer('days');
+            $table->decimal('amount', 9)->default(0);
+            $table->integer('days')->default(0);
+            $table->integer('hours')->default(0);
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->timestamps();
@@ -126,8 +127,9 @@ class CreatePayrollRelatedTable extends Migration {
             $table->bigIncrements('id');
             $table->bigInteger('payroll_trx_id');
             $table->bigInteger('deduction_master_id');
-            $table->decimal('amount', 9);
-            $table->integer('days');
+            $table->decimal('amount', 9)->default(0);
+            $table->integer('days')->default(0);
+            $table->integer('hours')->default(0);
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->timestamps();
