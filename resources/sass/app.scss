@@ -4,6 +4,7 @@
 
 // Variables
 @import 'variables';
+@import 'theming';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
@@ -34,10 +35,15 @@ $fa-font-path: "../webfonts" !default;
 
 // SECTION: App Styles
 @import 'global';
+@import 'general';
+
 
 @import 'sidebar';
 @import 'navbar';
 @import 'breadcrumbs';
+@import 'table';
 
 @import 'login';
 @import 'component';
+
+@import 'super-admin/dashboard';

@@ -5,31 +5,56 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateDeductionsTable extends Migration {
 
-	/**
+/**
 	 * Run the migrations.
 	 *
 	 * @return void
 	 */
 	public function up()
 	{
+
 		Schema::create('deductions', function(Blueprint $table)
 		{
-			$table->bigInteger('id', true)->unsigned();
-			$table->bigInteger('id_company_master');
+			$table->increments('id');
+			
+            $table->unsignedInteger('company_id', false)->nullable();
+			$table->foreign('company_id')->references('id')->on('companies');
+			
 			$table->string('code');
 			$table->string('name');
 			$table->string('type');
-			$table->integer('day')->default(0);
 			$table->decimal('amount', 9);
 			$table->string('statutory')->nullable();
-			$table->integer('confirmed_employee')->default(0);
 			$table->string('status');
-			$table->bigInteger('created_by');
-			$table->timestamp('created_on')->default(DB::raw('CURRENT_TIMESTAMP'));
-			$table->string('id_applies_to', 50)->nullable();
-			$table->string('id_cost_centre', 50)->nullable();
-			$table->string('id_job_master', 50)->nullable();
+			$table->boolean('confirmed_employee')->nullable();
+			
+			// Relationship to be created later
+			$table->integer('ea_form_id')->nullable();
+			
+            $table->softDeletes();
+			$table->string('created_by', 100)->nullable();
+            $table->timestamps();
 		});
+
+		Schema::create('deduction_cost_centre', function (Blueprint $table) {
+			$table->integer('deduction_id')->unsigned()->nullable();
+			$table->foreign('deduction_id')->references('id')
+				  ->on('deductions');
+	  
+			$table->integer('cost_centre_id')->unsigned()->nullable();
+			$table->foreign('cost_centre_id')->references('id')
+				  ->on('cost_centres');
+		});
+
+		Schema::create('deduction_employee_grade', function (Blueprint $table) {
+			$table->integer('deduction_id')->unsigned()->nullable();
+			$table->foreign('deduction_id')->references('id')
+				  ->on('deductions');
+	  
+			$table->integer('employee_grade_id')->unsigned()->nullable();
+			$table->foreign('employee_grade_id')->references('id')
+				  ->on('employee_grades');
+        });
 	}
 
 
@@ -40,7 +65,8 @@ class CreateDeductionsTable extends Migration {
 	 */
 	public function down()
 	{
+		Schema::dropIfExists('deduction_cost_centre');
+		Schema::dropIfExists('deduction_employee_grade');
 		Schema::drop('deductions');
 	}
-
 }

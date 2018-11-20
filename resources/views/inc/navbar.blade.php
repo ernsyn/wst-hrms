@@ -1,6 +1,6 @@
 <nav id="navbar" class="navbar navbar-expand navbar-dark sticky-top">
     <div class="container-fluid w-100">
-        <div class="float-left"><a id="btn-toggle-menu" href="#"><span class="fa fa-lg fa-bars "></span></a></div>
+        <div class="float-left"><a id="btn-toggle-menu" href="#"><span class="fa fa-bars "></span></a></div>
  
         <div class="collapse navbar-collapse">
             <!-- Navbar -->
@@ -9,7 +9,7 @@
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false" v-pre>
-                        <i class="fas fa-user-circle fa-2x text-info px-3 align-middle"></i>{{ Auth::user()->email }}
+                        <i class="default-user-logo-light fas fa-user-circle fa-2x px-3 align-middle"></i>{{ Auth::user()->email }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{{ route('profile') }}">
