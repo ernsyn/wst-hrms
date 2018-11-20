@@ -67,6 +67,83 @@ Breadcrumbs::for('admin.employees.add', function ($trail) {
 });
 
 
+// Home > Settings > Epf
+Breadcrumbs::for('admin.settings.epf', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: EPF', route('admin.settings.epf'));
+});
+
+// Home > Settings > Epf - Add
+Breadcrumbs::for('admin.settings.epf.add', function ($trail) {
+    $trail->parent('admin.settings.companies');
+    $trail->push('Add EPF', route('admin.settings.epf.add'));
+});
+
+// Home > Settings > Epf - Edit
+Breadcrumbs::for('admin.settings.epf.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.epf');
+    $trail->push('Edit EPF', route('admin.settings.epf.edit', $id));
+});
+
+// Home > Settings > Eis
+Breadcrumbs::for('admin.settings.eis', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Eis', route('admin.settings.epf'));
+});
+
+// Home > Settings > Epf - Add
+Breadcrumbs::for('admin.settings.eis.add', function ($trail) {
+    $trail->parent('admin.settings.companies');
+    $trail->push('Add Eis', route('admin.settings.eis.add'));
+});
+
+// Home > Settings > Epf - Edit
+Breadcrumbs::for('admin.settings.eis.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.eis');
+    $trail->push('Edit Eis', route('admin.settings.eis.edit', $id));
+});
+
+
+
+// Home > Settings > Socso
+Breadcrumbs::for('admin.settings.socso', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Socso', route('admin.settings.socso'));
+});
+
+// Home > Settings > Socso - Add
+Breadcrumbs::for('admin.settings.socso.add', function ($trail) {
+    $trail->parent('admin.settings.companies');
+    $trail->push('Add Socso', route('admin.settings.socso.add'));
+});
+
+// Home > Settings > Socso - Edit
+Breadcrumbs::for('admin.settings.socso.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.socso');
+    $trail->push('Edit Socso', route('admin.settings.socso.edit', $id));
+});
+
+// Home > Settings > Pcb
+Breadcrumbs::for('admin.settings.pcb', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: PCB', route('admin.settings.pcb'));
+});
+
+// Home > Settings > Pcb - Add
+Breadcrumbs::for('admin.settings.pcb.add', function ($trail) {
+    $trail->parent('admin.settings.companies');
+    $trail->push('Add PCB', route('admin.settings.pcb.add'));
+});
+
+// Home > Settings > Pcb - Edit
+Breadcrumbs::for('admin.settings.pcb.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.pcb');
+    $trail->push('Edit PCB', route('admin.settings.pcb.edit', $id));
+});
+
+
+
+
 // Home > Settings > Company
 Breadcrumbs::for('admin.settings.companies', function ($trail) {
     $trail->parent('admin.dashboard');

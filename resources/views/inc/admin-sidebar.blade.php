@@ -134,6 +134,27 @@
                     <li class="menu-option {{ request()->is('admin/settings/grades') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.grades')}}">Grades</a>
                     </li>
+
+                {{-- OPTION: EPF --}}
+                <li class="menu-option {{ request()->is('admin/settings/epf') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.epf')}}">EPF</a>
+                    </li>
+
+                                    {{-- OPTION: Eis --}}
+                <li class="menu-option {{ request()->is('admin/settings/eis') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.eis')}}">EIS</a>
+                    </li>
+
+                                                        {{-- OPTION: Socso --}}
+                <li class="menu-option {{ request()->is('admin/settings/socso') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.socso')}}">Socso</a>
+                    </li>
+
+                                                        {{-- OPTION: Eis --}}
+                <li class="menu-option {{ request()->is('admin/settings/pcb') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.pcb')}}">PCB</a>
+                    </li>
+                                            
                     {{-- OPTION: General Information --}}
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                         <a href="#">General Information</a>

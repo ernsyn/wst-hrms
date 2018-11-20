@@ -88,10 +88,6 @@ class EmployeeController extends Controller
     {       
         $dependents = EmployeeDependent::where('emp_id', $id)->get();
 
-        foreach ($dependents as $dependent) {
-            $dependent->update_url = route('admin.employees.dependents.edit', ['emp_id' => $id, 'id' => $dependent->id]);
-        }
-
         return DataTables::of($dependents)->make(true);
     }
 
@@ -259,21 +255,19 @@ class EmployeeController extends Controller
 
     public function postDependent(Request $request, $id)
     {              
-        $name = $request->input('name');
-        $relationship = $request->input('relationship');      
-        $altDobDate = $request->input('altdobDate');
-        $created_by = auth()->user()->id;
+        $dependentData = $request->validate([
+            'name' => 'required',
+            'relationship' => 'required',
+           // 'dob' => 'required',
+        ]);
 
-         
-        DB::insert('insert into employee_dependents
-        (emp_id, name, relationship, dob, created_by) 
-        values
-        (?,?,?,?,?)',
-        [$id, $name, $relationship, $altDobDate, $created_by]);
+        $dependent = new EmployeeDependent($dependentData);
 
-        // $dependents = EmployeeDependent::where('emp_id', $id)->get();  
-        
-        return redirect()->route('admin.employees.id', ['id' => $id]); 
+
+        $employee = Employee::find($id);
+        $employee->employee_dependents()->save($dependent);
+
+        return response()->json(['success'=>'Record is successfully added']); 
     }
 
     public function postImmigration(Request $request, $id)
