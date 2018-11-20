@@ -8,22 +8,26 @@ use App\Epf;
 use App\PayrollMaster;
 use App\PayrollTrx;
 use App\Enums\PayrollPeriodEnum;
+use App\Enums\PayrollStatus;
 use App\Helpers\DateHelper;
 use App\Helpers\PayrollHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PayrollRequest;
 use App\Repositories\Repository;
+use App\Repositories\Employee\EmployeeRepository;
+use App\Repositories\Employee\EmployeeSupervisorRepository;
 use App\Repositories\Payroll\AdditionRepository;
 use App\Repositories\Payroll\DeductionRepository;
 use App\Repositories\Payroll\EisRepository;
 use App\Repositories\Payroll\EpfRepository;
+use App\Repositories\Payroll\PayrollTrxAdditionRepository;
 use App\Repositories\Payroll\PayrollTrxRepository;
 use App\Repositories\Payroll\PcbRepository;
 use App\Repositories\Payroll\SocsoRepository;
 use App\Services\PayrollService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Enums\PayrollStatus;
+use App\Repositories\Payroll\PayrollTrxDeductionRepository;
 
 class PayrollController extends Controller
 {
@@ -37,10 +41,18 @@ class PayrollController extends Controller
     protected $payrollTrxRepository;
     protected $additionRepository;
     protected $deductionRepository;
+    protected $payrollTrx;
+    protected $company;
+    protected $employeeSupervisorRepository;
+    protected $employeeRepository;
+    protected $payrollTrxAdditionRepository;
+    protected $payrollTrxDeductionRepository;
 
     public function __construct(PayrollMaster $payrollMaster, PayrollService $payrollService, EpfRepository $epfRepository, EisRepository $eisRepository, 
         SocsoRepository $socsoRepository, PcbRepository $pcbRepository, PayrollTrxRepository $payrollTrxRepository, AdditionRepository $additionRepository,
-        DeductionRepository $deductionRepository)
+        DeductionRepository $deductionRepository, PayrollTrxRepository $payrollTrx, Company $company,
+        EmployeeSupervisorRepository $employeeSupervisorRepository, EmployeeRepository $employeeRepository, PayrollTrxAdditionRepository $payrollTrxAdditionRepository,
+        PayrollTrxDeductionRepository $payrollTrxDeductionRepository)
     {
         $this->middleware('auth');
         // set the model
@@ -53,6 +65,12 @@ class PayrollController extends Controller
         $this->payrollTrxRepository = $payrollTrxRepository;
         $this->additionRepository = $additionRepository;
         $this->deductionRepository = $deductionRepository;
+        $this->payrollTrx = $payrollTrx;
+        $this->company = $company;
+        $this->employeeSupervisorRepository = $employeeSupervisorRepository;
+        $this->employeeRepository = $employeeRepository;
+        $this->payrollTrxAdditionRepository = $payrollTrxAdditionRepository;
+        $this->payrollTrxDeductionRepository = $payrollTrxDeductionRepository;
     }
 
     /**
@@ -388,5 +406,55 @@ class PayrollController extends Controller
         DB::commit();
 
         return redirect($request->server('HTTP_REFERER'))->with('success', 'Payroll month '.DateHelper::dateWithFormat($info[0]->year_month, 'Y-m').' is '. strtolower(new PayrollStatus($request['status'])).'.');
+    }
+    
+    public function showPayrollTrx(Request $request, $id)
+    {
+        /*
+         * 1. Basic info
+         * 2. Remarks
+         * 3. Basic Earnings
+         * 4. Bonus
+         * 5. Additions
+         * 6. Deductions
+         * 7. Employee Contribution
+         * 8. Employer Contribution
+         * 9. Summary
+         */
+        $info = $this->payrollTrx->find($id)->first();
+//         dd($info);
+//         $company = $this->company->find($info->company_id);
+        //TODO: get report to 
+        $currentUser = 1; //TODO: get current logged in user
+        $isKpiProposer = $this->employeeSupervisorRepository->isKpiProposer($info->employee_id, $currentUser); //$this->employeereportto->find_employee_in_charge($info->employee_id, Auth::user()->id);
+        $info->is_in_charge = $isKpiProposer;
+//         dd($isKpiProposer);
+        $employee = $this->employeeRepository->find($info->employee_id)->first();
+        $payrolltrx_additionList = $this->payrollTrxAdditionRepository->findByPayrollTrxId($id);
+        $payrolltrx_deductionList = $this->payrollTrxDeductionRepository->findByPayrollTrxId($id);
+        
+        $employee_forms = ['employee_id', 'full_name', 'joined_date', 'resignation_date', 'confirmation_date', 'increment_date'];
+        $salary_form;// = $this->payrolltrx->salary_form(@$info);
+        $bonus_form;// = $this->payrolltrx->bonus_form(@$info);
+        $payrolltrx_additionForm;// = $this->payrolltrx->addition_form($payrolltrx_additionList);
+        $payrolltrx_deductionForm;// = $this->payrolltrx->deduction_form($payrolltrx_deductionList);
+        $employeeContribution_form;// = $this->payrolltrx->employeeContribution_form(@$info);
+        $employerContribution_form;// = $this->payrolltrx->employerContribution_form(@$info);
+        
+        $title = 'Payroll';
+        $payroll_id = $info->id_PayrollMaster;
+        $addition_days_array = PayrollHelper::payroll_addition_with_days();
+        $addition_hours_array = PayrollHelper::payroll_addition_with_hours();
+        $deduction_days_array = PayrollHelper::payroll_deduction_with_days();
+        $year_month = $info->year_month;
+        $total_days = cal_days_in_month(CAL_GREGORIAN, substr($year_month,5,2), substr($year_month,0,4));
+        $start_date = $year_month.'-01';
+        $joined_date = $info->joined_date;
+        if(strtotime($joined_date) > strtotime($start_date)) {
+            $different_of_dates = date_diff(date_create($start_date), date_create($joined_date));
+            $total_days = $total_days - $different_of_dates->format('%a')+1;
+        }
+        
+        return view('pages.payroll.show-payroll-trx', compact('id', 'payroll_id', 'title', 'employee_forms', 'salary_form', 'bonus_form', 'payrolltrx_additionForm', 'payrolltrx_deductionForm', 'employeeContribution_form', 'employerContribution_form', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 'year_month', 'total_days', 'is_in_charge'));
     }
 }

@@ -18,6 +18,6 @@ interface PayrollRepository
 //         ])->exists();
 //     }
 	
-//     public function isPayrollExists(array $filter);
+    public function isPayrollExists(array $filter);
 }
 

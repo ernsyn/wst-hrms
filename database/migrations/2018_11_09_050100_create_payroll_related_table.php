@@ -13,52 +13,18 @@ class CreatePayrollRelatedTable extends Migration {
 	 */
 	public function up()
 	{
-	    Schema::create('addition_master', function(Blueprint $table)
-	    {
-	        $table->bigIncrements('id', true);
-	        $table->integer('company_id');
-	        $table->string('code')->unique('code');
-	        $table->string('name');
-	        $table->string('type');
-	        $table->integer('day');
-	        $table->decimal('amount', 9);
-	        $table->string('statutory')->nullable();
-	        $table->bigInteger('ea_form_id');
-	        $table->integer('confirmed_employee');
-	        $table->integer('status')->default(1);
-	        $table->integer('created_by');
-	        $table->integer('updated_by')->nullable();
-	        $table->timestamps();
-	    });
 	    
 		Schema::create('addition_applies_to', function(Blueprint $table)
 		{
 		    $table->bigIncrements('id', true);
-			$table->bigInteger('addition_master_id');
+			$table->bigInteger('additions_id');
 			$table->bigInteger('job_master_id');
-		});
-		
-		Schema::create('deduction_master', function(Blueprint $table)
-		{
-		    $table->bigIncrements('id', true);
-		    $table->integer('company_id');
-		    $table->string('code')->unique('code');
-		    $table->string('name');
-		    $table->string('type');
-		    $table->integer('day');
-		    $table->decimal('amount', 9);
-		    $table->string('statutory')->nullable();
-		    $table->integer('confirmed_employee');
-		    $table->integer('status')->default(1);
-		    $table->integer('created_by');
-		    $table->integer('updated_by')->nullable();
-		    $table->timestamps();
 		});
 		
 		Schema::create('deduction_applies_to', function(Blueprint $table)
 		{
 		    $table->bigIncrements('id', true);
-		    $table->bigInteger('deduction_master_id');
+		    $table->bigInteger('deductions_id');
 		    $table->bigInteger('job_master_id');
 		});
 		
@@ -136,6 +102,8 @@ class CreatePayrollRelatedTable extends Migration {
 	        $table->decimal('bonus', 9)->default(0);
 	        $table->decimal('seniority_pay', 9)->default(0);
 	        $table->decimal('basic_salary', 9)->default(0);
+	        $table->decimal('total_addition', 9)->default(0);
+	        $table->decimal('total_deduction', 9)->default(0);
 	        $table->decimal('take_home_pay', 9)->default(0);
 	        $table->longText('note')->nullable();
 	        $table->integer('created_by');
@@ -174,9 +142,7 @@ class CreatePayrollRelatedTable extends Migration {
 	 */
 	public function down()
 	{
-	    Schema::dropIfExists('addition_master');
 	    Schema::dropIfExists('addition_applies_to');
-	    Schema::dropIfExists('deduction_master');
 	    Schema::dropIfExists('deduction_applies_to');
 	    Schema::dropIfExists('eis');
 	    Schema::dropIfExists('epf');

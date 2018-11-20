@@ -75,5 +75,33 @@ class PayrollHelper
         return $diff->format('%y');
     }
     
+    // 20180921 Lin : This is the special case. For those addition need key in days,
+    // only can calculate the amount of the addition.
+    public static function payroll_addition_with_days(){
+        return [
+            // 'OT'        => 'Overtime',
+            'ALP'       => 'Annual Leave Payback',
+            'CFLP'      => 'Carry Forward Leave Payback',
+            'PH'        => 'Public Holiday',
+            'RD'        => 'Rest Day',
+        ];
+    }
+    
+    // 20180924 Lin : This is the special cas. For those addition need key in hours,
+    // only can calculate the amount of the addition.
+    public static function payroll_addition_with_hours(){
+        return [
+            'OT'        => 'Overtime',
+        ];
+    }
+    
+    // 20180921 Lin : This is the special case. For those deduction need key in days,
+    // only can calculate the amount of the deduction.
+    public static function payroll_deduction_with_days(){
+        return [
+            'UL'        => 'Unpaid Leave',
+        ];
+    }
+    
 }
 

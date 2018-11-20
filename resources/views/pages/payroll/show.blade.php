@@ -49,7 +49,7 @@
 									<td class="col-border-right">{!! $info->thp !!}</td>
 									<td class="col-border-right">{!! (@$info->remark)? : '-' !!}</td>
 									<td><a
-										href="{{ route('payroll.trx.show', ['id'=>$info->id, 'payroll_type'=>Request::get('payroll_type')]) }}"
+										href="{{ route('payroll.trx.show', ['id'=>$info->id]) }}"
 										class="btn btn-primary btn-circle" data-lity><i
 											class="fa fa-edit"></i></a></td>
 								</tr>

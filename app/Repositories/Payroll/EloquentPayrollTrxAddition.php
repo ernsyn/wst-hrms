@@ -1,11 +1,29 @@
 <?php
 namespace App\Repositories\Payroll;
 
+use App\PayrollTrxAddition;
+
 class EloquentPayrollTrxAddition implements PayrollTrxAdditionRepository
 {
+    public function query()
+    {
+        return
+        PayrollTrxAddition::join('additions as a', 'a.id', '=', 'payroll_trx_addition.additions_id')
+        ->join('payroll_trx as pt', 'pt.id', '=', 'payroll_trx_addition.payroll_trx_id')
+        ->join('payroll_master as pm', 'pm.id', '=', 'pt.payroll_master_id')
+        ->join('employees as e', 'e.id', '=', 'pt.employee_id')
+        ->join('users as u', 'u.id', '=', 'e.user_id')
+        ->select('payroll_trx_addition.*', 'u.id as user_id', 'a.name', 'a.type', 'a.code', 'e.company_id', 'pm.status');
+    }
+    
     public function storeArray(array $data)
     {
         if(count($data)) PayrollTrxAdditionRepository::insert($data);
+    }
+    
+    public function findByPayrollTrxId($payrolltrx_id)
+    {
+        return $this->query()->where('payroll_trx_id', $payrolltrx_id)->get();
     }
 
 }
