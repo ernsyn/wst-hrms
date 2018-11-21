@@ -149,7 +149,7 @@ $('#skillEndDate').datepicker({
     }
 });
 //change day according to selected value
-$('#type').on('change', function() {
+$('#type-balance').on('change', function() {
 
     var txt = this.value;
     var obj = JSON.parse(txt);
