@@ -52,7 +52,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
-    Route::get('/profile','Employee\EmployeeController@displayProfile')->name('profile');
+    Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
     Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
      Route::get('leaveapplication','Employee\ELeaveController@displayLeaveApplication')->name('employee/leaveapplication');
     // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
@@ -61,6 +61,38 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     // Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
 
   //  Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
+  // Data Tables
+    Route::get('employee/dt/dependents', 'Employee\EmployeeController@getDataTableDependents')->name('employee.dt.dependents');
+    Route::get('employee/dt/immigrations', 'Employee\EmployeeController@getDataTableImmigrations')->name('employee.dt.immigrations');
+    Route::get('employee/dt/visas', 'Employee\EmployeeController@getDataTableVisas')->name('employee.dt.visas');
+    Route::get('employee/dt/bank-accounts', 'Employee\EmployeeController@getDataTableBankAccounts')->name('employee.dt.bank-accounts');
+    Route::get('employee/dt/jobs', 'Employee\EmployeeController@getDataTableJobs')->name('employee.dt.jobs');
+    Route::get('employee/dt/experiences', 'Employee\EmployeeController@getDataTableExperiences')->name('employee.dt.experiences');
+    Route::get('employee/dt/education', 'Employee\EmployeeController@getDataTableEducation')->name('employee.dt.education');
+    Route::get('employee/dt/skills', 'Employee\EmployeeController@getDataTableSkills')->name('employee.dt.skills');
+    Route::get('employee/dt/attachments', 'Employee\EmployeeController@getDataTableAttachments')->name('employee.dt.attachments');
+    Route::get('employee/dt/emergency-contacts', 'Employee\EmployeeController@getDataTableEmergencyContacts')->name('employee.dt.emergency-contacts');
+    Route::get('employee/dt/report-to', 'Employee\EmployeeController@getDataTableReportTo')->name('employee.dt.report-to');
+
+    Route::post('employee/jobs','Employee\EmployeeController@postJob')->name('employee.jobs.post');
+    Route::post('employee/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
+    Route::post('employee/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');
+    Route::post('employee/immigrations','Employee\EmployeeController@postImmigration')->name('employee.immigrations.post');
+    Route::post('employee/visas','Employee\EmployeeController@postVisa')->name('employee.visas.post');
+    Route::post('employee/bank-accounts','Employee\EmployeeController@postBankAccount')->name('employee.bank-accounts.post');
+    Route::post('employee/companies','Employee\EmployeeController@postCompany')->name('employee.companies.post');
+    Route::post('employee/education','Employee\EmployeeController@postEducation')->name('employee.education.post');
+    Route::post('employee/skills','Employee\EmployeeController@postSkill')->name('employee.skills.post');
+    Route::post('employee/report-tp','Employee\EmployeeController@postReportTo')->name('employee.report-to.post');
+
+    Route::post('employee/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
+    Route::post('employee/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
+    Route::post('employee/immigrations/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.immigrations.edit');
+    Route::post('employee/visas/{id}/edit','Employee\EmployeeController@postEditVisa')->name('employee.visas.edit');
+    Route::post('employee/bank-accounts/{id}/edit','Employee\EmployeeController@postEditBankAccount')->name('employee.bank-accounts.edit');
+    Route::post('employee/companies/{id}/edit','Employee\EmployeeController@postEditCompany')->name('employee.companies.edit');
+    Route::post('employee/education/{id}/edit','Employee\EmployeeController@postEditEducation')->name('employee.education.edit');
+    Route::post('employee/skills/{id}/edit','Employee\EmployeeController@postEditSkill')->name('employee.skills.edit');
 });
 
 

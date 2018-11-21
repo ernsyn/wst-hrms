@@ -12,7 +12,7 @@
                         <i class="default-user-logo-light fas fa-user-circle fa-2x px-3 align-middle"></i>{{ Auth::user()->email }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ route('profile') }}">
+                        <a class="dropdown-item" href="{{ route('employee.profile') }}">
                             {{ __('Profile') }}
                         </a>
                         <a class="dropdown-item" href="">

@@ -13,9 +13,9 @@ Breadcrumbs::for('employee.dashboard', function ($trail) {
 });
 
 
-Breadcrumbs::for('profile', function ($trail) {
-    $trail->parent('profile');
-    $trail->push('Profile', route('profile'));
+Breadcrumbs::for('employee.profile', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('My Profile', route('employee.profile'));
 });
 
 Breadcrumbs::for('employee/leaverequest', function ($trail) {
