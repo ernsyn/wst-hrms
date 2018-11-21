@@ -114,7 +114,7 @@ class CreatePayrollRelatedTable extends Migration {
         Schema::create('payroll_trx_addition', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('payroll_trx_id');
-            $table->bigInteger('addition_master_id');
+            $table->bigInteger('additions_id');
             $table->decimal('amount', 9)->default(0);
             $table->integer('days')->default(0);
             $table->integer('hours')->default(0);
@@ -126,7 +126,7 @@ class CreatePayrollRelatedTable extends Migration {
         Schema::create('payroll_trx_deduction', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('payroll_trx_id');
-            $table->bigInteger('deduction_master_id');
+            $table->bigInteger('deductions_id');
             $table->decimal('amount', 9)->default(0);
             $table->integer('days')->default(0);
             $table->integer('hours')->default(0);
@@ -146,10 +146,10 @@ class CreatePayrollRelatedTable extends Migration {
 	{
 	    Schema::dropIfExists('addition_applies_to');
 	    Schema::dropIfExists('deduction_applies_to');
-	    Schema::dropIfExists('eis');
-	    Schema::dropIfExists('epf');
-	    Schema::dropIfExists('pcb');
-	    Schema::dropIfExists('socso');
+// 	    Schema::dropIfExists('eis');
+// 	    Schema::dropIfExists('epf');
+// 	    Schema::dropIfExists('pcb');
+// 	    Schema::dropIfExists('socso');
 		Schema::dropIfExists('payroll_master');
 		Schema::dropIfExists('payroll_trx');
 		Schema::dropIfExists('payroll_trx_addition');

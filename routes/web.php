@@ -351,7 +351,7 @@ Route::get('payroll/{id}', 'Payroll\PayrollController@show')->name('payroll.show
 Route::post('/payroll/status/{id}', 'Payroll\PayrollController@updatePayrollStatus')->name('payroll.status.update');
 Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
 Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
-Route::get('payroll/create', 'Payroll\PayrollController@create')->name('admin.settings.companies.add');
+Route::get('payroll/create', 'Payroll\PayrollController@create')->name('payroll.create');
 
 Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
 Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');

@@ -12,16 +12,16 @@ class EloquentEpf implements EpfRepository
         
         //todo: move logic to service layer
         $category = '';
-        if($age < 60 && $citizenship == 'Malaysian') {
+        if($age < 60 && $citizenship == '132') {
             $category = 'A';
-        } else if($age < 60 && $citizenship != 'Malaysian') {
+        } else if($age < 60 && $citizenship != '132') {
             $category = 'B';
-        } else if($age >= 60 && $citizenship == 'Malaysian') {
+        } else if($age >= 60 && $citizenship == '132') {
             $category = 'C';
-        } else if($age >= 60 && $citizenship != 'Malaysian') {
+        } else if($age >= 60 && $citizenship != '132') {
             $category = 'D';
         }
-        
+//         dd($citizenship);
         $epf = Epf::select('*')
         ->where('salary', '>=', $filter['salary'])
         ->where(function($query) use($category){

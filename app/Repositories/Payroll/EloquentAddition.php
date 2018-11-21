@@ -13,7 +13,7 @@ class EloquentAddition implements AdditionRepository
         $companyId = $filter['companyId'];
         return
         Addition::select('additions.*')
-        ->leftjoin('addition_applies_to as AAT', 'AAT.addition_master_id', '=', 'additions.id')
+        ->leftjoin('addition_applies_to as AAT', 'AAT.additions_id', '=', 'additions.id')
         ->where(function($query) use($companyId){
             $query->where('Additions.company_id', $companyId)
             ->orwhere('Additions.company_id', 0);

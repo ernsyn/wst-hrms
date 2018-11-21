@@ -48,9 +48,11 @@
 									<td class="col-border-right">{!! $info->total_deduction !!}</td>
 									<td class="col-border-right">{!! $info->thp !!}</td>
 									<td class="col-border-right">{!! (@$info->remark)? : '-' !!}</td>
-									<td><a
-										href="{{ route('payroll.trx.show', ['id'=>$info->id]) }}"
-										class="btn btn-outline-primary waves-effect" role="button">Edit</a></td>
+									<td>
+										<button onclick="window.location='{{ route('payroll.trx.show', ['id'=>$info->id]) }}';"
+                                            class="round-btn btn btn-default fas fa-edit btn-segment">
+                                        </button>
+										</td>
 								</tr>
                         @endforeach
                     @else

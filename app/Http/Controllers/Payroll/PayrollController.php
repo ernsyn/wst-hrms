@@ -171,7 +171,7 @@ class PayrollController extends Controller
             foreach ($employeeList as $employee) {
 
                 // Step 4. Find employee's payroll's required info.
-                $employeeJob = $employee->employeeJob->sortByDesc('start_date', SORT_REGULAR)->first();
+                $employeeJob = $employee->employee_jobs->sortByDesc('start_date', SORT_REGULAR)->first();
                 // dd($employeeJob);
                 $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
                 // dd($basicSalary);
@@ -182,11 +182,11 @@ class PayrollController extends Controller
 
                 $epfFilter = array();
                 $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
-                $epfFilter['citizenship'] = $employee->citizenship;
+                $epfFilter['citizenship'] = $employee->nationality;
                 $epfFilter['salary'] = $basicSalary;
                 $epf = new Epf();
                 $epf = $this->epfRepository->findByFilter($epfFilter);
-                // dd($epf);
+//                 dd($epf);
                 $eis = $this->eisRepository->findBySalary($basicSalary);
                 $socso = $this->socsoRepository->findBySalary($basicSalary);
                 $pcbFilter = array();
@@ -311,8 +311,6 @@ class PayrollController extends Controller
                 (SELECT start_date FROM employee_jobs WHERE emp_id = EM.id ORDER BY id ASC LIMIT 1) as joined_date,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
-                (SELECT SUM(amount) FROM payroll_trx_addition WHERE payroll_trx_id = payroll_trx.id) as total_addition,
-                (SELECT SUM(amount) FROM payroll_trx_deduction WHERE payroll_trx_id = payroll_trx.id) as total_deduction,
                 payroll_trx.take_home_pay as thp,
                 ROUND((payroll_trx.kpi * payroll_trx.bonus),2) as total_bonus,
                 YEAR(CURDATE()) - YEAR(EM.dob) as age

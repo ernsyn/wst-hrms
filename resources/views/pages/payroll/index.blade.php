@@ -26,7 +26,7 @@
                       @endif
                 </div>
                 <div class="col-auto">
-                <a role="button" class="btn btn-primary" href="{{ route('admin.settings.companies.add') }}">
+                <a role="button" class="btn btn-primary" href="{{ route('payroll.create') }}">
                         Add Payroll
                     </a>
                 </div>
