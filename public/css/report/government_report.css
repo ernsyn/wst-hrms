@@ -37,9 +37,30 @@ body a {
     outline: none!important;
 }
 
-.m--bg-brand {
-    background-color: #716aca!important;
+.m-bg-brand {
+    background-color: #986780!important;
 }
+
+.m-bg-brand-cream {
+    background-color: #c6b1d6 !important;
+}
+
+.m-bg-brand-bluish {
+    background-color: #78abb2!important;
+}
+
+.m-bg-brand-greenish {
+    background-color: #6f9398!important;
+}
+
+.m-bg-brand-rasberry {
+    background-color: #e5b2cc!important;
+}
+
+.m-bg-brand-orange {
+    background-color: #e56974 !important;
+}
+
 
 [class*=" la-"] {
     font-size: 1.3rem;

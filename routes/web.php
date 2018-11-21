@@ -24,7 +24,7 @@ Auth::routes();
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('', 'HomeController@index')->name('employee.dashboard');
-    
+
     Route::get('/employee','EmployeeController@displayProfile')->name('employee');
     Route::get('profile','EmployeeController@displayProfile')->name('profile');
     Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
@@ -66,11 +66,11 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 // MODE: Admin
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
     Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
-    
+
     // View
     Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
     Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
-    
+
     // Data Tables
     Route::get('employees/{id}/dt/dependents', 'Admin\EmployeeController@getDataTableDependents')->name('admin.employees.dt.dependents')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/immigrations', 'Admin\EmployeeController@getDataTableImmigrations')->name('admin.employees.dt.immigrations')->where('id', '[0-9]+');
@@ -83,7 +83,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees/{id}/dt/attachments', 'Admin\EmployeeController@getDataTableAttachments')->name('admin.employees.dt.attachments')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/emergency-contacts', 'Admin\EmployeeController@getDataTableEmergencyContacts')->name('admin.employees.dt.emergency-contacts')->where('id', '[0-9]+');
 
-    
+
     // Add / Edit
     Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add');
     Route::post('employees/add','Admin\EmployeeController@postAdd')->name('admin.employees.add.post');
@@ -106,8 +106,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{emp_id}/companies/{id}/edit','Admin\EmployeeController@postEditCompany')->name('admin.employees.companies.edit')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/education/{id}/edit','Admin\EmployeeController@postEditEducation')->name('admin.employees.education.edit')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/skills/{id}/edit','Admin\EmployeeController@postEditSkill')->name('admin.employees.skills.edit')->where('id', '[0-9]+');
-  
-    //settings-view 
+
+    //settings-view
     Route::get('settings/companies', 'Admin\SettingsController@displayCompanies')->name('admin.settings.companies');
     // Route::get('settings/add-company', 'Admin\SettingsController@displayAddCompany')->name('admin.settings.add-company');
     Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');
@@ -122,11 +122,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('settings/socso', 'Admin\SettingsController@displaySocso')->name('admin.settings.socso');
     Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
 
-    
+
     // Settings - Add
     Route::get('settings/companies/add','Admin\SettingsController@addCompany')->name('admin.settings.companies.add');
     Route::post('settings/companies/add','Admin\SettingsController@postAddCompany')->name('admin.settings.companies.add.post');
-   
+
     Route::get('settings/positions/add','Admin\SettingsController@addPosition')->name('admin.settings.positions.add');
     Route::post('settings/positions/add','Admin\SettingsController@postAddPosition')->name('admin.settings.positions.add.post');
 
@@ -143,71 +143,71 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('settings/departments/add','Admin\SettingsController@addDepartment')->name('admin.settings.departments.add');
     Route::post('settings/departments/add','Admin\SettingsController@postAddDepartment')->name('admin.settings.departments.add.post');
 
-    
+
     Route::get('settings/branches/add','Admin\SettingsController@addBranch')->name('admin.settings.branches.add');
     Route::post('settings/branches/add','Admin\SettingsController@postAddBranch')->name('admin.settings.branches.add.post');
 
     Route::get('settings/epf/add','Admin\SettingsController@addEpf')->name('admin.settings.epf.add');
     Route::post('settings/epf/add','Admin\SettingsController@postAddEpf')->name('admin.settings.epf.add.post');
-   
+
     Route::get('settings/eis/add','Admin\SettingsController@addEis')->name('admin.settings.eis.add');
     Route::post('settings/eis/add','Admin\SettingsController@postAddEis')->name('admin.settings.eis.add.post');
-   
+
     Route::get('settings/socso/add','Admin\SettingsController@addSocso')->name('admin.settings.socso.add');
     Route::post('settings/socso/add','Admin\SettingsController@postAddSocso')->name('admin.settings.socso.add.post');
-   
+
     Route::get('settings/pcb/add','Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
     Route::post('settings/pcb/add','Admin\SettingsController@postAddPcb')->name('admin.settings.pcb.add.post');
-   
-  
+
+
     Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
     Route::post('settings/holidays/add','Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
     Route::post('settings/security-groups/add','Admin\SettingsController@postAddSecurityGroup')->name('admin.settings.security-groups.add.post');
     Route::post('settings/company-banks/add','Admin\SettingsController@postAddCompanyBank')->name('admin.settings.company-banks.add.post');
     Route::post('settings/company-additions/add','Admin\SettingsController@postAddCompanyAddition')->name('admin.settings.company-additions.add.post');
     Route::post('settings/company-deductions/add','Admin\SettingsController@postAddCompanyDeduction')->name('admin.settings.company-deductions.add.post');
-    
+
 
     //setting-edit
 
     Route::get('settings/epf/{id}/edit','Admin\SettingsController@editEpf')->name('admin.settings.epf.edit')->where('id', '[0-9]+');
     Route::post('settings/epf/{id}/edit','Admin\SettingsController@postEditEpf')->name('admin.settings.epf.edit.post')->where('id', '[0-9]+');
-  
+
     Route::get('settings/eis/{id}/edit','Admin\SettingsController@editEis')->name('admin.settings.eis.edit')->where('id', '[0-9]+');
     Route::post('settings/eis/{id}/edit','Admin\SettingsController@postEditEis')->name('admin.settings.eis.edit.post')->where('id', '[0-9]+');
-   
+
     Route::get('settings/socso/{id}/edit','Admin\SettingsController@editSocso')->name('admin.settings.socso.edit')->where('id', '[0-9]+');
     Route::post('settings/socso/{id}/edit','Admin\SettingsController@postEditSocso')->name('admin.settings.socso.edit.post')->where('id', '[0-9]+');
-   
+
     Route::get('settings/pcb/{id}/edit','Admin\SettingsController@editPcb')->name('admin.settings.pcb.edit')->where('id', '[0-9]+');
     Route::post('settings/pcb/{id}/edit','Admin\SettingsController@postEditPcb')->name('admin.settings.pcb.edit.post')->where('id', '[0-9]+');
-   
+
 
     Route::get('settings/companies/{id}/edit','Admin\SettingsController@editCompany')->name('admin.settings.companies.edit')->where('id', '[0-9]+');
     Route::post('settings/companies/{id}/edit','Admin\SettingsController@postEditCompany')->name('admin.settings.companies.edit.post')->where('id', '[0-9]+');
-   
+
         //setting-edit
     Route::get('settings/positions/{id}/edit','Admin\SettingsController@editPosition')->name('admin.settings.positions.edit')->where('id', '[0-9]+');
     Route::post('settings/positions/{id}/edit','Admin\SettingsController@postEditPosition')->name('admin.settings.positions.edit.post')->where('id', '[0-9]+');
-    
+
     Route::get('settings/grades/{id}/edit','Admin\SettingsController@editGrade')->name('admin.settings.grades.edit')->where('id', '[0-9]+');
     Route::post('settings/grades/{id}/edit','Admin\SettingsController@postEditGrade')->name('admin.settings.grades.edit.post')->where('id', '[0-9]+');
-   
+
     Route::get('settings/teams/{id}/edit','Admin\SettingsController@editTeam')->name('admin.settings.teams.edit')->where('id', '[0-9]+');
     Route::post('settings/teams/{id}/edit','Admin\SettingsController@postEditTeam')->name('admin.settings.teams.edit.post')->where('id', '[0-9]+');
-   
+
     Route::get('settings/cost-centres/{id}/edit','Admin\SettingsController@editCostCentre')->name('admin.settings.cost-centres.edit')->where('id', '[0-9]+');
     Route::post('settings/cost-centres/{id}/edit','Admin\SettingsController@postEditCostCentre')->name('admin.settings.cost-centres.edit.post')->where('id', '[0-9]+');
     //Route::post('settings/grades/edit','Admin\SettingsController@editGrade')->name('admin.settings.grades.edit.post');
-    
+
     Route::get('settings/departments/{id}/edit','Admin\SettingsController@editDepartment')->name('admin.settings.departments.edit')->where('id', '[0-9]+');
     Route::post('settings/departments/{id}/edit','Admin\SettingsController@postEditDepartment')->name('admin.settings.departments.edit.post')->where('id', '[0-9]+');
-   
+
 
     Route::get('settings/branches/{id}/edit','Admin\SettingsController@editBranch')->name('admin.settings.branches.edit')->where('id', '[0-9]+');
     Route::post('settings/branches/{id}/edit','Admin\SettingsController@postEditBranch')->name('admin.settings.branches.edit.post')->where('id', '[0-9]+');
-   
-    
+
+
     Route::post('settings/leave-balances/edit','Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balances.edit.post');
     Route::post('settings/company-banks/edit','Admin\SettingsController@editCompanyBank')->name('admin.settings.company-banks.edit.post');
     Route::post('settings/security-groups/edit','Admin\SettingsController@editSecurityGroup')->name('admin.settings.security-groups.edit.post');
@@ -227,7 +227,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 //later
     Route::post('approve_leave', 'AdminController@approvedLeaveRequest')->name('approve_leave'); // also for manager
     Route::post('disapprove_leave', 'AdminController@disapprovedLeaveRequest')->name('disapprove_leave'); // merge
-    Route::post('add_leave_balance','AdminController@addLeaveBalance')->name('add_leave_balance'); 
+    Route::post('add_leave_balance','AdminController@addLeaveBalance')->name('add_leave_balance');
 
 
 
@@ -280,8 +280,8 @@ Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-ad
     // Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
     // Route::get('/admin/history', 'AdminController@displayHistory')->name('admin/history');
     // Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
-    
-    
+
+
     // TODO Experiences ??
     // Route::post('edit_emergency_contact','AdminController@editEmergencyContact')->name('edit_emergency_contact');
     // Route::post('edit_immigration','AdminController@editEmployeeImmigration')->name('edit_immigration');
@@ -290,7 +290,7 @@ Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-ad
     // Route::post('edit_qualification_skills','AdminController@editQualificationSkills')->name('edit_qualification_skills');
     // Route::post('edit_bank','AdminController@editEmployeeBank')->name('edit_bank');
     // Route::post('edit_qualification_education','AdminController@editQualificationEducation')->name('edit_qualification_education');
-    
+
     // Route::post('add_emergency_contact','AdminController@addEmergencyContact')->name('add_emergency_contact');
     // Route::post('add_employee_dependent','AdminController@addEmployeeDependent')->name('add_employee_dependent');
     // Route::post('add_employee_immigration','AdminController@addEmployeeImmigration')->name('add_employee_immigration');
@@ -299,11 +299,11 @@ Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-ad
     // Route::post('add_qualification_experience','AdminController@addQualificationCompany')->name('add_qualification_experience');
     // Route::post('add_qualification_education','AdminController@addQualificationEducation')->name('add_qualification_education');
     // Route::post('add_qualification_skills','AdminController@addQualificationSkills')->name('add_qualification_skills');
-    
+
     // Route::post('edit_employee_dependent','AdminController@editEmployeeDependent')->name('edit_employee_dependent');
-    
+
     // Route::post('register_employee4','AdminController@addProfile3')->name('register_employee4');
-    
+
 /**
  * Payroll related route
  */
@@ -318,4 +318,6 @@ Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->nam
 Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
 Route::get('payroll/create','Payroll\PayrollController@create')->name('admin.settings.companies.add');
 
-Route::get('government_report', 'payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
+Route::get('government_report','Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
+Route::post('generate_report','Payroll\GovernmentReportController@generateReport')->name('generate_report');
+

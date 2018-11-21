@@ -1,0 +1,149 @@
+.ff0{font-family:sans-serif;visibility:hidden;}
+@font-face{font-family:ff1;src:url('../../../fonts/report/soscoLampiranA/f1.woff')format("woff");}  .ff1{font-family:ff1;line-height:1.700684;font-style:normal;font-weight:normal;visibility:visible;}
+@font-face{font-family:ff2;src:url('../../../fonts/report/soscoLampiranA/f2.woff')format("woff");}  .ff2{font-family:ff2;line-height:1.931641;font-style:normal;font-weight:normal;visibility:visible;}
+.m0{transform:matrix(0.250000,0.000000,0.000000,0.250000,0,0);-ms-transform:matrix(0.250000,0.000000,0.000000,0.250000,0,0);-webkit-transform:matrix(0.250000,0.000000,0.000000,0.250000,0,0);}
+.v0{vertical-align:0.000000pt;}
+.ls3{letter-spacing:-0.899733pt;}
+.ls4{letter-spacing:-0.889067pt;}
+.ls2{letter-spacing:-0.818133pt;}
+.ls1{letter-spacing:-0.813333pt;}
+.ls0{letter-spacing:0.000000pt;}
+.sc_{text-shadow:none;}
+.sc0{text-shadow:-0.015em 0 transparent,0 0.015em transparent,0.015em 0 transparent,0 -0.015em  transparent;}
+
+.ws0{word-spacing:0.000000pt;}
+._7{margin-left:-25.600000pt;}
+._4{width:6.400000pt;}
+._0{width:8.016000pt;}
+._5{width:44.800000pt;}
+._3{width:76.800000pt;}
+._a{width:108.800000pt;}
+._8{width:172.800000pt;}
+._e{width:204.800000pt;}
+._6{width:236.800000pt;}
+._9{width:262.400000pt;}
+._c{width:300.800000pt;}
+._2{width:428.800000pt;}
+._1{width:460.800000pt;}
+._d{width:550.400000pt;}
+._b{width:620.800000pt;}
+.fs1{font-size:48.000000pt;}
+.fs0{font-size:53.333333pt;}
+.y0{bottom:0.000000pt;}
+.y1d{bottom:192.426667pt;}
+.y1c{bottom:208.362667pt;}
+.y1b{bottom:224.298667pt;}
+.y1a{bottom:272.106667pt;}
+.y19{bottom:303.978667pt;}
+.y18{bottom:319.914667pt;}
+.y17{bottom:335.850667pt;}
+.y16{bottom:367.722667pt;}
+.y15{bottom:399.594667pt;}
+.y14{bottom:431.466667pt;}
+.y13{bottom:447.402667pt;}
+.y12{bottom:479.274667pt;}
+.y11{bottom:543.018667pt;}
+.y10{bottom:574.890667pt;}
+.yf{bottom:606.762667pt;}
+.ye{bottom:670.506667pt;}
+.yd{bottom:702.378667pt;}
+.yc{bottom:734.250667pt;}
+.yb{bottom:766.122667pt;}
+.ya{bottom:797.994667pt;}
+.y9{bottom:861.738667pt;}
+.y8{bottom:877.674667pt;}
+.y7{bottom:941.418667pt;}
+.y6{bottom:973.290667pt;}
+.y5{bottom:989.226667pt;}
+.y4{bottom:1017.856000pt;}
+.y3{bottom:1032.256000pt;}
+.y2{bottom:1048.480000pt;}
+.y1{bottom:1064.480000pt;}
+.h4{height:49.007812pt;}
+.h2{height:54.453125pt;}
+.h3{height:65.130208pt;}
+.h0{height:1122.560000pt;}
+.h1{height:1122.666667pt;}
+.w0{width:793.760000pt;}
+.w1{width:794.000000pt;}
+.x0{left:0.000000pt;}
+.x7{left:96.000000pt;}
+.x4{left:105.600000pt;}
+.x5{left:115.200000pt;}
+.x3{left:144.000000pt;}
+.x6{left:230.400000pt;}
+.x2{left:258.400000pt;}
+.x8{left:422.400000pt;}
+.x1{left:668.800000pt;}
+@media print{
+    .v0{vertical-align:0.000000pt;}
+    .ls3{letter-spacing:-0.899733pt;}
+    .ls4{letter-spacing:-0.889067pt;}
+    .ls2{letter-spacing:-0.818133pt;}
+    .ls1{letter-spacing:-0.813333pt;}
+    .ls0{letter-spacing:0.000000pt;}
+    .ws0{word-spacing:0.000000pt;}
+    ._7{margin-left:-25.600000pt;}
+    ._4{width:6.400000pt;}
+    ._0{width:8.016000pt;}
+    ._5{width:44.800000pt;}
+    ._3{width:76.800000pt;}
+    ._a{width:108.800000pt;}
+    ._8{width:172.800000pt;}
+    ._e{width:204.800000pt;}
+    ._6{width:236.800000pt;}
+    ._9{width:262.400000pt;}
+    ._c{width:300.800000pt;}
+    ._2{width:428.800000pt;}
+    ._1{width:460.800000pt;}
+    ._d{width:550.400000pt;}
+    ._b{width:620.800000pt;}
+    .fs1{font-size:48.000000pt;}
+    .fs0{font-size:53.333333pt;}
+    .y0{bottom:0.000000pt;}
+    .y1d{bottom:192.426667pt;}
+    .y1c{bottom:208.362667pt;}
+    .y1b{bottom:224.298667pt;}
+    .y1a{bottom:272.106667pt;}
+    .y19{bottom:303.978667pt;}
+    .y18{bottom:319.914667pt;}
+    .y17{bottom:335.850667pt;}
+    .y16{bottom:367.722667pt;}
+    .y15{bottom:399.594667pt;}
+    .y14{bottom:431.466667pt;}
+    .y13{bottom:447.402667pt;}
+    .y12{bottom:479.274667pt;}
+    .y11{bottom:543.018667pt;}
+    .y10{bottom:574.890667pt;}
+    .yf{bottom:606.762667pt;}
+    .ye{bottom:670.506667pt;}
+    .yd{bottom:702.378667pt;}
+    .yc{bottom:734.250667pt;}
+    .yb{bottom:766.122667pt;}
+    .ya{bottom:797.994667pt;}
+    .y9{bottom:861.738667pt;}
+    .y8{bottom:877.674667pt;}
+    .y7{bottom:941.418667pt;}
+    .y6{bottom:973.290667pt;}
+    .y5{bottom:989.226667pt;}
+    .y4{bottom:1017.856000pt;}
+    .y3{bottom:1032.256000pt;}
+    .y2{bottom:1048.480000pt;}
+    .y1{bottom:1064.480000pt;}
+    .h4{height:49.007812pt;}
+    .h2{height:54.453125pt;}
+    .h3{height:65.130208pt;}
+    .h0{height:1122.560000pt;}
+    .h1{height:1122.666667pt;}
+    .w0{width:793.760000pt;}
+    .w1{width:794.000000pt;}
+    .x0{left:0.000000pt;}
+    .x7{left:96.000000pt;}
+    .x4{left:105.600000pt;}
+    .x5{left:115.200000pt;}
+    .x3{left:144.000000pt;}
+    .x6{left:230.400000pt;}
+    .x2{left:258.400000pt;}
+    .x8{left:422.400000pt;}
+    .x1{left:668.800000pt;}
+}

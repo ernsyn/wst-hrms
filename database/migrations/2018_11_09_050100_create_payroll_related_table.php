@@ -28,7 +28,7 @@ class CreatePayrollRelatedTable extends Migration {
 		    $table->bigInteger('job_master_id');
 		});
 		
-		Schema::create('eis', function(Blueprint $table)
+		/* Schema::create('eis', function(Blueprint $table)
 		{
 		    $table->bigIncrements('id', true);
 		    $table->decimal('salary', 9);
@@ -72,7 +72,7 @@ class CreatePayrollRelatedTable extends Migration {
 		    $table->integer('created_by');
 		    $table->integer('updated_by')->nullable();
 		    $table->timestamps();
-		});
+		}); */
 		
 		Schema::create('payroll_master', function (Blueprint $table) {
 		    $table->bigIncrements('id');
