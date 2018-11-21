@@ -46,21 +46,21 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     // Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
     // Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
 
-    Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
+  //  Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
 });
 
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
     Route::get('/profile','Employee\EmployeeController@displayProfile')->name('profile');
-
+    Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
      Route::get('leaveapplication','Employee\ELeaveController@displayLeaveApplication')->name('employee/leaveapplication');
     // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
-    // Route::get('leaverequest','EmployeeController@displayLeaveRequest')->name('employee/leaverequest');
+     Route::get('leaverequest','Employee\ELeaveController@displayLeaveRequest')->name('employee/leaverequest');
     // Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
     // Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
 
-    Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
+  //  Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
 });
 
 
@@ -263,9 +263,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
 
 //later
-    Route::post('approve_leave', 'AdminController@approvedLeaveRequest')->name('approve_leave'); // also for manager
-    Route::post('disapprove_leave', 'AdminController@disapprovedLeaveRequest')->name('disapprove_leave'); // merge
-    Route::post('add_leave_balance','AdminController@addLeaveBalance')->name('add_leave_balance'); 
+    Route::post('approve_leave', 'Admin\ELeaveController@approvedLeaveRequest')->name('approve_leave'); // also for manager
+    Route::post('disapprove_leave', 'Admin\ELeaveController@disapprovedLeaveRequest')->name('disapprove_leave'); // merge
+    Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance'); 
 
 
 
@@ -281,9 +281,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
     Route::post('register_employee4','AdminController@addProfile3')->name('register_employee4');
     Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
-    Route::post('approve_leave', 'AdminController@approvedLeaveRequest')->name('approve_leave');
-    Route::post('disapprove_leave', 'AdminController@disapprovedLeaveRequest')->name('disapprove_leave');
-    Route::post('add_leave_balance','AdminController@addLeaveBalance')->name('add_leave_balance');
+    Route::post('approve_leave', 'Admin\ELeaveController@approvedLeaveRequest')->name('approve_leave');
+    Route::post('disapprove_leave', 'Admin\ELeaveController@disapprovedLeaveRequest')->name('disapprove_leave');
+    Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance');
     Route::post('add_job','AdminController@addJob')->name('add_job');
 
 });

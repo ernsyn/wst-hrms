@@ -99,7 +99,7 @@ public function postAddPublicHoliday(Request $request)
 
     Holiday::create($publicHolidayData);
 
-    return redirect()->route('pages.admin.e-leave.configuration.leaveholidays');
+    return redirect()->route('admin.e-leave.configuration.leaveholidays');
 }
 
 public function editHoliday(Request $request, $id) {
@@ -162,7 +162,7 @@ public function postAddLeaveType(Request $request)
 
     LeaveType::create($leaveTypeData);
 
-    return redirect()->route('pages.admin.e-leave.configuration.leavetypes');
+    return redirect()->route('admin.e-leave.configuration.leavetypes');
 }
 
 public function editLeaveType(Request $request, $id) {
@@ -188,6 +188,21 @@ public function postEditLeaveType(Request $request, $id)
     return redirect()->route('admin.settings.epf');
 }
 
+
+public function displayLeaveRequests()
+{       
+    $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
+    ->join('users','users.id','=','leave_employees_requests.user_id')
+    // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
+    ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
+    ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
+    'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
+    'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
+    'leave_employees_requests.status as status')
+    ->get();
+
+    return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
+}
 
 // List Of Leave Balances
 public function displayLeaveBalances()
@@ -517,4 +532,41 @@ public function postEditLeaveBalance(Request $request, $id)
 
     //     return view('pages.leaveapplication', ['leave'=>$leave]);
     // }
+    public function approvedLeaveRequest(Request $request)
+    {         
+        $req_id = $request->input('req_id');
+        LeaveRequest::where('id',$req_id)->update(array('status' => 'Approved'));
+       
+        $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
+        ->join('users','users.id','=','leave_employees_requests.user_id')
+        // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
+        ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
+        ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
+        'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
+        'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
+        'leave_employees_requests.status as status')
+        ->get();
+
+        return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
+    }
+
+    public function disapprovedLeaveRequest(Request $request)
+    {          
+       
+        $req_id = $request->input('req_id');
+        LeaveRequest::where('id',$req_id)->update(array('status' => 'Disapproved'));
+       
+        $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
+        ->join('users','users.id','=','leave_employees_requests.user_id')
+        // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
+        ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
+        ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
+        'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
+        'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
+        'leave_employees_requests.status as status')
+        ->get();
+
+        return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
+    }
+
 }
