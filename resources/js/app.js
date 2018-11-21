@@ -189,6 +189,11 @@ $('#dobDateEdit').datepicker({
     altFormat: 'yy-mm-dd',
     format: 'dd/mm/yy'
 });
+$('#dobDate').datepicker({
+    altField: "#altdobDate",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy'
+});
 
 
 $('#updatedobDate').datepicker({

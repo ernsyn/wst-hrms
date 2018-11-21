@@ -32,11 +32,13 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeEmergencyContact', 'emp_id');
     }
 
-    public function leave_balances()
+    public function dependents()
     {
-        return $this->hasMany('App\LeaveBalance', 'user_id');
+        return $this->hasMany('App\EmployeeDependent', 'emp_id');
     }
 
-
- 
+    public function report_tos()
+    {
+        return $this->hasMany('App\EmployeeReportTo', 'emp_id');
+    }
 }

@@ -34,6 +34,7 @@ use App\EmployeeSkill;
 use App\EmployeeVisa;
 use App\EmployeeEmergencyContact;
 use App\EmployeeGrade;
+use App\EmployeeReportTo;
 
 use App\Http\Requests\Admin\AddEmployee;
 
@@ -145,6 +146,12 @@ class EmployeeController extends Controller
         $contacts = EmployeeEmergencyContact::where('emp_id', $id)->get();
         return DataTables::of($contacts)->make(true);
     }
+
+    public function getDataTableReportTo($id)
+    {
+        $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', $id)->get();
+        return DataTables::of($reportTos)->make(true);
+    }
     
     protected function postAdd(Request $request)
     {
@@ -252,6 +259,24 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Record is successfully added']); 
     }
 
+    public function postReportTo(Request $request, $id)
+    {   
+        $reportToData = $request->validate([
+            'report_to_emp_id' => 'required',
+            'type' => 'required',
+            'kpi_proposer' => 'required',
+            'notes' => 'required',
+        ]);
+
+        $reportTo = new EmployeeReportTo($reportToData);
+
+
+        $employee = Employee::find($id);
+        $employee->report_tos()->save($reportTo);
+
+        return response()->json(['success'=>'Record is successfully added']); 
+    }
+
     public function postJob(Request $request, $id)
     {   
         
@@ -282,14 +307,15 @@ class EmployeeController extends Controller
         $dependentData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-           // 'dob' => 'required',
+            'dob' => 'required',
         ]);
+        $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
 
         $dependent = new EmployeeDependent($dependentData);
 
 
         $employee = Employee::find($id);
-        $employee->employee_dependents()->save($dependent);
+        $employee->dependents()->save($dependent);
 
         return response()->json(['success'=>'Record is successfully added']); 
     }
