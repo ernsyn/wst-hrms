@@ -60,17 +60,17 @@ class EmployeeController extends Controller
     {
         $employee = Employee::with('user', 'employee_jobs')->find($id);
 
-        $bank_list = Bank::all();
-        $cost_centre = CostCentre::all();
-        $department = Department::all();
-        $team = Team::all();
-        $position = EmployeePosition::all();
-        $grade = EmployeeGrade::all();
-        $branch = Branch::all();
-        $countries = Country::all();
-        $companies = Company::all();
+        // $bank_list = Bank::all();
+        // $cost_centre = CostCentre::all();
+        // $department = Department::all();
+        // $team = Team::all();
+        // $position = EmployeePosition::all();
+        // $grade = EmployeeGrade::all();
+        // $branch = Branch::all();
+        // $countries = Country::all();
+        // $companies = Company::all();
 
-        return view('pages.admin.employees.id', ['employee' => $employee,'countries'=>$countries, 'team'=>$team,'bank_list'=>$bank_list,'branch'=>$branch, 'grade'=>$grade,'department'=>$department, 'position'=>$position,'companies'=>$companies,'cost_centre'=>$cost_centre]);        
+        return view('pages.admin.employees.id', ['employee' => $employee]);        
     }
 
     public function add()
@@ -112,7 +112,7 @@ class EmployeeController extends Controller
 
     public function getDataTableJobs($id)
     {       
-        $job = EmployeeJob::where('emp_id', $id)->get();
+        $job = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', $id)->get();
         return DataTables::of($job)->make(true);
     }
 
@@ -145,8 +145,7 @@ class EmployeeController extends Controller
         $contacts = EmployeeEmergencyContact::where('emp_id', $id)->get();
         return DataTables::of($contacts)->make(true);
     }
-
-
+    
     protected function postAdd(Request $request)
     {
         $validatedUserData = $request->validate([
@@ -251,6 +250,31 @@ class EmployeeController extends Controller
         $employee->employee_emergency_contacts()->save($emergencyContact);
 
         return response()->json(['success'=>'Record is successfully added']); 
+    }
+
+    public function postJob(Request $request, $id)
+    {   
+        
+        $jobData = $request->validate([
+            'branch_id' => 'required',
+            'emp_mainposition_id' => 'required',
+            'department_id' => 'required',
+            'team_id' => 'required',
+            'cost_centre_id' => 'required',
+            'emp_grade_id' => 'required',
+            'start_date' => 'required',
+            'basic_salary' => 'required',
+            'specification' => 'required',
+        ]);
+        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+        $jobData['status'] = 'active';
+
+        $job = new EmployeeJob($jobData);
+
+        $employee = Employee::find($id);
+        $employee->employee_jobs()->save($job);
+
+        return response()->json(['success'=>'Job is successfully added']); 
     }
 
     public function postDependent(Request $request, $id)
@@ -394,14 +418,16 @@ class EmployeeController extends Controller
     }
 
     public function postEditEmergencyContact(Request $request, $emp_id, $id)
-    {          
-        $name = $request->input('name');
-        $relationship = $request->input('relationship');    
-        $contact_number = $request->input('contact_number');       
+    {   
+        $emergencyContactUpdatedData = $request->validate([
+            'name' => 'required',
+            'relationship' => 'required',
+            'contact_no' => 'required|numeric',
+        ]);      
        
-        EmergencyContact::where('id', $id)->update(array('contact_name' => $name,'relationship' => $relationship, 'contact_number' => $contact_number));
+        EmployeeEmergencyContact::where('id', $id)->update($emergencyContactUpdatedData);
 
-        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+        return response()->json(['success'=>'Emergency Contact was successfully updated.']); 
     }
 
     public function postEditImmigration(Request $request, $emp_id, $id)

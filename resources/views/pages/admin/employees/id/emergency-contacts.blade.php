@@ -1,20 +1,20 @@
 <!-- ADD -->
-<div class="modal fade" id="add-emergency-contact-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="add-emergency-contact-popup" tabindex="-1" role="dialog" aria-labelledby="add-emergency-contact-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add an Emergency Contact</h5>
+                <h5 class="modal-title" id="add-emergency-contact-label">Add an Emergency Contact</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <form id="add-emergency-contact-form">
             <div class="modal-body">
-                <form id="add-emergency-contact-form">
                     @csrf
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="name">Name*</label>
+                            <label for="name"><strong>Name*</strong></label>
                             <input id="name" type="text" class="form-control" placeholder="" value="" required>
                             {{-- <div class="valid-feedback">
                             Looks good!
@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="name">Relationship*</label>
+                            <label for="name"><strong>Relationship*</strong></label>
                             <input id="relationship" type="text" class="form-control" placeholder="eg. Father, Son" value="" required>
                             {{-- <div class="valid-feedback">
                             Looks good!
@@ -38,7 +38,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="name">Contact Number*</label>
+                            <label for="name"><strong>Contact Number*</strong></label>
                             <input id="contact-no" type="tel" class="form-control" placeholder="eg. 01X-XXX XXXX" value="" required>
                             {{-- <div class="valid-feedback">
                             Looks good!
@@ -48,36 +48,6 @@
                             </div>
                         </div>
                     </div>
-  
-
-                    {{-- <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <label class="col-md-5 col-form-label">Name*</label>
-                            <div class="col-md-7">
-                                <input id="name" type="text" class="form-control" placeholder="Name" name="name" value="" required>
-                                <span id="name-error" hidden="true" class="invalid-feedback" role="alert">
-                                    
-                                </span>
-                            </div>
-
-                            <label class="col-md-8 col-form-label">Relationship*</label>
-                            <div class="col-md-10">
-                                <input id="relationship" type="text" class="form-control" placeholder="Father / Son / etc" name="relationship" value="" required>
-                                <span id="relationship-error" class="invalid-feedback" role="alert">
-                                    
-                                </span>
-                            </div>
-
-                            <label class="col-md-5 col-form-label">Contact Number*</label>
-                            <div class="col-md-7">
-                                <input id="contact-no" type="text" class="form-control" placeholder="eg. 01X-XXX XXXX" name="contact_no" value="" required>
-                                <span id="contact-no-error" class="invalid-feedback" role="alert">
-                                    
-                                </span>
-                            </div>
-                        </div>
-                    </div> --}}
-
             </div>
             <div class="modal-footer">
                 <button id="add-submit" type="submit" class="btn btn-primary">
@@ -91,7 +61,67 @@
 </div>
 
 <!-- UPDATE -->
-<div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel" aria-hidden="true">
+<div class="modal fade" id="edit-emergency-contact-popup" tabindex="-1" role="dialog" aria-labelledby="edit-emergency-contact-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-emergency-contact-label">Edit an Emergency Contact</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-emergency-contact-form">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Name*</strong></label>
+                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            {{-- <div class="valid-feedback">
+                            Looks good!
+                            </div> --}}
+                            <div id="name-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Relationship*</strong></label>
+                            <input id="relationship" type="text" class="form-control" placeholder="eg. Father, Son" value="" required>
+                            {{-- <div class="valid-feedback">
+                            Looks good!
+                            </div> --}}
+                            <div id="relationship-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Contact Number*</strong></label>
+                            <input id="contact-no" type="tel" class="form-control" placeholder="eg. 01X-XXX XXXX" value="" required>
+                            {{-- <div class="valid-feedback">
+                            Looks good!
+                            </div> --}}
+                            <div id="contact-no-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button id="edit-submit" type="submit" class="btn btn-primary">
+                    {{ __('Submit') }}
+                </button>
+                {{-- <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- <div class="modal fade" id="updateContactPopup" tabindex="-1" role="dialog" aria-labelledby="updateContactLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -142,7 +172,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <div class="tab-pane fade show p-3" id="nav-emergency" role="tabpanel" aria-labelledby="nav-emergency-tab">
     <div class="row pb-3">
@@ -153,7 +183,7 @@
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="emergency-contacts-table">
+    <table class="hrms-primary-data-table table w-100" id="emergency-contacts-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -171,7 +201,7 @@
 
 @section('scripts')
 <script>
-    var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
+var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
     "bInfo": true,
     "bDeferRender": true,
     "serverSide": true,
@@ -193,7 +223,10 @@
         },
         {
             "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#emergencyModal"><i class="far fa-edit"></i></button>'
+            render: function (data, type, row, meta) {
+                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>` +
+                    `<button type="button" class="delete-emergency-contact-btn btn btn-danger btn-sm" data-id=${row.id}><i class="far fa-trash-alt"></i></button>`;
+            }
         }
     ]
 });
@@ -202,9 +235,8 @@
 <script type="text/javascript">
     $(function(){
         // ADD
-       $('#add-submit').click(function(e){
+       $('#add-emergency-contact-form #add-submit').click(function(e){
           e.preventDefault();
-          console.log("Submit clicked!");
           $.ajax({
             url: "{{ route('admin.employees.emergency-contacts.post', ['id' => $id]) }}",
             type: 'POST',
@@ -218,7 +250,7 @@
                 showAlert(data.success);
                 emergencyContactsTable.ajax.reload();
                 $('#add-emergency-contact-popup').modal('toggle');
-                clearAddEmergencyContactModal();
+                clearEmergencyContactModal('#add-emergency-contact-form');
             },
             error: function(xhr) {
                 if(xhr.status == 422) {
@@ -247,33 +279,94 @@
              }
           });
        });
-       
 
-    //    $('#add-emergency-contact-popup').on('hidden.bs.modal', function () {
-    //         $('#add-emergency-contact-form #name').removeClass('is-invalid');
-    //         $('#add-emergency-contact-form #relationship').removeClass('is-invalid');
-    //         $('#add-emergency-contact-form #contact-no').removeClass('is-invalid');
-    //     })
+
+        // EDIT
+        var editId = null;
+       // Function: On Modal Clicked Handler
+       $('#edit-emergency-contact-form #edit-emergency-contact-popup').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+            console.log('Data: ', currentData)
+
+            editId = currentData.id;
+
+            $('#edit-emergency-contact-form #name').val(currentData.name);
+            $('#edit-emergency-contact-form #relationship').val(currentData.relationship);
+            $('#edit-emergency-contact-form #contact-no').val(currentData.contact_no);
+        });
+       
+       var editRouteTemplate = "{{ route('admin.employees.emergency-contacts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+       $('#edit-submit').click(function(e){
+           var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
+
+          e.preventDefault();
+          $.ajax({
+            url: editRoute,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                name: $('#edit-emergency-contact-form #name').val(),
+                relationship: $('#edit-emergency-contact-form #relationship').val(),
+                contact_no: $('#edit-emergency-contact-form #contact-no').val()
+            },
+            success: function(data) {
+                showAlert(data.success);
+                emergencyContactsTable.ajax.reload();
+                $('#edit-emergency-contact-popup').modal('toggle');
+                clearEmergencyContactModal('#edit-emergency-contact-form');
+            },
+            error: function(xhr) {
+                if(xhr.status == 422) {
+                    var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'name':
+                                        $('#edit-emergency-contact-form #name').addClass('is-invalid');
+                                        $('#edit-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'relationship':
+                                        $('#edit-emergency-contact-form #relationship').addClass('is-invalid');
+                                        $('#edit-emergency-contact-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'contact_no':
+                                        $('#edit-emergency-contact-form #contact-no').addClass('is-invalid');
+                                        $('#edit-emergency-contact-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                }               
+             }
+          });
+       });
         
     });
 
-    function clearAddEmergencyContactModal() {
-        $('#add-emergency-contact-form #name').val('');
-        $('#add-emergency-contact-form #relationship').val('');
-        $('#add-emergency-contact-form #contact-no').val('');
+    // DELETE
+    $('')
 
-        $('#add-emergency-contact-form #name').removeClass('is-invalid');
-        $('#add-emergency-contact-form #relationship').removeClass('is-invalid');
-        $('#add-emergency-contact-form #contact-no').removeClass('is-invalid');
+    // GENERAL FUNCTIONS
+    function clearEmergencyContactModal(htmlId) {
+        $(htmlId + ' #name').val('');
+        $(htmlId + ' #relationship').val('');
+        $(htmlId + ' #contact-no').val('');
+
+        $(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #relationship').removeClass('is-invalid');
+        $(htmlId + ' #contact-no').removeClass('is-invalid');
     }
 
     function showAlert(message) {
         $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
-                    <span id="alert-message">${message}</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>`)
+            <span id="alert-message">${message}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`)
     }
 
 </script>
