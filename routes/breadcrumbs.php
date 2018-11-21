@@ -412,7 +412,7 @@ Breadcrumbs::for('payroll/show/{id}', function ($trail) {
 });
 
 Breadcrumbs::for('payroll/government_report', function ($trail) {
-    $trail->parent('home');
+    $trail->parent('payroll');
     $trail->push('Government Reports', route('payroll/government_report'));
 });
 
