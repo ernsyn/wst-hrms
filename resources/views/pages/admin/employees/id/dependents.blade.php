@@ -1,5 +1,5 @@
 <!-- ADD -->
-<div class="modal fade" id="dependentPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="dependentPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -48,6 +48,64 @@
             </div>
         </div>
     </div>
+</div> --}}
+<div class="modal fade" id="add-dependent-popup" tabindex="-1" role="dialog" aria-labelledby="add-dependent-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-dependent-label">Add a Dependent</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="add-dependent-form">
+            <div class="modal-body">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Name*</strong></label>
+                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            {{-- <div class="valid-feedback">
+                            Looks good!
+                            </div> --}}
+                            <div id="name-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Relationship*</strong></label>
+                            <input id="relationship" type="text" class="form-control" placeholder="eg. Father, Son" value="" required>
+                            {{-- <div class="valid-feedback">
+                            Looks good!
+                            </div> --}}
+                            <div id="relationship-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
+                        <div class="col-md-7">
+                            <input id="altdobDate" name="altdobDate" type="text" class="form-control" hidden>
+                            <input  name="dobDate" id="dobDate" type="text" class="form-control hrms-datepicker" readonly>
+                            <div id="dobDate-error" class="invalid-feedback">
+                            
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button id="add-submit" type="submit" class="btn btn-primary">
+                    {{ __('Submit') }}
+                </button>
+                {{-- <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+            </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- UPDATE -->
@@ -55,7 +113,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateContactLabel">Edit Emergency Contact</h5>
+                <h5 class="modal-title" id="updateContactLabel">Edit Dependent</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -111,7 +169,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#dependentPopup">
+            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-dependent-popup">
                 Add Dependent
             </button>
         </div>
@@ -133,7 +191,7 @@
 
 @section('scripts')
 <script>
-    $('#employee-dependents-table').DataTable({
+    var dependentsTable = $('#employee-dependents-table').DataTable({
         "bInfo": true,
         "bDeferRender": true,
         "serverSide": true,
@@ -163,24 +221,92 @@
         ]
     });
 
-    $(function () {
-        console.log("Calling function");
-        $(document).on("click", ".open-update-dependent-modal", function () {
-            console.log("Updating route: ", JSON.parse(decodeURI($(this).data('action'))));
-            $('#edit-dependent-form').attr("action", $(this).data('action'));
-            $('#dependentModal').modal('show');
-        });
+    // $(function () {
+    //     $(document).on("click", ".open-update-dependent-modal", function () {
+    //         console.log("Updating route: ", JSON.parse(decodeURI($(this).data('action'))));
+    //         $('#edit-dependent-form').attr("action", $(this).data('action'));
+    //         $('#dependentModal').modal('show');
+    //     });
 
-        $('#my_modal').on('show.bs.modal', function(e) {
+    //     $('#my_modal').on('show.bs.modal', function(e) {
 
-            //get data-id attribute of the clicked element
-            var bookId = $(e.relatedTarget).data('book-id');
+    //         //get data-id attribute of the clicked element
+    //         var bookId = $(e.relatedTarget).data('book-id');
 
-            //populate the textbox
-            $(e.currentTarget).find('input[name="bookId"]').val(bookId);
-        });
-    });
+    //         //populate the textbox
+    //         $(e.currentTarget).find('input[name="bookId"]').val(bookId);
+    //     });
+    // });
 
 </script>
+<script type="text/javascript">
+    $(function(){
+        // ADD
+       $('#add-dependent-form #add-submit').click(function(e){
+          e.preventDefault();
+          $.ajax({
+            url: "{{ route('admin.employees.dependents.post', ['id' => $id]) }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                name: $('#add-dependent-form #name').val(),
+                relationship: $('#add-dependent-form #relationship').val(),
+                dob: $('#add-dependent-form #dobDate').val()
+            },
+            success: function(data) {
+                showAlert(data.success);
+                dependentsTable.ajax.reload();
+                $('#add-dependent-popup').modal('toggle');
+                clearDependentModal('#add-dependent-form');
+            },
+            error: function(xhr) {
+                if(xhr.status == 422) {
+                    var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'name':
+                                        $('#add-dependent-form #name').addClass('is-invalid');
+                                        $('#add-dependent-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'relationship':
+                                        $('#add-dependent-form #relationship').addClass('is-invalid');
+                                        $('#add-dependent-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'dob':
+                                        $('#add-dependent-form #dobDate').addClass('is-invalid');
+                                        $('#add-dependent-form #dobDate-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                }               
+             }
+          });
+       });
+    });
 
+    // GENERAL FUNCTIONS
+    function clearDependentModal(htmlId) {
+        $(htmlId + ' #name').val('');
+        $(htmlId + ' #relationship').val('');
+        $(htmlId + ' #dobDate').val('');
+
+        $(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #relationship').removeClass('is-invalid');
+        $(htmlId + ' #dobDate').removeClass('is-invalid');
+    }
+
+    function showAlert(message) {
+        $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <span id="alert-message">${message}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`)
+    }
+
+</script>
 @append
