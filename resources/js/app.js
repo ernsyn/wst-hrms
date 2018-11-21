@@ -260,6 +260,14 @@ $('#editjobDate').datepicker({
     altFormat: 'yy-mm-dd',
     format: 'dd/mm/yy'
 });
+$('#job-date').datepicker({
+    altField: "#alt-job-date",
+    altFormat: 'yy-mm-dd',
+    format: 'dd/mm/yy',
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "-80:+0"
+});
 $('#startYear').datepicker({
     changeMonth: true,
     changeYear: true,
