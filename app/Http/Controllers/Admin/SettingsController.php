@@ -548,7 +548,7 @@ class SettingsController extends Controller
 
     public function displayWorkingDays()
     {
-        $working_days = EmployeeWorkingDay::withoutGlobalScope('non-template')->where('is_template', true)->get();
+        $working_days = EmployeeWorkingDay::templates()->get();
         return view('pages.admin.settings.working-day', ['working_days'=>$working_days]);
     }
 

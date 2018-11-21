@@ -28,7 +28,10 @@ class EmployeeWorkingDay extends Model
         static::addGlobalScope('non-template', function (Builder $builder) {
             $builder->where('is_template', '!=', true);
         });
+    }
 
-
+    public function scopeTemplates($query)
+    {
+        return $query->withoutGlobalScope('non-template')->where('is_template', true);
     }
 }
