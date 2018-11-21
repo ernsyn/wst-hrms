@@ -108,43 +108,56 @@ class GovernmentReport
         $this->reportCss = $reportCss;
     }
 
-    public function getGovernmentReport(){
-        $arr = array();
+    public static function getGovernmentReport(){
+        $slider = array();
+        $slider1 = array();
+        $slider2 = array();
+        $slider3 = array();
+        $slider4 = array();
+
         //LHDN
-        array_push($arr,new GovernmentReport(['reportName' => 'Borang E', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'borangE', 'reportCss' => 'm-bg-brand']));
-        array_push($arr,new GovernmentReport(['reportName' => 'CP21', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp21', 'reportCss' => 'm-bg-brand']));
-        array_push($arr,new GovernmentReport(['reportName' => 'CP22', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp22', 'reportCss' => 'm-bg-brand']));
-        array_push($arr,new GovernmentReport(['reportName' => 'CP22a', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp22a', 'reportCss' => 'm-bg-brand']));
-        array_push($arr,new GovernmentReport(['reportName' => 'CP22b', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp22b', 'reportCss' => 'm-bg-brand']));
-        array_push($arr,new GovernmentReport(['reportName' => 'CP39', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp39', 'reportCss' => 'm-bg-brand']));
-        array_push($arr,new GovernmentReport(['reportName' => 'CP39 Lieu', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp39lieu', 'reportCss' => 'm-bg-brand']));
-        array_push($arr,new GovernmentReport(['reportName' => 'EA Form', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'eaform', 'reportCss' => 'm-bg-brand']));
+        array_push($slider,new GovernmentReport(['reportName' => 'Borang E', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'borangE', 'reportCss' => 'm-bg-brand']));
+        array_push($slider,new GovernmentReport(['reportName' => 'CP21', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp21', 'reportCss' => 'm-bg-brand']));
+        array_push($slider,new GovernmentReport(['reportName' => 'CP22', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp22', 'reportCss' => 'm-bg-brand']));
+        array_push($slider,new GovernmentReport(['reportName' => 'CP22a', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp22a', 'reportCss' => 'm-bg-brand']));
+
+        array_push($slider1,new GovernmentReport(['reportName' => 'CP22b', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp22b', 'reportCss' => 'm-bg-brand']));
+        array_push($slider1,new GovernmentReport(['reportName' => 'CP39', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp39', 'reportCss' => 'm-bg-brand']));
+        array_push($slider1,new GovernmentReport(['reportName' => 'CP39 Lieu', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'cp39lieu', 'reportCss' => 'm-bg-brand']));
+        array_push($slider1,new GovernmentReport(['reportName' => 'EA Form', 'reportDescription' => '', 'reportGroup' => 'LHDN', 'reportTarget' => 'eaform', 'reportCss' => 'm-bg-brand']));
 
         //Tabung haji
-        array_push($arr,new GovernmentReport(['reportName' => 'Caruman', 'reportDescription' => '', 'reportGroup' => 'Tabung Haji', 'reportTarget' => 'caruman', 'reportCss' => 'm-bg-brand-cream']));
-        array_push($arr,new GovernmentReport(['reportName' => 'Disket', 'reportDescription' => '', 'reportGroup' => 'Tabung Haji', 'reportTarget' => 'disket', 'reportCss' => 'm-bg-brand-cream']));
+        array_push($slider2,new GovernmentReport(['reportName' => 'Caruman', 'reportDescription' => '', 'reportGroup' => 'Tabung Haji', 'reportTarget' => 'caruman', 'reportCss' => 'm-bg-brand-cream']));
+        array_push($slider2,new GovernmentReport(['reportName' => 'Disket', 'reportDescription' => '', 'reportGroup' => 'Tabung Haji', 'reportTarget' => 'disket', 'reportCss' => 'm-bg-brand-cream']));
 
         //EPF
-        array_push($arr,new GovernmentReport(['reportName' => 'BBCD', 'reportDescription' => '', 'reportGroup' => 'EPF', 'reportTarget' => 'bbcd', 'reportCss' => 'm-bg-brand-bluish']));
-        array_push($arr,new GovernmentReport(['reportName' => 'Borang A', 'reportDescription' => '', 'reportGroup' => 'EPF', 'reportTarget' => 'borangA', 'reportCss' => 'm-bg-brand-bluish']));
+        array_push($slider2,new GovernmentReport(['reportName' => 'BBCD', 'reportDescription' => '', 'reportGroup' => 'EPF', 'reportTarget' => 'bbcd', 'reportCss' => 'm-bg-brand-bluish']));
+        array_push($slider2,new GovernmentReport(['reportName' => 'Borang A', 'reportDescription' => '', 'reportGroup' => 'EPF', 'reportTarget' => 'borangA', 'reportCss' => 'm-bg-brand-bluish']));
 
         //SOSCO
-        array_push($arr,new GovernmentReport(['reportName' => 'Lampiran A', 'reportDescription' => '', 'reportGroup' => 'SOSCO', 'reportTarget' => 'lampiranA', 'reportCss' => 'm-bg-brand-greenish']));
-        array_push($arr,new GovernmentReport(['reportName' => 'Borang 8A', 'reportDescription' => '', 'reportGroup' => 'EPF', 'reportTarget' => 'borang8A', 'reportCss' => 'm-bg-brand-greenish']));
+        array_push($slider3,new GovernmentReport(['reportName' => 'Lampiran A', 'reportDescription' => '', 'reportGroup' => 'SOSCO', 'reportTarget' => 'lampiranA', 'reportCss' => 'm-bg-brand-greenish']));
+        array_push($slider3,new GovernmentReport(['reportName' => 'Borang 8A', 'reportDescription' => '', 'reportGroup' => 'SOSCO', 'reportTarget' => 'borang8A', 'reportCss' => 'm-bg-brand-greenish']));
 
 
         //PTPTN
-        array_push($arr,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'PTPTN', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-rasberry']));
+        array_push($slider3,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'PTPTN', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-rasberry']));
 
         //ZAKAT
-        array_push($arr,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'ZAKAT', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-orange']));
+        array_push($slider3,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'ZAKAT', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-orange']));
 
         //ASBN
-        array_push($arr,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'ASBN', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-cream']));
+        array_push($slider4,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'ASBN', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-cream']));
 
         //EIS
-        array_push($arr,new GovernmentReport(['reportName' => 'Lampiran 1', 'reportDescription' => '', 'reportGroup' => 'EIS', 'reportTarget' => 'lampiran1', 'reportCss' => 'm-bg-brand-bluish']));
+        array_push($slider4,new GovernmentReport(['reportName' => 'Lampiran 1', 'reportDescription' => '', 'reportGroup' => 'EIS', 'reportTarget' => 'lampiran1', 'reportCss' => 'm-bg-brand-bluish']));
 
+        $arr = array(
+            "slider"=>$slider,
+            "slider1"=>$slider1,
+            "slider2"=>$slider2,
+            "slider3"=>$slider3,
+            "slider4"=>$slider4
+        );
         return $arr;
     }
 

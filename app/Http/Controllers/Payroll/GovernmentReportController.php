@@ -5,8 +5,6 @@ namespace App\Http\Controllers\payroll;
 use App\Helpers\GenerateReportsHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Popo\governmentreport\GovernmentReport;
-use App\Http\Controllers\Popo\governmentreport\LhdnBorangEBean;
-use App\Http\Controllers\Popo\governmentreport\LhdnCP8EmployeeDetail;
 use PDF;
 use Illuminate\Http\Request;
 use DB;
@@ -22,11 +20,17 @@ class GovernmentReportController extends Controller
     }
 
     public function viewGovernmentReport(){
-        $data = new GovernmentReport();
-        //get slider data
-        $sliders = $data->getGovernmentReport();
 
-        return view('pages.payroll.government-report')->with(['sliders' => $sliders]);
+        //get slider data
+        $arr = GovernmentReport::getGovernmentReport();
+
+        return view('pages.payroll.government-report')->with([
+            'sliders' => $arr['slider'] ,
+            'sliders1' => $arr['slider1'] ,
+            'sliders2' => $arr['slider2'] ,
+            'sliders3' => $arr['slider3'] ,
+            'sliders4' => $arr['slider4'] ,
+        ]);
     }
 
     public function generateReport(Request $request){
@@ -86,6 +90,7 @@ class GovernmentReportController extends Controller
                 // download pdf
                 return $pdf->download('lhdn_cp22a.pdf');
                 break;
+
             case "LHDN_cp22b":
                 echo "portrait";
                 break;
