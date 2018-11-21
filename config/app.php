@@ -162,6 +162,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
+
     ],
 
     /*
@@ -213,9 +215,11 @@ return [
 		'PayrollPeriodEnum' => App\Enums\PayrollPeriodEnum::class,
         'DateHelper' => App\Helpers\DateHelper::class,
         'PayrollHelper' => App\Helpers\PayrollHelper::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 
- 
+
 
 ];

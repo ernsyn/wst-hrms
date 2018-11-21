@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.admin-base')
 @section('pageTitle', 'Government Reports')
 @section('content')
 <div class="p-4">
@@ -10,8 +10,8 @@
             <div class="carousel-row">
                 @foreach($sliders as $slider)
                 <div class="carousel-tile">
-                    <div class="m-portlet m-portlet--skin-dark m-portlet--bordered-semi m--bg-brand port-item" data-toggle="collapse" data-target="#{{$slider->getReportTarget()}}">
-                        <div class="m-portlet__head" style="padding-top:12pt;align-items: center;height: 20pt;">
+                    <div class="m-portlet m-portlet--skin-dark m-portlet--bordered-semi {{$slider->getReportCss()}} port-item" data-toggle="collapse" data-target="#{{$slider->getReportTarget()}}">
+                    <div class="m-portlet__head" style="padding-top:12pt;align-items: center;height: 20pt;">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
                                     <div class="m-portlet__head-icon" style="float:left;">
@@ -42,9 +42,12 @@
                     LHDN Borang E
                 </div>
                 <div class="card-body">
-                    <form method="post">
-                        <input type="button" class="btn btn-primary" value="Generate">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                        {{csrf_field()}}
+                        <input type="hidden" name="reportName" value="LHDN_borangE">
+                        <input type="submit" class="btn btn-primary" value="Generate">
                     </form>
+
                 </div>
                 <div class="card-footer text-muted">
                     Lembaga Hasil Dalam Negeri

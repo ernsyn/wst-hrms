@@ -18,6 +18,8 @@
         "spatie/laravel-permission": "^2.23",
         "yajra/laravel-datatables": "^1.2",
         "yajra/laravel-datatables-oracle": "^8.9"
+        "barryvdh/laravel-snappy": "^0.4.3"
+
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
