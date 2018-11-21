@@ -22,15 +22,15 @@
                         </thead>
 
                         <tbody>
-                            @foreach($leavetype as $row)
+                            @foreach($types as $types)
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$row['code']}}</td>
-                                <td>{{$row['name']}}</td>
-                                <td>{{$row['apply_before_days']}}</td>
-                                <td>{{$row['approval_level']}}</td>
-                                <td>{{$row['divide_method']}}</td>
-                                <td>{{$row['carry_forward']}}</td>
+                                <td>{{$types['code']}}</td>
+                                <td>{{$types['name']}}</td>
+                                <td>{{$types['apply_before_days']}}</td>
+                                <td>{{$types['approval_level']}}</td>
+                                <td>{{$types['divide_method']}}</td>
+                                <td>{{$types['carry_forward']}}</td>
                                 <td>Action</td>
                             </tr>
                             @endforeach

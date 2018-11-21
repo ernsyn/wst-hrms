@@ -282,14 +282,15 @@ class EmployeeController extends Controller
         $dependentData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-           // 'dob' => 'required',
+            'dob' => 'required',
         ]);
+        $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
 
         $dependent = new EmployeeDependent($dependentData);
 
 
         $employee = Employee::find($id);
-        $employee->employee_dependents()->save($dependent);
+        $employee->dependents()->save($dependent);
 
         return response()->json(['success'=>'Record is successfully added']); 
     }
