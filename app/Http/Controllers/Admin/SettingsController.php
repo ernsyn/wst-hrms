@@ -317,9 +317,36 @@ class SettingsController extends Controller
             return view('pages.admin.settings.edit-department', ['department' => $department]);
         }
 
+        public function addWorkingDays()
+        {
+            return view('pages.admin.settings.add-working-day');
+        }
+        
+        
+        public function postAddWorkingDays(Request $request)
+        {     
+            $workingDaysData = $request->validate([
+                'template_name' => 'required',
+                'monday' => 'required',
+                'tuesday' => 'required',
+                'wednesday' => 'required',
+                'thursday' => 'required',
+                'friday' => 'required',
+                'saturday' => 'required',
+                'sunday' => 'required',
+            ]);
+            $workingDaysData['is_template'] = true;
 
-  
+            EmployeeWorkingDay::create($workingDaysData);    
+            return redirect()->route('admin.settings.working-days');
+        }
 
+
+    public function editWorkingDays(Request $request, $id) {
+        $working_days = EmployeeWorkingDay::find($id);
+
+        return view('pages.admin.settings.edit-working-days', ['working_days' => $working_days]);
+    }
 
 
     public function displayBranches()
@@ -517,6 +544,12 @@ class SettingsController extends Controller
     {
         $departments = Department::all();
         return view('pages.admin.settings.department', ['departments'=>$departments]);
+    }
+
+    public function displayWorkingDays()
+    {
+        $working_days = EmployeeWorkingDay::withoutGlobalScope('non-template')->where('is_template', true)->get();
+        return view('pages.admin.settings.working-day', ['working_days'=>$working_days]);
     }
 
 

@@ -4,7 +4,31 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EmployeeWorking_Day extends Model
+class EmployeeWorkingDay extends Model
 {
     protected $table = 'employee_working_days';
+
+    protected $fillable = [
+        'emp_id',
+        'is_template',
+        'template_name',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday',
+        'sunday',
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('non-template', function (Builder $builder) {
+            $builder->where('is_template', '!=', true);
+        });
+
+
+    }
 }

@@ -125,6 +125,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('settings/eis', 'Admin\SettingsController@displayEis')->name('admin.settings.eis');
     Route::get('settings/socso', 'Admin\SettingsController@displaySocso')->name('admin.settings.socso');
     Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
+    Route::get('settings/working-days', 'Admin\SettingsController@displayWorkingDays')->name('admin.settings.working-days');
 
     Route::get('e-leave/configuration/leaveholidays', 'Admin\ELeaveController@displayPublicHolidays')->name('admin.e-leave.configuration.leaveholidays');
     Route::get('e-leave/configuration/leavebalances', 'Admin\ELeaveController@displayLeaveBalances')->name('admin.e-leave.configuration.leavebalances');
@@ -194,6 +195,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
    
     Route::get('settings/pcb/add','Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
     Route::post('settings/pcb/add','Admin\SettingsController@postAddPcb')->name('admin.settings.pcb.add.post');
+
+    Route::get('settings/working-days/add','Admin\SettingsController@addWorkingDays')->name('admin.settings.working-days.add');
+    Route::post('settings/working-days/add','Admin\SettingsController@postAddWorkingDays')->name('admin.settings.working-days.add.post');
    
   
     Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
