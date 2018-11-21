@@ -18,25 +18,25 @@
                 </div>
                 <div id="basic-profile" class="px-2 ml-3 w-100">
                     <div class="header d-flex pb-3">
-                        <h3 id="emp-name">Adrian Miller</h3>
-                        <h3 id="emp-email">adrianmiller@wisetech.com</h3>
+                        <h3 id="emp-name">{{$employee->user->name}}</h3>
+                        <h3 id="emp-email">{{$employee->user->email}}</h3>
                     </div>
                     <div class="details">
                         <div class="field pb-1">
                             <span class="field-name mr-2">IC No</span>
-                            <span class="field-value">102213-12-1231</span>
+                            <span class="field-value">{{$employee->ic_no}}</span>
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">DOB</span>
-                            <span class="field-value">12 Dec 2018</span>
+                            <span class="field-value">{{$employee->dob}}</span>
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Gender</span>
-                            <span class="field-value">Male</span>
+                            <span class="field-value">{{ ucfirst($employee->gender) }}</span>
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">Malaysian</span>
+                            <span class="field-value">{{ App\Country::find($employee->nationality)->citizenship }}</span>
                         </div>
                     </div>
                     {{-- <div class="form-group row">
