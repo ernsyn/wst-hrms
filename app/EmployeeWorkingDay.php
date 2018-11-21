@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EmployeeWorkingDay extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'employee_working_days';
 
     protected $fillable = [
@@ -20,6 +24,8 @@ class EmployeeWorkingDay extends Model
         'saturday',
         'sunday',
     ];
+
+    protected $dates = ['deleted_at'];
 
     protected static function boot()
     {
