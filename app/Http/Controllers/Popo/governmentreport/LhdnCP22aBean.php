@@ -6,7 +6,7 @@
  * Time: 2:00 PM
  */
 
-namespace App\Popo\report;
+namespace App\Http\Controllers\Popo\governmentreport;
 
 
 class LhdnCP22aBean

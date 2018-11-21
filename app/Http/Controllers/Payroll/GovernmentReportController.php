@@ -46,21 +46,45 @@ class GovernmentReportController extends Controller
                 $arr = GenerateReportsHelper::generateBean($reportName,null);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnBorangE',
                     ['data' => $arr['data'] ,
-                        'empData' => $arr['data1'] ,
+                     'empData' => $arr['data1'] ,
                     ])->setOrientation('landscape');
 
                 $pdf->setTemporaryFolder(storage_path("temp"));
                 // download pdf
                 return $pdf->download('lhdnBorangE.pdf');
                 break;
+
             case "LHDN_cp21":
-                echo "portrait";
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP21',
+                    ['dataArr' => $arr['data']
+                    ]);
+
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp21.pdf');
                 break;
+
             case "LHDN_cp22":
-                echo "portrait";
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22',
+                    ['dataArr' => $arr['data']
+                    ]);
+
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp22.pdf');
                 break;
+
             case "LHDN_cp22a":
-                echo "portrait";
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22a',
+                    ['dataArr' => $arr['data']
+                    ]);
+
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp22a.pdf');
                 break;
             case "LHDN_cp22b":
                 echo "portrait";

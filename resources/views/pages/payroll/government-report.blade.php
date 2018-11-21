@@ -47,7 +47,6 @@
                         <input type="hidden" name="reportName" value="LHDN_borangE">
                         <input type="submit" class="btn btn-primary" value="Generate">
                     </form>
-
                 </div>
                 <div class="card-footer text-muted">
                     Lembaga Hasil Dalam Negeri
@@ -60,8 +59,10 @@
                     LHDN CP21
                 </div>
                 <div class="card-body">
-                    <form method="post">
-                        <input type="button" class="btn btn-primary" value="Generate">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                        {{csrf_field()}}
+                        <input type="hidden" name="reportName" value="LHDN_cp21">
+                        <input type="submit" class="btn btn-primary" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
@@ -75,8 +76,27 @@
                     LHDN CP22
                 </div>
                 <div class="card-body">
-                    <form method="post">
-                        <input type="button" class="btn btn-primary" value="Generate">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                        {{csrf_field()}}
+                        <input type="hidden" name="reportName" value="LHDN_cp22">
+                        <input type="submit" class="btn btn-primary" value="Generate">
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    Lembaga Hasil Dalam Negeri
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="cp22a" class="card text-center collapse">
+                <div class="card-header">
+                    LHDN CP22a
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                        {{csrf_field()}}
+                        <input type="hidden" name="reportName" value="LHDN_cp22a">
+                        <input type="submit" class="btn btn-primary" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
