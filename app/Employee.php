@@ -38,4 +38,9 @@ class Employee extends Model
     {
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
     }
+
+    public function report_tos()
+    {
+        return $this->hasMany('App\EmployeeReportTo', 'emp_id');
+    }
 }

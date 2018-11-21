@@ -19,7 +19,7 @@
                 <a href="{{ route('employee/leaveapplication') }}">Leave Application</a>
             </li>
             <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                <a href="{{ route('employee/leaveapplication') }}">Leave Request History</a>
+                <a href="{{ route('employee.leaveapplication') }}">Leave Request History</a>
             </li>
         </ul>
 

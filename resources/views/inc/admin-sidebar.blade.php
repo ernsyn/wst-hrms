@@ -107,9 +107,9 @@
                             <a href="{{ route('admin.e-leave.configuration.leavetypes') }}">Leave Type Setup</a>
                         </li>
 
-                        <li class="menu-option {{ request()->is('admin/e-leave/configuration/leavebalances') ? 'active' : '' }}">
+                        {{-- <li class="menu-option {{ request()->is('admin/e-leave/configuration/leavebalances') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration.leavebalances') }}">Leave Balance</a>
-                        </li>
+                        </li> --}}
 
                         
                         <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaverequest') ? 'active' : '' }}">

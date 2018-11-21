@@ -1,5 +1,4 @@
-@extends('layouts.base') 
-@section('pageTitle', 'Leave Request') 
+@extends('layouts.admin-base') 
 @section('content')
 
 {{-- Approved Leave Request --}}
