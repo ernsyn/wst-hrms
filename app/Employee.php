@@ -13,6 +13,12 @@ class Employee extends Model
         return $this->hasMany('App\PayrollTrx');
     }
     
+    protected $fillable = [
+        'user_id', 'address', 'company_id','contact_no','dob',
+        'gender','race','nationality','marital_status','total_children','ic_no','tax_no',
+        'epf_no','driver_license_no','driver_license_expiry_date','created_by'
+    ];
+
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -23,11 +29,9 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeJob', 'emp_id');
     }
 
-    protected $fillable = [
-        'user_id', 'address', 'company_id','contact_no','dob',
-        'gender','race','nationality','marital_status','total_children','ic_no','tax_no',
-        'epf_no','driver_license_no','driver_license_expiry_date','created_by'
-    ];
-
+    public function employee_emergency_contacts()
+    {
+        return $this->hasMany('App\EmployeeEmergencyContact', 'emp_id');
+    }
 
 }

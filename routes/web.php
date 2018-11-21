@@ -117,7 +117,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('settings/positions', 'Admin\SettingsController@displayPositions')->name('admin.settings.positions');
     Route::get('settings/grades', 'Admin\SettingsController@displayGrades')->name('admin.settings.grades');
     Route::get('settings/branches', 'Admin\SettingsController@displayBranches')->name('admin.settings.branches');
- 
+    Route::get('settings/epf', 'Admin\SettingsController@displayEpf')->name('admin.settings.epf');
+    Route::get('settings/eis', 'Admin\SettingsController@displayEis')->name('admin.settings.eis');
+    Route::get('settings/socso', 'Admin\SettingsController@displaySocso')->name('admin.settings.socso');
+    Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
+
     
     // Settings - Add
     Route::get('settings/companies/add','Admin\SettingsController@addCompany')->name('admin.settings.companies.add');
@@ -143,8 +147,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('settings/branches/add','Admin\SettingsController@addBranch')->name('admin.settings.branches.add');
     Route::post('settings/branches/add','Admin\SettingsController@postAddBranch')->name('admin.settings.branches.add.post');
 
-    
-    
+    Route::get('settings/epf/add','Admin\SettingsController@addEpf')->name('admin.settings.epf.add');
+    Route::post('settings/epf/add','Admin\SettingsController@postAddEpf')->name('admin.settings.epf.add.post');
+   
+    Route::get('settings/eis/add','Admin\SettingsController@addEis')->name('admin.settings.eis.add');
+    Route::post('settings/eis/add','Admin\SettingsController@postAddEis')->name('admin.settings.eis.add.post');
+   
+    Route::get('settings/socso/add','Admin\SettingsController@addSocso')->name('admin.settings.socso.add');
+    Route::post('settings/socso/add','Admin\SettingsController@postAddSocso')->name('admin.settings.socso.add.post');
+   
+    Route::get('settings/pcb/add','Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
+    Route::post('settings/pcb/add','Admin\SettingsController@postAddPcb')->name('admin.settings.pcb.add.post');
+   
   
     Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
     Route::post('settings/holidays/add','Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
@@ -155,9 +169,23 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     
 
     //setting-edit
+
+    Route::get('settings/epf/{id}/edit','Admin\SettingsController@editEpf')->name('admin.settings.epf.edit')->where('id', '[0-9]+');
+    Route::post('settings/epf/{id}/edit','Admin\SettingsController@postEditEpf')->name('admin.settings.epf.edit.post')->where('id', '[0-9]+');
+  
+    Route::get('settings/eis/{id}/edit','Admin\SettingsController@editEis')->name('admin.settings.eis.edit')->where('id', '[0-9]+');
+    Route::post('settings/eis/{id}/edit','Admin\SettingsController@postEditEis')->name('admin.settings.eis.edit.post')->where('id', '[0-9]+');
+   
+    Route::get('settings/socso/{id}/edit','Admin\SettingsController@editSocso')->name('admin.settings.socso.edit')->where('id', '[0-9]+');
+    Route::post('settings/socso/{id}/edit','Admin\SettingsController@postEditSocso')->name('admin.settings.socso.edit.post')->where('id', '[0-9]+');
+   
+    Route::get('settings/pcb/{id}/edit','Admin\SettingsController@editPcb')->name('admin.settings.pcb.edit')->where('id', '[0-9]+');
+    Route::post('settings/pcb/{id}/edit','Admin\SettingsController@postEditPcb')->name('admin.settings.pcb.edit.post')->where('id', '[0-9]+');
+   
+
     Route::get('settings/companies/{id}/edit','Admin\SettingsController@editCompany')->name('admin.settings.companies.edit')->where('id', '[0-9]+');
     Route::post('settings/companies/{id}/edit','Admin\SettingsController@postEditCompany')->name('admin.settings.companies.edit.post')->where('id', '[0-9]+');
-    
+   
         //setting-edit
     Route::get('settings/positions/{id}/edit','Admin\SettingsController@editPosition')->name('admin.settings.positions.edit')->where('id', '[0-9]+');
     Route::post('settings/positions/{id}/edit','Admin\SettingsController@postEditPosition')->name('admin.settings.positions.edit.post')->where('id', '[0-9]+');

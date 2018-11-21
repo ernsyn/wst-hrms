@@ -52,7 +52,7 @@
                         </div>
                         <div class="form-group row">
 
-                            <label class="col-lg-2 col-form-label text-right">Mobile No</label>
+                            <label class="col-lg-2 col-form-label text-right">Contact No</label>
                             <div class="col-lg-6">
                                 <input id="contact_no" type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" name="contact_no"
                                     value="{{ old('contact_no') }}" required> 

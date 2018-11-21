@@ -57,7 +57,7 @@
 				<button onclick="window.location='{{ route('payroll.show',$row->id) }}';"
                                             class="round-btn btn btn-default fas fa-edit btn-segment">
                                         </button>
-                                        
+                @hasanyrole('super-admin|admin')                        
 				<form action="{{ route('payroll.status.update', ['id'=>$row->id]) }}"
 					method="POST" id="update_status_form" style="display: inline;">
 					
@@ -73,6 +73,7 @@
 						class="round-btn btn btn-default fas fa-lock btn-segment" title="Lock"></button>
                 @endif
 				</form>
+				@endhasanyrole
 				</td>
 							</tr>
 							@endforeach

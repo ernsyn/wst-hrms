@@ -1,0 +1,47 @@
+#employee-profile-card {
+    #employee-profile-details {
+        border-radius: 0.25rem 0.25rem 0 0;
+        #profile-pic-container {
+            border-radius: 0.25rem;
+            background-color: rgba(255, 255, 255, 0.287);
+            width: 250px;
+        }
+        #basic-profile {
+            .header {
+                #emp-name {
+                    padding-right: 20px;
+                }
+
+                #emp-email {
+                    color: rgba(255, 255, 255, 0.507);
+                }
+            }
+            .details {
+                width: 300px;
+                .field {
+                    font-size: 1.05em;
+                    color: rgba(255, 255, 255, 0.849);
+                    .field-name {
+                        font-weight: 600;
+                        display: inline-block;
+                        width: 80px;
+                        
+                        // overflow: hidden;
+                        // text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                    .field-value {
+                        font-weight: 300;
+                        // overflow: hidden;
+                    }
+                }
+            }
+        }
+        #end-btn-group {
+            padding: 10px;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+        }
+    }
+}
