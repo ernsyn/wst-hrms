@@ -565,6 +565,13 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been deleted.');
     }
 
+    public function deleteEpf(Request $request, $id)
+    {
+        EPF::find($id)->delete();
+
+        return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been deleted.');
+    }
+
     public function deletePcb(Request $request, $id)
     {
         Pcb::find($id)->delete();
@@ -766,9 +773,9 @@ class SettingsController extends Controller
 // Contribution List
 public function displayEpf()
 {
-    $epf = EPF::all();
+    $epfs = EPF::all();
 
-    return view('pages.admin.settings.epf', ['epf' => $epf]);
+    return view('pages.admin.settings.epf', ['epfs' => $epfs]);
 }
 
 public function addEpf()
@@ -779,8 +786,8 @@ public function addEpf()
 public function postAddEpf(Request $request)
 {
     $epfData = $request->validate([
-        'category' => 'required',
-        'salary' => 'required',
+        'category' => 'required|unique:epfs,category,NULL,id,deleted_at,NULL',
+        'salary' => 'required|numeric',
         'employer' => 'required',
         'employee' => 'required',
         'name'=>'required',
@@ -802,8 +809,8 @@ public function postEditEpf(Request $request, $id)
 
     $epfData = $request->validate([
 
-        'category' => 'required',
-        'salary' => 'required',
+        'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
+        'salary' => 'required|numeric',
         'employer' => 'required',
         'employee' => 'required',
         'name'=>'required',
