@@ -30,7 +30,7 @@
             @endhasrole 
             @hasrole('employee')
             <div class="option row col mx-0">
-                <a href="{{ route('home') }}">
+                <a href="{{ route('employee.dashboard') }}">
                     Employee
                 </a>
             </div>
