@@ -1,7 +1,8 @@
 @extends('layouts.admin-base')
-@section('content') @foreach ($errors->all() as $error)
+@section('content')
+{{-- @foreach ($errors->all() as $error)
 <li>{{ $error }}</li>
-@endforeach
+@endforeach --}}
 <div class="container">
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.socso.add.post') }}" id="form_validate" data-parsley-validate>
@@ -14,6 +15,11 @@
                             <div class="col-md-12">
                                 <input id="salary" type="text" class="form-control{{ $errors->has('salary') ? ' is-invalid' : '' }}" placeholder="" name="salary"
                                     value="{{ old('salary') }}" required>
+                                    @if ($errors->has('salary'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('salary') }}</strong>
+                                    </span>
+                                    @endif
                             </div>
                         </div>
                         <div class="form-group row w-100">
@@ -22,14 +28,24 @@
                                 <input id="first_category_employer" type="text" class="form-control{{ $errors->has('first_category_employer') ? ' is-invalid' : '' }}"
                                     placeholder="" name="first_category_employer" value="{{ old('first_category_employer') }}"
                                     required>
+                                    @if ($errors->has('first_category_employer'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('first_category_employer') }}</strong>
+                                    </span>
+                                    @endif
                             </div>
                         </div>
                         <div class="form-group row w-100">
-                            <label class="col-md-12 col-form-label">First Category Employer**</label>
+                            <label class="col-md-12 col-form-label">First Category Employee*</label>
                             <div class="col-md-12">
                                 <input id="first_category_employee" type="text" class="form-control{{ $errors->has('first_category_employee') ? ' is-invalid' : '' }}"
                                     placeholder="" name="first_category_employee" value="{{ old('first_category_employee') }}"
                                     required>
+                                    @if ($errors->has('first_category_employee'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('first_category_employee') }}</strong>
+                                    </span>
+                                    @endif
                             </div>
                         </div>
                     </div>

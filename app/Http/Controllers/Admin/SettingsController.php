@@ -79,12 +79,12 @@ class SettingsController extends Controller
     public function postAddCompany(Request $request)
     {
         $companyData = $request->validate([
-            'name' => 'required|unique:companies',
+            'name' => 'required|unique:companies,name,NULL,id,deleted_at,NULL',
             'url' => 'required',
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|numeric',
             'tax_no' => 'required',
             'epf_no' => 'required',
             'socso_no' => 'required',
@@ -120,7 +120,7 @@ class SettingsController extends Controller
     public function postAddPosition(Request $request)
     {
         $positionData = $request->validate([
-            'name' => 'required|unique:employee_positions',
+            'name' => 'required|unique:employee_positions,name,NULL,id,deleted_at,NULL',
 
         ]);
 
@@ -137,10 +137,8 @@ class SettingsController extends Controller
 
     public function postEditPosition(Request $request, $id)
     {
-
         $positionData = $request->validate([
-            'name' => 'required|unique:employee_positions,name,'.$id,
-
+            'name' => 'required|unique:employee_positions,name,'.$id.',id,deleted_at,NULL',
         ]);
 
         EmployeePosition::where('id', $id)->update($positionData);
@@ -203,8 +201,7 @@ class SettingsController extends Controller
     public function postAddTeam(Request $request)
     {
         $teamData = $request->validate([
-            'name' => 'required|unique:teams',
-
+            'name' => 'required|unique:teams,name,NULL,id,deleted_at,NULL',
         ]);
 
         Team::create($teamData);
@@ -224,7 +221,7 @@ class SettingsController extends Controller
        {
 
             $teamData = $request->validate([
-                'name' => 'required|unique:teams,name,'.$id,
+                'name' => 'required|unique:teams,name,'.$id.',id,deleted_at,NULL',
 
             ]);
 
@@ -351,9 +348,9 @@ class SettingsController extends Controller
 
     public function displayBranches()
     {
-        $branch = Branch::all();
+        $branches = Branch::all();
 
-        return view('pages.admin.settings.branch', ['branch'=>$branch]);
+        return view('pages.admin.settings.branch', ['branches'=>$branches]);
     }
 
 
@@ -458,23 +455,19 @@ class SettingsController extends Controller
     {
 
         $branchData = $request->validate([
-            'name' => 'required',
-            'contact_no_primary' =>'required',
-            'contact_no_secondary' => 'required',
-            'fax_no' =>'required',
+            'name' => 'required|unique:branches,name,NULL,id,deleted_at,NULL',
+            'contact_no_primary' =>'required|numeric',
+            'contact_no_secondary' => 'required|numeric',
+            'fax_no' =>'required|numeric',
             'address'=>'required',
-            'country_code'=> 'required',
+            'country_code'=> 'required|numeric',
             'state'=> 'required',
             'city'=>   'required',
-            'zip_code'=> 'required'
-
+            'zip_code'=> 'required|numeric'
         ]);
+
         Branch::create($branchData);
         return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been added.');
-
-
-        $branch = Branch::all();
-        return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }
 
 
@@ -513,15 +506,15 @@ class SettingsController extends Controller
     public function postEditBranch(Request $request, $id)
     {
         $branchData = $request->validate([
-            'name' => 'required',
-            'contact_no_primary' =>'required',
-            'contact_no_secondary' => 'required',
-            'fax_no' =>'required',
+            'name' => 'required|unique:branches,name,'.$id.',id,deleted_at,NULL',
+            'contact_no_primary' =>'required|numeric',
+            'contact_no_secondary' => 'required|numeric',
+            'fax_no' =>'required|numeric',
             'address'=>'required',
-            'country_code'=> 'required',
+            'country_code'=> 'required|numeric',
             'state'=> 'required',
             'city'=>   'required',
-            'zip_code'=> 'required'
+            'zip_code'=> 'required|numeric'
 
 
             ]);
@@ -537,12 +530,12 @@ class SettingsController extends Controller
     {
 
         $companyData = $request->validate([
-            'name' => 'required|unique:companies,name,'.$id,
+            'name' => 'required|unique:companies,name,'.$id.',id,deleted_at,NULL',
             'url' => 'required',
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|numeric',
             'tax_no' => 'required',
             'epf_no' => 'required',
             'socso_no' => 'required|numeric',
@@ -563,12 +556,61 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grades has successfully been deleted.');
     }
+    
+    public function deleteCompany(Request $request, $id)
+    {
+        Company::find($id)->delete();
+
+        return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been deleted.');
+    }
+
+    public function deleteTeam(Request $request, $id)
+    {
+        Team::find($id)->delete();
+
+        return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been deleted.');
+    }
+
+    public function deleteBranch(Request $request, $id)
+    {
+        Branch::find($id)->delete();
+
+        return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been deleted.');
+    }
+
+    public function deletePosition(Request $request, $id)
+    {
+        EmployeePosition::find($id)->delete();
+
+        return redirect()->route('admin.settings.positions')->with('status', 'Position has successfully been deleted.');
+    }
 
     public function deleteWorkingDay(Request $request, $id)
     {
         EmployeeWorkingDay::templates()->find($id)->delete();
 
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been deleted.');
+    }
+
+    public function deleteEpf(Request $request, $id)
+    {
+        EPF::find($id)->delete();
+
+        return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been deleted.');
+    }
+    
+    public function deleteEis(Request $request, $id)
+    {
+        Eis::find($id)->delete();
+
+        return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been deleted.');
+    }
+    
+    public function deleteSocso(Request $request, $id)
+    {
+        Socso::find($id)->delete();
+
+        return redirect()->route('admin.settings.socso')->with('status', 'Socso has successfully been deleted.');
     }
 
     public function deletePcb(Request $request, $id)
@@ -772,9 +814,9 @@ class SettingsController extends Controller
 // Contribution List
 public function displayEpf()
 {
-    $epf = EPF::all();
+    $epfs = EPF::all();
 
-    return view('pages.admin.settings.epf', ['epf' => $epf]);
+    return view('pages.admin.settings.epf', ['epfs' => $epfs]);
 }
 
 public function addEpf()
@@ -785,8 +827,8 @@ public function addEpf()
 public function postAddEpf(Request $request)
 {
     $epfData = $request->validate([
-        'category' => 'required',
-        'salary' => 'required',
+        'category' => 'required|unique:epfs,category,NULL,id,deleted_at,NULL',
+        'salary' => 'required|numeric',
         'employer' => 'required',
         'employee' => 'required',
         'name'=>'required',
@@ -808,8 +850,8 @@ public function postEditEpf(Request $request, $id)
 
     $epfData = $request->validate([
 
-        'category' => 'required',
-        'salary' => 'required',
+        'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
+        'salary' => 'required|numeric',
         'employer' => 'required',
         'employee' => 'required',
         'name'=>'required',
@@ -825,8 +867,8 @@ public function postEditEpf(Request $request, $id)
 // Contribution List
 public function displayEis()
 {
-    $eis = Eis::all();
-    return view('pages.admin.settings.eis', ['eis' => $eis]);
+    $eiss = Eis::all();
+    return view('pages.admin.settings.eis', ['eiss' => $eiss]);
 }
 
 public function addEis()
@@ -837,12 +879,9 @@ public function addEis()
 public function postAddEis(Request $request)
 {
     $eisData = $request->validate([
-
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'employer' => 'required',
         'employee' => 'required',
-
-
     ]);
 
     Eis::create($eisData);
@@ -861,7 +900,7 @@ public function postEditEis(Request $request, $id)
 
     $eisData = $request->validate([
 
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'employer' => 'required',
         'employee' => 'required',
 
@@ -876,8 +915,8 @@ public function postEditEis(Request $request, $id)
 // Contribution List
 public function displaySocso()
 {
-    $socso = Socso::all();
-    return view('pages.admin.settings.socso', ['socso' => $socso]);
+    $socsos = Socso::all();
+    return view('pages.admin.settings.socso', ['socsos' => $socsos]);
 }
 
 public function addSocso()
@@ -889,7 +928,7 @@ public function postAddSocso(Request $request)
 {
     $socsoData = $request->validate([
 
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'first_category_employer' => 'required',
         'first_category_employee' => 'required',
 
@@ -912,7 +951,7 @@ public function postEditSocso(Request $request, $id)
 
     $socsoData = $request->validate([
 
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'first_category_employer' => 'required',
         'first_category_employee' => 'required',
 
@@ -960,7 +999,7 @@ public function postEditPcb(Request $request, $id)
 {
 
     $pcbData = $request->validate([
-        'category' => 'required|unique:pcbs,category,{$id},id,deleted_at,NULL',
+        'category' => 'required|unique:pcbs,category,'.$id.',id,deleted_at,NULL',
         'salary' => 'required',
         'amount' => 'required',
         'total_children' =>'required',
