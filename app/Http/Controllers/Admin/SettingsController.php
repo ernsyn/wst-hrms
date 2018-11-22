@@ -296,7 +296,7 @@ class SettingsController extends Controller
         public function postAddDepartment(Request $request)
         {
             $departmentData = $request->validate([
-                'name' => 'required'
+                'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
 
             ]);
             Department::create($departmentData);
@@ -472,7 +472,7 @@ class SettingsController extends Controller
     {
 
         $departmentData = $request->validate([
-            'name' => 'required|unique:departments,name,'.$id
+            'name' => 'required|unique:departments,name,'.$id.',id,deleted_at,NULL'
         ]);
 
         Department::where('id', $id)->update($departmentData);
@@ -553,6 +553,13 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been deleted.');
     }
 
+    public function deleteDepartment(Request $request, $id)
+    {
+        Department::find($id)->delete();
+
+        return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been deleted.');
+    }
+    
     public function deleteGrade(Request $request, $id)
     {
         EmployeeGrade::find($id)->delete();
