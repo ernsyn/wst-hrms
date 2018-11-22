@@ -36,7 +36,9 @@
 
                         <td>
                             <button onclick="window.location='{{ route('admin.settings.grades.edit.post', ['id' => $grade->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
-                                </button>
+                            </button>
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $grade->name }}' data-link='{{ route('admin.settings.grades.delete', ['id ' => $grade->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                            </button>
                         </td>
                     </tr>
                     @endforeach
@@ -44,13 +46,32 @@
             </table>
         </div>
     </div>
-
+</div>
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm">Delete</button>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
 @section('scripts')
 <script>
-    $('#grades-table').DataTable({
+    $(function(){
+        $('#grades-table').DataTable({
             responsive: true,
             stateSave: true,
             dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
@@ -84,6 +105,19 @@
             ]
 
         });
+        $('#confirm-delete-modal').on('show.bs.modal', function (e) {
+            var entryTitle = $(e.relatedTarget).data('entry-title');
+            var link = $(e.relatedTarget).data('link');
+            $(this).find('.modal-body p').text('Are you sure you want to delete - ' + entryTitle + '?');
 
+            // Pass form reference to modal for submission on yes/ok
+            var form = $(e.relatedTarget).closest('form');
+            $(this).find('.modal-footer #confirm').data('form', link);
+        });
+
+        $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
+            window.location = $(this).data('form');
+        });
+    })
 </script>
 @append
