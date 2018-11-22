@@ -565,6 +565,13 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been deleted.');
     }
 
+    public function deleteEis(Request $request, $id)
+    {
+        Eis::find($id)->delete();
+
+        return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been deleted.');
+    }
+
     public function deletePcb(Request $request, $id)
     {
         Pcb::find($id)->delete();
@@ -819,8 +826,8 @@ public function postEditEpf(Request $request, $id)
 // Contribution List
 public function displayEis()
 {
-    $eis = Eis::all();
-    return view('pages.admin.settings.eis', ['eis' => $eis]);
+    $eiss = Eis::all();
+    return view('pages.admin.settings.eis', ['eiss' => $eiss]);
 }
 
 public function addEis()
@@ -831,12 +838,9 @@ public function addEis()
 public function postAddEis(Request $request)
 {
     $eisData = $request->validate([
-
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'employer' => 'required',
         'employee' => 'required',
-
-
     ]);
 
     Eis::create($eisData);
@@ -855,7 +859,7 @@ public function postEditEis(Request $request, $id)
 
     $eisData = $request->validate([
 
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'employer' => 'required',
         'employee' => 'required',
 
@@ -883,7 +887,7 @@ public function postAddSocso(Request $request)
 {
     $socsoData = $request->validate([
 
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'first_category_employer' => 'required',
         'first_category_employee' => 'required',
 
