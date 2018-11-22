@@ -250,10 +250,8 @@ class SettingsController extends Controller
         public function postAddCostCentre(Request $request)
         {
             $costCentreData = $request->validate([
-                'name' => 'required',
-                'seniority_pay' =>'required',
-
-                // 'payroll_type' =>'required'
+                'name' => 'required|unique:cost_centres,name,NULL,id,deleted_at,NULL',
+                'seniority_pay' =>'required'
 
             ]);
 
@@ -281,10 +279,8 @@ class SettingsController extends Controller
         {
 
             $costCentreData = $request->validate([
-                'name' => 'required|unique:cost_centres,name,'.$id,
+                'name' => 'required|unique:cost_centres,name,'.$id.',id,deleted_at,NULL',
                 'seniority_pay' =>'required',
-                // 'payroll_type' =>'required'
-
             ]);
 
             CostCentre::where('id', $id)->update($costCentreData);
@@ -557,6 +553,12 @@ class SettingsController extends Controller
     }
 
     // Section: DELETE
+    public function deleteCostCentre(Request $request, $id)
+    {
+        CostCentre::find($id)->delete();
+
+        return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been deleted.');
+    }
 
     public function deleteWorkingDay(Request $request, $id)
     {

@@ -1,9 +1,6 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="container">
-    @foreach ($errors->all() as $error)
-    <li>{{ $error }}</li>
-    @endforeach
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.cost-centres.edit.post', ['id' => $costs->id]) }}" id="form_validate"
             data-parsley-validate>
@@ -24,16 +21,16 @@
                         <div class="col-6">
                             <label class="col-md-12 col-form-label">Seniority Pay*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="seniority_pay" name="seniority_pay" name="seniority_pay" value="{{ $costs->seniority_pay }}"
+                                <select class="form-control{{ $errors->has('seniority_pay') ? ' is-invalid' : '' }}" id="seniority_pay" name="seniority_pay" name="seniority_pay" value="{{ $costs->seniority_pay }}"
                                     required>
-                                            @if ($errors->has('seniority_pay'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('seniority_pay') }}</strong>
-                                            </span>
-                                            @endif
                                         <option value="Auto">Auto</option>
                                         <option value="Manual">Manual</option>
                                     </select>
+                                    @if ($errors->has('seniority_pay'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('seniority_pay') }}</strong>
+                                    </span>
+                                    @endif
 
                             </div>
                         </div>
