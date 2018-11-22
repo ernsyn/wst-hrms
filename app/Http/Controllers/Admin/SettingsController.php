@@ -79,12 +79,12 @@ class SettingsController extends Controller
     public function postAddCompany(Request $request)
     {
         $companyData = $request->validate([
-            'name' => 'required|unique:companies',
+            'name' => 'required|unique:companies,name,NULL,id,deleted_at,NULL',
             'url' => 'required',
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|numeric',
             'tax_no' => 'required',
             'epf_no' => 'required',
             'socso_no' => 'required',
@@ -537,12 +537,12 @@ class SettingsController extends Controller
     {
 
         $companyData = $request->validate([
-            'name' => 'required|unique:companies,name,'.$id,
+            'name' => 'required|unique:companies,name,'.$id.',id,deleted_at,NULL',
             'url' => 'required',
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|numeric',
             'tax_no' => 'required',
             'epf_no' => 'required',
             'socso_no' => 'required|numeric',
@@ -557,6 +557,12 @@ class SettingsController extends Controller
     }
 
     // Section: DELETE
+    public function deleteCompany(Request $request, $id)
+    {
+        Company::find($id)->delete();
+
+        return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been deleted.');
+    }
 
     public function deleteWorkingDay(Request $request, $id)
     {
@@ -954,7 +960,7 @@ public function postEditPcb(Request $request, $id)
 {
 
     $pcbData = $request->validate([
-        'category' => 'required|unique:pcbs,category,{$id},id,deleted_at,NULL',
+        'category' => 'required|unique:pcbs,category,'.$id.',id,deleted_at,NULL',
         'salary' => 'required',
         'amount' => 'required',
         'total_children' =>'required',
