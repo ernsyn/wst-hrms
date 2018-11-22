@@ -77,7 +77,8 @@
 
 @section('scripts')
 <script>
-    $('#pcb-table').DataTable({
+    $(function(){
+        $('#pcb-table').DataTable({
             responsive: true,
             stateSave: true,
             dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
@@ -124,6 +125,7 @@
         $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
             window.location = $(this).data('form');
         });
+    });
 
 </script>
 @append
