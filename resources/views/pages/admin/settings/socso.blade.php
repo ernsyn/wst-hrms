@@ -5,8 +5,8 @@
     <div class="alert alert-primary fade show" role="alert">
         {{ session('status') }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     @endif
     <div class="row pb-3">
@@ -24,26 +24,25 @@
                 <thead>
                     <tr>
                         <th>No</th>
-
                         <th>Salary</th>
                         <th>First Category Employer</th>
                         <th>First Category Employee</th>
-                        <th>Total</th>
+                        {{-- <th>Total</th> --}}
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($socso as $socso)
+                    @foreach($socsos as $socso)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-
-                        <td>{{$socso['salary']}}</td>
+                        <td>RM {{$socso['salary']}}</td>
                         <td>{{$socso['first_category_employer']}}</td>
                         <td>{{$socso['first_category_employee']}}</td>
-                        <td>{{$socso['total']}}</td>
-
+                        {{-- <td>{{$socso['total']}}</td> --}}
                         <td>
                             <button onclick="window.location='{{ route('admin.settings.socso.edit.post', ['id' => $socso->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
+                                </button>
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $socso->salary }}' data-link='{{ route('admin.settings.socso.delete', ['id ' => $socso->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
                                 </button>
                         </td>
                     </tr>
@@ -52,12 +51,31 @@
             </table>
         </div>
     </div>
-
 </div>
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
 <script>
+    $(function(){
     $('#socso-table').DataTable({
             responsive: true,
             stateSave: true,
@@ -92,6 +110,19 @@
             ]
 
         });
+        $('#confirm-delete-modal').on('show.bs.modal', function (e) {
+            var entryTitle = $(e.relatedTarget).data('entry-title');
+            var link = $(e.relatedTarget).data('link');
+            $(this).find('.modal-body p').text('Are you sure you want to delete - ' + entryTitle + '?');
 
+            // Pass form reference to modal for submission on yes/ok
+            var form = $(e.relatedTarget).closest('form');
+            $(this).find('.modal-footer #confirm').data('form', link);
+        });
+
+        $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
+            window.location = $(this).data('form');
+        });
+    })
 </script>
 @append
