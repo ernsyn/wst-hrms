@@ -269,34 +269,34 @@ class PayrollController extends Controller
         $viewerEmployeeId = @$request['viewer_employee_id'];
         $companyId = @$request['company_id'];
 
-        $list = PayrollTrx::join('payroll_master as PM', 'PM.id', '=', 'payroll_trx.payroll_master_id')->join('employees as EM', 'EM.id', '=', 'payroll_trx.employee_id')
-            ->join('users as U', 'U.id', '=', 'EM.user_id') 
+        $list = PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')
+            ->join('employees as e', 'e.id', '=', 'payroll_trx.employee_id')
+            ->join('users as u', 'u.id', '=', 'e.user_id') 
         /* ->join('countries as C', 'C.id', '=', 'EM.citizenship')  */
-        ->join('employee_jobs as EJ', function ($join) {
-            $join->on('EJ.emp_id', '=', 'EM.id');
-//                 ->on('EJ.default', '=', DB::raw('"1"'));
-        })
-        ->join('employee_positions as JM', 'JM.id', '=', 'EJ.emp_mainposition_id')
+            ->join('employee_jobs as ej', function ($join) {
+                $join->on('ej.emp_id', '=', 'e.id');
+            })
+            ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
         /* ->join('job_master as JM2', 'JM2.id', '=', 'EJ.id_category')  */
         // ->leftjoin('EmployeeGroup as EG', 'EG.id_EmployeeMaster', '=', 'EM.id')
         /* ->leftjoin('employee_bank as EB', function($join){
             $join->on('EB.emp_id', '=', 'EM.emp_id')
             ->on('EB.acc_status', '=', DB::raw('"Active"'));
         }) */
-        ->select('payroll_trx.*', 'PM.company_id as company_id', 'PM.year_month', 'PM.period', 'PM.status', 'EM.id as employee_id', 'EM.code as employee_code', 'U.name','JM.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
-                (SELECT start_date FROM employee_jobs WHERE emp_id = EM.id ORDER BY id ASC LIMIT 1) as joined_date,
+        ->select('payroll_trx.*', 'pm.company_id as company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
+                (SELECT start_date FROM employee_jobs WHERE emp_id = ej.id ORDER BY id ASC LIMIT 1) as joined_date,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
                 payroll_trx.take_home_pay as thp,
                 ROUND((payroll_trx.kpi * payroll_trx.bonus),2) as total_bonus,
-                YEAR(CURDATE()) - YEAR(EM.dob) as age
+                YEAR(CURDATE()) - YEAR(e.dob) as age
             '))
             ->
         // ->leftjoin('EmployeeGroup as EG', 'EG.id_EmployeeMaster', '=', 'EM.id')
         /* ->leftjoin('employee_report_to as ERT', 'ERT.emp_id', '=', 'EM.emp_id') */
-        where(function ($query) use ($payrollId) {
-            if ($payrollId)
-                $query->where('payroll_trx.payroll_master_id', $payrollId);
+            where(function ($query) use ($id) {
+                if ($id)
+                $query->where('payroll_trx.payroll_master_id', $id);
         })
         /* ->where(function($query) use($groupArray, $isAdmin, $viewerEmployeeId){
             if(($groupArray || !$isAdmin)) {
@@ -309,9 +309,9 @@ class PayrollController extends Controller
             if($companyId) $query->where('PM.company_info_id', $companyId);
         })  */
 //         ->groupby('payroll_trx.id')
-            ->orderby('payroll_trx.id', 'ASC')
-            ->paginate(10);
-
+            ->orderby('payroll_trx.id', 'ASC')->get();
+//             ->paginate(10);
+//             dd($list);
         // Condition
         // if(!count($list)) return redirect('/payroll')->with('error', 'Payroll not found.');
 
@@ -322,7 +322,6 @@ class PayrollController extends Controller
             ]
         ])->first();
         $title = 'Payroll Month (' . DateHelper::dateWithFormat(@$payroll->year_month, 'Y-m') . ')';
-//         dd($list);
         return view('pages.payroll.show', compact('id', 'title', 'payroll', 'forms', 'list'));
     }
 

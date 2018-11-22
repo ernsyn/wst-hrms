@@ -34,9 +34,10 @@
 									<th class="col-border-right">Remark</th>
 									<th>Action</th>
 								</tr>
-								@if (count($list)) @foreach ($list as $key => $info)
+								@if (count($list)) 
+									@foreach ($list as $key => $info)
 								<tr>
-									<td>{{ $list->firstItem()+$key }}</td>
+									<td>{{ $loop->iteration }}</td>
 									<td>{!! $info->employee_code !!}</td>
 									<td>{!! $info->name !!}</td>
 									<td>{!! $info->position !!}</td>
@@ -64,7 +65,6 @@
 							</tbody>
 						</table>
 
-						<div class="text-center">{!! $list->render() !!}</div>
 					</div>
 				</div>
 			</div>
