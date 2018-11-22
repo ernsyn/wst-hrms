@@ -42,7 +42,7 @@ body a {
 }
 
 .m-bg-brand-cream {
-    background-color: #c6b1d6 !important;
+    background-color: #b484d6 !important;
 }
 
 .m-bg-brand-bluish {
@@ -54,11 +54,15 @@ body a {
 }
 
 .m-bg-brand-rasberry {
-    background-color: #e5b2cc!important;
+    background-color: #e5a2b3 !important;
 }
 
 .m-bg-brand-orange {
-    background-color: #e56974 !important;
+    background-color: #e5728f !important;
+}
+
+.m-bg-brand-brown {
+    background-color: #8e6753 !important;
 }
 
 
@@ -171,7 +175,7 @@ body a {
 }
 
 .m-portlet .m-portlet__body {
-    color: #575962;
+    #color: #575962;
 }
 
 .m-portlet.m-portlet--bordered-semi .m-portlet__head {
@@ -205,7 +209,7 @@ body a {
 }
 
 .m-portlet.m-portlet--skin-dark .m-portlet__body {
-    color: #fff;
+    #color: #fff;
 }
 
 .m-portlet.m-portlet--skin-dark.m-portlet--bordered-semi .m-portlet__head {
@@ -224,6 +228,19 @@ body a {
 }
 
 
+.engraved-text {
+    color: #ececec;
+    text-shadow: 0px 1px 0px rgba(255,255,255,.3), 0px -1px 0px rgba(47, 47, 47, 0.7);
+}
+
+
+.card-header{
+    font-weight: bold;
+}
+
+.card-footer{
+    font-size: 8pt;
+}
 
 
 

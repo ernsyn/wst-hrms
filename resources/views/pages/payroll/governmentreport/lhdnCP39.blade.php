@@ -5,8 +5,8 @@
     <meta charset="utf-8"/>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <link rel="stylesheet" href="{{asset('css/report/soscoBorang8A/base.min.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/report/soscoBorang8A/main.css')}}"/>
+    <link rel="stylesheet" href="{{public_path('css/report/soscoBorang8A/base.min.css')}}"/>
+    <link rel="stylesheet" href="{{public_path('css/report/soscoBorang8A/main.css')}}"/>
     <title></title>
     <style>
         /*        table, td, th {
@@ -87,7 +87,7 @@
                 <div style="padding-left: 3pt;">
                     <br>
                     <br>
-                    <img style="display:block;width: 70pt;height: 65pt;" alt="" src="{{asset('img/report/lhdn_grey.png')}}"/>
+                    <img style="display:block;width: 70pt;height: 65pt;" alt="" src="{{public_path('img/report/lhdn_grey.png')}}"/>
                 </div>
             </td>
             <td class="text_center" rowspan="2" width="50%" style="font-size: 11pt;">

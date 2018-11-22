@@ -49,8 +49,9 @@ class GovernmentReportController extends Controller
             case "LHDN_borangE":
                 $arr = GenerateReportsHelper::generateBean($reportName,null);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnBorangE',
-                    ['data' => $arr['data'] ,
-                     'empData' => $arr['data1'] ,
+                    [
+                        'data' => $arr['data'] ,
+                        'empData' => $arr['data1'] ,
                     ])->setOrientation('landscape');
 
                 $pdf->setTemporaryFolder(storage_path("temp"));
@@ -61,7 +62,8 @@ class GovernmentReportController extends Controller
             case "LHDN_cp21":
                 $arr = GenerateReportsHelper::generateBean($reportName,null);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP21',
-                    ['dataArr' => $arr['data']
+                    [
+                        'dataArr' => $arr['data']
                     ]);
 
                 $pdf->setTemporaryFolder(storage_path("temp"));
@@ -72,7 +74,8 @@ class GovernmentReportController extends Controller
             case "LHDN_cp22":
                 $arr = GenerateReportsHelper::generateBean($reportName,null);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22',
-                    ['dataArr' => $arr['data']
+                    [
+                        'dataArr' => $arr['data']
                     ]);
 
                 $pdf->setTemporaryFolder(storage_path("temp"));
@@ -83,7 +86,8 @@ class GovernmentReportController extends Controller
             case "LHDN_cp22a":
                 $arr = GenerateReportsHelper::generateBean($reportName,null);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22a',
-                    ['dataArr' => $arr['data']
+                    [
+                        'dataArr' => $arr['data']
                     ]);
 
                 $pdf->setTemporaryFolder(storage_path("temp"));
@@ -92,11 +96,31 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp22b":
-                echo "portrait";
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22b',
+                    [
+                        'dataArr' => $arr['data']
+                    ]);
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp22b.pdf');
                 break;
+
             case "LHDN_cp39":
-                echo "portrait";
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39',
+                    [
+                        'data' => $arr['data'] ,
+                        'empData' => $arr['empData'],
+                        'totalPcb' => $arr['totalPcb'],
+                        'totalcp38' => $arr['totalcp38'],
+                        'totalAmountofPCBAndCP8' => $arr['totalAmountofPCBAndCP8']
+                    ] )->setOrientation('landscape');
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp39.pdf');
                 break;
+
             case "LHDN_cp39lieu":
                 echo "portrait";
                 break;

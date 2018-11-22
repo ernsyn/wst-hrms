@@ -140,13 +140,13 @@ class GovernmentReport
 
 
         //PTPTN
-        array_push($slider3,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'PTPTN', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-rasberry']));
+        array_push($slider3,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'PTPTN', 'reportTarget' => 'ptptn', 'reportCss' => 'm-bg-brand-rasberry']));
 
         //ZAKAT
-        array_push($slider3,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'ZAKAT', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-orange']));
+        array_push($slider3,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'ZAKAT', 'reportTarget' => 'zakat', 'reportCss' => 'm-bg-brand-orange']));
 
         //ASBN
-        array_push($slider4,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'ASBN', 'reportTarget' => 'montly', 'reportCss' => 'm-bg-brand-cream']));
+        array_push($slider4,new GovernmentReport(['reportName' => 'Montly', 'reportDescription' => '', 'reportGroup' => 'ASBN', 'reportTarget' => 'asbn', 'reportCss' => 'm-bg-brand-brown']));
 
         //EIS
         array_push($slider4,new GovernmentReport(['reportName' => 'Lampiran 1', 'reportDescription' => '', 'reportGroup' => 'EIS', 'reportTarget' => 'lampiran1', 'reportCss' => 'm-bg-brand-bluish']));

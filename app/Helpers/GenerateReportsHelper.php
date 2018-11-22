@@ -14,6 +14,8 @@ use App\Http\Controllers\Popo\governmentreport\LhdnCP8EmployeeDetail;
 use App\Http\Controllers\Popo\governmentreport\LhdnCP21Bean;
 use App\Http\Controllers\Popo\governmentreport\LhdnCP22Bean;
 use App\Http\Controllers\Popo\governmentreport\LhdnCP22aBean;
+use App\Http\Controllers\Popo\governmentreport\LhdnCP22bBean;
+use App\Http\Controllers\Popo\governmentreport\LhdnCP39Bean;
 use App\Company;
 use App\Employee;
 
@@ -102,6 +104,7 @@ class GenerateReportsHelper
                 $arr = array("data"=>$data, "data1"=>$data1);
                 return $arr;
                 break;
+
             case "LHDN_cp21":
                     //set pojo
                     $data = array();
@@ -368,12 +371,174 @@ class GenerateReportsHelper
                 $arr = array("data"=>$data);
                 return $arr;
                 break;
+
             case "LHDN_cp22b":
-                echo "portrait";
+                //set pojo
+                $data = array();
+                for($count=0;$count < 5; $count++) {
+                    $obj = new LhdnCP22bBean([
+                        'employerName' => 'OPPO ELECTRONICS SDN BHD',
+                        'employerNoE' => 'E9119707907',
+                        'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                        'employerAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
+                        'employerAddress3' => 'SELANGOR.',
+                        'employerPostcode' => 46200,
+                        'employerNoTel' => '03-19220112',
+
+                        'name_A' => 'Shahril Abu Bakar',
+                        'telNo_A' => '0345674734',
+                        'commencementDate_A' => '190993',
+                        'address1_A' => 'No 7 ,Simpang Empat',
+                        'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
+                        'address3_A' => 'SELANGOR.',
+                        'postcode_A' => 46200,
+                        'resignDate_A' => '190993',
+                        'birthDate_A' => '190993',
+                        'resignType_A' => 'X',
+                        'signX' => '',
+                        'icNo_A' => '860110781723',
+                        'legalRepresentativeName_A' => 'SHAHRIL ABU BAKAR',
+                        'legalRepresentativeIc_A' => '871898176765',
+                        'legalRepresentativeAddress1_A' => 'No 7 ,Simpang Empat',
+                        'legalRepresentativeAddress2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
+                        'legalRepresentativeAddress3_A' => 'SELANGOR.',
+                        'legalRepresentativeNoTel_A' => '0345467453',
+                        'incomeTaxNo_A' => 'OG12345678910',
+                        'marriedStatus_A' => 'SINGLE',
+                        'childrenNo_A' => '01',
+                        'totalIncomeTaxChild_A' => '12300',
+                        'spouseName_A' => 'SUZANNAH IBRAHIM',
+                        'spouseIc_A' => '871898176765',
+                        'spouseIncomeTax_A' => 'OG12345678910',
+
+                        'salaryFrom_B' => '01/01/2018',
+                        'salaryUntil_B' => '01/04/1212',
+                        'salaryAmount_B' => 9774.19,
+                        'leavePayFrom_B' => '01/01/2018',
+                        'leavePayUntil_B' => '01/04/1212',
+                        'leavePayAmount_B' => 74.19,
+                        'commissionFrom_B' => '01/01/2018',
+                        'commissionUntil_B' => '01/04/1212',
+                        'commissionAmount_B' => 4.19,
+                        'gratuityFrom_B' => '01/01/2018',
+                        'gratuityUntil_B' => '01/04/1212',
+                        'gratuityAmount_B' => 74.19,
+                        'compensationFrom_B' => '01/01/2018',
+                        'compensationUntil_B' => '01/04/1212',
+                        'compensationAmount_B' => 4.19,
+                        'cashAllowanceFrom_B' => '01/01/2018',
+                        'cashAllowanceUntil_B' => '01/04/1212',
+                        'cashAllowanceAmount_B' => 74.19,
+                        'pensionFrom_B' => '01/01/2018',
+                        'pensionUntil_B' => '01/04/1212',
+                        'pensionAmount_B' => 4.19,
+                        'benefitSubjectToTaxFrom_B' => '01/01/2018',
+                        'benefitSubjectToTaxUntil_B' => '01/04/1212',
+                        'benefitSubjectToTaxAmount_B' => 74.19,
+                        'transportFrom_B' => '01/01/2018',
+                        'transportUntil_B' => '01/04/1212',
+                        'transportAmount_B' => 4.29,
+                        'otherAllowanceFrom_B' => '01/01/2018',
+                        'otherAllowanceUntil_B' => '01/04/1212',
+                        'otherAllowanceAmount_B' => 74.19,
+                        'otherPaymentsFrom_B' => '01/01/2018',
+                        'otherPaymentsUntil_B' => '01/04/1212',
+                        'otherPaymentsAmount_B' => 4.19,
+                        'total_B' => 0,
+
+                        'typeOfIncome1_C' => 'Online Business',
+                        'typeOfIncome2_C' => 'Online Business',
+                        'typeOfIncome3_C' => 'Online Business',
+                        'yearForWhichPaid1_C' => '01/01/2018',
+                        'yearForWhichPaid2_C' => '01/04/1212',
+                        'yearForWhichPaid3_C' => '01/04/1212',
+                        'totalIncome1_C' => 74.19,
+                        'totalIncome2_C' => 74.19,
+                        'totalIncome3_C' => 74.19,
+                        'pensionFund1_C' => 4.19,
+                        'pensionFund2_C' => 4.19,
+                        'pensionFund3_C' => 4.19,
+
+                        'moneyWithheldByEmployer_D' => 74.19,
+                        'monthlyTaxDeductions_D' => 1501.00,
+                        'amountOfZakatPaid_D' => 74.19,
+                        'contributionsToEmployeeProvidentFund_D' => 1501.00,
+
+                        'officerName_E' => 'CHONG HWEE MIN',
+                        'officerDesignation_E' => 'HUMAN RESOURCES OFFICER',
+                        'officerSignature_E' => '',
+                        'date_E' => '011018'
+
+                    ]);
+                    $data[] = $obj;
+                }
+                $arr = array("data"=>$data);
+                return $arr;
                 break;
+
             case "LHDN_cp39":
-                echo "portrait";
+                //set popo
+                $data = new LhdnCP39Bean([
+                    'companyName' => 'OPPO ELECTRONICS SDN BHD',
+                    'companyRegistrationNo' => '1075187-D',
+                    'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                    'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                    'companyAddress3' => 'SELANGOR.',
+                    'companyPostcode' => 46200,
+
+                    'employerNoE' => 'E9119707907',
+                    'pcbTotalCut' => 4581.65,
+                    'pcbTotalWorker' => 23,
+                    'pcbTotalAmount' => 4581.65,
+                    'pcbBranchNo' => '',
+                    'cp38TotalCut' => '',
+                    'cp38TotalWorker' => 0,
+
+                    'officerSignature' => '',
+                    'officerName' => 'CHONG HWEE MIN',
+                    'officerIcNo' => '891787654321',
+                    'officerPosition' => 'HUMAN RESOURCES OFFICER',
+                    'officerNoTel' => '03-7931 3550'
+                ]);
+
+                $empData = array();
+                $totalPcb = 0;
+                $totalcp38 = 0;
+                $totalAmountofPCBAndCP8 = 0;
+
+                //example
+                for($count=0;$count < 55; $count++){
+                    $emp = new LhdnCP39Bean([
+                        'incomeTaxNo' => 'SG67676776767',
+                        'name' => 'MUHAMMAD SHAHRIL B. ABU BAKAR',
+                        'oldIcNo' => '',
+                        'newIcNo' => '881876876767',
+                        'staffNo' => '12473',
+                        'foreignerPassportNo' => '',
+                        'foreignerCountry' => '',
+                        'pcbAmount' => 163.80,
+                        'cp38Amount' => 0
+                    ]);
+                    //sum of pcb/cp8
+                    $totalPcb += $emp->getPcbAmount();
+                    $totalcp38 += $emp->getCp38Amount();
+
+                    //sum of total pcb/cp8
+                    $totalAmountofPCBAndCP8 = ($totalPcb + $totalcp38);
+
+                    $empData[] = $emp;
+                }
+
+                $arr = array(
+                    "data"=>$data,
+                    "empData"=>$empData,
+                    "totalPcb"=>$totalPcb,
+                    "totalcp38"=>$totalcp38,
+                    "totalAmountofPCBAndCP8"=>$totalAmountofPCBAndCP8
+                );
+                return $arr;
                 break;
+
             case "LHDN_cp39lieu":
                 echo "portrait";
                 break;
