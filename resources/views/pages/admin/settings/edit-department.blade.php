@@ -11,7 +11,7 @@
                         <div class="col-4">
                             <label class="col-md-12 col-form-label">Name*</label>
                             <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name here"
+                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder=""
                                     name="name" value="{{ $department->name }}" required>
                                 @if($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
