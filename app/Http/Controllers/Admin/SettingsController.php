@@ -203,8 +203,7 @@ class SettingsController extends Controller
     public function postAddTeam(Request $request)
     {
         $teamData = $request->validate([
-            'name' => 'required|unique:teams',
-
+            'name' => 'required|unique:teams,name,NULL,id,deleted_at,NULL',
         ]);
 
         Team::create($teamData);
@@ -224,7 +223,7 @@ class SettingsController extends Controller
        {
 
             $teamData = $request->validate([
-                'name' => 'required|unique:teams,name,'.$id,
+                'name' => 'required|unique:teams,name,'.$id.',id,deleted_at,NULL',
 
             ]);
 
@@ -557,6 +556,13 @@ class SettingsController extends Controller
     }
 
     // Section: DELETE
+
+    public function deleteTeam(Request $request, $id)
+    {
+        Team::find($id)->delete();
+
+        return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been deleted.');
+    }
 
     public function deleteWorkingDay(Request $request, $id)
     {
