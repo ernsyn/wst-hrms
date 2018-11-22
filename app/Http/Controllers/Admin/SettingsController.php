@@ -159,7 +159,7 @@ class SettingsController extends Controller
     public function postAddGrade(Request $request)
     {
         $gradeData = $request->validate([
-            'name' => 'required|unique:employee_grades',
+            'name' => 'required|unique:employee_grades,name,NULL,id,deleted_at,NULL',
 
         ]);
 
@@ -178,7 +178,7 @@ class SettingsController extends Controller
     {
 
         $gradeData = $request->validate([
-            'name' => 'required|unique:employee_grades,name,'.$id,
+            'name' => 'required|unique:employee_grades,name,'.$id.',id,deleted_at,NULL',
 
         ]);
 
@@ -550,6 +550,13 @@ class SettingsController extends Controller
     }
 
     // Section: DELETE
+    public function deleteGrade(Request $request, $id)
+    {
+        EmployeeGrade::find($id)->delete();
+
+        return redirect()->route('admin.settings.grades')->with('status', 'Grades has successfully been deleted.');
+    }
+    
     public function deleteCompany(Request $request, $id)
     {
         Company::find($id)->delete();
