@@ -120,7 +120,7 @@ class SettingsController extends Controller
     public function postAddPosition(Request $request)
     {
         $positionData = $request->validate([
-            'name' => 'required|unique:employee_positions',
+            'name' => 'required|unique:employee_positions,name,NULL,id,deleted_at,NULL',
 
         ]);
 
@@ -137,10 +137,8 @@ class SettingsController extends Controller
 
     public function postEditPosition(Request $request, $id)
     {
-
         $positionData = $request->validate([
-            'name' => 'required|unique:employee_positions,name,'.$id,
-
+            'name' => 'required|unique:employee_positions,name,'.$id.',id,deleted_at,NULL',
         ]);
 
         EmployeePosition::where('id', $id)->update($positionData);
@@ -557,6 +555,13 @@ class SettingsController extends Controller
     }
 
     // Section: DELETE
+
+    public function deletePosition(Request $request, $id)
+    {
+        EmployeePosition::find($id)->delete();
+
+        return redirect()->route('admin.settings.positions')->with('status', 'Position has successfully been deleted.');
+    }
 
     public function deleteWorkingDay(Request $request, $id)
     {
