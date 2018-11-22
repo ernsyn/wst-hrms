@@ -350,9 +350,9 @@ class SettingsController extends Controller
 
     public function displayBranches()
     {
-        $branch = Branch::all();
+        $branches = Branch::all();
 
-        return view('pages.admin.settings.branch', ['branch'=>$branch]);
+        return view('pages.admin.settings.branch', ['branches'=>$branches]);
     }
 
 
@@ -457,23 +457,19 @@ class SettingsController extends Controller
     {
 
         $branchData = $request->validate([
-            'name' => 'required',
-            'contact_no_primary' =>'required',
-            'contact_no_secondary' => 'required',
-            'fax_no' =>'required',
+            'name' => 'required|unique:branches,name,NULL,id,deleted_at,NULL',
+            'contact_no_primary' =>'required|numeric',
+            'contact_no_secondary' => 'required|numeric',
+            'fax_no' =>'required|numeric',
             'address'=>'required',
-            'country_code'=> 'required',
+            'country_code'=> 'required|numeric',
             'state'=> 'required',
             'city'=>   'required',
-            'zip_code'=> 'required'
-
+            'zip_code'=> 'required|numeric'
         ]);
+
         Branch::create($branchData);
         return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been added.');
-
-
-        $branch = Branch::all();
-        return view('pages.admin.settings.branch', ['branch'=>$branch]);
     }
 
 
@@ -512,15 +508,15 @@ class SettingsController extends Controller
     public function postEditBranch(Request $request, $id)
     {
         $branchData = $request->validate([
-            'name' => 'required',
-            'contact_no_primary' =>'required',
-            'contact_no_secondary' => 'required',
-            'fax_no' =>'required',
+            'name' => 'required|unique:branches,name,'.$id.',id,deleted_at,NULL',
+            'contact_no_primary' =>'required|numeric',
+            'contact_no_secondary' => 'required|numeric',
+            'fax_no' =>'required|numeric',
             'address'=>'required',
-            'country_code'=> 'required',
+            'country_code'=> 'required|numeric',
             'state'=> 'required',
             'city'=>   'required',
-            'zip_code'=> 'required'
+            'zip_code'=> 'required|numeric'
 
 
             ]);
@@ -568,6 +564,13 @@ class SettingsController extends Controller
         Team::find($id)->delete();
 
         return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been deleted.');
+    }
+
+    public function deleteBranch(Request $request, $id)
+    {
+        Branch::find($id)->delete();
+
+        return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been deleted.');
     }
 
     public function deleteWorkingDay(Request $request, $id)
