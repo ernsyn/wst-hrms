@@ -326,7 +326,7 @@ class SettingsController extends Controller
         public function postAddWorkingDay(Request $request)
         {     
             $workingDaysData = $request->validate([
-                'template_name' => 'required|unique:employee_working_days,deleted_at,NULL',
+                'template_name' => 'required|unique:employee_working_days,template_name,NULL,id,deleted_at,NULL',
                 'monday' => 'required',
                 'tuesday' => 'required',
                 'wednesday' => 'required',
@@ -493,7 +493,7 @@ class SettingsController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {     
         $workingDayData = $request->validate([
-            'template_name' => 'required|unique:employee_working_days,deleted_at,NULL,id,'.$id,
+            'template_name' => 'required|unique:employee_working_days,template_name,{$id},id,deleted_at,NULL',
             'monday' => 'required',
             'tuesday' => 'required',
             'wednesday' => 'required',
