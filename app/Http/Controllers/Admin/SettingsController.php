@@ -565,6 +565,13 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been deleted.');
     }
 
+    public function deleteSocso(Request $request, $id)
+    {
+        Socso::find($id)->delete();
+
+        return redirect()->route('admin.settings.socso')->with('status', 'Socso has successfully been deleted.');
+    }
+
     public function deletePcb(Request $request, $id)
     {
         Pcb::find($id)->delete();
@@ -870,8 +877,8 @@ public function postEditEis(Request $request, $id)
 // Contribution List
 public function displaySocso()
 {
-    $socso = Socso::all();
-    return view('pages.admin.settings.socso', ['socso' => $socso]);
+    $socsos = Socso::all();
+    return view('pages.admin.settings.socso', ['socsos' => $socsos]);
 }
 
 public function addSocso()
@@ -883,7 +890,7 @@ public function postAddSocso(Request $request)
 {
     $socsoData = $request->validate([
 
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'first_category_employer' => 'required',
         'first_category_employee' => 'required',
 
@@ -906,7 +913,7 @@ public function postEditSocso(Request $request, $id)
 
     $socsoData = $request->validate([
 
-        'salary' => 'required',
+        'salary' => 'required|numeric',
         'first_category_employer' => 'required',
         'first_category_employee' => 'required',
 

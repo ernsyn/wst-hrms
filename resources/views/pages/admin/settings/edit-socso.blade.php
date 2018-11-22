@@ -27,7 +27,7 @@
                                 </span>
 								@endif
 
-                                <label class="col-md-12 col-form-label">First Category Employee**</label>
+                                <label class="col-md-12 col-form-label">First Category Employee*</label>
                                 <input id="first_category_employee" type="text" class="form-control{{ $errors->has('first_category_employee') ? ' is-invalid' : '' }}"
                                     placeholder="Name here" name="first_category_employee" value="{{ $socso->first_category_employee }}"
                                     required>
