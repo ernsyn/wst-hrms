@@ -1,0 +1,125 @@
+#sidebar {
+    overflow-y: scroll;
+    width: 230px;
+    position: fixed;
+    height: 100%;
+    background: $app-primary;
+
+    -webkit-box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.75);
+    box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.75);
+
+    color: #fff;
+    letter-spacing: 0.7px;
+
+    .sidebar-header {
+        height: 50px;
+        // padding: 18px;
+        background: $app-primary-darkened;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            width: 110px;
+            object-fit: contain;
+        }
+    }
+
+    #hrms-mode-container {
+        padding: 10px 10px 10px 10px;
+        font-size: 10pt;
+        font-weight: 600;
+        color: $app-textcolor-light;
+        #hrms-mode {
+            // background-color: lighten($app-primary-darkened, 10%);
+            // background-attachment: fixed;
+    
+            div {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+    
+            #label {
+                background-color: lighten($app-primary-darkened, 15%);
+                border-radius: 5px 0px 0px 5px;
+            }
+            #value {
+                background-color: lighten($app-primary-darkened, 10%);
+                border-radius: 0px 5px 5px 0px;
+            }
+        }
+
+        #mode-options {
+            background-color: $app-primary-darkened;
+            border-radius: 0px 0px 5px 5px;
+            .option {
+                padding-top: 10px;
+                padding-bottom: 10px;
+
+                a {
+                    text-decoration: none;
+                    color: $app-textcolor-light;
+                }
+            }
+        }
+    }
+    
+
+    #menu-container {
+        padding: 20px 0;
+        .menu-section {
+            .info {
+                padding: 8px 20px;
+                font-size: 10pt;
+                font-weight: 600;
+                display: block;
+                color: $app-textcolor-light;
+
+                &::after {
+                    display: block;
+                    position: absolute;
+                    top: 50%;
+                    right: 20px;
+                    transform: translateY(-50%);
+                }
+
+                &:hover {
+                    background: $app-primary-darkened;
+                }
+
+                &:hover, &:focus {
+                    color: inherit;
+                    text-decoration: none;
+                }
+            }  
+
+            .menu-option {
+                padding: 5px 40px;
+                a {
+                    font-size: 0.9em !important;
+                    // padding-left: 40px !important;
+                    color: $app-textcolor-light;
+                    font-weight: 300;
+
+                    &:hover, &:focus {
+                        color: inherit;
+                        text-decoration: none;
+                    }
+                }
+
+                &:hover {
+                    background: $app-primary-darkened;
+       
+                }
+            }
+        }
+    }
+
+    a[data-toggle="collapse"] {
+        position: relative;
+    }
+
+}
