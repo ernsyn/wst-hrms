@@ -1,6 +1,5 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
-
 <div class="container">
     @if (session('status'))
         <div class="alert alert-primary fade show" role="alert">
@@ -72,7 +71,7 @@
     </div>
 </div>
 @endsection
- 
+
 @section('scripts')
 <script>
     $('#working-days-table').DataTable({
@@ -107,7 +106,7 @@
                     titleAttr: 'Print'
                 },
             ]
-    
+
         });
         $('#confirm-delete-modal').on('show.bs.modal', function (e) {
             var entryTitle = $(e.relatedTarget).data('entry-title');

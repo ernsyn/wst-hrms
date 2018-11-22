@@ -1,4 +1,4 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
 <div class="container">
     <div class="card">
@@ -10,23 +10,19 @@
                         <div class="form-group row w-100">
                             <label class="col-md-12 col-form-label">Department Name*</label>
                             <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder=""
-                                    name="name" value="{{ old('name') }}" required>
-                            </div>                            
+                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="" name="name"
+                                    value="{{ old('name') }}" required>
+                            </div>
                         </div>
-                    </div>
-
                     </div>
                 </div>
             </div>
-
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                            </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
             </div>
         </form>
     </div>
+</div>
 </div>
 @endsection

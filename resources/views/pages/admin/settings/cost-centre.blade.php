@@ -1,56 +1,62 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
-
-
 <div class="container">
-            <div class="row pb-3">
-                <div class="col-auto mr-auto"></div>
-                <div class="col-auto">
-                    <a role="button" class="btn btn-primary" href="{{ route('admin.settings.cost-centres.add') }}">
+    @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+    </div>
+    @endif
+    <div class="row pb-3">
+        <div class="col-auto mr-auto"></div>
+        <div class="col-auto">
+            <a role="button" class="btn btn-primary" href="{{ route('admin.settings.cost-centres.add') }}">
                             Add Cost Centre
                         </a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="float-right tableTools-container"></div>
-                        <table class="hrms-data-table compact w-100 t-2" id="cost-centres-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Seniority Pay</th>
-                                    <th>Amount</th>
-                                    <th>Payroll Type</th>                                   
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                    @foreach($costs as $cost)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{$cost['name']}}</td>
-                                        <td>{{$cost['seniority_pay']}}</td>
-                                        <td>{{$cost['amount']}}</td>
-                                        <td>{{$cost['payroll_type']}}</td>
-                
-                                        <td>
-                                            <button onclick="window.location='{{ route('admin.settings.cost-centres.edit', ['id' => $cost->id]) }}';"
-                                                class="round-btn btn btn-default fas fa-edit btn-segment">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right tableTools-container"></div>
+            <table class="hrms-data-table compact w-100 t-2" id="cost-centres-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Seniority Pay</th>
+                        <th>Amount</th>
+                        {{-- <th>Payroll Type</th> --}}
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($costs as $cost)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{$cost['name']}}</td>
+                        <td>{{$cost['seniority_pay']}}</td>
+                        <td>{{$cost['amount']}}</td>
+                        {{-- <td>{{$cost['payroll_type']}}</td> --}}
+
+                        <td>
+                            <button onclick="window.location='{{ route('admin.settings.cost-centres.edit', ['id' => $cost->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
                                             </button>
-                                        </td>
-    
+                        </td>
+
                     </tr>
                     @endforeach
-                    </tbody>
-                    </table>
-                </div>
-            </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 @endsection
+
 @section('scripts')
 <script>
-$('#cost-centres-table').DataTable({
+    $('#cost-centres-table').DataTable({
     responsive: true,
     stateSave: true,
     dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
@@ -94,5 +100,6 @@ $('#cost-centres-table').DataTable({
         });
     }
 });
+
 </script>
 @append

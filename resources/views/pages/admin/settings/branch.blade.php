@@ -1,8 +1,14 @@
-@extends('layouts.admin-base') 
-@section('pageTitle', 'Branch') 
+@extends('layouts.admin-base')
 @section('content')
-
 <div class="container">
+    @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+    </div>
+    @endif
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -35,9 +41,8 @@
                         <td>{{$branches['country_code']}}</td>
                         <td>{{$branches['contact_no_primary']}}</td>
                         <td>{{$branches['state']}}</td>
-                        <td> 
-                            <button onclick="window.location='{{ route('admin.settings.branches.edit', ['id' => $branches->id]) }}';"
-                                class="round-btn btn btn-default fas fa-edit btn-segment">
+                        <td>
+                            <button onclick="window.location='{{ route('admin.settings.branches.edit', ['id' => $branches->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
                             </button>
                         </td>
 
@@ -49,6 +54,7 @@
     </div>
 </div>
 @endsection
+
 @section('scripts')
 <script>
     $('#branches-table').DataTable({

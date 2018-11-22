@@ -1,46 +1,52 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
-
 <div class="container">
-            <div class="row pb-3">
-                <div class="col-auto mr-auto"></div>
-                <div class="col-auto">
-                    <a role="button" class="btn btn-primary" href="{{ route('admin.settings.positions.add') }}">
+    @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+    </div>
+    @endif
+    <div class="row pb-3">
+        <div class="col-auto mr-auto"></div>
+        <div class="col-auto">
+            <a role="button" class="btn btn-primary" href="{{ route('admin.settings.positions.add') }}">
                         Add Position
                     </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="float-right tableTools-container"></div>
-                    <table class="hrms-data-table compact w-100 t-2" id="positions-table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($positions as $position)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{$position['name']}}</td>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right tableTools-container"></div>
+            <table class="hrms-data-table compact w-100 t-2" id="positions-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($positions as $position)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{$position['name']}}</td>
 
-                                <td> 
-                                        <button onclick="window.location='{{ route('admin.settings.positions.edit.post', ['id' => $position->id]) }}';"
-                                                class="round-btn btn btn-default fas fa-edit btn-segment">
+                        <td>
+                            <button onclick="window.location='{{ route('admin.settings.positions.edit.post', ['id' => $position->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
                                             </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 @endsection
- 
+
 @section('scripts')
 <script>
     $('#positions-table').DataTable({

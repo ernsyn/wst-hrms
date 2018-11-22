@@ -1,14 +1,20 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
-
 <div class="container">
-
+    @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+    </div>
+    @endif
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
             <a role="button" class="btn btn-primary" href="{{ route('admin.settings.departments.add') }}">
-                                    Add Department
-                                </a>
+                Add Department
+            </a>
         </div>
     </div>
     <div class="row">
@@ -28,8 +34,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$department['name']}}</td>
                         <td>
-                            <button onclick="window.location='{{ route('admin.settings.departments.edit', ['id' => $department->id]) }}';"
-                                    class="round-btn btn btn-default fas fa-edit btn-segment">
+                            <button onclick="window.location='{{ route('admin.settings.departments.edit', ['id' => $department->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
                                 </button>
                         </td>
                     </tr>
@@ -41,7 +46,7 @@
     </div>
 </div>
 @endsection
- 
+
 @section('scripts')
 <script>
     $('#departments-table').DataTable({
@@ -76,7 +81,8 @@
                     titleAttr: 'Print'
                 },
             ]
-    
+
         });
+
 </script>
 @append

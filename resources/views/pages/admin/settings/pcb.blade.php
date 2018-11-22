@@ -1,9 +1,14 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
-
-
 <div class="container">
-
+    @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+    </div>
+    @endif
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -19,7 +24,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-    
+
                         <th>Salary</th>
                         <th>Category</th>
                         <th>Number of Children</th>
@@ -31,15 +36,14 @@
                     @foreach($pcb as $pcbs)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-        
+
                         <td>{{$pcbs['salary']}}</td>
                         <td>{{$pcbs['category']}}</td>
                         <td>{{$pcbs['total_children']}}</td>
                         <td>{{$pcbs['amount']}}</td>
 
-                        <td> 
-                            <button onclick="window.location='{{ route('admin.settings.pcb.edit', ['id' => $pcbs->id]) }}';"
-                                    class="round-btn btn btn-default fas fa-edit btn-segment">
+                        <td>
+                            <button onclick="window.location='{{ route('admin.settings.pcb.edit', ['id' => $pcbs->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
                                 </button>
                         </td>
                     </tr>
@@ -51,7 +55,7 @@
 
 </div>
 @endsection
- 
+
 @section('scripts')
 <script>
     $('#pcb-table').DataTable({
@@ -86,7 +90,8 @@
                     titleAttr: 'Print'
                 },
             ]
-    
+
         });
+
 </script>
 @append

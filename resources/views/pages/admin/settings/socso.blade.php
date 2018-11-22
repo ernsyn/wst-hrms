@@ -1,9 +1,14 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
-
-
 <div class="container">
-
+    @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+    </div>
+    @endif
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -19,7 +24,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-    
+
                         <th>Salary</th>
                         <th>First Category Employer</th>
                         <th>First Category Employee</th>
@@ -31,15 +36,14 @@
                     @foreach($socso as $socso)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-        
+
                         <td>{{$socso['salary']}}</td>
                         <td>{{$socso['first_category_employer']}}</td>
                         <td>{{$socso['first_category_employee']}}</td>
                         <td>{{$socso['total']}}</td>
 
-                        <td> 
-                            <button onclick="window.location='{{ route('admin.settings.socso.edit.post', ['id' => $socso->id]) }}';"
-                                    class="round-btn btn btn-default fas fa-edit btn-segment">
+                        <td>
+                            <button onclick="window.location='{{ route('admin.settings.socso.edit.post', ['id' => $socso->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
                                 </button>
                         </td>
                     </tr>
@@ -51,7 +55,7 @@
 
 </div>
 @endsection
- 
+
 @section('scripts')
 <script>
     $('#socso-table').DataTable({
@@ -86,7 +90,8 @@
                     titleAttr: 'Print'
                 },
             ]
-    
+
         });
+
 </script>
 @append

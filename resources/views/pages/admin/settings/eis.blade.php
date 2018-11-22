@@ -1,14 +1,19 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
-
-
 <div class="container">
-
+    @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+    </div>
+    @endif
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
             <a role="button" class="btn btn-primary" href="{{ route('admin.settings.eis.add') }}">
-                Add Eis
+                Add EIS
             </a>
         </div>
     </div>
@@ -19,11 +24,11 @@
                 <thead>
                     <tr>
                         <th>No</th>
-    
+
                         <th>Salary</th>
                         <th>Employer</th>
                         <th>Employee</th>
-                        <th>Total</th>
+                        {{-- <th>Total</th> --}}
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -31,15 +36,14 @@
                     @foreach($eis as $eis)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-        
+
                         <td>{{$eis['salary']}}</td>
                         <td>{{$eis['employer']}}</td>
                         <td>{{$eis['employee']}}</td>
-                        <td>{{$eis['total']}}</td>
+                        {{-- <td>{{$eis['total']}}</td> --}}
 
-                        <td> 
-                            <button onclick="window.location='{{ route('admin.settings.eis.edit.post', ['id' => $eis->id]) }}';"
-                                    class="round-btn btn btn-default fas fa-edit btn-segment">
+                        <td>
+                            <button onclick="window.location='{{ route('admin.settings.eis.edit.post', ['id' => $eis->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
                                 </button>
                         </td>
                     </tr>
@@ -51,7 +55,7 @@
 
 </div>
 @endsection
- 
+
 @section('scripts')
 <script>
     $('#eis-table').DataTable({
@@ -86,7 +90,8 @@
                     titleAttr: 'Print'
                 },
             ]
-    
+
         });
+
 </script>
 @append
