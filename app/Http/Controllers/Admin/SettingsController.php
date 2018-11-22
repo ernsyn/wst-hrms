@@ -545,7 +545,7 @@ class SettingsController extends Controller
             'phone' => 'required',
             'tax_no' => 'required',
             'epf_no' => 'required',
-            'socso_no' => 'required',
+            'socso_no' => 'required|numeric',
             'eis_no' => 'required',
             'code' => 'required|unique:companies,code,'.$id,
             'status' => 'required',
@@ -563,6 +563,13 @@ class SettingsController extends Controller
         EmployeeWorkingDay::templates()->find($id)->delete();
 
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been deleted.');
+    }
+
+    public function deletePcb(Request $request, $id)
+    {
+        Pcb::find($id)->delete();
+
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been deleted.');
     }
 
     public function displayDepartments()
@@ -914,8 +921,8 @@ public function postEditSocso(Request $request, $id)
 // Contribution List
 public function displayPcb()
 {
-    $pcb = Pcb::all();
-    return view('pages.admin.settings.pcb', ['pcb' => $pcb]);
+    $pcbs = Pcb::all();
+    return view('pages.admin.settings.pcb', ['pcbs' => $pcbs]);
 }
 
 public function addPcb()
@@ -926,14 +933,10 @@ public function addPcb()
 public function postAddPcb(Request $request)
 {
     $pcbData = $request->validate([
-
-        'salary' => 'required',
-        'amount' => 'required',
-        'category' => 'required',
-        'total_children' =>'required',
-
-
-
+        'category' => 'required|unique:pcbs,category,NULL,id,deleted_at,NULL',
+        'salary' => 'required|numeric',
+        'amount' => 'required|numeric',
+        'total_children' =>'required|numeric',
     ]);
 
     Pcb::create($pcbData);
@@ -951,10 +954,9 @@ public function postEditPcb(Request $request, $id)
 {
 
     $pcbData = $request->validate([
-
+        'category' => 'required|unique:pcbs,category,{$id},id,deleted_at,NULL',
         'salary' => 'required',
         'amount' => 'required',
-        'category' => 'required',
         'total_children' =>'required',
 
     ]);

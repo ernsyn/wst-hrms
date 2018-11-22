@@ -7,18 +7,6 @@
                 @csrf
                 <div class="row p-3">
                     <div class="form-group row w-100">
-                        <label class="col-md-12 col-form-label">Name*</label>
-                        <div class="col-md-12">
-                            <input id="salary" type="text" class="form-control{{ $errors->has('salary') ? ' is-invalid' : '' }}" placeholder="Name here"
-                                name="salary" value="{{ $pcbs->salary }}" required>
-                            @if ($errors->has('salary'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('salary') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Category*</label>
                         <div class="col-md-12">
                             <input id="category" type="text" class="form-control{{ $errors->has('category') ? ' is-invalid' : '' }}" placeholder="Name here"
@@ -31,7 +19,19 @@
                         </div>
                     </div>
                     <div class="form-group row w-100">
-                        <label class="col-md-12 col-form-label">Number Of Children**</label>
+                        <label class="col-md-12 col-form-label">Salary*</label>
+                        <div class="col-md-12">
+                            <input id="salary" type="text" class="form-control{{ $errors->has('salary') ? ' is-invalid' : '' }}" placeholder="Name here"
+                                name="salary" value="{{ $pcbs->salary }}" required>
+                            @if ($errors->has('salary'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('salary') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group row w-100">
+                        <label class="col-md-12 col-form-label">Number Of Children*</label>
                         <div class="col-md-12">
                             <input id="total_children" type="text" class="form-control{{ $errors->has('total_children') ? ' is-invalid' : '' }}" placeholder="Name here"
                                 name="total_children" value="{{ $pcbs->total_children }}" required>
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="form-group row w-100">
-                        <label class="col-md-12 col-form-label">Amount**</label>
+                        <label class="col-md-12 col-form-label">Amount*</label>
                         <div class="col-md-12">
                             <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" placeholder="Name here"
                                 name="amount" value="{{ $pcbs->amount }}" required>
