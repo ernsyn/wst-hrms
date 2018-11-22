@@ -13,9 +13,9 @@ Breadcrumbs::for('employee.dashboard', function ($trail) {
 });
 
 
-Breadcrumbs::for('profile', function ($trail) {
-    $trail->parent('profile');
-    $trail->push('Profile', route('profile'));
+Breadcrumbs::for('employee.profile', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('My Profile', route('employee.profile'));
 });
 
 Breadcrumbs::for('employee/leaverequest', function ($trail) {
@@ -210,6 +210,24 @@ Breadcrumbs::for('admin.settings.companies.add', function ($trail) {
 Breadcrumbs::for('admin.settings.companies.edit', function ($trail, $id) {
     $trail->parent('admin.settings.companies');
     $trail->push('Edit Company', route('admin.settings.companies.edit', $id));
+});
+
+// Home > Settings > Company
+Breadcrumbs::for('admin.settings.working-days', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Working Days (Templates)', route('admin.settings.working-days'));
+});
+
+// Home > Settings > Company - Add
+Breadcrumbs::for('admin.settings.working-days.add', function ($trail) {
+    $trail->parent('admin.settings.working-days');
+    $trail->push('Add Working Days', route('admin.settings.working-days.add'));
+});
+
+// Home > Settings > Company - Edit
+Breadcrumbs::for('admin.settings.working-days.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.working-days');
+    $trail->push('Edit Working Days', route('admin.settings.working-days.edit', $id));
 });
 
 
