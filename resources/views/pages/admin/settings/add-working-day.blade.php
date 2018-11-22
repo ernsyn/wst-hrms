@@ -11,6 +11,11 @@
                             <div class="col-md-12">
                                 <input id="template-name" type="text" class="form-control{{ $errors->has('template_name') ? ' is-invalid' : '' }}" placeholder=""
                                     name="template_name" value="{{ old('template_name') }}" required>
+                                    @if ($errors->has('template_name'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('template_name') }}</strong>
+                                    </span> 
+                                    @endif
                             </div>                            
                         </div>
                         <div class="form-group row w-100">

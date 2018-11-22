@@ -326,7 +326,7 @@ class SettingsController extends Controller
         public function postAddWorkingDay(Request $request)
         {     
             $workingDaysData = $request->validate([
-                'template_name' => 'required',
+                'template_name' => 'required|unique:employee_working_days,deleted_at,NULL',
                 'monday' => 'required',
                 'tuesday' => 'required',
                 'wednesday' => 'required',
@@ -338,7 +338,7 @@ class SettingsController extends Controller
             $workingDaysData['is_template'] = true;
 
             EmployeeWorkingDay::create($workingDaysData);    
-            return redirect()->route('admin.settings.working-days')->with('message', 'Working Days has successfully been added.');
+            return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been added.');
         }
 
 
@@ -493,7 +493,7 @@ class SettingsController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {     
         $workingDayData = $request->validate([
-            'template_name' => 'required|unique:employee_working_days,name,'.$id,
+            'template_name' => 'required|unique:employee_working_days,deleted_at,NULL,id,'.$id,
             'monday' => 'required',
             'tuesday' => 'required',
             'wednesday' => 'required',
@@ -503,9 +503,9 @@ class SettingsController extends Controller
             'sunday' => 'required',
         ]);
 
-        EmployeeWorkingDay::where('id', $id)->update($departmentData);
+        EmployeeWorkingDay::where('id', $id)->update($workingDayData);
 
-        return redirect()->route('admin.settings.working-days')->with('message', 'Working Days has successfully been updated.');
+        return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been updated.');
     }
 
 
