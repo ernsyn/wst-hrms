@@ -238,16 +238,9 @@ Route::group([
         Route::get('settings/pcb/add', 'Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
         Route::post('settings/pcb/add', 'Admin\SettingsController@postAddPcb')->name('admin.settings.pcb.add.post');
 
-<<<<<<< .mine
-
-
-
-=======
-    Route::get('settings/working-days/add','Admin\SettingsController@addWorkingDay')->name('admin.settings.working-days.add');
-    Route::post('settings/working-days/add','Admin\SettingsController@postAddWorkingDay')->name('admin.settings.working-days.add.post');
+        Route::get('settings/working-days/add','Admin\SettingsController@addWorkingDay')->name('admin.settings.working-days.add');
+        Route::post('settings/working-days/add','Admin\SettingsController@postAddWorkingDay')->name('admin.settings.working-days.add.post');
    
->>>>>>> .theirs
-  
         Route::post('settings/grades/add', 'Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
         Route::post('settings/holidays/add', 'Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
         Route::post('settings/security-groups/add', 'Admin\SettingsController@postAddSecurityGroup')->name('admin.settings.security-groups.add.post');
