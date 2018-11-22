@@ -62,7 +62,7 @@ Route::group([
     ]
 ], function () {
     Route::get('/employee', 'Employee\EmployeeController@displayProfile')->name('employee');
-    Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
+    Route::get('/profile', 'Employee\EmployeeController@displayProfile')->name('employee.profile');
     Route::post('add_leave_application', 'Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
     Route::get('leaveapplication', 'Employee\ELeaveController@displayLeaveApplication')->name('employee/leaveapplication');
     // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
@@ -71,7 +71,7 @@ Route::group([
     // Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
 
     // Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
-  // Data Tables
+    // Data Tables
     Route::get('employee/dt/dependents', 'Employee\EmployeeController@getDataTableDependents')->name('employee.dt.dependents');
     Route::get('employee/dt/immigrations', 'Employee\EmployeeController@getDataTableImmigrations')->name('employee.dt.immigrations');
     Route::get('employee/dt/visas', 'Employee\EmployeeController@getDataTableVisas')->name('employee.dt.visas');
@@ -84,25 +84,25 @@ Route::group([
     Route::get('employee/dt/emergency-contacts', 'Employee\EmployeeController@getDataTableEmergencyContacts')->name('employee.dt.emergency-contacts');
     Route::get('employee/dt/report-to', 'Employee\EmployeeController@getDataTableReportTo')->name('employee.dt.report-to');
 
-    Route::post('employee/jobs','Employee\EmployeeController@postJob')->name('employee.jobs.post');
-    Route::post('employee/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
-    Route::post('employee/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');
-    Route::post('employee/immigrations','Employee\EmployeeController@postImmigration')->name('employee.immigrations.post');
-    Route::post('employee/visas','Employee\EmployeeController@postVisa')->name('employee.visas.post');
-    Route::post('employee/bank-accounts','Employee\EmployeeController@postBankAccount')->name('employee.bank-accounts.post');
-    Route::post('employee/companies','Employee\EmployeeController@postCompany')->name('employee.companies.post');
-    Route::post('employee/education','Employee\EmployeeController@postEducation')->name('employee.education.post');
-    Route::post('employee/skills','Employee\EmployeeController@postSkill')->name('employee.skills.post');
-    Route::post('employee/report-tp','Employee\EmployeeController@postReportTo')->name('employee.report-to.post');
+    Route::post('employee/jobs', 'Employee\EmployeeController@postJob')->name('employee.jobs.post');
+    Route::post('employee/emergency-contacts', 'Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
+    Route::post('employee/dependents', 'Employee\EmployeeController@postDependent')->name('employee.dependents.post');
+    Route::post('employee/immigrations', 'Employee\EmployeeController@postImmigration')->name('employee.immigrations.post');
+    Route::post('employee/visas', 'Employee\EmployeeController@postVisa')->name('employee.visas.post');
+    Route::post('employee/bank-accounts', 'Employee\EmployeeController@postBankAccount')->name('employee.bank-accounts.post');
+    Route::post('employee/companies', 'Employee\EmployeeController@postCompany')->name('employee.companies.post');
+    Route::post('employee/education', 'Employee\EmployeeController@postEducation')->name('employee.education.post');
+    Route::post('employee/skills', 'Employee\EmployeeController@postSkill')->name('employee.skills.post');
+    Route::post('employee/report-tp', 'Employee\EmployeeController@postReportTo')->name('employee.report-to.post');
 
-    Route::post('employee/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
-    Route::post('employee/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
-    Route::post('employee/immigrations/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.immigrations.edit');
-    Route::post('employee/visas/{id}/edit','Employee\EmployeeController@postEditVisa')->name('employee.visas.edit');
-    Route::post('employee/bank-accounts/{id}/edit','Employee\EmployeeController@postEditBankAccount')->name('employee.bank-accounts.edit');
-    Route::post('employee/companies/{id}/edit','Employee\EmployeeController@postEditCompany')->name('employee.companies.edit');
-    Route::post('employee/education/{id}/edit','Employee\EmployeeController@postEditEducation')->name('employee.education.edit');
-    Route::post('employee/skills/{id}/edit','Employee\EmployeeController@postEditSkill')->name('employee.skills.edit');
+    Route::post('employee/dependents/{id}/edit', 'Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
+    Route::post('employee/emergency-contacts/{id}/edit', 'Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
+    Route::post('employee/immigrations/{id}/edit', 'Employee\EmployeeController@postEditEmergencyContact')->name('employee.immigrations.edit');
+    Route::post('employee/visas/{id}/edit', 'Employee\EmployeeController@postEditVisa')->name('employee.visas.edit');
+    Route::post('employee/bank-accounts/{id}/edit', 'Employee\EmployeeController@postEditBankAccount')->name('employee.bank-accounts.edit');
+    Route::post('employee/companies/{id}/edit', 'Employee\EmployeeController@postEditCompany')->name('employee.companies.edit');
+    Route::post('employee/education/{id}/edit', 'Employee\EmployeeController@postEditEducation')->name('employee.education.edit');
+    Route::post('employee/skills/{id}/edit', 'Employee\EmployeeController@postEditSkill')->name('employee.skills.edit');
 });
 
 // MODE: Admin
@@ -172,7 +172,7 @@ Route::group([
         Route::get('settings/eis', 'Admin\SettingsController@displayEis')->name('admin.settings.eis');
         Route::get('settings/socso', 'Admin\SettingsController@displaySocso')->name('admin.settings.socso');
         Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
-    Route::get('settings/working-days', 'Admin\SettingsController@displayWorkingDays')->name('admin.settings.working-days');
+        Route::get('settings/working-days', 'Admin\SettingsController@displayWorkingDays')->name('admin.settings.working-days');
 
         Route::get('e-leave/configuration/leaveholidays', 'Admin\ELeaveController@displayPublicHolidays')->name('admin.e-leave.configuration.leaveholidays');
         Route::get('e-leave/configuration/leavebalances', 'Admin\ELeaveController@displayLeaveBalances')->name('admin.e-leave.configuration.leavebalances');
@@ -238,8 +238,8 @@ Route::group([
         Route::get('settings/pcb/add', 'Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
         Route::post('settings/pcb/add', 'Admin\SettingsController@postAddPcb')->name('admin.settings.pcb.add.post');
 
-        Route::get('settings/working-days/add','Admin\SettingsController@addWorkingDay')->name('admin.settings.working-days.add');
-        Route::post('settings/working-days/add','Admin\SettingsController@postAddWorkingDay')->name('admin.settings.working-days.add.post');
+        Route::get('settings/working-days/add', 'Admin\SettingsController@addWorkingDay')->name('admin.settings.working-days.add');
+        Route::post('settings/working-days/add', 'Admin\SettingsController@postAddWorkingDay')->name('admin.settings.working-days.add.post');
 
         Route::post('settings/grades/add', 'Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
         Route::post('settings/holidays/add', 'Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
@@ -283,11 +283,8 @@ Route::group([
         Route::get('settings/branches/{id}/edit', 'Admin\SettingsController@editBranch')->name('admin.settings.branches.edit')->where('id', '[0-9]+');
         Route::post('settings/branches/{id}/edit', 'Admin\SettingsController@postEditBranch')->name('admin.settings.branches.edit.post')->where('id', '[0-9]+');
 
-
-    Route::get('settings/working-days/{id}/edit','Admin\SettingsController@editWorkingDay')->name('admin.settings.working-days.edit')->where('id', '[0-9]+');
-    Route::post('settings/working-days/{id}/edit','Admin\SettingsController@postEditWorkingDay')->name('admin.settings.working-days.edit.post')->where('id', '[0-9]+');
-
-
+        Route::get('settings/working-days/{id}/edit', 'Admin\SettingsController@editWorkingDay')->name('admin.settings.working-days.edit')->where('id', '[0-9]+');
+        Route::post('settings/working-days/{id}/edit', 'Admin\SettingsController@postEditWorkingDay')->name('admin.settings.working-days.edit.post')->where('id', '[0-9]+');
 
         Route::post('settings/leave-balances/edit', 'Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balances.edit.post');
         Route::post('settings/company-banks/edit', 'Admin\SettingsController@editCompanyBank')->name('admin.settings.company-banks.edit.post');
@@ -295,18 +292,18 @@ Route::group([
         Route::post('settings/company-additions/edit', 'Admin\SettingsController@editCompanyAddition')->name('admin.settings.company-additions.edit.post');
         Route::post('settings/company-deductions/edit', 'Admin\SettingsController@editCompanyDeduction')->name('admin.settings.company-deductions.edit.post');
 
-    Route::get('settings/epf/{id}/delete','Admin\SettingsController@deleteEpf')->name('admin.settings.epf.delete')->where('id', '[0-9]+');
-    Route::get('settings/eis/{id}/delete','Admin\SettingsController@deleteEis')->name('admin.settings.eis.delete')->where('id', '[0-9]+');
-    Route::get('settings/socso/{id}/delete','Admin\SettingsController@deleteSocso')->name('admin.settings.socso.delete')->where('id', '[0-9]+');
-    Route::get('settings/pcb/{id}/delete','Admin\SettingsController@deletePcb')->name('admin.settings.pcb.delete')->where('id', '[0-9]+');
-    Route::get('settings/companies/{id}/delete','Admin\SettingsController@deleteCompany')->name('admin.settings.companies.delete')->where('id', '[0-9]+');
-    Route::get('settings/positions/{id}/delete','Admin\SettingsController@deletePosition')->name('admin.settings.positions.delete')->where('id', '[0-9]+');
-    Route::get('settings/grades/{id}/delete','Admin\SettingsController@deleteGrade')->name('admin.settings.grades.delete')->where('id', '[0-9]+');
-    Route::get('settings/teams/{id}/delete','Admin\SettingsController@deleteTeam')->name('admin.settings.teams.delete')->where('id', '[0-9]+');
-    Route::get('settings/cost-centres/{id}/delete','Admin\SettingsController@deleteCostCentre')->name('admin.settings.cost-centres.delete')->where('id', '[0-9]+');
-    Route::get('settings/departments/{id}/delete','Admin\SettingsController@deleteDepartment')->name('admin.settings.departments.delete')->where('id', '[0-9]+');
-    Route::get('settings/branches/{id}/delete','Admin\SettingsController@deleteBranch')->name('admin.settings.branches.delete')->where('id', '[0-9]+');
-    Route::get('settings/working-days/{id}/delete','Admin\SettingsController@deleteWorkingDay')->name('admin.settings.working-days.delete')->where('id', '[0-9]+');
+        Route::get('settings/epf/{id}/delete', 'Admin\SettingsController@deleteEpf')->name('admin.settings.epf.delete')->where('id', '[0-9]+');
+        Route::get('settings/eis/{id}/delete', 'Admin\SettingsController@deleteEis')->name('admin.settings.eis.delete')->where('id', '[0-9]+');
+        Route::get('settings/socso/{id}/delete', 'Admin\SettingsController@deleteSocso')->name('admin.settings.socso.delete')->where('id', '[0-9]+');
+        Route::get('settings/pcb/{id}/delete', 'Admin\SettingsController@deletePcb')->name('admin.settings.pcb.delete')->where('id', '[0-9]+');
+        Route::get('settings/companies/{id}/delete', 'Admin\SettingsController@deleteCompany')->name('admin.settings.companies.delete')->where('id', '[0-9]+');
+        Route::get('settings/positions/{id}/delete', 'Admin\SettingsController@deletePosition')->name('admin.settings.positions.delete')->where('id', '[0-9]+');
+        Route::get('settings/grades/{id}/delete', 'Admin\SettingsController@deleteGrade')->name('admin.settings.grades.delete')->where('id', '[0-9]+');
+        Route::get('settings/teams/{id}/delete', 'Admin\SettingsController@deleteTeam')->name('admin.settings.teams.delete')->where('id', '[0-9]+');
+        Route::get('settings/cost-centres/{id}/delete', 'Admin\SettingsController@deleteCostCentre')->name('admin.settings.cost-centres.delete')->where('id', '[0-9]+');
+        Route::get('settings/departments/{id}/delete', 'Admin\SettingsController@deleteDepartment')->name('admin.settings.departments.delete')->where('id', '[0-9]+');
+        Route::get('settings/branches/{id}/delete', 'Admin\SettingsController@deleteBranch')->name('admin.settings.branches.delete')->where('id', '[0-9]+');
+        Route::get('settings/working-days/{id}/delete', 'Admin\SettingsController@deleteWorkingDay')->name('admin.settings.working-days.delete')->where('id', '[0-9]+');
 
         // //admin e-leave
         // Route::get('e-leave','Admin\ELeaveController@displayLeaveApplication')->name('admin.e-leave'); // on behalf
@@ -397,17 +394,22 @@ Route::group([
 /**
  * Payroll related route
  */
+Route::group([
+    'middleware' => [
+        'auth',
+        'role:super-admin|admin|hr-exec'
+    ]
+], function () {
+    Route::resource('payroll', 'Payroll\PayrollController');
+    Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');
+    Route::post('payroll/store', 'Payroll\PayrollController@store')->name('payroll.store');
+    Route::get('payroll/{id}', 'Payroll\PayrollController@show')->name('payroll.show');
+    // Route::get('/payroll/show/{id}', 'Payroll\PayrollController@show')->name('payroll/show/{id}');
+    Route::post('/payroll/status/{id}', 'Payroll\PayrollController@updatePayrollStatus')->name('payroll.status.update');
+    Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
+    Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
+    Route::get('/payroll/create', 'Payroll\PayrollController@create')->name('payroll.create');
 
-Route::resource('payroll', 'Payroll\PayrollController');
-Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');
-Route::post('payroll/store', 'Payroll\PayrollController@store')->name('payroll.store');
-Route::get('payroll/{id}', 'Payroll\PayrollController@show')->name('payroll.show');
-// Route::get('/payroll/show/{id}', 'Payroll\PayrollController@show')->name('payroll/show/{id}');
-Route::post('/payroll/status/{id}', 'Payroll\PayrollController@updatePayrollStatus')->name('payroll.status.update');
-Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
-Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
-Route::get('payroll/create', 'Payroll\PayrollController@create')->name('payroll.create');
-
-Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
-Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');
-
+    Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
+    Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');
+});

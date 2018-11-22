@@ -24,5 +24,10 @@ class PayrollService
     {
         return $this->payrollRepository->isPayrollExists($data);
     }
+    
+    public function getPayrollStartDate(array $data)
+    {
+        return $this->payrollRepository->getPayrollStartDate($data);
+    }
 }
 

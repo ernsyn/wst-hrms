@@ -27,7 +27,11 @@ use App\Repositories\Payroll\PcbRepository;
 use App\Repositories\Payroll\SocsoRepository;
 use App\Services\PayrollService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Eis;
+use App\Socso;
+use App\Pcb;
 
 class PayrollController extends Controller
 {
@@ -73,47 +77,27 @@ class PayrollController extends Controller
         $this->payrollTrxDeductionRepository = $payrollTrxDeductionRepository;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Payroll listing
     public function index()
     {
-        // TODO: pagination
-//         $payroll = $this->payrollMaster->with('Company');
-        
         $payroll = PayrollMaster::leftJoin('companies', 'companies.id', '=', 'payroll_master.company_id')
-        ->select('payroll_master.*','companies.name')->get();
-//         ->paginate(10); //todo: .env
-//         dd($payroll);
+            ->select('payroll_master.*','companies.name')->get();
 
         $period = PayrollPeriodEnum::choices();
         return view('pages.payroll.index', compact('payroll', 'period'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Add payroll form
     public function create()
     {
         $period = PayrollPeriodEnum::choices();
-        // dd($period);
-        return view('pages.payroll.create', [
-            'period' => $period
-        ]);
+        return view('pages.payroll.create', ['period' => $period]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+    // Add payroll
     public function store(PayrollRequest $request)
     {
+        $currentUser = auth()->user()->id;
         // validate and store
         $validated = $request->validated();
         // check if payroll period exists
@@ -122,9 +106,10 @@ class PayrollController extends Controller
         // ['period', $validated['period']]
         // ])->exists();
         // TODO: refactor to service
-        $data = array_add([
-            'year_month' => $request->input('year_month') . '-01'
-        ], 'period', $request->input('period'));
+        $data = array(
+            'year_month' => $validated['year_month'].'-01', 
+            'period' => $validated['period'] 
+        );
 
         $payrollPeriodExists = $this->payrollService->isPayrollExists($data);
         if ($payrollPeriodExists) {
@@ -144,30 +129,25 @@ class PayrollController extends Controller
             $payroll->company_id = $company->id;
             $payroll->year_month = $validated['year_month'] . '-01';
             $payroll->period = $validated['period'];
-            // $payroll->created_on = Carbon::now();
-            $payroll->created_by = 1; // TODO: integrate auth to get current login user
-            $payroll->updated_by = 1; // TODO: integrate auth to get current login user
-                                      // $payroll->updated_on = Carbon::now();
+            $payroll->created_by = $currentUser; 
+            $payroll->updated_by = $currentUser; 
+            $payroll->start_date = $this->payrollService->getPayrollStartDate($data);
+            $payroll->end_date = date('Y-m-d', strtotime('-1 days'));
             $payroll->save();
 
             $payrollId = $payroll->id;
-            // $lastDayOfPayroll = DateHelper::getLastDayOfDate($validated['year_month'].'-01');
-            $time = strtotime($validated['year_month'] . '-01');
-            $payrollStartDate = date('Y-m-d', $time);
-            // dd($payrollStartDate);
+            $firstDayOfMonth = date('Y-m-d', strtotime($validated['year_month'] . '-01'));
+            
             // Step 3. Find all employees under this company, generate all employees' payroll trx.
             $employeeList = Employee::leftJoin('employee_jobs', 'employee_jobs.emp_id', '=', 'employees.id')->where([
-                [
-                    'company_id',
-                    $company->id
-                ]
+                ['company_id', $company->id]
             ])
-                ->where(function ($query) use ($payrollStartDate) {
+            ->where(function ($query) use ($firstDayOfMonth) {
                 // Either default or month/year greater or same
-                $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $payrollStartDate . '" ORDER BY start_date DESC LIMIT 1)'));
+                $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
             })
                 ->get();
-            var_dump($employeeList);
+//             dd($employeeList);
             foreach ($employeeList as $employee) {
 
                 // Step 4. Find employee's payroll's required info.
@@ -182,17 +162,20 @@ class PayrollController extends Controller
 
                 $epfFilter = array();
                 $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
-                $epfFilter['citizenship'] = $employee->nationality;
+                $epfFilter['nationality'] = $employee->nationality;
                 $epfFilter['salary'] = $basicSalary;
                 $epf = new Epf();
                 $epf = $this->epfRepository->findByFilter($epfFilter);
 //                 dd($epf);
+                $eis = new Eis();
                 $eis = $this->eisRepository->findBySalary($basicSalary);
+                $socso = new Socso();
                 $socso = $this->socsoRepository->findBySalary($basicSalary);
                 $pcbFilter = array();
                 $pcbFilter['salary'] = $basicSalary;
                 $pcbFilter['pcbGroup'] = $employee->pcb_group;
                 $pcbFilter['noOfChildren'] = $employee->total_child;
+                $pcb = new Pcb();
                 $pcb = $this->pcbRepository->findByFilter($pcbFilter);
                 // Step 5. Create payroll trx.
                 $payrollTrxData = array();
@@ -208,10 +191,8 @@ class PayrollController extends Controller
                 $payrollTrxData['seniority_pay'] = $seniorityPay;
                 $payrollTrxData['basic_salary'] = $basicSalary;
                 $payrollTrxData['take_home_pay'] = 0;
-                $payrollTrxData['created_by'] = 1;
-                // $payrollTrxData['created_on'] = Carbon::now();
-                $payrollTrxData['updated_by'] = 1;
-                // $payrollTrxData['updated_on'] = Carbon::now();
+                $payrollTrxData['created_by'] = $currentUser;
+                $payrollTrxData['updated_by'] = $currentUser;
 //                 dd($payrollTrxData);
                 $payrollTrxId = $this->payrollTrxRepository->create($payrollTrxData)->id;
 
@@ -258,12 +239,7 @@ class PayrollController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\PayrollMaster $payrollMaster
-     * @return \Illuminate\Http\Response
-     */
+    // Show payroll month
     public function show($id)
     {
         // TODO: show by security group and report to
@@ -271,7 +247,7 @@ class PayrollController extends Controller
 //         $request->request->add([
 //             'payroll_id' => $id
 //         ]);
-
+        
         $forms = [
             'employee_id',
             'name',
@@ -287,7 +263,7 @@ class PayrollController extends Controller
         ];
 
         // $list = $this->payrolltrx->all(true, $request->input());
-        $isAdmin = 1; // (Auth::user()->role->name == 'Admin' || Auth::user()->role->name == 'Superadmin')? 1 : 0;
+        $isAdmin = Auth::user()->hasRole('admin'); 
         $payrollId = @$request['payroll_id'];
         $groupArray = @$request['group_array'];
         $viewerEmployeeId = @$request['viewer_employee_id'];

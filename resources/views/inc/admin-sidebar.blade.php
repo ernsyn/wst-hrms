@@ -3,7 +3,7 @@
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
 
-    @hasanyrole('super-admin|admin')
+    @hasanyrole('super-admin|admin|hr-exec')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -72,7 +72,8 @@
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                         <a href="{{ route('payroll') }}">Payroll</a>
                     </li>
-                    <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+                    @hasrole('admin')
+                    <li class="menu-option {{ request()->is('payroll/government_report') ? 'active' : '' }}">
                         <a href="{{ route('payroll/government_report') }}">Government Reports</a>
                     </li>
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
@@ -81,6 +82,7 @@
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                         <a href="">Payroll Setup</a>
                     </li>
+                    @endhasrole
                 </ul>
             </li>
             

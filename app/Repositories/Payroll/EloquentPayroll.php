@@ -19,5 +19,28 @@ class EloquentPayroll implements PayrollRepository
             ['period', $data['period']]
         ])->exists();
     }
+    
+    public function getPayrollStartDate(array $data)
+    {
+        $payrollMonth = $data['year_month'];
+        $period = $data['period'];
+        
+        $prevPayrollMonthTs = strtotime($payrollMonth.' -1 month');
+        $prevPayrollMonth = date('Y-m-d', $prevPayrollMonthTs);
+        
+        $prevPayroll = $this->payrollMaster->where([
+            ['year_month', $prevPayrollMonth],
+            ['period', $period]
+        ])->get();
+        
+        if (count($prevPayroll) > 0){
+            $startDate = date('Y-m-d', strtotime($prevPayroll->end_date.' -1 days'));
+        } else {
+            $startDate = date('Y-m-d', strtotime('-1 months'));
+        }
+        
+        return $startDate;
+    }
+
 }
 

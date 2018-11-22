@@ -19,5 +19,7 @@ interface PayrollRepository
 //     }
 	
     public function isPayrollExists(array $filter);
+    
+    public function getPayrollStartDate(array $data);
 }
 
