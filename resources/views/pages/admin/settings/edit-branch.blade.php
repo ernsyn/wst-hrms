@@ -1,7 +1,8 @@
 @extends('layouts.admin-base')
-@section('content') @foreach ($errors->all() as $error)
+@section('content')
+{{-- @foreach ($errors->all() as $error)
 <li>{{ $error }}</li>
-@endforeach
+@endforeach --}}
 <div class="container pb-5">
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.branches.edit.post', ['id' => $branch->id])  }}" id="form_validate" data-parsley-validate>
