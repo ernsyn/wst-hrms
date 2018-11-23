@@ -2,7 +2,7 @@
 @section('pageTitle', 'Employee Profile')
 @section('content')
 <div class="container">
-    <div id="alert-container" class="row col">
+    <div id="alert-container">
 
     </div>
     <div id="employee-profile-card" class="card shadow-sm">
