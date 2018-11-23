@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PayrollRequest;
 use App\Repositories\Repository;
 use App\Repositories\Employee\EmployeeRepository;
-use App\Repositories\Employee\EmployeeSupervisorRepository;
+use App\Repositories\Employee\EmployeeReportToRepository;
 use App\Repositories\Payroll\AdditionRepository;
 use App\Repositories\Payroll\DeductionRepository;
 use App\Repositories\Payroll\EisRepository;
@@ -47,7 +47,7 @@ class PayrollController extends Controller
     protected $deductionRepository;
     protected $payrollTrx;
     protected $company;
-    protected $employeeSupervisorRepository;
+    protected $employeeReportToRepository;
     protected $employeeRepository;
     protected $payrollTrxAdditionRepository;
     protected $payrollTrxDeductionRepository;
@@ -55,7 +55,7 @@ class PayrollController extends Controller
     public function __construct(PayrollMaster $payrollMaster, PayrollService $payrollService, EpfRepository $epfRepository, EisRepository $eisRepository, 
         SocsoRepository $socsoRepository, PcbRepository $pcbRepository, PayrollTrxRepository $payrollTrxRepository, AdditionRepository $additionRepository,
         DeductionRepository $deductionRepository, PayrollTrxRepository $payrollTrx, Company $company,
-        EmployeeSupervisorRepository $employeeSupervisorRepository, EmployeeRepository $employeeRepository, PayrollTrxAdditionRepository $payrollTrxAdditionRepository,
+        EmployeeReportToRepository $employeeReportToRepository, EmployeeRepository $employeeRepository, PayrollTrxAdditionRepository $payrollTrxAdditionRepository,
         PayrollTrxDeductionRepository $payrollTrxDeductionRepository)
     {
         $this->middleware('auth');
@@ -71,7 +71,7 @@ class PayrollController extends Controller
         $this->deductionRepository = $deductionRepository;
         $this->payrollTrx = $payrollTrx;
         $this->company = $company;
-        $this->employeeSupervisorRepository = $employeeSupervisorRepository;
+        $this->employeeReportToRepository = $employeeReportToRepository;
         $this->employeeRepository = $employeeRepository;
         $this->payrollTrxAdditionRepository = $payrollTrxAdditionRepository;
         $this->payrollTrxDeductionRepository = $payrollTrxDeductionRepository;
@@ -181,13 +181,13 @@ class PayrollController extends Controller
                 $payrollTrxData = array();
                 $payrollTrxData['payroll_master_id'] = $payrollId;
                 $payrollTrxData['employee_id'] = $employee->emp_id;
-                $payrollTrxData['employee_epf'] = $epf->employee;
-                $payrollTrxData['employee_eis'] = $eis->employee;
-                $payrollTrxData['employee_socso'] = $socso->first_category_employee;
-                $payrollTrxData['employee_pcb'] = $pcb->amount;
-                $payrollTrxData['employer_epf'] = $epf->employer;
-                $payrollTrxData['employer_eis'] = $eis->employer;
-                $payrollTrxData['employer_socso'] = $socso->first_category_employer;
+                $payrollTrxData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
+                $payrollTrxData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
+                $payrollTrxData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
+                $payrollTrxData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
+                $payrollTrxData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
+                $payrollTrxData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
+                $payrollTrxData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
                 $payrollTrxData['seniority_pay'] = $seniorityPay;
                 $payrollTrxData['basic_salary'] = $basicSalary;
                 $payrollTrxData['take_home_pay'] = 0;
@@ -242,7 +242,12 @@ class PayrollController extends Controller
     // Show payroll month
     public function show($id)
     {
-        // TODO: show by security group and report to
+        // TODO: show by security group and KPI proposer
+        /*
+         * HR Admin - show all
+         * HR Exec by security group
+         * KPI Proposer 
+         */
 //         $request[];
 //         $request->request->add([
 //             'payroll_id' => $id
@@ -268,6 +273,8 @@ class PayrollController extends Controller
         $groupArray = @$request['group_array'];
         $viewerEmployeeId = @$request['viewer_employee_id'];
         $companyId = @$request['company_id'];
+        $isHrAdminOrHrExec = Auth::user()->hasAnyRole('admin|hr-exec'); 
+        $currentUser = auth()->user()->id;
 
         $list = PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employees as e', 'e.id', '=', 'payroll_trx.employee_id')
@@ -277,6 +284,7 @@ class PayrollController extends Controller
                 $join->on('ej.emp_id', '=', 'e.id');
             })
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
+            ->leftjoin('employee_report_to as ert', 'ert.emp_id', '=', 'e.id')
         /* ->join('job_master as JM2', 'JM2.id', '=', 'EJ.id_category')  */
         // ->leftjoin('EmployeeGroup as EG', 'EG.id_EmployeeMaster', '=', 'EM.id')
         /* ->leftjoin('employee_bank as EB', function($join){
@@ -291,80 +299,35 @@ class PayrollController extends Controller
                 ROUND((payroll_trx.kpi * payroll_trx.bonus),2) as total_bonus,
                 YEAR(CURDATE()) - YEAR(e.dob) as age
             '))
-            ->
-        // ->leftjoin('EmployeeGroup as EG', 'EG.id_EmployeeMaster', '=', 'EM.id')
-        /* ->leftjoin('employee_report_to as ERT', 'ERT.emp_id', '=', 'EM.emp_id') */
-            where(function ($query) use ($id) {
-                if ($id)
+        ->where(function ($query) use ($id) {
+            if ($id) {
                 $query->where('payroll_trx.payroll_master_id', $id);
-        })
-        /* ->where(function($query) use($groupArray, $isAdmin, $viewerEmployeeId){
-            if(($groupArray || !$isAdmin)) {
-                $query->whereIn('EM.id_GroupMaster', $groupArray)
-                ->orwhereIn('EM.emp_id', $viewerEmployeeId);
             }
-            if($viewerEmployeeId) $query->orwhereIn('ERT.report_id_EmployeeMaster', $viewerEmployeeId);
-        }) */
-        /* ->where(function($query) use($companyId){
-            if($companyId) $query->where('PM.company_info_id', $companyId);
-        })  */
-//         ->groupby('payroll_trx.id')
-            ->orderby('payroll_trx.id', 'ASC')->get();
-//             ->paginate(10);
-//             dd($list);
+        })
+        ->where(function($query) use($isHrAdminOrHrExec, $currentUser){
+            if(!$isHrAdminOrHrExec) {
+                $query->where('ert.report_to_emp_id', $currentUser);
+            }
+        })
+        ->orderby('payroll_trx.id', 'ASC')->get();
+
         // Condition
         // if(!count($list)) return redirect('/payroll')->with('error', 'Payroll not found.');
 
         $payroll = PayrollMaster::where([
             [
-                'id',
-                $id
+                'id', $id
             ]
         ])->first();
         $title = 'Payroll Month (' . DateHelper::dateWithFormat(@$payroll->year_month, 'Y-m') . ')';
         return view('pages.payroll.show', compact('id', 'title', 'payroll', 'forms', 'list'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\PayrollMaster $payrollMaster
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(PayrollMaster $payrollMaster)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\PayrollMaster $payrollMaster
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, PayrollMaster $payrollMaster)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\PayrollMaster $payrollMaster
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(PayrollMaster $payrollMaster)
-    {
-        //
-    }
-
     public function updatePayrollStatus(Request $request, $id)
     {
         $info = PayrollMaster::where([
             [
-                'id',
-                $id
+                'id', $id
             ]
         ])->get();
 //             dd($info);
@@ -374,7 +337,7 @@ class PayrollController extends Controller
         DB::beginTransaction();
         $storeData = [];
         $storeData['status'] = $request['status'];
-        $storeData['updated_by'] = 1; // Auth::user()->id;
+        $storeData['updated_by'] = auth()->user()->id;
         PayrollMaster::where('id', $id)->update($storeData);
         DB::commit();
 
@@ -398,8 +361,8 @@ class PayrollController extends Controller
 //         dd($info);
 //         $company = $this->company->find($info->company_id);
         //TODO: get report to 
-        $currentUser = 1; //TODO: get current logged in user
-        $isKpiProposer = $this->employeeSupervisorRepository->isKpiProposer($info->employee_id, $currentUser); //$this->employeereportto->find_employee_in_charge($info->employee_id, Auth::user()->id);
+        $currentUser = auth()->user()->id;
+        $isKpiProposer = $this->employeeReportToRepository->isKpiProposer($info->employee_id, $currentUser); //$this->employeereportto->find_employee_in_charge($info->employee_id, Auth::user()->id);
         $info->is_in_charge = $isKpiProposer;
 //         dd($isKpiProposer);
         $employee = $this->employeeRepository->find($info->employee_id)->first();
@@ -427,7 +390,7 @@ class PayrollController extends Controller
             $different_of_dates = date_diff(date_create($start_date), date_create($joined_date));
             $total_days = $total_days - $different_of_dates->format('%a')+1;
         }
-// dd($info);
+//         dd($info->is_in_charge);
         return view('pages.payroll.show-payroll-trx', compact('id', 'payroll_id', 'title', 'employee_forms', 'salary_form', 'bonus_form', 'payrolltrx_additionForm', 'payrolltrx_deductionForm', 'employeeContribution_form', 'employerContribution_form', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 'year_month', 'total_days', 'is_in_charge'));
     }
     

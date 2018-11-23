@@ -94,16 +94,22 @@
 			<div class="card h-100">
 				<div class="card-header">Bonus</div>
 				<div class="card-body">
+					@php
+					$disable = '';
+					@endphp
+					@if(!$info->is_in_charge)
+						{{ $disable = 'disabled' }};
+					@endif
 					<div class="row p-2">
 						<div class="col-sm-4 mb15">Bonus (BN)</div>
 						<div class="col-sm-8 mb15">
-							<input class="form-control " placeholder="0.00" id="bonus" name="bonus" type="number" value="{{ $info->bonus }}">
+							<input class="form-control " placeholder="0.00" id="bonus" name="bonus" type="number" value="{{ $info->bonus }}" {{ $disable }} >
 						</div>
 					</div>
 					<div class="row p-2">
 						<div class="col-sm-4 mb15">KPI (0.5-1.5)</div>
 						<div class="col-sm-8 mb15">
-							<input class="form-control " step="any" placeholder="0.00" id="kpi" name="kpi" type="number" value="{!! $info->kpi !!}">
+							<input class="form-control " step="any" placeholder="0.00" id="kpi" name="kpi" type="number" value="{!! $info->kpi !!}" {{ $disable }}>
 						</div>
 					</div>
 					<div class="row p-2">
@@ -112,12 +118,15 @@
 							<input class="form-control " readonly="" placeholder="0.00" id="total_bonus" name="total_bonus" type="text" value="{{ $info->bonus * $info->kpi }}">
 						</div>
 					</div>
+					
+					@if($info->is_in_charge)
 					<div class="row p-2">
 						<div class="col-sm-4 mb15"></div>
 						<div class="col-sm-8 mb15 text-right">
 							<button type="submit" class="btn btn-primary" name="saveKpi" value="1">Save</button>
 						</div>
 					</div>
+					@endif
 				</div>
 			</div>
 		</span>

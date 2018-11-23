@@ -22,8 +22,8 @@ use App\Repositories\Payroll\PayrollTrxRepository;
 use App\Repositories\Payroll\PcbRepository;
 use App\Repositories\Payroll\SocsoRepository;
 use Illuminate\Support\ServiceProvider;
-use App\Repositories\Employee\EmployeeSupervisorRepository;
-use App\Repositories\Employee\EloquentEmployeeSupervisor;
+use App\Repositories\Employee\EmployeeReportToRepository;
+use App\Repositories\Employee\EloquentEmployeeReportTo;
 use App\Repositories\Employee\EmployeeRepository;
 use App\Repositories\Employee\EloquentEmployee;
 
@@ -41,7 +41,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(PayrollTrxRepository::class, EloquentPayrollTrx::class);
         $this->app->singleton(PayrollTrxAdditionRepository::class, EloquentPayrollTrxAddition::class);
         $this->app->singleton(PayrollTrxDeductionRepository::class, EloquentPayrollTrxDeduction::class);
-        $this->app->singleton(EmployeeSupervisorRepository::class, EloquentEmployeeSupervisor::class);
+        $this->app->singleton(EmployeeReportToRepository::class, EloquentEmployeeReportTo::class);
         $this->app->singleton(EmployeeRepository::class, EloquentEmployee::class);
         $this->app->singleton(PayrollTrxAdditionRepository::class, EloquentPayrollTrxAddition::class);
         $this->app->singleton(PayrollTrxDeductionRepository::class, EloquentPayrollTrxDeduction::class);

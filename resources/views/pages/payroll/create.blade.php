@@ -45,6 +45,7 @@
     $('#year_month').datepicker({
     	changeMonth: true,
         changeYear: true,
+        showButtonPanel: true,
         dateFormat: 'yy-mm',
 
 	    onClose: function(dateText, inst) {  

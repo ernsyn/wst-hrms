@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories\Employee;
 
-interface EmployeeSupervisorRepository
+interface EmployeeReportToRepository
 {
     public function isKpiProposer($employeeId, $currentUser);
 }

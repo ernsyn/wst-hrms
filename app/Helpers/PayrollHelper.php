@@ -1,6 +1,8 @@
 <?php
 namespace App\Helpers;
 
+use App\EmployeeReportTo;
+
 class PayrollHelper
 {
     public static function calculateSalary($employee, $payrollMonth)
@@ -103,6 +105,16 @@ class PayrollHelper
         ];
     }
     
-    
+    public static function isKpiProposer(){
+        $isKpiProposer = false;
+        $currentUser = auth()->user()->id;
+        $employeeReportTo = EmployeeReportTo::where([['report_to_emp_id', $currentUser], ['kpi_proposer',1]])->get();
+//         dd($currentUser);
+        if(count($employeeReportTo) > 0){
+            $isKpiProposer = true;
+        }
+//         dd($isKpiProposer);
+        return $isKpiProposer;
+    }
 }
 

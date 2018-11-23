@@ -394,12 +394,12 @@ Route::group([
 /**
  * Payroll related route
  */
-Route::group([
+/* Route::group([
     'middleware' => [
         'auth',
         'role:super-admin|admin|hr-exec'
     ]
-], function () {
+], function () { */
     Route::resource('payroll', 'Payroll\PayrollController');
     Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');
     Route::post('payroll/store', 'Payroll\PayrollController@store')->name('payroll.store');
@@ -412,4 +412,4 @@ Route::group([
 
     Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
     Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');
-});
+// });
