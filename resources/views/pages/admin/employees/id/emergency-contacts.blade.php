@@ -383,7 +383,7 @@
             e.preventDefault();
             $.ajax({
                 url: deleteRoute,
-                type: 'DELETE',
+                type: 'GET',
                 data: {
                     _token: '{{ csrf_token() }}',
                     id: deleteId
