@@ -25,8 +25,8 @@ Auth::routes();
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('', 'HomeController@index')->name('employee.dashboard');
 
-    Route::get('/employee','EmployeeController@displayProfile')->name('employee');
-    Route::get('profile','EmployeeController@displayProfile')->name('profile');
+    // Route::get('/employee','EmployeeController@displayProfile')->name('employee');
+    // Route::get('profile','EmployeeController@displayProfile')->name('profile');
     Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
     Route::get('employeeimmigrationdata','EmployeeController@displayImmigration')->name('immigration');
     Route::get('qualificationcompaniesdata','EmployeeController@displayQualificationCompanies')->name('companies');
@@ -39,29 +39,10 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('historydata','EmployeeController@displayHistory')->name('history');
     Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
 
-
-   // Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('employee/leaveapplication');
-    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
-    // Route::get('leaverequest','EmployeeController@displayLeaveRequest')->name('employee/leaverequest');
-    // Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
-    // Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
-
-  //  Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
-});
-
-// MODE: Employee
-Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
     Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
-    Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
-     Route::get('leaveapplication','Employee\ELeaveController@displayLeaveApplication')->name('employee/leaveapplication');
-    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
-     Route::get('leaverequest','Employee\ELeaveController@displayLeaveRequest')->name('employee/leaverequest');
-    // Route::get('leavebalance','EmployeeController@displayLeaveBalance')->name('employee/leavebalance');
-    // Route::get('leaveholiday','EmployeeController@displayLeaveHoliday')->name('employee/leaveholiday');
 
-  //  Route::post('add_leave_application','EmployeeController@addLeaveApplication')->name('add_leave_application');
-  // Data Tables
+    // Data Tables
     Route::get('employee/dt/dependents', 'Employee\EmployeeController@getDataTableDependents')->name('employee.dt.dependents');
     Route::get('employee/dt/immigrations', 'Employee\EmployeeController@getDataTableImmigrations')->name('employee.dt.immigrations');
     Route::get('employee/dt/visas', 'Employee\EmployeeController@getDataTableVisas')->name('employee.dt.visas');
@@ -94,7 +75,6 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/education/{id}/edit','Employee\EmployeeController@postEditEducation')->name('employee.education.edit');
     Route::post('employee/skills/{id}/edit','Employee\EmployeeController@postEditSkill')->name('employee.skills.edit');
 });
-
 
 // MODE: Admin
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
@@ -163,36 +143,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
     Route::get('settings/working-days', 'Admin\SettingsController@displayWorkingDays')->name('admin.settings.working-days');
 
-    Route::get('e-leave/configuration/leaveholidays', 'Admin\ELeaveController@displayPublicHolidays')->name('admin.e-leave.configuration.leaveholidays');
-    Route::get('e-leave/configuration/leavebalances', 'Admin\ELeaveController@displayLeaveBalances')->name('admin.e-leave.configuration.leavebalances');
-    Route::get('e-leave/configuration/leavetypes', 'Admin\ELeaveController@displayLeaveTypes')->name('admin.e-leave.configuration.leavetypes');
-    Route::get('e-leave/configuration/leaverequests', 'Admin\ELeaveController@displayLeaveRequests')->name('admin.e-leave.configuration.leaverequests');
+    // Route::get('e-leave/configuration/leaveholidays', 'Admin\ELeaveController@displayPublicHolidays')->name('admin.e-leave.configuration.leaveholidays');
+    // Route::get('e-leave/configuration/leavebalances', 'Admin\ELeaveController@displayLeaveBalances')->name('admin.e-leave.configuration.leavebalances');
+    // Route::get('e-leave/configuration/leavetypes', 'Admin\ELeaveController@displayLeaveTypes')->name('admin.e-leave.configuration.leavetypes');
+    // Route::get('e-leave/configuration/leaverequests', 'Admin\ELeaveController@displayLeaveRequests')->name('admin.e-leave.configuration.leaverequests');
 
 
     //leave public holidays setup
-    Route::get('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@addPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.add');
-    Route::post('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@postAddPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.add.post');
+    // Route::get('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@addPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.add');
+    // Route::post('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@postAddPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.add.post');
 
-    Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.edit')->where('id', '[0-9]+');
-    Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.edit.post')->where('id', '[0-9]+');
-
-    Route::get('e-leave/configuration/leavetypes/add','Admin\ELeaveController@addLeaveType')->name('admin.e-leave.configuration.leavetypes.add');
-    Route::post('e-leave/configuration/leavetypes/add','Admin\ELeaveController@postAddLeaveType')->name('admin.e-leave.configuration.leavetypes.add.post');
-
-    Route::get('e-leave/configuration/leavetypes/{id}/edit','Admin\ELeaveController@editLeaveType')->name('admin.e-leave.configuration.leavetypes.edit')->where('id', '[0-9]+');
-    Route::post('e-leave/configuration/leavetypes/{id}/edit','Admin\ELeaveController@postEditLeaveType')->name('admin.e-leave.configuration.leavetypes.edit.post')->where('id', '[0-9]+');
-
-    Route::get('e-leave/configuration/leavebalances/add','Admin\ELeaveController@addLeaveBalance')->name('admin.e-leave.configuration.leavebalances.add');
-    Route::post('e-leave/configuration/leavebalances/add','Admin\ELeaveController@postAddLeaveBalance')->name('admin.e-leave.configuration.leavebalances.add.post');
-
-    Route::get('e-leave/configuration/leavebalances/{id}/edit','Admin\ELeaveController@editLeaveBalance')->name('admin.e-leave.configuration.leavebalances.edit')->where('id', '[0-9]+');
-    Route::post('e-leave/configuration/leavebalances/{id}/edit','Admin\ELeaveController@postEditLeaveBalance')->name('admin.e-leave.configuration.leavebalances.edit.post')->where('id', '[0-9]+');
-
-    Route::get('e-leave/configuration/leaverequests/add','Admin\ELeaveController@addLeaveRequest')->name('admin.e-leave.configuration.leavebalances.add');
-    Route::post('e-leave/configuration/leaverequests/add','Admin\ELeaveController@postAddLeaveRequest')->name('admin.e-leave.configuration.leavebalances.add.post');
-
-    Route::get('e-leave/configuration/leaverequests/{id}/edit','Admin\ELeaveController@editLeaveRequest')->name('admin.e-leave.configuration.leaverequests.edit')->where('id', '[0-9]+');
-    Route::post('e-leave/configuration/leaverequests/{id}/edit','Admin\ELeaveController@postEditLeaveRequest')->name('admin.e-leave.configuration.leaverequests.edit.post')->where('id', '[0-9]+');
+    // Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.edit')->where('id', '[0-9]+');
+    // Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.edit.post')->where('id', '[0-9]+');
 
 
 
@@ -285,7 +247,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('settings/working-days/{id}/edit','Admin\SettingsController@postEditWorkingDay')->name('admin.settings.working-days.edit.post')->where('id', '[0-9]+');
 
 
-    Route::post('settings/leave-balances/edit','Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balances.edit.post');
     Route::post('settings/company-banks/edit','Admin\SettingsController@editCompanyBank')->name('admin.settings.company-banks.edit.post');
     Route::post('settings/security-groups/edit','Admin\SettingsController@editSecurityGroup')->name('admin.settings.security-groups.edit.post');
     Route::post('settings/company-additions/edit','Admin\SettingsController@editCompanyAddition')->name('admin.settings.company-additions.edit.post');
@@ -318,10 +279,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
 
 
-//later
-    Route::post('approve_leave', 'Admin\ELeaveController@approvedLeaveRequest')->name('approve_leave'); // also for manager
-    Route::post('disapprove_leave', 'Admin\ELeaveController@disapprovedLeaveRequest')->name('disapprove_leave'); // merge
-    Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance');
+    //later
+    // Route::post('approve_leave', 'Admin\ELeaveController@approvedLeaveRequest')->name('approve_leave'); // also for manager
+    // Route::post('disapprove_leave', 'Admin\ELeaveController@disapprovedLeaveRequest')->name('disapprove_leave'); // merge
+    // Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance');
 
 
 
@@ -337,9 +298,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
     Route::post('register_employee4','AdminController@addProfile3')->name('register_employee4');
     Route::post('register_employee','EmployeeDataController@insert')->name('register_employee');
-    Route::post('approve_leave', 'Admin\ELeaveController@approvedLeaveRequest')->name('approve_leave');
-    Route::post('disapprove_leave', 'Admin\ELeaveController@disapprovedLeaveRequest')->name('disapprove_leave');
-    Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance');
+    // Route::post('approve_leave', 'Admin\ELeaveController@approvedLeaveRequest')->name('approve_leave');
+    // Route::post('disapprove_leave', 'Admin\ELeaveController@disapprovedLeaveRequest')->name('disapprove_leave');
+    // Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance');
     Route::post('add_job','AdminController@addJob')->name('add_job');
 
 });
@@ -348,52 +309,3 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin']], function() {
     Route::get('', 'SuperAdmin\DashboardController@index')->name('super-admin.dashboard');
 });
-
-
-// MODE: Manager
-// Route::group(['prefix' => 'manager', 'middleware' => ['auth', 'role:manager']], function() {
-//     Route::get('', 'Manager\DashboardController@index')->name('manager.dashboard');
-//     Route::get('e-leave','Manager\ELeaveController@displayLeaveApplication')->name('admin.e-leave'); // on behalf
-//     Route::get('e-leave/edit/{id}','Manager\ELeaveController@displayEmployeeLeave')->name('admin.edit');
-//     Route::get('e-leave/apply-on-behalf','Manager\ELeaveController@displayLeaveRequest')->name('admin.e-leave.apply-on-behalf');
-// });
-
-
-
-    // Route::get('setup', 'AdminController@displaySetupCompany')->name('setup');
-
-
-    // Route::get('leaveapplication','EmployeeController@displayLeaveApplication')->name('admin/leaveapplication');
-    // Route::get('leavetype','AdminController@displayEmployeeLeave')->name('admin.configuration.leavetypes');
-    // Route::get('leaverequest','AdminController@displayLeaveRequest')->name('admin.e-leave');
-    // Route::get('leavebalance','AdminController@displayLeaveBalance')->name('admin.configuration');
-    // Route::get('leaveholiday','AdminController@displayLeaveHoliday')->name('admin.e-leave.configuration.holidays');
-
-    // Route::get('employee_list', 'AdminController@displayAllEmployee')->name('admin/employee_list');
-    // Route::get('user_list', 'EmployeeDataController@index')->name('admin/user_list');
-    // Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
-    // Route::get('/admin/history', 'AdminController@displayHistory')->name('admin/history');
-    // Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
-
-
-    // TODO Experiences ??
-    // Route::post('edit_emergency_contact','AdminController@editEmergencyContact')->name('edit_emergency_contact');
-   // Route::post('edit_immigration','AdminController@editEmployeeImmigration')->name('edit_immigration');
-   // Route::post('edit_visa','AdminController@editEmployeeVisa')->name('edit_visa');
-    // Route::post('edit_qualification_company','AdminController@editQualificationCompany')->name('edit_qualification_company');
-    // Route::post('edit_qualification_skills','AdminController@editQualificationSkills')->name('edit_qualification_skills');
-    // Route::post('edit_bank','AdminController@editEmployeeBank')->name('edit_bank');
-  // Route::post('edit_qualification_education','AdminController@editQualificationEducation')->name('edit_qualification_education');
-
- // Route::post('add_emergency_contact','AdminController@addEmergencyContact')->name('add_emergency_contact');
-  // Route::post('add_employee_dependent','AdminController@addEmployeeDependent')->name('add_employee_dependent');
-      // Route::post('add_employee_immigration','AdminController@addEmployeeImmigration')->name('add_employee_immigration');
-     // Route::post('add_employee_visa','AdminController@addEmployeeVisa')->name('add_employee_visa');
-      // Route::post('add_employee_bank','AdminController@addEmployeeBank')->name('add_employee_bank');
-  // Route::post('add_qualification_experience','AdminController@addQualificationCompany')->name('add_qualification_experience');
-     // Route::post('add_qualification_education','AdminController@addQualificationEducation')->name('add_qualification_education');
-    // Route::post('add_qualification_skills','AdminController@addQualificationSkills')->name('add_qualification_skills');
-
-    // Route::post('edit_employee_dependent','AdminController@editEmployeeDependent')->name('edit_employee_dependent');
-
-    // Route::post('register_employee4','AdminController@addProfile3')->name('register_employee4');

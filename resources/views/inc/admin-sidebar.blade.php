@@ -61,7 +61,7 @@
             </li>
             
             {{-- SECTION: E-Leave --}}
-            <li class="menu-section {{ request()->is('admin.e-leave','admin.e-leave','','admin.e-leave','admin.e-leave') ? 'active' : '' }}">
+            {{-- <li class="menu-section {{ request()->is('admin.e-leave','admin.e-leave','','admin.e-leave','admin.e-leave') ? 'active' : '' }}">
                     <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
                         <div class="row">
                             <div class="col-1"><i class="far fa-calendar-alt"></i></div>
@@ -69,31 +69,31 @@
                         </div>
                     </a>
                     <ul class="collapse list-unstyled {{ request()->is('admin.e-leave','admin.e-leave','','admin.e-leave','admin.e-leave') ? 'show' : '' }}"
-                        id="leaveSubmenu">
+                        id="leaveSubmenu"> --}}
                         {{-- OPTION: Leave Request --}}
                         {{-- <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave') }}">Leave Request</a>
                         </li> --}}
                         {{-- OPTION: PH Setup --}}
-                        <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
+                        {{-- <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration.leaveholidays') }}">PH Setup</a>
                         </li>
 
                         <li class="menu-option {{ request()->is('admin/e-leave/configuration/leavetypes') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration.leavetypes') }}">Leave Type Setup</a>
-                        </li>
+                        </li> --}}
 
                         {{-- <li class="menu-option {{ request()->is('admin/e-leave/configuration/leavebalances') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration.leavebalances') }}">Leave Balance</a>
                         </li> --}}
 
                         
-                        <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaverequest') ? 'active' : '' }}">
+                        {{-- <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaverequest') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration.leaverequests') }}">Leave Request</a>
                         </li>
                        
                     </ul>
-                </li>
+                </li> --}}
     
             {{-- SECTION: Settings --}}
             <li class="menu-section {{ request()->is('admin/settings*') ? 'active' : '' }}">

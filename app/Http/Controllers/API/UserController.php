@@ -3,7 +3,6 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request; 
 use App\Http\Controllers\Controller; 
 use App\User; 
-use App\LeaveBalance;
 use Illuminate\Support\Facades\Auth; 
 use Validator;
 class UserController extends Controller 
@@ -58,12 +57,5 @@ return response()->json(['success'=>$success], $this-> successStatus);
         return response()->json(['success' => $user], $this-> successStatus); 
 
 
-    } 
-
-
-    public function leaveDetails() 
-    { 
-        $leave_balance = Auth::leave_balance(); 
-        return response()->json(['success' => $leave_balance], $this-> successStatus); 
     } 
 }

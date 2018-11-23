@@ -57,7 +57,7 @@
             </ul>
 
         </li>
-        <li class="menu-section {{ request()->is('leave*') ? 'active' : '' }}">
+        {{-- <li class="menu-section {{ request()->is('leave*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1">
@@ -77,6 +77,6 @@
                 </li>
             </ul>
 
-        </li>
+        </li> --}}
     </ul>
 </nav>
