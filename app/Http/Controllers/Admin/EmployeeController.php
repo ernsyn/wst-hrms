@@ -417,18 +417,19 @@ class EmployeeController extends Controller
 
     public function postSkill(Request $request, $id)
     {
-        $emp_skill = $request->input('skills');
-        $year_experience = $request->input('year_experience');
-        $competency = Input::get('competency');
-        $created_by = auth()->user()->id;
+        $skillData = $request->validate([
+            'name' => 'required',
+            'years_of_experience' => 'required',
+            'competency' => 'required'
+        ]);
 
-        DB::insert('insert into employee_skills
-        (emp_id, emp_skill, year_experience, competency, created_by)
-        values
-        (?,?,?,?,?)',
-        [$id, $emp_skill, $year_experience, $competency, $created_by]);
+        $skill = new EmployeeSkill($skillData);
 
-        return redirect()->route('admin.employees.id', ['id' => $id]);
+
+        $employee = Employee::find($id);
+        $employee->employee_skills()->save($skill);
+
+        return response()->json(['success'=>'Skill is successfully added']);
     }
 
     // SECTION: Edit
