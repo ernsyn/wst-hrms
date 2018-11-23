@@ -242,6 +242,7 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
+                // Form Data
                 name: $('#add-emergency-contact-form #name').val(),
                 relationship: $('#add-emergency-contact-form #relationship').val(),
                 contact_no: $('#add-emergency-contact-form #contact-no').val()
@@ -284,13 +285,13 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
         // EDIT
         var editId = null;
        // Function: On Modal Clicked Handler
-       $('#edit-emergency-contact-form #edit-emergency-contact-popup').on('show.bs.modal', function (event) {
+       $('#edit-emergency-contact-popup').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
 
             editId = currentData.id;
-
+            
             $('#edit-emergency-contact-form #name').val(currentData.name);
             $('#edit-emergency-contact-form #relationship').val(currentData.relationship);
             $('#edit-emergency-contact-form #contact-no').val(currentData.contact_no);
