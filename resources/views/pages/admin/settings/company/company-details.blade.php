@@ -1,6 +1,10 @@
 @extends('layouts.admin-base') 
 @section('pageTitle', 'Job Configure') 
 @section('content')
+<div class="container">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+    @endforeach
 <div class="row">
     {{-- <nav class="col-6 pr-0">
         <ol class="breadcrumb">
@@ -48,113 +52,127 @@
                                     </div>
                                     <div class="row">
                                             <div class="col-md-12">
-                                                <table class="table table-bordered table-hover">
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Account Name</th>
-                                                        <th>Bank Code</th>
-                                                        <th>Status</th>                    
-                                                        <th>Action</th>
-                                                    </tr>
-                                                    @foreach($bank as $row)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{$row['account_name']}}</td>
-                                                        <td>{{$row['bank_code_name']}}</td>
-                                                        <td>{{$row['status']}}</td>
-                                                        <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                            data-bank-id="{{$row['id']}}"
-                                                            data-bank-code="{{$row['bank_code']}}"        
-                                                            data-bank-accout-name="{{$row['account_name']}}"             
-                                                            data-bank-status="{{$row['status']}}"
-                                                            data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button></td>
-                                                    </tr>
-                                                    @endforeach
+                                                <div class="float-right tableTools-container"></div>
+                                                <table class="hrms-data-table compact w-100 t-2" id="company-banks-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Company Name</th>
+                                                            <th>Account Name</th>
+                                                            <th>Bank Code</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($bank as $companybanks)
+                                                        <tr>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{$companybanks->company->name}}</td>
+                                                            <td>{{$companybanks['account_name']}}</td>
+                                                            <td>{{$companybanks['bank_code']}}</td>
+                                                        
+                                                            <td>
+                                                                <button onclick="window.location='{{ route('admin.settings.company-banks.edit', ['id' => $companybanks->id]) }}';"
+                                                                        class="round-btn btn btn-default fas fa-edit btn-segment">
+                                                                    </button>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
                                                 </table>
                                             </div>
-                                    </div>
+                                    
+                                        </div>
                             </div>
 
                             {{-- Security Group --}}
                             <div class="tab-pane fade" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
-                                <div class="row pb-3">
-                                    <div class="col-auto mr-auto"></div>
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addSecurityGroupPopup">
-                                            Add Security Group
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table class="table table-bordered table-hover">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Name</th>
-                                                <th>Description</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
-                                            </tr>
-                                            @foreach($security as $row)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{$row['name']}}</td>
-                                                <td>{{$row['description']}}</td>
-                                                <td>{{$row['status']}}</td>
-                                                <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                    data-security-id="{{$row['id']}}"
-                                                    data-security-name="{{$row['name']}}"        
-                                                    data-security-description="{{$row['description']}}"             
-                                                    data-security-status="{{$row['status']}}"
-                                                    data-target="#editSecurityGroupPopup"><i class="fas fa-pencil-alt"></i></button></td>
-                                            </tr>
-                                            @endforeach
-                                        </table>
-                                    </div>
-                                </div>
+                                    <div class="row pb-3">
+                                            <div class="col-auto mr-auto"></div>
+                                            <div class="col-auto">
+                                                    <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addSecurityGroupPopup">
+                                                            Add Security Group
+                                                        </button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="float-right tableTools-container"></div>
+                                                <table class="hrms-data-table compact w-100 t-2" id="security-groups-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Company Name</th>
+                                                            <th>Name</th>
+                                                            <th>Description</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($security as $securities)
+                                                        <tr>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{$securities['company_id']}}</td>
+                                                            <td>{{$securities['name']}}</td>
+                                                            <td>{{$securities['description']}}</td>
+                                                        
+                                                            <td>
+                                                                <button onclick="window.location='{{ route('admin.settings.company-banks.edit', ['id' => $securities->id]) }}';"
+                                                                        class="round-btn btn btn-default fas fa-edit btn-segment">
+                                                                    </button>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    
+                                        </div>
                             </div>
                 
-
+    {{--ADDITION--}}
                             <div class="tab-pane fade" id="nav-addition" role="tabpanel" aria-labelledby="nav-addition-tab">
-                                <div class="row pb-3">
-                                    <div class="col-auto mr-auto"></div>
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyAdditionPopup">
-                                            Add Company Addition
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table class="table table-bordered table-hover">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Code</th>                                                
-                                                <th>Name</th>
-                                                <th>Amount</th>                                                
-                                                <th>Action</th>
-                                            </tr>
-                                            @foreach($additions as $row)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{$row['code']}}</td>
-                                                <td>{{$row['name']}}</td>
-                                                <td>{{$row['amount']}}</td>      
-                                                <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                    data-addition-id="{{$row['id']}}"
-                                                    data-addition-code="{{$row['code']}}"
-                                                    data-addition-name="{{$row['name']}}"
-                                                    data-addition-type="{{$row['type']}}"
-                                                    data-addition-amount="{{$row['amount']}}"
-                                                    data-addition-statutory="{{$row['statutory']}}"        
-                                                    data-addition-eaform="{{$row['id_EaForm']}}"
-                                                    data-addition-status="{{$row['status']}}"
-                                                    data-target="#editCompanyAdditionPopup"><i class="fas fa-pencil-alt"></i></button></td>
-                                            </tr>
-                                            @endforeach
-                                        </table>
-                                    </div>
-                                </div>
+                                    <div class="row pb-3">
+                                            <div class="col-auto mr-auto"></div>
+                                            <div class="col-auto">
+                                                    <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyAdditionPopup">
+                                                            Add Company Addition
+                                                        </button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="float-right tableTools-container"></div>
+                                                <table class="hrms-data-table compact w-100 t-2" id="additions-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Code</th>
+                                                            <th>Name</th>
+                                                            <th>Amount</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($additions as $additions)
+                                                        <tr>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{$additions['code']}}</td>
+                                                            <td>{{$additions['name']}}</td>
+                                                            <td>{{$additions['amount']}}</td>
+                                                        
+                                                            <td>
+                                                                {{-- <button onclick="window.location='{{ route('admin.settings.additions.edit', ['id' => $additions->id]) }}';"
+                                                                        class="round-btn btn btn-default fas fa-edit btn-segment">
+                                                                    </button> --}}
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    
+             </div>
                             </div>
 
                             {{-- DEDUCTION --}}
@@ -162,56 +180,91 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyDeductionPopup">
+                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addDeductionPopup">
                                             Add Company Deduction
                                         </button>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <table class="table table-bordered table-hover">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Code</th>                                                
-                                                <th>Name</th>
-                                                <th>Amount</th>                                                
-                                                <th>Action</th>
-                                            </tr>
-                                            @foreach($deductions as $row)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{$row['code']}}</td>
-                                                <td>{{$row['name']}}</td>
-                                                <td>{{$row['amount']}}</td>      
-                                                <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                    data-deduction-id="{{$row['id']}}"
-                                                    data-deduction-code="{{$row['code']}}"
-                                                    data-deduction-name="{{$row['name']}}"
-                                                    data-deduction-type="{{$row['type']}}"
-                                                    data-deduction-amount="{{$row['amount']}}"
-                                                    data-deduction-statutory="{{$row['statutory']}}"
-                                                    data-deduction-status="{{$row['status']}}"
-                                                    data-target="#editCompanyDeductionPopup"><i class="fas fa-pencil-alt"></i></button></td>
-                                            </tr>
-                                            @endforeach
-                                        </table>
+                                        <div class="col-md-12">
+                                            <div class="float-right tableTools-container"></div>
+                                            <table class="hrms-data-table compact w-100 t-2" id="deductions-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Code</th>
+                                                        <th>Name</th>
+                                                        <th>Amount</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($deductions as $deductions)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{$deductions['code']}}</td>
+                                                        <td>{{$deductions['name']}}</td>
+                                                        <td>{{$deductions['amount']}}</td>
+                                                    
+                                                        <td>
+                                                            <button onclick="window.location='{{ route('admin.settings.deductions.edit', ['id' => $deductions->id]) }}';"
+                                                                    class="round-btn btn btn-default fas fa-edit btn-segment">
+                                                                </button>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                
                                     </div>
-                                </div>
                             </div>
 
                             
                                 {{-- TRAVEL ALLOWANCE --}}
-                                <div class="tab-pane fade show active" id="nav-travel" role="tabpanel" aria-labelledby="nav-travel-tab">
-                                    <div class="row pb-3">
-                                        <div class="col-auto mr-auto"></div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#addCompanyBankPopup">
-                                              Under Maintenance
-                                            </button>
+                                <div class="tab-pane fade" id="nav-travel" role="tabpanel" aria-labelledby="nav-travel-tab">
+                                        <div class="row pb-3">
+                                            <div class="col-auto mr-auto"></div>
+                                            <div class="col-auto">
+                                                <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addTravelPopup">
+                                                    Add Company Travel Allowance 
+                                                </button>
+                                            </div>
                                         </div>
+                                        <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="float-right tableTools-container"></div>
+                                                    <table class="hrms-data-table compact w-100 t-2" id="travel-allowance-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>Code</th>
+                                                                <th>Name</th>
+                                                                <th>Amount</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($company_travel_allowance as $company_travel_allowances)
+                                                            <tr>
+                                                                <td>{{ $loop->iteration }}</td>
+                                                                <td>{{$company_travel_allowances['company_id']}}</td>
+                                                                <td>{{$company_travel_allowances['rate']}}</td>
+                                                                <td>{{$company_travel_allowances['code']}}</td>
+                                                            
+                                                                <td>
+                                                                    <button onclick="window.location='{{ route('admin.settings.deductions.edit', ['id' => $company_travel_allowances->id]) }}';"
+                                                                            class="round-btn btn btn-default fas fa-edit btn-segment">
+                                                                        </button>
+                                                                </td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                        
+                                            </div>
                                     </div>
-
-                            </div>
                         {{-- ADDITION --}}
                             {{--
                             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
@@ -237,31 +290,40 @@
               </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('add_company_bank') }}" id="add_company_bank">
+                        @foreach($company as $companies)
+                    <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $companies->id])}} "id="add_company_bank"> 
+                            @endforeach
                         @csrf
-                        <div class="row pb-5">
-                            <div class="col-xl-8">
-                                <label class="col-md-12 col-form-label">Account Name*</label>
-                                <div class="col-md-12">
-                                    <input id="account_name" type="text" class="form-control{{ $errors->has('account_name') ? ' is-invalid' : '' }}"
-                                        name="account_name" value="{{ old('account_name') }}" required>
-                                </div> 
-                                <label class="col-md-12 col-form-label">Bank*</label>
-                                <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('bank_list') ? ' is-invalid' : '' }}" name="bank_list" id="bank_list">
-                                        @foreach($bank_list as $item)
-                                        <option value="{{ $item->bank_code }}">{{ $item->name }}</option>
-                                        @endforeach
-                                    </select>
+
+                        
+            
+                                <div class="row p-3">
+                                    <div class="row p-3">
+                                        <div class="form-group row w-100">
+                                            <label class="col-md-12 col-form-label">Account Bank Name*</label>
+                                            <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code">
+                                                <option disabled selected>Please Select</option>
+                                                @foreach(App\BankCode::all() as $banks)
+                                                <option value="{{ $banks->bank_code }}">{{ $banks->name }}</option>
+                                                @endforeach
+                                              </select>                         
+                                        </div>
+                                    </div>
+                           
                                 </div>
-                                <label class="col-md-12 col-form-label">Status*</label>
-                                <div class="col-md-12">
-                                    <select class ="form-control" id="status" name="status">
-                                        <option value="Active">Active</option>
-                                        <option value="Inactive">Inactive</option>
-                                    </select>
-                                </div>                                   
-                            </div>
+                                <div class="row p-3">
+                                    <div class="row p-3">
+                                        <div class="form-group row w-100">
+                                            <label class="col-md-12 col-form-label">Account Name*</label>
+                                            <div class="col-md-12">
+                                                <input id="account_name" type="text" class="form-control{{ $errors->has('account_name') ? ' is-invalid' : '' }}"
+                                                    name="account_name" value="{{ old('account_name') }}" required>
+                                            </div>                      
+                                        </div>
+                                    </div>
+                           
+                                </div>
+            
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">
@@ -286,7 +348,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('edit_company_bank') }}" id="edit_company_bank">
+                    <form method="POST" action="{{ route('admin.settings.cost-centres.add')}}" id="edit_company_bank">
                         @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
@@ -330,13 +392,17 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit Security Group</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Security Group</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('add_security_group') }}" id="add_security_group">
+             
+                        @foreach($company as $company_security_group)
+                        <form method="POST" action="{{ route('admin.settings.security-groups.add.post', ['id' => $company_security_group->id])}} "id="add_company_bank"> 
+                                @endforeach
+                            @csrf
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -349,13 +415,7 @@
                             <div class="col-md-10">                                     
                                 <textarea name="description" class="form-control"></textarea>
                             </div>
-                            <label class="col-md-12 col-form-label">Status*</label>
-                            <div class="col-md-12">
-                                <select class ="form-control" id="status" name="status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>                                   
+                                                    
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -381,7 +441,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_security_group') }}" id="add_security_group">
+                <form method="POST" action="{{route('admin.settings.cost-centres.add')}}" id="add_security_group">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -421,33 +481,30 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Company Addition</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Company</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <span aria-hidden="true">&times;</span>
+              </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('add_company_addition') }}" id="add_company_addition">
-                        @csrf
-                        <div class="row p-3">
-                            <div class="form-group row w-100">
-                                <div class="col-6">
+        
+                        @foreach($company as $company_deduction)
+                        <form method="POST" action="{{ route('admin.settings.additions.add.post', ['id' => $company_deduction->id])}} "id="add_company_addition">
+                                @endforeach
+                            @csrf
+                  
+                        <div class="row pb-5">
+                                <div class="col-xl-8">
                                     <label class="col-md-12 col-form-label">Code*</label>
                                     <div class="col-md-12">
                                         <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}"
                                             name="code" value="{{ old('code') }}" required>
                                     </div>
-                                </div>
-                                <div class="col-6">
                                     <label class="col-md-12 col-form-label">Name*</label>
                                     <div class="col-md-12">
                                         <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
                                             name="name" value="{{ old('name') }}" required>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group row w-100">
-                                <div class="col-4">
                                     <label class="col-md-12 col-form-label">Type*</label>
                                     <div class="col-md-12">
                                         <select class ="form-control" id="type" name="type">
@@ -455,15 +512,11 @@
                                             <option value="Custom">Custom</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="col-4">
                                     <label class="col-md-12 col-form-label">Amount</label>
                                     <div class="col-md-12">
-                                        <input id="amount" type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}"
+                                        <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}"
                                             name="amount" value="{{ old('amount') }}" required>
                                     </div>
-                                </div>
-                                <div class="col-4">
                                     <label class="col-md-12 col-form-label">Status*</label>
                                     <div class="col-md-12">
                                         <select class ="form-control" id="status" name="status">
@@ -471,92 +524,84 @@
                                             <option value="Inactive">Inactive</option>
                                         </select>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group row w-100">
-                                <div class="col-6">
                                     <label class="col-md-12 col-form-label">Statutory</label>
-                                    <div class="checkbox col-md-12">
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" id="inlineCheckbox1" name="statutory[]" value="PCB"> PCB
-                                        </label>
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" id="inlineCheckbox2" name="statutory[]" value="EPF"> EPF
-                                        </label>
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" id="inlineCheckbox3" name="statutory[]" value="SOCSO"> SOCSO
-                                        </label>
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" id="inlineCheckbox4" name="statutory[]" value="EIS"> EIS
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <label class="col-md-12 col-form-label">EA Form*</label>
-                                    <div class="col-md-12">
-                                        <select class="form-control{{ $errors->has('ea_form') ? ' is-invalid' : '' }}" name="ea_form" id="ea_form">
-                                            @foreach($ea_form as $item)
-                                            <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row w-100">
-                                <div class="col-12">
+                                        <div class="checkbox col-md-12">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox1" name="statutory[]" value="PCB"> PCB
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox2" name="statutory[]" value="EPF"> EPF
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox3" name="statutory[]" value="SOCSO"> SOCSO
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox4" name="statutory[]" value="EIS"> EIS
+                                            </label>
+                                        </div>
                                     <label class="col-md-12 col-form-label">Applies To</label>
                                     <div class="checkbox col-md-12">
                                         <label class="checkbox-inline">
-                                            <input type="checkbox" id="check_cost_centre" name="applies[]" value="PCB"> Cost Centre
+                                            <input type="checkbox" id="check_cost_centre_a" name="applies[]" value="PCB"> Cost Centre
                                         </label>
                                         <label class="checkbox-inline">
-                                            <input type="checkbox" id="check_job_grade" name="applies[]" value="EPF"> Job Grade
+                                            <input type="checkbox" id="check_job_grade_a" name="applies[]" value="EPF"> Job Grade
                                         </label>
                                         <label class="checkbox-inline">
                                             <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
                                         </label>
                                     </div>
+                                    <label class="col-md-12 col-form-label">Cost Centre</label>
+                                    <div class="col-md-12">
+        
+                           
+                                        <div class="col-md-12">
+                                            <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre_a" name="cost_centres" required disabled>
+                                                @foreach(App\CostCentre::all() as $cost_centre)
+                                                <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
+                                                @endforeach
+                                            </select> @if ($errors->has('cost_centres'))
+                                            <span class="invalid-feedback" role="alert">
+                                                                      <strong>{{ $errors->first('cost_centres') }}</strong>
+                                                                  </span> @endif
+                                                                </select>
+                                
+                                    </div>
+                                                              </div>
+                                                              <label class="col-md-12 col-form-label">Job Grade</label>
+                                                              <div class="col-md-12">
+                                                                  <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]" required disabled>
+                                                                      @foreach(App\EmployeeGrade::all() as $grade)
+                                                                      <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                                                                      @endforeach
+                                                                  </select> @if ($errors->has('name'))
+                                                                  <span class="invalid-feedback" role="alert">
+                                                                                            <strong>{{ $errors->first('name') }}</strong>
+                                                                                        </span> @endif
+                                  
+                                  
+                                                                                 
+                                                                                  </select>
+                                                              </div>   
+                                    {{-- <div class="form-group">
+                                        <label>Enter your Skill</label>
+                                        <input type="typeahead" name="tags" id="tags" data-role="tagsinput" style="background-color:pink" class="form-control" />
+                                       </div>   --}}
                                 </div>
                             </div>
-                            <div class="form-group row w-100">
-                                <div class="col-6">
-                                        <label class="col-md-12 col-form-label">Cost Centre</label>
-                                        <div class="col-md-12">
-                                            <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="cost_centre_a" name="cost_centre[]" required disabled>
-                                                    @foreach($cost_centre as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                    @endforeach
-                                            </select>
-                                        </div>
-                                </div>
-                                <div class="col-6">
-                                        <label class="col-md-12 col-form-label">Job Grade</label>
-                                        <div class="col-md-12">
-                                            <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]" required disabled>
-                                                    @foreach($grade as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                    @endforeach
-                                            </select>
-                                        </div>     
-                                    {{-- <div class="form-group">
-                                            <label>Enter your Skill</label>
-                                            <input type="typeahead" name="tags" id="tags" data-role="tagsinput" style="background-color:pink" class="form-control" />
-                                        </div>   --}}
-                                </div>
-                            </div>                                                              
+                    </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                            {{ __('Submit') }}
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
-                        {{ __('Submit') }}
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 </div>
+
 
 <!-- UPDATE COMPANY ADDITION -->
 <div class="modal fade" id="editCompanyAdditionPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -569,7 +614,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('edit_company_addition') }}" id="add_company_addition">
+                <form method="POST" action="{{ route('admin.settings.cost-centres.add') }}" id="add_company_addition">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -640,20 +685,36 @@
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="cost_centre_a" name="cost_centre[]" required disabled>
-                                        @foreach($cost_centre as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+
+                   
+                                <div class="col-md-12">
+                                    <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre_a" name="cost_centres" required disabled>
+                                        @foreach(App\CostCentre::all() as $cost_centre)
+                                        <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
                                         @endforeach
-                                </select>
+                                    </select> @if ($errors->has('cost_centres'))
+                                    <span class="invalid-feedback" role="alert">
+                                                              <strong>{{ $errors->first('cost_centres') }}</strong>
+                                                          </span> @endif
+                                                        </select>
+                        
                             </div>
-                            <label class="col-md-12 col-form-label">Job Grade</label>
-                            <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]" required disabled>
-                                        @foreach($grade as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
-                                </select>
-                            </div>   
+                                                      </div>
+                                                      <label class="col-md-12 col-form-label">Job Grade</label>
+                                                      <div class="col-md-12">
+                                                          <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]" required disabled>
+                                                              @foreach(App\EmployeeGrade::all() as $grade)
+                                                              <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                                                              @endforeach
+                                                          </select> @if ($errors->has('name'))
+                                                          <span class="invalid-feedback" role="alert">
+                                                                                    <strong>{{ $errors->first('name') }}</strong>
+                                                                                </span> @endif
+                          
+                          
+                                                                         
+                                                                          </select>
+                                                      </div>  
                             {{-- <div class="form-group">
                                 <label>Enter your Skill</label>
                                 <input type="typeahead" name="tags" id="tags" data-role="tagsinput" style="background-color:pink" class="form-control" />
@@ -673,108 +734,129 @@
 </div>
 
 <!-- ADD COMPANY DEDUCTION -->
-<div class="modal fade" id="addCompanyDeductionPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Company Deduction</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ route('add_company_deduction') }}" id="add_company_addition">
-                    @csrf
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <label class="col-md-12 col-form-label">Code*</label>
-                            <div class="col-md-12">
-                                <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}"
-                                    name="code" value="{{ old('code') }}" required>
-                            </div>
-                            <label class="col-md-12 col-form-label">Name*</label>
-                            <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                                    name="name" value="{{ old('name') }}" required>
-                            </div>
-                            <label class="col-md-12 col-form-label">Type*</label>
-                            <div class="col-md-12">
-                                <select class ="form-control" id="type" name="type">
-                                    <option value="Fixed">Fixed</option>
-                                    <option value="Custom">Custom</option>
-                                </select>
-                            </div>
-                            <label class="col-md-12 col-form-label">Amount</label>
-                            <div class="col-md-12">
-                                <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}"
-                                    name="amount" value="{{ old('amount') }}" required>
-                            </div>
-                            <label class="col-md-12 col-form-label">Status*</label>
-                            <div class="col-md-12">
-                                <select class ="form-control" id="status" name="status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>
-                            <label class="col-md-12 col-form-label">Statutory</label>
-                                <div class="checkbox col-md-12">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox1" name="statutory[]" value="PCB"> PCB
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox2" name="statutory[]" value="EPF"> EPF
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox3" name="statutory[]" value="SOCSO"> SOCSO
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox4" name="statutory[]" value="EIS"> EIS
-                                    </label>
+<div class="modal fade" id="addDeductionPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Company</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <div class="modal-body">
+
+                        @foreach($company as $company_deduction)
+                        <form method="POST" action="{{ route('admin.settings.deductions.add.post', ['id' => $company_deduction->id])}} "id="add_company_deduction">
+                                @endforeach
+                            @csrf
+                  
+                        <div class="row pb-5">
+                                <div class="col-xl-8">
+                                    <label class="col-md-12 col-form-label">Code*</label>
+                                    <div class="col-md-12">
+                                        <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}"
+                                            name="code" value="{{ old('code') }}" required>
+                                    </div>
+                                    <label class="col-md-12 col-form-label">Name*</label>
+                                    <div class="col-md-12">
+                                        <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
+                                            name="name" value="{{ old('name') }}" required>
+                                    </div>
+                                    <label class="col-md-12 col-form-label">Type*</label>
+                                    <div class="col-md-12">
+                                        <select class ="form-control" id="type" name="type">
+                                            <option value="Fixed">Fixed</option>
+                                            <option value="Custom">Custom</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-md-12 col-form-label">Amount</label>
+                                    <div class="col-md-12">
+                                        <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}"
+                                            name="amount" value="{{ old('amount') }}" required>
+                                    </div>
+                                    <label class="col-md-12 col-form-label">Status*</label>
+                                    <div class="col-md-12">
+                                        <select class ="form-control" id="status" name="status">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-md-12 col-form-label">Statutory</label>
+                                        <div class="checkbox col-md-12">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox1" name="statutory[]" value="PCB"> PCB
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox2" name="statutory[]" value="EPF"> EPF
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox3" name="statutory[]" value="SOCSO"> SOCSO
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox4" name="statutory[]" value="EIS"> EIS
+                                            </label>
+                                        </div>
+                                    <label class="col-md-12 col-form-label">Applies To</label>
+                                    <div class="checkbox col-md-12">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="check_cost_centre_d" name="applies[]" value="PCB"> Cost Centre
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="check_job_grade_d" name="applies[]" value="EPF"> Job Grade
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
+                                        </label>
+                                    </div>
+                                    <label class="col-md-12 col-form-label">Cost Centre</label>
+                                    <div class="col-md-12">
+        
+                           
+                                        <div class="col-md-12">
+                                            <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre_d" name="cost_centres" required disabled>
+                                                @foreach(App\CostCentre::all() as $cost_centre)
+                                                <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
+                                                @endforeach
+                                            </select> @if ($errors->has('cost_centres'))
+                                            <span class="invalid-feedback" role="alert">
+                                                                      <strong>{{ $errors->first('cost_centres') }}</strong>
+                                                                  </span> @endif
+                                                                </select>
+                                
+                                    </div>
+                                                              </div>
+                                                              <label class="col-md-12 col-form-label">Job Grade</label>
+                                                              <div class="col-md-12">
+                                                                  <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_d" name="job_grade[]" required disabled>
+                                                                      @foreach(App\EmployeeGrade::all() as $grade)
+                                                                      <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                                                                      @endforeach
+                                                                  </select> @if ($errors->has('name'))
+                                                                  <span class="invalid-feedback" role="alert">
+                                                                                            <strong>{{ $errors->first('name') }}</strong>
+                                                                                        </span> @endif
+                                  
+                                  
+                                                                                 
+                                                                                  </select>
+                                                              </div>   
+                                    {{-- <div class="form-group">
+                                        <label>Enter your Skill</label>
+                                        <input type="typeahead" name="tags" id="tags" data-role="tagsinput" style="background-color:pink" class="form-control" />
+                                       </div>   --}}
                                 </div>
-                            <label class="col-md-12 col-form-label">Applies To</label>
-                            <div class="checkbox col-md-12">
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="check_cost_centre_d" name="applies[]" value="PCB"> Cost Centre
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="check_job_grade_d" name="applies[]" value="EPF"> Job Grade
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
-                                </label>
                             </div>
-                            <label class="col-md-12 col-form-label">Cost Centre</label>
-                            <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="cost_centre_a" name="cost_centre[]" required disabled>
-                                        @foreach($cost_centre as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
-                                </select>
-                            </div>
-                            <label class="col-md-12 col-form-label">Job Grade</label>
-                            <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]" required disabled>
-                                        @foreach($grade as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
-                                </select>
-                            </div>      
-                            {{-- <div class="form-group">
-                                <label>Enter your Skill</label>
-                                <input type="typeahead" name="tags" id="tags" data-role="tagsinput" style="background-color:pink" class="form-control" />
-                               </div>   --}}
+                    </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                            {{ __('Submit') }}
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
-                        {{ __('Submit') }}
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 </div>
 
 <!-- UPDATE COMPANY DEDUCTION -->
@@ -788,7 +870,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('edit_company_deduction') }}" id="add_company_addition">
+                    <form method="POST" action="{{ route('admin.settings.cost-centres.add')}}" id="add_company_addition">
                         @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
@@ -849,7 +931,7 @@
                                         <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
                                     </label>
                                 </div>
-                                <label class="col-md-12 col-form-label">Cost Centre</label>
+                                {{-- <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
                                 <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="cost_centre_a" name="cost_centre[]" required disabled>
                                         @foreach($cost_centre as $item)
@@ -864,7 +946,7 @@
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                 </select>
-                            </div>      
+                            </div>       --}}
                                 {{-- <div class="form-group">
                                     <label>Enter your Skill</label>
                                     <input type="typeahead" name="tags" id="tags" data-role="tagsinput" style="background-color:pink" class="form-control" />
@@ -883,29 +965,232 @@
         </div>
 </div>
 
-@section('js')
-    <script>
-        $(function(){
-            var tags = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.whitespace,
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            
-            prefetch: {
-                        url: "/company/tags"
-                      }
+<!-- ADD TRAVEL ALLOWANCE -->
+<div class="modal fade" id="addTravelPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Security Group</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+                            @foreach($company as $company_travel)
+                            <form method="POST" action="{{ route('admin.settings.company-travel-allowance.add.post', ['id' => $company_travel->id])}} "id="add_company_bank"> 
+                                    @endforeach
+                                @csrf
+                        @csrf
+                        <div class="row pb-5">
+                            <div class="col-xl-8">
+                                <label class="col-md-12 col-form-label">Security Group Name*</label>
+                                <div class="col-md-12">
+                                    <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
+                                        name="name" value="{{ old('name') }}" required>
+                                </div>
+                                <label class="col-md-12 col-form-label">Description*</label> 
+                                <div class="col-md-10">                                     
+                                    <textarea name="description" class="form-control"></textarea>
+                                </div>
+                                                        
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                            {{ __('Submit') }}
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endsection
+
+@section('scripts')
+<script>
+    $('#company-banks-table').DataTable({
+            responsive: true,
+            stateSave: true,
+            dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
+            <'row'<'col-md-6'><'col-md-6'>>
+            <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
+            buttons: [{
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy "></i>',
+                    // text: '<i class="fas fa-copy "></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Copy'
+                },
+                {
+                    extend: 'colvis',
+                    text: '<i class="fas fa-search "></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Show/Hide Column'
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-alt "></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Export CSV'
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print "></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Print'
+                },
+            ]
+    
+        });
+</script>
+
+ <script>
+   
+    $('#additions-table').DataTable({
+            responsive: true,
+            stateSave: true,
+            dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
+            <'row'<'col-md-6'><'col-md-6'>>
+            <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
+            buttons: [{
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy "></i>',
+                    // text: '<i class="fas fa-copy "></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Copy'
+                },
+                {
+                    extend: 'colvis',
+                    text: '<i class="fas fa-search "></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Show/Hide Column'
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-alt "></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Export CSV'
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print "></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Print'
+                },
+            ]
+    
+        });
+</script>
+<script>
+     $('#security-groups-table').DataTable({
+             responsive: true,
+             stateSave: true,
+             dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
+             <'row'<'col-md-6'><'col-md-6'>>
+             <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
+             buttons: [{
+                     extend: 'copy',
+                     text: '<i class="fas fa-copy "></i>',
+                     // text: '<i class="fas fa-copy "></i>',
+                     className: 'btn-segment',
+                     titleAttr: 'Copy'
+                 },
+                 {
+                     extend: 'colvis',
+                     text: '<i class="fas fa-search "></i>',
+                     className: 'btn-segment',
+                     titleAttr: 'Show/Hide Column'
+                 },
+                 {
+                     extend: 'csv',
+                     text: '<i class="fas fa-file-alt "></i>',
+                     className: 'btn-segment',
+                     titleAttr: 'Export CSV'
+                 },
+                 {
+                     extend: 'print',
+                     text: '<i class="fas fa-print "></i>',
+                     className: 'btn-segment',
+                     titleAttr: 'Print'
+                 },
+             ]
+     
+         });
+ </script>
+ <script>
+        $('#travel-allowance-table').DataTable({
+                responsive: true,
+                stateSave: true,
+                dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
+                <'row'<'col-md-6'><'col-md-6'>>
+                <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
+                buttons: [{
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy "></i>',
+                        // text: '<i class="fas fa-copy "></i>',
+                        className: 'btn-segment',
+                        titleAttr: 'Copy'
+                    },
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fas fa-search "></i>',
+                        className: 'btn-segment',
+                        titleAttr: 'Show/Hide Column'
+                    },
+                    {
+                        extend: 'csv',
+                        text: '<i class="fas fa-file-alt "></i>',
+                        className: 'btn-segment',
+                        titleAttr: 'Export CSV'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print "></i>',
+                        className: 'btn-segment',
+                        titleAttr: 'Print'
+                    },
+                ]
+        
             });
-
-            tags.initialize();
-
-            $('[name=tags]').tagsinput({
-                typeaheadjs: {
-                    name: 'tags',
-                    source: tags.ttAdapter()
-                }
-            });
-
-        })
     </script>
-@endsection
-
-@endsection
+<script>
+        $('#deductions-table').DataTable({
+                responsive: true,
+                stateSave: true,
+                dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
+                <'row'<'col-md-6'><'col-md-6'>>
+                <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
+                buttons: [{
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy "></i>',
+                        // text: '<i class="fas fa-copy "></i>',
+                        className: 'btn-segment',
+                        titleAttr: 'Copy'
+                    },
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fas fa-search "></i>',
+                        className: 'btn-segment',
+                        titleAttr: 'Show/Hide Column'
+                    },
+                    {
+                        extend: 'csv',
+                        text: '<i class="fas fa-file-alt "></i>',
+                        className: 'btn-segment',
+                        titleAttr: 'Export CSV'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print "></i>',
+                        className: 'btn-segment',
+                        titleAttr: 'Print'
+                    },
+                ]
+        
+            });
+    </script>
+@append
