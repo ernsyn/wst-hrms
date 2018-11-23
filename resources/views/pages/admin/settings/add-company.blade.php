@@ -1,8 +1,8 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
 <div class="container">
     <div class="card">
-        <form method="POST" action="{{ route('admin.settings.companies.add.post') }}" id="form_validate" data-parsley-validate>
+        <form method="POST" action="{{ route('admin.settings.companies.add.post') }}" id="form_validate">
             <div class="card-body">
                 @csrf
                 <div class="row p-3">
@@ -15,7 +15,7 @@
                                     @if ($errors->has('name'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('name') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                                     @if ($errors->has('code'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('code') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                                     @if ($errors->has('registration_no'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('registration_no') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                                     @if ($errors->has('description'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('description') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                     @if ($errors->has('url'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('url') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -79,7 +79,7 @@
                                     @if ($errors->has('address'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('address') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                                     @if ($errors->has('phone'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('phone') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                                     @if ($errors->has('tax_no'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('tax_no') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -119,19 +119,19 @@
                                     @if ($errors->has('epf_no'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('epf_no') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
                         <div class="col-4">
-                            <label class="col-md-12 col-form-label">Eis No*</label>
+                            <label class="col-md-12 col-form-label">EIS No*</label>
                             <div class="col-md-12">
                                 <input id="eis_no" type="text" class="form-control{{ $errors->has('eis_no') ? ' is-invalid' : '' }}" placeholder="EIS No here"
                                     name="eis_no" value="{{ old('eis_no') }}" required>
                                     @if ($errors->has('eis_no'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('eis_no') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -143,22 +143,17 @@
                                     @if ($errors->has('socso_no'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('socso_no') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
                     </div>
-                    {{--
-                    <div class="form-group row w-100">
-                    </div> --}}
                 </div>
             </div>
 
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                            </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
             </div>
         </form>
     </div>

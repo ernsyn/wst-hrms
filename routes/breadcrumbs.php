@@ -19,7 +19,7 @@ Breadcrumbs::for('employee.profile', function ($trail) {
 });
 
 Breadcrumbs::for('employee/leaverequest', function ($trail) {
-    
+
     $trail->push('Leave Request', route('employee/leaverequest'));
 });
 
@@ -125,7 +125,7 @@ Breadcrumbs::for('admin.settings.epf', function ($trail) {
 
 // Home > Settings > Epf - Add
 Breadcrumbs::for('admin.settings.epf.add', function ($trail) {
-    $trail->parent('admin.settings.companies');
+    $trail->parent('admin.settings.epf');
     $trail->push('Add EPF', route('admin.settings.epf.add'));
 });
 
@@ -138,19 +138,19 @@ Breadcrumbs::for('admin.settings.epf.edit', function ($trail, $id) {
 // Home > Settings > Eis
 Breadcrumbs::for('admin.settings.eis', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Settings: Eis', route('admin.settings.epf'));
+    $trail->push('Settings: EIS', route('admin.settings.eis'));
 });
 
 // Home > Settings > Epf - Add
 Breadcrumbs::for('admin.settings.eis.add', function ($trail) {
-    $trail->parent('admin.settings.companies');
-    $trail->push('Add Eis', route('admin.settings.eis.add'));
+    $trail->parent('admin.settings.eis');
+    $trail->push('Add EIS', route('admin.settings.eis.add'));
 });
 
 // Home > Settings > Epf - Edit
 Breadcrumbs::for('admin.settings.eis.edit', function ($trail, $id) {
     $trail->parent('admin.settings.eis');
-    $trail->push('Edit Eis', route('admin.settings.eis.edit', $id));
+    $trail->push('Edit EIS', route('admin.settings.eis.edit', $id));
 });
 
 
@@ -163,7 +163,7 @@ Breadcrumbs::for('admin.settings.socso', function ($trail) {
 
 // Home > Settings > Socso - Add
 Breadcrumbs::for('admin.settings.socso.add', function ($trail) {
-    $trail->parent('admin.settings.companies');
+    $trail->parent('admin.settings.socso');
     $trail->push('Add Socso', route('admin.settings.socso.add'));
 });
 
@@ -181,7 +181,7 @@ Breadcrumbs::for('admin.settings.pcb', function ($trail) {
 
 // Home > Settings > Pcb - Add
 Breadcrumbs::for('admin.settings.pcb.add', function ($trail) {
-    $trail->parent('admin.settings.companies');
+    $trail->parent('admin.settings.pcb');
     $trail->push('Add PCB', route('admin.settings.pcb.add'));
 });
 
@@ -284,7 +284,7 @@ Breadcrumbs::for('admin.settings.teams.edit', function ($trail, $id) {
 // Home > Settings > Department - Edit
 Breadcrumbs::for('admin.settings.departments.edit', function ($trail, $id) {
     $trail->parent('admin.settings.departments');
-    $trail->push('Edit Team', route('admin.settings.departments.edit', $id));
+    $trail->push('Edit Department', route('admin.settings.departments.edit', $id));
 });
 
 
