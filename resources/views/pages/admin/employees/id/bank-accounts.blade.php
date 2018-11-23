@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="add-submit" type="submit" class="btn btn-primary">
+                    <button id="add-bank-accounts-submit" type="submit" class="btn btn-primary">
                     {{ __('Submit') }}
                 </button>
                 </div>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="edit-submit" type="submit" class="btn btn-primary">
+                    <button id="edit-bank-accounts-submit" type="submit" class="btn btn-primary">
                         {{ __('Submit') }}
                     </button>
                 </div>
@@ -117,7 +117,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="delete-submit">Delete</button>
+                <button type="button" class="btn btn-danger" id="delete-bank-accounts-submit">Delete</button>
             </div>
         </div>
     </div>
@@ -185,7 +185,7 @@
 <script type="text/javascript">
     $(function(){
         // ADD
-       $('#add-bank-accounts-form #add-submit').click(function(e){
+       $('#add-bank-accounts-form #add-bank-accounts-submit').click(function(e){
           e.preventDefault();
           $.ajax({
             url: "{{ route('admin.employees.bank-accounts.post', ['id' => $id]) }}",
@@ -247,7 +247,7 @@
         });
 
         var editRouteTemplate = "{{ route('admin.employees.bank-accounts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        $('#edit-submit').click(function(e){
+        $('#edit-bank-accounts-submit').click(function(e){
             var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
             e.preventDefault();
             $.ajax({
@@ -303,7 +303,7 @@
         });
 
         var deleteRouteTemplate = "{{ route('admin.settings.bank-accounts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        $('#delete-submit').click(function(e){
+        $('#delete-bank-accounts-submit').click(function(e){
             var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
             e.preventDefault();
             $.ajax({
