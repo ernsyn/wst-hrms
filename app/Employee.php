@@ -32,6 +32,11 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeEmergencyContact', 'emp_id');
     }
 
+    public function employee_bank_accounts()
+    {
+        return $this->hasMany('App\EmployeeBankAccount', 'emp_id');
+    }
+
     public function dependents()
     {
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
