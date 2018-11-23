@@ -126,6 +126,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('settings/socso', 'Admin\SettingsController@displaySocso')->name('admin.settings.socso');
     Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
 
+    Route::get('settings/deduction', 'Admin\SettingsController@displayCompanyDeduction')->name('admin.settings.deductions');
+    Route::get('settings/addition', 'Admin\SettingsController@displayCompanyAddition')->name('admin.settings.additions');
+    Route::get('settings/company-banks', 'Admin\SettingsController@displayCompanyBank')->name('admin.settings.company-banks');
+
     Route::get('e-leave/configuration/leaveholidays', 'Admin\ELeaveController@displayPublicHolidays')->name('admin.e-leave.configuration.leaveholidays');
     Route::get('e-leave/configuration/leavebalances', 'Admin\ELeaveController@displayLeaveBalances')->name('admin.e-leave.configuration.leavebalances');
     Route::get('e-leave/configuration/leavetypes', 'Admin\ELeaveController@displayLeaveTypes')->name('admin.e-leave.configuration.leavetypes');
@@ -195,14 +199,40 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('settings/pcb/add','Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
     Route::post('settings/pcb/add','Admin\SettingsController@postAddPcb')->name('admin.settings.pcb.add.post');
    
-  
-    Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
-    Route::post('settings/holidays/add','Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
-    Route::post('settings/security-groups/add','Admin\SettingsController@postAddSecurityGroup')->name('admin.settings.security-groups.add.post');
-    Route::post('settings/company-banks/add','Admin\SettingsController@postAddCompanyBank')->name('admin.settings.company-banks.add.post');
-    Route::post('settings/company-additions/add','Admin\SettingsController@postAddCompanyAddition')->name('admin.settings.company-additions.add.post');
-    Route::post('settings/company-deductions/add','Admin\SettingsController@postAddCompanyDeduction')->name('admin.settings.company-deductions.add.post');
+    // Route::get('settings/company-banks/add','Admin\SettingsController@addCompanyBank')->name('admin.settings.company-banks.add');
+    // Route::post('settings/company-banks/add','Admin\SettingsController@postAddCompanyBank')->name('admin.settings.company-bank.add.post');
     
+  //  Route::get('settings/additions/{id}/add','Admin\SettingsController@addCompanyAddition')->name('admin.settings.additions.add')->where('id', '[0-9]+');
+   
+    
+    Route::get('settings/deductions/add','Admin\SettingsController@addCompanyDeduction')->name('admin.settings.deductions.add'); 
+    Route::post('settings/deductions/add','Admin\SettingsController@postAddCompanyDeduction')->name('admin.settings.deductions.add.post');
+   
+    Route::get('settings/additions/{id}/edit','Admin\SettingsController@editAdditions')->name('admin.settings.additions.edit')->where('id', '[0-9]+');
+    Route::post('settings/additions/{id}/edit','Admin\SettingsController@postEditAdditions')->name('admin.settings.additions.edit.post')->where('id', '[0-9]+');
+   
+    Route::get('settings/deductions/{id}/edit','Admin\SettingsController@editCompanyDeduction')->name('admin.settings.deductions.edit')->where('id', '[0-9]+');
+    Route::post('settings/deductions/{id}/edit','Admin\SettingsController@postEditCompanyDeduction')->name('admin.settings.deductions.edit.post')->where('id', '[0-9]+');
+   
+    Route::get('settings/company-banks/{id}/edit','Admin\SettingsController@editCompany-bank')->name('admin.settings.company-banks.edit')->where('id', '[0-9]+');
+    Route::post('settings/company-banks/{id}/edit','Admin\SettingsController@postEditCompany-bank')->name('admin.settings.company-banks.edit.post')->where('id', '[0-9]+');
+   
+
+    Route::post('settings/company-banks/{id}/add','Admin\SettingsController@postAddCompanyBank')->name('admin.settings.company-banks.add.post')->where('id', '[0-9]+');
+    Route::post('settings/additions/{id}/add','Admin\SettingsController@postAddCompanyAddition')->name('admin.settings.additions.add.post')->where('id', '[0-9]+');
+    Route::post('settings/deductions/{id}/add','Admin\SettingsController@postAddCompanyDeduction')->name('admin.settings.deductions.add.post')->where('id', '[0-9]+'); 
+    Route::post('settings/security-groups/{id}/add','Admin\SettingsController@postAddCompanySecurityGroup')->name('admin.settings.security-groups.add.post')->where('id', '[0-9]+');  
+    Route::post('settings/travel-allowances/{id}/add','Admin\SettingsController@postAddCompanyTravelAllowance')->name('admin.settings.travel-allowances.add.post')->where('id', '[0-9]+');  
+
+    Route::get('settings/company/{id}/company-details','Admin\SettingsController@displayCompanyDetails')->name('admin.settings.company.company-details')->where('id', '[0-9]+');
+
+  
+    //  Route::post('settings/company-details/{id}','Admin\SettingsController@displayCompanyDetails')->name('admin.settings.company-details')->where('id', '[0-9]+');
+
+    //Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
+    Route::post('settings/holidays/add','Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
+  //  Route::post('settings/security-groups/add','Admin\SettingsController@postAddSecurityGroup')->name('admin.settings.security-groups.add.post');
+   
 
     //setting-edit
 
