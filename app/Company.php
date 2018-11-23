@@ -22,4 +22,9 @@ class Company extends Model
         'code',
         'status',
     ];
+
+
+
+
+ 
 }

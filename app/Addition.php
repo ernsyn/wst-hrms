@@ -8,11 +8,22 @@ class Addition extends Model
 {
     protected $table = 'additions';
 
+    protected $fillable =[
 
+        'code' ,
+        'name' ,
+        'type' ,
+    //    'day' => 'required',
+        'amount' ,
+        'statutory',
+        'status',
+        'company_id'
+
+    ];
     
     public function cost_centres()
     {
-        return $this->belongsToMany('App\CostCentre')
+        return $this->belongsToMany('App\CostCentre', 'addition_cost_centre')
         ->withTimestamps();
     }
 
@@ -23,7 +34,5 @@ class Addition extends Model
     }
 
 
-    protected $fillable = [
-   
-    ];
+  
 }

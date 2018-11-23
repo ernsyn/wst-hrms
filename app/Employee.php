@@ -22,6 +22,8 @@ class Employee extends Model
         return $this->belongsTo('App\User');
     }
 
+   
+
     public function employee_jobs()
     {
         return $this->hasMany('App\EmployeeJob', 'emp_id');
