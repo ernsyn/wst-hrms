@@ -22,4 +22,8 @@ class ELeaveController extends Controller
 
         return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes]);
     }
+
+    public function addLeaveType() {
+        return view('pages.admin.e-leave.configuration.add-leave-type');
+    }
 }

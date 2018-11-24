@@ -59,9 +59,9 @@
         </ul>
         <div class="card-header bg-primary text-white">
             <strong>Custom Leave Types</strong>
-            <button id="add-leave-type-btn" class="float-right btn btn-primary btn-sm">
+            <a role="button" id="add-leave-type-btn" class="float-right btn btn-primary btn-sm" href={{ route('admin.e-leave.configuration.leave-types.add') }}>
                 <i class="fas fa-plus"></i>
-            </button>
+            </a>
         </div>
         <ul id="leave-types-list" class="list-group list-group-flush">
             @foreach ($customLeaveTypes as $leaveType)
