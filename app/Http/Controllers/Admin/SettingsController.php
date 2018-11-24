@@ -560,14 +560,14 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been deleted.');
     }
-    
+
     public function deleteGrade(Request $request, $id)
     {
         EmployeeGrade::find($id)->delete();
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been deleted.');
     }
-    
+
     public function deleteCompany(Request $request, $id)
     {
         Company::find($id)->delete();
@@ -609,14 +609,14 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been deleted.');
     }
-    
+
     public function deleteEis(Request $request, $id)
     {
         Eis::find($id)->delete();
 
         return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been deleted.');
     }
-    
+
     public function deleteSocso(Request $request, $id)
     {
         Socso::find($id)->delete();
@@ -645,35 +645,35 @@ class SettingsController extends Controller
 
 
     public function displayCompanyDetails($id)
-    {       
-       $bank = CompanyBank::where('company_id', $id)->get();  
+    {
+       $bank = CompanyBank::where('company_id', $id)->get();
 
 
-        
+
         $company=Company::where('id', $id)->get();
 
         $security = SecurityGroup::where('company_id', $id)->get();
         $additions = Addition::where('company_id', $id)->get();
-        $deductions = Deduction::where('company_id', $id)->get();       
-        $travels = CompanyTravelAllowance::where('company_id', $id)->get();     
+        $deductions = Deduction::where('company_id', $id)->get();
+        $travels = CompanyTravelAllowance::where('company_id', $id)->get();
 
         $bank_list = Bank::all();
         $ea_form = EaForm::all();
         $cost_centre = CostCentre::all();
         $grade = EmployeeGrade::all();
-        $company_travel_allowance = CompanyTravelAllowance::where('company_id', $id)->get();  
+        $company_travel_allowance = CompanyTravelAllowance::where('company_id', $id)->get();
 
         return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
         'security'=>$security, 'additions'=>$additions, 'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company,
         'company_travel_allowance'=>$company_travel_allowance]);
-    
-        
+
+
         return view('pages.admin.settings.company.company-details', ['bank' => $bank]);
 
-    
+
     }
 
- 
+
 // Contribution List
 public function displayEpf()
 {
@@ -876,10 +876,10 @@ public function postEditPcb(Request $request, $id)
 
 
 public function displayCompanyDeduction()
-{       
+{
     $deduction = Deduction::all();
     return view('pages.admin.settings.deduction', ['deduction' => $deduction]);
-  
+
 }
 
 public function addCompanyDeduction()
@@ -897,7 +897,7 @@ public function postAddCompanyDeduction(Request $request, $id)
    'amount' => 'required',
    'statutory'=> 'required',
     ]);
- 
+
     $validatedDeductionCostCentreData = $request->validate([
         'cost_centres'=>'required|numeric',
     ]);
@@ -907,7 +907,7 @@ public function postAddCompanyDeduction(Request $request, $id)
     $validatedDeductionData['status'] = 'active';
     $validatedDeductionData['company_id']=$id;
    // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
-   
+
     $deduction = Deduction::create($validatedDeductionData);
     $deduction->cost_centres()->sync($validatedDeductionCostCentreData['cost_centres']);
 
@@ -925,9 +925,9 @@ public function editCompanyDeduction(Request $request, $id) {
 }
 
 public function postEditCompanyDeduction(Request $request)
-{              
-    
-   
+{
+
+
     $validatedAdditionData = $request->validate([
         'code' => 'required',
         'name' => 'required',
@@ -947,20 +947,20 @@ public function postEditCompanyDeduction(Request $request)
    // $validatedAdditionData['company_id']=$id;
    // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
 
-  
-   
+
+
 
      $addition =Deduction::where('id', $request->company_deduction_id)->update($validatedAdditionData);
   //  $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
-   
+
     return redirect()->route('admin.settings.companies');
-    
-    
-    
+
+
+
 }
 
 public function displayCompanyAddition()
-{       
+{
 
     $addition = Addition::all();
     return view('pages.admin.settings.addition', ['addition' => $addition]);
@@ -984,21 +984,21 @@ public function postAddCompanyAddition(Request $request, $id)
         'amount' => 'required',
         'statutory'=> 'required',
          ]);
-      
+
          $validatedAdditionCostCentreData = $request->validate([
             'cost_centres'=>'required|numeric',
         ]);
-    
+
         // dd($validatedData);
         $validatedAdditionData['statutory'] = implode(",", $request->statutory);
         $validatedAdditionData['status'] = 'active';
         $validatedAdditionData['company_id']=$id;
        // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
-       
+
         $addition = Addition::create($validatedAdditionData);
         $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
 
-           
+
     return redirect()->route('admin.settings.additions');
 
 }
@@ -1010,8 +1010,8 @@ public function editCompanyAddition(Request $request, $id) {
 }
 
 public function postEditCompanyAddition(Request $request)
-{              
-    
+{
+
     $validatedAdditionData = $request->validate([
         'code' => 'required',
         'name' => 'required',
@@ -1031,19 +1031,19 @@ public function postEditCompanyAddition(Request $request)
    // $validatedAdditionData['company_id']=$id;
    // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
 
-  
-   
+
+
 
      $addition =Addition::where('id', $request->company_addition_id)->update($validatedAdditionData);
   //  $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
-   
+
     return redirect()->route('admin.settings.companies');
 }
 
 
 
 // public function displayCompanyBank()
-// {       
+// {
 //    $companybank = CompanyBank::all();
 //     return view('pages.admin.settings.company-bank', ['companybank' => $companybank]);
 // }
@@ -1057,42 +1057,38 @@ public function displayCompanyBank($id)
 public function addCompanyBank($id)
 {
     return redirect()->route('admin.settings.company-banks.add');
-    
+
 }
 
 public function postAddCompanyBank(Request $request,$id)
 {
     $additionData = $request->validate([
         'bank_code' => 'required',
-        'account_name' => 'required',
-
+        'account_name' => 'required'
     ]);
 
     $additionData['status'] = 'active';
     $additionData['company_id']= $id;
-     $additionData['created_by'] = auth()->user()->id;
+    $additionData['created_by'] = auth()->user()->id;
     CompanyBank::create($additionData);
 
-  
-
-    return redirect()->route('admin.settings.company.company-details',['id'=>$id]);      
+    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
 }
 
 public function postEditCompanyBank(Request $request)
-{      $additionData = $request->validate([
-            'bank_code' => 'required',
-            'account_name' => 'required',
-        //    'company_bank_id'=>'required',
-    
-        ]);
-    
-        $additionData['status'] = 'active';
-     //  $additionData['id_company_master']= $id;
-         $additionData['created_by'] = auth()->user()->id;
+{
+    $additionData = $request->validate([
+        'bank_code' => 'required',
+        'account_name' => 'required',
+        'status'  => 'required'
+    ]);
 
-   
+    // $additionData['status'] = 'active';
+    // $additionData['created_by'] = auth()->user()->id;
+
+
     CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
-    return redirect()->route('admin.settings.companies');    
+    return redirect()->route('admin.settings.companies')->with('status', 'Company Bank has successfully been updated.');
 }
 
 public function postEditSecurityGroup(Request $request)
@@ -1100,23 +1096,23 @@ public function postEditSecurityGroup(Request $request)
             'name' => 'required',
             'description' => 'required',
         //    'company_bank_id'=>'required',
-    
+
         ]);
-    
+
         $additionData['status'] = 'active';
         $additionData['created_by'] = auth()->user()->id;
 
     SecurityGroup::where('id',  $request->security_group_id)->update($additionData);
-   
-    return redirect()->route('admin.settings.companies');    
+
+    return redirect()->route('admin.settings.companies');
 }
 
 
 public function displaySecurities()
-{       
+{
     $security = SecurityGroup::all();
     return view('pages.admin.settings.security', ['security' => $security]);
-  
+
 }
 
 public function addCompanySecurities()
@@ -1128,13 +1124,13 @@ public function postAddCompanySecurityGroup(Request $request,$id)
 {
 
    $validateSecurityGroup = $request->validate([
-   
+
    'description' => 'required',
    'name' => 'required',
 
     ]);
-    
-    $validateSecurityGroup['status'] = 'active';   
+
+    $validateSecurityGroup['status'] = 'active';
     $validateSecurityGroup['company_id']=$id;
     // $validateSecurityGroup['created_by'] = auth()->user()->id;
     // $security = SecurityGroup::create($validateSecurityGroup);
@@ -1142,11 +1138,11 @@ public function postAddCompanySecurityGroup(Request $request,$id)
     $validateSecurityGroup['created_by'] = auth()->user()->id;
     SecurityGroup::create($validateSecurityGroup);
 
-    
+
 
   //  $user->save();
 
-  return redirect()->route('admin.settings.company.company-details',['id'=>$id]);      
+  return redirect()->route('admin.settings.company.company-details',['id'=>$id]);
 }
 
 public function editCompanySecurities(Request $request, $id) {
@@ -1156,10 +1152,10 @@ public function editCompanySecurities(Request $request, $id) {
 }
 
 public function postEditCompanySecurities(Request $request, $id)
-{              
-    
+{
+
     $deductionData = $request->validate([
-       
+
         'id_company_master' => 'required',
         'code' => 'required',
         'name' => 'required',
@@ -1170,17 +1166,17 @@ public function postEditCompanySecurities(Request $request, $id)
     ]);
 
     Deduction::where('id', 1)->update($deductionData);
-   
-    return redirect()->route('admin.settings.company.company-details',['id'=>$id]);    
+
+    return redirect()->route('admin.settings.company.company-details',['id'=>$id]);
 }
 
 
 
 public function displayTravelAllowance()
-{       
+{
     $travel = TravelAllowance::all();
     return view('pages.admin.settings.travel', ['travel' => $travel]);
-  
+
 }
 
 public function addCompanyTravelAllowance()
@@ -1192,14 +1188,14 @@ public function postAddCompanyTravelAllowance(Request $request,$id)
 {
 
    $validateSecurityGroup = $request->validate([
-   
+
    'rate' => 'required',
    'code' => 'required',
    'countries_id'=>'required',
 
     ]);
-    
-    $validateSecurityGroup['status'] = 'active';   
+
+    $validateSecurityGroup['status'] = 'active';
     $validateSecurityGroup['company_id']=$id;
     // $validateSecurityGroup['created_by'] = auth()->user()->id;
     // $security = SecurityGroup::create($validateSecurityGroup);
@@ -1207,11 +1203,11 @@ public function postAddCompanyTravelAllowance(Request $request,$id)
     $validateSecurityGroup['created_by'] = auth()->user()->id;
     SecurityGroup::create($validateSecurityGroup);
 
-    
+
 
   //  $user->save();
 
-  return redirect()->route('admin.settings.company.company-details',['id'=>$id]);      
+  return redirect()->route('admin.settings.company.company-details',['id'=>$id]);
 }
 
 public function editCompanyTravelAllowance(Request $request, $id) {
@@ -1227,47 +1223,47 @@ public function postEditTravelAllowance(Request $request)
 {      $additionData = $request->validate([
             'code' => 'required',
             'rate' => 'required',
-   
-    
+
+
         ]);
-    
+
      //   $additionData['status'] = 'active';
         $additionData['created_by'] = auth()->user()->id;
 
     CompanyTravelAllowance::where('id',  $request->travel_id)->update($additionData);
-   
-    return redirect()->route('admin.settings.companies');    
+
+    return redirect()->route('admin.settings.companies');
 }
 
 
 public function destroyCompanyBank($id)
 {
     CompanyBank::find($id)->delete();
-    return redirect()->route('admin.settings.companies');    
+    return redirect()->route('admin.settings.companies');
 }
 
 // public function postEditSecurityGroup(Request $request, $id)
 // {      $additionData = $request->validate([
 //             'code' => 'required',
 //             'rate' => 'required',
-   
-    
+
+
 //         ]);
-    
+
 //      //   $additionData['status'] = 'active';
 //         $additionData['created_by'] = auth()->user()->id;
 
 //     CompanyTravelAllowance::where('id',  $request->travel_id)->update($additionData);
-   
-//     return redirect()->route('admin.settings.companies');    
+
+//     return redirect()->route('admin.settings.companies');
 // }
 
 
-//data table 
+//data table
 
 
 // public function getDataTableCompanyBank($id)
-// {       
+// {
 //     $companyBank = CompanyBank::where('company_id', $id)->get();
 
 //     return DataTables::of($companyBank)->make(true);
@@ -1277,5 +1273,5 @@ public function destroyCompanyBank($id)
 
 
 }
-  
+
 
