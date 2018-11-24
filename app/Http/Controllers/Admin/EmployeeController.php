@@ -557,4 +557,10 @@ class EmployeeController extends Controller
         EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
+
+    public function deleteReportTo(Request $request, $emp_id, $id)
+    {
+        EmployeeReportTo::find($id)->delete();
+        return response()->json(['success'=>'Report to was successfully deleted.']);
+    }
 }
