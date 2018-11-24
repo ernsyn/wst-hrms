@@ -23,6 +23,10 @@ class Company extends Model
         'status',
     ];
 
+    public function companybank()
+    {
+        return $this->hasOne('App\CompanyBank');
+    }
 
 
 
