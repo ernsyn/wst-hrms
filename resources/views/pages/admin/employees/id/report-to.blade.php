@@ -58,11 +58,11 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">KPI Proposer*</label>
                                 <div class="col-md-7">
-                                    <input type="hidden" value="0" checked id="kpi_proposer" name="kpi_proposer">   
+                                    <input type="hidden" value="0" checked id="kpi_proposer" name="kpi_proposer">
                                     <input type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
                                 </div>
-                                <label class="col-md-5 col-form-label">Note</label> 
-                                <div class="col-md-10">                                     
+                                <label class="col-md-5 col-form-label">Note</label>
+                                <div class="col-md-10">
                                     <textarea name="note" id="note" class="form-control"></textarea>
                                 </div>
                             </div>
@@ -106,7 +106,7 @@
                             Looks good!
                             </div> --}}
                             <div id="report-to-error" class="invalid-feedback">
-                            
+
                             </div>
                         </div>
                     </div>
@@ -122,7 +122,7 @@
                             Looks good!
                             </div> --}}
                             <div id="type-error" class="invalid-feedback">
-                            
+
                             </div>
                         </div>
                     </div>
@@ -130,14 +130,14 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                            
-                            <input type="hidden" value="0" checked>   
+
+                            <input type="hidden" value="0" checked>
                             <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
                             {{-- <div class="valid-feedback">
                             Looks good!
                             </div> --}}
                             <div id="kpi-proposer-error" class="invalid-feedback">
-                            
+
                             </div>
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                             Looks good!
                             </div> --}}
                             <div id="notes-error" class="invalid-feedback">
-                            
+
                             </div>
                         </div>
                     </div>
@@ -170,7 +170,7 @@
 
 @section('scripts')
 <script>
-    var dependentsTable = $('#report-to-table').DataTable({
+    var reportTosTable = $('#report-to-table').DataTable({
         "bInfo": true,
         "bDeferRender": true,
         "serverSide": true,
@@ -268,7 +268,7 @@
                                 }
                             }
                         }
-                }               
+                }
              }
           });
        });
