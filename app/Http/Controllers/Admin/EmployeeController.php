@@ -315,9 +315,9 @@ class EmployeeController extends Controller
 
 
         $employee = Employee::find($id);
-        $employee->dependents()->save($dependent);
+        $employee->employee_dependents()->save($dependent);
 
-        return response()->json(['success'=>'Record is successfully added']);
+        return response()->json(['success'=>'Dependent is successfully added']);
     }
 
     public function postImmigration(Request $request, $id)
@@ -435,12 +435,16 @@ class EmployeeController extends Controller
 
     public function postEditDependent(Request $request, $emp_id, $id)
     {
-        $name = $request->input('name');
-        $relationship = $request->input('relationship');
+        $dependentUpdatedData = $request->validate([
+            'name' => 'required',
+            'relationship' => 'required',
+            'dob' => 'required|date',
+        ]);
+        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
 
-        EmployeeDependent::where('id', $id)->update(array('name' => $name,'relationship' => $relationship));
+        EmployeeDependent::where('id', $id)->update($dependentUpdatedData);
 
-        return redirect()->route('admin.employees.id', ['id' => $emp_id]);
+        return response()->json(['success'=>'Dependent was successfully updated.']);
     }
 
     public function postEditEmergencyContact(Request $request, $emp_id, $id)
@@ -556,5 +560,11 @@ class EmployeeController extends Controller
     {
         EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
+    }
+
+    public function deleteDependent(Request $request, $emp_id, $id)
+    {
+        EmployeeDependent::find($id)->delete();
+        return response()->json(['success'=>'Dependent was successfully deleted.']);
     }
 }
