@@ -78,60 +78,108 @@
     </div>
 </div>
 
-<!-- UPDATE -->
-<div class="modal fade" id="updateVisaPopup" tabindex="-1" role="dialog" aria-labelledby="updateVisaLabel" aria-hidden="true">
+<!-- UPDATE VISA -->
+<div class="modal fade" id="edit-visa-popup" tabindex="-1" role="dialog" aria-labelledby="edit-visa-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateVisaLabel">Edit Emergency Contact</h5>
+                <h5 class="modal-title" id="edit-visa-label">Edit Visa</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
             </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ route('admin.employees.visas.edit.post', ['emp_id' => $id, 'id' => 1]) }}" id="edit_visa">
+            <form id="edit-visa-form">
+                <div class="modal-body">
                     @csrf
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <input id="emp_con_id" name="emp_con_id" type="hidden">
-                            <label class="col-md-5 col-form-label">Name*</label>
-                            <div class="col-md-7">
-                                <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}"
-                                    required> @if ($errors->has('name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
-                                </span> @endif
-                            </div>
-                            <label class="col-md-2 col-form-label">Relationship*</label>
-                            <div class="col-md-10">
-                                <input id="relationship" type="text" class="form-control{{ $errors->has('relationship') ? ' is-invalid' : '' }}" name="relationship"
-                                    value="{{ old('relationship') }}" required> @if ($errors->has('relationship'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('relationship') }}</strong>
-                                </span> @endif
-                            </div>
-                            <label class="col-md-2 col-form-label">Contact Number*</label>
-                            <div class="col-md-10">
-                                <input id="contact_number" type="text" class="form-control{{ $errors->has('contact_number') ? ' is-invalid' : '' }}" name="contact_number"
-                                    value="{{ old('contact_number') }}" required> @if ($errors->has('contact_number'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('contact_number') }}</strong>
-                                </span> @endif
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="type"><strong>Type*</strong></label>
+                            <input id="type" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="type-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="visa-number"><strong>Visa Number*</strong></label>
+                            <input id="visa-number" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="visa-number-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="passport-no"><strong>Passport Number*</strong></label>
+                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="passport-no-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="expiry-date"><strong>Expiry Date*</strong></label>
+                            <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="expiry-date-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="issued-by"><strong>Issued By*</strong></label>
+                            <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="issued-by-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="issued-date"><strong>Issued Date*</strong></label>
+                            <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="issued-date-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="family-members-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="edit-visa-submit" type="submit" class="btn btn-primary">
                             {{ __('Submit') }}
                         </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- DELETE VISA --}}
+<div class="modal fade" id="confirm-delete-visa-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-visa-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-visa-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-visa-submit">Delete</button>
             </div>
         </div>
     </div>
 </div>
 
+{{-- TABLE --}}
 <div class="tab-pane fade show p-3" id="nav-visa" role="tabpanel" aria-labelledby="nav-visa-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
@@ -157,6 +205,7 @@
         </thead>
     </table>
 </div>
+
 
 
 
@@ -195,8 +244,11 @@
                 "data": "family_members"
             },
             {
-                "data": null, // can be null or undefined
-                "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#visaModal"><i class="far fa-edit"></i></button>'
+                "data": null,
+                render: function (data, type, row, meta) {
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-visa-popup"><i class="far fa-edit"></i></button>` +
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-visa-modal"><i class="far fa-trash-alt"></i></button>`;
+                }
             }
         ]
     });
@@ -281,11 +333,13 @@
 
             editVisaId = currentData.id;
 
-            $('#edit-visa-form #company').val(currentData.company);
-            $('#edit-visa-form #position').val(currentData.position);
-            $('#edit-visa-form #start-date').val(currentData.start_date);
-            $('#edit-visa-form #end-date').val(currentData.end_date);
-            $('#edit-visa-form #notes').val(currentData.notes);
+            $('#edit-visa-form #type').val(currentData.type);
+            $('#edit-visa-form #visa-number').val(currentData.visa_number);
+            $('#edit-visa-form #passport-no').val(currentData.passport_no);
+            $('#edit-visa-form #expiry-date').val(currentData.expiry_date);
+            $('#edit-visa-form #issued-by').val(currentData.issued_by);
+            $('#edit-visa-form #issued-date').val(currentData.issued_date);
+            $('#edit-visa-form #family-members').val(currentData.family_members);
         });
 
         var editVisaRouteTemplate = "{{ route('admin.employees.visas.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -297,11 +351,13 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    company: $('#edit-visa-form #company').val(),
-                    position: $('#edit-visa-form #position').val(),
-                    start_date: $('#edit-visa-form #start-date').val(),
-                    end_date: $('#edit-visa-form #end-date').val(),
-                    notes: $('#edit-visa-form #notes').val()
+                    type: $('#edit-visa-form #type').val(),
+                    visa_number: $('#edit-visa-form #visa-number').val(),
+                    passport_no: $('#edit-visa-form #passport-no').val(),
+                    expiry_date: $('#edit-visa-form #expiry-date').val(),
+                    issued_by: $('#edit-visa-form #issued-by').val(),
+                    issued_date: $('#edit-visa-form #issued-date').val(),
+                    family_members: $('#edit-visa-form #family-members').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -317,25 +373,33 @@
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
-                                    case 'company':
-                                        $('#edit-visa-form #company').addClass('is-invalid');
-                                        $('#edit-visa-form #company-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    case 'type':
+                                        $('#edit-visa-form #type').addClass('is-invalid');
+                                        $('#edit-visa-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'position':
-                                        $('#edit-visa-form #position').addClass('is-invalid');
-                                        $('#edit-visa-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    case 'visa_number':
+                                        $('#edit-visa-form #visa-number').addClass('is-invalid');
+                                        $('#edit-visa-form #visa-number-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'start_date':
-                                        $('#edit-visa-form #start-date').addClass('is-invalid');
-                                        $('#edit-visa-form #start-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    case 'passport_no':
+                                        $('#edit-visa-form #passport-no').addClass('is-invalid');
+                                        $('#edit-visa-form #passport-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'end_date':
-                                        $('#edit-visa-form #end-date').addClass('is-invalid');
-                                        $('#edit-visa-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    case 'expiry_date':
+                                        $('#edit-visa-form #expiry-date').addClass('is-invalid');
+                                        $('#edit-visa-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'notes':
-                                        $('#edit-visa-form #notes').addClass('is-invalid');
-                                        $('#edit-visa-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    case 'issued_by':
+                                        $('#edit-visa-form #issued-by').addClass('is-invalid');
+                                        $('#edit-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'issued_date':
+                                        $('#edit-visa-form #issued-by').addClass('is-invalid');
+                                        $('#edit-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'family_members':
+                                        $('#edit-visa-form #family-members').addClass('is-invalid');
+                                        $('#edit-visa-form #family-members-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
                             }
@@ -349,8 +413,8 @@
         var deleteVisaId = null;
         // Function: On Modal Clicked Handler
         $('#confirm-delete-visa-modal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+            var button = $(event.relatedTarget)
+            var currentData = JSON.parse(decodeURI(button.data('current')))
             console.log('Data: ', currentData)
 
             deleteVisaId = currentData.id;

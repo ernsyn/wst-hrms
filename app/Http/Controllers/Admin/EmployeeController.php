@@ -471,13 +471,19 @@ class EmployeeController extends Controller
 
     public function postEditVisa(Request $request, $emp_id, $id)
     {
-        $type = $request->input('type');
-        $visa_number = $request->input('visa_number');
-        $family_members = $request->input('family_members');
+        $visaUpdatedData = $request->validate([
+            'type' => 'required',
+            'visa_number' => 'required|numeric',
+            'passport_no' => 'required|numeric',
+            'expiry_date' => 'required|date',
+            'issued_by' => 'required',
+            'issued_date' => 'required|date',
+            'family_members' => 'required'
+        ]);
 
-        EmployeeVisa::where('id', $id)->update(array('type' => $type, 'visa_number' => $visa_number,'family_members' => $family_members));
+        EmployeeVisa::where('id', $id)->update($visaUpdatedData);
 
-        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+        return response()->json(['success'=>'Visa was successfully updated.']);
     }
 
     public function postEditBankAccount(Request $request, $emp_id, $id)
@@ -558,5 +564,10 @@ class EmployeeController extends Controller
     {
         EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
+    }
+    public function deleteVisa(Request $request, $emp_id, $id)
+    {
+        EmployeeVisa::find($id)->delete();
+        return response()->json(['success'=>'Visa was successfully deleted.']);
     }
 }
