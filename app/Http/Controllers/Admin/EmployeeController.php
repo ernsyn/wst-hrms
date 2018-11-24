@@ -265,7 +265,7 @@ class EmployeeController extends Controller
             'report_to_emp_id' => 'required',
             'type' => 'required',
             'kpi_proposer' => 'required',
-            'notes' => 'required',
+            'notes' => 'required'
         ]);
 
         $reportTo = new EmployeeReportTo($reportToData);
@@ -549,6 +549,20 @@ class EmployeeController extends Controller
         return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
     }
 
+    public function postEditReportTo(Request $request, $emp_id, $id)
+    {
+        $reportToUpdatedData = $request->validate([
+            'report_to_emp_id' => 'required',
+            'type' => 'required',
+            'kpi_proposer' => 'required',
+            'notes' => 'required'
+        ]);
+
+        EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+
+        return response()->json(['success'=>'Report To was successfully updated.']);
+    }
+
 
 
     //delete function
@@ -561,6 +575,6 @@ class EmployeeController extends Controller
     public function deleteReportTo(Request $request, $emp_id, $id)
     {
         EmployeeReportTo::find($id)->delete();
-        return response()->json(['success'=>'Report to was successfully deleted.']);
+        return response()->json(['success'=>'Report To was successfully deleted.']);
     }
 }
