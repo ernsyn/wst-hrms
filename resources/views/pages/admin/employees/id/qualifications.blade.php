@@ -208,7 +208,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.employees.companies.edit', ['emp_id' => $id, 'id' => 1]) }}" id="edit_qualification_experiences">
+                <form method="POST" action="{{ route('admin.employees.companies.edit.post', ['emp_id' => $id, 'id' => 1]) }}" id="edit_qualification_experiences">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -258,138 +258,142 @@
 </div>
 
 <!-- UPDATE EDUCATION -->
-<div class="modal fade" id="updateEducationPopup" tabindex="-1" role="dialog" aria-labelledby="updateEducationLabel" aria-hidden="true">
+<div class="modal fade" id="edit-education-popup" tabindex="-1" role="dialog" aria-labelledby="edit-education-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateEducationLabel">Update Education</h5>
+                <h5 class="modal-title" id="edit-education-label">Add Education</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
             </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ route('admin.employees.education.edit', ['emp_id' => $id, 'id' => 1]) }}" id="update_qualification_education">
+            <form id="edit-education-form">
+                <div class="modal-body">
                     @csrf
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <input id="edu_id" name="edu_id" type="hidden">
-                            <label class="col-md-5 col-form-label">Degree*</label>
-                            <div class="col-md-10">
-                                <input id="level" type="text" class="form-control{{ $errors->has('level') ? ' is-invalid' : '' }}" placeholder="Degree name"
-                                    name="level" value="{{ old('level') }}" required> @if ($errors->has('level'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('level') }}</strong>
-                                </span> @endif
-                            </div>
-                            <label class="col-md-2 col-form-label">Field of Study*</label>
-                            <div class="col-md-10">
-                                <input id="major" type="text" class="form-control{{ $errors->has('major') ? ' is-invalid' : '' }}" placeholder="etc" name="major"
-                                    value="{{ old('major') }}" required> @if ($errors->has('major'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('major') }}</strong>
-                                </span> @endif
-                            </div>
-                            <label class="col-md-5 col-form-label">Start Year*</label>
-                            <div class="col-md-7">
-                                <input id="startYear" name="start_year" autocomplete="off" type="text" class="form-control">
-                                <input id="altStartYear" type="text" class="form-control" hidden>
-                            </div>
-                            <label class="col-md-5 col-form-label">End Date*</label>
-                            <div class="col-md-7">
-                                <input id="endYear" name="end_year" autocomplete="off" type="text" class="form-control">
-                                <input id="altEndYear" type="text" class="form-control" hidden>
-                            </div>
-                            <label class="col-md-2 col-form-label">GPA*</label>
-                            <div class="col-md-10">
-                                <input id="gpa" type="number" min="0" max="4" class="form-control{{ $errors->has('gpa') ? ' is-invalid' : '' }}" placeholder="etc"
-                                    name="gpa" value="{{ old('gpa') }}" required> @if ($errors->has('gpa'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('gpa') }}</strong>
-                                </span> @endif
-                            </div>
-                            <label class="col-md-2 col-form-label">School*</label>
-                            <div class="col-md-10">
-                                <input id="school" type="text" class="form-control{{ $errors->has('school') ? ' is-invalid' : '' }}" placeholder="etc" name="school"
-                                    value="{{ old('school') }}" required> @if ($errors->has('school'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('school') }}</strong>
-                                </span> @endif
-                            </div>
-                            <label class="col-md-5 col-form-label">Description</label>
-                            <div class="col-md-10">
-                                <textarea name="description" id="description" class="form-control"></textarea>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="institution"><strong>Institution*</strong></label>
+                            <input id="institution" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="institution-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="start-year"><strong>Start Year*</strong></label>
+                            <input id="start-year" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="start-year-error" class="invalid-feedback">
+                            </div>
+                        </div>
                     </div>
-                </form>
-            </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="end-year"><strong>End Year*</strong></label>
+                            <input id="end-year" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="end-year-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="level"><strong>Level*</strong></label>
+                            <input id="level" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="level-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="major"><strong>Major*</strong></label>
+                            <input id="major" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="major-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="gpa"><strong>Gpa*</strong></label>
+                            <input id="gpa" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="gpa-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="description"><strong>Description*</strong></label>
+                            <input id="description" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="description-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="edit-education-submit" type="submit" class="btn btn-primary">
+                                {{ __('Submit') }}
+                            </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <!-- UPDATE SKILLS -->
-<div class="modal fade" id="updateSkillsPopup" tabindex="-1" role="dialog" aria-labelledby="updateSkillsLabel" aria-hidden="true">
+<div class="modal fade" id="edit-skill-popup" tabindex="-1" role="dialog" aria-labelledby="edit-skill-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateSkillsLabel">Edit Skills</h5>
+                <h5 class="modal-title" id="edit-skill-label">Edit Skill</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ route('admin.employees.immigrations.edit', ['emp_id' => $id, 'id' => 1]) }}" id="edit_qualification_skills">
+            <form id="edit-skill-form">
+                <div class="modal-body">
                     @csrf
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <input id="skill_id" name="skill_id" type="hidden">
-                            <label class="col-md-5 col-form-label">Skill Name*</label>
-                            <div class="col-md-10">
-                                <input id="emp_skill" type="text" class="form-control{{ $errors->has('emp_skill') ? ' is-invalid' : '' }}" name="emp_skill"
-                                    value="{{ old('emp_skill') }}" required> @if ($errors->has('emp_skill'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('emp_skill') }}</strong>
-                                </span> @endif
-                            </div>
-                            <label class="col-md-2 col-form-label">Year Experience*</label>
-                            <div class="col-md-10">
-                                <input id="year_experience" type="text" class="form-control{{ $errors->has('year_experience') ? ' is-invalid' : '' }}" name="year_experience"
-                                    value="{{ old('year_experience') }}" required> @if ($errors->has('year_experience'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('year_experience') }}</strong>
-                                </span> @endif
-                            </div>
-                            <label class="col-md-2 col-form-label">Competency</label>
-                            <div class="col-md-10">
-                                <select name="competency" id="competency" class="form-control">
-                                    <option value="Beginner">Beginner</option>
-                                    <option value="Intermediate">Intermediate</option>
-                                    <option value="Advanced">Advanced</option>
-                                </select>
-                            </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Skill Name*</strong></label>
+                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="name-error" class="invalid-feedback">
 
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Year Experience*</strong></label>
+                            <input id="years-of-experience" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="years-of-experience-error" class="invalid-feedback">
+                            </div>
+                        </div>
                     </div>
-                </form>
-            </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Competency*</strong></label>
+                            <select id="competency" type="text" class="form-control" placeholder="" value="" required>
+                                    <option value="">Select Competency</option>
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            <div id="competency-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="edit-skill-submit" type="submit" class="btn btn-primary">
+                    {{ __('Submit') }}
+                </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 {{-- DELETE EXP--}}
-<div class="modal fade" id="confirm-delete-experiences-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-experiences-label" aria-hidden="true">
+<div class="modal fade" id="confirm-delete-experiences-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-experiences-label"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -410,7 +414,8 @@
 </div>
 
 {{-- DELETE EDU--}}
-<div class="modal fade" id="confirm-delete-educations-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-educations-label" aria-hidden="true">
+<div class="modal fade" id="confirm-delete-educations-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-educations-label"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -504,6 +509,8 @@
 
 
 
+
+
 @section('scripts')
 <script>
     var experiencesTable = $('#employee-companies-table').DataTable({
@@ -535,7 +542,7 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>` +
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
                         `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-experiences-modal"><i class="far fa-trash-alt"></i></button>`;
                 }
             }
@@ -576,7 +583,7 @@ var educationsTable = $('#employee-education-table').DataTable({
         {
             "data": null,
             render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>` +
+                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>` +
                     `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
             }
         }
@@ -605,7 +612,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
         {
             "data": null,
             render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>` +
+                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
                     `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
             }
         }
@@ -675,38 +682,38 @@ var skillsTable = $('#employee-skill-table').DataTable({
         });
 
         // EDIT SKILLS
-        // var editId = null;
+        // var editSkillId = null;
         // // Function: On Modal Clicked Handler
         // $('#edit-skill-popup').on('show.bs.modal', function (event) {
         //     var button = $(event.relatedTarget) // Button that triggered the modal
         //     var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
         //     console.log('Data: ', currentData)
 
-        //     editId = currentData.id;
+        //     editSkillId = currentData.id;
 
-        //     $('#edit-emergency-contact-form #name').val(currentData.name);
-        //     $('#edit-emergency-contact-form #years-of-experience').val(currentData.years_of_experience);
-        //     $('#edit-emergency-contact-form #competency').val(currentData.contact_no);
+        //     $('#edit-skill-form #name').val(currentData.name);
+        //     $('#edit-skill-form #years-of-experience').val(currentData.years_of_experience);
+        //     $('#edit-skill-form #competency').val(currentData.contact_no);
         // });
 
-        // var editRouteTemplate = "{{ route('admin.employees.emergency-contacts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        // $('#edit-submit').click(function(e){
-        //     var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
+        // var editSkillRouteTemplate = "{{ route('admin.employees.skills.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        // $('#edit-skill-submit').click(function(e){
+        //     var editSkillRoute = editSkillRouteTemplate.replace(encodeURI('<<id>>'), editSkillId);
         //     e.preventDefault();
         //     $.ajax({
-        //         url: editRoute,
+        //         url: editSkillRoute,
         //         type: 'POST',
         //         data: {
         //             _token: '{{ csrf_token() }}',
-        //             name: $('#edit-emergency-contact-form #name').val(),
-        //             years_of_experience: $('#edit-emergency-contact-form #years-of-experience').val(),
-        //             contact_no: $('#edit-emergency-contact-form #competency').val()
+        //             name: $('#edit-skill-form #name').val(),
+        //             years_of_experience: $('#edit-skill-form #years-of-experience').val(),
+        //             contact_no: $('#edit-skill-form #competency').val()
         //         },
         //         success: function(data) {
         //             showAlert(data.success);
         //             skillsTable.ajax.reload();
         //             $('#edit-skill-popup').modal('toggle');
-        //             clearSkillsModal('#edit-emergency-contact-form');
+        //             clearSkillsModal('#edit-skill-form');
         //         },
         //         error: function(xhr) {
         //             if(xhr.status == 422) {
@@ -717,16 +724,16 @@ var skillsTable = $('#employee-skill-table').DataTable({
         //                         console.log("Error: ", errorField);
         //                         switch(errorField) {
         //                             case 'name':
-        //                                 $('#edit-emergency-contact-form #name').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+        //                                 $('#edit-skill-form #name').addClass('is-invalid');
+        //                                 $('#edit-skill-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
         //                             break;
         //                             case 'years_of_experience':
-        //                                 $('#edit-emergency-contact-form #years-of-experience').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #years-of-experience-error').html('<strong>' + errors[errorField][0] + "</strong>");
+        //                                 $('#edit-skill-form #years-of-experience').addClass('is-invalid');
+        //                                 $('#edit-skill-form #years-of-experience-error').html('<strong>' + errors[errorField][0] + "</strong>");
         //                             break;
         //                             case 'contact_no':
-        //                                 $('#edit-emergency-contact-form #competency').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #competency-error').html('<strong>' + errors[errorField][0] + '</strong>');
+        //                                 $('#edit-skill-form #competency').addClass('is-invalid');
+        //                                 $('#edit-skill-form #competency-error').html('<strong>' + errors[errorField][0] + '</strong>');
         //                             break;
         //                         }
         //                     }
@@ -747,7 +754,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
             deleteExperienceId = currentData.id;
         });
 
-        var deleteExperienceRouteTemplate = "{{ route('admin.settings.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        var deleteExperienceRouteTemplate = "{{ route('admin.settings.skills.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#delete-experiences-submit').click(function(e){
             var deleteExperienceRoute = deleteExperienceRouteTemplate.replace(encodeURI('<<id>>'), deleteExperienceId);
             e.preventDefault();
@@ -871,67 +878,91 @@ var skillsTable = $('#employee-skill-table').DataTable({
             });
         });
 
-        // EDIT SKILLS
-        // var editId = null;
-        // // Function: On Modal Clicked Handler
-        // $('#edit-skill-popup').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget) // Button that triggered the modal
-        //     var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
-        //     console.log('Data: ', currentData)
+        // EDIT EDUCATION
+        var editEducationId = null;
+        // Function: On Modal Clicked Handler
+        $('#edit-education-popup').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+            console.log('Data: ', currentData)
 
-        //     editId = currentData.id;
+            editEducationId = currentData.id;
 
-        //     $('#edit-emergency-contact-form #name').val(currentData.name);
-        //     $('#edit-emergency-contact-form #years-of-experience').val(currentData.years_of_experience);
-        //     $('#edit-emergency-contact-form #competency').val(currentData.contact_no);
-        // });
+            $('#edit-education-form #institution').val(currentData.institution);
+            $('#edit-education-form #start-year').val(currentData.start_year);
+            $('#edit-education-form #end-year').val(currentData.end_year);
+            $('#edit-education-form #level').val(currentData.level);
+            $('#edit-education-form #major').val(currentData.major);
+            $('#edit-education-form #gpa').val(currentData.gpa);
+            $('#edit-education-form #description').val(currentData.description);
+        });
 
-        // var editRouteTemplate = "{{ route('admin.employees.emergency-contacts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        // $('#edit-submit').click(function(e){
-        //     var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
-        //     e.preventDefault();
-        //     $.ajax({
-        //         url: editRoute,
-        //         type: 'POST',
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             name: $('#edit-emergency-contact-form #name').val(),
-        //             years_of_experience: $('#edit-emergency-contact-form #years-of-experience').val(),
-        //             contact_no: $('#edit-emergency-contact-form #competency').val()
-        //         },
-        //         success: function(data) {
-        //             showAlert(data.success);
-        //             skillsTable.ajax.reload();
-        //             $('#edit-skill-popup').modal('toggle');
-        //             clearSkillsModal('#edit-emergency-contact-form');
-        //         },
-        //         error: function(xhr) {
-        //             if(xhr.status == 422) {
-        //                 var errors = xhr.responseJSON.errors;
-        //                 console.log("Error: ", xhr);
-        //                 for (var errorField in errors) {
-        //                     if (errors.hasOwnProperty(errorField)) {
-        //                         console.log("Error: ", errorField);
-        //                         switch(errorField) {
-        //                             case 'name':
-        //                                 $('#edit-emergency-contact-form #name').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
-        //                             break;
-        //                             case 'years_of_experience':
-        //                                 $('#edit-emergency-contact-form #years-of-experience').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #years-of-experience-error').html('<strong>' + errors[errorField][0] + "</strong>");
-        //                             break;
-        //                             case 'contact_no':
-        //                                 $('#edit-emergency-contact-form #competency').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #competency-error').html('<strong>' + errors[errorField][0] + '</strong>');
-        //                             break;
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     });
-        // });
+        var editEducationRouteTemplate = "{{ route('admin.employees.educations.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        $('#edit-education-submit').click(function(e){
+            var editEducationRoute = editEducationRouteTemplate.replace(encodeURI('<<id>>'), editEducationId);
+            e.preventDefault();
+            $.ajax({
+                url: editEducationRoute,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    institution: $('#edit-education-form #institution').val(),
+                    start_year: $('#edit-education-form #start-year').val(),
+                    end_year: $('#edit-education-form #end-year').val(),
+                    level: $('#edit-education-form #level').val(),
+                    major: $('#edit-education-form #major').val(),
+                    gpa: $('#edit-education-form #gpa').val(),
+                    description: $('#edit-education-form #description').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    educationsTable.ajax.reload();
+                    $('#edit-education-popup').modal('toggle');
+                    clearEducationsModal('#edit-education-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'institution':
+                                        $('#edit-education-form #institution').addClass('is-invalid');
+                                        $('#edit-education-form #institution-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'start_year':
+                                        $('#edit-education-form #start-year').addClass('is-invalid');
+                                        $('#edit-education-form #start-year-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'end_year':
+                                        $('#edit-education-form #end-year').addClass('is-invalid');
+                                        $('#edit-education-form #end-year-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'level':
+                                        $('#edit-education-form #level').addClass('is-invalid');
+                                        $('#edit-education-form #level-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'major':
+                                        $('#edit-education-form #major').addClass('is-invalid');
+                                        $('#edit-education-form #major-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'gpa':
+                                        $('#edit-education-form #gpa').addClass('is-invalid');
+                                        $('#edit-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'description':
+                                        $('#edit-education-form #description').addClass('is-invalid');
+                                        $('#edit-education-form #description-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
 
         // DELETE SKILLS
         var deleteEducationId = null;
@@ -1055,66 +1086,66 @@ var skillsTable = $('#employee-skill-table').DataTable({
 
 
         // EDIT SKILLS
-        // var editId = null;
-        // // Function: On Modal Clicked Handler
-        // $('#edit-skill-popup').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget) // Button that triggered the modal
-        //     var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
-        //     console.log('Data: ', currentData)
+        var editSkillId = null;
+        // Function: On Modal Clicked Handler
+        $('#edit-skill-popup').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+            console.log('Data: ', currentData)
 
-        //     editId = currentData.id;
+            editSkillId = currentData.id;
 
-        //     $('#edit-emergency-contact-form #name').val(currentData.name);
-        //     $('#edit-emergency-contact-form #years-of-experience').val(currentData.years_of_experience);
-        //     $('#edit-emergency-contact-form #competency').val(currentData.contact_no);
-        // });
+            $('#edit-skill-form #name').val(currentData.name);
+            $('#edit-skill-form #years-of-experience').val(currentData.years_of_experience);
+            $('#edit-skill-form #competency').val(currentData.competency);
+        });
 
-        // var editRouteTemplate = "{{ route('admin.employees.emergency-contacts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        // $('#edit-submit').click(function(e){
-        //     var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
-        //     e.preventDefault();
-        //     $.ajax({
-        //         url: editRoute,
-        //         type: 'POST',
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             name: $('#edit-emergency-contact-form #name').val(),
-        //             years_of_experience: $('#edit-emergency-contact-form #years-of-experience').val(),
-        //             contact_no: $('#edit-emergency-contact-form #competency').val()
-        //         },
-        //         success: function(data) {
-        //             showAlert(data.success);
-        //             skillsTable.ajax.reload();
-        //             $('#edit-skill-popup').modal('toggle');
-        //             clearSkillsModal('#edit-emergency-contact-form');
-        //         },
-        //         error: function(xhr) {
-        //             if(xhr.status == 422) {
-        //                 var errors = xhr.responseJSON.errors;
-        //                 console.log("Error: ", xhr);
-        //                 for (var errorField in errors) {
-        //                     if (errors.hasOwnProperty(errorField)) {
-        //                         console.log("Error: ", errorField);
-        //                         switch(errorField) {
-        //                             case 'name':
-        //                                 $('#edit-emergency-contact-form #name').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
-        //                             break;
-        //                             case 'years_of_experience':
-        //                                 $('#edit-emergency-contact-form #years-of-experience').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #years-of-experience-error').html('<strong>' + errors[errorField][0] + "</strong>");
-        //                             break;
-        //                             case 'contact_no':
-        //                                 $('#edit-emergency-contact-form #competency').addClass('is-invalid');
-        //                                 $('#edit-emergency-contact-form #competency-error').html('<strong>' + errors[errorField][0] + '</strong>');
-        //                             break;
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     });
-        // });
+        var editSkillRouteTemplate = "{{ route('admin.employees.skills.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        $('#edit-skill-submit').click(function(e){
+            var editSkillRoute = editSkillRouteTemplate.replace(encodeURI('<<id>>'), editSkillId);
+            e.preventDefault();
+            $.ajax({
+                url: editSkillRoute,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    name: $('#edit-skill-form #name').val(),
+                    years_of_experience: $('#edit-skill-form #years-of-experience').val(),
+                    competency: $('#edit-skill-form #competency').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    skillsTable.ajax.reload();
+                    $('#edit-skill-popup').modal('toggle');
+                    clearSkillsModal('#edit-skill-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'name':
+                                        $('#edit-skill-form #name').addClass('is-invalid');
+                                        $('#edit-skill-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'years_of_experience':
+                                        $('#edit-skill-form #years-of-experience').addClass('is-invalid');
+                                        $('#edit-skill-form #years-of-experience-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'competency':
+                                        $('#edit-skill-form #competency').addClass('is-invalid');
+                                        $('#edit-skill-form #competency-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
 
         // DELETE SKILLS
         var deleteSkillId = null;

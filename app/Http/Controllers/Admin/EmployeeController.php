@@ -496,58 +496,47 @@ class EmployeeController extends Controller
 
     public function postEditCompany(Request $request, $emp_id, $id)
     {
-        $previous_company = $request->input('previous_company');
-        $previous_position = $request->input('previous_position');
-        $start_date = $request->input('start_date');
-        $end_date = $request->input('end_date');
-        $note = $request->input('note');
+        $experienceUpdatedData = $request->validate([
+            'company' => 'required',
+            'position' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'notes' => 'required'
+        ]);
 
-        EmployeeExperience::where('id', $id)->update(array(
-            'previous_company' => $previous_company,
-            'previous_position' => $previous_position,
-            'start_date' => $start_date,
-            'end_date' => $end_date,
-            'note' => $note
-        ));
+        EmployeeExperience::where('id', $id)->update($experienceUpdatedData);
 
-        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+        return response()->json(['success'=>'Experience was successfully updated.']);
     }
 
     public function postEditEducation(Request $request, $emp_id, $id)
     {
-        $level = $request->input('level');
-        $major = $request->input('major');
-        $start_year = $request->input('start_year');
-        $end_year = $request->input('end_year');
-        $gpa = $request->input('gpa');
-        $school = $request->input('school');
-        $description = $request->input('description');
+        $educationUpdatedData = $request->validate([
+            'institution' => 'required',
+            'start_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
+            'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
+            'level' => 'required',
+            'major' => 'required',
+            'gpa' => 'required|between:0,99.99',
+            'description' => 'required'
+        ]);
 
-        EmployeeEducation::where('id', $id)->update(array(
-            'level' => $level,
-            'major' => $major,
-            'start_year' => $start_year,
-            'end_year' => $end_year,
-            'gpa' => $gpa,
-            'school' => $school,
-            'description' => $description
-        ));
+        EmployeeEducation::where('id', $id)->update($educationUpdatedData);
 
-        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+        return response()->json(['success'=>'Education was successfully updated.']);
     }
 
     public function postEditSkill(Request $request, $emp_id, $id)
     {
-        $emp_skill = $request->input('emp_skill');
-        $year_experience = $request->input('year_experience');
-        $competency = Input::get('competency');
+        $skillUpdatedData = $request->validate([
+            'name' => 'required',
+            'years_of_experience' => 'required',
+            'competency' => 'required',
+        ]);
 
-        EmployeeSkills::where('id',$skill_id)->update(
-            array('emp_skill' => $emp_skill,
-            'year_experience' => $year_experience,
-            'competency' => $competency));
+        EmployeeSkill::where('id', $id)->update($skillUpdatedData);
 
-        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+        return response()->json(['success'=>'Skill was successfully updated.']);
     }
 
 
