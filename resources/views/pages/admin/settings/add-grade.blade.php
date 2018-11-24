@@ -1,4 +1,4 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
 <div class="container">
     <div class="card">
@@ -12,19 +12,19 @@
                             <div class="col-md-12">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name here"
                                     name="name" value="{{ old('name') }}" required>
-                            </div>                            
+                                    @if ($errors->has('name'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                    @endif
+                            </div>
                         </div>
-                    </div>
-
                     </div>
                 </div>
             </div>
-
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                            </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
             </div>
         </form>
     </div>
