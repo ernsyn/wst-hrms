@@ -37,6 +37,19 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
     }
 
+    public function employee_experiences()
+    {
+        return $this->hasMany('App\EmployeeExperience', 'emp_id');
+    }
+    public function employee_educations()
+    {
+        return $this->hasMany('App\EmployeeEducation', 'emp_id');
+    }
+    public function employee_skills()
+    {
+        return $this->hasMany('App\EmployeeSkill', 'emp_id');
+    }
+
     public function report_tos()
     {
         return $this->hasMany('App\EmployeeReportTo', 'emp_id');

@@ -378,41 +378,41 @@ class EmployeeController extends Controller
 
     public function postCompany(Request $request, $id)
     {
-        $company = $request->input('company');
-        $position = $request->input('position');
-        $start_date = $request->input('start_date');
-        $end_date = $request->input('end_date');
-        $note = $request->input('notes');
+        $experienceData = $request->validate([
+            'company' => 'required',
+            'position' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'notes' => 'required'
+        ]);
 
-        $created_by = auth()->user()->id;
+        $experience = new EmployeeExperience($experienceData);
 
-        DB::insert('insert into employee_experience
-        (emp_id, previous_company, previous_position, start_date, end_date, note, created_by)
-        values
-        (?,?,?,?,?,?,?)',
-        [$id, $company, $position, $start_date, $end_date, $note, $created_by]);
+        $employee = Employee::find($id);
+        $employee->employee_experiences()->save($experience);
 
-        return redirect()->route('admin.employees.id', ['id' => $id]);
+        return response()->json(['success'=>'Experience is successfully added']);
     }
 
     public function postEducation(Request $request, $id)
     {
-        $level = $request->input('level');
-        $major = $request->input('major');
-        $start_year = $request->input('start_year');
-        $end_year = $request->input('end_year');
-        $gpa = $request->input('gpa');
-        $school = $request->input('school');
-        $description = $request->input('description');
-        $created_by = auth()->user()->id;
+        $educationData = $request->validate([
+            'institution' => 'required',
+            'start_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
+            'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
+            'level' => 'required',
+            'major' => 'required',
+            'gpa' => 'required|between:0,99.99',
+            'description' => 'required'
+        ]);
 
-        DB::insert('insert into employee_education
-        (emp_id, level, major, start_year, end_year, gpa, school, description, created_by)
-        values
-        (?,?,?,?,?,?,?,?,?)',
-        [$id, $level, $major, $start_year, $end_year, $gpa, $school, $description, $created_by]);
+        $education = new EmployeeEducation($educationData);
 
-        return redirect()->route('admin.employees.id', ['id' => $id]);
+
+        $employee = Employee::find($id);
+        $employee->employee_educations()->save($education);
+
+        return response()->json(['success'=>'Education is successfully added']);
     }
 
     public function postSkill(Request $request, $id)
