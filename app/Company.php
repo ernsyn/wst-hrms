@@ -24,5 +24,19 @@ class Company extends Model
         'code',
         'status',
     ];
+
+    public function companybank()
+    {
+        return $this->hasOne('App\CompanyBank');
+    }
+
+    public function securityGroup()
+    {
+        return $this->hasOne('App\SecurityGroup');
+    }
+
+
+ 
+
     protected $dates = ['deleted_at'];
 }

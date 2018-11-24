@@ -67,9 +67,58 @@
             <div class="modal-body">
                 <p></p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirm">Delete</button>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="float-right tableTools-container"></div>
+                    <table class="hrms-data-table compact w-100 t-2" id="setupCompanyTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Name</th>
+                                {{-- <th>Description</th>
+                                <th>Image</th> --}}
+                                <th>Tax No</th>
+                                <th>EPF No</th>
+                                <th>Socso No</th>
+                                {{-- <th>EIS No</th> --}}
+                                <th>Last Updated</th>
+                  
+                                {{-- <th>Account Number</th> --}}
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($companies as $company)
+                            {{-- <tr onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';"> --}}
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{$company['name']}}</td>
+                                {{-- <td>{{$company['description']}}</td> --}}
+                                {{-- <td>{{$company['registration_no']}}</td> --}}
+                                <td>{{$company['tax_no']}}</td>
+                                <td>{{$company['epf_no']}}</td>
+                                <td>{{$company['socso_no']}}</td>
+                                {{-- <td>{{$company['eis_no']}}</td> --}}
+                                <td>{{$company['updated_at']}}</td>
+                        
+                                {{-- <td>          <button onclick="window.location='{{ url('/admin/company-edit/'.$row['id']) }}';" class="btn btn-default">View</button></td> --}}
+                                <td>
+                                    {{-- <a class="btn btn-primary" href="{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}" role="button">Edit</a>
+                                    <button class="btn btn-success waves-effect" onclick="window.location='{{ url('admin/setup/company-details/'.$company['id']) }}';">View</button> --}}
+                                    <button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';"
+                                            class="round-btn btn btn-default fas fa-edit btn-segment">
+                                        </button>
+    
+                                        <button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
+                                        {{-- <button onclick="window.location='{{ route('admin.settings.additions', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-plus btn-segment"></button>  
+                                        <button onclick="window.location='{{ route('admin.settings.deductions.add', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-minus btn-segment"></button>  
+                                        <button onclick="window.location='{{ route('admin.settings.company-banks.add', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-money btn-segment"></button>  
+                                        <button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-travel btn-segment"></button>  </td> --}}
+
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
