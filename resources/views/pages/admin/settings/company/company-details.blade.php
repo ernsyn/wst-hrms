@@ -71,11 +71,12 @@
                                                             <td>{{$companybanks['account_name']}}</td>
                                                             <td>{{$companybanks['bank_code']}}</td>
                                                         
-                                                            <td>
-                                                                <button onclick="window.location='{{ route('admin.settings.company-banks.edit', ['id' => $companybanks->id]) }}';"
-                                                                        class="round-btn btn btn-default fas fa-edit btn-segment">
-                                                                    </button>
-                                                            </td>
+                                                            <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                                data-bank-id="{{$companybanks['id']}}"
+                                                                data-bank-code="{{$companybanks['bank_code']}}"        
+                                                                data-bank-accout-name="{{$companybanks['account_name']}}"             
+                                                                data-bank-status="{{$companybanks['status']}}"
+                                                                data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button></td>
                                                         </tr>
                                                         @endforeach
                                                     </tbody>
@@ -117,7 +118,7 @@
                                                             <td>{{$securities['description']}}</td>
                                                         
                                                             <td>
-                                                                <button onclick="window.location='{{ route('admin.settings.company-banks.edit', ['id' => $securities->id]) }}';"
+                                                                <button onclick="window.location='{{ route('admin.settings.company-banks.edit.post', ['id' => $securities->id]) }}';"
                                                                         class="round-btn btn btn-default fas fa-edit btn-segment">
                                                                     </button>
                                                             </td>
@@ -290,8 +291,8 @@
               </button>
                 </div>
                 <div class="modal-body">
-                        @foreach($company as $companies)
-                    <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $companies->id])}} "id="add_company_bank"> 
+                        @foreach($bank as $banks)
+                    <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->id ])}} "id="add_company_bank"> 
                             @endforeach
                         @csrf
 
@@ -348,11 +349,18 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('admin.settings.cost-centres.add')}}" id="edit_company_bank">
+
+                   
+                        <form method="POST" action="{{route('admin.settings.company-banks.edit.post', ['id' => $banks->id])}}" id="edit_company_bank">
+        
                         @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
-                                <input id="company_bank_id" name="company_bank_id" type="hidden">
+                                    <label class="col-md-12 col-form-label">Account Name*</label>
+                                    <div class="col-md-12">
+                                        <input id="company_bank_id" type="text" class="form-control{{ $errors->has('company_bank_id') ? ' is-invalid' : '' }}"
+                                            name="company_bank_id" value="{{ old('company_bank_id') }}" required>
+                                    </div> 
                                 <label class="col-md-12 col-form-label">Account Name*</label>
                                 <div class="col-md-12">
                                     <input id="account_name" type="text" class="form-control{{ $errors->has('account_name') ? ' is-invalid' : '' }}"
@@ -360,15 +368,16 @@
                                 </div> 
                                 <label class="col-md-12 col-form-label">Bank*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('bank_list') ? ' is-invalid' : '' }}" name="bank_list" id="bank_list">
-                                        @foreach($bank_list as $item)
-                                        <option value="{{ $item->bank_code }}">{{ $item->name }}</option>
-                                        @endforeach
-                                    </select>
+                                        <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code">
+                                                <option disabled selected>Please Select</option>
+                                                @foreach(App\BankCode::all() as $banks)
+                                                <option value="{{ $banks->bank_code }}">{{ $banks->name }}</option>
+                                                @endforeach
+                                              </select>  
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
-                                    <select class ="form-control" id="status" name="status">
+                                    <select class ="form-control" id="status" name="status" value="{{ old('account_name') }}" >
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
                                     </select>
@@ -970,7 +979,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Security Group</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Travel Allowance</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

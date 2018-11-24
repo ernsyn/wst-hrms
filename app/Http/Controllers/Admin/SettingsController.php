@@ -523,8 +523,11 @@ class SettingsController extends Controller
 
     public function displayCompanyDetails($id)
     {       
-        $bank = CompanyBank::all();
-        $company=Company::all();
+       $bank = CompanyBank::where('company_id', $id)->get();  
+
+
+        
+        $company=Company::where('id', $id)->get();
 
         $security = SecurityGroup::where('company_id', $id)->get();
         $additions = Addition::where('company_id', $id)->get();
@@ -534,10 +537,15 @@ class SettingsController extends Controller
         $ea_form = EaForm::all();
         $cost_centre = CostCentre::all();
         $grade = EmployeeGrade::all();
-        $company_travel_allowance = CompanyTravelAllowance::all();
+        $company_travel_allowance = CompanyTravelAllowance::where('company_id', $id)->get();  
 
         return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
         'security'=>$security, 'additions'=>$additions, 'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company,'company_travel_allowance'=>$company_travel_allowance]);
+    
+        
+        return view('pages.admin.settings.company.company-details', ['bank' => $bank]);
+
+    
     }
 
  
@@ -891,9 +899,15 @@ public function postEditCompanyAddition(Request $request, $id)
 
 
 
-public function displayCompanyBank()
-{       
-   $companybank = CompanyBank::all();
+// public function displayCompanyBank()
+// {       
+//    $companybank = CompanyBank::all();
+//     return view('pages.admin.settings.company-bank', ['companybank' => $companybank]);
+// }
+
+public function displayCompanyBank($id)
+{
+    $companybanks = CompanyBank::where('id', $id)->get();
     return view('pages.admin.settings.company-bank', ['companybank' => $companybank]);
 }
 
@@ -912,7 +926,7 @@ public function postAddCompanyBank(Request $request,$id)
     ]);
 
     $additionData['status'] = 'active';
-    $additionData['id_company_master']= $id;
+    $additionData['company_id']= $id;
      $additionData['created_by'] = auth()->user()->id;
     CompanyBank::create($additionData);
 
@@ -921,32 +935,21 @@ public function postAddCompanyBank(Request $request,$id)
     return redirect()->route('admin.settings.company.company-details',['id'=>$id]);      
 }
 
-
-public function editCompanyBank(Request $request, $id) {
-    $addition = Addition::find($id);
-
-    return view('pages.admin.settings.edit-company-bank', ['addition' => $addition]);
-}
-
 public function postEditCompanyBank(Request $request, $id)
-{              
+{      $additionData = $request->validate([
+            'bank_code' => 'required',
+            'account_name' => 'required',
+        //    'company_bank_id'=>'required',
     
-    $companyBankData = $request->validate([
-       
-        'id_company_master' => 'required',
-        'code' => 'required',
-        'name' => 'required',
-        'type' => 'required',
-        'day' => 'required',
-        'amount' => 'required',
-        'statutory' => 'required',
-        'confirmed_employee' => 'required',
+        ]);
+    
+        $additionData['status'] = 'active';
+     //  $additionData['id_company_master']= $id;
+         $additionData['created_by'] = auth()->user()->id;
 
-    ]);
-
-    Addition::where('id', $id)->update($companyBankData);
+    CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
    
-    return redirect()->route('admin.settings.company-bank');
+    return redirect()->route('admin.settings.company.company-details',['id'=>$id]);    
 }
 
 
@@ -1032,8 +1035,9 @@ public function postAddCompanyTravelAllowance(Request $request,$id)
 
    $validateSecurityGroup = $request->validate([
    
-   'description' => 'required',
-   'name' => 'required',
+   'rate' => 'required',
+   'code' => 'required',
+   'countries_id'=>'required',
 
     ]);
     
@@ -1075,6 +1079,20 @@ public function postEditCompanyTravelAllowance(Request $request, $id)
     Deduction::where('id', 1)->update($deductionData);
    
     return redirect()->route('admin.settings.deduction');
+}
+
+
+
+
+
+//data table 
+
+
+public function getDataTableCompanyBank($id)
+{       
+    $companyBank = CompanyBank::where('company_id', $id)->get();
+
+    return DataTables::of($companyBank)->make(true);
 }
 }
   

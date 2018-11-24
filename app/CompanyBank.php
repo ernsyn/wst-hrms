@@ -10,7 +10,7 @@ class CompanyBank extends Model
 
     protected $fillable =[
 
-        'id_company_master' ,
+        'company_id' ,
         'bank_code',
         'account_name',
         'status',
@@ -26,7 +26,9 @@ class CompanyBank extends Model
 
     public function company()
     {
-        return $this->belongsTo('App\Company', 'id_company_master');
+        return $this->belongsTo('App\Company', 'company_id');
     }
 
+
+  
 }
