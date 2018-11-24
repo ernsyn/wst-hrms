@@ -27,6 +27,8 @@ class CreateEmployeeReportToTable extends Migration
 
             $table->string('notes', 200);
             
+            $table->softDeletes();
+			$table->string('created_by', 100)->nullable();
             $table->timestamps();
         });
     }

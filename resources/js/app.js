@@ -168,6 +168,44 @@ $("#leaveFullDay").click(function(){
     $( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
     $("#totalLeave").val(1);
 });
+
+
+function hrmsDatepicker(settings) {
+    let elementRef = settings.elementRef;
+    let altElementRef = settings.altElementRef;
+    let format = 'dd/mm/yy';
+    let altFormat = 'yy-mm-dd';
+    let changeMonth = true;
+    let changeYear = true;
+
+    if(settings.format) {
+        format = settings.format;
+    }
+
+    if(settings.altFormat) {
+        format = settings.altFormat;
+    }
+
+    if(settings.changeMonth) {
+        changeMonth = settings.changeMonth;
+    }
+
+    if(settings.changeYear) {
+        changeYear = settings.changeYear;
+    }
+
+    $(elementRef).datepicker({
+        altField: altElementRef,
+        altFormat: altFormat,
+        format: format,
+        changeMonth: changeMonth,
+        changeYear: changeYear,
+        yearRange: "-10:+20"
+    });
+}
+
+
+
 $('#expiryDate').datepicker({
     altField: "#altexpiryDate",
     altFormat: 'yy-mm-dd',

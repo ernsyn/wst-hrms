@@ -136,6 +136,10 @@
                     <li class="menu-option {{ request()->is('admin/settings/grades') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.grades')}}">Grades</a>
                     </li>
+                    {{-- OPTION: Working Days --}}
+                    <li class="menu-option {{ request()->is('admin/settings/working-days') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.working-days')}}">Working Days</a>
+                    </li>
 
                 {{-- OPTION: EPF --}}
                 <li class="menu-option {{ request()->is('admin/settings/epf') ? 'active' : '' }}">

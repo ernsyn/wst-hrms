@@ -318,10 +318,36 @@ class SettingsController extends Controller
             return view('pages.admin.settings.edit-department', ['department' => $department]);
         }
 
+        public function addWorkingDay()
+        {
+            return view('pages.admin.settings.add-working-day');
+        }
+        
+        
+        public function postAddWorkingDay(Request $request)
+        {     
+            $workingDaysData = $request->validate([
+                'template_name' => 'required|unique:employee_working_days,deleted_at,NULL',
+                'monday' => 'required',
+                'tuesday' => 'required',
+                'wednesday' => 'required',
+                'thursday' => 'required',
+                'friday' => 'required',
+                'saturday' => 'required',
+                'sunday' => 'required',
+            ]);
+            $workingDaysData['is_template'] = true;
 
-  
+            EmployeeWorkingDay::create($workingDaysData);    
+            return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been added.');
+        }
 
 
+    public function editWorkingDay(Request $request, $id) {
+        $working_day = EmployeeWorkingDay::templates()->find($id);
+
+        return view('pages.admin.settings.edit-working-day', ['working_day' => $working_day]);
+    }
 
     public function displayBranches()
     {       
@@ -458,13 +484,29 @@ class SettingsController extends Controller
         
         $departmentData = $request->validate([
             'name' => 'required|unique:departments,name,'.$id
-         
-
         ]);
 
         Department::where('id', $id)->update($departmentData);
        
         return redirect()->route('admin.settings.departments');
+    }
+
+    public function postEditWorkingDay(Request $request, $id)
+    {     
+        $workingDayData = $request->validate([
+            'template_name' => 'required|unique:employee_working_days,deleted_at,NULL,id,'.$id,
+            'monday' => 'required',
+            'tuesday' => 'required',
+            'wednesday' => 'required',
+            'thursday' => 'required',
+            'friday' => 'required',
+            'saturday' => 'required',
+            'sunday' => 'required',
+        ]);
+
+        EmployeeWorkingDay::where('id', $id)->update($workingDayData);
+
+        return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been updated.');
     }
 
 
@@ -514,10 +556,25 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.companies');
     }
 
+    // Section: DELETE
+
+    public function deleteWorkingDay(Request $request, $id)
+    {     
+        EmployeeWorkingDay::templates()->find($id)->delete();
+
+        return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been deleted.');
+    }
+
     public function displayDepartments()
     {
         $departments = Department::all();
         return view('pages.admin.settings.department', ['departments'=>$departments]);
+    }
+
+    public function displayWorkingDays()
+    {
+        $working_days = EmployeeWorkingDay::templates()->get();
+        return view('pages.admin.settings.working-day', ['working_days'=>$working_days]);
     }
 
 
