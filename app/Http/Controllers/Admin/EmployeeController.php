@@ -322,22 +322,20 @@ class EmployeeController extends Controller
 
     public function postImmigration(Request $request, $id)
     {
-        $passport_no = $request->input('passport_no');
-        $issued_by = $request->input('issued_by');
-        $altexpiryDate = $request->input('altexpiryDate');
-        $altlicenseExpiryDate = $request->input('altlicenseExpiryDate');
-        $created_by = auth()->user()->id;
+        $immigrationData = $request->validate([
+            'passport_no' => 'required',
+            'expiry_date' => 'required|date',
+            'issued_by' => 'required',
+            'issued_date' => 'required|date'
+        ]);
 
-        DB::insert('insert into employee_immigrations
-        (emp_id, passport_no, issued_by, issued_date, expiry_date, created_by)
-        values
-        (?,?,?,?,?,?)',
-        [$id, $passport_no, $issued_by, $altexpiryDate, $altlicenseExpiryDate, $created_by]);
+        $immigration = new EmployeeImmigration($immigrationData);
 
 
-        // $immigrations = EmployeeImmigration::where('emp_id',$user_id)->get();
+        $employee = Employee::find($id);
+        $employee->employee_immigrations()->save($immigration);
 
-        return redirect()->route('admin.employees.id', ['id' => $id]);
+        return response()->json(['success'=>'Record is successfully added']);
     }
 
     public function postVisa(Request $request, $id)
@@ -458,13 +456,16 @@ class EmployeeController extends Controller
 
     public function postEditImmigration(Request $request, $emp_id, $id)
     {
-        $document = $request->input('document');
-        $passport_no = $request->input('passport_no');
-        $issued_by = $request->input('issued_by');
+        $immigrationUpdatedData = $request->validate([
+            'passport_no' => 'required',
+            'expiry_date' => 'required|date',
+            'issued_by' => 'required',
+            'issued_date' => 'required|date'
+        ]);
 
-        EmployeeImmigration::where('id', $id)->update(array('document' => $document,'passport_no' => $passport_no, 'issued_by' => $issued_by));
+        EmployeeImmigration::where('id', $id)->update($immigrationUpdatedData);
 
-        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+        return response()->json(['success'=>'Immigration was successfully updated.']);
     }
 
     public function postEditVisa(Request $request, $emp_id, $id)
@@ -554,7 +555,13 @@ class EmployeeController extends Controller
     //delete function
     public function deleteEmergencyContact(Request $request, $emp_id, $id)
     {
-        EmployeeEmergencyContact::find($id)->delete();
+        EmployeeImmigration::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
+    }
+
+    public function deleteImmigration(Request $request, $emp_id, $id)
+    {
+        EmployeeImmigration::find($id)->delete();
+        return response()->json(['success'=>'Immigration was successfully deleted.']);
     }
 }
