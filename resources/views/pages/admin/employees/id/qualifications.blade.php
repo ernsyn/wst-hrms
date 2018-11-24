@@ -388,9 +388,51 @@
     </div>
 </div>
 
+{{-- DELETE EXP--}}
+<div class="modal fade" id="confirm-delete-experiences-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-experiences-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-experiences-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-experiences-submit">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+{{-- DELETE EDU--}}
+<div class="modal fade" id="confirm-delete-educations-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-educations-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-educations-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-educations-submit">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- TABLE SKILL--}}
 <div class="tab-pane fade show p-3" id="nav-qualification" role="tabpanel" aria-labelledby="nav-qualification-tab">
-    {{-- experiences --}}
+    {{-- Experiences Table--}}
     <div class="row pb-3">
         <div class="col-auto mr-auto">EXPERIENCE</div>
         <div class="col-auto">
@@ -413,7 +455,7 @@
         </thead>
     </table>
     <div class="dropdown-divider pb-3"></div>
-    {{-- Education --}}
+    {{-- Education Table--}}
     <div class="row pb-3">
         <div class="col-auto mr-auto">EDUCATION</div>
         <div class="col-auto">
@@ -438,7 +480,7 @@
         </thead>
     </table>
     <div class="dropdown-divider pb-3"></div>
-    {{-- Skill --}}
+    {{-- Skill Table--}}
     <div class="row pb-3">
         <div class="col-auto mr-auto">SKILL</div>
         <div class="col-auto">
@@ -459,6 +501,8 @@
         </thead>
     </table>
 </div>
+
+
 
 @section('scripts')
 <script>
@@ -489,8 +533,11 @@
                 "data": "notes"
             },
             {
-                "data": null, // can be null or undefined
-                "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#experienceModal"><i class="far fa-edit"></i></button>'
+                "data": null,
+                render: function (data, type, row, meta) {
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>` +
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-experiences-modal"><i class="far fa-trash-alt"></i></button>`;
+                }
             }
         ]
     });
@@ -527,8 +574,11 @@ var educationsTable = $('#employee-education-table').DataTable({
             "data": "description"
         },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#educationModal"><i class="far fa-edit"></i></button>'
+            "data": null,
+            render: function (data, type, row, meta) {
+                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>` +
+                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
+            }
         }
     ]
 });
@@ -553,8 +603,11 @@ var skillsTable = $('#employee-skill-table').DataTable({
             "data": "competency"
         },
         {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#skillModal"><i class="far fa-edit"></i></button>'
+            "data": null,
+            render: function (data, type, row, meta) {
+                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>` +
+                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
+            }
         }
     ]
 });
@@ -683,43 +736,42 @@ var skillsTable = $('#employee-skill-table').DataTable({
         //     });
         // });
 
-        // // DELETE SKILLS
-        // var deleteId = null;
-        // // Function: On Modal Clicked Handler
-        // $('#confirm-delete-modal').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget) // Button that triggered the modal
-        //     var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
-        //     console.log('Data: ', currentData)
+        // DELETE EXPERIENCE
+        var deleteExperienceId = null;
+        // Function: On Modal Clicked Handler
+        $('#confirm-delete-experiences-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+            console.log('Data: ', currentData)
 
-        //     deleteId = currentData.id;
-        // });
+            deleteExperienceId = currentData.id;
+        });
 
-        // var deleteRouteTemplate = "{{ route('admin.settings.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        // $('#delete-submit').click(function(e){
-        //     var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
-        //     e.preventDefault();
-        //     $.ajax({
-        //         url: deleteRoute,
-        //         type: 'GET',
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             id: deleteId
-        //         },
-        //         success: function(data) {
-        //             showAlert(data.success);
-        //             skillsTable.ajax.reload();
-        //             $('#confirm-delete-modal').modal('toggle');
-        //             // clearSkillsModal('#edit-emergency-contact-form');
-        //         },
-        //         error: function(xhr) {
-        //             if(xhr.status == 422) {
-        //                 var errors = xhr.responseJSON.errors;
-        //                 console.log("Error 422: ", xhr);
-        //             }
-        //             console.log("Error: ", xhr);
-        //         }
-        //     });
-        // });
+        var deleteExperienceRouteTemplate = "{{ route('admin.settings.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        $('#delete-experiences-submit').click(function(e){
+            var deleteExperienceRoute = deleteExperienceRouteTemplate.replace(encodeURI('<<id>>'), deleteExperienceId);
+            e.preventDefault();
+            $.ajax({
+                url: deleteExperienceRoute,
+                type: 'GET',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: deleteExperienceId
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    experiencesTable.ajax.reload();
+                    $('#confirm-delete-experiences-modal').modal('toggle');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error 422: ", xhr);
+                    }
+                    console.log("Error: ", xhr);
+                }
+            });
+        });
     });
 
 
@@ -881,43 +933,42 @@ var skillsTable = $('#employee-skill-table').DataTable({
         //     });
         // });
 
-        // // DELETE SKILLS
-        // var deleteId = null;
-        // // Function: On Modal Clicked Handler
-        // $('#confirm-delete-modal').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget) // Button that triggered the modal
-        //     var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
-        //     console.log('Data: ', currentData)
+        // DELETE SKILLS
+        var deleteEducationId = null;
+        // Function: On Modal Clicked Handler
+        $('#confirm-delete-educations-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+            console.log('Data: ', currentData)
 
-        //     deleteId = currentData.id;
-        // });
+            deleteEducationId = currentData.id;
+        });
 
-        // var deleteRouteTemplate = "{{ route('admin.settings.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        // $('#delete-submit').click(function(e){
-        //     var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
-        //     e.preventDefault();
-        //     $.ajax({
-        //         url: deleteRoute,
-        //         type: 'GET',
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             id: deleteId
-        //         },
-        //         success: function(data) {
-        //             showAlert(data.success);
-        //             skillsTable.ajax.reload();
-        //             $('#confirm-delete-modal').modal('toggle');
-        //             // clearSkillsModal('#edit-emergency-contact-form');
-        //         },
-        //         error: function(xhr) {
-        //             if(xhr.status == 422) {
-        //                 var errors = xhr.responseJSON.errors;
-        //                 console.log("Error 422: ", xhr);
-        //             }
-        //             console.log("Error: ", xhr);
-        //         }
-        //     });
-        // });
+        var deleteEducationRouteTemplate = "{{ route('admin.settings.educations.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        $('#delete-educations-submit').click(function(e){
+            var deleteEducationRoute = deleteEducationRouteTemplate.replace(encodeURI('<<id>>'), deleteEducationId);
+            e.preventDefault();
+            $.ajax({
+                url: deleteEducationRoute,
+                type: 'GET',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: deleteEducationId
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    educationsTable.ajax.reload();
+                    $('#confirm-delete-educations-modal').modal('toggle');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error 422: ", xhr);
+                    }
+                    console.log("Error: ", xhr);
+                }
+            });
+        });
     });
 
 
@@ -1065,43 +1116,42 @@ var skillsTable = $('#employee-skill-table').DataTable({
         //     });
         // });
 
-        // // DELETE SKILLS
-        // var deleteId = null;
-        // // Function: On Modal Clicked Handler
-        // $('#confirm-delete-modal').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget) // Button that triggered the modal
-        //     var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
-        //     console.log('Data: ', currentData)
+        // DELETE SKILLS
+        var deleteSkillId = null;
+        // Function: On Modal Clicked Handler
+        $('#confirm-delete-skills-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+            console.log('Data: ', currentData)
 
-        //     deleteId = currentData.id;
-        // });
+            deleteSkillId = currentData.id;
+        });
 
-        // var deleteRouteTemplate = "{{ route('admin.settings.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        // $('#delete-submit').click(function(e){
-        //     var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
-        //     e.preventDefault();
-        //     $.ajax({
-        //         url: deleteRoute,
-        //         type: 'GET',
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             id: deleteId
-        //         },
-        //         success: function(data) {
-        //             showAlert(data.success);
-        //             skillsTable.ajax.reload();
-        //             $('#confirm-delete-modal').modal('toggle');
-        //             // clearSkillsModal('#edit-emergency-contact-form');
-        //         },
-        //         error: function(xhr) {
-        //             if(xhr.status == 422) {
-        //                 var errors = xhr.responseJSON.errors;
-        //                 console.log("Error 422: ", xhr);
-        //             }
-        //             console.log("Error: ", xhr);
-        //         }
-        //     });
-        // });
+        var deleteSkillRouteTemplate = "{{ route('admin.settings.skills.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        $('#delete-skills-submit').click(function(e){
+            var deleteSkillRoute = deleteSkillRouteTemplate.replace(encodeURI('<<id>>'), deleteSkillId);
+            e.preventDefault();
+            $.ajax({
+                url: deleteSkillRoute,
+                type: 'GET',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: deleteSkillId
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    skillsTable.ajax.reload();
+                    $('#confirm-delete-skills-modal').modal('toggle');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error 422: ", xhr);
+                    }
+                    console.log("Error: ", xhr);
+                }
+            });
+        });
     });
 
 

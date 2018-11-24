@@ -558,4 +558,23 @@ class EmployeeController extends Controller
         EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
+
+
+    public function deleteExperience(Request $request, $emp_id, $id)
+    {
+        EmployeeExperience::find($id)->delete();
+        return response()->json(['success'=>'Experience was successfully deleted.']);
+    }
+
+    public function deleteEducation(Request $request, $emp_id, $id)
+    {
+        EmployeeEducation::find($id)->delete();
+        return response()->json(['success'=>'Education was successfully deleted.']);
+    }
+
+    public function deleteSkill(Request $request, $emp_id, $id)
+    {
+        EmployeeSkill::find($id)->delete();
+        return response()->json(['success'=>'Skill was successfully deleted.']);
+    }
 }
