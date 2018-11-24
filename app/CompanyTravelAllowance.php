@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CompanyTravelAllowance extends Model
 {
@@ -14,7 +15,6 @@ class CompanyTravelAllowance extends Model
         'country_id',
      
     ];
-
 
 
 

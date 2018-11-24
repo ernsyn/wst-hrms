@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Deduction extends Model
 {
     protected $table = 'deductions';
@@ -29,5 +30,5 @@ class Deduction extends Model
         return $this->belongsToMany('App\EmployeeGrade')
         ->withTimestamps();
     }
-
+    
 }

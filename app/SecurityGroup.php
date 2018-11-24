@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class SecurityGroup extends Model
 {
     protected $table = 'security_groups';
@@ -16,4 +17,12 @@ class SecurityGroup extends Model
   
 
     ];
+
+
+    public function company()
+    {
+        return $this->belongsTo('App\Company', 'company_id');
+    }
+  
+ //   use SoftDeletes;
 }

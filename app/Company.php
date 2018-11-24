@@ -28,6 +28,10 @@ class Company extends Model
         return $this->hasOne('App\CompanyBank');
     }
 
+    public function securityGroup()
+    {
+        return $this->hasOne('App\SecurityGroup');
+    }
 
 
  

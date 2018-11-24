@@ -11,4 +11,7 @@ class CostCentre extends Model
     protected $fillable = [
         'name','seniority_pay','payroll_type','amount'
     ];
+
+    
+ 
 }
