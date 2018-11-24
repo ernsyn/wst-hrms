@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\payroll;
 
+use App\Enums\PayrollPeriodEnum;
 use App\Helpers\GenerateReportsHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Popo\governmentreport\GovernmentReport;
@@ -22,7 +23,14 @@ class GovernmentReportController extends Controller
     public function viewGovernmentReport(){
 
         //get slider data
-        $arr = GovernmentReport::getGovernmentReport();
+        $arr = GovernmentReport::getGovernmentReportSlider();
+        $form = GovernmentReport::getGovernmentReportForm();
+        $costcentres = GenerateReportsHelper::getCostCentre();
+        $departments = GenerateReportsHelper::getDepartments();
+        $branches = GenerateReportsHelper::getBranches();
+        $positions = GenerateReportsHelper::getPosition();
+        $period = PayrollPeriodEnum::list();
+        $officers = GenerateReportsHelper::getOfficer();
 
         return view('pages.payroll.government-report')->with([
             'sliders' => $arr['slider'] ,
@@ -30,6 +38,16 @@ class GovernmentReportController extends Controller
             'sliders2' => $arr['slider2'] ,
             'sliders3' => $arr['slider3'] ,
             'sliders4' => $arr['slider4'] ,
+            'dforms' => $form['form'],
+            'dforms1' => $form['form1'],
+            'dforms2' => $form['form2'],
+            'dforms3' => $form['form3'],
+            'costcentres' => $costcentres,
+            'departments' => $departments,
+            'branches' => $branches,
+            'positions' => $positions,
+            'period' => $period,
+            'officers' => $officers
         ]);
     }
 
@@ -41,10 +59,32 @@ class GovernmentReportController extends Controller
 
         $reportName = $request->input('reportName');
 
-        return $this->generate($reportName,null);
+        if($request->input('selectCostCentres') != 0){
+            $filter = "costcentres";
+            $value = $request->input('selectCostCentres');
+
+        }else if($request->input('selectDepartments') != 0){
+            $filter = "departments";
+            $value = $request->input('selectDepartments');
+
+        }else if($request->input('selectBranches') != 0){
+            $filter = "branches";
+            $value = $request->input('selectBranches');
+
+        }else if($request->input('selectPositions') != 0){
+            $filter = "positions";
+            $value = $request->input('selectPositions');
+
+        }else{
+            $filter = "none";
+            $value = 0;
+        }
+
+        $filterOption = GenerateReportsHelper::getFilterKey($filter,$value);
+        return $this->generate($reportName,$filterOption);
     }
 
-    private function generate($reportName,$option){
+    private function generate($reportName,$filter){
         switch ($reportName) {
             case "LHDN_borangE":
                 $arr = GenerateReportsHelper::generateBean($reportName,null);
@@ -122,10 +162,85 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp39lieu":
-                echo "portrait";
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39_lieu',
+                    [
+                        'dataArr' => $arr['data']
+                    ]);
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp39lieu.pdf');
                 break;
+
             case "LHDN_eaform":
-                echo "portrait";
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnEaForm',
+                    [
+                        'dataArr' => $arr['data']
+                    ]);
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_eaForm.pdf');
+                break;
+
+            case "Tabung_Haji_caruman":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/tabunghaji_caruman',
+                    [
+                        'data' => $arr['data'] ,
+                        'empData' => $arr['empData']
+                    ] )->setOrientation('landscape');
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('tabunghaji_caruman.pdf');
+                break;
+
+            case "Tabung_Haji_df":
+                break;
+
+            case "EPF_bbcd":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/epf_bbcd',
+                    [
+                        'data' => $arr['data']
+                    ]);
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('epf_bbcd.pdf');
+                break;
+
+            case "EPF_borangA":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/epf_borangA',
+                    [
+                        'data' => $arr['data'] ,
+                        'empData' => $arr['empData'],
+                        'totalOverallContributionEmp' => $arr['totalOverallContributionEmp'],
+                    ]);
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('epf_borangA.pdf');
+                break;
+
+            case "SOSCO_lampiranA":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/soscoLampiranA',
+                    [
+                        'data' => $arr['data']
+                    ]);
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('sosco_LampiranA.pdf');
+                break;
+
+            case "LHDN_eaform":
+                break;
+
+            case "LHDN_eaform":
+                break;
+
+            case "test":
+                $arr = GenerateReportsHelper::generateBean($reportName,$filter);
                 break;
             default:
                 echo "None";

@@ -6,7 +6,7 @@
  * Time: 3:59 PM
  */
 
-namespace App\Popo\report;
+namespace App\Http\Controllers\Popo\governmentreport;
 
 
 class EpfBBCDBean

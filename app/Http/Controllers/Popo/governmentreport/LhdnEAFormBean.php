@@ -6,10 +6,10 @@
  * Time: 12:24 PM
  */
 
-namespace App\Popo\report;
+namespace App\Http\Controllers\Popo\governmentreport;
 
 
-class EAFormBean
+class LhdnEAFormBean
 {
     private $serialNo;
     private $incomeTaxNo;

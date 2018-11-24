@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by IntelliJ IDEA.
- * User: play
+ * User: Shahril Abu Bakar
  * Date: 11/8/18
  * Time: 11:08 AM
  */
 
-namespace App\Popo\report;
+namespace App\Http\Controllers\Popo\governmentreport;
 
 
 class LhdnCP39LieuBean

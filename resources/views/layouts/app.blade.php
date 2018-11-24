@@ -10,17 +10,19 @@
 
     <title>{{ ($breadcrumb = Breadcrumbs::current()) ? $breadcrumb->title : 'Fallback Title' }} | {{ config('app.name') }} </title>
 
-    
+
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
 </head>
 
 <body>
     @yield('app-content')
-    
-    
+
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{asset('js/report/custom-report.js')}}"></script>
     @yield('scripts')
 </body>
 

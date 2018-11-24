@@ -6,7 +6,7 @@
  * Time: 6:56 PM
  */
 
-namespace App\Popo\report;
+namespace App\Http\Controllers\Popo\governmentreport;
 
 
 class SoscoLampiranABean
@@ -19,29 +19,32 @@ class SoscoLampiranABean
     private $noCheck;
     private $amount;
     private $employerCode;
-    private $employerName;
+    private $companyName;
+    private $companyRegistrationNo;
     private $address1;
     private $address2;
     private $address3;
     private $postcode;
-    private $name;
-    private $telNo;
+    private $officerName;
+    private $officerTelNo;
 
     public function __construct(array $array = []) {
         $this->fromMonth = isset($array['fromMonth']) ? $array['fromMonth'] : null;
         $this->toMonth = isset($array['toMonth']) ? $array['toMonth'] : null;
         $this->year = isset($array['year']) ? $array['year'] : date("Y");
         $this->date = isset($array['date']) ? $array['date'] : date("d/m/Y");
+        $this->employeeTotalNumber = isset($array['employeeTotalNumber']) ? $array['employeeTotalNumber'] : null;
         $this->noCheck = isset($array['noCheck']) ? $array['noCheck'] : null;
         $this->amount = isset($array['amount']) ? $array['amount'] : "0.00";
         $this->employerCode = isset($array['employerCode']) ? $array['employerCode'] : null;
-        $this->employerName = isset($array['employerName']) ? $array['employerName'] : null;
+        $this->companyName = isset($array['companyName']) ? $array['companyName'] : null;
+        $this->companyRegistrationNo = isset($array['companyRegistrationNo']) ? $array['companyRegistrationNo'] : null;
         $this->address1 = isset($array['address1']) ? $array['address1'] : null;
         $this->address2 = isset($array['address2']) ? $array['address2'] : null;
         $this->address3 = isset($array['address3']) ? $array['address3'] : null;
         $this->postcode = isset($array['postcode']) ? $array['postcode'] : null;
-        $this->name = isset($array['name']) ? $array['name'] : null;
-        $this->telNo = isset($array['telNo']) ? $array['telNo'] : null;
+        $this->officerName = isset($array['officerName']) ? $array['officerName'] : null;
+        $this->officerTelNo = isset($array['officerTelNo']) ? $array['officerTelNo'] : null;
     }
 
     public function getFromMonth() {
@@ -116,12 +119,21 @@ class SoscoLampiranABean
         return $this;
     }
 
-    public function getEmployerName() {
-        return $this->employerName;
+    public function getCompanyName() {
+        return $this->companyName;
     }
 
-    public function setEmployerName($employerName) {
-        $this->employerName = $employerName;
+    public function setCompanyName($companyName) {
+        $this->companyName = $companyName;
+        return $this;
+    }
+
+    public function getCompanyRegistrationNo() {
+        return $this->companyRegistrationNo;
+    }
+
+    public function setCompanyRegistrationNo($companyRegistrationNo) {
+        $this->companyRegistrationNo = $companyRegistrationNo;
         return $this;
     }
 
@@ -161,21 +173,21 @@ class SoscoLampiranABean
         return $this;
     }
 
-    public function getName() {
-        return $this->name;
+    public function getOfficerName() {
+        return $this->officerName;
     }
 
-    public function setName($name) {
-        $this->name = $name;
+    public function setOfficerName($officerName) {
+        $this->officerName = $officerName;
         return $this;
     }
 
-    public function getTelNo() {
-        return $this->telNo;
+    public function getOfficerTelNo() {
+        return $this->officerTelNo;
     }
 
-    public function setTelNo($telNo) {
-        $this->telNo = $telNo;
+    public function setOfficerTelNo($officerTelNo) {
+        $this->officerTelNo = $officerTelNo;
         return $this;
     }
 
@@ -188,13 +200,13 @@ class SoscoLampiranABean
             'noCheck' => $this->noCheck,
             'amount' => $this->amount,
             'employerCode' => $this->employerCode,
-            'employerName' => $this->employerName,
+            'companyName' => $this->companyName,
             'address1' => $this->address1,
             'address2' => $this->address2,
             'address3' => $this->address3,
             'postcode' => $this->postcode,
-            'name' => $this->name,
-            'telNo' => $this->telNo,
+            'officerName' => $this->officerName,
+            'officerTelNo' => $this->oficerTelNo,
         ];
     }
 

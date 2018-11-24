@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     protected $table = 'employees';
-    
+
     public function payrollTrx()
     {
         return $this->hasMany('App\PayrollTrx');
     }
-    
+
     protected $fillable = [
         'user_id', 'address', 'company_id','contact_no','dob',
         'gender','race','nationality','marital_status','total_children','ic_no','tax_no',
@@ -42,5 +42,10 @@ class Employee extends Model
     public function report_tos()
     {
         return $this->hasMany('App\EmployeeReportTo', 'emp_id');
+    }
+
+    public function company()
+    {
+        return $this->hasMany('App\Company','id','company_id');
     }
 }

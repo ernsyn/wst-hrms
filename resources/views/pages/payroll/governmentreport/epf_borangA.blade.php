@@ -21,6 +21,7 @@
         .padded td.pleft { padding-left:3pt; }
         .padded th.pleft { padding-left:3pt; }
         .padded td.pright { padding-right:3pt; }
+        .padded th.pright { padding-right:3pt; }
 
         .padded td.pleft3 { padding-left:3pt; }
         .padded td.pleft5 { padding-left:5pt; }
@@ -114,10 +115,41 @@
 <body>
 <div id="page-container">
 
+    <!-- page  -->
+    @php
+        $total_items = count($empData);
+        $num_per_page = 15;
+        $num_pages = ceil($total_items / $num_per_page);
+        $count=0;
+        $start=0;
+        $end=$num_per_page;
+        $cur_page=1;
+
+        //total amount
+        $totalOverallContribution=0;
+        $totalEmployerContribution=0;
+        $totalEmployeeContribution=0;
+    @endphp
+
+    @for($i=0; $i<$num_pages; $i++)
+    @php
+    if($i != 0){
+        $start += $num_per_page;
+    }
+
+        //amount
+        $employerContribution=0;
+        $employeeContribution=0;
+    @endphp
+
+    @if($cur_page > 1)
+        <div style="page-break-before:always">&nbsp;</div>
+    @endif
+
     <table class="pf padded" style="margin-top: 10pt;">
         <tr>
             <th class="tg-s268 text_center" rowspan="7" width="15%">
-                <img style="width: 75pt;height: 75pt;" alt="" src="{{asset('img/report/epf_grey.png')}}"/>
+                <img style="width: 75pt;height: 75pt;" alt="" src="{{public_path('img/report/epf_grey.png')}}"/>
                 <br>
                 <br>
             </th>
@@ -141,7 +173,7 @@
         <tr>
             <td class="tg-s268 text_center table-border">{{$data->getEmployerReferenceNo()}}</td>
             <td class="tg-s268 text_center table-border">{{$data->getContributionMonth()}}</td>
-            <td class="tg-s268 text_center table-border">121726.00</td>
+            <td class="tg-s268 text_center table-border">{{number_format($totalOverallContributionEmp,2)}}</td>
             <td class="tg-s268 text_center table-border">{{$data->getReferenceNo()}}</td>
         </tr>
         <tr>
@@ -150,7 +182,7 @@
         </tr>
         <tr>
             <td class="tg-s268 pleft5 border_left border_right" colspan="4">KWSP sebelum/pada 15 hb setiap bulan</td>
-            <td class="tg-s268 text_center">Mukasurat: 1</td>
+            <td class="tg-s268 text_center">Mukasurat: {{$cur_page}}</td>
         </tr>
         <tr>
             <td class="tg-0lax" ></td>
@@ -166,27 +198,27 @@
         </tr>
         <tr>
             <td class="tg-0lax" valign="top">Nama Majikan</td>
-            <td class="tg-0lax border_left pleft" colspan="2">OPPO ELECTRONICS SDN BHD 1075187-D</td>
+            <td class="tg-0lax border_left pleft" colspan="2">{{$data->getCompanyName()}} {{$data->getCompanyRegNo()}}</td>
             <td class="tg-0lax border_right" colspan="2"></td>
         </tr>
         <tr>
             <td class="tg-0lax">Alamat </td>
-            <td class="tg-0lax border_left pleft" colspan="2">LEVEL 15, TOWER 1, PJ 33,</td>
-            <td class="tg-0lax border_right" colspan="2">Tarikh DiCetak: 05/10/2018</td>
+            <td class="tg-0lax border_left pleft" colspan="2">{{$data->getCompanyAddress1()}}</td>
+            <td class="tg-0lax border_right" colspan="2">Tarikh DiCetak: {{$data->getPrintedDate()}}</td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
-            <td class="tg-0lax border_left pleft" colspan="2">JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA, </td>
-            <td class="tg-0lax border_right" colspan="2">Bil Pekerja: 204</td>
+            <td class="tg-0lax border_left pleft" colspan="2">{{$data->getCompanyAddress2()}} </td>
+            <td class="tg-0lax border_right" colspan="2">Bil Pekerja: {{$data->getEmployeeTotal()}}</td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
-            <td class="tg-0lax border_left pleft" colspan="2">SELANGOR.</td>
+            <td class="tg-0lax border_left pleft" colspan="2">{{$data->getCompanyAddress3()}}</td>
             <td class="tg-0lax border_right" colspan="2"></td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
-            <td class="tg-0lax border_left border_bottom pleft" colspan="2">Poskod: 46200</td>
+            <td class="tg-0lax border_left border_bottom pleft" colspan="2">Poskod: {{$data->getCompanyPostcode()}}</td>
             <td class="tg-0lax border_right border_bottom" colspan="2"></td>
             <td class="tg-0lax text_center" style="font-size: 10pt;">Cop Agen Kutipan</td>
         </tr>
@@ -211,23 +243,52 @@
         </tr>
         <tr>
             <td class="tg-s268 text_right pright border_right border_bottom" colspan="5">Jumlah yang dibawa dari mukasurat terdahulu (jika ada)</td>
-            <td class="tg-s268 border_bottom border_right"></td>
-            <td class="tg-0lax border_bottom"></td>
+            <td class="tg-s268 border_bottom border_right text_right pright">{{number_format($totalEmployerContribution,2)}}</td>
+            <td class="tg-0lax border_bottom text_right pright">{{number_format($totalEmployeeContribution,2)}}</td>
         </tr>
+
+        @foreach(array_slice($empData,$start,$end) as $emp )
         <tr>
-            <td class="tg-s268 pleft border_right border_bottom">1</td>
-            <td class="tg-s268 pleft border_right border_bottom">220610</td>
-            <td class="tg-s268 pleft border_right border_bottom">891616565432</td>
-            <td class="tg-s268 pleft border_right border_bottom">ABDUL HALIM BIN MOHAMED AYOOB</td>
-            <td class="tg-s268 border_right border_bottom text_right pright">2631.31</td>
-            <td class="tg-s268 border_right border_bottom text_center ">344</td>
-            <td class="tg-0lax border_bottom text_center ">291</td>
+            <td class="tg-s268 pleft border_right border_bottom">{{$count+1}}</td>
+            <td class="tg-s268 pleft border_right border_bottom">{{$emp->getEmployeeKwspNo()}}</td>
+            <td class="tg-s268 pleft border_right border_bottom">{{$emp->getEmployeeIcNo()}}</td>
+            <td class="tg-s268 pleft border_right border_bottom">{{$emp->getEmployeeName()}}</td>
+            <td class="tg-s268 border_right border_bottom text_right pright">{{$emp->getEmployeeWages()}}</td>
+            <td class="tg-s268 border_right border_bottom text_right pright ">{{$emp->getEmployerContribution()}}</td>
+            <td class="tg-0lax border_bottom text_right pright ">{{$emp->getEmployeeContribution()}}</td>
         </tr>
-        <tr>
-            <th class="tg-s268 text_right pright border_right border_bottom" colspan="5">Jumlah yang dibawa dari mukasurat terdahulu (jika ada)</th>
-            <th class="tg-s268 border_bottom border_right text_center">6723</th>
-            <th class="tg-0lax border_bottom text_center">5690</th>
-        </tr>
+        @php
+            //sum of amount
+            $employerContribution += $emp->getEmployerContribution();
+            $employeeContribution += $emp->getEmployeeContribution();
+
+            $count++
+        @endphp
+        @endforeach
+
+        @php
+            //total amount of end page
+            $totalEmployerContribution += $employerContribution;
+            $totalEmployeeContribution += $employeeContribution;
+        @endphp
+
+        @if($cur_page == $num_pages)
+            <tr>
+                <th class="tg-s268 text_right pright border_right border_bottom" colspan="5">JUMLAH BESAR (RM)</th>
+                <th class="tg-s268 border_bottom border_right text_right pright">{{number_format($totalEmployerContribution,2)}}</th>
+                <th class="tg-0lax border_bottom text_right pright">{{number_format($totalEmployeeContribution,2)}}</th>
+            </tr>
+            <tr>
+                <th class="tg-s268 text_right pright border_right border_bottom" colspan="5">JUMLAH (RM)</th>
+                <th class="tg-s268 border_bottom  text_center" colspan="2">{{number_format($totalOverallContributionEmp,2)}}</th>
+            </tr>
+        @else
+            <tr>
+                <th class="tg-s268 text_right pright border_right border_bottom" colspan="5">Jumlah yang dibawa ke mukasurat seterusnya (jika ada)</th>
+                <th class="tg-s268 border_bottom border_right text_right pright">{{number_format($totalEmployerContribution,2)}}</th>
+                <th class="tg-0lax border_bottom text_right pright">{{number_format($totalEmployeeContribution,2)}}</th>
+            </tr>
+        @endif
     </table>
 
     <table class="padded" style="margin-top: 30pt;">
@@ -243,7 +304,7 @@
         <tr style="height: 20pt;">
             <td class="tg-s268">Nama </td>
             <td class="tg-s268">:</td>
-            <td class="tg-s268 border_bottom" style="font-size: 10pt;">CHONG HWEE MIN</td>
+            <td class="tg-s268 border_bottom" style="font-size: 10pt;">{{$data->getOfficerName()}}</td>
             <td class="tg-s268"></td>
             <td class="tg-s268"></td>
             <td class="tg-s268"></td>
@@ -263,7 +324,7 @@
         <tr style="height: 20pt;">
             <td class="tg-s268">No Kad Pengenalan :</td>
             <td class="tg-s268">:</td>
-            <td class="tg-s268 border_bottom" style="font-size: 10pt;">897865765645</td>
+            <td class="tg-s268 border_bottom" style="font-size: 10pt;">{{$data->getOfficerIC()}}</td>
             <td class="tg-s268"></td>
             <td class="tg-s268"></td>
             <td class="tg-s268"></td>
@@ -271,7 +332,7 @@
         <tr style="height: 20pt;">
             <td class="tg-0lax">Jawatan</td>
             <td class="tg-0lax">:</td>
-            <td class="tg-0lax border_bottom" style="font-size: 10pt;">HUMAN RESOURCES OFFICER</td>
+            <td class="tg-0lax border_bottom" style="font-size: 10pt;">{{$data->getOfficerPosition()}}</td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax"></td>
@@ -279,7 +340,7 @@
         <tr style="height: 20pt;">
             <td class="tg-0lax">No Tel/Bimbit</td>
             <td class="tg-0lax">:</td>
-            <td class="tg-0lax border_bottom" style="font-size: 10pt;">03-7931 3550</td>
+            <td class="tg-0lax border_bottom" style="font-size: 10pt;">{{$data->getOfficerTelNo()}}</td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax"></td>
@@ -287,7 +348,7 @@
         <tr style="height: 20pt;">
             <td class="tg-0lax">E-Mel </td>
             <td class="tg-0lax">:</td>
-            <td class="tg-0lax border_bottom" style="font-size: 10pt;">oppo.amandachong@gmail.com</td>
+            <td class="tg-0lax border_bottom" style="font-size: 10pt;">{{$data->getOfficerEmail()}}</td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax"></td>
@@ -295,7 +356,7 @@
         <tr style="height: 20pt;">
             <td class="tg-0lax">Tarikh</td>
             <td class="tg-0lax">:</td>
-            <td class="tg-0lax border_bottom" style="font-size: 10pt;">05/10/2018</td>
+            <td class="tg-0lax border_bottom" style="font-size: 10pt;">{{$data->getPrintedDate()}}</td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax">Cop Rasmi Majikan</td>
             <td class="tg-0lax"></td>
@@ -307,7 +368,8 @@
             <td colspan="7">PERINGATAN: Berdasarkan Akta KWSP 1991,kesilapan membekalkan maklumat ahli boleh menyebabkan tuan dikenakan caj atau tindakan undang-undang</td>
         </tr>
     </table>
-
+    @php($cur_page++)
+    @endfor
 </div>
 </body>
 </html>

@@ -5,14 +5,14 @@
     <meta charset="utf-8"/>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <link rel="stylesheet" href="{{asset('css/report/epf_bbcd/base.min.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/report/epf_bbcd/main.css')}}"/>
+    <link rel="stylesheet" href="{{public_path('css/report/epf_bbcd/base.min.css')}}"/>
+    <link rel="stylesheet" href="{{public_path('css/report/epf_bbcd/main.css')}}"/>
     <title></title>
 </head>
 <body>
 <div id="page-container">
     <div id="pf1" class="pf w0 h0">
-        <div class="pc pc1 w0 h0"><img class="bi x0 y0 w1 h1" alt="" src="{{asset('img/report/epf_bbcd.png')}}"/>
+        <div class="pc pc1 w0 h0"><img class="bi x0 y0 w1 h1" alt="" src="{{public_path('img/report/epf_bbcd.png')}}"/>
             <div class="t m0 x1 h2 y1 ff1 fs0 fc0 sc0 ls0 ws0"><b>BORANG(BBCD)</b></div>
             <div class="t m0 x2 h2 y2 ff1 fs0 fc0 sc0 ls1 ws0"><b>KUMPULAN WANG SIMPANAN  PEKERJA</b></div>
             <div class="t m0 x3 h3 y3 ff2 fs1 fc0 sc0 ls2 ws0">(Peraturan-Peraturan Dan Kaedah-Kaedah KWSP 1991(Kaedah 11(1)))</div>

@@ -38,7 +38,7 @@
             <div class="carousel-row">
                 @foreach($sliders as $slider)
                 <div class="carousel-tile">
-                    <div class="m-portlet m-portlet--skin-dark m-portlet--bordered-semi {{$slider->getReportCss()}} port-item" data-toggle="collapse" data-target="#{{$slider->getReportTarget()}}">
+                    <div class="m-portlet m-portlet--skin-dark m-portlet--bordered-semi {{$slider->getReportCss()}} port-item" data-toggle="collapse"  data-target="#{{$slider->getReportTarget()}}">
                         <div class="m-portlet__head" style="padding-top:12pt;align-items: center;height: 20pt;">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
@@ -61,15 +61,16 @@
         </div>
     </div>
 
-    <!--government report form slider-->
+    <!--government report form -->
     <div class="row">
+        @foreach($dforms as $form)
         <div class="col-md-8 mx-auto">
-            <div id="borangE" class="card text-center collapse" >
+            <div id="{{$form->getReportTarget()}}" class="card text-center form-collapse collapse" >
                 <div class="card-header">
                     <div  style="float: left;">
                         <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
                     </div>
-                    LHDN Borang E
+                    {{$form->getReportName()}}
                     <button type="button" class="close port-item" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -77,84 +78,79 @@
                 <div class="card-body">
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="LHDN_borangE">
+                        <div class="col-md-8 mx-auto">
+                            <div id="accordion" role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
+                                        <i class="fas fa-search"></i> Filter
+                                    </div>
+                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlCostCentres">Cost Centres</label>
+                                                    <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                        <option value="0">--Select--</option>
+                                                        @foreach($costcentres as $key => $value)
+                                                        <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <label for="exampleFormControlDepartments">Departments</label>
+                                                    <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                        <option value="0">--Select--</option>
+                                                        @foreach($departments as $key => $value)
+                                                        <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <label for="exampleFormControlBranches">Branches</label>
+                                                    <select class="form-control" id="selectBranches" name="selectBranches">
+                                                        <option value="0">--Select--</option>
+                                                        @foreach($branches as $key => $value)
+                                                        <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <label for="exampleFormControlPositions">Positions</label>
+                                                    <select class="form-control" id="selectPositions" name="selectPositions">
+                                                        <option value="0">--Select--</option>
+                                                        @foreach($positions as $key => $value)
+                                                        <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-md-6 mx-auto">
+                            <div class="form-group">
+                                <label for="exampleFormPeriod">Periods</label>
+                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                    <option value="0">--Select--</option>
+                                    @foreach($period['period'] as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                    @endforeach
+                                </select>
+                                <label for="exampleFormOfficer">Officer</label>
+                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                    <option value="0">--Select--</option>
+                                    @foreach($officers as  $value)
+                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="reportName" value="{{$form->getValue()}}">
                         <input type="submit" class="btn btn-info" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
-                    Lembaga Hasil Dalam Negeri
+                    {{$form->getReportGroup()}}
                 </div>
             </div>
         </div>
-        <div class="col-md-8 mx-auto">
-            <div id="cp21" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    LHDN CP21
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="LHDN_cp21">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Lembaga Hasil Dalam Negeri
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="cp22" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    LHDN CP22
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="LHDN_cp22">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Lembaga Hasil Dalam Negeri
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="cp22a" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    LHDN CP22a
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="LHDN_cp22a">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Lembaga Hasil Dalam Negeri
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
     <!--government report slider 1-->
@@ -186,15 +182,16 @@
         </div>
     </div>
 
-    <!--government report form slider 1-->
+    <!--government report form  1-->
     <div class="row">
+        @foreach($dforms1 as $form)
         <div class="col-md-8 mx-auto">
-            <div id="cp22b" class="card text-center collapse" >
+            <div id="{{$form->getReportTarget()}}" class="card text-center form-collapse collapse" >
                 <div class="card-header">
                     <div  style="float: left;">
                         <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
                     </div>
-                    LHDN CP22b
+                    {{$form->getReportName()}}
                     <button type="button" class="close port-item" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -202,84 +199,60 @@
                 <div class="card-body">
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="LHDN_cp22b">
+                        <div class="col-md-8 mx-auto">
+                            <div id="accordion" role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
+                                        <i class="fas fa-search"></i> Filter
+                                    </div>
+                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlCostCentres">Cost Centres</label>
+                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($costcentres as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlDepartments">Departments</label>
+                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($departments as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlBranches">Branches</label>
+                                                <select class="form-control" id="selectBranches" name="selectBranches">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($branches as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlPositions">Positions</label>
+                                                <select class="form-control" id="selectPositions" name="selectPositions">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($positions as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <input type="hidden" name="reportName" value="{{$form->getValue()}}">
                         <input type="submit" class="btn btn-info" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
-                    Lembaga Hasil Dalam Negeri
+                    {{$form->getReportGroup()}}
                 </div>
             </div>
         </div>
-        <div class="col-md-8 mx-auto">
-            <div id="cp39" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    LHDN CP39
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="LHDN_cp39">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Lembaga Hasil Dalam Negeri
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="cp39lieu" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    LHDN CP39 Lieu
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="LHDN_cp39lieu">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Lembaga Hasil Dalam Negeri
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="eaform" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    LHDN EA Form
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="LHDN_eaform">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Lembaga Hasil Dalam Negeri
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
 
@@ -312,15 +285,16 @@
         </div>
     </div>
 
-    <!--government report form slider 2-->
+    <!--government report form 2-->
     <div class="row">
+        @foreach($dforms2 as $form)
         <div class="col-md-8 mx-auto">
-            <div id="caruman" class="card text-center collapse" >
+            <div id="{{$form->getReportTarget()}}" class="card text-center form-collapse collapse" >
                 <div class="card-header">
                     <div  style="float: left;">
                         <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
                     </div>
-                    Tabung Haji Caruman
+                    {{$form->getReportName()}}
                     <button type="button" class="close port-item" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -328,84 +302,60 @@
                 <div class="card-body">
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="Tabung_Haji_caruman">
+                        <div class="col-md-8 mx-auto">
+                            <div id="accordion" role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
+                                        <i class="fas fa-search"></i> Filter
+                                    </div>
+                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlCostCentres">Cost Centres</label>
+                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($costcentres as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlDepartments">Departments</label>
+                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($departments as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlBranches">Branches</label>
+                                                <select class="form-control" id="selectBranches" name="selectBranches">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($branches as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlPositions">Positions</label>
+                                                <select class="form-control" id="selectPositions" name="selectPositions">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($positions as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <input type="hidden" name="reportName" value="{{$form->getValue()}}">
                         <input type="submit" class="btn btn-info" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
-                    Lembaga Tabung Haji
+                    {{$form->getReportGroup()}}
                 </div>
             </div>
         </div>
-        <div class="col-md-8 mx-auto">
-            <div id="disket" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    Tabung Haji Disket
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="Tabung_Haji_disket">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Lembaga Tabung Haji
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="bbcd" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    EPF BBCD
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="EPF_bbcd">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Kumpulan Wang Simpanan Pekerja
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="borangA" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    EPF Borang A
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="EPF_borangA">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Kumpulan Wang Simpanan Pekerja
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
 
@@ -438,15 +388,16 @@
         </div>
     </div>
 
-    <!--government report form slider 3-->
+    <!--government report form 3-->
     <div class="row">
+        @foreach($dforms3 as $form)
         <div class="col-md-8 mx-auto">
-            <div id="lampiranA" class="card text-center collapse" >
+            <div id="{{$form->getReportTarget()}}" class="card text-center form-collapse collapse" >
                 <div class="card-header">
                     <div  style="float: left;">
                         <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
                     </div>
-                    SOSCO Lampiran A
+                    {{$form->getReportName()}}
                     <button type="button" class="close port-item" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -454,84 +405,60 @@
                 <div class="card-body">
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="SOSCO_lampiranA">
+                        <div class="col-md-8 mx-auto">
+                            <div id="accordion" role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
+                                        <i class="fas fa-search"></i> Filter
+                                    </div>
+                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlCostCentres">Cost Centres</label>
+                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($costcentres as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlDepartments">Departments</label>
+                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($departments as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlBranches">Branches</label>
+                                                <select class="form-control" id="selectBranches" name="selectBranches">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($branches as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlPositions">Positions</label>
+                                                <select class="form-control" id="selectPositions" name="selectPositions">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($positions as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <input type="hidden" name="reportName" value="{{$form->getValue()}}">
                         <input type="submit" class="btn btn-info" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
-                    Pertubuhan Keselamatan Social
+                    {{$form->getReportGroup()}}
                 </div>
             </div>
         </div>
-        <div class="col-md-8 mx-auto">
-            <div id="borang8A" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    SOSCO Borang 8A
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="SOSCO_borang8A">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Pertubuhan Keselamatan Social
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="ptptn" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    PTPTN
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="PTPTN_montly">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Perbadanan Tabung Pendidikan Tinggi Nasional
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="zakat" class="card text-center collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    ZAKAT
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="ZAKAT_montly">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    ZAKAT Malaysia
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
     <!--government report slider 4-->
@@ -566,7 +493,7 @@
     <!--government report form slider 4-->
     <div class="row">
         <div class="col-md-8 mx-auto">
-            <div id="asbn" class="card text-center collapse" >
+            <div id="asbn" class="card text-center form-collapse collapse" >
                 <div class="card-header">
                     <div  style="float: left;">
                         <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
@@ -589,7 +516,7 @@
             </div>
         </div>
         <div class="col-md-8 mx-auto">
-            <div id="lampiran1" class="card text-center collapse">
+            <div id="lampiran1" class="card text-center form-collapse collapse">
                 <div class="card-header">
                     <div  style="float: left;">
                         <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
@@ -615,16 +542,5 @@
 
 
 </div>
-
-<script src="{{asset('js/report/jquery-3.3.1.min.js')}}" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-<script src="{{asset('js/report/bootstrap.min.js')}}" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-        crossorigin="anonymous"></script>
-<script>
-    // accordion fix
-    $('.port-item').click(function () {
-        $('.collapse').collapse('hide');
-    })
-</script>
-
 @endsection
+
