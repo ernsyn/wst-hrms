@@ -4,13 +4,24 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Deduction extends Model
 {
     protected $table = 'deductions';
-    
+    protected $fillable =[
+        'code' ,
+        'name' ,
+        'type' ,
+    //    'day' => 'required',
+        'amount' ,
+        'statutory',
+        'status',
+        'company_id'
+
+    ];
     public function cost_centres()
     {
-        return $this->belongsToMany('App\CostCentre')
+        return $this->belongsToMany('App\CostCentre', 'deduction_cost_centre')
         ->withTimestamps();
     }
 
@@ -19,4 +30,5 @@ class Deduction extends Model
         return $this->belongsToMany('App\EmployeeGrade')
         ->withTimestamps();
     }
+    
 }
