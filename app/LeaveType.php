@@ -28,4 +28,14 @@ class LeaveType extends Model
     public function lt_conditional_entitlements() {
         return $this->hasMany('App\LTConditionalEntitlement'); 
     }
+
+    public function scopeCustom($query)
+    {
+        return $query->where('is_custom', true);
+    }
+
+    public function scopeDefault($query)
+    {
+        return $query->where('is_custom', false);
+    }
 }
