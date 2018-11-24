@@ -22,7 +22,7 @@ class Employee extends Model
         return $this->belongsTo('App\User');
     }
 
-   
+
 
     public function employee_jobs()
     {
@@ -37,6 +37,11 @@ class Employee extends Model
     public function dependents()
     {
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
+    }
+
+    public function employee_attachments()
+    {
+        return $this->hasMany('App\EmployeeAttachment', 'emp_id');
     }
 
     public function report_tos()
