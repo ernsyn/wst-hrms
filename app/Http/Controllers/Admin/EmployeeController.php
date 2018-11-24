@@ -342,21 +342,23 @@ class EmployeeController extends Controller
 
     public function postVisa(Request $request, $id)
     {
-        $family_members = $request->input('family_members');
-        $visa_number = $request->input('visa_number');
-        $issued_date = $request->input('issued_date');
-        $expiry_date = $request->input('expiry_date');
-        $issued = $request->input('altissueDate');
-        $expiry = $request->input('altexpDate');
-        $created_by = auth()->user()->id;
+        $visaData = $request->validate([
+            'type' => 'required',
+            'visa_number' => 'required|numeric',
+            'passport_no' => 'required|numeric',
+            'expiry_date' => 'required|date',
+            'issued_by' => 'required',
+            'issued_date' => 'required|date',
+            'family_members' => 'required'
+        ]);
 
-        DB::insert('insert into employee_visas
-        (emp_id, visa_number,family_members, issued_date, expiry_date, created_by)
-        values
-        (?,?,?,?,?,?)',
-         [$id, $visa_number,$family_members, $issued, $expiry, $created_by]);
+        $visa = new EmployeeVisa($visaData);
 
-         return redirect()->route('admin.employees.id', ['id' => $id]);
+
+        $employee = Employee::find($id);
+        $employee->employee_visas()->save($visa);
+
+        return response()->json(['success'=>'Visa is successfully added']);
     }
 
     public function postBankAccount(Request $request, $id)
