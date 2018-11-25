@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EmployeeReportTo extends Model
 {
+    use SoftDeletes;
     protected $table = 'employee_report_to';
 
     protected $fillable = [
@@ -14,6 +16,9 @@ class EmployeeReportTo extends Model
         'kpi_proposer',
         'notes',
     ];
+
+    protected $dates = ['deleted_at'];
+
 
     public function report_to()
     {
