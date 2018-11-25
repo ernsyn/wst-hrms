@@ -35,6 +35,7 @@ use App\EmployeeVisa;
 use App\EmployeeEmergencyContact;
 use App\EmployeeGrade;
 use App\EmployeeReportTo;
+use App\EmployeeWorkingDay;
 
 use App\Http\Requests\Admin\AddEmployee;
 
@@ -275,6 +276,44 @@ class EmployeeController extends Controller
         $employee->report_tos()->save($reportTo);
 
         return response()->json(['success'=>'Record is successfully added']);
+    }
+
+    public function postWorkingDay(Request $request, $id)
+    {
+        $workingDayData = $request->validate([
+            'monday' => 'required',
+            'tuesday' => 'required',
+            'wednesday' => 'required',
+            'thursday' => 'required',
+            'friday' => 'required',
+            'saturday' => 'required',
+            'sunday' => 'required',
+        ]);
+
+        $workingDaysData['is_template'] = false;
+
+
+        $workingDay = new EmployeeWorkingDay($workingDayData);
+   
+        $employee = Employee::find($id);
+        $employee->working_day()->save($workingDay);
+
+        return response()->json(['success' => 'Record is successfully added']);
+
+    }
+
+    public function getWorkingDay($id)
+    {       
+        $working_day = EmployeeWorkingDay::templates()->where('id', $id)->get();
+    
+        return response()->json($working_day);
+    }
+
+    public function getEmployeeWorkingDay($emp_id)
+    {       
+        $working_day = EmployeeWorkingDay::templates()->where('emp_id', $emp_id)->get();
+    
+        return response()->json($working_day);
     }
 
     public function postJob(Request $request, $id)

@@ -43,4 +43,9 @@ class Employee extends Model
     {
         return $this->hasMany('App\EmployeeReportTo', 'emp_id');
     }
+
+    public function working_day()
+    {
+        return $this->hasOne('App\EmployeeWorkingDay', 'emp_id');
+    }
 }
