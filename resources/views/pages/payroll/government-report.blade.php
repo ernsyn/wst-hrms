@@ -79,6 +79,7 @@
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
+                            @if ($form->getShowFilter() == 'true')
                             <div id="accordion" role="tablist">
                                 <div class="card">
                                     <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
@@ -120,24 +121,39 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
-                                <label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                    <option value="0">--Select--</option>
-                                    @foreach($period['period'] as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
-                                    @endforeach
-                                </select>
+                                @if ($form->getShowPeriod() == 'true')
+
+                                <div class="row">
+                                <div class="col-md-6 mx-auto">
+                                    <label for="exampleFormDate">Date</label>
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mx-auto">
+                                    <label for="exampleFormPeriod">Periods</label>
+                                    <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                        <option value="0">--Select--</option>
+                                        @foreach($period['period'] as $key => $value)
+                                        <option value="{{$key}}">{{$value}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                </div>
+                                @endif
+                                @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
                                 <select class="form-control" id="selectOfficer" name="selectOfficer">
-                                    <option value="0">--Select--</option>
                                     @foreach($officers as  $value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
                                 </select>
+                                @endif
                             </div>
                         </div>
 
@@ -200,6 +216,7 @@
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
+                            @if ($form->getShowFilter() == 'true')
                             <div id="accordion" role="tablist">
                                 <div class="card">
                                     <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
@@ -241,8 +258,31 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <br>
+                        <div class="col-md-6 mx-auto">
+                            <div class="form-group">
+                                @if ($form->getShowPeriod() == 'true')
+                                <label for="exampleFormPeriod">Periods</label>
+                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                    <option value="0">--Select--</option>
+                                    @foreach($period['period'] as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
+                                @if ($form->getShowOfficer() == 'true')
+                                <label for="exampleFormOfficer">Officer</label>
+                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                    @foreach($officers as  $value)
+                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
+                            </div>
+                        </div>
+
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
                         <input type="submit" class="btn btn-info" value="Generate">
                     </form>
@@ -303,6 +343,7 @@
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
+                            @if ($form->getShowFilter() == 'true')
                             <div id="accordion" role="tablist">
                                 <div class="card">
                                     <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
@@ -344,8 +385,31 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <br>
+                        <div class="col-md-6 mx-auto">
+                            <div class="form-group">
+                                @if ($form->getShowPeriod() == 'true')
+                                <label for="exampleFormPeriod">Periods</label>
+                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                    <option value="0">--Select--</option>
+                                    @foreach($period['period'] as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
+                                @if ($form->getShowOfficer() == 'true')
+                                <label for="exampleFormOfficer">Officer</label>
+                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                    @foreach($officers as  $value)
+                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
+                            </div>
+                        </div>
+
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
                         <input type="submit" class="btn btn-info" value="Generate">
                     </form>
@@ -406,6 +470,7 @@
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
+                            @if ($form->getShowFilter() == 'true')
                             <div id="accordion" role="tablist">
                                 <div class="card">
                                     <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
@@ -447,8 +512,31 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <br>
+                        <div class="col-md-6 mx-auto">
+                            <div class="form-group">
+                                @if ($form->getShowPeriod() == 'true')
+                                <label for="exampleFormPeriod">Periods</label>
+                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                    <option value="0">--Select--</option>
+                                    @foreach($period['period'] as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
+                                @if ($form->getShowOfficer() == 'true')
+                                <label for="exampleFormOfficer">Officer</label>
+                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                    @foreach($officers as  $value)
+                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
+                            </div>
+                        </div>
+
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
                         <input type="submit" class="btn btn-info" value="Generate">
                     </form>
@@ -490,15 +578,16 @@
         </div>
     </div>
 
-    <!--government report form slider 4-->
+    <!--government report form 4-->
     <div class="row">
+        @foreach($dforms4 as $form)
         <div class="col-md-8 mx-auto">
-            <div id="asbn" class="card text-center form-collapse collapse" >
+            <div id="{{$form->getReportTarget()}}" class="card text-center form-collapse collapse" >
                 <div class="card-header">
                     <div  style="float: left;">
                         <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
                     </div>
-                    ASBN
+                    {{$form->getReportName()}}
                     <button type="button" class="close port-item" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -506,40 +595,85 @@
                 <div class="card-body">
                     <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
                         {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="ASBN_montly">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Amanah Saham National Berhad
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 mx-auto">
-            <div id="lampiran1" class="card text-center form-collapse collapse">
-                <div class="card-header">
-                    <div  style="float: left;">
-                        <i class="fas fa-edit" style="color: #7b7474;font-size: 12pt;"></i>
-                    </div>
-                    EIS Lampiran 1
-                    <button type="button" class="close port-item" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
-                        {{csrf_field()}}
-                        <input type="hidden" name="reportName" value="EIS_lampiran1">
-                        <input type="submit" class="btn btn-info" value="Generate">
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    Employment Insurance System
-                </div>
-            </div>
-        </div>
-    </div>
+                        <div class="col-md-8 mx-auto">
+                            @if ($form->getShowFilter() == 'true')
+                            <div id="accordion" role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
+                                        <i class="fas fa-search"></i> Filter
+                                    </div>
+                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlCostCentres">Cost Centres</label>
+                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($costcentres as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlDepartments">Departments</label>
+                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($departments as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlBranches">Branches</label>
+                                                <select class="form-control" id="selectBranches" name="selectBranches">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($branches as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="exampleFormControlPositions">Positions</label>
+                                                <select class="form-control" id="selectPositions" name="selectPositions">
+                                                    <option value="0">--Select--</option>
+                                                    @foreach($positions as $key => $value)
+                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                        <br>
+                        <div class="col-md-6 mx-auto">
+                            <div class="form-group">
+                                @if ($form->getShowPeriod() == 'true')
+                                <label for="exampleFormPeriod">Periods</label>
+                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                    <option value="0">--Select--</option>
+                                    @foreach($period['period'] as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
+                                @if ($form->getShowOfficer() == 'true')
+                                <label for="exampleFormOfficer">Officer</label>
+                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                    @foreach($officers as  $value)
+                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
+                            </div>
+                        </div>
 
+                        <input type="hidden" name="reportName" value="{{$form->getValue()}}">
+                        <input type="submit" class="btn btn-info" value="Generate">
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    {{$form->getReportGroup()}}
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
 
 </div>
 @endsection

@@ -383,11 +383,7 @@
         </tr>
         <tr>
             <td class="tg-s268"></td>
-            <td class="border_bottom pleft" colspan="2"></td>
-        </tr>
-        <tr>
-            <td class="tg-s268"></td>
-            <td class="border_bottom pleft" colspan="2"></td>
+            <td class="border_bottom pleft" colspan="2">&nbsp;</td>
         </tr>
         <tr>
             <td class="tg-s268"></td>

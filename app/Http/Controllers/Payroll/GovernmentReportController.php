@@ -30,7 +30,10 @@ class GovernmentReportController extends Controller
         $branches = GenerateReportsHelper::getBranches();
         $positions = GenerateReportsHelper::getPosition();
         $period = PayrollPeriodEnum::list();
-        $officers = GenerateReportsHelper::getOfficer();
+
+        //get company information based on user login
+        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $officers = GenerateReportsHelper::getListOfficerInformation($company->id);
 
         return view('pages.payroll.government-report')->with([
             'sliders' => $arr['slider'] ,
@@ -42,6 +45,7 @@ class GovernmentReportController extends Controller
             'dforms1' => $form['form1'],
             'dforms2' => $form['form2'],
             'dforms3' => $form['form3'],
+            'dforms4' => $form['form4'],
             'costcentres' => $costcentres,
             'departments' => $departments,
             'branches' => $branches,
@@ -52,13 +56,19 @@ class GovernmentReportController extends Controller
     }
 
     public function generateReport(Request $request){
+        $year = "";
+        $month = "";
 
         $this->validate($request, [
             'reportName' => 'required'
         ]);
 
         $reportName = $request->input('reportName');
+        $date = $request->input('yearMonth');
+        $periods = $request->input('selectPeriod');
+        $officerId = $request->input('selectOfficer');
 
+        //checking filter
         if($request->input('selectCostCentres') != 0){
             $filter = "costcentres";
             $value = $request->input('selectCostCentres');
@@ -80,14 +90,20 @@ class GovernmentReportController extends Controller
             $value = 0;
         }
 
+        //checking yearMonth
+        if(empty($yearMonth)){
+            $year = date("Y");
+            $month;
+        }
+
         $filterOption = GenerateReportsHelper::getFilterKey($filter,$value);
-        return $this->generate($reportName,$filterOption);
+        return $this->generate($reportName,$periods,$officerId,$date,$filterOption);
     }
 
-    private function generate($reportName,$filter){
+    private function generate($reportName,$periods,$officerId,$date,$filter){
         switch ($reportName) {
             case "LHDN_borangE":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnBorangE',
                     [
                         'data' => $arr['data'] ,
@@ -100,7 +116,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp21":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP21',
                     [
                         'dataArr' => $arr['data']
@@ -112,7 +128,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp22":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22',
                     [
                         'dataArr' => $arr['data']
@@ -124,7 +140,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp22a":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22a',
                     [
                         'dataArr' => $arr['data']
@@ -136,7 +152,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp22b":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22b',
                     [
                         'dataArr' => $arr['data']
@@ -147,7 +163,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp39":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39',
                     [
                         'data' => $arr['data'] ,
@@ -162,7 +178,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp39lieu":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39_lieu',
                     [
                         'dataArr' => $arr['data']
@@ -173,7 +189,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_eaform":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnEaForm',
                     [
                         'dataArr' => $arr['data']
@@ -184,7 +200,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "Tabung_Haji_caruman":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/tabunghaji_caruman',
                     [
                         'data' => $arr['data'] ,
@@ -199,7 +215,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "EPF_bbcd":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/epf_bbcd',
                     [
                         'data' => $arr['data']
@@ -210,7 +226,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "EPF_borangA":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/epf_borangA',
                     [
                         'data' => $arr['data'] ,
@@ -223,7 +239,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "SOSCO_lampiranA":
-                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/soscoLampiranA',
                     [
                         'data' => $arr['data']
@@ -240,7 +256,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "test":
-                $arr = GenerateReportsHelper::generateBean($reportName,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 break;
             default:
                 echo "None";

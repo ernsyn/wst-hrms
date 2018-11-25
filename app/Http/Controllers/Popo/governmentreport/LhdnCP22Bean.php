@@ -96,7 +96,7 @@ class LhdnCP22Bean
         $this->spouseIncomeTax_A = isset($array['spouseIncomeTax_A']) ? $array['spouseIncomeTax_A'] : null;
 
         $this->fixedMontlyRemunerationRate_B = isset($array['fixedMontlyRemunerationRate_B']) ? $array['fixedMontlyRemunerationRate_B'] : null;
-        $this->rateCashAllowance_B = isset($array['rateCashAllowance_B']) ? $array['rateCashAllowance_B'] : null;
+        $this->rateCashAllowance_B = isset($array['rateCashAllowance_B']) ? $array['rateCashAllowance_B'] : " ";
         $this->emolumentNotFixed_B = isset($array['emolumentNotFixed_B']) ? $array['emolumentNotFixed_B'] : null;
         $this->employerName_B = isset($array['employerName_B']) ? $array['employerName_B'] : null;
         $this->employerAddress1_B = isset($array['employerAddress1_B']) ? $array['employerAddress1_B'] : null;

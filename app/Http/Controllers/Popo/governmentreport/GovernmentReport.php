@@ -240,40 +240,40 @@ class GovernmentReport
         $form4 = array();
 
         //LHDN
-        array_push($form,new GovernmentReport(['reportName' => 'LHDN Borang E', 'value' => 'test', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'borangE', 'reportCss' => 'm-bg-brand']));
-        array_push($form,new GovernmentReport(['reportName' => 'LHDN CP21', 'value' => 'LHDN_cp21', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp21', 'reportCss' => 'm-bg-brand']));
-        array_push($form,new GovernmentReport(['reportName' => 'LHDN CP22', 'value' => 'LHDN_cp22', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp22', 'reportCss' => 'm-bg-brand']));
-        array_push($form,new GovernmentReport(['reportName' => 'LHDN CP22a', 'value' => 'LHDN_cp22a', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp22a', 'reportCss' => 'm-bg-brand']));
+        array_push($form,new GovernmentReport(['reportName' => 'LHDN Borang E', 'value' => 'test', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'borangE', 'reportCss' => 'm-bg-brand', 'reportCss' => 'm-bg-brand', 'showOfficer' => true, 'showPeriod' => false, 'showFilter' => true ]));
+        array_push($form,new GovernmentReport(['reportName' => 'LHDN CP21', 'value' => 'LHDN_cp21', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp21', 'reportCss' => 'm-bg-brand', 'showOfficer' => true, 'showPeriod' => false, 'showFilter' => true]));
+        array_push($form,new GovernmentReport(['reportName' => 'LHDN CP22', 'value' => 'LHDN_cp22', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp22', 'reportCss' => 'm-bg-brand', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form,new GovernmentReport(['reportName' => 'LHDN CP22a', 'value' => 'LHDN_cp22a', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp22a', 'reportCss' => 'm-bg-brand', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
-        array_push($form1,new GovernmentReport(['reportName' => 'LHDN CP22b', 'value' => 'LHDN_cp22b', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp22b', 'reportCss' => 'm-bg-brand']));
-        array_push($form1,new GovernmentReport(['reportName' => 'LHDN CP39', 'value' => 'LHDN_cp39', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp39', 'reportCss' => 'm-bg-brand']));
-        array_push($form1,new GovernmentReport(['reportName' => 'LHDN CP39 Lieu', 'value' => 'LHDN_cp39lieu', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp39lieu', 'reportCss' => 'm-bg-brand']));
-        array_push($form1,new GovernmentReport(['reportName' => 'LHDN EA Form', 'value' => 'LHDN_eaform', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'eaform', 'reportCss' => 'm-bg-brand']));
+        array_push($form1,new GovernmentReport(['reportName' => 'LHDN CP22b', 'value' => 'LHDN_cp22b', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp22b', 'reportCss' => 'm-bg-brand', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form1,new GovernmentReport(['reportName' => 'LHDN CP39', 'value' => 'LHDN_cp39', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp39', 'reportCss' => 'm-bg-brand', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form1,new GovernmentReport(['reportName' => 'LHDN CP39 Lieu', 'value' => 'LHDN_cp39lieu', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'cp39lieu', 'reportCss' => 'm-bg-brand', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form1,new GovernmentReport(['reportName' => 'LHDN EA Form', 'value' => 'LHDN_eaform', 'reportGroup' => 'Lembaga Hasil Dalam Negeri', 'reportTarget' => 'eaform', 'reportCss' => 'm-bg-brand', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
         //Tabung haji
-        array_push($form2,new GovernmentReport(['reportName' => 'Tabung Haji  Caruman', 'value' => 'Tabung_Haji_caruman', 'reportGroup' => 'Lembaga Tabung Haji', 'reportTarget' => 'caruman', 'reportCss' => 'm-bg-brand-cream']));
-        array_push($form2,new GovernmentReport(['reportName' => 'Tabung Haji  Disket', 'value' => 'Tabung_Haji_disket', 'reportGroup' => 'Lembaga Tabung Haji', 'reportTarget' => 'disket', 'reportCss' => 'm-bg-brand-cream']));
+        array_push($form2,new GovernmentReport(['reportName' => 'Tabung Haji  Caruman', 'value' => 'Tabung_Haji_caruman', 'reportGroup' => 'Lembaga Tabung Haji', 'reportTarget' => 'caruman', 'reportCss' => 'm-bg-brand-cream', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form2,new GovernmentReport(['reportName' => 'Tabung Haji  Disket', 'value' => 'Tabung_Haji_disket', 'reportGroup' => 'Lembaga Tabung Haji', 'reportTarget' => 'disket', 'reportCss' => 'm-bg-brand-cream', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
         //EPF
-        array_push($form2,new GovernmentReport(['reportName' => 'EPF BBCD', 'value' => 'EPF_bbcd', 'reportGroup' => 'Kumpulan Wang Simpanan Pekerja', 'reportTarget' => 'bbcd', 'reportCss' => 'm-bg-brand-bluish']));
-        array_push($form2,new GovernmentReport(['reportName' => 'EPF Borang A', 'value' => 'EPF_borangA', 'reportGroup' => 'Kumpulan Wang Simpanan Pekerja', 'reportTarget' => 'borangA', 'reportCss' => 'm-bg-brand-bluish']));
+        array_push($form2,new GovernmentReport(['reportName' => 'EPF BBCD', 'value' => 'EPF_bbcd', 'reportGroup' => 'Kumpulan Wang Simpanan Pekerja', 'reportTarget' => 'bbcd', 'reportCss' => 'm-bg-brand-bluish', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form2,new GovernmentReport(['reportName' => 'EPF Borang A', 'value' => 'EPF_borangA', 'reportGroup' => 'Kumpulan Wang Simpanan Pekerja', 'reportTarget' => 'borangA', 'reportCss' => 'm-bg-brand-bluish', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
         //SOSCO
-        array_push($form3,new GovernmentReport(['reportName' => 'SOCSO Lampiran A', 'value' => 'SOSCO_lampiranA', 'reportGroup' => 'Pertubuhan Keselamatan Social', 'reportTarget' => 'lampiranA', 'reportCss' => 'm-bg-brand-greenish']));
-        array_push($form3,new GovernmentReport(['reportName' => 'SOCSO Borang 8A', 'value' => 'SOSCO_borang8A', 'reportGroup' => 'Pertubuhan Keselamatan Social', 'reportTarget' => 'borang8A', 'reportCss' => 'm-bg-brand-greenish']));
+        array_push($form3,new GovernmentReport(['reportName' => 'SOCSO Lampiran A', 'value' => 'SOSCO_lampiranA', 'reportGroup' => 'Pertubuhan Keselamatan Social', 'reportTarget' => 'lampiranA', 'reportCss' => 'm-bg-brand-greenish', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form3,new GovernmentReport(['reportName' => 'SOCSO Borang 8A', 'value' => 'SOSCO_borang8A', 'reportGroup' => 'Pertubuhan Keselamatan Social', 'reportTarget' => 'borang8A', 'reportCss' => 'm-bg-brand-greenish', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
 
         //PTPTN
-        array_push($form3,new GovernmentReport(['reportName' => 'PTPTN', 'value' => 'PTPTN_montly', 'reportGroup' => 'Perbadanan Tabung Pendidikan Tinggi Nasional', 'reportTarget' => 'ptptn', 'reportCss' => 'm-bg-brand-rasberry']));
+        array_push($form3,new GovernmentReport(['reportName' => 'PTPTN', 'value' => 'PTPTN_montly', 'reportGroup' => 'Perbadanan Tabung Pendidikan Tinggi Nasional', 'reportTarget' => 'ptptn', 'reportCss' => 'm-bg-brand-rasberry', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
         //ZAKAT
-        array_push($form3,new GovernmentReport(['reportName' => 'ZAKAT', 'value' => 'ZAKAT_montly', 'reportGroup' => 'ZAKAT Malaysia', 'reportTarget' => 'zakat', 'reportCss' => 'm-bg-brand-orange']));
+        array_push($form3,new GovernmentReport(['reportName' => 'ZAKAT', 'value' => 'ZAKAT_montly', 'reportGroup' => 'ZAKAT Malaysia', 'reportTarget' => 'zakat', 'reportCss' => 'm-bg-brand-orange', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
         //ASBN
-        array_push($form4,new GovernmentReport(['reportName' => 'ASBN', 'value' => 'ASBN_montly',  'reportGroup' => 'Amanah Saham National Berhad', 'reportTarget' => 'asbn', 'reportCss' => 'm-bg-brand-brown']));
+        array_push($form4,new GovernmentReport(['reportName' => 'ASBN', 'value' => 'ASBN_montly',  'reportGroup' => 'Amanah Saham National Berhad', 'reportTarget' => 'asbn', 'reportCss' => 'm-bg-brand-brown', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
         //EIS
-        array_push($form4,new GovernmentReport(['reportName' => 'EIS Lampiran 1', 'value' => 'EIS_lampiran1',   'reportGroup' => 'Employment Insurance System', 'reportTarget' => 'lampiran1', 'reportCss' => 'm-bg-brand-bluish']));
+        array_push($form4,new GovernmentReport(['reportName' => 'EIS Lampiran 1', 'value' => 'EIS_lampiran1',   'reportGroup' => 'Employment Insurance System', 'reportTarget' => 'lampiran1', 'reportCss' => 'm-bg-brand-bluish', 'showOfficer' => true, 'showPeriod' => true, 'showFilter' => true]));
 
         $form = array(
             "form"=>$form,

@@ -38,7 +38,7 @@ use \Carbon;
 class GenerateReportsHelper
 {
 
-    public static function generateBean($reportName,$filter){
+    public static function generateBean($reportName,$periods,$date,$officerId,$filter){
         switch ($reportName) {
             case "LHDN_borangE":
 
@@ -126,94 +126,52 @@ class GenerateReportsHelper
             case "LHDN_cp21":
                     //set pojo
                     $data = array();
-                    for($count=0;$count < 5; $count++) {
+                    $date="";
+                    $year="2018";
+                    $month="";
+                    $companyInformation = self::getUserLogonCompanyInfomation();
+                    $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                    $userInfoAndPayrollList = self::getListUserInfomationAndPayroll($companyInformation->id,$filter,$month,$year);
+
+
+                    foreach($userInfoAndPayrollList as $userPayroll) {
                         $obj = new LhdnCP21Bean([
-                            'employerName' => 'OPPO ELECTRONICS SDN BHD',
+                            'employerName' => $companyInformation->name,
                             'employerNoE' => 'E9119707907',
                             'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
                             'employerAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
                             'employerAddress3' => 'SELANGOR.',
                             'employerPostcode' => 46200,
-                            'employerNoTel' => '03-19220112',
-                            'name_A' => 'Shahril Abu Bakar',
-                            'dateOfCommencement_A' => '190993',
+                            'employerNoTel' => $companyInformation->phone,
+                            'name_A' => $userPayroll->name,
+                            'dateOfCommencement_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
                             'address1_A' => 'No 7 ,Simpang Empat',
                             'address2_A' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
                             'address3_A' => 'SELANGOR.',
                             'postcode_A' => 46200,
                             'expectedDatetoLeaveMalaysia_A' => '',
                             'xAddressBelongsToTaxAgent_A' => '',
-                            'ic_A' => '860110781723',
-                            'incomeTaxNo_A' => 'OG12345678910',
-                            'reasonLeaveMalaysia_A' => 'hueheue hueue ehuehue',
-                            'citizenship_A' => 'Malaysian',
-                            'dateOfBirth_A' => '010412',
-                            'placeOfBirth_A' => 'Kuala Lumpur',
-                            'addressOutMalaysia1_A' => 'No 7 ,Simpang Empat',
-                            'addressOutMalaysia2_A' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                            'addressOutMalaysia3_A' => 'SELANGOR.',
-                            'postcodeOutMalaysia_A' => 46200,
-                            'natureOfEmployment_A' => 'CONCEPT STORE SALES REPRESENTATIVE',
-                            'telno_A' => '03-19220112',
-                            'stateProbableDateofReturn_A' => '01/05/2017',
+                            'ic_A' => $userPayroll->ic_no,
+                            'incomeTaxNo_A' => $userPayroll->tax_no,
+                            'citizenship_A' => $userPayroll->citizenship,
+                            'dateOfBirth_A' => self::changeTwoDigitDate($userPayroll->dob),
+                            'natureOfEmployment_A' => $userPayroll->position,
+                            'telno_A' => $userPayroll->contact_no,
 
-                            'salaryFrom_B' => '01/01/2018',
-                            'salaryUntil_B' => '01/04/1212',
-                            'salaryAmount_B' => 9774.19,
-                            'leavePayFrom_B' => '01/01/2018',
-                            'leavePayUntil_B' => '01/04/1212',
-                            'leavePayAmount_B' => 74.19,
-                            'commissionFrom_B' => '01/01/2018',
-                            'commissionUntil_B' => '01/04/1212',
-                            'commissionAmount_B' => 4.19,
-                            'gratuityFrom_B' => '01/01/2018',
-                            'gratuityUntil_B' => '01/04/1212',
-                            'gratuityAmount_B' => 74.19,
-                            'compensationFrom_B' => '01/01/2018',
-                            'compensationUntil_B' => '01/04/1212',
-                            'compensationAmount_B' => 4.19,
-                            'cashAllowanceFrom_B' => '01/01/2018',
-                            'cashAllowanceUntil_B' => '01/04/1212',
-                            'cashAllowanceAmount_B' => 74.19,
-                            'pensionFrom_B' => '01/01/2018',
-                            'pensionUntil_B' => '01/04/1212',
-                            'pensionAmount_B' => 4.19,
-                            'benefitSubjectToTaxFrom_B' => '01/01/2018',
-                            'benefitSubjectToTaxUntil_B' => '01/04/1212',
-                            'benefitSubjectToTaxAmount_B' => 74.19,
-                            'livingAccommodationFrom_B' => '01/01/2018',
-                            'livingAccommodationUntil_B' => '01/04/1212',
-                            'livingAccommodationAmount_B' => 4.19,
-                            'otherAllowanceFrom_B' => '01/01/2018',
-                            'otherAllowanceUntil_B' => '01/04/1212',
-                            'otherAllowanceAmount_B' => 74.19,
-                            'otherPaymentsFrom_B' => '01/01/2018',
-                            'otherPaymentsUntil_B' => '01/04/1212',
-                            'otherPaymentsAmount_B' => 4.19,
-                            'total_B' => 0,
+                            'salaryFrom_B' => self::changeMalaysianDate($userPayroll->remuneration_start_date),
+                            'salaryUntil_B' => self::changeMalaysianDate($userPayroll->remuneration_end_date),
+                            'salaryAmount_B' => $userPayroll->total_basic_salary,
 
-                            'typeOfIncome1_C' => 'Online Business',
-                            'typeOfIncome2_C' => 'Online Business',
-                            'typeOfIncome3_C' => 'Online Business',
-                            'yearForWhichPaid1_C' => '01/01/2018',
-                            'yearForWhichPaid2_C' => '01/04/1212',
-                            'yearForWhichPaid3_C' => '01/04/1212',
-                            'totalIncome1_C' => 74.19,
-                            'totalIncome2_C' => 74.19,
-                            'totalIncome3_C' => 74.19,
-                            'pensionFund1_C' => 4.19,
-                            'pensionFund2_C' => 4.19,
-                            'pensionFund3_C' => 4.19,
+                            //TODO : need sum of total of B section
+                            'total_B' => $userPayroll->total_basic_salary,
 
-                            'moneyWithheldByEmployer_D' => 74.19,
-                            'monthlyTaxDeductions_D' => 1501.00,
-                            'amountOfZakatPaid_D' => 74.19,
-                            'contributionsToEmployeeProvidentFund_D' => 1501.00,
+                            //SECTION D
+                            'contributionsToEmployeeProvidentFund_D' => $userPayroll->total_epf,
 
-                            'officerName_E' => 'CHONG HWEE MIN',
-                            'officerDesignation_E' => 'HUMAN RESOURCES OFFICER',
+                            'officerName_E' => $officerInformation->name,
+                            'officerDesignation_E' => $officerInformation->position,
                             'officerSignature_E' => '',
-                            'date_E' => '011018'
+                            'date_E' => self::getCurrentTwoDigitDate()
 
                         ]);
                         $data[] = $obj;
@@ -225,11 +183,18 @@ class GenerateReportsHelper
             case "LHDN_cp22":
                 //set pojo
                 $data = array();
-                for($count=0;$count < 5; $count++) {
+                $date="";
+                $year="2018";
+                $month="11";
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInfomationAndPayroll($companyInformation->id,$filter,$month,$year);
+
+                foreach($userInfoAndPayrollList as $userPayroll) {
                     $obj = new LhdnCP22Bean([
-                        'companyName' => 'OPPO ELECTRONICS SDN BHD',
+                        'companyName' => $companyInformation->name,
                         'companyNoE' => 'E9119707907',
-                        'companyNoTel' => '03-19220112',
+                        'companyNoTel' => $companyInformation->phone,
                         'addressTo1' => 'LEVEL 15, TOWER 1, PJ 33,',
                         'addressTo2' => 'JALAN SEMANGAT, PETALING JAYA,',
                         'addressTo3' => 'SELANGOR.',
@@ -239,42 +204,27 @@ class GenerateReportsHelper
                         'addressFrom3' => 'SELANGOR.',
                         'postcodeFrom' => 46200,
 
-                        'name_A' => 'Shahril Abu Bakar',
-                        'incomeTaxNo_A' => 'A565655',
-                        'jobRole_A' => 'CONCEPT STORE SALES REPRESENTATIVE',
-                        'noIc_A' => '876756543213',
-                        'employmentStartDate_A' => '05/03/2018',
+                        'name_A' => $userPayroll->name,
+                        'incomeTaxNo_A' => $userPayroll->tax_no,
+                        'jobRole_A' => $userPayroll->position,
+                        'noIc_A' => $userPayroll->ic_no,
+                        'employmentStartDate_A' => self::changeMalaysianDate($userPayroll->job_start_date),
                         'employmentExpectedDate_A' => '05/03/2018',
-                        'immigrationNo_A' => '131233132H',
+                        'immigrationNo_A' => $userPayroll->immigration_passport_no,
                         'address1_A' => 'No 7 ,Simpang Empat',
                         'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
                         'address3_A' => 'SELANGOR.',
                         'postcode_A' => 46200,
-                        'birthDate_A' => '190993',
-                        'maritalStatus_A' => 'SINGLE',
-                        'childrenUnder18No_A' => '2',
-                        'addressNow1_A' => 'No 7 ,Simpang Empat',
-                        'addressNow2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'addressNow3_A' => 'SELANGOR.',
-                        'postcodeNow_A' => '676177',
-                        'incomeTaxNo_A' => 'OG12345678910',
+                        'birthDate_A' => self::changeMalaysianDate($userPayroll->dob),
+                        'maritalStatus_A' => $userPayroll->marital_status,
                         'signX_A' => '',
-                        'spouseName_A' => 'SUZANNAH IBRAHIM',
-                        'spouseIC_A' => '871898176765',
-                        'spouseIncomeTax_A' => 'OG12345678910',
 
-                        'fixedMontlyRemunerationRate_B' => 565.00,
-                        'rateCashAllowance_B' => 'Huehuehue',
-                        'emolumentNotFixed_B' => '',
-                        'employerName_B' => 'JOSE WENGER',
-                        'employerAddress1_B' => 'No 7 ,Simpang Empat',
-                        'employerAddress2_B' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'employerAddress3_B' => 'SELANGOR.',
+                        'fixedMontlyRemunerationRate_B' => $userPayroll->total_gross_salary,
 
                         'officerSignature_C' => '',
-                        'officerName_C' => 'CHONG HWEE MIN',
-                        'officerRole_C' => 'HUMAN RESOURCES OFFICER',
-                        'date_C' => '01/10/2018'
+                        'officerName_C' => $officerInformation->name,
+                        'officerRole_C' => $officerInformation->position,
+                        'date_C' => self::getCurrentDate()
                     ]);
                     $data[] = $obj;
                 }
@@ -791,14 +741,12 @@ class GenerateReportsHelper
                 break;
 
             case "test":
-                $company = self::getCompanyInfomation(null);
-                //echo $company['name'];
-                //$filter(""=>"")
-                $list = self::getLHDNYearlyReport($company['id'],$filter);
-                self::getOfficer();
+                 $companyInformation = self::getUserLogonCompanyInfomation();
+                 self::getEmployeeInformation($officerId,$companyInformation->id);
+                $year="2018";
+                $month="";
+                //self::getListUserInfomationAndPayroll($companyInformation->id,$filter,$month,$year);
 
-                $company = self::getUserLogonCompanyInfomation();
-                self::getUserInfomationAndPayrollYearly($company->id,$filter);
                 //$user->compan
 /*                foreach ($list as $emp){
                     echo $emp->name;
@@ -811,7 +759,7 @@ class GenerateReportsHelper
     }
 
 
-    private static function getUserLogonCompanyInfomation(){
+    public static function getUserLogonCompanyInfomation(){
         $id = Auth::id();
         return User::find($id)->employee->company->where('status', 'Active')->first();
     }
@@ -895,113 +843,100 @@ class GenerateReportsHelper
         return EmployeePosition::get();
     }
 
-    public static function getOfficer(){
-/*        select users.id,users.name from model_has_roles
-        inner join `roles` on `model_has_roles`.`role_id` = `roles`.`id`
-        inner join `users` on `model_has_roles`.`model_id` = `users`.`id`
-        inner join `employees` on `users`.`id` = `employees`.`user_id`
-        where roles.name='hr-exec' and users.status='Active';*/
+    public static function getEmployeeInformation($emp_id,$company_id){;
+     //  sample query : ->toSql()
+        return DB::table('employees')
+            ->select(DB::raw('users.id,users.name,employees.ic_no,employees.contact_no,employee_positions.name as position'))
+            ->join('users', 'employees.user_id', '=', 'users.id')
+            ->join('employee_jobs','employees.id','employee_jobs.emp_id')
+            ->join('employee_positions','employee_jobs.emp_mainposition_id','employee_positions.id')
+            ->where('employees.id',$emp_id)
+            ->where('users.status','Active')
+            ->where('employees.company_id', $company_id)->first();
+
+    }
+
+    public static function getListOfficerInformation($companyId){
+        //  sample query : ->toSql()
 
         return DB::table('model_has_roles')
-            ->select(DB::raw('users.id,users.name'))
+            ->select(DB::raw('employees.id,users.name,employees.ic_no,employees.contact_no,employee_positions.name as position'))
             ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
             ->join('users', 'model_has_roles.model_id', '=', 'users.id')
             ->join('employees','users.id','employees.user_id')
+            ->join('employee_jobs','employees.id','employee_jobs.emp_id')
+            ->join('employee_positions','employee_jobs.emp_mainposition_id','employee_positions.id')
             ->where('roles.name','hr-exec')
             ->where('users.status','Active')
+            ->where('employees.company_id', $companyId)
             ->get();
 
     }
 
-    public static function getUserInfomationAndPayrollYearly($companyId,$filter){
-/*        select employees.id,users.name, employees.contact_no, employees.address, employees.dob, employees.gender, employees.race,
-        countries.citizenship, employees.marital_status, employees.total_children, employees.ic_no, employees.tax_no,
-        employees.epf_no, employees.socso_no, employees.insurance_no, employees.pcb_group, employees.driver_license_no,
-        employees.driver_license_expiry_date, employees.confirmed_date, users.email, employee_positions.name as position,
-        employee_jobs.start_date as job_start_date, employee_jobs.end_date as job_end_date,
-        max(employees.total_children) as total_children,
+    public static function getListUserInfomationAndPayroll($companyId,$filter,$month,$year){
 
-        sum(payroll_trx.gross_pay) as total_gross_salary ,sum(payroll_trx.basic_salary) as total_basic_salary,
-        sum(payroll_trx.employee_epf) as total_epf,sum(payroll_trx.employee_eis) as total_eis,
-        sum(payroll_trx.employee_socso) as total_socso,sum(payroll_trx.employee_pcb) as total_pcb,
-        min(payroll_master.start_date) as remuneration_start_date , max(payroll_master.end_date) as remuneration_end_date
+        $query = DB::table('payroll_master')
+            ->select(
+                DB::raw('employees.id,users.name, employees.contact_no, employees.address, employees.dob, employees.gender, employees.race'),
+                DB::raw('countries.citizenship, employees.marital_status, employees.total_children, employees.ic_no, employees.tax_no'),
+                DB::raw('employees.epf_no, employees.socso_no, employees.insurance_no, employees.pcb_group, employees.driver_license_no'),
+                DB::raw('employees.driver_license_expiry_date, employees.confirmed_date, users.email, employee_positions.name as position'),
+                DB::raw('employee_jobs.start_date as job_start_date, employee_jobs.end_date as job_end_date'),
+                DB::raw('employee_immigrations.passport_no as immigration_passport_no'),
+                DB::raw('max(employees.total_children) as total_children'),
 
-        from `payroll_master`
-        inner join `payroll_trx` on `payroll_master`.`id` = `payroll_trx`.`payroll_master_id`
-        inner join `employee_jobs` on `payroll_trx`.`employee_id` = `employee_jobs`.`emp_id`
-        inner join `employees` on `payroll_trx`.`employee_id` = `employees`.`id`
-        inner join `countries` on `employees`.`nationality` = `countries`.`id`
-        inner join `users` on `employees`.`user_id` = `users`.`id`
-        inner join `employee_positions` on `employee_jobs`.`emp_mainposition_id` = `employee_positions`.`id`
-        where `users`.`status` = 'Active' and  year(`year_month`) = 2018 and `payroll_master`.`company_id` = 1
-        group by (employee_id);*/
-        if(!empty($filter)) {
-            echo DB::table('payroll_master')
-                ->select(
-                    DB::raw('employees.id,users.name, employees.contact_no, employees.address, employees.dob, employees.gender, employees.race'),
-                    DB::raw('countries.citizenship, employees.marital_status, employees.total_children, employees.ic_no, employees.tax_no'),
-                    DB::raw('employees.epf_no, employees.socso_no, employees.insurance_no, employees.pcb_group, employees.driver_license_no'),
-                    DB::raw('employees.driver_license_expiry_date, employees.confirmed_date, users.email, employee_positions.name as position'),
-                    DB::raw('employee_jobs.start_date as job_start_date, employee_jobs.end_date as job_end_date'),
-                    DB::raw('max(employees.total_children) as total_children'),
+                DB::raw('sum(payroll_trx.gross_pay) as total_gross_salary ,sum(payroll_trx.basic_salary) as total_basic_salary'),
+                DB::raw('sum(payroll_trx.employee_epf) as total_epf,sum(payroll_trx.employee_eis) as total_eis'),
+                DB::raw('sum(payroll_trx.employee_socso) as total_socso,sum(payroll_trx.employee_pcb) as total_pcb'),
+                DB::raw('min(payroll_master.start_date) as remuneration_start_date , max(payroll_master.end_date) as remuneration_end_date')
+            )
+            ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
+            ->join('employees', 'payroll_trx.employee_id', 'employees.id')
+            ->join('countries', 'employees.nationality', 'countries.id')
+            ->join('employee_positions', 'employee_jobs.emp_mainposition_id', 'employee_positions.id')
+            ->join('users', 'employees.user_id', 'users.id')
+            ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id');
 
-                    DB::raw('sum(payroll_trx.gross_pay) as total_gross_salary ,sum(payroll_trx.basic_salary) as total_basic_salary'),
-                    DB::raw('sum(payroll_trx.employee_epf) as total_epf,sum(payroll_trx.employee_eis) as total_eis'),
-                    DB::raw('sum(payroll_trx.employee_socso) as total_socso,sum(payroll_trx.employee_pcb) as total_pcb'),
-                    DB::raw('min(payroll_master.start_date) as remuneration_start_date , max(payroll_master.end_date) as remuneration_end_date')
-                )
-                ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
-                ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
-                ->join('employees', 'payroll_trx.employee_id', 'employees.id')
-                ->join('countries', 'employees.nationality', 'countries.id')
-                ->join('employee_positions', 'employee_jobs.emp_mainposition_id', 'employee_positions.id')
-                ->join('users', 'employees.user_id', 'users.id')
+            //filter
+            if(!empty($filter)){
+                $query->where(array_keys($filter)[0], array_values($filter)[0]);
+            }
 
-                ->where(array_keys($filter)[0], array_values($filter)[0])
-                ->whereYear('payroll_master.year_month', date('Y'))
-                ->where('payroll_master.company_id', $companyId)
-                ->where('users.status', 'Active')
-                ->groupBy(DB::raw("payroll_trx.employee_id"))
-                ->get();
-        }else{
-            echo DB::table('payroll_master')
-                ->select(
-                    DB::raw('employees.id,users.name, employees.contact_no, employees.address, employees.dob, employees.gender, employees.race'),
-                    DB::raw('countries.citizenship, employees.marital_status, employees.total_children, employees.ic_no, employees.tax_no'),
-                    DB::raw('employees.epf_no, employees.socso_no, employees.insurance_no, employees.pcb_group, employees.driver_license_no'),
-                    DB::raw('employees.driver_license_expiry_date, employees.confirmed_date, users.email, employee_positions.name as position'),
-                    DB::raw('employee_jobs.start_date as job_start_date, employee_jobs.end_date as job_end_date'),
-                    DB::raw('max(employees.total_children) as total_children'),
+            if(!empty($month)){
+                $query->whereMonth('payroll_master.year_month', $month);
+            }
 
-                    DB::raw('sum(payroll_trx.gross_pay) as total_gross_salary ,sum(payroll_trx.basic_salary) as total_basic_salary'),
-                    DB::raw('sum(payroll_trx.employee_epf) as total_epf,sum(payroll_trx.employee_eis) as total_eis'),
-                    DB::raw('sum(payroll_trx.employee_socso) as total_socso,sum(payroll_trx.employee_pcb) as total_pcb'),
-                    DB::raw('min(payroll_master.start_date) as remuneration_start_date , max(payroll_master.end_date) as remuneration_end_date')
-                )
-                ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
-                ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
-                ->join('employees', 'payroll_trx.employee_id', 'employees.id')
-                ->join('countries', 'employees.nationality', 'countries.id')
-                ->join('employee_positions', 'employee_jobs.emp_mainposition_id', 'employee_positions.id')
-                ->join('users', 'employees.user_id', 'users.id')
+            if(!empty($year)){
+                $query->whereYear('payroll_master.year_month', $year);
+            }
 
-                ->whereYear('payroll_master.year_month', date('Y'))
-                ->where('payroll_master.company_id', $companyId)
-                ->where('users.status', 'Active')
-                ->groupBy(DB::raw("payroll_trx.employee_id"))
-                ->get();
-        }
+        $query->where('payroll_master.company_id', $companyId)
+            ->where('users.status', 'Active')
+            ->groupBy(DB::raw("payroll_trx.employee_id"));
+
+        $result= $query->get();
+
+        return $result;
     }
 
-/*select users.name, employees.contact_no, employees.address, employees.dob, employees.gender, employees.race,
-countries.citizenship, employees.marital_status, employees.total_children, employees.ic_no, employees.tax_no,
-employees.epf_no, employees.socso_no, employees.insurance_no, employees.pcb_group, employees.driver_license_no,
-employees.driver_license_expiry_date, employees.confirmed_date, users.email, employee_positions.name,
-employee_jobs.start_date, employee_jobs.end_date
-from employees
-inner join `users` on `employees`.`user_id` = `users`.`id`
-inner join `countries` on `employees`.`nationality` = `countries`.`id`
-inner join `employee_jobs` on `employees`.`id` = `employee_jobs`.`emp_id`
-inner join `employee_positions` on `employee_jobs`.`emp_mainposition_id` = `employee_positions`.`id`
-where users.status='Active' and employees.company_id=1;*/
+
+    /**
+     * Helper
+     */
+    public static function getCurrentTwoDigitDate(){
+        return date("dmy");
+    }
+
+    public static function getCurrentDate(){
+        return date("d/m/Y");
+    }
+
+    public static function changeTwoDigitDate($date){
+        return date_format(date_create($date),"dmy");
+    }
+
+    public static function changeMalaysianDate($date){
+        return date_format(date_create($date),"d/m/Y");
+    }
 }
