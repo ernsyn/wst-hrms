@@ -1096,7 +1096,7 @@ public function deleteCompanyBank(Request $request, $id)
 {
     CompanyBank::find($id)->delete();
 
-    return redirect()->route('admin.settings.company-banks.delete', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');
+    return redirect()->route('admin.settings.company.company-details', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');
 }
 
 public function postEditSecurityGroup(Request $request)
