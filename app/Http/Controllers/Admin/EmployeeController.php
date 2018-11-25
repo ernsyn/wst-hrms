@@ -265,7 +265,7 @@ class EmployeeController extends Controller
             'report_to_emp_id' => 'required',
             'type' => 'required',
             'kpi_proposer' => 'required',
-            'notes' => 'required',
+            'notes' => 'required'
         ]);
 
         $reportTo = new EmployeeReportTo($reportToData);
@@ -574,6 +574,20 @@ class EmployeeController extends Controller
         return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
     }
 
+    public function postEditReportTo(Request $request, $emp_id, $id)
+    {
+        $reportToUpdatedData = $request->validate([
+            'report_to_emp_id' => 'required',
+            'type' => 'required',
+            'kpi_proposer' => 'required',
+            'notes' => 'required'
+        ]);
+
+        EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+
+        return response()->json(['success'=>'Report To was successfully updated.']);
+    }
+    
     public function postEditAttachment(Request $request, $emp_id, $id)
     {
         $attachmentUpdatedData = $request->validate([
@@ -593,6 +607,12 @@ class EmployeeController extends Controller
     {
         EmployeeImmigration::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
+    }
+
+    public function deleteReportTo(Request $request, $emp_id, $id)
+    {
+        EmployeeReportTo::find($id)->delete();
+        return response()->json(['success'=>'Report To was successfully deleted.']);
     }
     
     public function deleteVisa(Request $request, $emp_id, $id)
