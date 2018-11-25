@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="add-submit" type="submit" class="btn btn-primary">
+                    <button id="add-emergency-contacts-submit" type="submit" class="btn btn-primary">
                     {{ __('Submit') }}
                 </button> {{-- <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                    --}}
                 </div>
@@ -111,7 +111,7 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button id="edit-submit" type="submit" class="btn btn-primary">
+                <button id="edit-emergency-contacts-submit" type="submit" class="btn btn-primary">
                     {{ __('Submit') }}
                 </button> {{-- <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                --}}
             </div>
@@ -189,7 +189,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger"  id="delete-submit">Delete</button>
+                <button type="button" class="btn btn-danger"  id="delete-emergency-contacts-submit">Delete</button>
             </div>
         </div>
     </div>
@@ -253,7 +253,7 @@
 <script type="text/javascript">
     $(function(){
         // ADD
-       $('#add-emergency-contact-form #add-submit').click(function(e){
+       $('#add-emergency-contact-form #add-emergency-contacts-submit').click(function(e){
           e.preventDefault();
           $.ajax({
             url: "{{ route('admin.employees.emergency-contacts.post', ['id' => $id]) }}",
@@ -316,7 +316,7 @@
         });
 
         var editRouteTemplate = "{{ route('admin.employees.emergency-contacts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        $('#edit-submit').click(function(e){
+        $('#edit-emergency-contacts-submit').click(function(e){
             var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
             e.preventDefault();
             $.ajax({
@@ -378,7 +378,7 @@
         });
 
         var deleteRouteTemplate = "{{ route('admin.settings.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        $('#delete-submit').click(function(e){
+        $('#delete-emergency-contacts-submit').click(function(e){
             var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
             e.preventDefault();
             $.ajax({
