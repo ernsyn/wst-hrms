@@ -15,326 +15,326 @@
         <div class="card py-4">
             <div class="card-body">
                 <div class="container-fluid">
-                    <form>
-                        <div class="row">
-                            <nav class="col-sm-12">
-                                <div class="nav nav-tabs font-weight-bold" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link active" id="nav-bank-tab" data-toggle="tab" href="#nav-bank" role="tab" aria-controls="nav-bank"
-                                        aria-selected="false">Company Bank</a>
-                                    <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"
-                                        aria-selected="true">Security Group</a>
-                                    <a class="nav-item nav-link" id="nav-travel-tab" data-toggle="tab" href="#nav-travel" role="tab" aria-controls="nav-travel"
-                                        aria-selected="true">
-                                        Travel Allowance</a>
-                                    <a class="nav-item nav-link" id="nav-addition-tab" data-toggle="tab" href="#nav-addition" role="tab" aria-controls="nav-addition"
-                                        aria-selected="true">Addition</a>
-                                    <a class="nav-item nav-link" id="nav-deduction-tab" data-toggle="tab" href="#nav-deduction" role="tab" aria-controls="nav-deduction"
-                                        aria-selected="true">Deduction</a>
-                                </div>
-                            </nav>
-
-
-                            <div class="tab-content col-sm-12 text-justify pt-4" id="nav-tabContent">
-                                {{-- Company Bank --}}
-                                <div class="tab-pane fade show active" id="nav-bank" role="tabpanel" aria-labelledby="nav-bank-tab">
-                                    <div class="row pb-3">
-                                        <div class="col-auto mr-auto"></div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyBankPopup">
-                                                Add Company Bank
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="float-right tableTools-container"></div>
-                                            <table class="hrms-data-table compact w-100 t-2" id="company-banks-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Company Name</th>
-                                                        <th>Account Name</th>
-                                                        <th>Bank Code</th>
-                                                        <th>Created At</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($bank as $companybanks)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{$companybanks->company->name}}</td>
-                                                        <td>{{$companybanks['account_name']}}</td>
-                                                        <td>{{$companybanks['bank_code']}}</td>
-
-                                                        <td>{{$companybanks['created_at']}}</td>
-                                                        <td>{{$companybanks['status']}}</td>
-
-                                                        <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                                data-toggle="modal" data-bank-id="{{$companybanks['id']}}" data-bank-code="{{$companybanks['bank_code']}}"
-                                                                data-bank-accout-name="{{$companybanks['account_name']}}" data-bank-status="{{$companybanks['status']}}"
-                                                                data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button></td>
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                {{-- Security Group --}}
-                                <div class="tab-pane fade" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
-                                    <div class="row pb-3">
-                                        <div class="col-auto mr-auto"></div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addSecurityGroupPopup">
-                                                            Add Security Group
-                                                        </button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="float-right tableTools-container"></div>
-                                            <table class="hrms-data-table compact w-100 t-2" id="security-groups-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Company Name</th>
-                                                        <th>Name</th>
-                                                        <th>Description</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($security as $securities)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{$securities->company->name}}</td>
-                                                        <td>{{$securities['name']}}</td>
-                                                        <td>{{$securities['description']}}</td>
-                                                        <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                                data-toggle="modal" data-security-id="{{$securities['id']}}"
-                                                                data-security-name="{{$securities['name']}}" data-security-description="{{$securities['description']}}"
-                                                                data-security-status="{{$securities['status']}}" data-target="#editSecurityGroupPopup"><i class="fas fa-pencil-alt"></i></button></td>
-
-
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                {{--ADDITION--}}
-                                <div class="tab-pane fade" id="nav-addition" role="tabpanel" aria-labelledby="nav-addition-tab">
-                                    <div class="row pb-3">
-                                        <div class="col-auto mr-auto"></div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyAdditionPopup">
-                                                            Add Company Addition
-                                                        </button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="float-right tableTools-container"></div>
-                                            <table class="hrms-data-table compact w-100 t-2" id="additions-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Code</th>
-                                                        <th>Name</th>
-                                                        <th>Amount</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($additions as $additions)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{$additions['code']}}</td>
-                                                        <td>{{$additions['name']}}</td>
-                                                        <td>{{$additions['amount']}}</td>
-                                                        <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                                data-toggle="modal" data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
-                                                                data-addition-accout-name="{{$additions['name']}}" data-addition-status="{{$additions['status']}}"
-                                                                data-target="#editCompanyAdditionPopup"><i class="fas fa-pencil-alt"></i></button></td>
-
-
-                                                    </tr>
-
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                {{-- DEDUCTION --}}
-                                <div class="tab-pane fade" id="nav-deduction" role="tabpanel" aria-labelledby="nav-deduction-tab">
-                                    <div class="row pb-3">
-                                        <div class="col-auto mr-auto"></div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addDeductionPopup">
-                                            Add Company Deduction
-                                        </button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="float-right tableTools-container"></div>
-                                            <table class="hrms-data-table compact w-100 t-2" id="deductions-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Code</th>
-                                                        <th>Name</th>
-                                                        <th>Amount</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($deductions as $deductions)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{$deductions['code']}}</td>
-                                                        <td>{{$deductions['name']}}</td>
-                                                        <td>{{$deductions['amount']}}</td>
-                                                        <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                                data-toggle="modal" data-deduction-id="{{$deductions['id']}}"
-                                                                data-deduction-code="{{$deductions['code']}}" data-deduction-name="{{$deductions['name']}}"
-                                                                data-deduction-type="{{$deductions['type']}}" data-deduction-amount="{{$deductions['amount']}}"
-                                                                data-deduction-confirmed_employee="{{$deductions['confirmed_employee']}}"
-                                                                data-deduction-status="{{$deductions['status']}}" data-target="#editCompanyDeductionPopup"><i class="fas fa-pencil-alt"></i></button></td>
-
-
-                                                    </tr>
-
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-
-                                {{-- TRAVEL ALLOWANCE --}}
-                                <div class="tab-pane fade" id="nav-travel" role="tabpanel" aria-labelledby="nav-travel-tab">
-                                    <div class="row pb-3">
-                                        <div class="col-auto mr-auto"></div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addTravelPopup">
-                                                    Add Company Travel Allowance
-                                                </button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="float-right tableTools-container"></div>
-                                            <table class="hrms-data-table compact w-100 t-2" id="travel-allowance-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Code</th>
-                                                        <th>Name</th>
-                                                        <th>Amount</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-
-                                                    @foreach($company_travel_allowance as $company_travel_allowances)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{$company_travel_allowances['company_id']}}</td>
-                                                        <td>{{$company_travel_allowances['rate']}}</td>
-                                                        <td>{{$company_travel_allowances['code']}}</td>
-                                                        <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                                data-toggle="modal" data-travel-id="{{$company_travel_allowances['id']}}"
-                                                                data-travel-code="{{$company_travel_allowances['code']}}" data-travel-rate="{{$company_travel_allowances['rate']}}"
-                                                                data-travel-status="{{$company_travel_allowances['status']}}"
-                                                                data-target="#editTravelPopup"><i class="fas fa-pencil-alt"></i></button></td>
-
-
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                {{-- ADDITION --}} {{--
-                                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                                    This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
-                                </div> --}}
+                    <div class="row">
+                        <nav class="col-sm-12">
+                            <div class="nav nav-tabs font-weight-bold" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-bank-tab" data-toggle="tab" href="#nav-bank" role="tab" aria-controls="nav-bank"
+                                    aria-selected="false">Company Bank</a>
+                                <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"
+                                    aria-selected="true">Security Group</a>
+                                <a class="nav-item nav-link" id="nav-travel-tab" data-toggle="tab" href="#nav-travel" role="tab" aria-controls="nav-travel"
+                                    aria-selected="true">
+                                    Travel Allowance</a>
+                                <a class="nav-item nav-link" id="nav-addition-tab" data-toggle="tab" href="#nav-addition" role="tab" aria-controls="nav-addition"
+                                    aria-selected="true">Addition</a>
+                                <a class="nav-item nav-link" id="nav-deduction-tab" data-toggle="tab" href="#nav-deduction" role="tab" aria-controls="nav-deduction"
+                                    aria-selected="true">Deduction</a>
                             </div>
+                        </nav>
+
+                        {{-- TABLES --}}
+                        <div class="tab-content col-sm-12 text-justify pt-4" id="nav-tabContent">
+                            {{-- Company Bank --}}
+                            <div class="tab-pane fade show active" id="nav-bank" role="tabpanel" aria-labelledby="nav-bank-tab">
+                                <div class="row pb-3">
+                                    <div class="col-auto mr-auto"></div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyBankPopup">
+                                            Add Company Bank
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="float-right tableTools-container"></div>
+                                        <table class="hrms-data-table compact w-100 t-2" id="company-banks-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Company Name</th>
+                                                    <th>Account Name</th>
+                                                    <th>Bank Code</th>
+                                                    <th>Created At</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($bank as $companybanks)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{$companybanks->company->name}}</td>
+                                                    <td>{{$companybanks['account_name']}}</td>
+                                                    <td>{{$companybanks['bank_code']}}</td>
+                                                    <td>{{$companybanks['created_at']}}</td>
+                                                    <td>{{$companybanks['status']}}</td>
+
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
+                                                            data-toggle="modal" data-bank-id="{{$companybanks['id']}}" data-bank-code="{{$companybanks['bank_code']}}"
+                                                            data-bank-accout-name="{{$companybanks['account_name']}}" data-bank-status="{{$companybanks['status']}}"
+                                                            data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button>
+
+                                                        <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->account_name }}' data-link='{{ route('admin.settings.company-banks.delete', ['id ' => $companybanks->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button>
+
+                                                    </td>
+
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            {{-- Security Group --}}
+                            <div class="tab-pane fade" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
+                                <div class="row pb-3">
+                                    <div class="col-auto mr-auto"></div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addSecurityGroupPopup">
+                                                        Add Security Group
+                                                    </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="float-right tableTools-container"></div>
+                                        <table class="hrms-data-table compact w-100 t-2" id="security-groups-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Company Name</th>
+                                                    <th>Name</th>
+                                                    <th>Description</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($security as $securities)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{$securities->company->name}}</td>
+                                                    <td>{{$securities['name']}}</td>
+                                                    <td>{{$securities['description']}}</td>
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
+                                                            data-toggle="modal" data-security-id="{{$securities['id']}}"
+                                                            data-security-name="{{$securities['name']}}" data-security-description="{{$securities['description']}}"
+                                                            data-security-status="{{$securities['status']}}" data-target="#editSecurityGroupPopup"><i class="fas fa-pencil-alt"></i></button></td>
+
+
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            {{--ADDITION--}}
+                            <div class="tab-pane fade" id="nav-addition" role="tabpanel" aria-labelledby="nav-addition-tab">
+                                <div class="row pb-3">
+                                    <div class="col-auto mr-auto"></div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyAdditionPopup">
+                                                        Add Company Addition
+                                                    </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="float-right tableTools-container"></div>
+                                        <table class="hrms-data-table compact w-100 t-2" id="additions-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Code</th>
+                                                    <th>Name</th>
+                                                    <th>Amount</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($additions as $additions)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{$additions['code']}}</td>
+                                                    <td>{{$additions['name']}}</td>
+                                                    <td>{{$additions['amount']}}</td>
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
+                                                            data-toggle="modal" data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
+                                                            data-addition-accout-name="{{$additions['name']}}" data-addition-status="{{$additions['status']}}"
+                                                            data-target="#editCompanyAdditionPopup"><i class="fas fa-pencil-alt"></i></button></td>
+
+
+                                                </tr>
+
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            {{-- DEDUCTION --}}
+                            <div class="tab-pane fade" id="nav-deduction" role="tabpanel" aria-labelledby="nav-deduction-tab">
+                                <div class="row pb-3">
+                                    <div class="col-auto mr-auto"></div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addDeductionPopup">
+                                        Add Company Deduction
+                                    </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="float-right tableTools-container"></div>
+                                        <table class="hrms-data-table compact w-100 t-2" id="deductions-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Code</th>
+                                                    <th>Name</th>
+                                                    <th>Amount</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($deductions as $deductions)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{$deductions['code']}}</td>
+                                                    <td>{{$deductions['name']}}</td>
+                                                    <td>{{$deductions['amount']}}</td>
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
+                                                            data-toggle="modal" data-deduction-id="{{$deductions['id']}}"
+                                                            data-deduction-code="{{$deductions['code']}}" data-deduction-name="{{$deductions['name']}}"
+                                                            data-deduction-type="{{$deductions['type']}}" data-deduction-amount="{{$deductions['amount']}}"
+                                                            data-deduction-confirmed_employee="{{$deductions['confirmed_employee']}}"
+                                                            data-deduction-status="{{$deductions['status']}}" data-target="#editCompanyDeductionPopup"><i class="fas fa-pencil-alt"></i></button></td>
+
+
+                                                </tr>
+
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            {{-- TRAVEL ALLOWANCE --}}
+                            <div class="tab-pane fade" id="nav-travel" role="tabpanel" aria-labelledby="nav-travel-tab">
+                                <div class="row pb-3">
+                                    <div class="col-auto mr-auto"></div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addTravelPopup">
+                                                Add Company Travel Allowance
+                                            </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="float-right tableTools-container"></div>
+                                        <table class="hrms-data-table compact w-100 t-2" id="travel-allowance-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Code</th>
+                                                    <th>Name</th>
+                                                    <th>Amount</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                @foreach($company_travel_allowance as $company_travel_allowances)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{$company_travel_allowances['company_id']}}</td>
+                                                    <td>{{$company_travel_allowances['rate']}}</td>
+                                                    <td>{{$company_travel_allowances['code']}}</td>
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
+                                                            data-toggle="modal" data-travel-id="{{$company_travel_allowances['id']}}"
+                                                            data-travel-code="{{$company_travel_allowances['code']}}" data-travel-rate="{{$company_travel_allowances['rate']}}"
+                                                            data-travel-status="{{$company_travel_allowances['status']}}"
+                                                            data-target="#editTravelPopup"><i class="fas fa-pencil-alt"></i></button></td>
+
+
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {{-- ADDITION --}} {{--
+                            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+                            </div> --}}
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-    <!-- ADD COMPANY BANK -->
-    <div class="modal fade" id="addCompanyBankPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Company</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-                </div>
+</div>
+<!-- ADD COMPANY BANK -->
+<div class="modal fade" id="addCompanyBankPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Company</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            @foreach($bank as $banks)
+            <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->company_id ])}} " id="form_validate">
+                @endforeach
                 <div class="modal-body">
-                    @foreach($bank as $banks)
-                    <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->id ])}} " id="form_validate">
-                        @endforeach @csrf
-                        <div class="row p-3">
-                            <div class="form-group row w-100">
-                                <label class="col-md-12 col-form-label">Account Bank Name*</label>
-                                <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" required>
-                                    <option value="">Please Select</option>
-                                    @foreach(App\BankCode::all() as $banks)
-                                    <option value="{{ $banks->bank_code }}">{{ $banks->name }}</option>
-                                    @endforeach
-                                </select> @if ($errors->has('bank_code'))
-                                    <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('bank_code') }}</strong>
+                    @csrf
+                    <div class="row p-3">
+                        <div class="form-group row w-100">
+                            <label class="col-md-12 col-form-label">Account Bank Name*</label>
+                            <div class="col-md-12">
+                                <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" required>
+                                <option value="">Please Select</option>
+                                @foreach(App\BankCode::all() as $banks)
+                                <option value="{{ $banks->bank_code }}">{{ $banks->name }}</option>
+                                @endforeach
+                            </select> @if ($errors->has('bank_code'))
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('bank_code') }}</strong>
+                            </span> @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row p-3">
+                        <div class="form-group row w-100">
+                            <label class="col-md-12 col-form-label">Account Name*</label>
+                            <div class="col-md-12">
+                                <input id="account_name" type="text" class="form-control{{ $errors->has('account_name') ? ' is-invalid' : '' }}" name="account_name"
+                                    value="{{ old('account_name') }}" required> @if ($errors->has('account_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('account_name') }}</strong>
                                 </span> @endif
-                                </div>
                             </div>
                         </div>
-                        <div class="row p-3">
-                            <div class="form-group row w-100">
-                                <label class="col-md-12 col-form-label">Account Name*</label>
-                                <div class="col-md-12">
-                                    <input id="account_name" type="text" class="form-control{{ $errors->has('account_name') ? ' is-invalid' : '' }}" name="account_name"
-                                        value="{{ old('account_name') }}" required>
-                                    </select> @if ($errors->has('account_name'))
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('account_name') }}</strong>
-                                    </span> @endif
-                                </div>
-                            </div>
-                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                            </button>
+                        {{ __('Submit') }}
+                        </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -345,19 +345,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Edit Company Bank</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-
-
-                <form method="POST" action="{{route('admin.settings.company-banks.edit.post')}}" id="edit_company_bank">
-
-                    @csrf
+                @foreach($bank as $banks)
+                <form method="POST" action="{{route('admin.settings.company-banks.edit.post', ['id' => $banks->company_id ])}}"
+                    id="edit_company_bank">
+                    @endforeach @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
-                            <label class="col-md-12 col-form-label">Company Bank Id</label>
                             <div class="col-md-12">
                                 <input id="company_bank_id" type="text" class="form-control{{ $errors->has('company_bank_id') ? ' is-invalid' : '' }}" name="company_bank_id"
                                     value="{{ old('company_bank_id') }}" readonly>
@@ -369,12 +365,11 @@
                             </div>
                             <label class="col-md-12 col-form-label">Bank*</label>
                             <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" >
-                                                {{-- <option disabled selected>Please Select</option> --}}
-                                                @foreach(App\BankCode::all() as $banks)
-                                                <option value="{{ $banks->bank_code }}">{{ $banks->name }}</option>
-                                                @endforeach
-                                              </select>
+                                <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" value="{{ old('bank_code') }}">
+                                    @foreach(App\BankCode::all() as $banks)
+                                    <option value="{{ $banks->bank_code }}">{{ $banks->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
@@ -392,6 +387,26 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- DELETE COMPANY BANK -->
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm">Delete</button>
             </div>
         </div>
     </div>
@@ -451,7 +466,7 @@
             </div>
             <div class="modal-body">
 
-                <form method="POST" action="{{route('admin.settings.security-groups.edit.post', ['id' => $securities->id])}}" id="security_group">
+                <form method="POST" action="{{route('admin.settings.security-groups.edit.post')}}" id="security_group">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -1028,11 +1043,6 @@
         </div>
     </div>
 </div>
-@endsection
-
-
-
-
 <!-- UPDATE TRAVEL ALLOWANCE  -->
 <div class="modal fade" id="editTravelPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -1079,46 +1089,59 @@
         </div>
     </div>
 </div>
-
-
+@endsection
 
 
 @section('scripts')
 <script>
     $('#company-banks-table').DataTable({
-            responsive: true,
-            stateSave: true,
-            dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-            <'row'<'col-md-6'><'col-md-6'>>
-            <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
-            buttons: [{
-                    extend: 'copy',
-                    text: '<i class="fas fa-copy "></i>',
-                    // text: '<i class="fas fa-copy "></i>',
-                    className: 'btn-segment',
-                    titleAttr: 'Copy'
-                },
-                {
-                    extend: 'colvis',
-                    text: '<i class="fas fa-search "></i>',
-                    className: 'btn-segment',
-                    titleAttr: 'Show/Hide Column'
-                },
-                {
-                    extend: 'csv',
-                    text: '<i class="fas fa-file-alt "></i>',
-                    className: 'btn-segment',
-                    titleAttr: 'Export CSV'
-                },
-                {
-                    extend: 'print',
-                    text: '<i class="fas fa-print "></i>',
-                    className: 'btn-segment',
-                    titleAttr: 'Print'
-                },
-            ]
+        responsive: true,
+        stateSave: true,
+        dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
+        <'row'<'col-md-6'><'col-md-6'>>
+        <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
+        buttons: [{
+                extend: 'copy',
+                text: '<i class="fas fa-copy "></i>',
+                // text: '<i class="fas fa-copy "></i>',
+                className: 'btn-segment',
+                titleAttr: 'Copy'
+            },
+            {
+                extend: 'colvis',
+                text: '<i class="fas fa-search "></i>',
+                className: 'btn-segment',
+                titleAttr: 'Show/Hide Column'
+            },
+            {
+                extend: 'csv',
+                text: '<i class="fas fa-file-alt "></i>',
+                className: 'btn-segment',
+                titleAttr: 'Export CSV'
+            },
+            {
+                extend: 'print',
+                text: '<i class="fas fa-print "></i>',
+                className: 'btn-segment',
+                titleAttr: 'Print'
+            },
+        ]
 
-        });
+    });
+
+    $('#confirm-delete-modal').on('show.bs.modal', function (e) {
+        var entryTitle = $(e.relatedTarget).data('entry-title');
+        var link = $(e.relatedTarget).data('link');
+        $(this).find('.modal-body p').text('Are you sure you want to delete - ' + entryTitle + '?');
+
+        // Pass form reference to modal for submission on yes/ok
+        var form = $(e.relatedTarget).closest('form');
+        $(this).find('.modal-footer #confirm').data('form', link);
+    });
+
+    $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
+        window.location = $(this).data('form');
+    });
 
 </script>
 

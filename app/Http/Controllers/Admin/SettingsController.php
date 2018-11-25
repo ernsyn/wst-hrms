@@ -1067,7 +1067,7 @@ public function postAddCompanyBank(Request $request,$id)
         'account_name' => 'required'
     ]);
 
-    $additionData['status'] = 'active';
+    $additionData['status'] = 'Active';
     $additionData['company_id']= $id;
     $additionData['created_by'] = auth()->user()->id;
     CompanyBank::create($additionData);
@@ -1075,7 +1075,7 @@ public function postAddCompanyBank(Request $request,$id)
     return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
 }
 
-public function postEditCompanyBank(Request $request)
+public function postEditCompanyBank(Request $request,$id)
 {
     $additionData = $request->validate([
         'bank_code' => 'required',
@@ -1084,11 +1084,19 @@ public function postEditCompanyBank(Request $request)
     ]);
 
     // $additionData['status'] = 'active';
-    // $additionData['created_by'] = auth()->user()->id;
+    $additionData['company_id']= $id;
+    $additionData['created_by'] = auth()->user()->id;
 
 
     CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
-    return redirect()->route('admin.settings.companies')->with('status', 'Company Bank has successfully been updated.');
+    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been updated.');
+}
+
+public function deleteCompanyBank(Request $request, $id)
+{
+    CompanyBank::find($id)->delete();
+
+    return redirect()->route('admin.settings.company-banks.delete', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');
 }
 
 public function postEditSecurityGroup(Request $request)
