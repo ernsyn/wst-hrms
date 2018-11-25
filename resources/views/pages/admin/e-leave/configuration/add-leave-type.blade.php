@@ -51,14 +51,14 @@
                                 <div class="card-body">
                                     <h5 class="title text-primary">Leave Calculation</h5>
                                     <div class="form-check mt-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                        <label class="form-check-label" for="defaultCheck1">
+                                        <input class="form-check-input" type="checkbox" id="consecutive-input">
+                                        <label class="form-check-label" for="consecutive-input">
                                             Consecutive
                                         </label>
                                     </div>
                                     <div class="form-check mt-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                        <label class="form-check-label" for="defaultCheck1">
+                                        <input class="form-check-input" type="checkbox" id="include-off-days">
+                                        <label class="form-check-label" for="include-off-days">
                                             Include Holidays / Weekends / Off Days
                                         </label>
                                     </div>
@@ -203,8 +203,8 @@
             </a>
             <h5 class="title text-primary">Restrict: By Gender</h5>
             <div class="form-group">
-                <label for="change"><strong>Gender</strong></label>
-                <select class="form-control" id="change">
+                <label for="gender-input"><strong>Gender</strong></label>
+                <select class="form-control" id="gender-input">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                 </select>
@@ -219,14 +219,14 @@
             </a>
             <h5 class="title text-primary">Can Carry Forward</h5>
             <div class="form-group">
-                <label for="change"><strong>Max Carry Forward Days*</strong></label>
-                <div class="default input-group">
-                    <input type="number" class="form-control" placeholder="eg. 3">
+                <label for="max-carry-forward-days"><strong>Max Carry Forward Days*</strong></label>
+                <div class=" input-group">
+                    <input id="max-carry-forward-days" type="number" class="form-control" placeholder="eg. 3">
                 </div>
             </div>
             <div class="form-group">
-                <label for="change"><strong>Valid Until End Of*</strong></label>
-                <select class="form-control" id="change">
+                <label for="valid-until-end-month"><strong>Valid Until End Of*</strong></label>
+                <select class="form-control" id="valid-until-end-month">
                     <option value="1">January</option>
                     <option value="2">February</option>
                     <option value="3">March</option>
@@ -420,8 +420,8 @@
 
         // POST Leave Type
         // TODO: Validation
-        // $('#add-leave-type-form').submit(function (e) {
-        $('#submit').click(function (e) {
+        $('#add-leave-type-form').submit(function (e) {
+        // $('#submit').click(function (e) {
             e.preventDefault();
             
             let form = $('#add-leave-type-form');
@@ -485,57 +485,52 @@
                 break;
             }
             
-            
+            // SECTION: Rules
+            let leaveRulesListData = [];
+            let leaveRulesList = $('#leave-rules-list');
+            console.log("Leave Rules List: ", leaveRulesList);
+            leaveRulesList.children('.rule-entry').each(function (index, leaveRuleEl) {
+                let leaveRule = $(leaveRuleEl);
+                console.log('Leave Rule: ', leaveRuleEl.id);
+
+                let ruleData = {};
+                switch(leaveRuleEl.id) {
+                    case 'rule-leave-calculation':
+                        console.log("Leave Calculation: ", leaveRuleEl);
+                        ruleData.rule = 'leave_calculation';
+                        ruleData.configuration = {
+                            consecutive: leaveRule.find('#consecutive-input').prop('checked'),
+                            include_off_days: leaveRule.find('#include-off-days').prop('checked')
+                        };
+                    break;
+                    case 'rule-multiple-approval-levels-required':
+                        console.log("Multiple Approval Levels Required: ", leaveRuleEl);
+                        ruleData.rule = 'multiple_approval_levels_required';
+                    break;
+                    case 'rule-restrict-gender':
+                        console.log("Gender: ", leaveRuleEl);
+                        ruleData.rule = 'gender';
+                        ruleData.configuration = {
+                            gender: leaveRule.find('#gender-input').val(),
+                        };
+                    break;
+                    case 'rule-can-carry-forward':
+                        console.log("Can Carry Forward: ", leaveRuleEl);
+                        ruleData.rule = 'can_carry_forward';
+                        ruleData.configuration = {
+                            max_carry_forward_days: +(leaveRule.find('#max-carry-forward-days').val()),
+                            valid_till_end_month: +(leaveRule.find('#valid-until-end-month').val()),
+                        };
+                    break;
+                }
+
+                leaveRulesListData.push(ruleData);
+            })
+            data.applied_rules = leaveRulesListData;
 
             console.log("Data: ", data);
         })
     })
-
-    //  <div id="grade-group-list">
-    //                         <div class="grade-group-entry card mt-2">
-    //                             <div class="card-header bg-light text-primary">
-    //                                 <strong>Grade Group</strong>
-    //                                 {{-- <a role="button" id="add-leave-type-btn" class="float-right btn btn-light btn-sm">
-    //                                     <i class="fas fa-plus"></i>
-    //                                 </a> --}}
-    //                             </div>
-    //                             <div class="card-body section-entitlement-by-years">
-    //                                 <div class="form-group">
-    //                                     <label for="grade-group-2"><strong>Grades*</strong></label>
-    //                                     <select multiple class="form-control select-grades-dropdown" id="grade-group-2">
-    //                                         <option>A1</option>
-    //                                         <option>A2</option>
-    //                                         <option>M1</option>
-    //                                         <option>M2</option>
-    //                                         <option>M3</option>
-    //                                     </select>
-    //                                 </div>
-    
-    //                                 <div class="entitlement-by-years-entry default input-group">
-    //                                     <input type="text" class="min-years-input form-control text-white" value="Default"
-    //                                         readonly>
-    //                                     <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days">
-    //                                     <div class="input-group-append">
-    //                                         <span class="input-group-text"><i class="fas fa-times"></i></span>
-    //                                     </div>
-    //                                 </div>
-    
-    //                                 <div class="entitlement-by-years-list">
-    
-    //                                 </div>
-    
-    //                                 {{-- Button: Add --}}
-    //                                 <div class="row mt-2">
-    //                                     <div class="col">
-    //                                         <a role="button" class="add-entitlement-by-years-btn float-right btn btn-light">
-    //                                             <i class="fas fa-plus"></i>
-    //                                         </a>
-    //                                     </div>
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                         {{-- INSERT GRADE GROUPS HERE --}}
-    //                     </div>
 
 </script>
 @append
