@@ -114,6 +114,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees/{id}/dt/main-security-groups', 'Admin\EmployeeController@getDataTableMainSecurityGroup')->name('admin.employees.dt.main-security-group')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/security-groups', 'Admin\EmployeeController@getDataTableSecurityGroup')->name('admin.employees.dt.security-groups')->where('id', '[0-9]+');
 
+    Route::get('employees/{id}/details/security-groups', 'Admin\EmployeeController@displaySecurityGroup')->name('admin.employees.id.security-groups')->where('id', '[0-9]+');
+
 
     // Add / Edit
     Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add');
@@ -129,7 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{emp_id}/education','Admin\EmployeeController@postEducation')->name('admin.employees.education.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/skills','Admin\EmployeeController@postSkill')->name('admin.employees.skills.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/report-tp','Admin\EmployeeController@postReportTo')->name('admin.employees.report-to.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/security-group','Admin\EmployeeController@postReportTo')->name('admin.employees.security-groups.post')->where('id', '[0-9]+');
+    Route::post('employees/{emp_id}/security-group','Admin\EmployeeController@postSecurityGroup')->name('admin.employees.security-groups.post')->where('id', '[0-9]+');
 
     Route::post('add_report_to','AdminController@addReportTo')->name('add_report_to'); // TODO
     Route::post('employees/{emp_id}/dependents/{id}/edit','Admin\EmployeeController@postEditDependent')->name('admin.employees.dependents.edit.post')->where('id', '[0-9]+');

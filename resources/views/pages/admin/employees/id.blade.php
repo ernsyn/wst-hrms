@@ -27,7 +27,7 @@
                             <span class="field-value">{{$employee->ic_no}}</span>
                         </div>
                         <div class="field pb-1">
-                            <span class="field-name mr-2">DOB</span>
+                  @@          <span class="field-name mr-2">DOB</span>
                             <span class="field-value">{{$employee->dob}}</span>
                         </div>
                         <div class="field pb-1">

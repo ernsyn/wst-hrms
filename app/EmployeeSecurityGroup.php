@@ -9,9 +9,9 @@ class EmployeeSecurityGroup extends Model
     protected $table = 'employee_security_groups';
 
     protected $fillable = [
-        'emp_id',
+
         'security_group_id',
-        'payroll_access',
+
      
     ];
 

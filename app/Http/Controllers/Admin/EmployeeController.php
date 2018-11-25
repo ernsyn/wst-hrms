@@ -58,6 +58,14 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.index', ['employees'=> $employees]);
     }
 
+
+    public function dsplaySecurityGroup($id)
+    {
+        
+        $employees = Employee::all();
+
+        return view('pages.admin.employees.id.security-group', ['employees'=> $employees]);
+    }
     public function display($id)
     {
         $employee = Employee::with('user', 'employee_jobs')->find($id);
@@ -271,6 +279,25 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Record is successfully added']);
     }
+
+    public function postSecurityGroup(Request $request, $id)
+    {
+        $securityGroupData = $request->validate([
+            'security_group_id' => 'required',
+    
+
+        ]);
+
+        $securityGroup = new EmployeeSecurityGroup($securityGroupData);
+
+
+        $employee = Employee::find($id);
+        $employee->employee_security_groups()->save($securityGroup);
+
+        return response()->json(['success'=>'Record is successfully added']);
+    }
+
+
 
     public function postReportTo(Request $request, $id)
     {

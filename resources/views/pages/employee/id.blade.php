@@ -290,7 +290,8 @@
                         {{-- History --}}
                         @include('pages.employee.id.history', ['id' => $employee->id])
                         {{-- Security Group --}}
-                        @include('pages.employee.id.history', ['id' => $employee->id])
+                        <div class="tab-pane fade show p-3" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
+                        </div>
                     </div>
                 </div>
                 {{-- </div> --}}
