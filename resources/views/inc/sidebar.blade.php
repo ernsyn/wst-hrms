@@ -55,8 +55,11 @@
                     <a href="{{ route('employee.profile') }}">View My Profile</a>
                 </li>
                 <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
-                        <a href="{{ route('leaveapplication') }}">View My Profile</a>
+                        <a href="{{ route('leaveapplication') }}">Leave Application</a>
                     </li>
+                    <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
+                            <a href="{{ route('leaverequest') }}">Leave Approval</a>
+                        </li>
             </ul>
 
         </li>

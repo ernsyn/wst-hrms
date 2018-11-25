@@ -519,53 +519,82 @@ class ELeaveController extends Controller
         //     return view('pages.employee.leave-balance', ['leavebalance'=>$leavebalance]);
            
         // }
-    
+        public function postReportTo(Request $request, $id)
+    {
+        $reportToData = $request->validate([
+            'report_to_emp_id' => 'required',
+            'type' => 'required',
+            'kpi_proposer' => 'required',
+            'notes' => 'required',
+        ]);
+
+        $reportTo = new EmployeeReportTo($reportToData);
+
+
+        $employee = Employee::find($id);
+        $employee->report_tos()->save($reportTo);
+
+        return response()->json(['success'=>'Record is successfully added']);
+    }
     
         public function addLeaveApplication(Request $request)
-        {            
-            $type =  $request->input('leaveTypeId');  
-            $type_id = LeaveType::where('id','=',$type)->first();
+        {         
+            
+            $leaveApllicationData =$request->validate([
+
+
+
+            ]);
+
+            return redirect()->route('employees');
+        
+
+
+
+
+            // $type =  $request->input('leaveTypeId');  
+            // $type_id = LeaveType::where('id','=',$type)->first();
     
-            $startDate = $request->input('altStart');      
-            $endDate = $request->input('altEnd');
+            // $startDate = $request->input('altStart');      
+            // $endDate = $request->input('altEnd');
     
-            $leave_status = "Pending";
-            $reason = $request->input('reason');
-            $leaveBalance = $request->input('leaveBalance');
-            $totalLeave = $request->input('totalLeave');
-            $created_by = Auth::user()->id;
+            // $leave_status = "Pending";
+            // $reason = $request->input('reason');
+            // $leaveBalance = $request->input('leaveBalance');
+            // $totalLeave = $request->input('totalLeave');
+            // $created_by = Auth::user()->id;
     
-            DB::insert('insert into leave_employees
-            (user_id,id_leave_type,start_balance,
-            leave_status,created_by) 
-            values
-            (?,?,?,
-            ?,?)',
-            [$created_by, $type_id->id, $leaveBalance,
-             $leave_status,$created_by]);
+            // DB::insert('insert into leave_employees
+            // (user_id,id_leave_type,start_balance,
+            // leave_status,created_by) 
+            // values
+            // (?,?,?,
+            // ?,?)',
+            // [$created_by, $type_id->id, $leaveBalance,
+            //  $leave_status,$created_by]);
     
-            DB::insert('insert into leave_employees_requests
-            (user_id,id_leave_type,start_date,
-            end_date, total_days,
-            note, status, created_by) 
-            values
-            (?,?,?,
-            ?,?,
-            ?,?,?)',
-            [$created_by, $type_id->id, $startDate,
-            $endDate, $totalLeave,
-            $reason, $leave_status, $created_by]);
+            // DB::insert('insert into leave_employees_requests
+            // (user_id,id_leave_type,start_date,
+            // end_date, total_days,
+            // note, status, created_by) 
+            // values
+            // (?,?,?,
+            // ?,?,
+            // ?,?,?)',
+            // [$created_by, $type_id->id, $startDate,
+            // $endDate, $totalLeave,
+            // $reason, $leave_status, $created_by]);
     
-            $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
-            ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
-            ->join('users','users.id','=','employees.user_id')
-            ->select('users.name as name',
-            'leave_balance.balance as balance',
-            'leave_balance.carry_forward as carry',
-            'leave_types.name as leave')
-            ->where('users.id', Auth::user()->id)
-            ->get();
-            return view('pages.employee.leave-request', ['leavebalance'=>$leavebalance]);
+            // $leavebalance = LeaveBalance::join('employees','employees.user_id','=','leave_balance.user_id')
+            // ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+            // ->join('users','users.id','=','employees.user_id')
+            // ->select('users.name as name',
+            // 'leave_balance.balance as balance',
+            // 'leave_balance.carry_forward as carry',
+            // 'leave_types.name as leave')
+            // ->where('users.id', Auth::user()->id)
+            // ->get();
+            // return view('pages.employee.leave-request', ['leavebalance'=>$leavebalance]);
         }
     }
     

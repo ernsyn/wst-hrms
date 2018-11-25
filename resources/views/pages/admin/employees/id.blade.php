@@ -36,7 +36,7 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">{{ App\Country::find($employee->nationality)->citizenship }}</span>
+                            <span class="field-value">{{$employee->nationality}}</span>
                         </div>
                     </div>
                     {{-- <div class="form-group row">

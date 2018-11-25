@@ -440,11 +440,11 @@ Breadcrumbs::for('admin.settings.company.company-details', function ($trail, $id
 
 
 
-// Home > Admin > Leave Balance
-Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Leave Balance', route('admin.e-leave.configuration'));
-});
+// // Home > Admin > Leave Balance
+// Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
+//     $trail->parent('admin.dashboard');
+//     $trail->push('Leave Balance', route('admin.e-leave.configuration'));
+// });
 
 
 

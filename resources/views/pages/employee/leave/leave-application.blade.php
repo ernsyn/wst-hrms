@@ -4,17 +4,17 @@
 <div class="p-4">
     <div class="row">
         <div class="col-xl-8">
-            <div class="card calendar">
+      
                 <div class="card-body-leave" >
                     <div class="container-fluid">
-                        <div id='calendar'></div>
+                        <div id='calendarleave' class="calendar-leave"></div>
                         
                     </div>
-                </div>
+               
             </div>
         </div>
         <div class="col-xl-4">
-            <div class="card calendar">
+            <div class="card calendar-leave">
                 <div class="card-body-leave">
                     <div class="container-fluid">
                        
@@ -24,7 +24,8 @@
 
                                 <label class="col-sm-12 col-form-label">Leave Type</label>
                                 <div class="col-sm-8">
-                                    <select name="type" id="type" onchange="document.getElementById('department-form').submit()" class="custom-select" required data-required-message="Please select leave type">                               
+                                    <select name="type" id="type" onchange="document.getElementById('department-form').submit()" class="custom-select" >
+                                    {{-- required data-required-message="Please select leave type">                                --}}
                                         <option selected disabled>Select Leave</option>
                                         {{-- @foreach($leave as $type)
                                         <option value='{"balance":{{$type['balance']}}, "id":{{$type['id']}}}'>{{$type['name']}}</option>
@@ -60,9 +61,9 @@
                             <div class="form-group row" id="selectPeriod">
                                 <div class="col-sm-12">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" id="leaveFullDay" class="btn btn-outline-primary">Full Day</button>
-                                        <button type="button" id="leaveHalfDay" class="btn btn-outline-primary">AM</button>
-                                        <button type="button" id="leaveHalfDay" class="btn btn-outline-primary">PM</button>
+                                        <button type="button" id="leave-full-day" class="btn btn-outline-primary">Full Day</button>
+                                        <button type="button" id="leave-half-day-am" class="btn btn-outline-primary">AM</button>
+                                        <button type="button" id="leave-half-day-pm" class="btn btn-outline-primary">PM</button>
                                     </div>
                                 </div>
                             </div>
@@ -169,8 +170,38 @@
 
 		});
 
-	});
+    });
+
+});
 </script>
 
+<script>
+//change day according to selected value
+$('#type-balance').on('change', function() {
+
+var txt = this.value;
+var obj = JSON.parse(txt);
+
+$( "div.leavedays" ).replaceWith( "<div class='leavedays col-sm-4'><b>"+ obj.balance +"</b> days available</span></div>" );
+$("#leave-type-id").val(obj.id);
+$("#leave-balance").val(obj.balance);
+});
+</script>
+<script>
+$("#leave-half-day-am").click(function(){  
+    $( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
+    $("#totalLeave").val(0.5);
+});
+
+$("#leave-half-day-pm").click(function(){  
+$( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
+$("#totalLeave").val(0.5);
+});
+
+$("#leave-full-day").click(function(){  
+$( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
+$("#totalLeave").val(1);
+});     
+</script>
 
 @endsection
