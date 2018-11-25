@@ -758,21 +758,38 @@ $('#editCompanyBankPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #status').val(status)
 })
 
-//update company
+//update company security group
 $('#editSecurityGroupPopup').on('show.bs.modal', function (event) {
 
-var button = $(event.relatedTarget)
-var id = button.data('security-id')
-var security_name = button.data('security-name')
-var security_description = button.data('security-description')
-var security_status = button.data('security-status')
+    var button = $(event.relatedTarget)
+    var id = button.data('security-id')
+    var name = button.data('security-name')
+    var description = button.data('security-description')
+    var status = button.data('security-status')
 
-var modal = $(this)
+    var modal = $(this)
 
-modal.find('.modal-body #security_group_id').val(id)
-modal.find('.modal-body #name').val(security_name)
-modal.find('.modal-body textarea#description').val(security_description)
-modal.find('.modal-body #status').val(security_status)
+    modal.find('.modal-body #security_group_id').val(id)
+    modal.find('.modal-body #name').val(name)
+    modal.find('.modal-body #description').val(description)
+    modal.find('.modal-body #status').val(status)
+})
+
+//update company security group
+$('#editTravelPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget)
+    var id = button.data('travel-id')
+    var code = button.data('travel-code')
+    var rate = button.data('travel-rate')
+    var status = button.data('travel-status')
+
+    var modal = $(this)
+
+    modal.find('.modal-body #travel_id').val(id)
+    modal.find('.modal-body #code').val(code)
+    modal.find('.modal-body #rate').val(rate)
+    modal.find('.modal-body #status').val(status)
 })
 
 //update addition
@@ -785,7 +802,7 @@ var name = button.data('addition-name')
 var type = button.data('addition-type')    
 var amount = button.data('addition-amount')
 var statutory = button.data('addition-statutory')
-var eaform = button.data('addition-eaform')
+//var eaform = button.data('addition-eaform')
 var status = button.data('addition-status')
 
 var modal = $(this)
@@ -796,7 +813,7 @@ modal.find('.modal-body #name').val(name)
 modal.find('.modal-body #type').val(type)
 modal.find('.modal-body #amount').val(amount)
 modal.find('.modal-body #statutory').val(statutory)
-modal.find('.modal-body #ea_form').val(eaform)
+//modal.find('.modal-body #ea_form').val(eaform)
 modal.find('.modal-body #status').val(status)
 })
 
