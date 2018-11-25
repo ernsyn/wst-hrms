@@ -431,6 +431,22 @@ class EmployeeController extends Controller
         return redirect()->route('admin.employees.id', ['id' => $id]);
     }
 
+    public function postAttachment(Request $request, $id)
+    {
+        $attachmentData = $request->validate([
+            'name' => 'required',
+            'notes' => 'required'
+        ]);
+
+        $attachment = new EmployeeAttachment($attachmentData);
+
+
+        $employee = Employee::find($id);
+        $employee->employee_attachments()->save($attachment);
+
+        return response()->json(['success'=>'Attachment is successfully added']);
+    }
+
     // SECTION: Edit
 
     public function postEditDependent(Request $request, $emp_id, $id)
@@ -549,6 +565,18 @@ class EmployeeController extends Controller
         return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
     }
 
+    public function postEditAttachment(Request $request, $emp_id, $id)
+    {
+        $attachmentUpdatedData = $request->validate([
+            'name' => 'required',
+            'notes' => 'required'
+        ]);
+
+        EmployeeAttachment::where('id', $id)->update($attachmentUpdatedData);
+
+        return response()->json(['success'=>'Attachment was successfully updated.']);
+    }
+
 
 
     //delete function
@@ -556,5 +584,11 @@ class EmployeeController extends Controller
     {
         EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
+    }
+
+    public function deleteAttachment(Request $request, $emp_id, $id)
+    {
+        EmployeeAttachment::find($id)->delete();
+        return response()->json(['success'=>'Attachment was successfully deleted.']);
     }
 }
