@@ -2,8 +2,7 @@
 @section('content')
 <div id="page-add-leave-type" class="container">
     <div class="card mb-4">
-        <form method="POST" action="{{ route('admin.settings.working-days.add.post') }}" id="form_validate"
-            data-parsley-validate>
+        <form id="add-leave-type-form" data-parsley-validate>
             <div class="card-body">
                 @csrf
                 <div class="form-row">
@@ -27,6 +26,10 @@
                         </span>
                         @endif
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="description"><strong>Description*</strong></label>
+                    <textarea class="form-control" id="description" name="description" rows="2" required></textarea>
                 </div>
 
                 <div id="section-rules" class="card mb-3">
@@ -190,6 +193,7 @@
         </form>
     </div>
 </div>
+{{-- TEMPLATES --}}
 <div id="leave-type-rule-templates" hidden>
     {{-- RULE: Restrict: By Gender --}}
     <div id="rule-restrict-gender" class="card rule-entry mt-2">
@@ -387,11 +391,12 @@
 
         $('#add-grade-group-btn').click(function(e) {
             let list = $(e.target).closest('#section-employee-mode-by-grade').children('#grade-group-list').get(0);
-            console.log("List: ", list);
+            // console.log("List: ", list);
             let newEntry = $('#grade-group-entry-template .grade-group-entry').clone();
             
             newEntry.find('.remove-grade-group-btn').click(function (removeEvent) {
-                $(removeEvent.target).closest('.entitlement-by-years-entry').remove();
+                console.log('remove')
+                $(removeEvent.target).closest('.grade-group-entry').remove();
             })
 
             newEntry.find('.select-grades-dropdown').multiselect({
@@ -400,7 +405,7 @@
 
             newEntry.find('.add-entitlement-by-years-btn').click(function(e) {
                 let list = $(e.target).closest('.section-entitlement-by-years').children('.entitlement-by-years-list').get(0);
-                console.log("List: ", list)
+                // console.log("List: ", list)
                 let newEntry = $('#leave-type-entitled-days-by-years-template .entitlement-by-years-entry').clone();
                 
                 newEntry.find('.remove-entry').click(function (removeEvent) {
@@ -412,7 +417,125 @@
 
             newEntry.appendTo(list);
         })
+
+        // POST Leave Type
+        // TODO: Validation
+        // $('#add-leave-type-form').submit(function (e) {
+        $('#submit').click(function (e) {
+            e.preventDefault();
+            
+            let form = $('#add-leave-type-form');
+            console.log("FORM: ", form);
+            let data = {
+                code: form.find('#code').val(),
+                name: form.find('#name').val(),
+                description: form.find('#description').val(),
+            }
+
+            // SECTION: Entitled Days
+            let entitledMode = $('#entitled-mode').val();
+            console.log("Entitled Mode: ", entitledMode);
+            switch(entitledMode) {
+                case 'entitled-mode-all':
+                    let allSection = form.find('#section-employee-mode-all');
+                    console.log('SECTION: All');
+                    data.entitled_days = allSection.find('.entitlement-by-years-entry.default .entitled-days-input').val();
+
+                    let entitledDaysByYearsListData = [];
+                    let entitledDaysByYearsList = allSection.find('.entitlement-by-years-list').children();
+                    entitledDaysByYearsList.each(function (index, entitledDaysByYearsEntry) {
+                        console.log(`Min Years: ${$(entitledDaysByYearsEntry).find('.min-years-input').val()}, Entitled Days: ${$(entitledDaysByYearsEntry).find('.entitled-days-input').val()}`);
+                        entitledDaysByYearsListData.push({
+                            min_years: $(entitledDaysByYearsEntry).find('.min-years-input').val(),
+                            entitled_days: $(entitledDaysByYearsEntry).find('.entitled-days-input').val()
+                        });
+                    })
+                    data.conditional_entitlements = entitledDaysByYearsListData;
+                
+                break;
+                case 'entitled-mode-by-grade':
+                    let byGradeSection = form.find('#section-employee-mode-by-grade');
+
+                    let gradeGroupListData = [];
+                    let gradeGroupList = byGradeSection.find('#grade-group-list').children();
+                    gradeGroupList.each(function (index, gradeGroupEntryEl) {
+                        let gradeGroup = {};
+
+                        let gradeGroupEntry = $(gradeGroupEntryEl);
+
+                        gradeGroup.grades = gradeGroupEntry.find('.select-grades-dropdown').val();
+                        gradeGroup.entitled_days = gradeGroupEntry.find('.entitlement-by-years-entry.default .entitled-days-input').val();
+                        console.log("Grade Group: ", gradeGroup.grades);
+
+                        let entitledDaysByYearsListData = [];
+                        let entitledDaysByYearsList = gradeGroupEntry.find('.entitlement-by-years-list').children();
+                        entitledDaysByYearsList.each(function (index, entitledDaysByYearsEntry) {
+                            console.log(`Min Years: ${$(entitledDaysByYearsEntry).find('.min-years-input').val()}, Entitled Days: ${$(entitledDaysByYearsEntry).find('.entitled-days-input').val()}`);
+                            entitledDaysByYearsListData.push({
+                                min_years: $(entitledDaysByYearsEntry).find('.min-years-input').val(),
+                                entitled_days: $(entitledDaysByYearsEntry).find('.entitled-days-input').val()
+                            });
+                        })
+                        gradeGroup.conditional_entitlements = entitledDaysByYearsListData;
+
+                        gradeGroupListData.push(gradeGroup);
+                    })
+                    data.grade_groups = gradeGroupListData;
+
+                break;
+            }
+            
+            
+
+            console.log("Data: ", data);
+        })
     })
+
+    //  <div id="grade-group-list">
+    //                         <div class="grade-group-entry card mt-2">
+    //                             <div class="card-header bg-light text-primary">
+    //                                 <strong>Grade Group</strong>
+    //                                 {{-- <a role="button" id="add-leave-type-btn" class="float-right btn btn-light btn-sm">
+    //                                     <i class="fas fa-plus"></i>
+    //                                 </a> --}}
+    //                             </div>
+    //                             <div class="card-body section-entitlement-by-years">
+    //                                 <div class="form-group">
+    //                                     <label for="grade-group-2"><strong>Grades*</strong></label>
+    //                                     <select multiple class="form-control select-grades-dropdown" id="grade-group-2">
+    //                                         <option>A1</option>
+    //                                         <option>A2</option>
+    //                                         <option>M1</option>
+    //                                         <option>M2</option>
+    //                                         <option>M3</option>
+    //                                     </select>
+    //                                 </div>
+    
+    //                                 <div class="entitlement-by-years-entry default input-group">
+    //                                     <input type="text" class="min-years-input form-control text-white" value="Default"
+    //                                         readonly>
+    //                                     <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days">
+    //                                     <div class="input-group-append">
+    //                                         <span class="input-group-text"><i class="fas fa-times"></i></span>
+    //                                     </div>
+    //                                 </div>
+    
+    //                                 <div class="entitlement-by-years-list">
+    
+    //                                 </div>
+    
+    //                                 {{-- Button: Add --}}
+    //                                 <div class="row mt-2">
+    //                                     <div class="col">
+    //                                         <a role="button" class="add-entitlement-by-years-btn float-right btn btn-light">
+    //                                             <i class="fas fa-plus"></i>
+    //                                         </a>
+    //                                     </div>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                         {{-- INSERT GRADE GROUPS HERE --}}
+    //                     </div>
 
 </script>
 @append
