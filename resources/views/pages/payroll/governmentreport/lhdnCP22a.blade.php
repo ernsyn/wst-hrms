@@ -698,7 +698,7 @@
                     d) No. Telefon
                 </div>
                 <div class="table-border" style="float: left; margin-left: 10pt;padding-left: 5pt;display: table-cell;width: 50%;">
-                    {{$data->getLegalRepresentativeNoTelA()}}
+                    &nbsp;{{$data->getLegalRepresentativeNoTelA()}}
                 </div>
             </td>
             <td class="tg-0lax"></td>
@@ -865,7 +865,7 @@
         <tr>
             <td class="text_center border_bottom border_right" height="20%">Dari</td>
             <td class="text_center border_right border_bottom">Hingga</td>
-            <td class="text_center border_right border_bottom">RM</td>
+            <td class="text_center border_right border_bottom" width="8%">RM</td>
         </tr>
         <tr class="border_bottom border_left border_right">
             <td class="pleft" style="width: 18pt;border-right-style: none;">1)</td>

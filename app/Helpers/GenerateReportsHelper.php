@@ -235,46 +235,48 @@ class GenerateReportsHelper
             case "LHDN_cp22a":
                 //set pojo
                 $data = array();
-                for($count=0;$count < 5; $count++) {
+                $date="";
+                $year="2018";
+                $month="11";
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInfomationAndPayroll($companyInformation->id,$filter,$month,$year);
+
+                foreach($userInfoAndPayrollList as $userPayroll) {
                     $obj = new LhdnCP22aBean([
-                        'employerName' => 'OPPO ELECTRONICS SDN BHD',
+                        'employerName' => $companyInformation->name,
                         'employerNoE' => 'E9119707907',
                         'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
                         'employerAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
                         'employerAddress3' => 'SELANGOR.',
                         'employerPostcode' => 46200,
-                        'employerNoTel' => '03-19220112',
+                        'employerNoTel' => $companyInformation->phone,
 
-                        'name_A' => 'Shahril Abu Bakar',
-                        'telNo_A' => '0345674734',
-                        'commencementDate_A' => '190993',
+                        'name_A' => $userPayroll->name,
+                        'telNo_A' => $userPayroll->contact_no,
+                        'commencementDate_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
                         'address1_A' => 'No 7 ,Simpang Empat',
                         'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
                         'address3_A' => 'SELANGOR.',
                         'postcode_A' => 46200,
-                        'resignDate_A' => '190993',
-                        'birthDate_A' => '190993',
-                        'resignType_A' => 'X',
-                        'signX' => '',
-                        'icNo_A' => '860110781723',
-                        'legalRepresentativeName_A' => 'SHAHRIL ABU BAKAR',
-                        'legalRepresentativeIc_A' => '871898176765',
-                        'legalRepresentativeAddress1_A' => 'No 7 ,Simpang Empat',
-                        'legalRepresentativeAddress2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'legalRepresentativeAddress3_A' => 'SELANGOR.',
-                        'legalRepresentativeNoTel_A' => '0345467453',
-                        'incomeTaxNo_A' => 'OG12345678910',
-                        'marriedStatus_A' => 'SINGLE',
-                        'childrenNo_A' => '01',
-                        'totalIncomeTaxChild_A' => '12300',
-                        'spouseName_A' => 'SUZANNAH IBRAHIM',
-                        'spouseIc_A' => '871898176765',
-                        'spouseIncomeTax_A' => 'OG12345678910',
+                        'resignDate_A' => self::changeTwoDigitDate($userPayroll->job_end_date),
+                        'birthDate_A' => self::changeTwoDigitDate($userPayroll->dob),
+                        //'resignType_A' => 'X',
+                        //'signX' => '',
+                        'icNo_A' => $userPayroll->ic_no,
 
-                        'salaryFrom_B' => '01/01/2018',
-                        'salaryUntil_B' => '01/04/1212',
-                        'salaryAmount_B' => 9774.19,
-                        'leavePayFrom_B' => '01/01/2018',
+                        'incomeTaxNo_A' => $userPayroll->tax_no,
+                        'marriedStatus_A' => $userPayroll->marital_status,
+                        'childrenNo_A' => $userPayroll->total_children,
+                        'totalIncomeTaxChild_A' => '0.00',
+                        //'spouseName_A' => 'SUZANNAH IBRAHIM',
+                        //'spouseIc_A' => '871898176765',
+                        //'spouseIncomeTax_A' => 'OG12345678910',
+
+                        'salaryFrom_B' => self::changeMalaysianDate($userPayroll->remuneration_start_date),
+                        'salaryUntil_B' => self::changeMalaysianDate($userPayroll->remuneration_end_date),
+                        'salaryAmount_B' => $userPayroll->total_gross_salary,
+/*                        'leavePayFrom_B' => '01/01/2018',
                         'leavePayUntil_B' => '01/04/1212',
                         'leavePayAmount_B' => 74.19,
                         'commissionFrom_B' => '01/01/2018',
@@ -307,32 +309,19 @@ class GenerateReportsHelper
                         'dateOptionGranted_B' => '010118',
                         'dateExistingOptionCanExecuted_B' => '010118',
                         'dateOptionExecuted_B' => '010118',
-                        'totalBenefit' => 12.00,
-                        'total_B' => 0,
+                        'totalBenefit' => 12.00,*/
+                        //TODO calculate sum of
+                        'total_B' => $userPayroll->total_gross_salary,
 
-                        'typeOfIncome1_C' => 'Online Business',
-                        'typeOfIncome2_C' => 'Online Business',
-                        'typeOfIncome3_C' => 'Online Business',
-                        'yearForWhichPaid1_C' => '01/01/2018',
-                        'yearForWhichPaid2_C' => '01/04/1212',
-                        'yearForWhichPaid3_C' => '01/04/1212',
-                        'totalIncome1_C' => 74.19,
-                        'totalIncome2_C' => 74.19,
-                        'totalIncome3_C' => 74.19,
-                        'pensionFund1_C' => 4.19,
-                        'pensionFund2_C' => 4.19,
-                        'pensionFund3_C' => 4.19,
+                        //'moneyWithheldByEmployer_D' => 74.19,
+                        'monthlyTaxDeductions_D' => $userPayroll->total_pcb,
+                        //'amountOfZakatPaid_D' => 74.19,
+                        'contributionsToEmployeeProvidentFund_D' => $userPayroll->total_epf,
 
-                        'moneyWithheldByEmployer_D' => 74.19,
-                        'monthlyTaxDeductions_D' => 1501.00,
-                        'amountOfZakatPaid_D' => 74.19,
-                        'contributionsToEmployeeProvidentFund_D' => 1501.00,
-
-                        'officerName_E' => 'CHONG HWEE MIN',
-                        'officerDesignation_E' => 'HUMAN RESOURCES OFFICER',
+                        'officerName_E' => $officerInformation->name,
+                        'officerDesignation_E' => $officerInformation->position,
                         'officerSignature_E' => '',
-                        'date_E' => '011018'
-
+                        'date_E' => self::getCurrentTwoDigitDate()
                     ]);
                     $data[] = $obj;
                 }
