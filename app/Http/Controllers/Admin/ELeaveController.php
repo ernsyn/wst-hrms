@@ -36,6 +36,7 @@ class ELeaveController extends Controller
             "description" => 'required',
             "entitled_days" => '',
         ]);
+        $leaveTypeData['active'] = true;
 
         $appliedRulesData =  $request->validate([
             "applied_rules" => '',
