@@ -17951,3 +17951,11 @@ button.dropdown-toggle::after {
   color: #ffffffb7 !important;
 }
 
+#page-add-leave-type #section-rules .rule-entry .title {
+  font-weight: 600;
+}
+
+#page-add-leave-type #section-rules #rule-leave-calculation {
+  background-color: #e0e5f3;
+}
+
