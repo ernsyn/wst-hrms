@@ -28,4 +28,10 @@ class LeaveRequest extends Model
     public function attachment() {
         return $this->belongsTo('App\Media'); 
     }
+
+    public function report_to()
+    {
+        return $this->hasMany('App\EmployeeReportTo');
+    }
+
 }

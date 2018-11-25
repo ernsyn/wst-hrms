@@ -12,7 +12,10 @@ Breadcrumbs::for('employee.dashboard', function ($trail) {
     $trail->push('Dashboard', route('employee.dashboard'));
 });
 
-
+Breadcrumbs::for('leaverequest', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('List Of Leave', route('leaverequest'));
+});
 Breadcrumbs::for('employee.profile', function ($trail) {
     // $trail->parent('profile');
     $trail->push('My Profile', route('employee.profile'));
@@ -496,7 +499,10 @@ Breadcrumbs::for('add_team', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Add Team', route('add_team'));
 });
-
+Breadcrumbs::for('leaveapplication', function ($trail) {
+    $trail->parent('admin.employees');
+    $trail->push('Add Leave Application', route('leaveapplication', ''));
+});
 
 // Error 404
 Breadcrumbs::for('errors.404', function ($trail) {

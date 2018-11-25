@@ -54,6 +54,9 @@
                 <li class="menu-option {{ request()->is('employee/profile') ? 'active' : '' }}">
                     <a href="{{ route('employee.profile') }}">View My Profile</a>
                 </li>
+                <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
+                        <a href="{{ route('leaveapplication') }}">View My Profile</a>
+                    </li>
             </ul>
 
         </li>
