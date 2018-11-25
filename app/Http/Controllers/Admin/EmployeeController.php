@@ -361,19 +361,33 @@ class EmployeeController extends Controller
 
     public function postBankAccount(Request $request, $id)
     {
-        $type = $request->input('type');
-        $bank_code = Input::get('bank_list');
-        $acc_no = $request->input('acc_no');
-        $status = Input::get('status');
-        $created_by = auth()->user()->id;
+        $bankAccountData = $request->validate([
+            'bank_code' => 'required',
+            'acc_no' => 'required',
+            'acc_status' => 'required'
+        ]);
 
-        DB::insert('insert into employee_bank_accounts
-        (emp_id, type, bank_code, acc_no, acc_status, created_by)
-        values
-        (?,?,?,?,?,?)',
-        [$id, $type, $bank_code, $acc_no, $status, $created_by]);
+        $bankAccount = new EmployeeBankAccount($bankAccountData);
 
-        return redirect()->route('admin.employees.id', ['id' => $id]);
+
+        $employee = Employee::find($id);
+        $employee->employee_bank_accounts()->save($bankAccount);
+
+        return response()->json(['success'=>'Record is successfully added']);
+
+        // $type = $request->input('type');
+        // $bank_code = Input::get('bank_list');
+        // $acc_no = $request->input('acc_no');
+        // $status = Input::get('status');
+        // $created_by = auth()->user()->id;
+
+        // DB::insert('insert into employee_bank_accounts
+        // (emp_id, type, bank_code, acc_no, acc_status, created_by)
+        // values
+        // (?,?,?,?,?,?)',
+        // [$id, $type, $bank_code, $acc_no, $status, $created_by]);
+
+        // return redirect()->route('admin.employees.id', ['id' => $id]);
     }
 
     public function postCompany(Request $request, $id)
@@ -506,17 +520,15 @@ class EmployeeController extends Controller
 
     public function postEditBankAccount(Request $request, $emp_id, $id)
     {
-        $bank_code = Input::get('bank_code');
-        $acc_no = $request->input('acc_no');
-        $acc_status = Input::get('acc_status');
+        $bankAccountUpdateData = $request->validate([
+            'bank_code' => 'required',
+            'acc_no' => 'required|numeric',
+            'acc_status' => 'required'
+        ]);
 
-        EmployeeBank::where('id', $id)->update(array(
-            'bank_code' => $bank_code,
-            'acc_no' => $acc_no,
-            'acc_status' => $acc_status
-        ));
+        EmployeeBankAccount::where('id', $id)->update($bankAccountUpdateData);
 
-        return redirect()->route('admin/employees/{id}', ['id' => $emp_id]);
+        return response()->json(['success'=>'Bank Account was successfully updated.']);
     }
 
     public function postEditCompany(Request $request, $emp_id, $id)
@@ -599,7 +611,12 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
 
-
+    public function deleteBankAccount(Request $request, $emp_id, $id)
+    {
+        EmployeeBankAccount::find($id)->delete();
+        return response()->json(['success'=>'Bank Account was successfully deleted.']);
+    }
+    
     public function deleteExperience(Request $request, $emp_id, $id)
     {
         EmployeeExperience::find($id)->delete();
