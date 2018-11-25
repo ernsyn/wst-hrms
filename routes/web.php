@@ -52,7 +52,8 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('employee/dt/education', 'Employee\EmployeeController@getDataTableEducation')->name('employee.dt.education');
     Route::get('employee/dt/skills', 'Employee\EmployeeController@getDataTableSkills')->name('employee.dt.skills');
     Route::get('employee/dt/attachments', 'Employee\EmployeeController@getDataTableAttachments')->name('employee.dt.attachments');
-    Route::get('employee/dt/emergency-contacts', 'Employee\EmployeeController@getDataTableEmergencyContacts')->name('employee.dt.emergency-contacts');
+   
+    Route::get('employee/dt/security-groups', 'Employee\EmployeeController@getDataTableSecurityGroup')->name('employee.dt.security-groups');
     Route::get('employee/dt/report-to', 'Employee\EmployeeController@getDataTableReportTo')->name('employee.dt.report-to');
 
     Route::post('employee/jobs','Employee\EmployeeController@postJob')->name('employee.jobs.post');
@@ -65,6 +66,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/education','Employee\EmployeeController@postEducation')->name('employee.education.post');
     Route::post('employee/skills','Employee\EmployeeController@postSkill')->name('employee.skills.post');
     Route::post('employee/report-tp','Employee\EmployeeController@postReportTo')->name('employee.report-to.post');
+    Route::post('employee/main-security-group','Employee\EleaveController@displayLeaveRequestReportTo')->name('admin.employees.main-security-group.post');
 
     Route::post('employee/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
     Route::post('employee/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
@@ -74,6 +76,17 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/companies/{id}/edit','Employee\EmployeeController@postEditCompany')->name('employee.companies.edit');
     Route::post('employee/education/{id}/edit','Employee\EmployeeController@postEditEducation')->name('employee.education.edit');
     Route::post('employee/skills/{id}/edit','Employee\EmployeeController@postEditSkill')->name('employee.skills.edit');
+
+
+//to be edit 
+    Route::post('add_leave_application','Employee\EleaveController@addLeaveApplication')->name('add_leave_application');
+    Route::get('leaveapplication','Employee\EleaveController@displayLeaveApplication')->name('leaveapplication');
+   // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
+    Route::get('leaverequest','Employee\EleaveController@displayLeaveRequestReportTo')->name('leaverequest');
+  
+
+
+    
 });
 
 // MODE: Admin
@@ -96,6 +109,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees/{id}/dt/attachments', 'Admin\EmployeeController@getDataTableAttachments')->name('admin.employees.dt.attachments')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/emergency-contacts', 'Admin\EmployeeController@getDataTableEmergencyContacts')->name('admin.employees.dt.emergency-contacts')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/report-to', 'Admin\EmployeeController@getDataTableReportTo')->name('admin.employees.dt.report-to')->where('id', '[0-9]+');
+    Route::get('company/{id}/dt/company-banks', 'Admin\SettingsController@getDataTableCompanyBank')->name('admin.companies.dt.company-banks')->where('id', '[0-9]+');
+   
+    Route::get('employees/{id}/dt/main-security-groups', 'Admin\EmployeeController@getDataTableMainSecurityGroup')->name('admin.employees.dt.main-security-group')->where('id', '[0-9]+');
+    Route::get('employees/{id}/dt/security-groups', 'Admin\EmployeeController@getDataTableSecurityGroup')->name('admin.employees.dt.security-groups')->where('id', '[0-9]+');
 
 
     // Add / Edit
@@ -112,6 +129,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{emp_id}/education','Admin\EmployeeController@postEducation')->name('admin.employees.education.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/skills','Admin\EmployeeController@postSkill')->name('admin.employees.skills.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/report-tp','Admin\EmployeeController@postReportTo')->name('admin.employees.report-to.post')->where('id', '[0-9]+');
+    Route::post('employees/{emp_id}/security-group','Admin\EmployeeController@postReportTo')->name('admin.employees.security-groups.post')->where('id', '[0-9]+');
 
     Route::post('add_report_to','AdminController@addReportTo')->name('add_report_to'); // TODO
     Route::post('employees/{emp_id}/dependents/{id}/edit','Admin\EmployeeController@postEditDependent')->name('admin.employees.dependents.edit.post')->where('id', '[0-9]+');
@@ -121,8 +139,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{emp_id}/bank-accounts/{id}/edit','Admin\EmployeeController@postEditBankAccount')->name('admin.employees.bank-accounts.edit')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/companies/{id}/edit','Admin\EmployeeController@postEditCompany')->name('admin.employees.companies.edit')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/education/{id}/edit','Admin\EmployeeController@postEditEducation')->name('admin.employees.education.edit')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/skills/{id}/edit','Admin\EmployeeController@postEditSkill')->name('admin.employees.skills.edit')->where('id', '[0-9]+');
 
+    Route::post('employees/{emp_id}/security-group/{id}/edit','Admin\EmployeeController@postEditSecurityGroup')->name('admin.employees.security-groups.edit.post')->where('id', '[0-9]+');
+    Route::post('employees/{emp_id}/security-group/{id}/delete','Admin\EmployeeController@postDeleteSecurityGroup')->name('admin.employees.security-groups.delete')->where('id', '[0-9]+');
     //admin/employee/delete
     Route::get('employees/{emp_id}/emergency-contacts/{id}/delete','Admin\EmployeeController@deleteEmergencyContact')->name('admin.settings.emergency-contacts.delete')->where('id', '[0-9]+');
 
@@ -280,14 +299,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('settings/working-days/{id}/edit','Admin\SettingsController@postEditWorkingDay')->name('admin.settings.working-days.edit.post')->where('id', '[0-9]+');
 
 
-<<<<<<< HEAD
     Route::post('settings/company-banks/edit','Admin\SettingsController@editCompanyBank')->name('admin.settings.company-banks.edit.post');
     Route::post('settings/security-groups/edit','Admin\SettingsController@editSecurityGroup')->name('admin.settings.security-groups.edit.post');
-=======
     Route::post('settings/leave-balances/edit','Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balances.edit.post');
     //Route::post('settings/company-addition/edit','Admin\SettingsController@editCompanyAddition')->name('admin.settings.company-banks.edit.post');
 //    Route::post('settings/security-groups/edit','Admin\SettingsController@editSecurityGroup')->name('admin.settings.security-groups.edit.post');
->>>>>>> new-develop
     Route::post('settings/company-additions/edit','Admin\SettingsController@editCompanyAddition')->name('admin.settings.company-additions.edit.post');
     Route::post('settings/company-deductions/edit','Admin\SettingsController@editCompanyDeduction')->name('admin.settings.company-deductions.edit.post');
     //Route::post('settings/company-deductions/edit','Admin\SettingsController@editCompanyDeduction')->name('admin.settings.company-deductions.edit.post');
@@ -315,9 +331,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     // Route::get('e-leave/configuration/leave-setup','Admin\ELeaveController@displayLeaveTypes')->name('admin.e-leave.configuration.leave-types');
     // Route::get('e-leave/configuration/working-days','Admin\ELeaveController@displayLeaveHoliday')->name('admin.e-leave.configuration.working-days');
 
-    Route::get('company/{id}/dt/company-banks', 'Admin\SettingsController@getDataTableCompanyBank')->name('admin.companies.dt.company-banks')->where('id', '[0-9]+');
-
-
+   
 
     //later
     // Route::post('approve_leave', 'Admin\ELeaveController@approvedLeaveRequest')->name('approve_leave'); // also for manager

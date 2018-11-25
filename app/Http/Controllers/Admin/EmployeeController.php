@@ -35,6 +35,7 @@ use App\EmployeeVisa;
 use App\EmployeeEmergencyContact;
 use App\EmployeeGrade;
 use App\EmployeeReportTo;
+use App\EmployeeSecurityGroup;
 
 use App\Http\Requests\Admin\AddEmployee;
 
@@ -151,6 +152,18 @@ class EmployeeController extends Controller
     {
         $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', $id)->get();
         return DataTables::of($reportTos)->make(true);
+    }
+
+    public function getDataTableMainSecurityGroup($id)
+    {
+        $employee = Employee::with('security_groups')->where('emp_id', $id)->get();
+        return DataTables::of($employee)->make(true);
+    }
+
+    public function getDataTableSecurityGroup($id)
+    {
+        $security_groups = EmployeeSecurityGroup::with('security_groups')->where('emp_id', $id)->get();
+        return DataTables::of($security_groups)->make(true);
     }
 
     protected function postAdd(Request $request)
