@@ -1,7 +1,7 @@
 @extends('layouts.admin-base') 
 @section('content')
-<div class="container">
-        <div class="card">
+<div id="page-add-leave-type" class="container">
+        <div class="card mb-4">
                 <form method="POST" action="{{ route('admin.settings.working-days.add.post') }}" id="form_validate" data-parsley-validate>
                     <div class="card-body">
                         @csrf
@@ -53,114 +53,156 @@
                                     <button id="entitled-mode-by-grade" class="dropdown-item" type="button">By Employee Grade</button>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div id="section-employee-mode-all" class="row">
-                                    All
+                            <div id="section-employee-mode-by-grade" class="card-body"  hidden>
+                                  <div class="card">
+                                      <div class="card-header bg-light text-primary">
+                                            <strong>Grade Group</strong>
+                                            {{-- <a role="button" id="add-leave-type-btn" class="float-right btn btn-light btn-sm">
+                                                <i class="fas fa-plus"></i>
+                                            </a>  --}}
+                                      </div>
+                                      <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="grade-group-1"><strong>Grades*</strong></label>
+                                                <select multiple class="form-control" id="grade-group-1">
+                                                    <option>A1</option>
+                                                    <option>A2</option>
+                                                    <option>M1</option>
+                                                    <option>M2</option>
+                                                    <option>M3</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="entitlement-by-years-entry default input-group">
+                                                    <input type="text" class="min-years-input form-control text-white" value="Default" readonly>
+                                                    <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fas fa-times"></i></span>
+                                                    </div>
+                                                </div>
+                
+                                                <div class="entitlement-by-years-entry input-group mt-2">
+                                                    <input type="number" class="min-years-input form-control text-white" placeholder="Minimum Years" min="1" max="50">
+                                                    <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days" min="1" max="100">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fas fa-times"></i></span>
+                                                    </div>
+                                                </div>
+                
+                                                {{-- Button: Add --}}
+                                                <div class="row mt-2">
+                                                    <div class="col">
+                                                        <a role="button" id="" class="float-right btn btn-light">
+                                                                <i class="fas fa-plus"></i>
+                                                            </a>
+                
+                                                    </div>
+                                                </div>
+                                      </div>
+                                  </div>
+                                  
+                                  <div class="card mt-2">
+                                    <div class="card-header bg-light text-primary">
+                                            <strong>Grade Group</strong>
+                                            {{-- <a role="button" id="add-leave-type-btn" class="float-right btn btn-light btn-sm">
+                                                <i class="fas fa-plus"></i>
+                                            </a>  --}}
+                                        </div>
+                                      <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="grade-group-2"><strong>Grades*</strong></label>
+                                                <select multiple class="form-control" id="grade-group-2">
+                                                    <option>A1</option>
+                                                    <option>A2</option>
+                                                    <option>M1</option>
+                                                    <option>M2</option>
+                                                    <option>M3</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="entitlement-by-years-entry default input-group">
+                                                    <input type="text" class="min-years-input form-control text-white" value="Default" readonly>
+                                                    <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fas fa-times"></i></span>
+                                                    </div>
+                                                </div>
+                
+                                                <div class="entitlement-by-years-entry input-group mt-2">
+                                                    <input type="number" class="min-years-input form-control text-white" placeholder="Minimum Years" min="1" max="50">
+                                                    <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days" min="1" max="100">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fas fa-times"></i></span>
+                                                    </div>
+                                                </div>
+                
+                                                {{-- Button: Add --}}
+                                                <div class="row mt-2">
+                                                    <div class="col">
+                                                        <a role="button" id="" class="float-right btn btn-light">
+                                                            <i class="fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="row mt-2">
+                                        <div class="col">
+                                            <a role="button" id="" class="float-right btn btn-primary text-white">
+                                                <i class="fas fa-plus"></i> Add Group
+                                            </a>
+                                        </div>
+                                    </div>
+                            </div>
+                            {{-- <ul id="section-employee-mode-all" class="list-group list-group-flush">
+                                    <li class="entitlement-by-years-entry list-group-item">
+                                        <div class="row">
+                                            <div class="col-md-3 bg-primary">
+                                                Default
+                                            </div>
+                                            <div class="col-md-9">
+                                                10
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                                    <li class="list-group-item bg-light">
+                                        <a role="button" id="add-leave-type-btn" class="float-right btn btn-light btn-sm">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </li>
+                            </ul> --}}
+                            <div id="section-employee-mode-all" class="card-body">
+
+                                <div class="entitlement-by-years-entry default input-group">
+                                    <input type="text" class="min-years-input form-control text-white" value="Default" readonly>
+                                    <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-times"></i></span>
+                                    </div>
                                 </div>
-                                <div id="section-employee-mode-by-grade" hidden class="row">
-                                    By Grade
+
+                                <div class="entitlement-by-years-entry input-group mt-2">
+                                    <input type="number" class="min-years-input form-control text-white" placeholder="Minimum Years" min="1" max="50">
+                                    <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days" min="1" max="100">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-times"></i></span>
+                                    </div>
                                 </div>
+
+                                {{-- Button: Add --}}
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <a role="button" id="" class="float-right btn btn-light">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                       {{--  <div class="row p-3">
-                            <div class="form-group row w-100">
-                                <label class="col-md-12 col-form-label">Template Name*</label>
-                                <div class="col-md-12">
-                                    <input id="template-name" type="text" class="form-control{{ $errors->has('template_name') ? ' is-invalid' : '' }}" placeholder=""
-                                        name="template_name" value="{{ old('template_name') }}" required>
-                                    @if ($errors->has('template_name'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('template_name') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <div class="form-group row w-100">
-                                    <label class="col-md-12 col-form-label">Monday*</label>
-                                    <div class="col-md-12">
-                                        <input id="monday" type="number" min="0" max="1" step="0.5" value="1" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder=""
-                                            name="monday" value="{{ old('monday') }}" required>
-                                            @if ($errors->has('monday'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('monday') }}</strong>
-                                            </span>
-                                            @endif
-                                    </div>
-                                </div>
-        
-                                <div class="form-group row w-100">
-                                    <label class="col-md-12 col-form-label">Tuesday*</label>
-                                    <div class="col-md-12">
-                                        <input id="tuesday" type="number" min="0" max="1" step="0.5" value="1" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder=""
-                                            name="tuesday" value="{{ old('tuesday') }}" required>
-                                            @if ($errors->has('tuesday'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('tuesday') }}</strong>
-                                            </span>
-                                            @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row w-100">
-                                    <label class="col-md-12 col-form-label">Wednesday*</label>
-                                    <div class="col-md-12">
-                                        <input id="wednesday" type="number" min="0" max="1" step="0.5" value="1" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder=""
-                                            name="wednesday" value="{{ old('wednesday') }}" required>
-                                            @if ($errors->has('wednesday'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('wednesday') }}</strong>
-                                            </span>
-                                            @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row w-100">
-                                    <label class="col-md-12 col-form-label">Thursday*</label>
-                                    <div class="col-md-12">
-                                        <input id="thursday" type="number" min="0" max="1" step="0.5" value="1" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder=""
-                                            name="thursday" value="{{ old('thursday') }}" required>
-                                            @if ($errors->has('thursday'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('thursday') }}</strong>
-                                            </span>
-                                            @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row w-100">
-                                    <label class="col-md-12 col-form-label">Friday*</label>
-                                    <div class="col-md-12">
-                                        <input id="friday" type="number" min="0" max="1" step="0.5" value="1" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder=""
-                                            name="friday" value="{{ old('friday') }}" required>
-                                            @if ($errors->has('friday'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('friday') }}</strong>
-                                            </span>
-                                            @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row w-100">
-                                    <label class="col-md-12 col-form-label">Saturday*</label>
-                                    <div class="col-md-12">
-                                        <input id="saturday" type="number" min="0" max="1" step="0.5" value="0" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder=""
-                                            name="saturday" value="{{ old('saturday') }}" required>
-                                            @if ($errors->has('saturday'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('saturday') }}</strong>
-                                            </span>
-                                            @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row w-100">
-                                    <label class="col-md-12 col-form-label">Sunday*</label>
-                                    <div class="col-md-12">
-                                        <input id="sunday" type="number" min="0" max="1" step="0.5" value="0" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder=""
-                                            name="sunday" value="{{ old('sunday') }}" required>
-                                            @if ($errors->has('sunday'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('sunday') }}</strong>
-                                            </span>
-                                            @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>--}}
                     </div> 
                     
                     <div class="card-footer">
@@ -175,6 +217,13 @@
 @section('scripts') 
 <script>
     $(function() {
+        $('#grade-group-1').multiselect({
+            numberDisplayed: 0
+        });
+        $('#grade-group-2').multiselect({
+            numberDisplayed: 0
+        });
+
         $("#entitled-mode-options button").click(function (e) {
             $('#entitled-mode-dropdown #selected-text').html(e.target.innerText);
             $('#entitled-mode-dropdown').dropdown('toggle');

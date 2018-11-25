@@ -1,0 +1,19 @@
+#page-add-leave-type {
+
+    #section-employee-mode-all {
+        
+    }
+
+    .entitlement-by-years-entry {
+        .min-years-input {
+            background-color: lighten($app-primary-darkened, 15%);
+            &::placeholder {
+                color: #ffffffb7 !important;
+            }
+        }
+
+        .entitled-days-input {
+
+        }
+    }
+}
