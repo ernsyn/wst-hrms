@@ -420,8 +420,8 @@
 
         // POST Leave Type
         // TODO: Validation
-        $('#add-leave-type-form').submit(function (e) {
-        // $('#submit').click(function (e) {
+        // $('#add-leave-type-form').submit(function (e) {
+        $('#submit').click(function (e) {
             e.preventDefault();
             
             let form = $('#add-leave-type-form');
@@ -529,6 +529,45 @@
             data.applied_rules = leaveRulesListData;
 
             console.log("Data: ", data);
+            data._token = '{{ csrf_token() }}';
+            $.ajax({
+                url: "{{ route('admin.e-leave.configuration.leave-types.add.post') }}",
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    console.log("SUCCESS", response)
+                    // showAlert(data.success);
+                    // emergencyContactsTable.ajax.reload();
+                    // $('#confirm-delete-modal').modal('toggle');
+                    // // clearEmergencyContactModal('#edit-emergency-contact-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error 422: ", xhr);
+                        // for (var errorField in errors) {
+                        //     if (errors.hasOwnProperty(errorField)) {
+                        //         console.log("Error: ", errorField);
+                        //         switch(errorField) {
+                        //             case 'name':
+                        //                 $('#edit-emergency-contact-form #name').addClass('is-invalid');
+                        //                 $('#edit-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                        //             break;
+                        //             case 'relationship':
+                        //                 $('#edit-emergency-contact-form #relationship').addClass('is-invalid');
+                        //                 $('#edit-emergency-contact-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                        //             break;
+                        //             case 'contact_no':
+                        //                 $('#edit-emergency-contact-form #contact-no').addClass('is-invalid');
+                        //                 $('#edit-emergency-contact-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                        //             break;
+                        //         }
+                        //     }
+                        // }
+                    }
+                    console.log("Error: ", xhr);
+                }
+            });
         })
     })
 

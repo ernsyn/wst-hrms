@@ -288,8 +288,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
     Route::get('company/{id}/dt/company-banks', 'Admin\SettingsController@getDataTableCompanyBank')->name('admin.companies.dt.company-banks')->where('id', '[0-9]+');
 
+
+    // SECTION: E-Leave
    Route::get('e-leave/configuration', 'Admin\ELeaveController@displayConfiguration')->name('admin.e-leave.configuration');
    Route::get('e-leave/configuration/leave-types/add', 'Admin\ELeaveController@addLeaveType')->name('admin.e-leave.configuration.leave-types.add');
+   Route::post('e-leave/configuration/leave-types/add', 'Admin\ELeaveController@postAddLeaveType')->name('admin.e-leave.configuration.leave-types.add.post');
 
 
 
