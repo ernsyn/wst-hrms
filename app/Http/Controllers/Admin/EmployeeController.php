@@ -294,8 +294,13 @@ class EmployeeController extends Controller
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
         $jobData['status'] = 'active';
 
-        $job = new EmployeeJob($jobData);
 
+// EmployeeJob::where('emp_id',$id)
+// ->with($end_date = null)
+// ->update(array('end_date' => $start_date));
+        
+
+        $job = new EmployeeJob($jobData);
         $employee = Employee::find($id);
         $employee->employee_jobs()->save($job);
 
