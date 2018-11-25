@@ -115,16 +115,6 @@
 
 @section('scripts')
 <script>
-    $.get("{{ route('admin.employees.id.working-day.employee', ['id' => $id]) }}", function(data, status) {
-        $("#monday").val(data[0].monday);
-        $("#tuesday").val(data[0].tuesday);
-        $("#wednesday").val(data[0].wednesday);
-        $("#thursday").val(data[0].thursday);
-        $("#friday").val(data[0].friday);
-        $("#saturday").val(data[0].saturday);
-        $("#sunday").val(data[0].sunday);
-    })
-
     $("#working_day").change(function(){
         $.get("id/working-day/" + this.value, function(data, status){
             $("#monday").val(data[0].monday);
