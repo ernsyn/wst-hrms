@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use App\LeaveType;
+use App\Holiday;
 
 class ELeaveController extends Controller
 {
@@ -93,4 +94,51 @@ class ELeaveController extends Controller
             return view('pages.admin.e-leave.configuration.edit-default-leave-type', [ 'leave_type' => $leaveType]);
         }
     }
+
+
+
+    // List Of Leave Public Holidays List
+public function displayPublicHolidays()
+{       
+    $holiday = Holiday::all();
+    
+    return view('pages.admin.e-leave.configuration.leave-holidays', ['holiday' => $holiday]);
+}
+
+public function addPublicHoliday()
+{
+    return view('pages.admin.e-leave.configuration.add-leave-holidays');
+}
+
+public function postAddPublicHoliday(Request $request)
+{
+    $publicHolidayData = $request->validate([
+        'name' => 'required',
+        'start_date' => 'required',
+        'end_date' => 'required',
+        // 'total_days' => 'required',
+        'repeat_annually'=>'required',
+
+       //'status' => 'required',
+       'note' => 'required',
+
+   
+    ]);
+
+
+    $datetime1 = strtotime($publicHolidayData['start_date']);
+    $datetime2 = strtotime($publicHolidayData['end_date']);  
+    $created_by = auth()->user()->id;
+    $interval =  $datetime2 - $datetime1;
+    $days = floor($interval/(60*60*24)) + 1;
+
+    $publicHolidayData['total_days'] =  $days = floor($interval/(60*60*24)) + 1;
+   
+    $publicHolidayData['status'] =  'active';
+   
+
+    Holiday::create($publicHolidayData);
+
+    return redirect()->route('admin.e-leave.configuration.leave-holidays');
+}
 }
