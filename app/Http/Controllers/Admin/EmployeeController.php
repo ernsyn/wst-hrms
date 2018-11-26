@@ -35,6 +35,7 @@ use App\EmployeeVisa;
 use App\EmployeeEmergencyContact;
 use App\EmployeeGrade;
 use App\EmployeeReportTo;
+use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
 
 use App\Http\Requests\Admin\AddEmployee;
@@ -58,6 +59,14 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.index', ['employees'=> $employees]);
     }
 
+
+    public function dsplaySecurityGroup($id)
+    {
+        
+        $employees = Employee::all();
+
+        return view('pages.admin.employees.id.security-group', ['employees'=> $employees]);
+    }
     public function display($id)
     {
         $employee = Employee::with('user', 'employee_jobs')->find($id);
@@ -152,6 +161,18 @@ class EmployeeController extends Controller
     {
         $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', $id)->get();
         return DataTables::of($reportTos)->make(true);
+    }
+
+    public function getDataTableMainSecurityGroup($id)
+    {
+        $employee = Employee::with('security_groups')->where('emp_id', $id)->get();
+        return DataTables::of($employee)->make(true);
+    }
+
+    public function getDataTableSecurityGroup($id)
+    {
+        $security_groups = EmployeeSecurityGroup::with('security_groups')->where('emp_id', $id)->get();
+        return DataTables::of($security_groups)->make(true);
     }
 
     protected function postAdd(Request $request)
@@ -260,6 +281,40 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Record is successfully added']);
     }
 
+    public function postSecurityGroup(Request $request, $id)
+    {
+        $securityGroupData = $request->validate([
+            'security_group_id' => 'required',
+    
+
+        ]);
+
+        $securityGroup = new EmployeeSecurityGroup($securityGroupData);
+
+
+        $employee = Employee::find($id);
+        $employee->employee_security_groups()->save($securityGroup);
+
+        return response()->json(['success'=>'Security Group was successfully updated.']);
+    }
+
+
+    public function postMainSecurityGroup(Request $request, $id)
+    {
+        $mainSecurityGroupData = $request->validate([
+            'main_security_group_id' => 'required',
+
+        ]);
+
+
+        Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
+
+        return response()->json(['success'=>'Security Group was successfully updated.']);
+    }
+
+    
+
+
     public function postReportTo(Request $request, $id)
     {
         $reportToData = $request->validate([
@@ -329,11 +384,21 @@ class EmployeeController extends Controller
             'start_date' => 'required',
             'basic_salary' => 'required',
             'specification' => 'required',
+     
         ]);
-        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
         $jobData['status'] = 'active';
+        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+   //     $jobData['end_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
         $job = new EmployeeJob($jobData);
+
+         $end_date=   EmployeeJob::where('id', $id)
+        ->whereNull('end_date');
+
+        EmployeeJob::where('emp_id', $id)
+        ->whereNull('end_date')
+        ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
 
         $employee = Employee::find($id);
         $employee->employee_jobs()->save($job);

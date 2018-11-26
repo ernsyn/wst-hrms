@@ -70,8 +70,6 @@ $('.scrollable').mousewheel(function (e, delta) {
     e.preventDefault();
 });
 
-
-
 $("#form_validate").parsley({
     errorClass: 'is-invalid',
     successClass: 'is-valid', // Comment this option if you don't want the field to become green when valid. Recommended in Google material design to prevent too many hints for user experience. Only report when a field is wrong.
@@ -79,7 +77,6 @@ $("#form_validate").parsley({
     errorTemplate: '<small class="font-italic"></small>',
     trigger: 'change'
 });
-
 
 
 // datepicker
