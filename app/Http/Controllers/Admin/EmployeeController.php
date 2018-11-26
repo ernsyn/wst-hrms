@@ -278,6 +278,8 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Record is successfully added']);
     }
 
+    // SECTION: Employee Working Day Setup
+
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
@@ -298,20 +300,32 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $employee->working_day()->save($workingDay);
 
-        return response()->json(['success' => 'Record is successfully added']);
+        return response()->json(['success' => 'Working Day is successfully added']);
 
     }
 
-    public function getWorkingDay($id)
-    {       
-        $working_day = EmployeeWorkingDay::templates()->where('id', $id)->get();
-    
-        return response()->json($working_day);
+    public function postEditWorkingDay(Request $request, $id)
+    {
+        $workingDayUpdateData = $request->validate([
+            'monday' => 'required',
+            'tuesday' => 'required',
+            'wednesday' => 'required',
+            'thursday' => 'required',
+            'friday' => 'required',
+            'saturday' => 'required',
+            'sunday' => 'required',
+        ]);
+
+        $workingDayUpdateData['is_template'] = false;
+
+        EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
+
+        return response()->json(['success'=>'Working Day was successfully updated.']);
     }
 
-    public function getEmployeeWorkingDay($emp_id)
+    public function getEmployeeWorkingDay($id)
     {       
-        $working_day = EmployeeWorkingDay::templates()->where('emp_id', $emp_id)->get();
+        $working_day = EmployeeWorkingDay::where('emp_id', $id)->get();
     
         return response()->json($working_day);
     }
