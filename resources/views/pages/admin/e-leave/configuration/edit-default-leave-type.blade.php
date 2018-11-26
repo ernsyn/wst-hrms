@@ -266,11 +266,12 @@
                     switch(rule.rule) {
                         case 'leave_calculation': // rule-leave-calculation
                             let leaveCalculation = leaveRulesList.find('#rule-leave-calculation');
-                            if(configuration.consecutive) {
+                            console.log("Configuration: ", configuration)
+                            if(JSON.parse(configuration.consecutive) == true) {
                                 leaveCalculation.find('#consecutive-input').prop("checked", true);
                             }
 
-                            if(configuration.include_off_days) {
+                            if(JSON.parse(configuration.include_off_days) == true) {
                                 leaveCalculation.find('#include-off-days').prop("checked", true);
                             }
                         break;
@@ -329,7 +330,8 @@
             } else {
                 // MODE: Entitled By Grade
                 $('#section-employee-mode-all').attr('hidden', true);
-                $('#entitled-mode-dropdown #selected-text').text("By Employee Grade");   
+                $('#entitled-mode-dropdown #selected-text').text("By Employee Grade");
+                $('input[name="entitled-mode"]').attr('value', 'entitled-mode-by-grade');
 
                 let section = $('#section-employee-mode-by-grade');
                 section.removeAttr('hidden');
@@ -375,9 +377,6 @@
                         newGradeGroupEntry.appendTo(gradeGroupList);
                     }
                 }
-                
-
-
             }
         })();
 
@@ -385,6 +384,11 @@
         $('#section-employee-mode-by-grade .select-grades-dropdown').multiselect({
             numberDisplayed: 0
         });
+
+        $('.remove-grade-group-btn').click(function (removeEvent) {
+            console.log('remove')
+            $(removeEvent.target).closest('.grade-group-entry').remove();
+        })
 
         $("#entitled-mode-options button").click(function (e) {
             $('#entitled-mode-dropdown #selected-text').html(e.target.innerText);
@@ -494,9 +498,9 @@
             let form = $('#add-leave-type-form');
             console.log("FORM: ", form);
             let data = {
-                code: form.find('#code').val(),
-                name: form.find('#name').val(),
-                description: form.find('#description').val(),
+                // code: form.find('#code').val(),
+                // name: form.find('#name').val(),
+                // description: form.find('#description').val(),
             }
 
             // SECTION: Entitled Days
@@ -513,6 +517,7 @@
                     entitledDaysByYearsList.each(function (index, entitledDaysByYearsEntry) {
                         console.log(`Min Years: ${$(entitledDaysByYearsEntry).find('.min-years-input').val()}, Entitled Days: ${$(entitledDaysByYearsEntry).find('.entitled-days-input').val()}`);
                         entitledDaysByYearsListData.push({
+                            id: $(entitledDaysByYearsEntry).find('input[name=id]').val(),
                             min_years: $(entitledDaysByYearsEntry).find('.min-years-input').val(),
                             entitled_days: $(entitledDaysByYearsEntry).find('.entitled-days-input').val()
                         });
@@ -530,6 +535,7 @@
 
                         let gradeGroupEntry = $(gradeGroupEntryEl);
 
+                        gradeGroup.id = gradeGroupEntry.find('input[name=id]').val();
                         gradeGroup.grades = gradeGroupEntry.find('.select-grades-dropdown').val();
                         gradeGroup.entitled_days = gradeGroupEntry.find('.entitlement-by-years-entry.default .entitled-days-input').val();
                         console.log("Grade Group: ", gradeGroup.grades);
@@ -539,6 +545,7 @@
                         entitledDaysByYearsList.each(function (index, entitledDaysByYearsEntry) {
                             console.log(`Min Years: ${$(entitledDaysByYearsEntry).find('.min-years-input').val()}, Entitled Days: ${$(entitledDaysByYearsEntry).find('.entitled-days-input').val()}`);
                             entitledDaysByYearsListData.push({
+                                id: $(entitledDaysByYearsEntry).find('input[name=id]').val(),
                                 min_years: $(entitledDaysByYearsEntry).find('.min-years-input').val(),
                                 entitled_days: $(entitledDaysByYearsEntry).find('.entitled-days-input').val()
                             });
@@ -561,9 +568,14 @@
                 console.log('Leave Rule: ', leaveRuleEl.id);
 
                 let ruleData = {};
+                ruleData.id = +(leaveRule.find("input[name=id]").val());
+                if(ruleData.id === 0) {
+                    ruleData.id = null;
+                }
                 switch(leaveRuleEl.id) {
                     case 'rule-leave-calculation':
                         console.log("Leave Calculation: ", leaveRuleEl);
+                        
                         ruleData.rule = 'leave_calculation';
                         ruleData.configuration = {
                             consecutive: leaveRule.find('#consecutive-input').prop('checked'),
@@ -602,7 +614,7 @@
                 type: 'POST',
                 data: data,
                 success: function(response) {
-                    console.log("SUCCESS", response);
+                    // console.log("SUCCESS", response);
                     // window.location = '{{ route("admin.e-leave.configuration") }}'
                     // showAlert(data.success);
                     // emergencyContactsTable.ajax.reload();

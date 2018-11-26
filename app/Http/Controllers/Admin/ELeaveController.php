@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\LeaveType;
 use App\Holiday;
+use App\LTAppliedRule;
+use App\LTEntitlementGradeGroup;
 
 class ELeaveController extends Controller
 {
@@ -143,4 +145,82 @@ public function postAddPublicHoliday(Request $request)
 
     return redirect()->route('admin.e-leave.configuration.leave-holidays');
 }
+    public function postEditLeaveType(Request $request, $id) {
+        $leaveType = LeaveType::where('id', $id)->first();
+        if($leaveType->is_custom) {
+
+        } else {
+
+            $leaveTypeData = $request->validate([
+                "entitled_days" => 'nullable',
+            ]);
+    
+            $appliedRulesData =  $request->validate([
+                "applied_rules" => '',
+            ]);
+    
+            $gradeGroupsData =  $request->validate([
+                "grade_groups" => '',
+            ]);
+    
+            $conditionalEntitlementsData =  $request->validate([
+                "conditional_entitlements" => '',
+            ]);
+    
+            DB::transaction(function() use ($leaveType, $leaveTypeData, $appliedRulesData, $gradeGroupsData, $conditionalEntitlementsData) {
+                if(!array_key_exists("entitled_days", $leaveTypeData)) {
+                    $leaveTypeData["entitled_days"] = NULL;
+                }
+                $leaveType->update($leaveTypeData);
+    
+                if(array_key_exists("applied_rules", $appliedRulesData)) {
+                    foreach ($appliedRulesData['applied_rules'] as $key => $ruleData)  {
+                        if(array_key_exists('configuration', $ruleData)) {
+                            $appliedRulesData['applied_rules'][$key]['configuration'] = json_encode($ruleData['configuration']);
+                        }
+                    }
+
+                    foreach ($appliedRulesData['applied_rules'] as $key => $ruleData)  {
+                        $leaveType->applied_rules()->updateOrCreate(['rule' => $ruleData['rule']], $ruleData);
+                    }
+                }
+    
+                if(array_key_exists("grade_groups", $gradeGroupsData)) {
+                    $gradeGroupIds = array();
+                    foreach ($gradeGroupsData["grade_groups"] as $gradeGroupData) {
+                        $gradeGroup =  $leaveType->lt_entitlements_grade_groups()->updateOrCreate(['id' => $gradeGroupData['id']], $gradeGroupData);
+                        $gradeGroup->grades()->sync($gradeGroupData['grades']);
+
+                        $conditionalEntitlementIds = array();
+                        if(array_key_exists("conditional_entitlements", $gradeGroupData)) {
+                            foreach ($gradeGroupData["conditional_entitlements"] as $conditionalEntitlementData) {
+                                $conditionalEntitlement =  $gradeGroup->lt_conditional_entitlements()->updateOrCreate(['id' => $conditionalEntitlementData['id']], $conditionalEntitlementData);
+                                array_push($conditionalEntitlementIds, $conditionalEntitlement->id);
+                            }
+                        }
+                        $gradeGroup->lt_conditional_entitlements()->whereNotIn('id', $conditionalEntitlementIds)->delete();
+
+                        array_push($gradeGroupIds, $gradeGroup->id);
+                    }
+                    $leaveType->lt_entitlements_grade_groups()->whereNotIn('id', $gradeGroupIds)->delete();
+    
+                } else {
+                    $leaveType->lt_entitlements_grade_groups()->delete();
+                }
+
+                if(array_key_exists("conditional_entitlements", $conditionalEntitlementsData)) {
+                    $conditionalEntitlementIds = array();
+                    foreach ($conditionalEntitlementsData["conditional_entitlements"] as $conditionalEntitlementData) {
+                        $conditionalEntitlement = $leaveType->lt_conditional_entitlements()->updateOrCreate(['id' => $conditionalEntitlementData['id']], $conditionalEntitlementData);
+                        array_push($conditionalEntitlementIds, $conditionalEntitlement->id);
+                    }
+                   
+                } else {
+                    $leaveType->lt_conditional_entitlements()->delete();
+                }
+            });
+        }
+
+        return response()->json(['success'=>'Record is successfully added']);
+    }
 }
