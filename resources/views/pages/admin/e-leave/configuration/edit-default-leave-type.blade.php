@@ -1,4 +1,4 @@
-@extends('layouts.admin-base')
+@extends('layouts.admin-base') 
 @section('content')
 <div id="page-add-leave-type" class="container">
     <div class="card mb-4">
@@ -8,23 +8,19 @@
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label for="code"><strong>Code*</strong></label>
-                        <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}"
-                            placeholder="eg. ANNUAL" name="code" value="{{ old('code') }}" readonly>
-                        @if ($errors->has('code'))
+                        <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" placeholder="eg. ANNUAL"
+                            name="code" value="{{ old('code') }}" readonly> @if ($errors->has('code'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('code') }}</strong>
-                        </span>
-                        @endif
+                        </span> @endif
                     </div>
                     <div class="form-group col-md-9">
                         <label for="name"><strong>Name*</strong></label>
-                        <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                            placeholder="eg. Annual Leave" name="name" value="{{ old('name') }}" readonly>
-                        @if ($errors->has('name'))
+                        <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="eg. Annual Leave"
+                            name="name" value="{{ old('name') }}" readonly> @if ($errors->has('name'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('name') }}</strong>
-                        </span>
-                        @endif
+                        </span> @endif
                     </div>
                 </div>
                 <div class="form-group">
@@ -65,8 +61,8 @@
                 <div class="card mb-3">
                     <div class="card-header bg-primary text-white">
                         <strong>Entitled Days</strong>
-                        <button class="btn btn-primary btn-sm float-right dropdown-toggle" type="button" id="entitled-mode-dropdown"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-primary btn-sm float-right dropdown-toggle" type="button" id="entitled-mode-dropdown" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
                             <span id="selected-text">All Employees</span>
                             <span class="ml-2"><i class="fas fa-caret-down"></i></span>
                             <input type="text" hidden id="entitled-mode" name="entitled-mode" value="entitled-mode-all">
@@ -78,48 +74,7 @@
                     </div>
                     <div id="section-employee-mode-by-grade" class="card-body" hidden>
                         <div id="grade-group-list">
-                            <div class="grade-group-entry card mt-2">
-                                <div class="card-header bg-light text-primary">
-                                    <strong>Grade Group</strong>
-                                    {{-- <a role="button" id="add-leave-type-btn" class="float-right btn btn-light btn-sm">
-                                        <i class="fas fa-plus"></i>
-                                    </a> --}}
-                                </div>
-                                <div class="card-body section-entitlement-by-years">
-                                    <div class="form-group">
-                                        <label for="grade-group-2"><strong>Grades*</strong></label>
-                                        <select multiple class="form-control select-grades-dropdown" id="grade-group-2">
-                                            <option>A1</option>
-                                            <option>A2</option>
-                                            <option>M1</option>
-                                            <option>M2</option>
-                                            <option>M3</option>
-                                        </select>
-                                    </div>
-    
-                                    <div class="entitlement-by-years-entry default input-group">
-                                        <input type="text" class="min-years-input form-control text-white" value="Default"
-                                            readonly>
-                                        <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fas fa-times"></i></span>
-                                        </div>
-                                    </div>
-    
-                                    <div class="entitlement-by-years-list">
-    
-                                    </div>
-    
-                                    {{-- Button: Add --}}
-                                    <div class="row mt-2">
-                                        <div class="col">
-                                            <a role="button" class="add-entitlement-by-years-btn float-right btn btn-light">
-                                                <i class="fas fa-plus"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             {{-- INSERT GRADE GROUPS HERE --}}
                         </div>
 
@@ -131,29 +86,12 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <ul id="section-employee-mode-all" class="list-group list-group-flush">
-                        <li class="entitlement-by-years-entry list-group-item">
-                            <div class="row">
-                                <div class="col-md-3 bg-primary">
-                                    Default
-                                </div>
-                                <div class="col-md-9">
-                                    10
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item bg-light">
-                            <a role="button" id="add-leave-type-btn" class="float-right btn btn-light btn-sm">
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </li>
-                    </ul> --}}
                     <div id="section-employee-mode-all" class="section-entitlement-by-years card-body">
 
                         <div class="entitlement-by-years-entry default input-group">
-                            <input type="text" class="min-years-input form-control text-white" value="Default" readonly>
-                            <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days">
+                            <input type="text" name="min-years-input" class="min-years-input form-control text-white" value="Default" readonly>
+                            <input type="number" name="entitled-days-input" class="entitled-days-input form-control" placeholder="Entitled Days">
+                            <input type="number" name="id" hidden>
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-times"></i></span>
                             </div>
@@ -162,7 +100,7 @@
 
                         </div>
 
-                        
+
 
                         {{-- Button: Add --}}
                         <div class="row mt-2">
@@ -190,8 +128,7 @@
     {{-- RULE: Restrict: By Gender --}}
     <div id="rule-restrict-gender" class="card rule-entry mt-2">
         <div class="card-body">
-            <input type="number" name="id" hidden>
-            {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
             </a> --}}
             <h5 class="title text-primary">Restrict: By Gender</h5>
@@ -208,8 +145,7 @@
     {{-- RULE: Can Carry Forward--}}
     <div id="rule-can-carry-forward" class="card rule-entry mt-2">
         <div class="card-body">
-            <input type="number" name="id" hidden>
-            {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
             </a> --}}
             <h5 class="title text-primary">Can Carry Forward</h5>
@@ -242,8 +178,7 @@
     {{-- RULE: Multiple Approval Levels Required --}}
     <div id="rule-multiple-approval-levels-required" class="card rule-entry mt-2">
         <div class="card-body">
-            <input type="number" name="id" hidden>
-            {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
             </a> --}}
             <h5 class="title text-primary">Multiple Approval Levels Required</h5>
@@ -252,65 +187,201 @@
 </div>
 <div id="leave-type-entitled-days-by-years-template" hidden>
     <div class="entitlement-by-years-entry input-group mt-2">
-        <input type="number" class="min-years-input form-control text-white" placeholder="Minimum Years"
-            min="1" max="50">
-        <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days"
-            min="1" max="100">
+        <input type="number" name="min-years-input" class="min-years-input form-control text-white" placeholder="Minimum Years" min="1"
+            max="50">
+        <input type="number" name="entitled-days-input" class="entitled-days-input form-control" placeholder="Entitled Days" min="1"
+            max="100">
+        <input type="number" name="id" hidden>
         <div class="remove-entry input-group-append">
             <span class="input-group-text"><i class="fas fa-times"></i></span>
         </div>
     </div>
 </div>
 <div id="grade-group-entry-template" hidden>
-        <div class="grade-group-entry card mt-2">
-                <div class="card-header bg-light text-primary">
-                    <strong>Grade Group</strong>
-                    <a role="button" class="remove-grade-group-btn float-right btn btn-light btn-sm">
+    <div class="grade-group-entry card mt-2">
+        <input type="number" name="id" hidden>
+        <div class="card-header bg-light text-primary">
+            <strong>Grade Group</strong>
+            <a role="button" class="remove-grade-group-btn float-right btn btn-light btn-sm">
                         {{-- <i class="fas fa-plus"></i> --}}
                         Remove
                     </a>
-                </div>
-                <div class="card-body section-entitlement-by-years">
-                    <div class="form-group">
-                        <label for="grade-group-2"><strong>Grades*</strong></label>
-                        <select multiple class="select-grades-dropdown form-control">
-                            <option>A1</option>
-                            <option>A2</option>
-                            <option>M1</option>
-                            <option>M2</option>
-                            <option>M3</option>
-                        </select>
-                    </div>
+        </div>
+        <div class="card-body section-entitlement-by-years">
+            <div class="form-group">
+                <label for="grade-group-2"><strong>Grades*</strong></label>
+                <select multiple name="grades" class="select-grades-dropdown form-control">
+                    @foreach(App\EmployeeGrade::all() as $grade)
+                    <option value={{ $grade->id }}>{{ $grade->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-                    <div class="entitlement-by-years-entry default input-group">
-                        <input type="text" class="min-years-input form-control text-white" value="Default"
-                            readonly>
-                        <input type="number" class="entitled-days-input form-control" placeholder="Entitled Days">
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-times"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="entitlement-by-years-list">
-
-                    </div>
-
-                    {{-- Button: Add --}}
-                    <div class="row mt-2">
-                        <div class="col">
-                            <a role="button" class="add-entitlement-by-years-btn float-right btn btn-light">
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </div>
-                    </div>
+            <div class="entitlement-by-years-entry default input-group">
+                <input type="text" name="min-years-input" class="min-years-input form-control text-white" value="Default" readonly>
+                <input type="number" name="entitled-days-input" class="entitled-days-input form-control" placeholder="Entitled Days">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-times"></i></span>
                 </div>
             </div>
+
+            <div class="entitlement-by-years-list">
+
+            </div>
+
+            {{-- Button: Add --}}
+            <div class="row mt-2">
+                <div class="col">
+                    <a role="button" class="add-entitlement-by-years-btn float-right btn btn-light">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
-
+ 
 @section('scripts')
 <script>
     $(function () {
+        let leaveType = {!! json_encode($leave_type) !!};
+        // SECTION: Init Edit Data
+        (function () {
+            console.log("Leave Type: ", leaveType);
+            let form = $('#add-leave-type-form');
+            form.find('#code').val(leaveType.code);
+            form.find('#name').val(leaveType.name);
+            form.find('#description').val(leaveType.description);
+
+            let leaveRulesList = $('#leave-rules-list');
+            let leaveRulesTemplates = $('#leave-type-rule-templates');
+            if(leaveType.applied_rules) {
+                for(let rule of leaveType.applied_rules) {
+                    let configuration;
+                    if(rule.configuration) {
+                        configuration = JSON.parse(rule.configuration)
+                        console.log("Rule configuration: ", configuration);
+                    } 
+                    switch(rule.rule) {
+                        case 'leave_calculation': // rule-leave-calculation
+                            let leaveCalculation = leaveRulesList.find('#rule-leave-calculation');
+                            if(configuration.consecutive) {
+                                leaveCalculation.find('#consecutive-input').prop("checked", true);
+                            }
+
+                            if(configuration.include_off_days) {
+                                leaveCalculation.find('#include-off-days').prop("checked", true);
+                            }
+                        break;
+                        case 'multiple_approval_levels_required': // 'rule-multiple-approval-levels-required':
+                            let multipleApprovalLevelsReq = leaveRulesTemplates.find('#rule-multiple-approval-levels-required');
+                            
+                            multipleApprovalLevelsReq.find('input[name=id]').val(rule.id);
+                            
+                            multipleApprovalLevelsReq.appendTo('#leave-rules-list');
+                        break;
+                        case 'gender': // 'rule-restrict-gender':
+                            let restrictByGender = leaveRulesTemplates.find('#rule-restrict-gender');
+                            
+                            restrictByGender.find('input[name=id]').val(rule.id);
+                            restrictByGender.find('select[name=gender]').val(configuration.gender);
+                            
+                            restrictByGender.appendTo('#leave-rules-list');
+                        break;
+                        case 'can_carry_forward': //'rule-can-carry-forward':
+                            let canCarryForward = leaveRulesTemplates.find('#rule-can-carry-forward');
+                            
+                            canCarryForward.find('input[name=id]').val(rule.id);
+                            canCarryForward.find('input[name=max-carry-forward-days]').val(configuration.max_carry_forward_days);
+                            canCarryForward.find('select[name=valid-until-end-month]').val(configuration.valid_till_end_month);
+                            
+                            canCarryForward.appendTo('#leave-rules-list');
+                        break;
+                    }
+                }
+            }
+
+            if(leaveType.entitled_days) {
+                // MODE: Entitled By Years
+                let section = $('#section-employee-mode-all');
+                
+                section.find(".entitlement-by-years-entry.default").find('input[name=entitled-days-input]').val(leaveType.entitled_days);
+                
+                let list = section.find('.entitlement-by-years-list');
+                if(leaveType.lt_conditional_entitlements) {
+                    for(let conditionalEntitlement of leaveType.lt_conditional_entitlements) {
+                        console.log("Conditional entitlement: ", conditionalEntitlement)
+                        // Add conditional entitlement entry
+                        let newEntry = $('#leave-type-entitled-days-by-years-template .entitlement-by-years-entry').clone();
+                        newEntry.find('.remove-entry').click(function (removeEvent) {
+                            $(removeEvent.target).closest('.entitlement-by-years-entry').remove();
+                        });
+
+                        newEntry.find('input[name=id]').val(conditionalEntitlement.id);
+                        newEntry.find('input[name=min-years-input]').val(conditionalEntitlement.min_years);
+                        newEntry.find('input[name=entitled-days-input]').val(conditionalEntitlement.entitled_days);
+
+                        newEntry.appendTo(list);
+                    }
+                }
+                
+            } else {
+                // MODE: Entitled By Grade
+                $('#section-employee-mode-all').attr('hidden', true);
+                $('#entitled-mode-dropdown #selected-text').text("By Employee Grade");   
+
+                let section = $('#section-employee-mode-by-grade');
+                section.removeAttr('hidden');
+
+                let gradeGroupList = section.find('#grade-group-list');
+                console.log('GG List ', gradeGroupList);
+                if(leaveType.lt_entitlements_grade_groups) {
+                    for(let gradeGroup of leaveType.lt_entitlements_grade_groups) {
+
+                        let newGradeGroupEntry = $('#grade-group-entry-template .grade-group-entry').clone();
+                        
+                        newGradeGroupEntry.find('input[name=id]').val(gradeGroup.id);
+                        
+                        let section = newGradeGroupEntry.find('.section-entitlement-by-years');
+                        let grades = [];
+                        if(gradeGroup.grades) {
+                            for(let grade of gradeGroup.grades) {
+                                grades.push(grade.id);
+                            }
+                        }
+                        section.find('select[name=grades]').val(grades);
+                        section.find(".entitlement-by-years-entry.default").find('input[name=entitled-days-input]').val(gradeGroup.entitled_days);
+
+                        // console.log("Default: ", section.find(".entitlement-by-years-entry.default").find('input[name=entitled-days-input]'));
+                        let list = section.find('.entitlement-by-years-list');
+                        if(gradeGroup.lt_conditional_entitlements) {
+                            for(let conditionalEntitlement of gradeGroup.lt_conditional_entitlements) {
+                                console.log("Conditional entitlement: ", conditionalEntitlement)
+                                // Add conditional entitlement entry
+                                let newEntry = $('#leave-type-entitled-days-by-years-template .entitlement-by-years-entry').clone();
+                                newEntry.find('.remove-entry').click(function (removeEvent) {
+                                    $(removeEvent.target).closest('.entitlement-by-years-entry').remove();
+                                });
+
+                                newEntry.find('input[name=id]').val(conditionalEntitlement.id);
+                                newEntry.find('input[name=min-years-input]').val(conditionalEntitlement.min_years);
+                                newEntry.find('input[name=entitled-days-input]').val(conditionalEntitlement.entitled_days);
+
+                                newEntry.appendTo(list);
+                            }
+                        }
+                       
+                        newGradeGroupEntry.appendTo(gradeGroupList);
+                    }
+                }
+                
+
+
+            }
+        })();
+
+        // SECTION: Init Page Logic
         $('#section-employee-mode-by-grade .select-grades-dropdown').multiselect({
             numberDisplayed: 0
         });
@@ -566,62 +637,6 @@
                 }
             });
         })
-
-        // SECTION: Init Edit Data
-        let leaveType = {!! json_encode($leave_type) !!};
-        console.log("Leave Type: ", leaveType);
-        let form = $('#add-leave-type-form');
-        form.find('#code').val(leaveType.code);
-        form.find('#name').val(leaveType.name);
-        form.find('#description').val(leaveType.description);
-
-        let leaveRulesList = $('#leave-rules-list');
-        let leaveRulesTemplates = $('#leave-type-rule-templates');
-        if(leaveType.applied_rules) {
-            for(let rule of leaveType.applied_rules) {
-                let configuration;
-                if(rule.configuration) {
-                    configuration = JSON.parse(rule.configuration)
-                    console.log("Rule configuration: ", configuration);
-                } 
-                switch(rule.rule) {
-                    case 'leave_calculation': // rule-leave-calculation
-                        let leaveCalculation = leaveRulesList.find('#rule-leave-calculation');
-                        if(configuration.consecutive) {
-                            leaveCalculation.find('#consecutive-input').prop("checked", true);
-                        }
-
-                        if(configuration.include_off_days) {
-                            leaveCalculation.find('#include-off-days').prop("checked", true);
-                        }
-                    break;
-                    case 'multiple_approval_levels_required': // 'rule-multiple-approval-levels-required':
-                        let multipleApprovalLevelsReq = leaveRulesTemplates.find('#rule-multiple-approval-levels-required');
-                        
-                        multipleApprovalLevelsReq.find('input[name=id]').val(rule.id);
-                        
-                        multipleApprovalLevelsReq.appendTo('#leave-rules-list');
-                    break;
-                    case 'gender': // 'rule-restrict-gender':
-                        let restrictByGender = leaveRulesTemplates.find('#rule-restrict-gender');
-                        
-                        restrictByGender.find('input[name=id]').val(rule.id);
-                        restrictByGender.find('select[name=gender]').val(configuration.gender);
-                        
-                        restrictByGender.appendTo('#leave-rules-list');
-                    break;
-                    case 'can_carry_forward': //'rule-can-carry-forward':
-                        let canCarryForward = leaveRulesTemplates.find('#rule-can-carry-forward');
-                        
-                        canCarryForward.find('input[name=id]').val(rule.id);
-                        canCarryForward.find('input[name=max-carry-forward-days]').val(configuration.max_carry_forward_days);
-                        canCarryForward.find('select[name=valid-until-end-month]').val(configuration.valid_till_end_month);
-                        
-                        canCarryForward.appendTo('#leave-rules-list');
-                    break;
-                }
-            }
-        }
     })
 
 </script>
