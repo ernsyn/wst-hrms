@@ -4,7 +4,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="add-security-group-label">Add an Emergency Contact</h5>
+                <h5 class="modal-title" id="add-security-group-label">Add an Security Group</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -44,6 +44,52 @@
     </div>
 </div>
 
+<!-- ADD Main-->
+<div class="modal fade" id="add-main-security-groups-popup" tabindex="-1" role="dialog" aria-labelledby="add-main-security-groups-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-main-security-groups-label">Add Main Security Group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="add-main-security-group-form">
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Name*</strong></label>
+                            {{-- <input id="security-group-id" type="text" class="form-control" placeholder="" value="" required>  --}}
+                            <div class="col-md-6">
+                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                                        @foreach(App\SecurityGroup::all() as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                        @endforeach
+                                    </select> @if ($errors->has('main-security-group-id'))
+                                    <span class="invalid-feedback" role="alert">
+                                                              <strong>{{ $errors->first('main-security-group-id') }}</strong>
+                                                          </span> @endif
+                                </div>
+
+                            {{-- <div id="security-group-id-error" class="invalid-feedback"> --}}
+
+                            {{-- </div> --}}
+                        </div>
+                    </div>
+
+                </div>
+            
+                <div class="modal-footer">
+                    <button id="add-submit" type="submit" class="btn btn-primary">
+                    {{ __('Submit') }}
+                </button> {{-- <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                    --}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="tab-pane fade show p-3" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
     <div class="row pb-3">
@@ -101,6 +147,47 @@
 <script type="text/javascript">
     $(function(){
         // ADD
+       $('#add-main-security-group-form #add-submit').click(function(e){
+          e.preventDefault();
+          $.ajax({
+            url: "{{ route('admin.employees.main-security-groups.post', ['id' => $id]) }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                // Form Data
+                main_security_group_id: $('#add-main-security-group-form #main-security-group-id').val(),
+
+            },
+            success: function(data) {
+                showAlert(data.success);
+                emergencyContactsTable.ajax.reload();
+                $('#add-main-security-group-popup').modal('toggle');
+                clearEmergencyContactModal('#add-main-security-group-form');
+            },
+            error: function(xhr) {
+                if(xhr.status == 422) {
+                    var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'main_security_group_id':
+                                        $('#add-main-security-group-form #main-security-group-id').addClass('is-invalid');
+                                        $('#add-main-security-group-form #main-security-group-id-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                               
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+</script>
+<script type="text/javascript">
+    $(function(){
+        // ADD
        $('#add-security-group-form #add-submit').click(function(e){
           e.preventDefault();
           $.ajax({
@@ -127,7 +214,7 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'security_group_id':
-                                        $('#add-security-group-form #security-group').addClass('is-invalid');
+                                        $('#add-security-group-form #security-group-id').addClass('is-invalid');
                                         $('#add-security-group-form #security-group-id-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                
