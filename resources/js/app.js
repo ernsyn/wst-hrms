@@ -145,27 +145,9 @@ $('#skillEndDate').datepicker({
         $(this).parsley().validate();
     }
 });
-//change day according to selected value
-$('#type-balance').on('change', function() {
 
-    var txt = this.value;
-    var obj = JSON.parse(txt);
 
-    $( "div.leavedays" ).replaceWith( "<div class='leavedays col-sm-4'><b>"+ obj.balance +"</b> days available</span></div>" );
-    $("#leaveTypeId").val(obj.id);
-    $("#leaveBalance").val(obj.balance);
-});
-
-$("#leaveHalfDay").click(function(){  
-        $( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
-        $("#totalLeave").val(0.5);
-});
-
-$("#leaveFullDay").click(function(){  
-    $( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
-    $("#totalLeave").val(1);
-});
-
+ 
 
 function hrmsDatepicker(settings) {
     let elementRef = settings.elementRef;
@@ -942,3 +924,14 @@ $('#check_job_grade_de').change(function() {
         $('#job_grade_de').prop('disabled', true);
     }
 });
+$('#calendarleave').fullCalendar({
+    themeSystem: 'jquery-ui',
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay,listMonth'
+    },
+    weekNumbers: true,
+    eventLimit: true, // allow "more" link when too many events
+    // events: 'https://fullcalendar.io/demo-events.json'
+  });

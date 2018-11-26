@@ -283,8 +283,7 @@
                         {{-- Attachment --}}
                         @include('pages.admin.employees.id.attachments', ['id' => $employee->id])
                         {{-- Work Days --}}
-                        <div class="tab-pane fade show p-3" id="nav-workdays" role="tabpanel" aria-labelledby="nav-workdays-tab">
-                        </div>
+                        @include('pages.admin.employees.id.working-day', ['id' => $employee->id])
                         {{-- Report To --}}
                         @include('pages.admin.employees.id.report-to', ['id' => $employee->id])
                         {{-- History --}}

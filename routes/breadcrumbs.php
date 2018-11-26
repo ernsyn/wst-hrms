@@ -12,7 +12,10 @@ Breadcrumbs::for('employee.dashboard', function ($trail) {
     $trail->push('Dashboard', route('employee.dashboard'));
 });
 
-
+Breadcrumbs::for('leaverequest', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('List Of Leave', route('leaverequest'));
+});
 Breadcrumbs::for('employee.profile', function ($trail) {
     // $trail->parent('profile');
     $trail->push('My Profile', route('employee.profile'));
@@ -437,11 +440,11 @@ Breadcrumbs::for('admin.settings.company.company-details', function ($trail, $id
 
 
 
-// Home > Admin > Leave Balance
-Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Leave Balance', route('admin.e-leave.configuration'));
-});
+// // Home > Admin > Leave Balance
+// Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
+//     $trail->parent('admin.dashboard');
+//     $trail->push('Leave Balance', route('admin.e-leave.configuration'));
+// });
 
 
 
@@ -492,11 +495,25 @@ Breadcrumbs::for('admin/edit-employee/{id}', function ($trail) {
     $trail->push('Add Employee', route('admin/edit-employee/{id}', ''));
 });
 
+// SECTION: (Admin) E-Leave
+Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('E-Leave Configuration', route('admin.e-leave.configuration'));
+});
+
+Breadcrumbs::for('admin.e-leave.configuration.leave-types.add', function ($trail) {
+    $trail->parent('admin.e-leave.configuration');
+    $trail->push('Add Leave Type', route('admin.e-leave.configuration.leave-types.add'));
+});
+
 Breadcrumbs::for('add_team', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Add Team', route('add_team'));
 });
-
+Breadcrumbs::for('leaveapplication', function ($trail) {
+    $trail->parent('admin.employees');
+    $trail->push('Add Leave Application', route('leaveapplication', ''));
+});
 
 // Error 404
 Breadcrumbs::for('errors.404', function ($trail) {

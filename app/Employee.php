@@ -36,6 +36,7 @@ class Employee extends Model
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
     }
 
+
     public function employee_jobs()
     {
         return $this->hasMany('App\EmployeeJob', 'emp_id');
@@ -44,6 +45,11 @@ class Employee extends Model
     public function employee_emergency_contacts()
     {
         return $this->hasMany('App\EmployeeEmergencyContact', 'emp_id');
+    }
+
+    public function employee_bank_accounts()
+    {
+        return $this->hasMany('App\EmployeeBankAccount', 'emp_id');
     }
 
     public function dependents()
@@ -57,9 +63,47 @@ class Employee extends Model
     }
 
     public function employee_security_groups()
+    
+    {
+
+        return $this->hasMany('App\EmployeeSecurityGroup', 'emp_id');
+        
+    }
+    public function employee_experiences()
+    {
+        return $this->hasMany('App\EmployeeExperience', 'emp_id');
+    }
+    public function employee_educations()
+    {
+        return $this->hasMany('App\EmployeeEducation', 'emp_id');
+    }
+    public function employee_skills()
+    {
+        return $this->hasMany('App\EmployeeSkill', 'emp_id');
+    }
+    
+    public function employee_visas()
+    {
+        return $this->hasMany('App\EmployeeVisa', 'emp_id');
+    }
+    
+    public function employee_immigrations()
+    {
+        return $this->hasMany('App\EmployeeImmigration', 'emp_id');
+    }
+    
+    public function employee_attachments()
+    {
+        return $this->hasMany('App\EmployeeAttachment', 'emp_id');
+    }
+
+    public function report_tos()
     {
         return $this->hasMany('App\EmployeeSecurityGroup', 'emp_id');
     }
-    
-    
+
+    public function working_day()
+    {
+        return $this->hasOne('App\EmployeeWorkingDay', 'emp_id');
+    }
 }
