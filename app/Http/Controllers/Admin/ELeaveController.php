@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use App\LeaveType;
@@ -50,34 +51,38 @@ class ELeaveController extends Controller
             "conditional_entitlements" => '',
         ]);
 
-        // dd($conditionalEntitlementsData);
+        DB::transaction(function() use ($leaveTypeData, $gradeGroupsData, $conditionalEntitlementsData) {
+            $leaveType = LeaveType::create($leaveTypeData);
 
-        $leaveType = LeaveType::create($leaveTypeData);
+            if(array_key_exists("applied_rules", $appliedRulesData)) {
+                foreach ($appliedRulesData['applied_rules'] as $key => $ruleData)  {
+                    if(array_key_exists('configuration', $ruleData)) {
+                        $appliedRulesData['applied_rules'][$key]['configuration'] = json_encode($ruleData['configuration']);
+                    }
+                }
+                $leaveType->applied_rules()->createMany(
+                    $appliedRulesData['applied_rules']
+                );
+            }
 
-        if(array_key_exists("applied_rules", $appliedRulesData)) {
-            foreach ($appliedRulesData['applied_rules'] as $key => $ruleData)  {
-                if(array_key_exists('configuration', $ruleData)) {
-                    $appliedRulesData['applied_rules'][$key]['configuration'] = json_encode($ruleData['configuration']);
+            if(array_key_exists("grade_groups", $gradeGroupsData)) {
+                foreach ($gradeGroupsData["grade_groups"] as $gradeGroupData) {
+                    $gradeGroup = $leaveType->lt_entitlements_grade_group()->create($gradeGroupData);
+                    $gradeGroup->grades()->sync($gradeGroupData["grades"]);
+                    $gradeGroup->lt_conditional_entitlements()->createMany(
+                        $gradeGroupData["conditional_entitlements"]
+                    ); 
+                }
+
+            } else {
+                if(array_key_exists("conditional_entitlements", $conditionalEntitlementsData)) {
+                    $leaveType->lt_conditional_entitlements()->createMany(
+                        $conditionalEntitlementsData["conditional_entitlements"]
+                    ); 
                 }
             }
-            // dd($appliedRulesData);
-            $leaveType->applied_rules()->createMany(
-                $appliedRulesData['applied_rules']
-            );
-        }
+        });
 
-        if(array_key_exists("grade_groups", $gradeGroupsData)) {
-            // $leaveType->lt_entitlement_grade_groups()->createMany(
-            //     $gradeGroupsData["grade_groups"]
-            // ); 
-        } else {
-            if(array_key_exists("conditional_entitlements", $conditionalEntitlementsData)) {
-                $leaveType->lt_conditional_entitlements()->createMany(
-                    $conditionalEntitlementsData["conditional_entitlements"]
-                ); 
-            }
-        }
-        
         return response()->json(['success'=>'Record is successfully added']);
     }
 

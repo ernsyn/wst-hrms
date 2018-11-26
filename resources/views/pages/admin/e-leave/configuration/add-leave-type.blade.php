@@ -97,11 +97,9 @@
                                     <div class="form-group">
                                         <label for="grade-group-2"><strong>Grades*</strong></label>
                                         <select multiple class="form-control select-grades-dropdown" id="grade-group-2">
-                                            <option>A1</option>
-                                            <option>A2</option>
-                                            <option>M1</option>
-                                            <option>M2</option>
-                                            <option>M3</option>
+                                            @foreach(App\EmployeeGrade::all() as $grade)
+                                        <option value={{ $grade->id }}>{{ $grade->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
     
