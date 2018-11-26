@@ -160,26 +160,30 @@
 <script type="text/javascript">
     $(function(){
         // ADD ATTACHMENTS
+        $('#add-attachment-popup').on('show.bs.modal', function (event) {
+            clearAttachmentsError('#add-attachment-form');
+        });
         $('#add-attachment-form #add-attachment-submit').click(function(e){
-          e.preventDefault();
-          $.ajax({
-            url: "{{ route('admin.employees.attachments.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                // Form Data
-                name: $('#add-attachment-form #name').val(),
-                notes: $('#add-attachment-form #notes').val()
-            },
-            success: function(data) {
-                showAlert(data.success);
-                attachmentsTable.ajax.reload();
-                $('#add-attachment-popup').modal('toggle');
-                clearAttachmentsModal('#add-attachment-form');
-            },
-            error: function(xhr) {
-                if(xhr.status == 422) {
-                    var errors = xhr.responseJSON.errors;
+            clearAttachmentsError('#add-attachment-form');
+            e.preventDefault();
+            $.ajax({
+                url: "{{ route('admin.employees.attachments.post', ['id' => $id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // Form Data
+                    name: $('#add-attachment-form #name').val(),
+                    notes: $('#add-attachment-form #notes').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    attachmentsTable.ajax.reload();
+                    $('#add-attachment-popup').modal('toggle');
+                    clearAttachmentsModal('#add-attachment-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
                         console.log("Error: ", xhr);
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
@@ -205,6 +209,7 @@
         var editAttachmentId = null;
         // Function: On Modal Clicked Handler
         $('#edit-attachment-popup').on('show.bs.modal', function (event) {
+            clearAttachmentsError('#edit-attachment-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -217,6 +222,7 @@
 
         var editAttachmentRouteTemplate = "{{ route('admin.employees.attachments.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-attachment-submit').click(function(e){
+            clearAttachmentsError('#edit-attachment-form');
             var editAttachmentRoute = editAttachmentRouteTemplate.replace(encodeURI('<<id>>'), editAttachmentId);
             e.preventDefault();
             $.ajax({
@@ -301,6 +307,10 @@
         $(htmlId + ' #name').val('');
         $(htmlId + ' #notes').val('');
 
+        $(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #notes').removeClass('is-invalid');
+    }
+    function clearAttachmentsError(htmlId) {
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
     }

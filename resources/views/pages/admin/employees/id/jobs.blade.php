@@ -375,7 +375,7 @@ var jobsTable = $('#employee-jobs-table').DataTable({
                 team_id: $('#add-job-form #team').val(),
                 cost_centre_id: $('#add-job-form #cost-centre').val(),
                 emp_grade_id: $('#add-job-form #grade').val(),
-                start_date: $('#add-job-form #jobDate').val(),
+                start_date: $('#add-job-form #altjobDate').val(),
                 basic_salary: $('#add-job-form #basic-salary').val(),
                 specification: $('#add-job-form #specification').val(),
             },

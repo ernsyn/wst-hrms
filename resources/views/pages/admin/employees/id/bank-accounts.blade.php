@@ -23,7 +23,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Number*</strong></label>
-                            <input id="acc-no" type="number" class="form-control" placeholder="" value="" required>
+                            <input id="acc-no" type="text" class="form-control" placeholder="" value="" required>
                             <div id="acc-no-error" class="invalid-feedback">
 
                             </div>
@@ -77,7 +77,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Number*</strong></label>
-                            <input id="acc-no" type="number" class="form-control" placeholder="" value="" required>
+                            <input id="acc-no" type="text" class="form-control" placeholder="" value="" required>
                             <div id="acc-no-error" class="invalid-feedback">
 
                             </div>
@@ -86,16 +86,18 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Status*</strong></label>
-                            <input id="acc-status" type="text" class="form-control" placeholder="" value="" required>
+                            <select name="acc-status" id="acc-status" type="text" class="form-control" placeholder="" value="" required>
+                                <option value="">Select Type</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
                             <div id="acc-status-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="edit-bank-accounts-submit" type="submit" class="btn btn-primary">
-                        {{ __('Submit') }}
-                    </button>
+                    <button id="edit-bank-accounts-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
                 </div>
             </form>
         </div>
@@ -113,7 +115,7 @@
                         </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                    <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -144,6 +146,7 @@
         </thead>
     </table>
 </div>
+
 
 
 
@@ -185,27 +188,31 @@
 <script type="text/javascript">
     $(function(){
         // ADD
-       $('#add-bank-accounts-form #add-bank-accounts-submit').click(function(e){
-          e.preventDefault();
-          $.ajax({
-            url: "{{ route('admin.employees.bank-accounts.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                // Form Data
-                bank_code: $('#add-bank-accounts-form #bank-code').val(),
-                acc_no: $('#add-bank-accounts-form #acc-no').val(),
-                acc_status: $('#add-bank-accounts-form #acc-status').val()
-            },
-            success: function(data) {
-                showAlert(data.success);
-                bankAccountsTable.ajax.reload();
-                $('#add-bank-accounts-popup').modal('toggle');
-                clearBankAccountModal('#add-bank-accounts-form');
-            },
-            error: function(xhr) {
-                if(xhr.status == 422) {
-                    var errors = xhr.responseJSON.errors;
+        $('#add-bank-accounts-popup').on('show.bs.modal', function (event) {
+            clearBankAccountError('#add-bank-accounts-form');
+        });
+        $('#add-bank-accounts-form #add-bank-accounts-submit').click(function(e){
+            e.preventDefault();
+            clearBankAccountError('#add-bank-accounts-form');
+            $.ajax({
+                url: "{{ route('admin.employees.bank-accounts.post', ['id' => $id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // Form Data
+                    bank_code: $('#add-bank-accounts-form #bank-code').val(),
+                    acc_no: $('#add-bank-accounts-form #acc-no').val(),
+                    acc_status: $('#add-bank-accounts-form #acc-status').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    bankAccountsTable.ajax.reload();
+                    $('#add-bank-accounts-popup').modal('toggle');
+                    clearBankAccountModal('#add-bank-accounts-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
                         console.log("Error: ", xhr);
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
@@ -235,6 +242,7 @@
         // EDIT
         var editId = null;
         $('#edit-bank-accounts-popup').on('show.bs.modal', function (event) {
+            clearBankAccountError('#edit-bank-accounts-form');
             var button = $(event.relatedTarget)
             var currentData = JSON.parse(decodeURI(button.data('current')))
             console.log('Data: ', currentData)
@@ -249,6 +257,7 @@
         var editRouteTemplate = "{{ route('admin.employees.bank-accounts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-bank-accounts-submit').click(function(e){
             var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
+            clearBankAccountError('#edit-bank-accounts-form');
             e.preventDefault();
             $.ajax({
                 url: editRoute,
@@ -336,6 +345,12 @@
         $(htmlId + ' #acc-no').val('');
         $(htmlId + ' #acc-status').val('');
 
+        $(htmlId + ' #bank-code').removeClass('is-invalid');
+        $(htmlId + ' #acc-no').removeClass('is-invalid');
+        $(htmlId + ' #acc-status').removeClass('is-invalid');
+    }
+
+    function clearBankAccountError(htmlId) {
         $(htmlId + ' #bank-code').removeClass('is-invalid');
         $(htmlId + ' #acc-no').removeClass('is-invalid');
         $(htmlId + ' #acc-status').removeClass('is-invalid');
