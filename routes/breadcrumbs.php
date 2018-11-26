@@ -12,17 +12,14 @@ Breadcrumbs::for('employee.dashboard', function ($trail) {
     $trail->push('Dashboard', route('employee.dashboard'));
 });
 
-
+Breadcrumbs::for('leaverequest', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('List Of Leave', route('leaverequest'));
+});
 Breadcrumbs::for('employee.profile', function ($trail) {
     // $trail->parent('profile');
     $trail->push('My Profile', route('employee.profile'));
 });
-
-Breadcrumbs::for('employee/leaverequest', function ($trail) {
-
-    $trail->push('Leave Request', route('employee/leaverequest'));
-});
-
 
 Breadcrumbs::for('super-admin.dashboard', function ($trail) {
     $trail->push('Super Admin Dashboard', route('super-admin.dashboard'));
@@ -36,19 +33,6 @@ Breadcrumbs::for('super-admin.dashboard', function ($trail) {
 // SECTION: Admin
 Breadcrumbs::for('admin.dashboard', function ($trail) {
     $trail->push('Admin Dashboard', route('admin.dashboard'));
-});
-
-
-// Home > Employee > Application Leave
-Breadcrumbs::for('employee/leaveapplication', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Leave Application', route('employee/leaveapplication'));
-});
-
-// Home > Employee > Application Leave
-Breadcrumbs::for('employee/leavebalance', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Leave Balance', route('employee/leavebalance'));
 });
 
 Breadcrumbs::for('admin.employees', function ($trail) {
@@ -87,6 +71,11 @@ Breadcrumbs::for('admin.e-leave.configuration.leavetypes', function ($trail) {
 Breadcrumbs::for('admin.e-leave.configuration.leavetypes.add', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Add Leave', route('admin.e-leave.configuration.leavetypes.add'));
+});
+
+Breadcrumbs::for('admin.e-leave.configuration.leavetypes.edit', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Edit Leave', route('admin.e-leave.configuration.leavetypes.edit'));
 });
 
 
@@ -345,6 +334,62 @@ Breadcrumbs::for('admin.settings.positions', function ($trail) {
     $trail->push('Settings: Employee Positions', route('admin.settings.positions'));
 });
 
+
+
+
+// // Home > Settings > company-banks
+Breadcrumbs::for('admin.settings.company-banks', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Company Banks', route('admin.settings.company-banks'));
+});
+
+Breadcrumbs::for('admin.settings.company-banks.add', function ($trail, $id) {
+    $trail->parent('admin.settings.company-banks');
+    $trail->push('Add Company Banks', route('admin.settings.company-banks.add',$id));
+});
+
+// Home > Settings > company-banks - Edit
+Breadcrumbs::for('admin.settings.company-banks.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.company-banks');
+    $trail->push('Edit Company Banks', route('admin.settings.company-banks.edit', $id));
+});
+
+
+// // Home > Settings > additions
+Breadcrumbs::for('admin.settings.additions', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Company Addition', route('admin.settings.additions'));
+});
+
+Breadcrumbs::for('admin.settings.additions.add', function ($trail) {
+    $trail->parent('admin.settings.additions');
+    $trail->push('Add Company Addition', route('admin.settings.additions.add'));
+});
+
+// Home > Settings > addition - Edit
+Breadcrumbs::for('admin.settings.additions.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.additions');
+    $trail->push('Edit Company Addition', route('admin.settings.additions.edit', $id));
+});
+
+
+// // Home > Settings > deduction
+Breadcrumbs::for('admin.settings.deductions', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Company Deduction', route('admin.settings.deductions'));
+});
+
+Breadcrumbs::for('admin.settings.deductions.add', function ($trail) {
+    $trail->parent('admin.settings.deductions');
+    $trail->push('Add Company Deduction', route('admin.settings.deductions.add'));
+});
+
+// Home > Settings > deduction - Edit
+Breadcrumbs::for('admin.settings.deductions.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.deductions');
+    $trail->push('Edit Company Deduction', route('admin.settings.deductions.edit', $id));
+});
+
 // Home > Admin > Leave Request
 Breadcrumbs::for('admin.e-leave', function ($trail) {
     $trail->parent('admin.dashboard');
@@ -387,12 +432,27 @@ Breadcrumbs::for('disapprove_leave', function ($trail) {
     $trail->push('Leave Request', route('disapprove_leave'));
 });
 
-// Home > Admin > Leave Balance
-Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
+// Home > Admin > Leave Disapprove
+Breadcrumbs::for('admin.settings.company.company-details', function ($trail, $id) {
     $trail->parent('admin.dashboard');
-    $trail->push('Leave Balance', route('admin.e-leave.configuration'));
+    $trail->push('Company Details', route('admin.settings.company.company-details', $id));
 });
 
+
+
+// // Home > Admin > Leave Balance
+// Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
+//     $trail->parent('admin.dashboard');
+//     $trail->push('Leave Balance', route('admin.e-leave.configuration'));
+// });
+
+
+
+// Home > Admin > Leave Balance
+Breadcrumbs::for('admin.settings.securities', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Leave Balance', route('admin.settings.securities'));
+});
 // Home > Admin > Leave Holiday
 Breadcrumbs::for('add_leave_balance', function ($trail) {
     $trail->parent('admin.dashboard');
@@ -435,24 +495,25 @@ Breadcrumbs::for('admin/edit-employee/{id}', function ($trail) {
     $trail->push('Add Employee', route('admin/edit-employee/{id}', ''));
 });
 
-
-// Home > Admin > Leave Type
-Breadcrumbs::for('admin.e-leave.configuration.leave-types', function ($trail) {
+// SECTION: (Admin) E-Leave
+Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Leave Type', route('admin.e-leave.configuration.leave-types'));
+    $trail->push('E-Leave Configuration', route('admin.e-leave.configuration'));
 });
 
-// Home > Admin > Leave Type
-Breadcrumbs::for('admin/leaveapplication', function ($trail) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Leave Type', route('admin/leaveapplication'));
+Breadcrumbs::for('admin.e-leave.configuration.leave-types.add', function ($trail) {
+    $trail->parent('admin.e-leave.configuration');
+    $trail->push('Add Leave Type', route('admin.e-leave.configuration.leave-types.add'));
 });
 
 Breadcrumbs::for('add_team', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Add Team', route('add_team'));
 });
-
+Breadcrumbs::for('leaveapplication', function ($trail) {
+    $trail->parent('admin.employees');
+    $trail->push('Add Leave Application', route('leaveapplication', ''));
+});
 
 // Error 404
 Breadcrumbs::for('errors.404', function ($trail) {

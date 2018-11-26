@@ -3,7 +3,8 @@
         <img src="{{asset('img/oppologo.png')}}">
     </div>
     <ul id="menu-container" class="list-unstyled">
-    <li class="menu-section {{ request()->is('employee/leaveapplication') ? 'active' : '' }}">
+    </ul>
+    {{-- <li class="menu-section {{ request()->is('employee/leaveapplication') ? 'active' : '' }}">
         <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
             <div class="row">
                 <div class="col-1">
@@ -23,5 +24,5 @@
             </li>
         </ul>
 
-    </li>
+    </li> --}}
 </nav>

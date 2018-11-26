@@ -12,3 +12,4 @@ npm-debug.log
 yarn-error.log
 .env
 .phpunit.result.cache
+database/migrations/2018_11_24_201423_added_column_main_security_group_id_to_employees.php

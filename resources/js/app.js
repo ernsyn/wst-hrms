@@ -148,27 +148,9 @@ $('#skillEndDate').datepicker({
         $(this).parsley().validate();
     }
 });
-//change day according to selected value
-$('#type-balance').on('change', function() {
 
-    var txt = this.value;
-    var obj = JSON.parse(txt);
 
-    $( "div.leavedays" ).replaceWith( "<div class='leavedays col-sm-4'><b>"+ obj.balance +"</b> days available</span></div>" );
-    $("#leaveTypeId").val(obj.id);
-    $("#leaveBalance").val(obj.balance);
-});
-
-$("#leaveHalfDay").click(function(){  
-        $( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
-        $("#totalLeave").val(0.5);
-});
-
-$("#leaveFullDay").click(function(){  
-    $( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
-    $("#totalLeave").val(1);
-});
-
+ 
 
 function hrmsDatepicker(settings) {
     let elementRef = settings.elementRef;
@@ -758,21 +740,38 @@ $('#editCompanyBankPopup').on('show.bs.modal', function (event) {
     modal.find('.modal-body #status').val(status)
 })
 
-//update company
+//update company security group
 $('#editSecurityGroupPopup').on('show.bs.modal', function (event) {
 
-var button = $(event.relatedTarget)
-var id = button.data('security-id')
-var security_name = button.data('security-name')
-var security_description = button.data('security-description')
-var security_status = button.data('security-status')
+    var button = $(event.relatedTarget)
+    var id = button.data('security-id')
+    var name = button.data('security-name')
+    var description = button.data('security-description')
+    var status = button.data('security-status')
 
-var modal = $(this)
+    var modal = $(this)
 
-modal.find('.modal-body #security_group_id').val(id)
-modal.find('.modal-body #name').val(security_name)
-modal.find('.modal-body textarea#description').val(security_description)
-modal.find('.modal-body #status').val(security_status)
+    modal.find('.modal-body #security_group_id').val(id)
+    modal.find('.modal-body #name').val(name)
+    modal.find('.modal-body #description').val(description)
+    modal.find('.modal-body #status').val(status)
+})
+
+//update company security group
+$('#editTravelPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget)
+    var id = button.data('travel-id')
+    var code = button.data('travel-code')
+    var rate = button.data('travel-rate')
+    var status = button.data('travel-status')
+
+    var modal = $(this)
+
+    modal.find('.modal-body #travel_id').val(id)
+    modal.find('.modal-body #code').val(code)
+    modal.find('.modal-body #rate').val(rate)
+    modal.find('.modal-body #status').val(status)
 })
 
 //update addition
@@ -785,7 +784,7 @@ var name = button.data('addition-name')
 var type = button.data('addition-type')    
 var amount = button.data('addition-amount')
 var statutory = button.data('addition-statutory')
-var eaform = button.data('addition-eaform')
+//var eaform = button.data('addition-eaform')
 var status = button.data('addition-status')
 
 var modal = $(this)
@@ -796,7 +795,7 @@ modal.find('.modal-body #name').val(name)
 modal.find('.modal-body #type').val(type)
 modal.find('.modal-body #amount').val(amount)
 modal.find('.modal-body #statutory').val(statutory)
-modal.find('.modal-body #ea_form').val(eaform)
+//modal.find('.modal-body #ea_form').val(eaform)
 modal.find('.modal-body #status').val(status)
 })
 
@@ -928,3 +927,14 @@ $('#check_job_grade_de').change(function() {
         $('#job_grade_de').prop('disabled', true);
     }
 });
+$('#calendarleave').fullCalendar({
+    themeSystem: 'jquery-ui',
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay,listMonth'
+    },
+    weekNumbers: true,
+    eventLimit: true, // allow "more" link when too many events
+    // events: 'https://fullcalendar.io/demo-events.json'
+  });
