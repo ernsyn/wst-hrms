@@ -14,7 +14,7 @@ class AddTimestampsToEpfs extends Migration
     public function up()
     {
         
-        Schema::table('Epfs', function($table) {
+        Schema::table('epfs', function($table) {
             $table->timestamps();
                   $table->softDeletes();
         });
@@ -27,7 +27,7 @@ class AddTimestampsToEpfs extends Migration
      */
     public function down()
     {
-        Schema::table('Epfs', function($table) {
+        Schema::table('epfs', function($table) {
             $table->dropColumn('timestamps');
         });
     }

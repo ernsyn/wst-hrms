@@ -13,11 +13,11 @@ class AddSoftDeletesToEis extends Migration
      */
     public function up()
     {
-        Schema::table('Eis', function($table) {
+        Schema::table('eis', function($table) {
             $table->timestamps();
              $table->softDeletes();
         });
-        Schema::table('Pcbs', function($table) {
+        Schema::table('pcbs', function($table) {
             $table->timestamps();
              $table->softDeletes();
         });
@@ -30,10 +30,10 @@ class AddSoftDeletesToEis extends Migration
      */
     public function down()
     {
-        Schema::table('Eis', function($table) {
+        Schema::table('eis', function($table) {
             $table->dropColumn('timestamps');
         });
-        Schema::table('Pcbs', function($table) {
+        Schema::table('pcbs', function($table) {
             $table->dropColumn('timestamps');
         });
     }
