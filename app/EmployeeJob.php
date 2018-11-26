@@ -20,6 +20,7 @@ class EmployeeJob extends Model
         'specification',
         'end_date',
         'status',
+        'end_date',
     ];
 
     public function main_position()
