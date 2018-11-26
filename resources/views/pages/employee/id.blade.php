@@ -36,7 +36,7 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">{{ App\Country::find($employee->nationality)->citizenship }}</span>
+                            <span class="field-value">{{$employee->nationality}}</span>
                         </div>
                     </div>
                     {{-- <div class="form-group row">
@@ -94,11 +94,7 @@
                     </div> --}}
 
                 {{-- Ignore --}}
-                <div id="end-btn-group">
-                    <button type="button" class="btn btn-primary rounded">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                </div>
+
             </div>
 
         </div>
@@ -258,11 +254,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
-                                        <button type="button" class="btn btn-primary rounded-circle">
-                                            <i class="fas fa-pen"></i>
-                                        </button>
-                                    </div>
+                              
                                 </div>
                             </form>
                         </div>
