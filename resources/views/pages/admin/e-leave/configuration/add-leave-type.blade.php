@@ -9,7 +9,7 @@
                     <div class="form-group col-md-3">
                         <label for="code"><strong>Code*</strong></label>
                         <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}"
-                            placeholder="eg. ANNUAL" name="code" value="{{ old('code') }}" required>
+                            placeholder="eg. ANNUAL" name="code" value="{{ old('code') }}" oninput="this.value = this.value.toUpperCase()" required>
                         @if ($errors->has('code'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('code') }}</strong>
