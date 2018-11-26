@@ -20,7 +20,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $leaveRequests = LeaveRequest::with('user')->orderBy('created_at','desc')->limit(5)->get();
+        $leaveRequests = array();
 
         return view('pages.admin.dashboard', ['leaveRequests' => $leaveRequests]);
     }
