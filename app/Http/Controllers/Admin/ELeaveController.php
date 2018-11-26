@@ -91,6 +91,8 @@ class ELeaveController extends Controller
         // dd($leaveType);
         if(!$leaveType->is_custom) {
             return view('pages.admin.e-leave.configuration.edit-default-leave-type', [ 'leave_type' => $leaveType]);
+        } else {
+            return view('pages.admin.e-leave.configuration.edit-custom-leave-type', [ 'leave_type' => $leaveType]);
         }
     }
 }

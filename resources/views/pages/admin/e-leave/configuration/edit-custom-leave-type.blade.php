@@ -35,6 +35,15 @@
                 <div id="section-rules" class="card mb-3">
                     <div class="card-header bg-primary text-white">
                         <strong>Rules</strong>
+                        <a role="button" id="add-rule-btn" class="float-right btn btn-primary btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                        <div id="add-rule-dropdown" class="dropdown-menu" aria-labelledby="add-rule-btn">
+                                {{-- <a id="rule-select-min-apply-days-before" class="dropdown-item" href="#">Minimum Apply Days Before</a> --}}
+                                <a id="rule-select-multiple-approval-levels-required" class="dropdown-item" href="#"> Multiple Approval Levels Required</a>
+                                <a id="rule-select-can-carry-forward" class="dropdown-item" href="#">Can Carry Forward</a>
+                                <a id="rule-select-restrict-gender" class="dropdown-item" href="#">Restrict: By Gender</a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div id="leave-rules-list">
@@ -191,14 +200,14 @@
     <div id="rule-restrict-gender" class="card rule-entry mt-2">
         <div class="card-body">
             <input type="number" name="id" hidden>
-            {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+            <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
-            </a> --}}
+            </a>
             <h5 class="title text-primary">Restrict: By Gender</h5>
             <input type="number" name="id" hidden>
             <div class="form-group">
                 <label for="gender-input"><strong>Gender</strong></label>
-                <select class="form-control" id="gender-input" name="gender">
+                <select class="form-control" id="gender-input">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                 </select>
@@ -209,19 +218,19 @@
     <div id="rule-can-carry-forward" class="card rule-entry mt-2">
         <div class="card-body">
             <input type="number" name="id" hidden>
-            {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+            <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
-            </a> --}}
+            </a>
             <h5 class="title text-primary">Can Carry Forward</h5>
             <div class="form-group">
                 <label for="max-carry-forward-days"><strong>Max Carry Forward Days*</strong></label>
                 <div class=" input-group">
-                    <input id="max-carry-forward-days" name="max-carry-forward-days" type="number" class="form-control" placeholder="eg. 3">
+                    
                 </div>
             </div>
             <div class="form-group">
                 <label for="valid-until-end-month"><strong>Valid Until End Of*</strong></label>
-                <select class="form-control" id="valid-until-end-month" name="valid-until-end-month">
+                <select class="form-control" id="valid-until-end-month">
                     <option value="1">January</option>
                     <option value="2">February</option>
                     <option value="3">March</option>
@@ -243,9 +252,9 @@
     <div id="rule-multiple-approval-levels-required" class="card rule-entry mt-2">
         <div class="card-body">
             <input type="number" name="id" hidden>
-            {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+            <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
-            </a> --}}
+            </a>
             <h5 class="title text-primary">Multiple Approval Levels Required</h5>
         </div>
     </div>
@@ -335,43 +344,43 @@
             return false;
         });
 
-        // $('#add-rule-dropdown a').click(function(e) {
-        //     console.log('Clicked: ', e.target.id);
-        //     switch(e.target.id) {
-        //         // case 'rule-select-min-apply-days-before':
-        //         // break;
-        //         case 'rule-select-multiple-approval-levels-required':
-        //             $('#leave-type-rule-templates #rule-multiple-approval-levels-required').appendTo('#leave-rules-list');
-        //             $(e.target).attr('hidden', true);
-        //             break;
-        //         case 'rule-select-can-carry-forward':
-        //             $('#leave-type-rule-templates #rule-can-carry-forward').appendTo('#leave-rules-list');
-        //             $(e.target).attr('hidden', true);
-        //             break;
-        //         case 'rule-select-restrict-gender':
-        //             $('#leave-type-rule-templates #rule-restrict-gender').appendTo('#leave-rules-list');
-        //             $(e.target).attr('hidden', true);
-        //             break;
-        //     }
-        // })
+        $('#add-rule-dropdown a').click(function(e) {
+            console.log('Clicked: ', e.target.id);
+            switch(e.target.id) {
+                // case 'rule-select-min-apply-days-before':
+                // break;
+                case 'rule-select-multiple-approval-levels-required':
+                    $('#leave-type-rule-templates #rule-multiple-approval-levels-required').appendTo('#leave-rules-list');
+                    $(e.target).attr('hidden', true);
+                    break;
+                case 'rule-select-can-carry-forward':
+                    $('#leave-type-rule-templates #rule-can-carry-forward').appendTo('#leave-rules-list');
+                    $(e.target).attr('hidden', true);
+                    break;
+                case 'rule-select-restrict-gender':
+                    $('#leave-type-rule-templates #rule-restrict-gender').appendTo('#leave-rules-list');
+                    $(e.target).attr('hidden', true);
+                    break;
+            }
+        })
 
-        // $('.remove-rule').click(function (e) {
-        //     let parent = $(e.target).closest('.rule-entry');
-        //     parent.appendTo('#leave-type-rule-templates');
-        //     switch(parent.get(0).id) {
-        //         // case 'rule-select-min-apply-days-before':
-        //         // break;
-        //         case 'rule-multiple-approval-levels-required':
-        //             $('#rule-select-multiple-approval-levels-required').removeAttr('hidden');
-        //         break;
-        //         case 'rule-can-carry-forward':
-        //             $('#rule-select-can-carry-forward').removeAttr('hidden');
-        //             break;
-        //         case 'rule-restrict-gender':
-        //             $('#rule-select-restrict-gender').removeAttr('hidden');
-        //             break;
-        //     }
-        // })
+        $('.remove-rule').click(function (e) {
+            let parent = $(e.target).closest('.rule-entry');
+            parent.appendTo('#leave-type-rule-templates');
+            switch(parent.get(0).id) {
+                // case 'rule-select-min-apply-days-before':
+                // break;
+                case 'rule-multiple-approval-levels-required':
+                    $('#rule-select-multiple-approval-levels-required').removeAttr('hidden');
+                break;
+                case 'rule-can-carry-forward':
+                    $('#rule-select-can-carry-forward').removeAttr('hidden');
+                    break;
+                case 'rule-restrict-gender':
+                    $('#rule-select-restrict-gender').removeAttr('hidden');
+                    break;
+            }
+        })
 
         $('.add-entitlement-by-years-btn').click(function(e) {
             let list = $(e.target).closest('.section-entitlement-by-years').children('.entitlement-by-years-list').get(0);
@@ -527,12 +536,12 @@
             console.log("Data: ", data);
             data._token = '{{ csrf_token() }}';
             $.ajax({
-                url: "{{ route('admin.e-leave.configuration.leave-types.edit.post', ['id' => $leave_type->id ]) }}",
+                url: "{{ route('admin.e-leave.configuration.leave-types.edit.post') }}",
                 type: 'POST',
                 data: data,
                 success: function(response) {
                     console.log("SUCCESS", response);
-                    // window.location = '{{ route("admin.e-leave.configuration") }}'
+                    window.location = '{{ route("admin.e-leave.configuration") }}'
                     // showAlert(data.success);
                     // emergencyContactsTable.ajax.reload();
                     // $('#confirm-delete-modal').modal('toggle');
@@ -576,48 +585,44 @@
         form.find('#description').val(leaveType.description);
 
         let leaveRulesList = $('#leave-rules-list');
-        let leaveRulesTemplates = $('#leave-type-rule-templates');
         if(leaveType.applied_rules) {
             for(let rule of leaveType.applied_rules) {
-                let configuration;
-                if(rule.configuration) {
-                    configuration = JSON.parse(rule.configuration)
-                    console.log("Rule configuration: ", configuration);
-                } 
                 switch(rule.rule) {
                     case 'leave_calculation': // rule-leave-calculation
                         let leaveCalculation = leaveRulesList.find('#rule-leave-calculation');
-                        if(configuration.consecutive) {
-                            leaveCalculation.find('#consecutive-input').prop("checked", true);
-                        }
+                        console.log('leave calc', leaveCalculation);
 
-                        if(configuration.include_off_days) {
-                            leaveCalculation.find('#include-off-days').prop("checked", true);
-                        }
+                        // ruleData.configuration = {
+                        //     consecutive: leaveRule.find('#consecutive-input').prop('checked'),
+                        //     include_off_days: leaveRule.find('#include-off-days').prop('checked')
+                        // };
                     break;
                     case 'multiple_approval_levels_required': // 'rule-multiple-approval-levels-required':
-                        let multipleApprovalLevelsReq = leaveRulesTemplates.find('#rule-multiple-approval-levels-required');
-                        
-                        multipleApprovalLevelsReq.find('input[name=id]').val(rule.id);
-                        
+                        let multipleApprovalLevelsReq = leaveRulesList.find('#rule-multiple-approval-levels-required');
                         multipleApprovalLevelsReq.appendTo('#leave-rules-list');
+                        
+                        // NEED TO SET ID
+                        console.log("ID", multipleApprovalLevelsReq.find('input[name="id"]'))// .val(rule.id);
+                        multipleApprovalLevelsReq.find('input[name=id]')// .val(rule.id);
+
+                        console.log('multipleApprovalLevelsReq ', multipleApprovalLevelsReq);
+                        // console.log("Multiple Approval Levels Required: ", leaveRuleEl);
+                        // ruleData.rule = 'multiple_approval_levels_required';
                     break;
                     case 'gender': // 'rule-restrict-gender':
-                        let restrictByGender = leaveRulesTemplates.find('#rule-restrict-gender');
-                        
-                        restrictByGender.find('input[name=id]').val(rule.id);
-                        restrictByGender.find('select[name=gender]').val(configuration.gender);
-                        
-                        restrictByGender.appendTo('#leave-rules-list');
+                        // console.log("Gender: ", leaveRuleEl);
+                        // ruleData.rule = 'gender';
+                        // ruleData.configuration = {
+                        //     gender: leaveRule.find('#gender-input').val(),
+                        // };
                     break;
                     case 'can_carry_forward': //'rule-can-carry-forward':
-                        let canCarryForward = leaveRulesTemplates.find('#rule-can-carry-forward');
-                        
-                        canCarryForward.find('input[name=id]').val(rule.id);
-                        canCarryForward.find('input[name=max-carry-forward-days]').val(configuration.max_carry_forward_days);
-                        canCarryForward.find('select[name=valid-until-end-month]').val(configuration.valid_till_end_month);
-                        
-                        canCarryForward.appendTo('#leave-rules-list');
+                        // console.log("Can Carry Forward: ", leaveRuleEl);
+                        // ruleData.rule = 'can_carry_forward';
+                        // ruleData.configuration = {
+                        //     max_carry_forward_days: +(leaveRule.find('#max-carry-forward-days').val()),
+                        //     valid_till_end_month: +(leaveRule.find('#valid-until-end-month').val()),
+                        // };
                     break;
                 }
             }
