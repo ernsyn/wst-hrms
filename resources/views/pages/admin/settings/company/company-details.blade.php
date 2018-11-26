@@ -69,12 +69,13 @@
                                                     <td>{{$companybanks['created_at']}}</td>
                                                     <td>{{$companybanks['status']}}</td>
 
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                            data-toggle="modal" data-bank-id="{{$companybanks['id']}}" data-bank-code="{{$companybanks['bank_code']}}"
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                            data-bank-id="{{$companybanks['id']}}" data-bank-code="{{$companybanks['bank_code']}}"
                                                             data-bank-accout-name="{{$companybanks['account_name']}}" data-bank-status="{{$companybanks['status']}}"
                                                             data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button>
 
-                                                        <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->account_name }}' data-link='{{ route('admin.settings.company-banks.delete', ['id ' => $companybanks->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button>
+                                                        <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->account_name }}'
+                                                            data-link='{{ route('admin.settings.company-banks.delete', ['id' => $companybanks->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button>
 
                                                     </td>
 
@@ -117,10 +118,10 @@
                                                     <td>{{$securities->company->name}}</td>
                                                     <td>{{$securities['name']}}</td>
                                                     <td>{{$securities['description']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                            data-toggle="modal" data-security-id="{{$securities['id']}}"
-                                                            data-security-name="{{$securities['name']}}" data-security-description="{{$securities['description']}}"
-                                                            data-security-status="{{$securities['status']}}" data-target="#editSecurityGroupPopup"><i class="fas fa-pencil-alt"></i></button></td>
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                            data-security-id="{{$securities['id']}}" data-security-name="{{$securities['name']}}"
+                                                            data-security-description="{{$securities['description']}}" data-security-status="{{$securities['status']}}"
+                                                            data-target="#editSecurityGroupPopup"><i class="fas fa-pencil-alt"></i></button></td>
 
 
                                                 </tr>
@@ -162,8 +163,8 @@
                                                     <td>{{$additions['code']}}</td>
                                                     <td>{{$additions['name']}}</td>
                                                     <td>{{$additions['amount']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                            data-toggle="modal" data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                            data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
                                                             data-addition-accout-name="{{$additions['name']}}" data-addition-status="{{$additions['status']}}"
                                                             data-target="#editCompanyAdditionPopup"><i class="fas fa-pencil-alt"></i></button></td>
 
@@ -208,11 +209,10 @@
                                                     <td>{{$deductions['code']}}</td>
                                                     <td>{{$deductions['name']}}</td>
                                                     <td>{{$deductions['amount']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                            data-toggle="modal" data-deduction-id="{{$deductions['id']}}"
-                                                            data-deduction-code="{{$deductions['code']}}" data-deduction-name="{{$deductions['name']}}"
-                                                            data-deduction-type="{{$deductions['type']}}" data-deduction-amount="{{$deductions['amount']}}"
-                                                            data-deduction-confirmed_employee="{{$deductions['confirmed_employee']}}"
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                            data-deduction-id="{{$deductions['id']}}" data-deduction-code="{{$deductions['code']}}"
+                                                            data-deduction-name="{{$deductions['name']}}" data-deduction-type="{{$deductions['type']}}"
+                                                            data-deduction-amount="{{$deductions['amount']}}" data-deduction-confirmed_employee="{{$deductions['confirmed_employee']}}"
                                                             data-deduction-status="{{$deductions['status']}}" data-target="#editCompanyDeductionPopup"><i class="fas fa-pencil-alt"></i></button></td>
 
 
@@ -258,10 +258,9 @@
                                                     <td>{{$company_travel_allowances['company_id']}}</td>
                                                     <td>{{$company_travel_allowances['rate']}}</td>
                                                     <td>{{$company_travel_allowances['code']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect"
-                                                            data-toggle="modal" data-travel-id="{{$company_travel_allowances['id']}}"
-                                                            data-travel-code="{{$company_travel_allowances['code']}}" data-travel-rate="{{$company_travel_allowances['rate']}}"
-                                                            data-travel-status="{{$company_travel_allowances['status']}}"
+                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                            data-travel-id="{{$company_travel_allowances['id']}}" data-travel-code="{{$company_travel_allowances['code']}}"
+                                                            data-travel-rate="{{$company_travel_allowances['rate']}}" data-travel-status="{{$company_travel_allowances['status']}}"
                                                             data-target="#editTravelPopup"><i class="fas fa-pencil-alt"></i></button></td>
 
 
@@ -349,14 +348,13 @@
             </div>
             <div class="modal-body">
                 @foreach($bank as $banks)
-                <form method="POST" action="{{route('admin.settings.company-banks.edit.post', ['id' => $banks->company_id ])}}"
-                    id="edit_company_bank">
+                <form method="POST" action="{{route('admin.settings.company-banks.edit.post', ['id' => $banks->company_id ])}}" id="edit_company_bank">
                     @endforeach @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <div class="col-md-12">
                                 <input id="company_bank_id" type="text" class="form-control{{ $errors->has('company_bank_id') ? ' is-invalid' : '' }}" name="company_bank_id"
-                                    value="{{ old('company_bank_id') }}" readonly>
+                                    value="{{ old('company_bank_id') }}" hidden>
                             </div>
                             <label class="col-md-12 col-form-label">Account Name*</label>
                             <div class="col-md-12">
@@ -433,12 +431,18 @@
                             <label class="col-md-12 col-form-label">Security Group Name*</label>
                             <div class="col-md-12">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
-                                    required>
+                                    required>@if ($errors->has('name'))
+                                    <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span> @endif
                             </div>
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-10">
                                 <textarea name="description" class="form-control"></textarea>
-                            </div>
+                            </div>@if ($errors->has('description'))
+                            <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('description') }}</strong>
+                        </span> @endif
 
                         </div>
                     </div>
@@ -464,10 +468,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-
-                <form method="POST" action="{{route('admin.settings.security-groups.edit.post')}}" id="security_group">
-                    @csrf
+            <form method="POST" action="{{route('admin.settings.security-groups.edit.post')}}" id="security_group">
+                @csrf
+                <div class="modal-body">
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <input id="security_group_id" name="security_group_id" type="hidden">
@@ -481,24 +484,16 @@
                                 <input id="description" type="text" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" name="description"
                                     value="{{ old('description') }}" required>
                             </div>
-                            <label class="col-md-12 col-form-label">Status*</label>
-                            <div class="col-md-12">
-                                <select class="form-control" id="status" name="status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
                         {{ __('Submit') }}
                         </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
-
-            </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -1090,7 +1085,6 @@
     </div>
 </div>
 @endsection
-
 
 @section('scripts')
 <script>

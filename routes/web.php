@@ -255,7 +255,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('settings/deductions/{id}/edit','Admin\SettingsController@postEditCompanyDeduction')->name('admin.settings.deductions.edit.post')->where('id', '[0-9]+');
 
     Route::post('settings/company-banks/{id}/edit','Admin\SettingsController@postEditCompanyBank')->name('admin.settings.company-banks.edit.post')->where('id', '[0-9]+');
-    Route::post('settings/security-groups/edit','Admin\SettingsController@postEditSecurityGroup')->name('admin.settings.security-groups.edit.post');
+    Route::post('settings/security-groups/edit','Admin\SettingsController@postEditSecurityGroup')->name('admin.settings.security-groups.edit.post')->where('id', '[0-9]+');
     Route::post('settings/travel-allowance/edit','Admin\SettingsController@postEditTravelAllowance')->name('admin.settings.travel-allowance.edit.post');
     Route::post('settings/company-addition/edit','Admin\SettingsController@postEditCompanyAddition')->name('admin.settings.company-addition.edit.post');
     Route::post('settings/company-deduction/edit','Admin\SettingsController@postEditCompanyDeduction')->name('admin.settings.company-deduction.edit.post');

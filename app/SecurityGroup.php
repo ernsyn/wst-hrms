@@ -10,11 +10,10 @@ class SecurityGroup extends Model
     protected $table = 'security_groups';
 
     protected $fillable =[
-        'description' ,
-        'name' ,
-        'company_id',
-        'status'
-  
+        'name',
+        'description',
+        'company_id'
+
 
     ];
 
@@ -23,6 +22,6 @@ class SecurityGroup extends Model
     {
         return $this->belongsTo('App\Company', 'company_id');
     }
-  
+
  //   use SoftDeletes;
 }

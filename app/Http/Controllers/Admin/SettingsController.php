@@ -1099,20 +1099,18 @@ public function deleteCompanyBank(Request $request, $id)
     return redirect()->route('admin.settings.company.company-details', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');
 }
 
-public function postEditSecurityGroup(Request $request)
+public function postEditSecurityGroup(Request $request, $id)
 {      $additionData = $request->validate([
             'name' => 'required',
-            'description' => 'required',
-        //    'company_bank_id'=>'required',
+            'description' => 'required'
 
         ]);
-
-        $additionData['status'] = 'active';
+        $additionData['company_id']= $id;
         $additionData['created_by'] = auth()->user()->id;
 
     SecurityGroup::where('id',  $request->security_group_id)->update($additionData);
 
-    return redirect()->route('admin.settings.companies');
+    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been updated.');
 }
 
 
@@ -1131,26 +1129,16 @@ public function addCompanySecurities()
 public function postAddCompanySecurityGroup(Request $request,$id)
 {
 
-   $validateSecurityGroup = $request->validate([
-
-   'description' => 'required',
-   'name' => 'required',
-
+    $validateSecurityGroup = $request->validate([
+        'description' => 'required',
+        'name' => 'required'
     ]);
 
-    $validateSecurityGroup['status'] = 'active';
     $validateSecurityGroup['company_id']=$id;
-    // $validateSecurityGroup['created_by'] = auth()->user()->id;
-    // $security = SecurityGroup::create($validateSecurityGroup);
-
     $validateSecurityGroup['created_by'] = auth()->user()->id;
     SecurityGroup::create($validateSecurityGroup);
 
-
-
-  //  $user->save();
-
-  return redirect()->route('admin.settings.company.company-details',['id'=>$id]);
+  return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
 }
 
 public function editCompanySecurities(Request $request, $id) {
