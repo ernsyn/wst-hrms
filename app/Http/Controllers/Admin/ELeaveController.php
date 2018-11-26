@@ -80,4 +80,12 @@ class ELeaveController extends Controller
         
         return response()->json(['success'=>'Record is successfully added']);
     }
+
+    public function editLeaveType(Request $request, $id) {
+        $leaveType = LeaveType::with('applied_rules', 'lt_conditional_entitlements')->where('id', $id)->first();
+        // dd($leaveType);
+        if(!$leaveType->is_custom) {
+            return view('pages.admin.e-leave.configuration.edit-default-leave-type', [ 'leave_type' => $leaveType]);
+        }
+    }
 }

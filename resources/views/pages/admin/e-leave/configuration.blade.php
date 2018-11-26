@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="float-right">
-                                <button type="button" class="edit-btn btn btn-primary-outline btn-sm"><i class="fas fa-pen"></i></button>                                
+                            <button onclick="window.location.href='{{ route('admin.e-leave.configuration.leave-types.edit', ['id' => $leaveType->id]) }}'" type="button" class="edit-btn btn btn-primary-outline btn-sm"><i class="fas fa-pen"></i></button>                                
                                 @if($leaveType->active)
                                 <button type="button" class="activate-btn ml-1 btn btn-secondary btn-sm">Deactivate</button> 
                                 @else

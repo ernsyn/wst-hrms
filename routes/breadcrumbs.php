@@ -506,6 +506,11 @@ Breadcrumbs::for('admin.e-leave.configuration.leave-types.add', function ($trail
     $trail->push('Add Leave Type', route('admin.e-leave.configuration.leave-types.add'));
 });
 
+Breadcrumbs::for('admin.e-leave.configuration.leave-types.edit', function ($trail, $id) {
+    $trail->parent('admin.e-leave.configuration');
+    $trail->push('Edit Leave Type', route('admin.e-leave.configuration.leave-types.edit', $id));
+});
+
 Breadcrumbs::for('add_team', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Add Team', route('add_team'));
