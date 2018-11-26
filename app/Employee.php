@@ -22,7 +22,7 @@ class Employee extends Model
         return $this->belongsTo('App\User');
     }
 
-   
+
 
     public function employee_jobs()
     {
@@ -34,9 +34,42 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeEmergencyContact', 'emp_id');
     }
 
+    public function employee_bank_accounts()
+    {
+        return $this->hasMany('App\EmployeeBankAccount', 'emp_id');
+    }
+
     public function dependents()
     {
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
+    }
+
+    public function employee_experiences()
+    {
+        return $this->hasMany('App\EmployeeExperience', 'emp_id');
+    }
+    public function employee_educations()
+    {
+        return $this->hasMany('App\EmployeeEducation', 'emp_id');
+    }
+    public function employee_skills()
+    {
+        return $this->hasMany('App\EmployeeSkill', 'emp_id');
+    }
+    
+    public function employee_visas()
+    {
+        return $this->hasMany('App\EmployeeVisa', 'emp_id');
+    }
+    
+    public function employee_immigrations()
+    {
+        return $this->hasMany('App\EmployeeImmigration', 'emp_id');
+    }
+    
+    public function employee_attachments()
+    {
+        return $this->hasMany('App\EmployeeAttachment', 'emp_id');
     }
 
     public function report_tos()
