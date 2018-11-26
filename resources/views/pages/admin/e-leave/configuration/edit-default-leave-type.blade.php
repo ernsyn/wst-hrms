@@ -9,7 +9,7 @@
                     <div class="form-group col-md-3">
                         <label for="code"><strong>Code*</strong></label>
                         <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}"
-                            placeholder="eg. ANNUAL" name="code" value="{{ old('code') }}" oninput="this.value = this.value.toUpperCase()" required>
+                            placeholder="eg. ANNUAL" name="code" value="{{ old('code') }}" required>
                         @if ($errors->has('code'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('code') }}</strong>
@@ -50,6 +50,7 @@
                             <div id="rule-leave-calculation" class="card rule-entry">
                                 <div class="card-body">
                                     <h5 class="title text-primary">Leave Calculation</h5>
+                                    <input type="number" name="id" hidden>
                                     <div class="form-check mt-2">
                                         <input class="form-check-input" type="checkbox" id="consecutive-input">
                                         <label class="form-check-label" for="consecutive-input">
@@ -97,9 +98,11 @@
                                     <div class="form-group">
                                         <label for="grade-group-2"><strong>Grades*</strong></label>
                                         <select multiple class="form-control select-grades-dropdown" id="grade-group-2">
-                                            @foreach(App\EmployeeGrade::all() as $grade)
-                                        <option value={{ $grade->id }}>{{ $grade->name }}</option>
-                                            @endforeach
+                                            <option>A1</option>
+                                            <option>A2</option>
+                                            <option>M1</option>
+                                            <option>M2</option>
+                                            <option>M3</option>
                                         </select>
                                     </div>
     
@@ -196,10 +199,12 @@
     {{-- RULE: Restrict: By Gender --}}
     <div id="rule-restrict-gender" class="card rule-entry mt-2">
         <div class="card-body">
+            <input type="number" name="id" hidden>
             <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
             </a>
             <h5 class="title text-primary">Restrict: By Gender</h5>
+            <input type="number" name="id" hidden>
             <div class="form-group">
                 <label for="gender-input"><strong>Gender</strong></label>
                 <select class="form-control" id="gender-input">
@@ -212,6 +217,7 @@
     {{-- RULE: Can Carry Forward--}}
     <div id="rule-can-carry-forward" class="card rule-entry mt-2">
         <div class="card-body">
+            <input type="number" name="id" hidden>
             <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
             </a>
@@ -219,7 +225,7 @@
             <div class="form-group">
                 <label for="max-carry-forward-days"><strong>Max Carry Forward Days*</strong></label>
                 <div class=" input-group">
-                    <input id="max-carry-forward-days" type="number" class="form-control" placeholder="eg. 3">
+                    
                 </div>
             </div>
             <div class="form-group">
@@ -245,6 +251,7 @@
     {{-- RULE: Multiple Approval Levels Required --}}
     <div id="rule-multiple-approval-levels-required" class="card rule-entry mt-2">
         <div class="card-body">
+            <input type="number" name="id" hidden>
             <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
             </a>
@@ -276,9 +283,11 @@
                     <div class="form-group">
                         <label for="grade-group-2"><strong>Grades*</strong></label>
                         <select multiple class="select-grades-dropdown form-control">
-                                @foreach(App\EmployeeGrade::all() as $grade)
-                                <option value={{ $grade->id }}>{{ $grade->name }}</option>
-                                @endforeach
+                            <option>A1</option>
+                            <option>A2</option>
+                            <option>M1</option>
+                            <option>M2</option>
+                            <option>M3</option>
                         </select>
                     </div>
 
@@ -526,46 +535,98 @@
 
             console.log("Data: ", data);
             data._token = '{{ csrf_token() }}';
-            $.ajax({
-                url: "{{ route('admin.e-leave.configuration.leave-types.add.post') }}",
-                type: 'POST',
-                data: data,
-                success: function(response) {
-                    console.log("SUCCESS", response);
-                    window.location = '{{ route("admin.e-leave.configuration") }}'
-                    // showAlert(data.success);
-                    // emergencyContactsTable.ajax.reload();
-                    // $('#confirm-delete-modal').modal('toggle');
-                    // // clearEmergencyContactModal('#edit-emergency-contact-form');
-                },
-                error: function(xhr) {
-                    if(xhr.status == 422) {
-                        var errors = xhr.responseJSON.errors;
-                        console.log("Error 422: ", xhr);
-                        // for (var errorField in errors) {
-                        //     if (errors.hasOwnProperty(errorField)) {
-                        //         console.log("Error: ", errorField);
-                        //         switch(errorField) {
-                        //             case 'name':
-                        //                 $('#edit-emergency-contact-form #name').addClass('is-invalid');
-                        //                 $('#edit-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                        //             break;
-                        //             case 'relationship':
-                        //                 $('#edit-emergency-contact-form #relationship').addClass('is-invalid');
-                        //                 $('#edit-emergency-contact-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                        //             break;
-                        //             case 'contact_no':
-                        //                 $('#edit-emergency-contact-form #contact-no').addClass('is-invalid');
-                        //                 $('#edit-emergency-contact-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                        //             break;
-                        //         }
-                        //     }
-                        // }
-                    }
-                    console.log("Error: ", xhr);
-                }
-            });
+            // $.ajax({
+            //     url: "{{ route('admin.e-leave.configuration.leave-types.add.post') }}",
+            //     type: 'POST',
+            //     data: data,
+            //     success: function(response) {
+            //         console.log("SUCCESS", response);
+            //         window.location = '{{ route("admin.e-leave.configuration") }}'
+            //         // showAlert(data.success);
+            //         // emergencyContactsTable.ajax.reload();
+            //         // $('#confirm-delete-modal').modal('toggle');
+            //         // // clearEmergencyContactModal('#edit-emergency-contact-form');
+            //     },
+            //     error: function(xhr) {
+            //         if(xhr.status == 422) {
+            //             var errors = xhr.responseJSON.errors;
+            //             console.log("Error 422: ", xhr);
+            //             // for (var errorField in errors) {
+            //             //     if (errors.hasOwnProperty(errorField)) {
+            //             //         console.log("Error: ", errorField);
+            //             //         switch(errorField) {
+            //             //             case 'name':
+            //             //                 $('#edit-emergency-contact-form #name').addClass('is-invalid');
+            //             //                 $('#edit-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+            //             //             break;
+            //             //             case 'relationship':
+            //             //                 $('#edit-emergency-contact-form #relationship').addClass('is-invalid');
+            //             //                 $('#edit-emergency-contact-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
+            //             //             break;
+            //             //             case 'contact_no':
+            //             //                 $('#edit-emergency-contact-form #contact-no').addClass('is-invalid');
+            //             //                 $('#edit-emergency-contact-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
+            //             //             break;
+            //             //         }
+            //             //     }
+            //             // }
+            //         }
+            //         console.log("Error: ", xhr);
+            //     }
+            // });
         })
+
+        // SECTION: Init Edit Data
+        let leaveType = {!! json_encode($leave_type) !!};
+        console.log("Leave Type: ", leaveType);
+        let form = $('#add-leave-type-form');
+        form.find('#code').val(leaveType.code);
+        form.find('#name').val(leaveType.name);
+        form.find('#description').val(leaveType.description);
+
+        let leaveRulesList = $('#leave-rules-list');
+        if(leaveType.applied_rules) {
+            for(let rule of leaveType.applied_rules) {
+                switch(rule.rule) {
+                    case 'leave_calculation': // rule-leave-calculation
+                        let leaveCalculation = leaveRulesList.find('#rule-leave-calculation');
+                        console.log('leave calc', leaveCalculation);
+
+                        // ruleData.configuration = {
+                        //     consecutive: leaveRule.find('#consecutive-input').prop('checked'),
+                        //     include_off_days: leaveRule.find('#include-off-days').prop('checked')
+                        // };
+                    break;
+                    case 'multiple_approval_levels_required': // 'rule-multiple-approval-levels-required':
+                        let multipleApprovalLevelsReq = leaveRulesList.find('#rule-multiple-approval-levels-required');
+                        multipleApprovalLevelsReq.appendTo('#leave-rules-list');
+                        
+                        // NEED TO SET ID
+                        console.log("ID", multipleApprovalLevelsReq.find('input[name="id"]'))// .val(rule.id);
+                        multipleApprovalLevelsReq.find('input[name=id]')// .val(rule.id);
+
+                        console.log('multipleApprovalLevelsReq ', multipleApprovalLevelsReq);
+                        // console.log("Multiple Approval Levels Required: ", leaveRuleEl);
+                        // ruleData.rule = 'multiple_approval_levels_required';
+                    break;
+                    case 'gender': // 'rule-restrict-gender':
+                        // console.log("Gender: ", leaveRuleEl);
+                        // ruleData.rule = 'gender';
+                        // ruleData.configuration = {
+                        //     gender: leaveRule.find('#gender-input').val(),
+                        // };
+                    break;
+                    case 'can_carry_forward': //'rule-can-carry-forward':
+                        // console.log("Can Carry Forward: ", leaveRuleEl);
+                        // ruleData.rule = 'can_carry_forward';
+                        // ruleData.configuration = {
+                        //     max_carry_forward_days: +(leaveRule.find('#max-carry-forward-days').val()),
+                        //     valid_till_end_month: +(leaveRule.find('#valid-until-end-month').val()),
+                        // };
+                    break;
+                }
+            }
+        }
     })
 
 </script>
