@@ -56,27 +56,18 @@
                                 <option value="Indirect">Indirect</option>
                             </select>
                             <div id="type-error" class="invalid-feedback">
-<<<<<<< HEAD
 
-=======
->>>>>>> new-develop
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-<<<<<<< HEAD
 
-=======
->>>>>>> new-develop
                             <input type="hidden" value="0" checked>
                             <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
                             <div id="kpi-proposer-error" class="invalid-feedback">
-<<<<<<< HEAD
 
-=======
->>>>>>> new-develop
                             </div>
                         </div>
                     </div>
@@ -275,12 +266,6 @@
                                 }
                             }
                         }
-<<<<<<< HEAD
-                }
-             }
-          });
-       });
-=======
                     }
                 }
             });
@@ -391,7 +376,6 @@
                 }
             });
         });
->>>>>>> new-develop
     });
 
     // GENERAL FUNCTIONS
