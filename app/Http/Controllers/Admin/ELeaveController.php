@@ -67,7 +67,7 @@ class ELeaveController extends Controller
 
             if(array_key_exists("grade_groups", $gradeGroupsData)) {
                 foreach ($gradeGroupsData["grade_groups"] as $gradeGroupData) {
-                    $gradeGroup = $leaveType->lt_entitlements_grade_group()->create($gradeGroupData);
+                    $gradeGroup = $leaveType->lt_entitlements_grade_groups()->create($gradeGroupData);
                     $gradeGroup->grades()->sync($gradeGroupData["grades"]);
                     $gradeGroup->lt_conditional_entitlements()->createMany(
                         $gradeGroupData["conditional_entitlements"]
@@ -87,7 +87,7 @@ class ELeaveController extends Controller
     }
 
     public function editLeaveType(Request $request, $id) {
-        $leaveType = LeaveType::with('applied_rules', 'lt_conditional_entitlements')->where('id', $id)->first();
+        $leaveType = LeaveType::with('applied_rules', 'lt_conditional_entitlements', 'lt_entitlements_grade_groups.lt_conditional_entitlements', 'lt_entitlements_grade_groups.grades')->where('id', $id)->first();
         // dd($leaveType);
         if(!$leaveType->is_custom) {
             return view('pages.admin.e-leave.configuration.edit-default-leave-type', [ 'leave_type' => $leaveType]);
