@@ -51,7 +51,7 @@ class ELeaveController extends Controller
             "conditional_entitlements" => '',
         ]);
 
-        DB::transaction(function() use ($leaveTypeData, $gradeGroupsData, $conditionalEntitlementsData) {
+        DB::transaction(function() use ($leaveTypeData, $appliedRulesData, $gradeGroupsData, $conditionalEntitlementsData) {
             $leaveType = LeaveType::create($leaveTypeData);
 
             if(array_key_exists("applied_rules", $appliedRulesData)) {
