@@ -349,7 +349,7 @@ class EmployeeController extends Controller
 
 
         $workingDay = new EmployeeWorkingDay($workingDayData);
-   
+
         $employee = Employee::find($id);
         $employee->working_day()->save($workingDay);
 
@@ -358,16 +358,16 @@ class EmployeeController extends Controller
     }
 
     public function getWorkingDay($id)
-    {       
+    {
         $working_day = EmployeeWorkingDay::templates()->where('id', $id)->get();
-    
+
         return response()->json($working_day);
     }
 
     public function getEmployeeWorkingDay($emp_id)
-    {       
+    {
         $working_day = EmployeeWorkingDay::templates()->where('emp_id', $emp_id)->get();
-    
+
         return response()->json($working_day);
     }
 
@@ -467,7 +467,7 @@ class EmployeeController extends Controller
     {
         $bankAccountData = $request->validate([
             'bank_code' => 'required',
-            'acc_no' => 'required',
+            'acc_no' => 'required|numeric',
             'acc_status' => 'required'
         ]);
 
@@ -478,20 +478,6 @@ class EmployeeController extends Controller
         $employee->employee_bank_accounts()->save($bankAccount);
 
         return response()->json(['success'=>'Record is successfully added']);
-
-        // $type = $request->input('type');
-        // $bank_code = Input::get('bank_list');
-        // $acc_no = $request->input('acc_no');
-        // $status = Input::get('status');
-        // $created_by = auth()->user()->id;
-
-        // DB::insert('insert into employee_bank_accounts
-        // (emp_id, type, bank_code, acc_no, acc_status, created_by)
-        // values
-        // (?,?,?,?,?,?)',
-        // [$id, $type, $bank_code, $acc_no, $status, $created_by]);
-
-        // return redirect()->route('admin.employees.id', ['id' => $id]);
     }
 
     public function postCompany(Request $request, $id)
@@ -520,7 +506,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|between:0,99.99',
+            'gpa' => 'required|numeric|between:0.00,4.00',
             'description' => 'required'
         ]);
 
@@ -537,7 +523,7 @@ class EmployeeController extends Controller
     {
         $skillData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required',
+            'years_of_experience' => 'required|numeric',
             'competency' => 'required'
         ]);
 
@@ -662,7 +648,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|between:0,99.99',
+            'gpa' => 'required|numeric|between:0.00,4.00',
             'description' => 'required'
         ]);
 
@@ -675,7 +661,7 @@ class EmployeeController extends Controller
     {
         $skillUpdatedData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required',
+            'years_of_experience' => 'required|numeric',
             'competency' => 'required',
         ]);
 
@@ -697,7 +683,7 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Report To was successfully updated.']);
     }
-    
+
     public function postEditAttachment(Request $request, $emp_id, $id)
     {
         $attachmentUpdatedData = $request->validate([
@@ -715,7 +701,7 @@ class EmployeeController extends Controller
     //delete function
     public function deleteEmergencyContact(Request $request, $emp_id, $id)
     {
-        EmployeeImmigration::find($id)->delete();
+        EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
 
@@ -730,7 +716,7 @@ class EmployeeController extends Controller
         EmployeeBankAccount::find($id)->delete();
         return response()->json(['success'=>'Bank Account was successfully deleted.']);
     }
-    
+
     public function deleteExperience(Request $request, $emp_id, $id)
     {
         EmployeeExperience::find($id)->delete();
@@ -748,13 +734,13 @@ class EmployeeController extends Controller
         EmployeeSkill::find($id)->delete();
         return response()->json(['success'=>'Skill was successfully deleted.']);
     }
-    
+
     public function deleteReportTo(Request $request, $emp_id, $id)
     {
         EmployeeReportTo::find($id)->delete();
         return response()->json(['success'=>'Report To was successfully deleted.']);
     }
-    
+
     public function deleteVisa(Request $request, $emp_id, $id)
     {
         EmployeeVisa::find($id)->delete();
@@ -766,7 +752,7 @@ class EmployeeController extends Controller
         EmployeeImmigration::find($id)->delete();
         return response()->json(['success'=>'Immigration was successfully deleted.']);
     }
-    
+
     public function deleteAttachment(Request $request, $emp_id, $id)
     {
         EmployeeAttachment::find($id)->delete();
