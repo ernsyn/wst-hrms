@@ -30,7 +30,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="add-report-to-form">
+            <form id="add-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
@@ -98,10 +98,10 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="edit-report-to-form">
+            <form id="edit-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
                 <div class="modal-body">
                     @csrf
-                    <div class="form-row">
+                    <div class="form-row" class="form_validate" data-parsley-errors-messages-disabled>
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
                             <select class="form-control" name="report-to" id="report-to">
@@ -175,11 +175,6 @@
     </div>
 </div>
 
-
-
-
-
-
 @section('scripts')
 <script>
     var reportTosTable = $('#report-to-table').DataTable({
@@ -219,7 +214,11 @@
 <script type="text/javascript">
     $(function(){
         // ADD
-       $('#add-report-to-form #add-report-to-submit').click(function(e){
+        $('#add-report-to-popup').on('show.bs.modal', function (event) {
+            clearReportToError('#add-report-to-form');
+        });
+        $('#add-report-to-form #add-report-to-submit').click(function(e){
+            clearReportToError('#add-report-to-form');
             e.preventDefault();
             $.ajax({
                 url: "{{ route('admin.employees.report-to.post', ['id' => $id]) }}",
@@ -273,6 +272,7 @@
         var editReportToId = null;
         // Function: On Modal Clicked Handler
         $('#edit-report-to-popup').on('show.bs.modal', function (event) {
+            clearReportToError('#edit-report-to-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -287,6 +287,7 @@
 
         var editReportToRouteTemplate = "{{ route('admin.employees.report-to.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-report-to-submit').click(function(e){
+            clearReportToError('#edit-report-to-form');
             var editReportToRoute = editReportToRouteTemplate.replace(encodeURI('<<id>>'), editReportToId);
             e.preventDefault();
             $.ajax({
@@ -381,6 +382,13 @@
         $(htmlId + ' #kpi-proposer').val('');
         $(htmlId + ' #notes').val('');
 
+        $(htmlId + ' #report-to').removeClass('is-invalid');
+        $(htmlId + ' #type').removeClass('is-invalid');
+        $(htmlId + ' #kpi-proposer').removeClass('is-invalid');
+        $(htmlId + ' #notes').removeClass('is-invalid');
+    }
+
+    function clearReportToError(htmlId) {
         $(htmlId + ' #report-to').removeClass('is-invalid');
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #kpi-proposer').removeClass('is-invalid');

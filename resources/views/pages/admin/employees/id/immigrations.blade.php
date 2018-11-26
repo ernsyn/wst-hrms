@@ -8,7 +8,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="add-immigration-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="add-immigration-form">
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
@@ -123,7 +123,7 @@
                         </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                    <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -155,12 +155,6 @@
         </thead>
     </table>
 </div>
-
-
-
-
-
-
 
 @section('scripts')
 <script>
@@ -220,8 +214,12 @@
             yearRange: "-10:+20"
         });
         // ADD IMMIGRATIONS
+        $('#add-immigration-popup').on('show.bs.modal', function (event) {
+            clearImmigrationsError('#add-immigration-form'); //clear error if close or cancel
+        });
         $('#add-immigration-form #add-immigration-submit').click(function(e){
             e.preventDefault();
+            clearImmigrationsError('#add-immigration-form');
             $.ajax({
                 url: "{{ route('admin.employees.immigrations.post', ['id' => $id]) }}",
                 type: 'POST',
@@ -277,6 +275,7 @@
         var editImmigrationId = null;
         // Function: On Modal Clicked Handler
         $('#edit-immigration-popup').on('show.bs.modal', function (event) {
+            clearImmigrationsError('#edit-immigration-form'); //clear error if close or cancel
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -293,6 +292,7 @@
         $('#edit-immigration-submit').click(function(e){
             var editImmigrationRoute = editImmigrationRouteTemplate.replace(encodeURI('<<id>>'), editImmigrationId);
             e.preventDefault();
+            clearImmigrationsError('#edit-immigration-form');
             $.ajax({
                 url: editImmigrationRoute,
                 type: 'POST',
@@ -387,6 +387,13 @@
         $(htmlId + ' #issued-date').val('');
         $(htmlId + ' #expiry-date').val('');
 
+        $(htmlId + ' #passport-no').removeClass('is-invalid');
+        $(htmlId + ' #issued-by').removeClass('is-invalid');
+        $(htmlId + ' #issued-date').removeClass('is-invalid');
+        $(htmlId + ' #expiry-date').removeClass('is-invalid');
+    }
+
+    function clearImmigrationsError(htmlId) {
         $(htmlId + ' #passport-no').removeClass('is-invalid');
         $(htmlId + ' #issued-by').removeClass('is-invalid');
         $(htmlId + ' #issued-date').removeClass('is-invalid');

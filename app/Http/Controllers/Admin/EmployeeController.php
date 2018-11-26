@@ -402,7 +402,7 @@ class EmployeeController extends Controller
     {
         $bankAccountData = $request->validate([
             'bank_code' => 'required',
-            'acc_no' => 'required',
+            'acc_no' => 'required|numeric',
             'acc_status' => 'required'
         ]);
 
@@ -413,20 +413,6 @@ class EmployeeController extends Controller
         $employee->employee_bank_accounts()->save($bankAccount);
 
         return response()->json(['success'=>'Record is successfully added']);
-
-        // $type = $request->input('type');
-        // $bank_code = Input::get('bank_list');
-        // $acc_no = $request->input('acc_no');
-        // $status = Input::get('status');
-        // $created_by = auth()->user()->id;
-
-        // DB::insert('insert into employee_bank_accounts
-        // (emp_id, type, bank_code, acc_no, acc_status, created_by)
-        // values
-        // (?,?,?,?,?,?)',
-        // [$id, $type, $bank_code, $acc_no, $status, $created_by]);
-
-        // return redirect()->route('admin.employees.id', ['id' => $id]);
     }
 
     public function postCompany(Request $request, $id)
@@ -455,7 +441,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|between:0,99.99',
+            'gpa' => 'required|numeric|between:0.00,4.00',
             'description' => 'required'
         ]);
 
@@ -472,7 +458,7 @@ class EmployeeController extends Controller
     {
         $skillData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required',
+            'years_of_experience' => 'required|numeric',
             'competency' => 'required'
         ]);
 
@@ -593,7 +579,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|between:0,99.99',
+            'gpa' => 'required|numeric|between:0.00,4.00',
             'description' => 'required'
         ]);
 
@@ -606,7 +592,7 @@ class EmployeeController extends Controller
     {
         $skillUpdatedData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required',
+            'years_of_experience' => 'required|numeric',
             'competency' => 'required',
         ]);
 
