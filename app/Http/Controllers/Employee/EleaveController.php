@@ -78,12 +78,13 @@ class ELeaveController extends Controller
     {
         $user = Auth::user();
     
-        $userEmail = $user->employee->id;
-
-   //     $reportTo =EmployeeReportTo::where('report_to_emp_id',$userEmail)->get();
-     
+        $report_to_emp_id = $user->employee->id;
+     $report_to = EmployeeReportTo::where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
         // $leaverequest = LeaveRequest::with('report_to')->where('emp_id',$userEmail)->get();
-     $leaverequest = LeaveRequest::where('id',$userEmail)->get();
+        // $leaverequest = LeaveRequest::where('emp_id',$emp_id)->get();-
+$leaverequest =LeaveRequest::with('leave_types')->whereIn('emp_id',$report_to)->get();
+
+// dd($leaverequest);
 
         return view('pages.employee.leave.leave-request', ['leaverequest' => $leaverequest]);
 
