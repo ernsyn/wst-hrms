@@ -11,7 +11,7 @@ class Employee extends Model
     protected $fillable = [
         'user_id', 'address', 'company_id','contact_no','dob',
         'gender','race','nationality','marital_status','total_children','ic_no','tax_no',
-        'epf_no','driver_license_no','driver_license_expiry_date','created_by'
+        'epf_no','driver_license_no','driver_license_expiry_date','created_by','main_security_group_id'
     ];
 
 

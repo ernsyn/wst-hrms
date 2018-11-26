@@ -294,9 +294,24 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $employee->employee_security_groups()->save($securityGroup);
 
-        return response()->json(['success'=>'Record is successfully added']);
+        return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
+
+    public function postMainSecurityGroup(Request $request, $id)
+    {
+        $mainSecurityGroupData = $request->validate([
+            'main_security_group_id' => 'required',
+
+        ]);
+
+
+        Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
+
+        return response()->json(['success'=>'Security Group was successfully updated.']);
+    }
+
+    
 
 
     public function postReportTo(Request $request, $id)
@@ -330,11 +345,21 @@ class EmployeeController extends Controller
             'start_date' => 'required',
             'basic_salary' => 'required',
             'specification' => 'required',
+     
         ]);
-        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
         $jobData['status'] = 'active';
+        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+   //     $jobData['end_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
         $job = new EmployeeJob($jobData);
+
+         $end_date=   EmployeeJob::where('id', $id)
+        ->whereNull('end_date');
+
+        EmployeeJob::where('emp_id', $id)
+        ->whereNull('end_date')
+        ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
 
         $employee = Employee::find($id);
         $employee->employee_jobs()->save($job);

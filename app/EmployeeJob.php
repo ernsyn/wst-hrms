@@ -19,6 +19,7 @@ class EmployeeJob extends Model
         'basic_salary',
         'specification',
         'status',
+        'end_date',
     ];
 
     public function main_position()
