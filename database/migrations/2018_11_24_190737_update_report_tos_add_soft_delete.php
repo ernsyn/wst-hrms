@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdatePcbsTable extends Migration
+class UpdateReportTosAddSoftDelete extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class UpdatePcbsTable extends Migration
      */
     public function up()
     {
-        Schema::table('pcbs', function (Blueprint $table) {
-            $table->softdelete()->nullable()->change();
+        Schema::table('employee_report_to', function($table) {
+   
+            $table->softDeletes();
         });
     }
 
@@ -25,8 +26,9 @@ class UpdatePcbsTable extends Migration
      */
     public function down()
     {
-        $tableNames = config('permission.table_names');
-
-        Schema::drop($tableNames['pcbs']);
+        Schema::table('employee_report_to', function($table) {
+            $table->dropColumn('softDeletes');
+        });
     }
+
 }

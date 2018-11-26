@@ -3,25 +3,39 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LeaveType extends Model
 {
+    use SoftDeletes;
     protected $table = 'leave_types';
 
-
     protected $fillable = [
+        'code',
         'name',
-        'code' ,
-        'name' ,
-        'increment_per_year',
-        'apply_before_days',
-
-       'approval_level',
-       'carry_forward',
-       'carry_forward_expiry_months',
-       'divide_method',
-       'allow_carry_forward',
-
-
+        'description',
+        'is_custom',
+        'entitled_days',
+        'active',
     ];
+
+    protected $dates = ['deleted_at'];
+
+    public function applied_rules() {
+        return $this->hasMany('App\LTAppliedRule'); 
+    }
+
+    public function lt_conditional_entitlements() {
+        return $this->hasMany('App\LTConditionalEntitlement'); 
+    }
+
+    public function scopeCustom($query)
+    {
+        return $query->where('is_custom', true);
+    }
+
+    public function scopeDefault($query)
+    {
+        return $query->where('is_custom', false);
+    }
 }
