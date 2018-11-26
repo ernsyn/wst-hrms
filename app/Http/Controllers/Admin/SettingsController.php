@@ -281,7 +281,7 @@ class SettingsController extends Controller
                 'seniority_pay' =>'required',
             ]);
 
-            CostCentre::where('id', $id)->update($costCentreData);
+            CostCentre::where('id', $id)->update($costCentreData); 
 
             return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been updated.');
         }
