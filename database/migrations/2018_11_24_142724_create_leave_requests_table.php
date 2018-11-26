@@ -25,11 +25,16 @@ class CreateLeaveRequestsTable extends Migration
             $table->unsignedInteger('leave_allocation_id', false);
             $table->foreign('leave_allocation_id')->references('id')->on('leave_allocations');
 
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->date('am_pm')->nullable();
+
             $table->decimal('applied_days', 4, 1);
             $table->string('reason', 200)->nullable();
             $table->unsignedInteger('attachment_media_id', false)->nullable();
             $table->foreign('attachment_media_id')->references('id')->on('medias');
-            $table->boolean('is_approved')->default(false);
+
+            $table->enum('status', ['new', 'approved', 'rejected'])->default('new');
 
             $table->softDeletes();
 			$table->string('created_by', 100)->nullable();
