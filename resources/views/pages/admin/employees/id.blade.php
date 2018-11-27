@@ -39,60 +39,7 @@
                             <span class="field-value">{{$employee->nationality}}</span>
                         </div>
                     </div>
-                    {{-- <div class="form-group row">
-                        <div class="col-lg-12">
-                            <input type="text" readonly class="form-control-plaintext form-control-lg font-weight-bold"
-                                value="{{$employee->user->name}}">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label">Email</label>
-                        <div class="col-lg-10">
-                            <input type="email" readonly class="form-control-plaintext" value="{{$employee->user->email}}">
-                        </div>
-                        <label class="col-lg-2 col-form-label">Mobile No</label>
-                        <div class="col-lg-10">
-                            <input type="text" readonly class="form-control-plaintext" value="{{$employee->contact_no}}">
-                        </div>
-                        <label class="col-lg-2 col-form-label">Address</label>
-                        <div class="col-lg-10">
-                            <textarea type="Address" readonly class="form-control-plaintext" rows="3" style="resize:none">{{$employee->address}}
-                                    </textarea>
-                        </div>
-                    </div> --}}
                 </div>
-                {{-- <div id="profile-pic-container" class="col-xl-3">
-                    <div class="row col">
-                        <i class="fas fa-user-circle fa-10x"></i>
-                    </div>
-                    <div class="row col">
-                        <h6><strong>Profile Image</strong></h6>
-                    </div>
-                </div>
-
-                <div class="col-md-9">
-                    <div class="form-group row">
-                        <div class="col-lg-12">
-                            <input type="text" readonly class="form-control-plaintext form-control-lg font-weight-bold"
-                                value="{{$employee->user->name}}">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label">Email</label>
-                        <div class="col-lg-10">
-                            <input type="email" readonly class="form-control-plaintext" value="{{$employee->user->email}}">
-                        </div>
-                        <label class="col-lg-2 col-form-label">Mobile No</label>
-                        <div class="col-lg-10">
-                            <input type="text" readonly class="form-control-plaintext" value="{{$employee->contact_no}}">
-                        </div>
-                        <label class="col-lg-2 col-form-label">Address</label>
-                        <div class="col-lg-10">
-                            <textarea type="Address" readonly class="form-control-plaintext" rows="3" style="resize:none">{{$employee->address}}
-                                    </textarea>
-                        </div>
-                    </div> --}}
-
                 {{-- Ignore --}}
                 <div id="end-btn-group">
                     <button type="button" class="btn btn-primary rounded">
@@ -103,7 +50,6 @@
 
         </div>
         <div class="card-body">
-            {{-- <div class="container-fluid font-weight-bold"> --}}
                 <div class="row">
                     {{-- Tab List --}}
                     <nav class="col-sm-12">
@@ -153,16 +99,6 @@
                                                         <input type="text" readonly class="form-control-plaintext"
                                                             value="{{$employee->ic_no}}">
                                                     </div>
-                                                    <label class="col-lg-5 col-form-label">Gender</label>
-                                                    <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->gender}}">
-                                                    </div>
-                                                    <label class="col-lg-5 col-form-label">Date of Birth</label>
-                                                    <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->dob}}">
-                                                    </div>
                                                     <label class="col-lg-5 col-form-label">Marital Status</label>
                                                     <div class="col-lg-7">
                                                         <input type="text" readonly class="form-control-plaintext"
@@ -173,29 +109,34 @@
                                                         <input type="text" readonly class="form-control-plaintext"
                                                             value="{{$employee->race}}">
                                                     </div>
+                                                    <label class="col-lg-5 col-form-label">Number of Child</label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" readonly class="form-control-plaintext"
+                                                            value="{{$employee->total_children}}">
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group row">
-                                                    <label class="col-lg-5 col-form-label">Nationality</label>
-                                                    <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->nationality}}">
-                                                    </div>
-                                                    <label class="col-lg-5 col-form-label">Number of Child</label>
-                                                    <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->total_child}}">
-                                                    </div>
                                                     <label class="col-lg-5 col-form-label">Driver License No</label>
                                                     <div class="col-lg-7">
                                                         <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->driver_license_number}}">
+                                                            value="{{$employee->driver_license_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">License Expiry Date</label>
                                                     <div class="col-lg-7">
                                                         <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->license_expiry_date}}">
+                                                            value="{{$employee->driver_license_expiry_date}}">
+                                                    </div>
+                                                    <label class="col-lg-5 col-form-label">EPF No</label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" readonly class="form-control-plaintext"
+                                                            value="{{$employee->epf_no}}">
+                                                    </div>
+                                                    <label class="col-lg-5 col-form-label">Tax No</label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" readonly class="form-control-plaintext"
+                                                            value="{{$employee->tax_no}}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -214,11 +155,6 @@
                                                     <div class="col-lg-7">
                                                         <input type="text" readonly class="form-control-plaintext"
                                                             value="IT Department">
-                                                    </div>
-                                                    <label class="col-lg-5 col-form-label">EPF No</label>
-                                                    <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->epf_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Confirmation Date</label>
                                                     <div class="col-lg-7">
@@ -239,15 +175,10 @@
                                                         <input type="text" readonly class="form-control-plaintext"
                                                             value="Executive">
                                                     </div>
-                                                    <label class="col-lg-5 col-form-label">Tax No</label>
-                                                    <div class="col-lg-7">
-                                                        <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->tax_no}}">
-                                                    </div>
                                                     <label class="col-lg-5 col-form-label">Joined Date</label>
                                                     <div class="col-lg-7">
                                                         <input type="text" readonly class="form-control-plaintext"
-                                                            value="09-09-2018">
+                                                            value="">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Resignation Date</label>
                                                     <div class="col-lg-7">
@@ -259,9 +190,10 @@
                                         </div>
                                     </div>
                                     <div class="col-md-1">
-                                        <button type="button" class="btn btn-primary rounded-circle">
+                                        {{-- <button type="button" class="btn btn-primary rounded-circle">
                                             <i class="fas fa-pen"></i>
-                                        </button>
+                                        </button> --}}
+                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="{{$employee->id}}" data-target="#edit-profile-popup">
                                     </div>
                                 </div>
                             </form>
@@ -296,4 +228,137 @@
         </div>
     </div>
 </div>
+<!-- UPDATE -->
+<div class="modal fade" id="edit-profile-popup" tabindex="-1" role="dialog" aria-labelledby="edit-profile-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-profile-label">Edit an Emergency Contact</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Name*</strong></label>
+                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="name-error" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="ic-no"><strong>IC*</strong></label>
+                            <input id="ic-no" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="ic-no-error" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Contact Number*</strong></label>
+                            <input id="contact-no" type="tel" class="form-control" placeholder="" value="" required>
+                            <div id="contact-no-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button id="edit-profiles-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
+
+@section('scripts')
+<script type="text/javascript">
+    $(function(){
+        // EDIT Profile
+        var editProfileId = null;
+        // Function: On Modal Clicked Handler
+        $('#edit-profile-popup').on('show.bs.modal', function (event) {
+            clearProfilesError('#edit-profile-form');
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = button.data('current') // Extract info from data-* attributes
+            console.log('Data: ', currentData)
+
+            editProfileId = currentData.id;
+
+            $('#edit-profile-form #name').val(currentData.name);
+            $('#edit-profile-form #notes').val(currentData.notes);
+        });
+
+        // $('#edit-profile-submit').click(function(e){
+        //     clearProfilesError('#edit-profile-form');
+        //     var editProfileRoute = editProfileRouteTemplate.replace(encodeURI('<<id>>'), editProfileId);
+        //     e.preventDefault();
+        //     $.ajax({
+        //         url: editProfileRoute,
+        //         type: 'POST',
+        //         data: {
+        //             _token: '{{ csrf_token() }}',
+        //             name: $('#edit-profile-form #name').val(),
+        //             notes: $('#edit-profile-form #notes').val()
+        //         },
+        //         success: function(data) {
+        //             showAlert(data.success);
+        //             attachmentsTable.ajax.reload();
+        //             $('#edit-profile-popup').modal('toggle');
+        //             clearProfilesModal('#edit-profile-form');
+        //         },
+        //         error: function(xhr) {
+        //             if(xhr.status == 422) {
+        //                 var errors = xhr.responseJSON.errors;
+        //                 console.log("Error: ", xhr);
+        //                 for (var errorField in errors) {
+        //                     if (errors.hasOwnProperty(errorField)) {
+        //                         console.log("Error: ", errorField);
+        //                         switch(errorField) {
+        //                             case 'name':
+        //                                 $('#edit-profile-form #name').addClass('is-invalid');
+        //                                 $('#edit-profile-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+        //                             break;
+        //                             case 'notes':
+        //                                 $('#edit-profile-form #notes').addClass('is-invalid');
+        //                                 $('#edit-profile-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+        //                             break;
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     });
+        // });
+
+    });
+
+
+    // GENERAL FUNCTIONS
+    function clearProfilesModal(htmlId) {
+        $(htmlId + ' #name').val('');
+        $(htmlId + ' #notes').val('');
+
+        $(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #notes').removeClass('is-invalid');
+    }
+    function clearProfilesError(htmlId) {
+        $(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #notes').removeClass('is-invalid');
+    }
+
+    function showAlert(message) {
+        $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <span id="alert-message">${message}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`)
+    }
+
+</script>
+
+@append

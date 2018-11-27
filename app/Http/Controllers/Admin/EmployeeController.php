@@ -62,7 +62,7 @@ class EmployeeController extends Controller
 
     public function dsplaySecurityGroup($id)
     {
-        
+
         $employees = Employee::all();
 
         return view('pages.admin.employees.id.security-group', ['employees'=> $employees]);
@@ -82,6 +82,18 @@ class EmployeeController extends Controller
         // $companies = Company::all();
 
         return view('pages.admin.employees.id', ['employee' => $employee]);
+    }
+
+    public function postEditProfile(Request $request, $id)
+    {
+        $profileUpdatedData = $request->validate([
+            'ic_no' => 'required',
+            'contact_no' => 'required|numeric',
+        ]);
+
+        Employee::where('id', $id)->update($profileUpdatedData);
+
+        return response()->json(['success'=>'Profile was successfully updated.']);
     }
 
     public function add()
@@ -285,7 +297,7 @@ class EmployeeController extends Controller
     {
         $securityGroupData = $request->validate([
             'security_group_id' => 'required',
-    
+
 
         ]);
 
@@ -312,7 +324,7 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
-    
+
 
 
     public function postReportTo(Request $request, $id)
@@ -405,7 +417,7 @@ class EmployeeController extends Controller
             'start_date' => 'required',
             'basic_salary' => 'required',
             'specification' => 'required',
-     
+
         ]);
 
         $jobData['status'] = 'active';
@@ -730,7 +742,7 @@ class EmployeeController extends Controller
         EmployeeDependent::find($id)->delete();
         return response()->json(['success'=>'Dependent was successfully deleted.']);
     }
-    
+
     public function deleteBankAccount(Request $request, $emp_id, $id)
     {
         EmployeeBankAccount::find($id)->delete();
