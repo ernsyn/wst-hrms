@@ -409,6 +409,9 @@ Route::group([
     Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
     Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
     Route::get('/payroll/create', 'Payroll\PayrollController@create')->name('payroll.create');
+    Route::get('payroll-report', 'Payroll\PayrollController@showReport')->name('payroll.report.show');
+    Route::get('/payslip/show', 'Payroll\PayrollController@showPayslip')->name('payslip.show');
+    Route::post('/payslip/download', 'Payroll\PayrollController@downloadPayslip')->name('payslip.download');
 
     Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
     Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');

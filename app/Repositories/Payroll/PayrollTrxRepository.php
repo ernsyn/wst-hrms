@@ -9,5 +9,7 @@ interface PayrollTrxRepository
     
     public function findNext($id, $payroll_id);
     
+    public function findByEmployee($payrollMasterId, $employeeId);
+    
 }
 

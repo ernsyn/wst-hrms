@@ -41,6 +41,15 @@ class EloquentPayroll implements PayrollRepository
         
         return $startDate;
     }
+    
+    public function findByPayrollMonthPeriod(array $data)
+    {
+        return $this->payrollMaster->where([
+            ['year_month', $data['year_month']],
+            ['period', $data['period']],
+            ['company_id', $data['companyId']]
+        ])->get();
+    }
 
 }
 

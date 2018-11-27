@@ -61,23 +61,23 @@
             </li>
             
             {{-- SECTION: Payroll --}}
-            <li class="menu-section {{ request()->is('payroll') ? 'active' : '' }}">
+            <li class="menu-section {{ request()->is('payroll','government_report', 'payroll-report') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
                     <div class="row">
                         <div class="col-1"><i class="fas fa-dollar-sign"></i></div>
                         <div class="col-10">Payroll</div>
                     </div>
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('payroll') ? 'show' : '' }}" id="payrollSubmenu">
+                <ul class="collapse list-unstyled {{ request()->is('payroll','government_report', 'payroll-report') ? 'show' : '' }}" id="payrollSubmenu">
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                         <a href="{{ route('payroll') }}">Payroll</a>
                     </li>
                     @hasrole('admin')
-                    <li class="menu-option {{ request()->is('payroll/government_report') ? 'active' : '' }}">
+                    <li class="menu-option {{ request()->is('government_report') ? 'active' : '' }}">
                         <a href="{{ route('payroll/government_report') }}">Government Reports</a>
                     </li>
-                    <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                        <a href="">Reports</a>
+                    <li class="menu-option {{ request()->is('payroll-report') ? 'active' : '' }}">
+                        <a href="{{ route('payroll.report.show') }}">Reports</a>
                     </li>
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                         <a href="">Payroll Setup</a>

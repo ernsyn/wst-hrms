@@ -217,6 +217,7 @@ return [
         'PayrollHelper' => App\Helpers\PayrollHelper::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'PayrollReportEnum' => App\Enums\PayrollReportEnum::class,
 
     ],
 

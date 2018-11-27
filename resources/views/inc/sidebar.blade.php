@@ -112,7 +112,7 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('','') ? 'show' : '' }}" id="payslipSubmenu">
                 <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                    <a href="">Download Payslip</a>
+                    <a href="{{ route('payslip.show') }}">Download Payslip</a>
                 </li>
             </ul>
 

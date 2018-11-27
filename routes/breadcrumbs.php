@@ -494,3 +494,13 @@ Breadcrumbs::for('payroll.trx.show', function ($trail) {
     $trail->parent('payroll');
     $trail->push('Payroll Month', route('payroll'));
 });
+
+Breadcrumbs::for('payroll.report.show', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Reports', route('payroll.report.show'));
+});
+
+Breadcrumbs::for('payslip.show', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Payslip', route('payslip.show'));
+});

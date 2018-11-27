@@ -32,6 +32,9 @@ use Illuminate\Support\Facades\DB;
 use App\Eis;
 use App\Socso;
 use App\Pcb;
+use App\Enums\PayrollReportEnum;
+use App\Http\Controllers\Popo\payrollreport\PayrollReport;
+use PDF;
 
 class PayrollController extends Controller
 {
@@ -456,4 +459,162 @@ class PayrollController extends Controller
 //         if(!@$save_n_next) return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully updated payroll.');
 //         return (@$next)? redirect()->route('payroll.trx.show', ['id'=>$next->id])->with('success', 'Successfully updated payroll.') : redirect('/payroll/'.$request->input('payroll_id'))->with('success', 'All employees updated.');
     }
+    
+    //Reports
+    // Add payroll form
+    public function showReport()
+    {
+        $period = PayrollPeriodEnum::choices();
+//         $payrollReport = PayrollReportEnum::choices();
+//         $sliders = array_chunk($payrollReport, 3);
+        $arr = PayrollReport::getPayrollReport();
+//         $arr = array_chunk($report[0], 3);
+//         dd($arr);
+        return view('pages.payroll.payroll-report', ['period' => $period, 'sliders' => $arr['slider'],
+            'sliders1' => $arr['slider1']]);
+    }
+    
+    //Generate Report
+    public function generateReport(Request $request)
+    {
+        $this->validate($request, [
+            'reportName' => 'required'
+        ]);
+        
+        $reportName = $request->input('reportName');
+        
+        return $this->generate($reportName,null);
+    }
+    
+    private function generate($reportName,$option){
+        switch ($reportName) {
+            case "LHDN_borangE":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnBorangE',
+                    [
+                        'data' => $arr['data'] ,
+                        'empData' => $arr['data1'] ,
+                    ])->setOrientation('landscape');
+                    
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdnBorangE.pdf');
+                    break;
+                    
+            case "LHDN_cp21":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP21',
+                    [
+                        'dataArr' => $arr['data']
+                    ]);
+                
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp21.pdf');
+                break;
+                
+            case "LHDN_cp22":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22',
+                    [
+                        'dataArr' => $arr['data']
+                    ]);
+                
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp22.pdf');
+                break;
+                
+            case "LHDN_cp22a":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22a',
+                    [
+                        'dataArr' => $arr['data']
+                    ]);
+                
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp22a.pdf');
+                break;
+                
+            case "LHDN_cp22b":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22b',
+                    [
+                        'dataArr' => $arr['data']
+                    ]);
+                $pdf->setTemporaryFolder(storage_path("temp"));
+                // download pdf
+                return $pdf->download('lhdn_cp22b.pdf');
+                break;
+                
+            case "LHDN_cp39":
+                $arr = GenerateReportsHelper::generateBean($reportName,null);
+                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39',
+                    [
+                        'data' => $arr['data'] ,
+                        'empData' => $arr['empData'],
+                        'totalPcb' => $arr['totalPcb'],
+                        'totalcp38' => $arr['totalcp38'],
+                        'totalAmountofPCBAndCP8' => $arr['totalAmountofPCBAndCP8']
+                    ] )->setOrientation('landscape');
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdn_cp39.pdf');
+                    break;
+                    
+            case "LHDN_cp39lieu":
+                echo "portrait";
+                break;
+            case "LHDN_eaform":
+                echo "portrait";
+                break;
+            default:
+                echo "None";
+        }
+    }
+    
+    // Payslip
+    // Download payslip form
+    public function showPayslip()
+    {
+        $period = PayrollPeriodEnum::choices();
+        return view('pages.payroll.payslip', ['period' => $period]);
+    }
+    
+    public function downloadPayslip(PayrollRequest $request)
+    {
+//         dd($request);
+        $currentUser = auth()->user()->id;
+        $employee = Employee::where('user_id', $currentUser)->first();
+        $companyId = $employee->company_id;
+        $validated = $request->validated();
+        $data = array(
+            'year_month' => $validated['year_month'].'-01',
+            'period' => $validated['period'],
+            'companyId' => $companyId
+        );
+        
+        $payroll = $this->payrollService->findByPayrollMonthPeriod($data);
+        if (count($payroll) > 0) {
+            $payrollMasterId = $payroll->first()->id;
+            $info = $this->payrollTrx->findByEmployee($payrollMasterId, $employee->id);
+        } else {
+            $msg = 'Payslip ' . $validated['year_month'] . ' does not exist.';
+            return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
+        }
+        
+        //TODO: year to date
+//         dd($info);
+        $pdf = PDF::loadView('pages/payroll/payslip/payslip',
+            [
+                'info' => $info
+            ])->setOrientation('landscape');
+            
+            $pdf->setTemporaryFolder(storage_path("temp"));
+            // download pdf
+            return $pdf->download('payslip.pdf');
+            
+    }
+    
 }

@@ -57,7 +57,9 @@
 								@if ($row->status === 0) 
 									<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
 									<input type="hidden" name="status" value="1">
-									<button type="submit" id="update_status" class="round-btn btn btn-default fas fa-lock btn-segment" title="Lock"></button>
+									<button type="submit" id="update_status" class="round-btn btn btn-default fas fa-unlock btn-segment" title="Lock"></button>
+								@else
+									<button type="text" id="update_status" class="round-btn btn btn-default fas fa-lock btn-segment" disabled></button>
 								@endif
 							</form> 
 							@endhasanyrole
