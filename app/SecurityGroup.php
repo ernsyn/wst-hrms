@@ -13,8 +13,6 @@ class SecurityGroup extends Model
         'name',
         'description',
         'company_id'
-
-
     ];
 
 
@@ -22,6 +20,6 @@ class SecurityGroup extends Model
     {
         return $this->belongsTo('App\Company', 'company_id');
     }
-  
-  
+
+
 }
