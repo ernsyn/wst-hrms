@@ -73,9 +73,9 @@
                                                             data-bank-id="{{$companybanks['id']}}" data-bank-code="{{$companybanks['bank_code']}}"
                                                             data-bank-accout-name="{{$companybanks['account_name']}}" data-bank-status="{{$companybanks['status']}}"
                                                             data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button>
-
+{{--
                                                         <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->account_name }}'
-                                                            data-link='{{ route('admin.settings.company-banks.delete', ['id' => $companybanks->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button>
+                                                            data-link='{{ route('admin.settings.company-banks.delete', ['id' => $companybanks->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button> --}}
 
                                                     </td>
 
