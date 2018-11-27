@@ -94,10 +94,10 @@
                                         <div class="row p-3">
                                             <div class="col-md-6">
                                                 <div class="form-group row">
-                                                    <label class="col-lg-5 col-form-label">IC No</label>
+                                                    <label class="col-lg-5 col-form-label">Contact No</label>
                                                     <div class="col-lg-7 text-lowercase">
                                                         <input type="text" readonly class="form-control-plaintext"
-                                                            value="{{$employee->ic_no}}">
+                                                            value="{{$employee->contact_no}}">
                                                     </div>
                                                     <label class="col-lg-5 col-form-label">Marital Status</label>
                                                     <div class="col-lg-7">
@@ -193,7 +193,8 @@
                                         {{-- <button type="button" class="btn btn-primary rounded-circle">
                                             <i class="fas fa-pen"></i>
                                         </button> --}}
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="{{$employee->id}}" data-target="#edit-profile-popup">
+                                        <button type="button" class="btn btn-primary rounded-circle" data-toggle="modal" data-current="{{$employee}}" data-target="#edit-profile-popup"><i class="fas fa-pen"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -234,7 +235,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-profile-label">Edit an Emergency Contact</h5>
+                <h5 class="modal-title" id="edit-profile-label">Edit Profile</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -244,13 +245,6 @@
                     @csrf
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="name"><strong>Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="name-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
                             <label for="ic-no"><strong>IC*</strong></label>
                             <input id="ic-no" type="text" class="form-control" placeholder="" value="" required>
                             <div id="ic-no-error" class="invalid-feedback"></div>
@@ -258,7 +252,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="name"><strong>Contact Number*</strong></label>
+                            <label for="contact-no"><strong>Contact Number*</strong></label>
                             <input id="contact-no" type="tel" class="form-control" placeholder="" value="" required>
                             <div id="contact-no-error" class="invalid-feedback">
                             </div>
@@ -266,7 +260,7 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button id="edit-profiles-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+                <button id="edit-profile-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
             </div>
             </form>
         </div>
@@ -288,10 +282,11 @@
 
             editProfileId = currentData.id;
 
-            $('#edit-profile-form #name').val(currentData.name);
-            $('#edit-profile-form #notes').val(currentData.notes);
+            $('#edit-profile-form #ic-no').val(currentData.ic_no);
+            $('#edit-profile-form #contact-no').val(currentData.contact_no);
         });
 
+        // var editRouteTemplate = "{{ route('admin.employees.profile.edit.post', ['id' => '<<id>>']) }}";
         // $('#edit-profile-submit').click(function(e){
         //     clearProfilesError('#edit-profile-form');
         //     var editProfileRoute = editProfileRouteTemplate.replace(encodeURI('<<id>>'), editProfileId);
@@ -301,12 +296,12 @@
         //         type: 'POST',
         //         data: {
         //             _token: '{{ csrf_token() }}',
-        //             name: $('#edit-profile-form #name').val(),
-        //             notes: $('#edit-profile-form #notes').val()
+        //             ic_no: $('#edit-profile-form #ic-no').val(),
+        //             contact_no: $('#edit-profile-form #contact-no').val()
         //         },
         //         success: function(data) {
         //             showAlert(data.success);
-        //             attachmentsTable.ajax.reload();
+        //             // attachmentsTable.ajax.reload();
         //             $('#edit-profile-popup').modal('toggle');
         //             clearProfilesModal('#edit-profile-form');
         //         },
@@ -318,13 +313,13 @@
         //                     if (errors.hasOwnProperty(errorField)) {
         //                         console.log("Error: ", errorField);
         //                         switch(errorField) {
-        //                             case 'name':
-        //                                 $('#edit-profile-form #name').addClass('is-invalid');
-        //                                 $('#edit-profile-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+        //                             case 'ic_no':
+        //                                 $('#edit-profile-form #ic-no').addClass('is-invalid');
+        //                                 $('#edit-profile-form #contact-no').html('<strong>' + errors[errorField][0] + "</strong>");
         //                             break;
-        //                             case 'notes':
-        //                                 $('#edit-profile-form #notes').addClass('is-invalid');
-        //                                 $('#edit-profile-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+        //                             case 'contact_no':
+        //                                 $('#edit-profile-form #ic-no').addClass('is-invalid');
+        //                                 $('#edit-profile-form #contact-no').html('<strong>' + errors[errorField][0] + '</strong>');
         //                             break;
         //                         }
         //                     }
@@ -339,15 +334,15 @@
 
     // GENERAL FUNCTIONS
     function clearProfilesModal(htmlId) {
-        $(htmlId + ' #name').val('');
-        $(htmlId + ' #notes').val('');
+        $(htmlId + ' #ic-no').val('');
+        $(htmlId + ' #contact-no').val('');
 
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' #ic-no').removeClass('is-invalid');
+        $(htmlId + ' #contact-no').removeClass('is-invalid');
     }
     function clearProfilesError(htmlId) {
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' #ic-no').removeClass('is-invalid');
+        $(htmlId + ' #contact-no').removeClass('is-invalid');
     }
 
     function showAlert(message) {
