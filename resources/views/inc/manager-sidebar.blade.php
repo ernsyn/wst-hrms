@@ -4,7 +4,7 @@
     </div>
 
             {{-- SECTION: E-Leave --}}
-            <li class="menu-section {{ request()->is('manager/e-leave*') ? 'active' : '' }}">
+            {{-- <li class="menu-section {{ request()->is('manager/e-leave*') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
                     <div class="row">
                         <div class="col-1"><i class="far fa-calendar-alt"></i></div>
@@ -12,18 +12,13 @@
                     </div>
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('manager/e-leave*') ? 'show' : '' }}"
-                    id="leaveSubmenu">
+                    id="leaveSubmenu"> --}}
                     {{-- OPTION: Leave Request --}}
-                    <li class="menu-option {{ request()->is('manager.e-leave') ? 'active' : '' }}">
+                    {{-- <li class="menu-option {{ request()->is('manager.e-leave') ? 'active' : '' }}">
                         <a href="{{ route('manager.e-leave') }}">Leave Request</a>
                     </li>
-                    {{-- OPTION: Leave Application On Behalf --}}
-                    {{-- <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                        <a href="">Leave Application </a>
-                    </li> --}}
-
                 </ul>
             </li>
-        </ul>
+        </ul> --}}
    
 </nav>

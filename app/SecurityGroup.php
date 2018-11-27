@@ -22,6 +22,6 @@ class SecurityGroup extends Model
     {
         return $this->belongsTo('App\Company', 'company_id');
     }
-
- //   use SoftDeletes;
+  
+  
 }
