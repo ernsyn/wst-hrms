@@ -10,6 +10,7 @@ use App\PayrollTrx;
 use App\Enums\PayrollPeriodEnum;
 use App\Enums\PayrollStatus;
 use App\Helpers\DateHelper;
+use App\Helpers\GenerateReportsHelper;
 use App\Helpers\PayrollHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PayrollRequest;
@@ -464,14 +465,34 @@ class PayrollController extends Controller
     // Add payroll form
     public function showReport()
     {
-        $period = PayrollPeriodEnum::choices();
+//         $period = PayrollPeriodEnum::choices();
 //         $payrollReport = PayrollReportEnum::choices();
 //         $sliders = array_chunk($payrollReport, 3);
         $arr = PayrollReport::getPayrollReport();
 //         $arr = array_chunk($report[0], 3);
 //         dd($arr);
+
+        $form = PayrollReport::getPayrollReportForm();
+        $costcentres = GenerateReportsHelper::getCostCentre();
+        $departments = GenerateReportsHelper::getDepartments();
+        $branches = GenerateReportsHelper::getBranches();
+        $positions = GenerateReportsHelper::getPosition();
+        $period = PayrollPeriodEnum::list();
+        
+        //get company information based on user login
+        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $officers = GenerateReportsHelper::getListOfficerInformation($company->id);
+        
         return view('pages.payroll.payroll-report', ['period' => $period, 'sliders' => $arr['slider'],
-            'sliders1' => $arr['slider1']]);
+            'sliders1' => $arr['slider1'],
+            'dforms' => $form['form'],
+            'dforms1' => $form['form1'],
+            'costcentres' => $costcentres,
+            'departments' => $departments,
+            'branches' => $branches,
+            'positions' => $positions,
+            'officers' => $officers
+        ]);
     }
     
     //Generate Report

@@ -12,6 +12,10 @@ class PayrollReport
     private $reportGroup;
     private $reportTarget;
     private $reportCss;
+    private $showOfficer;
+    private $showPeriod;
+    private $showFilter;
+    private $value;
 
 
     public function __construct(array $array = []) {
@@ -20,9 +24,11 @@ class PayrollReport
         $this->reportGroup = isset($array['reportGroup']) ? $array['reportGroup'] : null;
         $this->reportTarget = isset($array['reportTarget']) ? $array['reportTarget'] : null;
         $this->reportCss = isset($array['reportCss']) ? $array['reportCss'] : null;
-
+        $this->showOfficer = isset($array['showOfficer']) ? $array['showOfficer'] : null;
+        $this->showPeriod = isset($array['showPeriod']) ? $array['showPeriod'] : null;
+        $this->showFilter = isset($array['showFilter']) ? $array['showFilter'] : null;
+        $this->value = isset($array['value']) ? $array['value'] : null;
     }
-
 
     /**
      * @return mixed|null
@@ -103,6 +109,70 @@ class PayrollReport
     {
         $this->reportCss = $reportCss;
     }
+    
+    /**
+     * @return mixed|null
+     */
+    public function getShowOfficer()
+    {
+        return $this->showOfficer;
+    }
+    
+    /**
+     * @param mixed|null $showOfficer
+     */
+    public function setShowOfficer( $showOfficer)
+    {
+        $this->showOfficer = $showOfficer;
+    }
+    
+    /**
+     * @return mixed|null
+     */
+    public function getShowPeriod()
+    {
+        return $this->showPeriod;
+    }
+    
+    /**
+     * @param mixed|null $showPeriod
+     */
+    public function setShowPeriod( $showPeriod)
+    {
+        $this->showPeriod = $showPeriod;
+    }
+    
+    /**
+     * @return mixed|null
+     */
+    public function getShowFilter()
+    {
+        return $this->showFilter;
+    }
+    
+    /**
+     * @param mixed|null $showFilter
+     */
+    public function setShowFilter( $showFilter)
+    {
+        $this->showFilter = $showFilter;
+    }
+    
+    /**
+     * @return mixed|null
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+    
+    /**
+     * @param mixed|null $value
+     */
+    public function setValue( $value)
+    {
+        $this->value = $value;
+    }
 
     public static function getPayrollReport(){
 //         $payrollReport = array();
@@ -131,20 +201,39 @@ class PayrollReport
         
         return $arr;
     }
-
-    public static function getGovernmentReportType(){
-        $arr = array(
-            "LHDNborangE" => "landscape",
-            "LHDNcp21" => "portrait",
-            "LHDN_cp22" => "portrait",
-            "LHDN_cp22a" => "portrait",
-            "LHDN_cp22b" => "portrait",
-            "LHDN_cp39" => "portrait",
-            "LHDN_cp39lieu" => "portrait",
-            "LHDN_eaform" => "portrait",
+    
+    public static function getPayrollReportForm(){
+        $form = array();
+        $form1 = array();
+        
+        array_push($form,new PayrollReport(['reportName' => 'Payroll Report', 'value' => '1', 'reportGroup' => '', 'reportTarget' => '1', 'reportCss' => 'm-bg-brand', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true ]));
+        array_push($form,new PayrollReport(['reportName' => 'Supplier Payment Form', 'value' => '2', 'reportGroup' => '', 'reportTarget' => '2', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form,new PayrollReport(['reportName' => 'Department Salary', 'value' => '3', 'reportGroup' => '', 'reportTarget' => '3', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form,new PayrollReport(['reportName' => 'Payroll Detail', 'value' => '4', 'reportGroup' => '', 'reportTarget' => '4', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
+       
+        array_push($form1,new PayrollReport(['reportName' => 'Bank Credit Detail', 'value' => '5', 'reportGroup' => '', 'reportTarget' => '5', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
+        array_push($form1,new PayrollReport(['reportName' => 'Payroll Summary', 'value' => '6', 'reportGroup' => '', 'reportTarget' => '6', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
+        
+        $form = array(
+            "form"=>$form,
+            "form1"=>$form1
         );
-        return $arr;
+        return $form;
     }
+
+//     public static function getGovernmentReportType(){
+//         $arr = array(
+//             "LHDNborangE" => "landscape",
+//             "LHDNcp21" => "portrait",
+//             "LHDN_cp22" => "portrait",
+//             "LHDN_cp22a" => "portrait",
+//             "LHDN_cp22b" => "portrait",
+//             "LHDN_cp39" => "portrait",
+//             "LHDN_cp39lieu" => "portrait",
+//             "LHDN_eaform" => "portrait",
+//         );
+//         return $arr;
+//     }
 
 
     public function toArray() {
