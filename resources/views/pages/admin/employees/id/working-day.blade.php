@@ -24,7 +24,20 @@
             <tr id="working-day-values">
             </tr>
         </thead>
-    </table>
+    </table>    
+    <div class="row pb-3" id="working_time_container">
+        <div class="col-md-12">
+            <label class="working-day"><strong><u>Working Time:</u></strong></label>
+        </div>
+        <div class="col-md-12">
+            <label class="working-day"><strong>Start of Work: </strong></label>
+            <span id="start_work_time"></span>
+        </div>
+        <div class="col-md-12">
+            <label class="working-day"><strong>End of Work: </strong></label>
+            <span id="end_work_time"></span>
+        </div>
+    </div>
 </div>
 
 {{-- ADD --}}
@@ -103,6 +116,22 @@
                             <label for="sunday"><strong>Sunday*</strong></label>
                             <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday" value="" required>
                             <div id="sunday-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="start_work_time"><strong>Start of Work*</strong></label>
+                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="" required>
+                            <div id="start_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="end_work_time"><strong>End of Work*</strong></label>
+                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="" required>
+                            <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -196,6 +225,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="start_work_time"><strong>Start of Work*</strong></label>
+                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="" required>
+                            <div id="start_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="end_work_time"><strong>End of Work*</strong></label>
+                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="" required>
+                            <div id="end_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="edit-working-day-submit" type="submit" class="btn btn-primary">
@@ -211,6 +256,7 @@
 <script>
     $("#assign-working-day-button").hide();
     $("#edit-working-day-button").hide();
+    $("#working_time_container").hide();
 
     getEmployeeWorkingDaysData();
 
@@ -220,6 +266,8 @@
         $("#add-working-day-form #working_day").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
         $("#edit-working-day-form #working_day").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
     });    
+
+    $('.timepicker').timeDropper({ format: 'HH:mm' });
 
     $("#add-working-day-form #working_day").change(function() {        
         var data_id = $(this).find(':selected').attr('data-id');
@@ -257,6 +305,9 @@
                 <td id="saturday-value">`+data[0].saturday+`</td>
                 <td id="sunday-value">`+data[0].sunday+`</td>`);
 
+                $("#working_time_container #start_work_time").html(convertTime(data[0].start_work_time));
+                $("#working_time_container #end_work_time").html(convertTime(data[0].end_work_time));
+
                 $("#edit-working-day-form #monday").val(data[0].monday);
                 $("#edit-working-day-form #tuesday").val(data[0].tuesday);
                 $("#edit-working-day-form #wednesday").val(data[0].wednesday);
@@ -264,9 +315,12 @@
                 $("#edit-working-day-form #friday").val(data[0].friday);
                 $("#edit-working-day-form #saturday").val(data[0].saturday);
                 $("#edit-working-day-form #sunday").val(data[0].sunday);
+                $("#edit-working-day-form #start_work_time").val(data[0].start_work_time);
+                $("#edit-working-day-form #end_work_time").val(data[0].end_work_time);
 
                 $("#assign-working-day-button").hide();
                 $("#edit-working-day-button").show();
+                $("#working_time_container").show();
             }
             else
             {
@@ -274,12 +328,14 @@
 
                 $("#assign-working-day-button").show();
                 $("#edit-working-day-button").hide();
+                $("#working_time_container").hide();
             }
         }).fail(function() {
             $("#working-day-values").html(`<td colspan="7" align="center">No Working Day is currently assigned</td>`);
 
             $("#assign-working-day-button").show();
             $("#edit-working-day-button").hide();
+            $("#working_time_container").hide();
         });
     }
 
@@ -298,7 +354,9 @@
                     thursday: $('#add-working-day-form #thursday').val(),
                     friday: $('#add-working-day-form #friday').val(),
                     saturday: $('#add-working-day-form #saturday').val(),
-                    sunday: $('#add-working-day-form #sunday').val()
+                    sunday: $('#add-working-day-form #sunday').val(),
+                    start_work_time: $("#add-working-day-form #start_work_time").val(),
+                    end_work_time: $("#add-working-day-form #end_work_time").val()
                 },
                 success: function(data) {
                     getEmployeeWorkingDaysData();
@@ -337,7 +395,9 @@
                     thursday: $('#edit-working-day-form #thursday').val(),
                     friday: $('#edit-working-day-form #friday').val(),
                     saturday: $('#edit-working-day-form #saturday').val(),
-                    sunday: $('#edit-working-day-form #sunday').val()
+                    sunday: $('#edit-working-day-form #sunday').val(),
+                    start_work_time: $("#edit-working-day-form #start_work_time").val(),
+                    end_work_time: $("#edit-working-day-form #end_work_time").val()
                 },
                 success: function(data) {
                     getEmployeeWorkingDaysData();
@@ -362,6 +422,21 @@
             });
         });
     });
+
+    function convertTime(time) {
+        time = time.substring(0, time.length-3);
+
+        // Check correct time format and split into components
+        time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+        if (time.length > 1) { // If time format correct
+            time = time.slice (1);  // Remove full string match value
+            time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+            time[0] = +time[0] % 12 || 12; // Adjust hours
+        }
+
+        return time.join(''); // return adjusted time or original string
+    }
 
     function showAlert(message) {
         $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">

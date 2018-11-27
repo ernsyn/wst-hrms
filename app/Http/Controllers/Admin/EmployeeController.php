@@ -345,6 +345,8 @@ class EmployeeController extends Controller
             'friday' => 'required',
             'saturday' => 'required',
             'sunday' => 'required',
+            'start_work_time' => 'required',
+            'end_work_time' => 'required',
         ]);
 
         $workingDaysData['is_template'] = false;
@@ -369,6 +371,8 @@ class EmployeeController extends Controller
             'friday' => 'required',
             'saturday' => 'required',
             'sunday' => 'required',
+            'start_work_time' => 'required',
+            'end_work_time' => 'required',
         ]);
 
         $workingDayUpdateData['is_template'] = false;
@@ -387,7 +391,7 @@ class EmployeeController extends Controller
 
     public function getEmployeeWorkingDay($emp_id)
     {
-        $working_day = EmployeeWorkingDay::templates()->where('emp_id', $emp_id)->get();
+        $working_day = EmployeeWorkingDay::where('emp_id', $emp_id)->get();
 
         return response()->json($working_day);
     }
