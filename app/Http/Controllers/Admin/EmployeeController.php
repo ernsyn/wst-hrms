@@ -284,9 +284,7 @@ class EmployeeController extends Controller
     public function postSecurityGroup(Request $request, $id)
     {
         $securityGroupData = $request->validate([
-            'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL'
-
-
+            'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
 
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);

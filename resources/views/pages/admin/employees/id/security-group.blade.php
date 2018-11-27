@@ -1,10 +1,10 @@
 <!-- Set Security Group -->
-<div class="modal fade" id="add-security-groups-popup" tabindex="-1" role="dialog" aria-labelledby="add-security-group-label"
+<div class="modal fade" id="add-security-group-popup" tabindex="-1" role="dialog" aria-labelledby="add-security-group-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="add-security-group-label">Set Security Group</h5>
+                <h5 class="modal-title" id="add-security-group-label">Add Security Group</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -40,12 +40,12 @@
 </div>
 
 <!-- Set Main Security Group -->
-<div class="modal fade" id="add-main-security-groups-popup" tabindex="-1" role="dialog" aria-labelledby="add-main-security-groups-label"
+<div class="modal fade" id="add-main-security-group-popup" tabindex="-1" role="dialog" aria-labelledby="add-main-security-group-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="add-main-security-groups-label">Set Main Security Group</h5>
+                <h5 class="modal-title" id="add-main-security-group-label">Set Main Security Group</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -57,28 +57,20 @@
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
                             <div class="col-md-6">
-                                <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id"
-                                    id="main-security-group-id">
-                                        @foreach(App\SecurityGroup::all() as $company)
-                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                        @endforeach
-                                    </select> @if ($errors->has('main-security-group-id'))
-                                <span class="invalid-feedback" role="alert">
-                                                              <strong>{{ $errors->first('main-security-group-id') }}</strong>
-                                                          </span> @endif
+                                <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                                    @foreach(App\SecurityGroup::all() as $company)
+                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div id="security-group-id-error" class="invalid-feedback"></div>
                             </div>
-
-                            {{--
-                            <div id="security-group-id-error" class="invalid-feedback"> --}} {{-- </div> --}}
                         </div>
                     </div>
-
                 </div>
-
                 <div class="modal-footer">
                     <button id="add-main-security-group-submit" type="submit" class="btn btn-primary">
                     {{ __('Submit') }}
-                </button> {{-- <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                    --}}
+                </button>
                 </div>
             </form>
         </div>
@@ -97,7 +89,7 @@
                             </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -112,10 +104,10 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-security-groups-popup">
-                Set Security Group
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-security-group-popup">
+                Add Security Group
             </button>
-            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-main-security-groups-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-main-security-group-popup">
                     Set Main Security Group
                 </button>
         </div>
@@ -141,7 +133,8 @@
     "serverSide": true,
     "bStateSave": true,
     "ajax": "{{ route('admin.employees.dt.security-groups', ['id' => $id]) }}",
-    "columns": [{
+    "columns": [
+        {
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;
             }
@@ -165,7 +158,11 @@
 <script type="text/javascript">
     $(function(){
         // ADD SECURITY GROUP
+        $('#add-security-group-popup').on('show.bs.modal', function (event) {
+            clearSecurityGroupError('#add-security-group-form');
+        });
         $('#add-security-group-form #add-security-group-submit').click(function(e){
+            clearSecurityGroupError('#add-security-group-form');
             e.preventDefault();
             $.ajax({
                 url: "{{ route('admin.employees.security-groups.post', ['id' => $id]) }}",
@@ -203,7 +200,11 @@
             });
         });
         // ADD MAIN SECURITY GROUP
+        $('#add-main-security-group-popup').on('show.bs.modal', function (event) {
+            clearMainSecurityGroupError('#add-main-security-group-form');
+        });
         $('#add-main-security-group-form #add-main-security-group-submit').click(function(e){
+            clearMainSecurityGroupError('#add-main-security-group-form');
             e.preventDefault();
             $.ajax({
                 url: "{{ route('admin.employees.main-security-groups.post', ['id' => $id]) }}",
@@ -218,7 +219,7 @@
                     showAlert(data.success);
                     securityGroupsTable.ajax.reload();
                     $('#add-main-security-group-popup').modal('toggle');
-                    clearSecurityGroupModal('#add-main-security-group-form');
+                    clearMainSecurityGroupModal('#add-main-security-group-form');
                 },
                 error: function(xhr) {
                     if(xhr.status == 422) {
@@ -288,6 +289,18 @@
         $(htmlId + ' #security-group-id').val('');
         $(htmlId + ' #security-group-id').removeClass('is-invalid');
     }
+    function clearSecurityGroupError(htmlId) {
+        $(htmlId + ' #security-group-id').removeClass('is-invalid');
+    }
+
+    function clearMainSecurityGroupModal(htmlId) {
+        $(htmlId + ' #main-security-group-id').val('');
+        $(htmlId + ' #main-security-group-id').removeClass('is-invalid');
+    }
+    function clearMainSecurityGroupError(htmlId) {
+        $(htmlId + ' #main-security-group-id').removeClass('is-invalid');
+    }
+
     function showAlert(message) {
         $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
             <span id="alert-message">${message}</span>
@@ -296,6 +309,5 @@
             </button>
             </div>`)
     }
-
 </script>
 @append
