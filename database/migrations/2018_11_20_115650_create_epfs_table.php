@@ -24,7 +24,10 @@ class CreateEpfsTable extends Migration
 
 			$table->decimal('salary', 10, 2)->nullable();
  
-           // $table->timestamps();
+            $table->timestamps();
+            $table->softDeletes();
+			$table->string('created_by', 100)->nullable();
+
         });
     }
 

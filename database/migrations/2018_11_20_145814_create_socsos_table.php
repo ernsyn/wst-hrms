@@ -19,7 +19,12 @@ class CreateSocsosTable extends Migration
             $table->string('first_category_employer', 100)->nullable();
             $table->string('first_category_employee', 100)->nullable();
 
-			$table->decimal('salary', 10, 2)->nullable();
+            $table->decimal('salary', 10, 2)->nullable();
+            
+             
+            $table->timestamps();
+            $table->softDeletes();
+			$table->string('created_by', 100)->nullable();
         });
     }
 
