@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEisTable extends Migration
+class CreateBankCodeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateEisTable extends Migration
      */
     public function up()
     {
-        Schema::create('eis', function (Blueprint $table) {
+        Schema::create('bank_code', function (Blueprint $table) {
             $table->increments('id');
-
-
-            $table->string('employer', 100)->nullable();
-            $table->string('employee', 100)->nullable();
-
-            $table->decimal('salary', 10, 2)->nullable();
-            
+            // $table->timestamps();
+            $table->string('name', 100)->nullable();
+            $table->string('status', 100)->nullable();            
              
             $table->timestamps();
             $table->softDeletes();
@@ -36,6 +32,6 @@ class CreateEisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('eis');
+        Schema::dropIfExists('bank_code');
     }
 }

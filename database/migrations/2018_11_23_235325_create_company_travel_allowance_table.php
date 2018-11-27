@@ -15,7 +15,7 @@ class CreateCompanyTravelAllowanceTable extends Migration
     {
         Schema::create('company_travel_allowance', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+
 
        
          
@@ -28,6 +28,8 @@ class CreateCompanyTravelAllowanceTable extends Migration
                 $table->unsignedInteger('countries_id', false)->nullable();
                 $table->foreign('countries_id')->references('id')->on('countries');
                 
+ 
+                $table->timestamps();
                 $table->softDeletes();
                 $table->string('created_by', 100)->nullable();
            
