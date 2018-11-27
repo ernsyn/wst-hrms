@@ -73,5 +73,25 @@ class LeaveTypesTableSeeder extends Seeder
                 ])
             ]),
         ]);
+
+        // Leave Type: Unpaid Leave
+
+        $leaveType = App\LeaveType::create([
+            'code' => 'UNPAID',
+            'name' => 'Unpaid Leave',
+            'description' => 'Leave taken by an employee where he will not be paid.',
+            'is_custom' => false,
+            'entitled_days' => 0,
+            'active' => true,
+        ]);
+
+        $leaveType->applied_rules()->saveMany([
+            new App\LTAppliedRule([
+                'rule' => 'leave_calculation',
+                'configuration' => json_encode([
+                    'unpaid' => true
+                ])
+            ])
+        ]);
     }
 }
