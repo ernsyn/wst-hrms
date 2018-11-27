@@ -27,35 +27,38 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @foreach($leaverequest as $row)
+                        @foreach($leaverequest as $leave_requests)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$row['leave_allocation_id']}}</td>
-                            <td>{{$row['leave_type_id']}}
+                            <td>{{$leave_requests['emp_id']}}</td>
+                            <td>{{$leave_requests['leave_type_id']}}
                             
-                                    @if ($row['leave_type_id'] == '1')
+                               </td>                                     
+                            <td>{{$leave_requests['applied_days']}}</td>
+                            <td>{{$leave_requests['applied_days']}}</td>
+                            <td>{{$leave_requests['name']}}</td>
+                            <td>             @if ($leave_requests['is_approved'] == '0')
                                 
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{$row['request_id']}}"
+                                    data-leaverequest-id="{{$leave_requests['request_id']}}"
                                     data-target="#approveLeaverequest"><span class="fas fa-check-circle"></span></button>
-                                        
+                                    <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
+                                    data-leaverequest-id="{{$leave_requests['request_id']}}"
+                                    data-target="#disapproveLeaverequest"><span class="fas fa-times-circle"></span></button>                                            
                                 @else
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     disabled><span class="fas fa-check-circle"></span></button>
-                                        
-                                @endif    </td>                                     
-                            <td>{{$row['applied_days']}}</td>
-                            <td>{{$row['applied_days']}}</td>
-                            <td>{{$row['total_days']}}</td>
-                            <td>{{$row['is_approved']}}</td>
+                                    <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
+                                    disabled><span class="fas fa-times-circle"></span></button>                                            
+                                @endif   </td>
                             <td>
-                                @if ($row['status'] == 'Pending')
+                                @if ($leave_requests['is_approved'] == '0')
                                 
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{$row['request_id']}}"
+                                    data-leaverequest-id="{{$leave_requests['request_id']}}"
                                     data-target="#approveLeaverequest"><span class="fas fa-check-circle"></span></button>
                                     <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{$row['request_id']}}"
+                                    data-leaverequest-id="{{$leave_requests['request_id']}}"
                                     data-target="#disapproveLeaverequest"><span class="fas fa-times-circle"></span></button>                                            
                                 @else
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"

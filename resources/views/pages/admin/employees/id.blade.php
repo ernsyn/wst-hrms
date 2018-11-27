@@ -36,7 +36,7 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            {{-- <span class="field-value">{{ App\Country::find($employee->nationality)->citizenship }}</span> --}}
+                            <span class="field-value">{{$employee->nationality}}</span>
                         </div>
                     </div>
                     {{-- <div class="form-group row">
@@ -289,8 +289,7 @@
                         {{-- History --}}
                         @include('pages.admin.employees.id.history', ['id' => $employee->id])
                         {{-- Security Group --}}
-                        <div class="tab-pane fade show p-3" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
-                        </div>
+                        @include('pages.admin.employees.id.security-group', ['id' => $employee->id])
                     </div>
                 </div>
                 {{-- </div> --}}

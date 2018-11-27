@@ -19,7 +19,12 @@ class CreatePcbsTable extends Migration
             $table->string('category', 100)->nullable();
             $table->string('amount', 100)->nullable();
 
-			$table->decimal('salary', 10, 2)->nullable();
+            $table->decimal('salary', 10, 2)->nullable();
+            
+             
+            $table->timestamps();
+            $table->softDeletes();
+			$table->string('created_by', 100)->nullable();
         });
     }
 

@@ -44,6 +44,7 @@ class CreateAdditionsTable extends Migration {
 			$table->integer('cost_centre_id')->unsigned()->nullable();
 			$table->foreign('cost_centre_id')->references('id')
 				  ->on('cost_centres');
+				  
 		});
 
 		Schema::create('addition_employee_grade', function (Blueprint $table) {

@@ -29,6 +29,10 @@ class LeaveType extends Model
         return $this->hasMany('App\LTConditionalEntitlement'); 
     }
 
+    public function lt_entitlements_grade_groups() {
+        return $this->hasMany('App\LTEntitlementGradeGroup'); 
+    }
+
     public function scopeCustom($query)
     {
         return $query->where('is_custom', true);
