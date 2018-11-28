@@ -83,89 +83,89 @@
                     <div class="tab-pane fade show active p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row" id="reload-profile2">
                                 <div class="col-md-11 text-capitalize">
-                                    <div class="col-md-12 font-weight-bold">PERSONAL</div>
+                                    {{-- <div class="col-md-12 font-weight-bold">PERSONAL</div> --}}
                                     <div class="row p-3">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <span class="col-lg-5 text-right p-2">Contact No</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Contact No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->contact_no}}</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Marital Status</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Marital Status</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Race</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Race</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->race}}</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Number of Child</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Number of Child</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->total_children}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <span class="col-lg-5 text-right p-2">Driver License No</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Driver License No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->driver_license_no}}</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">License Expiry Date</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">License Expiry Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->driver_license_expiry_date}}</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">EPF No</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">EPF No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->epf_no}}</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Tax No</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Tax No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->tax_no}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="dropdown-divider pb-3"></div>
+                                    {{-- <div class="dropdown-divider pb-3"></div>
                                     <div class="col-md-12 font-weight-bold">COMPANY</div>
                                     <div class="row p-3">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <span class="col-lg-5 text-right p-2">Employee ID</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Employee ID</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->id}}</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Department</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Department</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">IT Department</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Confirmation Date</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Confirmation Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">10-1-2019</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Basic Salary</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Basic Salary</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->basic_salary}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <span class="col-lg-5 text-right p-2">Position</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Position</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">Executive</span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Joined Date</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Joined Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value"></span>
                                                 </div>
-                                                <span class="col-lg-5 text-right p-2">Resignation Date</span>
-                                                <div class="col-lg-7 p-2">
+                                                <span class="col-lg-5 p-3">Resignation Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value"></span>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="col-md-1">
                                     {{-- <button type="button" class="btn btn-primary rounded-circle">
