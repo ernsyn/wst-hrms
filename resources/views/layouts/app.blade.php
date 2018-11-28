@@ -14,6 +14,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.css') }}" type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -23,6 +24,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.min.js"></script>
     @yield('scripts')
 </body>
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSoftDeletesToEpfs extends Migration
+class AddSoftDeletesCompanyBanksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddSoftDeletesToEpfs extends Migration
      */
     public function up()
     {
-        Schema::table('Epfs', function($table) {
-   
-            $table->softDeletes();
+        Schema::table('company_bank', function($table) {
+
+                  $table->softDeletes();
         });
     }
 
@@ -26,8 +26,7 @@ class AddSoftDeletesToEpfs extends Migration
      */
     public function down()
     {
-        Schema::table('Epfs', function($table) {
-            $table->dropColumn('softDeletes');
-        });
+
+
     }
 }

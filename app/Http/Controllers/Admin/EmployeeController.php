@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Hash;
-use DB;
 
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Yajra\DataTables\Facades\DataTables;
@@ -38,6 +39,8 @@ use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
 
+use App\Http\Services\LeaveService;
+
 use App\Http\Requests\Admin\AddEmployee;
 
 class EmployeeController extends Controller
@@ -62,7 +65,7 @@ class EmployeeController extends Controller
 
     public function dsplaySecurityGroup($id)
     {
-        
+
         $employees = Employee::all();
 
         return view('pages.admin.employees.id.security-group', ['employees'=> $employees]);
@@ -284,13 +287,10 @@ class EmployeeController extends Controller
     public function postSecurityGroup(Request $request, $id)
     {
         $securityGroupData = $request->validate([
-            'security_group_id' => 'required',
-    
-
+            'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
 
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
-
 
         $employee = Employee::find($id);
         $employee->employee_security_groups()->save($securityGroup);
@@ -306,13 +306,12 @@ class EmployeeController extends Controller
 
         ]);
 
-
         Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
 
         return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
-    
+
 
 
     public function postReportTo(Request $request, $id)
@@ -343,6 +342,8 @@ class EmployeeController extends Controller
             'friday' => 'required',
             'saturday' => 'required',
             'sunday' => 'required',
+            'start_work_time' => 'required',
+            'end_work_time' => 'required',
         ]);
 
         $workingDaysData['is_template'] = false;
@@ -357,6 +358,27 @@ class EmployeeController extends Controller
 
     }
 
+    public function postEditWorkingDay(Request $request, $id)
+    {
+        $workingDayUpdateData = $request->validate([
+            'monday' => 'required',
+            'tuesday' => 'required',
+            'wednesday' => 'required',
+            'thursday' => 'required',
+            'friday' => 'required',
+            'saturday' => 'required',
+            'sunday' => 'required',
+            'start_work_time' => 'required',
+            'end_work_time' => 'required',
+        ]);
+
+        $workingDayUpdateData['is_template'] = false;
+
+        EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
+
+        return response()->json(['success'=>'Working Day was successfully updated.']);
+    }
+
     public function getWorkingDay($id)
     {       
         $working_day = EmployeeWorkingDay::templates()->where('id', $id)->get();
@@ -365,14 +387,15 @@ class EmployeeController extends Controller
     }
 
     public function getEmployeeWorkingDay($emp_id)
-    {       
-        $working_day = EmployeeWorkingDay::templates()->where('emp_id', $emp_id)->get();
-    
+    {
+        $working_day = EmployeeWorkingDay::where('emp_id', $emp_id)->get();
+
         return response()->json($working_day);
     }
 
     public function postJob(Request $request, $id)
     {
+        // Add a new job
 
         $jobData = $request->validate([
             'branch_id' => 'required',
@@ -384,24 +407,25 @@ class EmployeeController extends Controller
             'start_date' => 'required',
             'basic_salary' => 'required',
             'specification' => 'required',
-     
+
         ]);
 
         $jobData['status'] = 'active';
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-   //     $jobData['end_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
-        $job = new EmployeeJob($jobData);
-
-         $end_date=   EmployeeJob::where('id', $id)
-        ->whereNull('end_date');
-
-        EmployeeJob::where('emp_id', $id)
-        ->whereNull('end_date')
-        ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
-
-        $employee = Employee::find($id);
-        $employee->employee_jobs()->save($job);
+        DB::transaction(function() use ($jobData, $id) {
+            $currentJob = EmployeeJob::where('emp_id', $id)
+            ->whereNull('end_date')->first();
+            
+            if(!empty($currentJob)) {
+                $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                LeaveService::onJobEnd($id, $jobData['start_date'], $jobData['emp_grade_id']);
+            }
+    
+            $employee = Employee::find($id);
+            $employee->employee_jobs()->save(new EmployeeJob($jobData));
+            LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
+        });
 
         return response()->json(['success'=>'Job is successfully added']);
     }
@@ -715,6 +739,12 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
 
+    public function deleteDependent(Request $request, $emp_id, $id)
+    {
+        EmployeeDependent::find($id)->delete();
+        return response()->json(['success'=>'Dependent was successfully deleted.']);
+    }
+
     public function deleteBankAccount(Request $request, $emp_id, $id)
     {
         EmployeeBankAccount::find($id)->delete();
@@ -761,5 +791,11 @@ class EmployeeController extends Controller
     {
         EmployeeAttachment::find($id)->delete();
         return response()->json(['success'=>'Attachment was successfully deleted.']);
+    }
+
+    public function deleteSecurityGroup(Request $request, $emp_id, $id)
+    {
+        EmployeeSecurityGroup::find($id)->delete();
+        return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 }
