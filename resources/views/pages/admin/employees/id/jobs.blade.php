@@ -6,9 +6,13 @@
             <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
                         Add Job
                     </button>
-            <button type="button" class="btn btn-outline-danger waves-effect" onclick="window.location='{{ url('admin/resign') }}';">
-                        Resign
-                    </button>
+                    @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
+                        <button type="button" class="btn btn-outline-danger waves-effect" onclick="window.location='{{ route('admin.employees.id.action.resign', ['id' => $id ]) }}';" >
+                            Resign
+                        </button>
+                    @else
+                        <h5><span class="badge badge-danger">Resigned / Job Not Assigned</span></h5>
+                    @endif
         </div>
     </div>
     <table class="hrms-primary-data-table table table-bordered table-hover w-100" id="employee-jobs-table">

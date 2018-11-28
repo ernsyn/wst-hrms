@@ -216,8 +216,8 @@ class ELeaveController extends Controller
             // $leaveRequest = LeaveRequest::
             // ->get();
 
-            $spentDay
-            LeaveAllocation::where('em_id',$id)->update(array('spent_days'));
+            // $spentDay
+            // LeaveAllocation::where('em_id',$id)->update(array('spent_days'));
     
             return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
         }

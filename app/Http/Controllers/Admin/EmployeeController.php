@@ -419,7 +419,7 @@ class EmployeeController extends Controller
             
             if(!empty($currentJob)) {
                 $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
-                LeaveService::onJobEnd($id, $jobData['start_date'], $jobData['emp_grade_id']);
+                LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
             }
     
             $employee = Employee::find($id);
@@ -428,6 +428,19 @@ class EmployeeController extends Controller
         });
 
         return response()->json(['success'=>'Job is successfully added']);
+    }
+
+    public function actionResign(Request $request, $id) {
+
+
+        $currentJob = EmployeeJob::where('emp_id', $id)
+            ->whereNull('end_date')->first();
+            
+        $currentDate = date("Y-m-d");
+        if(!empty($currentJob)) {
+            $currentJob->update(['end_date'=> $currentDate ]);
+            LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
+        }
     }
 
     public function postDependent(Request $request, $id)
