@@ -302,41 +302,41 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
         });
 
         // DELETE
-        // var deleteId = null;
-        // // Function: On Modal Clicked Handler
-        // $('#confirm-delete-modal').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget) // Button that triggered the modal
-        //     var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
-        //     console.log('Data: ', currentData)
+        var deleteId = null;
+        // Function: On Modal Clicked Handler
+        $('#confirm-delete-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+            console.log('Data: ', currentData)
 
-        //     deleteId = currentData.id;
-        // });
+            deleteId = currentData.id;
+        });
 
-        // var deleteRouteTemplate = "{{ route('admin.settings.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        // $('#delete-emergency-contacts-submit').click(function(e){
-        //     var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
-        //     e.preventDefault();
-        //     $.ajax({
-        //         url: deleteRoute,
-        //         type: 'GET',
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             id: deleteId
-        //         },
-        //         success: function(data) {
-        //             showAlert(data.success);
-        //             emergencyContactsTable.ajax.reload();
-        //             $('#confirm-delete-modal').modal('toggle');
-        //         },
-        //         error: function(xhr) {
-        //             if(xhr.status == 422) {
-        //                 var errors = xhr.responseJSON.errors;
-        //                 console.log("Error 422: ", xhr);
-        //             }
-        //             console.log("Error: ", xhr);
-        //         }
-        //     });
-        // });
+        var deleteRouteTemplate = "{{ route('employee.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        $('#delete-emergency-contacts-submit').click(function(e){
+            var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
+            e.preventDefault();
+            $.ajax({
+                url: deleteRoute,
+                type: 'GET',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: deleteId
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    emergencyContactsTable.ajax.reload();
+                    $('#confirm-delete-modal').modal('toggle');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error 422: ", xhr);
+                    }
+                    console.log("Error: ", xhr);
+                }
+            });
+        });
 
     });
 

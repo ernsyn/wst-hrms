@@ -72,13 +72,13 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/{id}/edit','Employee\EmployeeController@postEditProfile')->name('employee.profile.edit.post');
 
     Route::post('employee/{emp_id}/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
-    Route::post('employee/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
-    Route::post('employee/immigrations/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.immigrations.edit');
-    Route::post('employee/visas/{id}/edit','Employee\EmployeeController@postEditVisa')->name('employee.visas.edit');
-    Route::post('employee/bank-accounts/{id}/edit','Employee\EmployeeController@postEditBankAccount')->name('employee.bank-accounts.edit');
-    Route::post('employee/companies/{id}/edit','Employee\EmployeeController@postEditCompany')->name('employee.companies.edit');
-    Route::post('employee/education/{id}/edit','Employee\EmployeeController@postEditEducation')->name('employee.education.edit');
-    Route::post('employee/skills/{id}/edit','Employee\EmployeeController@postEditSkill')->name('employee.skills.edit');
+    Route::post('employee/{emp_id}/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
+    Route::post('employee/{emp_id}/immigrations/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.immigrations.edit');
+    Route::post('employee/{emp_id}/visas/{id}/edit','Employee\EmployeeController@postEditVisa')->name('employee.visas.edit');
+    Route::post('employee/{emp_id}/bank-accounts/{id}/edit','Employee\EmployeeController@postEditBankAccount')->name('employee.bank-accounts.edit');
+    Route::post('employee/{emp_id}/companies/{id}/edit','Employee\EmployeeController@postEditCompany')->name('employee.companies.edit');
+    Route::post('employee/{emp_id}/education/{id}/edit','Employee\EmployeeController@postEditEducation')->name('employee.education.edit');
+    Route::post('employee/{emp_id}/skills/{id}/edit','Employee\EmployeeController@postEditSkill')->name('employee.skills.edit');
 
     //to be edit
     Route::post('add_leave_application','Employee\EleaveController@addLeaveApplication')->name('add_leave_application');
@@ -87,17 +87,17 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('leaverequest','Employee\EleaveController@displayLeaveRequestReportTo')->name('leaverequest');
 
     //admin/employee/delete
-    // Route::get('employees/{emp_id}/emergency-contacts/{id}/delete','Admin\EmployeeController@deleteEmergencyContact')->name('admin.settings.emergency-contacts.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/dependents/{id}/delete','Admin\EmployeeController@deleteDependent')->name('admin.settings.dependents.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/bank-accounts/{id}/delete','Admin\EmployeeController@deleteBankAccount')->name('admin.settings.bank-accounts.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/experiences/{id}/delete','Admin\EmployeeController@deleteExperience')->name('admin.settings.experiences.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/educations/{id}/delete','Admin\EmployeeController@deleteEducation')->name('admin.settings.educations.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/skills/{id}/delete','Admin\EmployeeController@deleteSkill')->name('admin.settings.skills.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/visas/{id}/delete','Admin\EmployeeController@deleteVisa')->name('admin.settings.visas.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/immigrations/{id}/delete','Admin\EmployeeController@deleteImmigration')->name('admin.settings.immigrations.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/attachments/{id}/delete','Admin\EmployeeController@deleteAttachment')->name('admin.settings.attachments.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/report-tos/{id}/delete','Admin\EmployeeController@deleteReportTo')->name('admin.settings.report-tos.delete')->where('id', '[0-9]+');
-    // Route::get('employees/{emp_id}/security-groups/{id}/delete','Admin\EmployeeController@deleteSecurityGroup')->name('admin.settings.security-groups.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/emergency-contacts/{id}/delete','Employee\EmployeeController@deleteEmergencyContact')->name('employee.emergency-contacts.delete');
+    Route::get('employees/{emp_id}/dependents/{id}/delete','Employee\EmployeeController@deleteDependent')->name('employee.dependents.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/bank-accounts/{id}/delete','Employee\EmployeeController@deleteBankAccount')->name('employee.bank-accounts.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/experiences/{id}/delete','Employee\EmployeeController@deleteExperience')->name('employee.experiences.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/educations/{id}/delete','Employee\EmployeeController@deleteEducation')->name('employee.educations.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/skills/{id}/delete','Employee\EmployeeController@deleteSkill')->name('employee.skills.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/visas/{id}/delete','Employee\EmployeeController@deleteVisa')->name('employee.visas.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/immigrations/{id}/delete','Employee\EmployeeController@deleteImmigration')->name('employee.immigrations.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/attachments/{id}/delete','Employee\EmployeeController@deleteAttachment')->name('employee.attachments.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/report-tos/{id}/delete','Employee\EmployeeController@deleteReportTo')->name('employee.report-tos.delete')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/security-groups/{id}/delete','Employee\EmployeeController@deleteSecurityGroup')->name('employee.security-groups.delete')->where('id', '[0-9]+');
 });
 
 // MODE: Admin
