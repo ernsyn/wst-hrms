@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Pcb;
 
 class PcbTableSeeder extends Seeder
 {
@@ -11,27 +12,25 @@ class PcbTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pcbs')->insert([
-            [
-                'salary' => 3145.00,
-                'category' => '1',
-                'total_children' => 0,
-                'amount' => 1.00
-            ],
-            [
-                'salary' => 3145.00,
-                'category' => '2',
-                'total_children' => 0,
-                'amount' => 0
-            ],
-            [
-                'salary' => 3145.00,
-                'category' => '3',
-                'total_children' => 0,
-                'amount' => 2
-            ],
-            
+        Pcb::create([
+            'salary' => 3145.00,
+            'category' => '1',
+            'total_children' => 0,
+            'amount' => 1.00
         ]);
         
+        Pcb::create([
+            'salary' => 3145.00,
+            'category' => '2',
+            'total_children' => 0,
+            'amount' => 0
+        ]);
+        
+        Pcb::create([
+            'salary' => 3145.00,
+            'category' => '3',
+            'total_children' => 0,
+            'amount' => 2
+        ]);
     }
 }

@@ -14,5 +14,4 @@ yarn-error.log
 .phpunit.result.cache
 /.buildpath
 /.project
-/.settingsdatabase/migrations/2018_11_24_201423_added_column_main_security_group_id_to_employees.php
-database/migrations/2018_11_20_011938_update_companies_gstno.php
+/.settings
