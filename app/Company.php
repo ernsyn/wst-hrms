@@ -24,11 +24,21 @@ class Company extends Model
         'code',
         'status',
     ];
-    
-    protected $dates = ['deleted_at'];
+
+	protected $dates = ['deleted_at'];    
     
     public function payrollMaster()
     {
         return $this->hasMany('App\PayrollMaster');
+    }
+
+	public function companybank()
+    {
+        return $this->hasOne('App\CompanyBank');
+    }
+
+    public function securityGroup()
+    {
+        return $this->hasOne('App\SecurityGroup');
     }
 }

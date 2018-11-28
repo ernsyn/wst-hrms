@@ -2,12 +2,12 @@
 @section('content')
 <div class="container">
     @if (session('status'))
-        <div class="alert alert-primary fade show" role="alert">
-            {{ session('status') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-        </div>
+    </div>
     @endif
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
@@ -44,9 +44,9 @@
                         <td>{{$company['eis_no']}}</td>
                         <td>{{$company['updated_at']}}</td>
                         <td>
+                            <button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
                             <button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment"></button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $company->name }}' data-link='{{ route('admin.settings.companies.delete', ['id ' => $company->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
-                                </button>
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $company->name }}' data-link='{{ route('admin.settings.companies.delete', ['id ' => $company->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button>
                         </td>
                     </tr>
                     @endforeach
@@ -78,7 +78,7 @@
 
 @section('scripts')
 <script>
-$(function(){
+    $(function(){
     $('#setupCompanyTable').DataTable({
         responsive: true,
         stateSave: true,
@@ -148,5 +148,6 @@ $(function(){
     });
 
 })
+
 </script>
 @append

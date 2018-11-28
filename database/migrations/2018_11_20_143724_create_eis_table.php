@@ -20,7 +20,12 @@ class CreateEisTable extends Migration
             $table->string('employer', 100)->nullable();
             $table->string('employee', 100)->nullable();
 
-			$table->decimal('salary', 10, 2)->nullable();
+            $table->decimal('salary', 10, 2)->nullable();
+            
+             
+            $table->timestamps();
+            $table->softDeletes();
+			$table->string('created_by', 100)->nullable();
         });
     }
 
