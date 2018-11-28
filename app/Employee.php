@@ -63,7 +63,7 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeBankAccount', 'emp_id');
     }
 
-    public function dependents()
+    public function employee_dependents()
     {
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
     }
