@@ -26,6 +26,10 @@ use App\Repositories\Employee\EmployeeReportToRepository;
 use App\Repositories\Employee\EloquentEmployeeReportTo;
 use App\Repositories\Employee\EmployeeRepository;
 use App\Repositories\Employee\EloquentEmployee;
+use App\Repositories\Payroll\ReportRepository;
+use App\Repositories\Payroll\EloquentReport;
+use App\Repositories\Company\CompanyRepository;
+use App\Repositories\Company\EloquentCompany;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -45,6 +49,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(EmployeeRepository::class, EloquentEmployee::class);
         $this->app->singleton(PayrollTrxAdditionRepository::class, EloquentPayrollTrxAddition::class);
         $this->app->singleton(PayrollTrxDeductionRepository::class, EloquentPayrollTrxDeduction::class);
+        $this->app->singleton(ReportRepository::class, EloquentReport::class);
+        $this->app->singleton(CompanyRepository::class, EloquentCompany::class);
     }
 }
 

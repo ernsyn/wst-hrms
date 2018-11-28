@@ -11,14 +11,16 @@ class PayrollReportEnum extends Enum
     const DOC_4 = 4;
     const DOC_5 = 5;
     const DOC_6 = 6;
+    const DOC_7 = 7;
     
     protected static $labels = [
-        self::DOC_1 => 'Payroll Report',
-        self::DOC_2 => 'Supplier Payment Form',
-        self::DOC_3 => 'Department Salary',
-        self::DOC_4 => 'Payroll Detail',
-        self::DOC_5 => 'Bank Credit Detail',
-        self::DOC_6 => 'Payroll Summary'
+        self::DOC_1 => 'Payroll Summary - By Department',
+        self::DOC_2 => 'Payroll Summary - By Department, Cost Centre',
+        self::DOC_3 => 'Supplier Payment Form',
+        self::DOC_4 => 'Department Salary',
+        self::DOC_5 => 'Payroll Detail',
+        self::DOC_6 => 'Bank Credit Detail',
+        self::DOC_7 => 'Payroll Summary'
     ];
 }
 

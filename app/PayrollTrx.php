@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PayrollTrx extends Model
 {
     protected $table = 'payroll_trx';
+    
     protected $fillable = [
         'employee_id', 
         'payroll_master_id', 

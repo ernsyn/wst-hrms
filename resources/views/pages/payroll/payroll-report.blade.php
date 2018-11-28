@@ -23,8 +23,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="m-portlet__body engraved-text" style="text-align: center;height: 70pt;font-size: 15pt; word-wrap: break-word;">
-                            {{$slider->getReportName()}}
+                        <div class="m-portlet__body engraved-text" style="text-align: center;height: 70pt;">
+                        	@php
+                        		echo wordwrap($slider->getReportName(),30,"<br>");
+                        	@endphp
                         </div>
                     </div>
                 </div>
@@ -48,7 +50,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                    <form method="post" action="{{action('Payroll\PayrollReportController@export_report')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -104,7 +106,7 @@
                                 <div class="col-md-6 mx-auto">
                                     <label for="exampleFormDate">Date</label>
                                     <div class="input-group date">
-                                        <input type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                        <input type="text" class="form-control" name="year_month" id="payroll_month_{{$form->getReportTarget()}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mx-auto">
@@ -159,8 +161,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="m-portlet__body engraved-text" style="text-align: center;height: 70pt;font-size: 15pt;word-wrap: break-word;">
-                            {{$slider->getReportName()}}
+                        <div class="m-portlet__body engraved-text" style="text-align: center;height: 70pt;">
+                            @php
+                        		echo wordwrap($slider->getReportName(),30,"<br>");
+                        	@endphp
                         </div>
                     </div>
                 </div>
@@ -184,7 +188,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                    <form method="post" action="{{action('Payroll\PayrollController@generateReport')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -235,13 +239,23 @@
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
                                 @if ($form->getShowPeriod() == 'true')
-                                <label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                    <option value="0">--Select--</option>
-                                    @foreach($period['period'] as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
-                                    @endforeach
-                                </select>
+                                <div class="row">
+                                <div class="col-md-6 mx-auto">
+                                    <label for="exampleFormDate">Date</label>
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control" name="year_month" id="payroll_month_{{$form->getReportTarget()}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mx-auto">
+                                    <label for="exampleFormPeriod">Periods</label>
+                                    <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                        <option value="0">--Select--</option>
+                                        @foreach($period['period'] as $key => $value)
+                                        <option value="{{$key}}">{{$value}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                </div>
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
@@ -266,4 +280,27 @@
         @endforeach
     </div>
 </div>
+
 @endsection 
+@section('scripts')
+<script>
+$("[id^=payroll_month_report]").datepicker({
+    	changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: 'yy-mm',
+
+	    onClose: function(dateText, inst) {  
+            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val(); 
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val(); 
+            $(this).datepicker('setDate', new Date(year, month, 1)); 
+        }
+    });
+
+</script>
+<style>
+.ui-datepicker-calendar {
+    display: none;
+}
+</style>
+@append
