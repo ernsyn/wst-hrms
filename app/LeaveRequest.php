@@ -34,7 +34,7 @@ class LeaveRequest extends Model
         return $this->hasMany('App\EmployeeReportTo');
     }
 
-    public function leave_types() {
+    public function leave_type() {
         return $this->belongsTo('App\LeaveType','leave_type_id'); 
     }
 }

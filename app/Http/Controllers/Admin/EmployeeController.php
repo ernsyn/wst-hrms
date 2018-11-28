@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Hash;
-use DB;
 
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Yajra\DataTables\Facades\DataTables;
@@ -37,6 +38,8 @@ use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+
+use App\Http\Services\LeaveService;
 
 use App\Http\Requests\Admin\AddEmployee;
 
@@ -394,6 +397,7 @@ class EmployeeController extends Controller
 
     public function postJob(Request $request, $id)
     {
+        // Add a new job
 
         $jobData = $request->validate([
             'branch_id' => 'required',
@@ -410,18 +414,20 @@ class EmployeeController extends Controller
 
         $jobData['status'] = 'active';
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-   //     $jobData['end_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
-
-         $end_date=   EmployeeJob::where('id', $id)
-        ->whereNull('end_date');
-
-        EmployeeJob::where('emp_id', $id)
-        ->whereNull('end_date')
-        ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
-
-        $employee = Employee::find($id);
-        $employee->employee_jobs()->save($job);
+        DB::transaction(function() use ($jobData, $id) {
+            $currentJob = EmployeeJob::where('emp_id', $id)
+            ->whereNull('end_date')->first();
+            
+            if(!empty($currentJob)) {
+                $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                LeaveService::onJobEnd($id, $jobData['start_date'], $jobData['emp_grade_id']);
+            }
+    
+            $employee = Employee::find($id);
+            $employee->employee_jobs()->save(new EmployeeJob($jobData));
+            LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
+        });
 
         return response()->json(['success'=>'Job is successfully added']);
     }
