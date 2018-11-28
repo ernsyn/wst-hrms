@@ -15,8 +15,8 @@ class AddStartWorkTimeAndEndWorkTimeColumnsToEmployeeWorkingDaysTable extends Mi
     {
         Schema::table('employee_working_days', function (Blueprint $table) {
             //Add two new column
-            $table->time('start_work_time');
-            $table->time('end_work_time');
+            $table->time('start_work_time')->nullable();
+            $table->time('end_work_time')->nullable();
         });
     }
 
