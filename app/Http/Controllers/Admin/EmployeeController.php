@@ -88,7 +88,16 @@ class EmployeeController extends Controller
     {
         $profileUpdatedData = $request->validate([
             'ic_no' => 'required|numeric',
+            'dob' => 'required|date',
+            'gender' => 'required',
             'contact_no' => 'required|numeric',
+            'marital_status' => 'required',
+            'race' => 'required|alpha',
+            'total_children' => 'required|numeric',
+            'driver_license_no' => 'required',
+            'driver_license_expiry_date' => 'required|date',
+            'epf_no' => 'required',
+            'tax_no' => 'required'
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
