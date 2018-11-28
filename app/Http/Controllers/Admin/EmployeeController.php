@@ -62,7 +62,7 @@ class EmployeeController extends Controller
 
     public function dsplaySecurityGroup($id)
     {
-        
+
         $employees = Employee::all();
 
         return view('pages.admin.employees.id.security-group', ['employees'=> $employees]);
@@ -284,13 +284,10 @@ class EmployeeController extends Controller
     public function postSecurityGroup(Request $request, $id)
     {
         $securityGroupData = $request->validate([
-            'security_group_id' => 'required',
-    
-
+            'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
 
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
-
 
         $employee = Employee::find($id);
         $employee->employee_security_groups()->save($securityGroup);
@@ -306,13 +303,12 @@ class EmployeeController extends Controller
 
         ]);
 
-
         Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
 
         return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
-    
+
 
 
     public function postReportTo(Request $request, $id)
@@ -405,7 +401,7 @@ class EmployeeController extends Controller
             'start_date' => 'required',
             'basic_salary' => 'required',
             'specification' => 'required',
-     
+
         ]);
 
         $jobData['status'] = 'active';
@@ -730,7 +726,7 @@ class EmployeeController extends Controller
         EmployeeDependent::find($id)->delete();
         return response()->json(['success'=>'Dependent was successfully deleted.']);
     }
-    
+
     public function deleteBankAccount(Request $request, $emp_id, $id)
     {
         EmployeeBankAccount::find($id)->delete();
@@ -777,5 +773,11 @@ class EmployeeController extends Controller
     {
         EmployeeAttachment::find($id)->delete();
         return response()->json(['success'=>'Attachment was successfully deleted.']);
+    }
+
+    public function deleteSecurityGroup(Request $request, $emp_id, $id)
+    {
+        EmployeeSecurityGroup::find($id)->delete();
+        return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 }
