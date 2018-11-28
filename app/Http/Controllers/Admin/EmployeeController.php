@@ -305,13 +305,10 @@ class EmployeeController extends Controller
     public function postSecurityGroup(Request $request, $id)
     {
         $securityGroupData = $request->validate([
-            'security_group_id' => 'required',
-
-
+            'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
 
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
-
 
         $employee = Employee::find($id);
         $employee->employee_security_groups()->save($securityGroup);
@@ -326,7 +323,6 @@ class EmployeeController extends Controller
             'main_security_group_id' => 'required',
 
         ]);
-
 
         Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
 
@@ -366,6 +362,8 @@ class EmployeeController extends Controller
             'friday' => 'required',
             'saturday' => 'required',
             'sunday' => 'required',
+            'start_work_time' => 'required',
+            'end_work_time' => 'required',
         ]);
 
         $workingDaysData['is_template'] = false;
@@ -390,6 +388,8 @@ class EmployeeController extends Controller
             'friday' => 'required',
             'saturday' => 'required',
             'sunday' => 'required',
+            'start_work_time' => 'required',
+            'end_work_time' => 'required',
         ]);
 
         $workingDayUpdateData['is_template'] = false;
@@ -408,7 +408,7 @@ class EmployeeController extends Controller
 
     public function getEmployeeWorkingDay($emp_id)
     {
-        $working_day = EmployeeWorkingDay::templates()->where('emp_id', $emp_id)->get();
+        $working_day = EmployeeWorkingDay::where('emp_id', $emp_id)->get();
 
         return response()->json($working_day);
     }
@@ -798,5 +798,11 @@ class EmployeeController extends Controller
     {
         EmployeeAttachment::find($id)->delete();
         return response()->json(['success'=>'Attachment was successfully deleted.']);
+    }
+
+    public function deleteSecurityGroup(Request $request, $emp_id, $id)
+    {
+        EmployeeSecurityGroup::find($id)->delete();
+        return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTimestampsToEpfs extends Migration
+class CreateEaFormsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class AddTimestampsToEpfs extends Migration
      */
     public function up()
     {
-        
-        Schema::table('Epfs', function($table) {
+        Schema::create('ea_forms', function (Blueprint $table) {
+            $table->increments('id');
             $table->timestamps();
-                  $table->softDeletes();
+            $table->string('code', 200)->nullable();
+            $table->string('name', 200)->nullable();
         });
     }
 
@@ -27,8 +28,6 @@ class AddTimestampsToEpfs extends Migration
      */
     public function down()
     {
-        Schema::table('Epfs', function($table) {
-            $table->dropColumn('timestamps');
-        });
+        Schema::dropIfExists('ea_forms');
     }
 }

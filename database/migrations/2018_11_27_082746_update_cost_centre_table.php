@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateReportTosAddSoftDelete extends Migration
+class UpdateCostCentreTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class UpdateReportTosAddSoftDelete extends Migration
      */
     public function up()
     {
-        Schema::table('employee_report_to', function($table) {
-   
-            $table->softDeletes();
+        Schema::table('cost_centres', function (Blueprint $table) {
+            $table->dropColumn('payroll_type');
         });
     }
 
@@ -26,9 +25,6 @@ class UpdateReportTosAddSoftDelete extends Migration
      */
     public function down()
     {
-        Schema::table('employee_report_to', function($table) {
-            $table->dropColumn('softDeletes');
-        });
+        //
     }
-
 }
