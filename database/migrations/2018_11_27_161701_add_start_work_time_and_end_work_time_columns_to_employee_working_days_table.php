@@ -28,7 +28,9 @@ class AddStartWorkTimeAndEndWorkTimeColumnsToEmployeeWorkingDaysTable extends Mi
     public function down()
     {
         Schema::table('employee_working_days', function (Blueprint $table) {
-            //
+            //Remove Columns
+            $table->dropColumn('start_work_time');
+            $table->dropColumn('end_work_time');
         });
     }
 }
