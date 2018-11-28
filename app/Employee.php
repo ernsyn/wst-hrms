@@ -15,8 +15,6 @@ class Employee extends Model
     ];
 
 
-
-
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -105,5 +103,10 @@ class Employee extends Model
     public function working_day()
     {
         return $this->hasOne('App\EmployeeWorkingDay', 'emp_id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany('App\EmployeeAttendance', 'emp_id');
     }
 }

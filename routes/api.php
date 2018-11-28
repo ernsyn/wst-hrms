@@ -13,12 +13,18 @@
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-Route::post('login', 'API\UserController@login');
-Route::post('register', 'API\UserController@register');
-Route::group(['middleware' => 'auth:api'], function() {
-    Route::post('details', 'API\UserController@details');
-    // Route::post('leavedetails', 'API\UserController@leavedetails');
+Route::post('login', 'Api\UserController@login');
+
+Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function() {
+    Route::get('info', 'Api\UserController@info');
+});
+
+Route::group(['prefix' => 'employee', 'middleware' => 'auth:api'], function() {
+    Route::get('working-days', 'Api\EmployeeController@getWorkingDays');
+});
+
+Route::group(['prefix' => 'attendance', 'middleware' => 'auth:api'], function() {
+    Route::get('list', 'Api\AttendanceController@getAttendanceList');
+    Route::post('clock-in', 'Api\AttendanceController@postClockIn');
+    Route::post('clock-out', 'Api\AttendanceController@postClockOut');
 });
