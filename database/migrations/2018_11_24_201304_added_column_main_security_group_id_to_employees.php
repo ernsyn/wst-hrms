@@ -16,7 +16,7 @@ class AddedColumnMainSecurityGroupIdToEmployees extends Migration
         Schema::table('employees', function($table) {
   
 
-            $table->unsignedInteger('main_security_group_id', false);
+            $table->unsignedInteger('main_security_group_id', false)->nullable();
             $table->foreign('main_security_group_id')->references('id')->on('security_groups');
         });//
     }
@@ -27,8 +27,9 @@ class AddedColumnMainSecurityGroupIdToEmployees extends Migration
      * @return void
      */
     public function down()
-    { Schema::table('employees', function($table) {
-        $table->dropColumn('main_security_group_id');
-    });
+    { 
+        Schema::table('employees', function($table) {
+            $table->dropColumn('main_security_group_id');
+        });
     }
 }

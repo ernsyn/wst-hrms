@@ -27,7 +27,7 @@ class UpdateReportTosAddSoftDelete extends Migration
     public function down()
     {
         Schema::table('employee_report_to', function($table) {
-            $table->dropColumn('softDeletes');
+            $table->dropColumn('deleted_at');
         });
     }
 
