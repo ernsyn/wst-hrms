@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddedColumnMainSecurityGroupIdToEmployees extends Migration
+class UpdateMainSecurityGroupIdToEmployees extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,7 @@ class AddedColumnMainSecurityGroupIdToEmployees extends Migration
     {
         Schema::table('employees', function($table) {
   
-
-            $table->unsignedInteger('main_security_group_id', false)->nullable();
-            $table->foreign('main_security_group_id')->references('id')->on('security_groups');
+            $table->integer('main_security_group_id')->nullable();
         });//
     }
 
@@ -27,9 +25,9 @@ class AddedColumnMainSecurityGroupIdToEmployees extends Migration
      * @return void
      */
     public function down()
-    { 
-        Schema::table('employees', function($table) {
-            $table->dropColumn('main_security_group_id');
-        });
+    { Schema::table('employees', function($table) {
+
+        $table->dropColumn('main_security_group_id');
+    });
     }
 }

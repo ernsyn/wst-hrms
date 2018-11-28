@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateCompaniesGstno extends Migration
+class UpdateCostCentreTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateCompaniesGstno extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('gst_no', 50)->nullable()->change();
+        Schema::table('cost_centres', function (Blueprint $table) {
+            $table->dropColumn('payroll_type');
         });
     }
 
