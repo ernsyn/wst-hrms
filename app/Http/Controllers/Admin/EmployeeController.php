@@ -407,10 +407,10 @@ class EmployeeController extends Controller
             'start_date' => 'required',
             'basic_salary' => 'required',
             'specification' => 'required',
-
+            'status' => 'required'
         ]);
 
-        $jobData['status'] = 'active';
+        // $jobData['status'] = 'active';
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
         DB::transaction(function() use ($jobData, $id) {
@@ -657,6 +657,30 @@ class EmployeeController extends Controller
         EmployeeVisa::where('id', $id)->update($visaUpdatedData);
 
         return response()->json(['success'=>'Visa was successfully updated.']);
+    }
+
+    public function postEditJob(Request $request, $emp_id, $id)
+    {
+
+        $jobData = $request->validate([
+            'branch_id' => 'required',
+            'emp_mainposition_id' => 'required',
+            'department_id' => 'required',
+            'team_id' => 'required',
+            'cost_centre_id' => 'required',
+            'emp_grade_id' => 'required',
+            'start_date' => 'required',
+            'basic_salary' => 'required',
+            'specification' => 'required',
+            'status' => 'required'
+        ]);
+
+        // $jobData['status'] = 'active';
+        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
+        EmployeeJob::where('id', $id)->update($jobData);
+
+        return response()->json(['success'=>'Job is successfully updated.']);
     }
 
     public function postEditBankAccount(Request $request, $emp_id, $id)
