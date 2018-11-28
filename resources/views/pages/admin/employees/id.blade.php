@@ -1,5 +1,4 @@
 @extends('layouts.admin-base')
-@section('pageTitle', 'Employee Profile')
 @section('content')
 <div class="container">
     <div id="alert-container">
@@ -286,48 +285,48 @@
             $('#edit-profile-form #contact-no').val(currentData.contact_no);
         });
 
-        // var editRouteTemplate = "{{ route('admin.employees.profile.edit.post', ['id' => '<<id>>']) }}";
-        // $('#edit-profile-submit').click(function(e){
-        //     clearProfilesError('#edit-profile-form');
-        //     var editProfileRoute = editProfileRouteTemplate.replace(encodeURI('<<id>>'), editProfileId);
-        //     e.preventDefault();
-        //     $.ajax({
-        //         url: editProfileRoute,
-        //         type: 'POST',
-        //         data: {
-        //             _token: '{{ csrf_token() }}',
-        //             ic_no: $('#edit-profile-form #ic-no').val(),
-        //             contact_no: $('#edit-profile-form #contact-no').val()
-        //         },
-        //         success: function(data) {
-        //             showAlert(data.success);
-        //             // attachmentsTable.ajax.reload();
-        //             $('#edit-profile-popup').modal('toggle');
-        //             clearProfilesModal('#edit-profile-form');
-        //         },
-        //         error: function(xhr) {
-        //             if(xhr.status == 422) {
-        //                 var errors = xhr.responseJSON.errors;
-        //                 console.log("Error: ", xhr);
-        //                 for (var errorField in errors) {
-        //                     if (errors.hasOwnProperty(errorField)) {
-        //                         console.log("Error: ", errorField);
-        //                         switch(errorField) {
-        //                             case 'ic_no':
-        //                                 $('#edit-profile-form #ic-no').addClass('is-invalid');
-        //                                 $('#edit-profile-form #contact-no').html('<strong>' + errors[errorField][0] + "</strong>");
-        //                             break;
-        //                             case 'contact_no':
-        //                                 $('#edit-profile-form #ic-no').addClass('is-invalid');
-        //                                 $('#edit-profile-form #contact-no').html('<strong>' + errors[errorField][0] + '</strong>');
-        //                             break;
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     });
-        // });
+        var editRouteTemplate = "{{ route('admin.employees.profile.edit.post', ['id' => $employee->id]) }}";
+        $('#edit-profile-submit').click(function(e){
+            clearProfilesError('#edit-profile-form');
+            // var editProfileRoute = editProfileRouteTemplate.replace($id, editProfileId);
+            e.preventDefault();
+            $.ajax({
+                url: editRouteTemplate,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    ic_no: $('#edit-profile-form #ic-no').val(),
+                    contact_no: $('#edit-profile-form #contact-no').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    location.reload();
+                    $('#edit-profile-popup').modal('toggle');
+                    clearProfilesModal('#edit-profile-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'ic_no':
+                                        $('#edit-profile-form #ic-no').addClass('is-invalid');
+                                        $('#edit-profile-form #ic-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'contact_no':
+                                        $('#edit-profile-form #contact-no').addClass('is-invalid');
+                                        $('#edit-profile-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
 
     });
 

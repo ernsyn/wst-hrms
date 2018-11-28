@@ -87,7 +87,7 @@ class EmployeeController extends Controller
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
-            'ic_no' => 'required',
+            'ic_no' => 'required|numeric',
             'contact_no' => 'required|numeric',
         ]);
 
