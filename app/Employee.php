@@ -52,7 +52,7 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeBankAccount', 'emp_id');
     }
 
-    public function dependents()
+    public function employee_dependents()
     {
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
     }
@@ -63,11 +63,11 @@ class Employee extends Model
     }
 
     public function employee_security_groups()
-    
+
     {
 
         return $this->hasMany('App\EmployeeSecurityGroup', 'emp_id');
-        
+
     }
     public function employee_experiences()
     {
@@ -81,17 +81,17 @@ class Employee extends Model
     {
         return $this->hasMany('App\EmployeeSkill', 'emp_id');
     }
-    
+
     public function employee_visas()
     {
         return $this->hasMany('App\EmployeeVisa', 'emp_id');
     }
-    
+
     public function employee_immigrations()
     {
         return $this->hasMany('App\EmployeeImmigration', 'emp_id');
     }
-    
+
     public function employee_attachments()
     {
         return $this->hasMany('App\EmployeeAttachment', 'emp_id');

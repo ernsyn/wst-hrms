@@ -306,9 +306,9 @@ class EmployeeController extends Controller
         $dependentData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'dob' => 'required',
+            'dob' => 'required|date',
         ]);
-        $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
+        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
 
         $dependent = new EmployeeDependent($dependentData);
 

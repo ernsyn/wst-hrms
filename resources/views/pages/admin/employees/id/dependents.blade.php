@@ -31,7 +31,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
                             <input id="altdobDate" name="altdobDate" type="text" class="form-control" hidden>
-                            <input name="dobDate" id="dobDate" type="text" class="form-control hrms-datepicker" readonly>
+                            <input name="dobDate" id="dobDate" type="text" class="form-control">
                             <div id="dobDate-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -176,20 +176,25 @@
     });
 
 </script>
+
 <script type="text/javascript">
     $(function(){
         // ADD
-       $('#add-dependent-form #add-dependent-submit').click(function(e){
-          e.preventDefault();
-          $.ajax({
-            url: "{{ route('admin.employees.dependents.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                name: $('#add-dependent-form #name').val(),
-                relationship: $('#add-dependent-form #relationship').val(),
-                dob: $('#add-dependent-form #dobDate').val()
-            },
+        $('#add-dependent-popup').on('show.bs.modal', function (event) {
+            clearDependentsError('#add-dependent-form');
+        });
+        $('#add-dependent-form #add-dependent-submit').click(function(e){
+            clearDependentsError('#add-dependent-form');
+            e.preventDefault();
+            $.ajax({
+                url: "{{ route('admin.employees.dependents.post', ['id' => $id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    name: $('#add-dependent-form #name').val(),
+                    relationship: $('#add-dependent-form #relationship').val(),
+                    dob: $('#add-dependent-form #dobDate').val()
+                },
             success: function(data) {
                 showAlert(data.success);
                 dependentsTable.ajax.reload();
@@ -228,6 +233,7 @@
         var editDependentId = null;
         // Function: On Modal Clicked Handler
         $('#edit-dependent-popup').on('show.bs.modal', function (event) {
+            clearDependentsError('#edit-dependent-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -242,6 +248,7 @@
         var editDependentRouteTemplate = "{{ route('admin.employees.dependents.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-dependent-submit').click(function(e){
             var editDependentRoute = editDependentRouteTemplate.replace(encodeURI('<<id>>'), editDependentId);
+            clearDependentsError('#edit-dependent-form');
             e.preventDefault();
             $.ajax({
                 url: editDependentRoute,
@@ -334,6 +341,12 @@
         $(htmlId + ' #dobDate').removeClass('is-invalid');
     }
 
+    function clearDependentsError(htmlId) {
+        $(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #relationship').removeClass('is-invalid');
+        $(htmlId + ' #dobDate').removeClass('is-invalid');
+    }
+
     function showAlert(message) {
         $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
             <span id="alert-message">${message}</span>
@@ -345,3 +358,4 @@
 
 </script>
 @append
+
