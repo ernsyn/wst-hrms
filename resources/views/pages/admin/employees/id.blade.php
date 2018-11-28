@@ -202,9 +202,8 @@
                     @include('pages.admin.employees.id.security-group', ['id' => $employee->id])
                 </div>
             </div>
-            {{-- </div> --}}
+        </div>
     </div>
-</div>
 </div>
 <!-- UPDATE -->
 <div class="modal fade" id="edit-profile-popup" tabindex="-1" role="dialog" aria-labelledby="edit-profile-label" aria-hidden="true">
@@ -258,7 +257,7 @@
                             <select name="marital-status" id="marital-status" class="form-control" placeholder="" value="" required>
                                 <option value="">Select Marital Status</option>
                                 <option value="single">Single</option>
-                                <option value="female">Married</option>
+                                <option value="married">Married</option>
                             </select>
                             <div id="marital-status-error" class="invalid-feedback"></div>
                         </div>
@@ -491,5 +490,4 @@
     }
 
 </script>
-
 @append
