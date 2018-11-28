@@ -84,6 +84,27 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.id', ['employee' => $employee]);
     }
 
+    public function postEditProfile(Request $request, $id)
+    {
+        $profileUpdatedData = $request->validate([
+            'ic_no' => 'required|numeric',
+            'dob' => 'required|date',
+            'gender' => 'required',
+            'contact_no' => 'required|numeric',
+            'marital_status' => 'required',
+            'race' => 'required|alpha',
+            'total_children' => 'required|numeric',
+            'driver_license_no' => 'required',
+            'driver_license_expiry_date' => 'required|date',
+            'epf_no' => 'required',
+            'tax_no' => 'required'
+        ]);
+
+        Employee::where('id', $id)->update($profileUpdatedData);
+
+        return response()->json(['success'=>'Profile was successfully updated.']);
+    }
+
     public function add()
     {
         $countries = Country::all();
