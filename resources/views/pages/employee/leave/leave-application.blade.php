@@ -1,7 +1,7 @@
 @extends('layouts.base') 
 @section('pageTitle', 'Leave Application') 
 @section('content')
-<div class="p-4">
+<div class="p-4" id="page-leave-application">
     <div class="row">
         <div class="col-xl-8">      
                 <div class="card-body-leave" >
@@ -18,24 +18,17 @@
                         <form id="add-leave-request-form" data-parsley-validate>
                             @csrf
                             <div class="form-group row">
-
                                 <label class="col-sm-12 col-form-label">Leave Type</label>
                                 <div class="col-sm-8">
-                                    <select name="leave-type" id="leave-type" class="custom-select">
+                                    <select name="leave-types" id="leave-types" class="custom-select">
                                         <option selected disabled>Select Leave</option>
-                                        {{-- @foreach(App\LeaveType::all() as $leave)
-                                        <option value={{ $leave->id }}>{{ $leave->name }}</option>
-                                        @endforeach --}}
-                                    </select>
-                                    {{-- <input type="text" class="form-control" id="leaveTypeId" name="leaveTypeId" hidden>
-                                    <input type="text" class="form-control" id="leaveBalance" name="leaveBalance" hidden> --}}
-                                    <input type="text" class="form-control" id="leave-type-id" name="leave-type-id" hidden>
-                                    <input type="text" class="form-control" id="leave-balance" name="leave-balance" hidden>                          
-                                </div>
-                                
+                                    </select>                    
+                                </div>                                
                                 <div class="leavedays col-sm-4"><span><b id="available_days">0.0</b> days available</span></div>
+                                <div class="col-sm-12">
+                                    <div id="leave-description" class="leave-description"></div>
+                                </div>
                             </div>
-                            <div class="dropdown-divider pb-3"></div>
                             <div class="form-group row">
                                 <div class="col-sm-6 px-0">
                                     <label class="col-sm-12 col-form-label">Start Date</label>
@@ -62,7 +55,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="dropdown-divider"></div>
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Reason</label>
@@ -85,8 +77,8 @@
                             <input type="text" class="form-control" id="totalLeave" name="totalLeave" hidden>
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <button id="add-leave-request-submit" type="button" class="btn btn-primary btn-block">Apply for
-                                        <span class="font-weight-bold totaldays">0.0</span> days
+                                    <button id="add-leave-request-submit" type="submit" class="btn btn-primary btn-block" disabled>Apply for
+                                        <span class="totaldays"><b>0.0</b> days</span>
                                     </button>
                                 </div>
                             </div>
@@ -97,15 +89,24 @@
         </div>
     </div>
 </div>
+<div id="templates" hidden>
+    <option class="leave-type-option"></option>
+</div>
 
 @endsection
 @section('scripts')
 <script type="text/javascript">
-    $.get("{{ route('employee.e-leave.ajax.types') }}", function(data, status){
-        console.log(data);
+    $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
+        $.each(leaveTypeData, function(key, leaveType){
+            var leaveTypeOption = $('#templates .leave-type-option').clone();
+            leaveTypeOption.data('leave-type', leaveType);
+            leaveTypeOption.val(leaveType.id);
+            leaveTypeOption.text(leaveType.name);
+            leaveTypeOption.appendTo('#leave-types');
+        });
     });
 
-    //change day according to selected value
+    // change day according to selected value
     $("#leave-half-day-am").click(function(){  
         $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
         $("#totalLeave").val(0.5);
@@ -121,53 +122,44 @@
         $("#totalLeave").val(1);
     });
 
-    let getBalancesRouteTemplate = '{{ route('employee.e-leave.balances.ajax.get', ['leave_type_id' => '<<id>>']) }}';
     let getltAppliedRuleRouteTemplate = '{{ route('employee.e-leave.rules.ajax.get', ['leave_type_id' => '<<id>>']) }}';
     let getWorkingDaysRouteTemplate = '{{ route('employee.e-leave.days.ajax.get', ['start_date' => '<<start_date>>', 'end_date' => '<<end_date>>']) }}';
 
     var min_apply_days_before = [];
     var leave_calculation = {};
-    var leave_allocation_id = 0;
     
-    $('#type').on('change', function(){
-        var leave_type_id = $(this).val();
+    $('#leave-types').on('change', function() {
+        var leave_type_data = $(this).find('option:selected').data('leave-type');
+        
+        $("#available_days").text(leave_type_data.available_days.toFixed(1));
+        $("#leave-description").text(leave_type_data.description);
 
-        var getBalancesRoute = getBalancesRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
-        var getltAppliedRuleRoute = getltAppliedRuleRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
+        if(leave_type_data.available_days == 0) {
+            $("#add-leave-request-submit").prop('disabled', true);
+        }
+        else {
+            $("#add-leave-request-submit").prop('disabled', false);
+        }
 
-        var allocated_days = 0;
-        var spent_days = 0;
-        var available_days = 0;        
+        // var getBalancesRoute = getBalancesRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
+        // var getltAppliedRuleRoute = getltAppliedRuleRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
 
-        $.get(getBalancesRoute, function(data, status) {
-            $.each(data, function(key, value) {
-                allocated_days += parseFloat(value.allocated_days);
+        // var allocated_days = 0;
+        // var spent_days = 0;
 
-                if(value.spent_days) {
-                    spent_days += parseFloat(value.spent_days);
-                }
+        // $.get(getltAppliedRuleRoute, function(data, status) {
+        //     min_apply_days_before = [];
+        //     leave_calculation = {}
 
-                leave_allocation_id = value.id;
-            });
-
-            available_days = allocated_days - spent_days;
-
-            $("#available_days").html(available_days.toFixed(1));
-        });
-
-        $.get(getltAppliedRuleRoute, function(data, status) {
-            min_apply_days_before = [];
-            leave_calculation = {}
-
-            $.each(data, function(key, value) {
-                if(value.rule == "min_apply_days_before") {
-                    min_apply_days_before = JSON.parse(value.configuration);
-                }
-                else if(value.rule == "leave_calculation") {
-                    leave_calculation = JSON.parse(value.configuration);
-                }
-            });
-        });
+        //     $.each(data, function(key, value) {
+        //         if(value.rule == "min_apply_days_before") {
+        //             min_apply_days_before = JSON.parse(value.configuration);
+        //         }
+        //         else if(value.rule == "leave_calculation") {
+        //             leave_calculation = JSON.parse(value.configuration);
+        //         }
+        //     });
+        // });
     });
 
     $('#add-leave-request-form #add-leave-request-submit').click(function(e) {

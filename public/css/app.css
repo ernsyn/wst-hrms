@@ -17970,3 +17970,8 @@ button.dropdown-toggle::after {
   background-color: #e0e5f3;
 }
 
+#page-leave-application .leave-description {
+  color: #666666;
+  font-size: 12px;
+}
+
