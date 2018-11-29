@@ -112,8 +112,9 @@
         data: {
             _token: '{{ csrf_token() }}',
             start_date: '24-12-2018',
-            end_date: '26-12-2018',
-            leave_type: '10'
+            end_date: '24-12-2018',
+            leave_type: '10',
+            am_pm: 'am'
         },
         success: function(data) {
             console.log(data);

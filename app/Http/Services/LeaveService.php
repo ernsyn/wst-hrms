@@ -100,7 +100,7 @@ class LeaveService
         }
     }
 
-    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date) {
+    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm) {
         $startDate = Carbon::parse($start_date);
         $endDate = Carbon::parse($end_date);
         $now = Carbon::now();
@@ -320,6 +320,12 @@ class LeaveService
        
 
        // NEXT STAGE: Check leave days available
+       if($startDate->isSameDay($endDate) && $totalDays == 1) {
+            if(!empty($am_pm)) {
+                $totalDays -= 0.5;
+            }
+        }
+
         if(!empty($max_days_per_application)) {
             if($totalDays > $max_days_per_application) {
                 return self::error("Max days (".$max_days_per_application." days) per application exceeded (".$totalDays." leave days applied).");
@@ -330,7 +336,6 @@ class LeaveService
         if($availableDays < $totalDays) {
             return self::error("Insufficient days (".$availableDays." days) for application (".$totalDays." leave days applied).");
         }
-
 
         return array_merge(
             [
