@@ -77,33 +77,33 @@ class ELeaveController extends Controller
         $leave_request_approval = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)->get();
 
         $report_to = EmployeeReportTo::where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
+
+        dd($report_to);
      
-        $report_to_level_1 = EmployeeReportTo::where('report_to_emp_id',$report_to_emp_id)
-        ->where('report_to_level',1)
-        ->get()->toArray();
+        // $report_to_level_1 = EmployeeReportTo::where('report_to_emp_id',$report_to_emp_id)
+        // ->where('report_to_level',1)
+        // ->get()->toArray();
 
-        $report_to_level_2 = EmployeeReportTo::where('report_to_emp_id',$report_to_emp_id)
-        ->where('report_to_level',2)
-        ->get()->toArray();
+        // $report_to_level_2 = EmployeeReportTo::where('report_to_emp_id',$report_to_emp_id)
+        // ->where('report_to_level',2)
+        // ->get()->toArray();
 
 
 
-        $leaveRequests =LeaveRequest::with('leave_type','leave_request_approval')
+        $leaveRequests =LeaveRequest::with('leave_type')
         ->whereIn('emp_id',$report_to)
-        ->whereIn('id',$leave_request_approval)   
-        ->count();
+        // ->whereIn('id',$leave_request_approval)   
+        ->get();
+
+        dd($leaveRequests);
 
         $leaveRequestApprovalCount = LeaveRequestApproval::with('leave_request_approval')
         ->whereIn('leave_request_id',$report_to)
         //  ->whereIn('report_to_level',1)
         ->count();
 
-        dd($leaveRequestApprovalCount);
-
-        if ($leaveRequests){
 
 
-        }
    
         return view('pages.employee.leave.leave-request', ['leaveRequests' => $leaveRequests]);   
     }
