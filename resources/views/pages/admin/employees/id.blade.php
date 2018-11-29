@@ -26,7 +26,7 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">DOB</span>
-                            <span class="field-value">{{$employee->dob ? $employee->dob->format('d/m/Y'):null}}</span>
+                            <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Gender</span>
@@ -34,7 +34,7 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">{{$employee->nationality}}</span>
+                            <span class="field-value">{!! $employee->nationality ? $employee->nationality:'<strong>(not set)</strong>' !!}</span>
                         </div>
                     </div>
                 </div>
@@ -95,25 +95,33 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Race</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->race}}</span>
-                                                </div>
                                                 <span class="col-lg-5 p-3">Number of Child</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->total_children}}</span>
+                                                    <span class="field-value">{!! $employee->total_children ? $employee->total_children:'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">EIS No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->eis_no}}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">SOCSO No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->socso_no}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
+                                                <span class="col-lg-5 p-3">Race</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->race}}</span>
+                                                </div>
                                                 <span class="col-lg-5 p-3">Driver License No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->driver_license_no}}</span>
+                                                    <span class="field-value">{!!$employee->driver_license_no ? $employee->driver_license_no : '<strong>(not set)</strong>'!!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">License Expiry Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->driver_license_expiry_date ? $employee->driver_license_expiry_date->format('d/m/Y'): null}}</span>
+                                                    <span class="field-value">{!!$employee->driver_license_expiry_date ? $employee->driver_license_expiry_date->format('d/m/Y'): '<strong>(not set)</strong>'!!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">EPF No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
@@ -227,8 +235,9 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="dob"><strong>DOB*</strong></label>
-                            <input id="dob" type="text" class="form-control" placeholder="" value="" required>
+                            <label for="dob"><strong>Date of Birth*</strong></label>
+                            <input id="alt-dob" type="text" class="form-control" hidden>
+                            <input id="dob" type="text" class="form-control" placeholder="" value="" required readonly>
                             <div id="dob-error" class="invalid-feedback"></div>
                         </div>
                     </div>
@@ -278,22 +287,23 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="total-children"><strong>Number of Child*</strong></label>
+                            <label for="total-children"><strong>Number of Child</strong></label>
                             <input id="total-children" type="text" class="form-control" placeholder="" value="" required>
                             <div id="total-children-error" class="invalid-feedback"></div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="driver-license-no"><strong>Driver License No*</strong></label>
+                            <label for="driver-license-no"><strong>Driver License No</strong></label>
                             <input id="driver-license-no" type="text" class="form-control" placeholder="" value="" required>
                             <div id="driver-license-no-error" class="invalid-feedback"></div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="driver-license-expiry-date"><strong>License Expiry Date*</strong></label>
-                            <input id="driver-license-expiry-date" type="text" class="form-control" placeholder="" value="" required>
+                            <label for="driver-license-expiry-date"><strong>License Expiry Date</strong></label>
+                            <input id="alt-driver-license-expiry-date" type="text" class="form-control" hidden>
+                            <input id="driver-license-expiry-date" type="text" class="form-control" placeholder="" value="" readonly>
                             <div id="driver-license-expiry-date-error" class="invalid-feedback"></div>
                         </div>
                     </div>
@@ -311,6 +321,20 @@
                             <div id="tax-no-error" class="invalid-feedback"></div>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="eis-no"><strong>EIS No*</strong></label>
+                            <input id="eis-no" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="eis-no-error" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="socso-no"><strong>SOCSO No*</strong></label>
+                            <input id="socso-no" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="socso-no-error" class="invalid-feedback"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="edit-profile-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
@@ -323,6 +347,19 @@
 
 @section('scripts')
 <script type="text/javascript">
+    $('#dob').datepicker({
+        altField: "#alt-dob",
+        altFormat: 'yy-mm-dd',
+        format: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-80:+0"
+    });
+    $('#driver-license-expiry-date').datepicker({
+        altField: "#alt-driver-license-expiry-date",
+        altFormat: 'yy-mm-dd',
+        format: 'dd/mm/yy'
+    });
     $(function(){
         // EDIT Profile
         var editProfileId = null;
@@ -336,16 +373,31 @@
             editProfileId = currentData.id;
 
             $('#edit-profile-form #ic-no').val(currentData.ic_no);
-            $('#edit-profile-form #dob').val(currentData.dob);
+            $('#edit-profile-form #alt-dob').val(currentData.dob);
             $('#edit-profile-form #gender').val(currentData.gender);
             $('#edit-profile-form #contact-no').val(currentData.contact_no);
             $('#edit-profile-form #marital-status').val(currentData.marital_status);
             $('#edit-profile-form #race').val(currentData.race);
             $('#edit-profile-form #total-children').val(currentData.total_children);
             $('#edit-profile-form #driver-license-no').val(currentData.driver_license_no);
-            $('#edit-profile-form #driver-license-expiry-date').val(currentData.driver_license_expiry_date);
+            $('#edit-profile-form #alt-driver-license-expiry-date').val(currentData.driver_license_expiry_date);
             $('#edit-profile-form #epf-no').val(currentData.epf_no);
             $('#edit-profile-form #tax-no').val(currentData.tax_no);
+            $('#edit-profile-form #eis-no').val(currentData.eis_no);
+            $('#edit-profile-form #socso-no').val(currentData.socso_no);
+
+            if(currentData.dob!=null) {
+                formatDob = $.datepicker.formatDate("d/mm/yy", new Date(currentData.dob));
+                $('#edit-profile-form #dob').val(formatDob);
+            } else
+                $('#edit-profile-form #dob').val();
+
+            if(currentData.driver_license_expiry_date!=null) {
+                formatLicenseExpiry = $.datepicker.formatDate("d/mm/yy", new Date(currentData.driver_license_expiry_date));
+                $('#edit-profile-form #driver-license-expiry-date').val(formatLicenseExpiry);
+            } else
+                $('#edit-profile-form #driver-license-expiry-date').val();
+
         });
 
         var editRouteTemplate = "{{ route('admin.employees.profile.edit.post', ['id' => $employee->id]) }}";
@@ -359,16 +411,18 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     ic_no: $('#edit-profile-form #ic-no').val(),
-                    dob: $('#edit-profile-form #dob').val(),
+                    dob: $('#edit-profile-form #alt-dob').val(),
                     gender: $('#edit-profile-form #gender').val(),
                     contact_no: $('#edit-profile-form #contact-no').val(),
                     marital_status: $('#edit-profile-form #marital-status').val(),
                     race: $('#edit-profile-form #race').val(),
                     total_children: $('#edit-profile-form #total-children').val(),
                     driver_license_no: $('#edit-profile-form #driver-license-no').val(),
-                    driver_license_expiry_date: $('#edit-profile-form #driver-license-expiry-date').val(),
+                    driver_license_expiry_date: $('#edit-profile-form #alt-driver-license-expiry-date').val(),
                     epf_no: $('#edit-profile-form #epf-no').val(),
-                    tax_no: $('#edit-profile-form #tax-no').val()
+                    tax_no: $('#edit-profile-form #tax-no').val(),
+                    eis_no: $('#edit-profile-form #eis-no').val(),
+                    socso_no: $('#edit-profile-form #socso-no').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -429,6 +483,14 @@
                                         $('#edit-profile-form #tax-no').addClass('is-invalid');
                                         $('#edit-profile-form #tax-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'eis_no':
+                                        $('#edit-profile-form #eis-no').addClass('is-invalid');
+                                        $('#edit-profile-form #eis-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'socso_no':
+                                        $('#edit-profile-form #socso-no').addClass('is-invalid');
+                                        $('#edit-profile-form #socso-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                 }
                             }
                         }
@@ -453,6 +515,8 @@
         $(htmlId + ' #driver-license-expiry-date').val('');
         $(htmlId + ' #epf-no').val('');
         $(htmlId + ' #tax-no').val('');
+        $(htmlId + ' #eis-no').val('');
+        $(htmlId + ' #socso-no').val('');
 
         $(htmlId + ' #ic-no').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
@@ -465,6 +529,8 @@
         $(htmlId + ' #driver-license-expiry-date').removeClass('is-invalid');
         $(htmlId + ' #epf-no').removeClass('is-invalid');
         $(htmlId + ' #tax-no').removeClass('is-invalid');
+        $(htmlId + ' #eis-no').removeClass('is-invalid');
+        $(htmlId + ' #socso-no').removeClass('is-invalid');
     }
     function clearProfilesError(htmlId) {
         $(htmlId + ' #ic-no').removeClass('is-invalid');
@@ -478,6 +544,8 @@
         $(htmlId + ' #driver-license-expiry-date').removeClass('is-invalid');
         $(htmlId + ' #epf-no').removeClass('is-invalid');
         $(htmlId + ' #tax-no').removeClass('is-invalid');
+        $(htmlId + ' #eis-no').removeClass('is-invalid');
+        $(htmlId + ' #socso-no').removeClass('is-invalid');
     }
 
     function showAlert(message) {

@@ -53,11 +53,13 @@ class EmployeeController extends Controller
             'contact_no' => 'required|numeric',
             'marital_status' => 'required',
             'race' => 'required|alpha',
-            'total_children' => 'required|numeric',
-            'driver_license_no' => 'required',
-            'driver_license_expiry_date' => 'required|date',
+            'total_children' => 'nullable|numeric',
+            'driver_license_no' => 'nullable',
+            'driver_license_expiry_date' => 'nullable',
             'epf_no' => 'required',
-            'tax_no' => 'required'
+            'tax_no' => 'required',
+            'eis_no' => 'required',
+            'socso_no' => 'required'
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
