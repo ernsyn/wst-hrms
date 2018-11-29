@@ -106,6 +106,23 @@
         });
     });
 
+    $.ajax({
+        url: "{{ route('employee.e-leave.ajax.request.check') }}",
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            start_date: '24-12-2018',
+            end_date: '26-12-2018',
+            leave_type: '10'
+        },
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(xhr) {
+            console.log("Error: ", xhr);
+        }
+    });
+
     // change day according to selected value
     $("#leave-half-day-am").click(function(){  
         $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
@@ -161,6 +178,8 @@
         //     });
         // });
     });
+
+
 
     $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
         e.preventDefault();

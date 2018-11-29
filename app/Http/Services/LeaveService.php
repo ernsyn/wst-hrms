@@ -12,6 +12,7 @@ use App\LeaveRequest;
 use App\LeaveType;
 use App\EmployeeJob;
 use App\Employee;
+use App\Holiday;
 
 use App\Constants\LeaveTypeRule;
 
@@ -104,7 +105,7 @@ class LeaveService
         $endDate = Carbon::parse($end_date);
         $now = Carbon::now();
 
-        if($startDate.greaterThan($endDate)) {
+        if($startDate->greaterThan($endDate)) {
             return self::error("Start date is after end date.");
         }
         
@@ -114,7 +115,7 @@ class LeaveService
         }
 
         // Check if start/end day is non-working day or holiday
-        if(!isWorkingDay($working_day, $startDate)) {
+        if(!self::isWorkingDay($working_day, $startDate)) {
             return self::error("Start date cannot be a non-working day.");
         } else {
             $count = Holiday::where('start_date', '<=', $startDate)
@@ -125,7 +126,7 @@ class LeaveService
             }
 
         }
-        if(!isWorkingDay($working_day, $endDate)) {
+        if(!self::isWorkingDay($working_day, $endDate)) {
             return self::error("End date cannot be a non-working day.");
         } else {
             $count = Holiday::where('start_date', '<=', $endDate)
@@ -173,7 +174,7 @@ class LeaveService
                         if($applied_days_length >= $conditionEntry->min_leave_days) {
                             if($days_before < $conditionEntry->min_apply_days_before) {
                                 $invalid = true;
-                                $invalidErrorMessage = "To apply for leave equal or more than ".$conditionEntry->min_leave_day." days, you have to apply more than ".$conditionEntry->min_apply_days_before." days before."; 
+                                $invalidErrorMessage = "To apply for leave equal or more than ".$conditionEntry->min_leave_days." days, you have to apply more than ".$conditionEntry->min_apply_days_before." days before."; 
 
                                 break;
                             }
@@ -248,7 +249,7 @@ class LeaveService
         }
 
         if($invalid) {
-            return error($invalidErrorMessage);
+            return self::error($invalidErrorMessage);
         }
 
         $additionalResponseData = array();
@@ -275,22 +276,76 @@ class LeaveService
         // $end_date = explode("-", $end_date);
         // $end_string = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
 
-        // $start = new DateTime($start_string);
-        // $end = new DateTime($end_string);
+        // $start = Carbon::parse($startDate);
+        // $end = Carbon::parse($endDate);
 
-        // // Add the previous Sunday to leave period if start is a Monday
-        // if($start->format('D') == 'Mon') {
-        //     $start->modify('-1 day');
+        // Add the previous Sunday to leave period if start is a Monday
+        // if($startDate->format('D') == 'Mon') {
+        //     $startDate->modify('-1 day');
         // }
         
-        // $end->modify('+1 day'); // fix for end date is excluded
+        // $endDate->modify('+1 day'); // fix for end date is excluded
+        $totalDays = date_diff($startDate, $endDate)->days;
 
-        // $interval = $end->diff($start);
+        if(!$inc_off_days) {
+            $nextDayIsHoliday = false;  
+            if($startDate->dayOfWeek == Carbon::MONDAY) {
+                $prevDate = $startDate->copy()->subDay(1);
+                if(!self::isWorkingDay($working_day, $prevDate) && Holiday::where('end_date', $prevDate)->count() > 0) {
+                    $nextDayIsHoliday = true;
+                }
+            }
+
+            $holidays = Holiday::where('start_date', '>=', $startDate)
+            ->where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $startDate)
+            ->where('end_date', '<=', $endDate)
+            ->where('status', 'active')->get();
+
+            $cursorDate = $startDate->copy();
+           while($cursorDate->lessThanOrEqualTo($endDate)) {
+                if(!self::isWorkingDay($working_day, $cursorDate)) {
+                    $nextDayIsHoliday = false;
+                    if($cursorDate->dayOfWeek == Carbon::SUNDAY && self::isHoliday($holidays, $cursorDate)) {
+                        $nextDayIsHoliday = true;
+                    }
+
+                    $totalDays--;
+                } else if(self::isHoliday($holidays, $cursorDate) || $nextDayIsHoliday) {
+                    $nextDayIsHoliday = false;
+                    $totalDays--;
+                }
+
+                $cursorDate->addDays(1);
+           } 
+        }
+                
+       
+
+       // NEXT STAGE: Check leave days available
+        if(!empty($max_days_per_application)) {
+            if($totalDays > $max_days_per_application) {
+                return self::error("Max days (".$max_days_per_application." days) per application exceeded (".$totalDays." leave days applied)");
+            }
+        }
+
+        $availableDays = self::getLeaveAllocationsAvailableDays($employee->id, $leave_type_id, $now);
+        if($availableDays < $totalDays) {
+            return self::error("Insufficient days (".$availableDays." days) for application (".$totalDays." leave days applied)");
+        }
+
+
+
+        // $interval = $endDate->diff($startDate);
 
         // // total days
         // $days = $interval->days;
 
-        // $getHolidays = Holiday::where('start_date', '>=', $start->format('Y-m-d'))->where('status', 'active')->get();
+        // $getHolidays = Holiday::where('start_date', '>=', $startDate->format('Y-m-d'))
+        // ->where('start_date', '<=', $endDate->format('Y-m-d'))
+        // ->where('end_date', '>=', $startDate->format('Y-m-d'))
+        // ->where('end_date', '>=', $endDate->format('Y-m-d'))
+        // ->where('status', 'active')->get();
 
         // // Array of holidays to check the dates against
         // $holidays = array();
@@ -315,6 +370,11 @@ class LeaveService
         // foreach($period as $dt) {
         //     $curr = $dt->format('D');
 
+        //     if(!isWorkingDay($working_day, $dt->format('Y-m-d')))
+        //     {
+        //         $days--;
+        //     }
+
         //     // Substract if Saturday or Sunday
         //     if ($curr == 'Sat' || $curr == 'Sun') {
         //         $days--;
@@ -331,6 +391,12 @@ class LeaveService
         //     }
         // }
 
+        return array_merge(
+            [
+                'total_days' => $totalDays,
+            ], 
+            $additionalResponseData
+        );
         // return $days;
     }
 
@@ -540,7 +606,7 @@ class LeaveService
         ];
     }
 
-    private function isWorkingDay($workingDays, $time) {
+    private static function isWorkingDay($workingDays, $time) {
         switch($time->dayOfWeek) {
             case Carbon::MONDAY;
                 return $workingDays->monday > 0;
@@ -564,5 +630,35 @@ class LeaveService
                 return $workingDays->sunday > 0;
                 break;
         }
+    }
+
+    private static function isHoliday($holidays, $date) {
+        foreach ($holidays as $holiday) {
+            $startDate = Carbon::parse($holiday->start_date);
+            $endDate = Carbon::parse($holiday->end_date);
+
+            if($date->greaterThanOrEqualTo($startDate) && $date->lessThanOrEqualTo($endDate)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static function getLeaveAllocationsAvailableDays($emp_id, $leave_type_id, $now) {
+        $leaveAllocations = LeaveAllocation::where('emp_id', $emp_id)
+            ->where('leave_type_id', $leave_type_id)
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->get();
+
+        $totalAllocatedDays = 0;
+        $totalSpentDays = 0;
+        foreach($leaveAllocations as $leaveAllocation) {
+            $totalAllocatedDays += $leaveAllocation->allocated_days;
+            $totalSpentDays += $leaveAllocation->spent_days;
+        }
+
+        return $totalAllocatedDays - $totalSpentDays;
     }
 }

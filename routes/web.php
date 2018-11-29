@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('e-leave/days/{start_date}/{end_date}', 'Employee\EleaveController@ajaxCalculateActualLeaveDays')
     ->name('employee.e-leave.days.ajax.get')->where(['start_date' => '[A-Za-z0-9\-\/]+', 'end_date' => '[A-Za-z0-9\-\/]+']);
     Route::get('e-leave/types', 'Employee\EleaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
+    Route::post('e-leave/request/check', 'Employee\EleaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
     Route::post('e-leave/working-day','Employee\EleaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
 });
 

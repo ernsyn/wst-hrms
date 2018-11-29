@@ -201,6 +201,19 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
+        public function ajaxPostCheckLeaveRequest(Request $request)
+        {
+            $requestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required'
+            ]);
+
+            $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date']);
+
+            return response()->json($result);
+        }
+
         public function ajaxGetLeaveRules($leave_type_id)
         {
             $emp_id = Auth::user()->employee->id;
