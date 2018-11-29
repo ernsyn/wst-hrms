@@ -12,7 +12,7 @@ class LeaveTypeRule
     const REQUIRED_ATTACHMENT =  'required_attachment';
     const MIN_APPLY_DAYS_BEFORE =  'min_apply_days_before';
     const CONSECUTIVE =  'consecutive';
-    const SHARED_WITH =  'shared_with';
+    // const SHARED_WITH =  'shared_with';
     const MIN_EMPLOYMENT_PERIOD =  'min_employment_period';
     const MAX_NO_OF_CHILDREN =  'max_no_of_children';
     const UNPAID =  'unpaid';
