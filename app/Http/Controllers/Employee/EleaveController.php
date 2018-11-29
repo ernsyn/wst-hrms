@@ -201,20 +201,6 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
-        public function ajaxGetEmployeeLeaveBalances($leave_type_id)
-        {
-            $emp_id = Auth::user()->employee->id;
-
-            $now = Carbon::now();
-            $leaveBalance = LeaveAllocation::where('emp_id', $emp_id)
-            ->where('leave_type_id', $leave_type_id)
-            ->where('valid_from_date','<=', $now)
-            ->where('valid_until_date','>=',$now)
-            ->get();
-
-            return response()->json($leaveBalance);
-        }
-
         public function ajaxGetLeaveRules($leave_type_id)
         {
             $emp_id = Auth::user()->employee->id;
