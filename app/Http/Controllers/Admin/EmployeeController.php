@@ -363,14 +363,15 @@ class EmployeeController extends Controller
     public function postJob(Request $request, $id)
     {
         $jobData = $request->validate([
-            'branch_id' => 'required',
-            'emp_mainposition_id' => 'required',
+            'basic_salary' => 'required|numeric',
+            'cost_centre_id' => 'required',
             'department_id' => 'required',
             'team_id' => 'required',
-            'cost_centre_id' => 'required',
+            'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
-            'start_date' => 'required',
-            'basic_salary' => 'required',
+            'branch_id' => 'required',
+            'start_date' => 'required|date',
+            'status' => 'required',
             'specification' => 'required'
         ]);
 
@@ -382,9 +383,10 @@ class EmployeeController extends Controller
          $end_date=   EmployeeJob::where('id', $id)
         ->whereNull('end_date');
 
-        EmployeeJob::where('emp_id', $id)
-        ->whereNull('end_date')
-        ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
+        // EmployeeJob::where('emp_id', $id)
+        // ->whereNull('end_date')
+        // ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
+        $job = new EmployeeJob($jobData);
 
         $employee = Employee::find($id);
         $employee->employee_jobs()->save($job);

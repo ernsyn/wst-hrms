@@ -280,8 +280,6 @@
                                         $('#add-immigration-form #expiry-date-immigration').addClass('is-invalid');
                                         $('#add-immigration-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    default:
-                                        $('#add-immigration-form #passport-no').removeClass('is-invalid');
                                 }
                             }
                         }
