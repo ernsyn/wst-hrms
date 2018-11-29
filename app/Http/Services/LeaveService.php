@@ -109,7 +109,7 @@ class LeaveService
         }
     }
 
-    public static function getLeaveTypesForUser(Employee $employee) {
+    public static function getLeaveTypesForEmployee(Employee $employee) {
         $leaveTypes = LeaveType::with('applied_rules')->get();
         $employee->gender;
 

@@ -37,6 +37,11 @@ use App\Deduction;
 use App\Bank;
 use App\EaForm;
 
+use App\LeaveAllocation;
+use App\LTAppliedRule;
+use DatePeriod;
+use DateInterval;
+
 use DB;
 use App\User;
 use App\EmployeeInfo;
@@ -47,6 +52,8 @@ use \DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Auth;
+
+use App\Http\Services\LeaveService;
 
 class ELeaveController extends Controller
 {
@@ -187,7 +194,124 @@ class ELeaveController extends Controller
             return view('pages.employee.leave.leave-application', ['leavebalance'=>$leavebalance]);
         }
 
-        
+        public function ajaxGetLeaveTypes()
+        {
+            $leaveTypes = LeaveService::getLeaveTypesForEmployee(Auth::user()->employee);
+
+            return response()->json($leaveTypes);
+        }
+
+        public function ajaxGetEmployeeLeaveBalances($leave_type_id)
+        {
+            $emp_id = Auth::user()->employee->id;
+
+            $now = Carbon::now();
+            $leaveBalance = LeaveAllocation::where('emp_id', $emp_id)
+            ->where('leave_type_id', $leave_type_id)
+            ->where('valid_from_date','<=', $now)
+            ->where('valid_until_date','>=',$now)
+            ->get();
+
+            return response()->json($leaveBalance);
+        }
+
+        public function ajaxGetLeaveRules($leave_type_id)
+        {
+            $emp_id = Auth::user()->employee->id;
+
+            $now = Carbon::now();
+            $ltAppliedRule = LTAppliedRule::where('leave_type_id', $leave_type_id)
+            ->whereNull('deleted_at')
+            ->get();
+
+            return response()->json($ltAppliedRule);
+        }
+
+        public function ajaxCalculateActualLeaveDays($start_date, $end_date)
+        {
+            $start_date = explode("-", $start_date);
+            $start_string = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
+
+            $end_date = explode("-", $end_date);
+            $end_string = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
+
+            $start = new DateTime($start_string);
+            $end = new DateTime($end_string);
+
+            // Add the previous Sunday to leave period if start is a Monday
+            if($start->format('D') == 'Mon') {
+                $start->modify('-1 day');
+            }
+            
+            $end->modify('+1 day'); // fix for end date is excluded
+
+            $interval = $end->diff($start);
+
+            // total days
+            $days = $interval->days;
+
+            $getHolidays = Holiday::where('start_date', '>=', $start->format('Y-m-d'))->where('status', 'active')->get();
+
+            // Array of holidays to check the dates against
+            $holidays = array();
+
+            foreach ($getHolidays as $getHoliday) {
+                $includeDatesBetween = new DatePeriod(
+                     new DateTime($getHoliday->start_date),
+                     new DateInterval('P1D'),
+                     new DateTime($getHoliday->end_date.'+1 day') // fix for excluding end_date
+                );
+
+                foreach($includeDatesBetween as $date) { 
+                    if(!in_array($date->format('Y-m-d'), $holidays, true)) {
+                        array_push($holidays, $date->format('Y-m-d'));
+                    } 
+                }
+            }
+
+            // Create an iterateable period of date (P1D equates to 1 day)
+            $period = new DatePeriod($start, new DateInterval('P1D'), $end);
+
+            foreach($period as $dt) {
+                $curr = $dt->format('D');
+
+                // Substract if Saturday or Sunday
+                if ($curr == 'Sat' || $curr == 'Sun') {
+                    $days--;
+                    
+                    // Subtract if Holidays falls on a Sunday
+                    if($curr == 'Sun' && in_array($dt->format('Y-m-d'), $holidays)) {
+                        $days--;
+                    }
+                }
+
+                // Subtract Holidays 
+                elseif (in_array($dt->format('Y-m-d'), $holidays)) {
+                    $days--;
+                }
+            }
+
+            return $days;
+        }
+
+        public function postLeaveRequest(Request $request, $id)
+        {
+            $leaveRequestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'reason' => 'required'
+            ]);
+
+            $leaveRequestData['is_template'] = false;
+
+
+            $leaveRequest = new LeaveRequest($leaveRequestData);
+
+            $employee = Employee::find($id);
+            $employee->leave_request()->save($leaveRequest);
+
+            return response()->json(['success' => 'Leave Request is successfully added']);
+        }
 
         public function displayLeaveBalance()
         {
