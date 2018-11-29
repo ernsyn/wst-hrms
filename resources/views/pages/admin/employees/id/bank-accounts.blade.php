@@ -105,7 +105,7 @@
 </div>
 
 {{-- DELETE --}}
-<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+<div class="modal fade" id="confirm-delete-bank-account-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -178,7 +178,7 @@
                 "data": null,
                 render: function (data, type, row, meta) {
                     return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-bank-accounts-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-modal"><i class="far fa-trash-alt"></i></button>`;
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-bank-account-modal"><i class="far fa-trash-alt"></i></button>`;
                 }
             }
         ]
@@ -304,7 +304,7 @@
 
         // DELETE
         var deleteId = null;
-        $('#confirm-delete-modal').on('show.bs.modal', function (event) {
+        $('#confirm-delete-bank-account-modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var currentData = JSON.parse(decodeURI(button.data('current')))
             console.log('Data: ', currentData)
@@ -325,7 +325,7 @@
                 success: function(data) {
                     showAlert(data.success);
                     bankAccountsTable.ajax.reload();
-                    $('#confirm-delete-modal').modal('toggle');
+                    $('#confirm-delete-bank-account-modal').modal('toggle');
                 },
                 error: function(xhr) {
                     if(xhr.status == 422) {
