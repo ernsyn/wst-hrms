@@ -16,6 +16,11 @@ Breadcrumbs::for('leaverequest', function ($trail) {
     // $trail->parent('profile');
     $trail->push('List Of Leave', route('leaverequest'));
 });
+Breadcrumbs::for('leavehistory', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('List Of Leave', route('leavehistory'));
+});
+
 Breadcrumbs::for('employee.profile', function ($trail) {
     // $trail->parent('profile');
     $trail->push('My Profile', route('employee.profile'));

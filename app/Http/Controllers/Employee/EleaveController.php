@@ -66,19 +66,20 @@ class ELeaveController extends Controller
     public function displayLeaveRequestReportTo()
     {
         $user = Auth::user();
-    
         $report_to_emp_id = $user->employee->id;
-        $leave_request_approval = LeaveRequestApproval::where('emp_id','=',$id)->count();
-
-        
+        $leave_request_approval = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)->count();
         $report_to = EmployeeReportTo::where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
-
         $leaveRequests =LeaveRequest::with('leave_type')->whereIn('emp_id',$report_to)->get();
+        return view('pages.employee.leave.leave-request', ['leaveRequests' => $leaveRequests]);   
+    }
+    
 
-        return view('pages.employee.leave.leave-request', ['leaveRequests' => $leaveRequests]);
-
-
-        
+    public function displayLeaveRequests()
+    {
+        $user = Auth::user();
+        $emp_id = $user->employee->id;
+        $leaveRequests =LeaveRequest::where('emp_id',$emp_id)->get();
+        return view('pages.employee.leave.leave-history', ['leaveRequests' => $leaveRequests]);   
     }
     
     

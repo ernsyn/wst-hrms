@@ -94,6 +94,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('leaveapplication','Employee\EleaveController@displayLeaveApplication')->name('leaveapplication');
    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
     Route::get('leaverequest','Employee\EleaveController@displayLeaveRequestReportTo')->name('leaverequest');
+    Route::get('leavehistory','Employee\EleaveController@displayLeaveRequests')->name('leavehistory');
 
 
 
