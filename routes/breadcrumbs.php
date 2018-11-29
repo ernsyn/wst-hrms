@@ -45,6 +45,17 @@ Breadcrumbs::for('register_employee4', function ($trail) {
     $trail->push('Employee List', route('register_employee'));
 });
 
+
+Breadcrumbs::for('employee.e-leave.add-leave-request', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Approve Leave', route('employee.e-leave.add-leave-request', $id));
+});
+
+
+Breadcrumbs::for('employee.e-leave.add-leave-request-disapprove', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Approve Leave', route('employee.e-leave.add-leave-request-disapprove', $id));
+});
 Breadcrumbs::for('admin.employees.add', function ($trail) {
     $trail->parent('admin.employees');
     $trail->push('Add Employee', route('admin.employees.add'));
