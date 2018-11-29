@@ -1,4 +1,4 @@
-TABLE
+{{-- TABLE --}}
 <div class="tab-pane fade show p-3" id="nav-reportto" role="tabpanel" aria-labelledby="nav-reportto-tab">
     {{-- <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
