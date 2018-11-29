@@ -43,7 +43,7 @@
             <a class="info dropdown-toggle" href="#profileSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1">
-                        <i class="far fa-calendar-alt"></i>
+                            <i class="far fa-address-card"></i>
                     </div>
                     <div class="col-10">
                         Employee Profile
@@ -54,15 +54,33 @@
                 <li class="menu-option {{ request()->is('employee/profile') ? 'active' : '' }}">
                     <a href="{{ route('employee.profile') }}">View My Profile</a>
                 </li>
-                <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
-                        <a href="{{ route('leaveapplication') }}">Leave Application</a>
-                    </li>
-                    <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
-                            <a href="{{ route('leaverequest') }}">Leave Approval</a>
-                        </li>
             </ul>
 
         </li>
+
+        <ul id="menu-container" class="list-unstyled">
+                <li class="menu-section {{ request()->is('e-leave*') ? 'active' : '' }}">
+                    <a class="info dropdown-toggle" href="#e-leaveSubmenu" data-toggle="collapse" aria-expanded="false">
+                        <div class="row">
+                            <div class="col-1">
+                                <i class="far fa-calendar-alt"></i>
+                            </div>
+                            <div class="col-10">
+                                E-Leave Application
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="collapse list-unstyled {{ request()->is('e-leave*','') ? 'show' : '' }}" id="e-leaveSubmenu">
+                   
+                        <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
+                                <a href="{{ route('leaveapplication') }}">Leave Application</a>
+                            </li>
+                            <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
+                                    <a href="{{ route('leaverequest') }}">Leave Approval</a>
+                                </li>
+                    </ul>
+        
+                </li>
         {{-- <li class="menu-section {{ request()->is('leave*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
