@@ -196,6 +196,12 @@ class EmployeeController extends Controller
         ->editColumn('end_date', function ($experience) {
             return date('d/m/Y', strtotime($experience->end_date) );
         })
+        ->editColumn('alt_start_date', function ($experience) {
+            return date('Y-m-d', strtotime($experience->start_date) );
+        })
+        ->editColumn('alt_end_date', function ($experience) {
+            return date('Y-m-d', strtotime($experience->end_date) );
+        })
         ->make(true);
     }
 
