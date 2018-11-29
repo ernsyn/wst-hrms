@@ -53,7 +53,7 @@
                             <th>End Date</th>
                             <th>Total Days</th>      
                             <th>Status</th>                              
-                            <th>Action</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -71,25 +71,7 @@
                             <td>{{$leaveRequest['applied_days']}}</td>
 
                             <td>{{$leaveRequest['status']}}</td>
-                            <td>             @if ($leaveRequest['status'] == 'new')
-                                
-                                    <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{$leaveRequest['id']}}"onclick="window.location='{{ route('employee.e-leave.add-leave-request', ['id' => $leaveRequest->id]) }}';" 
-                                    {{-- data-target="#approveLeaverequest" --}}
-                                    >
-                                    <span class="fas fa-check-circle"></span></button>
-                                    <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{$leaveRequest['id']}}
-                                    {{-- data-target="#disapproveLeaverequest" --}}
-                                    "onclick="window.location='{{ route('employee.e-leave.add-leave-request-disapprove', ['id' => $leaveRequest->id]) }}';" 
-                                    ><span class="fas fa-times-circle"></span></button>                                            
-                                @else
-                                    <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                    disabled><span class="fas fa-check-circle"></span></button>
-                                    <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                    disabled><span class="fas fa-times-circle"></span></button>                                            
-                                @endif   
-                            </td>
+
                             {{-- <td> --}}
                                 {{-- @if ($leaveRequest['is_approved'] == '0')
                                 
