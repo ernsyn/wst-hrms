@@ -27,7 +27,7 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">DOB</span>
-                            <span class="field-value">{{$employee->dob}}</span>
+                            <span class="field-value">{{$employee->dob->format('d/m/Y')}}</span>
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Gender</span>
@@ -111,7 +111,7 @@
                                             </div>
                                             <span class="col-lg-5 p-3">License Expiry Date</span>
                                             <div class="col-lg-7 font-weight-bold p-3">
-                                                <span class="field-value">{{$employee->driver_license_expiry_date}}</span>
+                                                <span class="field-value">{{$employee->driver_license_expiry_date->format('d/m/Y')}}</span>
                                             </div>
                                             <span class="col-lg-5 p-3">EPF No</span>
                                             <div class="col-lg-7 font-weight-bold p-3">

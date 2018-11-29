@@ -161,8 +161,7 @@
                 "data": "relationship"
             },
             {
-                "data": "dob",
-                "iDataSort": 1
+                "data": "dob"
             },
             {
                 "data": null,
