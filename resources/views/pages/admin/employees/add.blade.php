@@ -1,8 +1,8 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
 <div class="container pb-5">
     <div class="card">
-        <form method="POST" action="{{ route('admin.employees.add') }}" id="register_employee">
+        <form method="POST" action="{{ route('admin.employees.add.post') }}" id="register_employee">
             <div class="card-body">
                 @csrf {{-- Basic --}}
                 <div class="row">
@@ -17,11 +17,11 @@
                             <label class="col-lg-2 col-form-label text-right text-right">Name</label>
                             <div class="col-lg-6">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
-                                    required> 
+                                    required>
                                 @if ($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('name') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -29,11 +29,11 @@
                             <label class="col-lg-2 col-form-label text-right">Email</label>
                             <div class="col-lg-6">
                                 <input id="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}"
-                                    required> 
+                                    required>
                                 @if ($errors->has('email'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('email') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -42,11 +42,11 @@
                             <label class="col-lg-2 col-form-label text-right">Password</label>
                             <div class="col-lg-6">
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password"
-                                    value="{{ old('password') }}" required> 
+                                    value="{{ old('password') }}" required>
                                 @if ($errors->has('password'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('password') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -55,11 +55,11 @@
                             <label class="col-lg-2 col-form-label text-right">Contact No</label>
                             <div class="col-lg-6">
                                 <input id="contact_no" type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" name="contact_no"
-                                    value="{{ old('contact_no') }}" required> 
+                                    value="{{ old('contact_no') }}" required>
                                 @if ($errors->has('contact_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('contact_no') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -68,11 +68,11 @@
                             <label class="col-lg-2 col-form-label text-right">Address</label>
                             <div class="col-lg-6">
                                 <textarea id="address" type="Address" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }} text-left" name="address"
-                                    value="{{ old('address') }}" required></textarea> 
+                                    value="{{ old('address') }}" required></textarea>
                                 @if ($errors->has('address'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('address') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -89,11 +89,11 @@
                             <label class="col-lg-4 col-form-label text-right">IC No:</label>
                             <div class="col-lg-6">
                                 <input id="ic_no" type="text" class="form-control{{ $errors->has('ic_no') ? ' is-invalid' : '' }}" name="ic_no" value="{{ old('ic_no') }}"
-                                    required> 
+                                    required>
                                 @if ($errors->has('ic_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('ic_no') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -108,7 +108,7 @@
                                 @if ($errors->has('gender'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('gender') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -124,12 +124,12 @@
                                         <span class="input-group-text" id="dob-icon"><i class="far fa-calendar-alt"></i></span>
                                     </div>
                                 </div>
-                                
+
                                 {{-- @if ($errors->has('dob')) --}}
                                 <span class="invalid-feedback" role="alert">
                                     {{-- <strong>{{ $errors->first('dob') }}</strong> --}}
                                     <strong>error dob</strong>
-                                </span> 
+                                </span>
                                 {{-- @endif --}}
                             </div>
                         </div>
@@ -145,7 +145,7 @@
                                 @if ($errors->has('marital_status'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('marital_status') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -154,11 +154,11 @@
                             <label class="col-lg-4 col-form-label text-right">Race:</label>
                             <div class="col-lg-6">
                                 <input id="race" type="text" class="form-control{{ $errors->has('race') ? ' is-invalid' : '' }}" name="race" value="{{ old('race') }}"
-                                    required> 
+                                    required>
                                     @if ($errors->has('race'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('race') }}</strong>
-                                    </span> 
+                                    </span>
                                     @endif
                             </div>
                         </div>
@@ -168,7 +168,7 @@
                                 <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
                                     <option selected disabled>Select Nationality</option>
                                     @foreach($countries as $country)
-                                    <option value="{{ $country->id }}">{{ $country->citizenship }}</option>
+                                    <option value="{{ $country->citizenship }}">{{ $country->citizenship }}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('nationality'))
@@ -195,11 +195,11 @@
 
                             <label class="col-lg-4 col-form-label text-right">Driver License No:</label>
                             <div class="col-lg-6">
-                                <input id="driver_license_number" type="text" class="form-control{{ $errors->has('driver_license_number') ? ' is-invalid' : '' }}"
-                                    name="driver_license_number" value="{{ old('driver_license_number') }}" required>
-                                    @if ($errors->has('driver_license_number'))
+                                <input id="driver_license_no" type="text" class="form-control{{ $errors->has('driver_license_no') ? ' is-invalid' : '' }}"
+                                    name="driver_license_no" value="{{ old('driver_license_no') }}" required>
+                                    @if ($errors->has('driver_license_no'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('total_children') }}</strong>
+                                        <strong>{{ $errors->first('driver_license_no') }}</strong>
                                     </span>
                                     @endif
                             </div>
@@ -208,15 +208,15 @@
                             <label class="col-md-4 col-form-label text-right">License Expiry Date:</label>
                             <div class="col-md-6">
                                 <div class="input-group mb-3">
-                                    <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date" aria-describedby="license-expiry-date-icon" name="driver_license_expiry_date" readonly>
-                                    <input id="alt-license-expiry-date" type="text" class="form-control" name="dob" hidden>
+                                    <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date" aria-describedby="license-expiry-date-icon" readonly>
+                                    <input id="alt-license-expiry-date" type="text" class="form-control" name="driver_license_expiry_date" hidden>
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="license-expiry-date-icon"><i class="far fa-calendar-alt"></i></span>
                                     </div>
                                 </div>
-                                @if ($errors->has('driver_license_number'))
+                                @if ($errors->has('driver_license_expiry_date'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('total_children') }}</strong>
+                                    <strong>{{ $errors->first('driver_license_expiry_date') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -243,11 +243,11 @@
                                     @foreach(App\Department::all() as $department)
                                     <option value="{{ $department->id }}">{{ $department->name }}</option>
                                     @endforeach
-                                </select> 
+                                </select>
                                 @if ($errors->has('departments'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('departments') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div> --}}
@@ -296,11 +296,11 @@
                                     @foreach(App\EmployeePosition::all() as $position)
                                     <option value="{{ $position->id }}">{{ $position->name }}</option>
                                     @endforeach
-                                </select> 
+                                </select>
                                 @if ($errors->has('position'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('position') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -312,7 +312,7 @@
                                 @if ($errors->has('tax_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('tax_no') }}</strong>
-                                </span> 
+                                </span>
                                 @endif
                             </div>
                         </div>
@@ -344,7 +344,7 @@
 </div>
 @endsection
 
-@section('scripts') 
+@section('scripts')
 <script>
     $('#license-expiry-date').datepicker({
         altField: "#alt-license-expiry-date",
