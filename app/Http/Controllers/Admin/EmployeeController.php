@@ -93,11 +93,13 @@ class EmployeeController extends Controller
             'contact_no' => 'required|numeric',
             'marital_status' => 'required',
             'race' => 'required|alpha',
-            'total_children' => 'required|numeric',
-            'driver_license_no' => 'required',
-            'driver_license_expiry_date' => 'required|date',
+            'total_children' => 'nullable|numeric',
+            'driver_license_no' => 'nullable',
+            'driver_license_expiry_date' => 'nullable',
             'epf_no' => 'required',
-            'tax_no' => 'required'
+            'tax_no' => 'required',
+            'eis_no' => 'required',
+            'socso_no' => 'required'
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
@@ -240,19 +242,21 @@ class EmployeeController extends Controller
             'contact_no' => 'required',
             'address' => 'required',
             'company_id' => 'required',
-            'dob' => 'required',
+            'dob' => 'required|date',
             'gender' => 'required',
             'race' => 'required',
-            'nationality' => '',
-            'marital_status' => '',
-            'total_children' => '',
+            'nationality' => 'nullable',
+            'marital_status' => 'required',
+            'total_children' => 'nullable|numeric',
             'ic_no' => 'required',
             'tax_no' => 'required',
             'epf_no' => 'required',
-            'driver_license_no' => '',
-            'driver_license_expiry_date' => ''
+            'eis_no' => 'required',
+            'socso_no' => 'required',
+            'driver_license_no' => 'nullable',
+            'driver_license_expiry_date' => 'nullable|date'
         ]);
-        // dd($validatedData);
+        // dd($validatedEmployeeData);
         $user = User::create($validatedUserData);
         $user->assignRole('employee');
 

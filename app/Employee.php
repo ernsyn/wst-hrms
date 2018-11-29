@@ -22,6 +22,8 @@ class Employee extends Model
         'ic_no',
         'tax_no',
         'epf_no',
+        'eis_no',
+        'socso_no',
         'driver_license_no',
         'driver_license_expiry_date',
         'created_by',
