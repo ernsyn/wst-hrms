@@ -51,5 +51,9 @@ class LeaveRequest extends Model
         return $this->belongsTo('App\LeaveAllocation','leave_allocation_id'); 
     }
 
+public function leave_request_approval()
+{
+ return $this->belongsTo('App\LeaveRequestApproval','leave_request_id'); 
 
+}
 }

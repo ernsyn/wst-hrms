@@ -20,4 +20,9 @@ class LeaveRequestApproval extends Model
     public function approved_by() {
         return $this->belongsTo('App\Employee', 'approved_by_emp_id'); 
     }
+
+    public function leave_request_approval(){
+
+        return $this->belongsTo('App\LeaveRequest', 'leave_request_id');   
+    }
 }

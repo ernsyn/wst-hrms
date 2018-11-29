@@ -76,6 +76,10 @@
                 <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
                     <a href="{{ route('leaverequest') }}">Leave Approval</a>
                 </li>
+
+                <li class="menu-option {{ request()->is('leavehistory') ? 'active' : '' }}">
+                    <a href="{{ route('leavehistory') }}">Leave Requests</a>
+                </li>
             </ul>
         </li>
 
