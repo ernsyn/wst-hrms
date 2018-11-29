@@ -250,7 +250,7 @@
                         <div class="col-md-7">
                             {{-- <input id="jobDate" autocomplete="off" type="text" class="form-control" readonly>
                             <input name="jobDate" id="altjobDate" type="text" class="form-control" hidden> --}}
-                            <input id="alt-date-job" type="text" class="form-control">
+                            <input id="alt-date-job" type="text" class="form-control" hidden>
                             <input id="date-job" type="text" class="form-control" readonly>
                             <div id="date-job-error" class="invalid-feedback"></div>
                         </div>

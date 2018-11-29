@@ -74,6 +74,9 @@ class EmployeeController extends Controller
         ->editColumn('dob', function ($dependent) {
             return date('d/m/Y', strtotime($dependent->dob) );
         })
+        ->editColumn('alt_dob', function ($dependent) {
+            return date('Y-m-d', strtotime($dependent->dob) );
+        })
         ->make(true);
     }
 
