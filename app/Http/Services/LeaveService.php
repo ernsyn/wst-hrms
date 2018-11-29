@@ -177,6 +177,7 @@ class LeaveService
             if($includeLeaveType) {
                 array_push($leaveTypesForUser, array_merge(
                     [
+                        'id' => $leaveType->id,
                         'name' => $leaveType->name,
                         'description' => $leaveType->description,
                         'available_days' => self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id)
