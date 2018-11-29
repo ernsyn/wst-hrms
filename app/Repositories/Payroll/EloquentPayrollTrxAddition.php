@@ -18,7 +18,18 @@ class EloquentPayrollTrxAddition implements PayrollTrxAdditionRepository
     
     public function storeArray(array $data)
     {
-        if(count($data)) PayrollTrxAdditionRepository::insert($data);
+        if(count($data)) {
+            $currentUser = auth()->user()->id;
+            foreach ($data as $d) {
+                $payrollTrxAddition = new PayrollTrxAddition();
+                $payrollTrxAddition->payroll_trx_id = $d['payroll_trx_id'];
+                $payrollTrxAddition->additions_id = $d['additions_id'];
+                $payrollTrxAddition->amount = $d['amount'];
+                $payrollTrxAddition->created_by = $currentUser;
+                $payrollTrxAddition->updated_by = $currentUser;
+                $payrollTrxAddition->save();
+            }
+        }
     }
     
     public function findByPayrollTrxId($payrolltrx_id)

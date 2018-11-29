@@ -2,6 +2,24 @@
 @section('content')
 <div class="container">
 	<div class="card">
+		@if($errors->any())
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			{{$errors->first()}}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		@endif 
+		
+		@if(session()->get('success'))
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			{{ session()->get('success') }}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		@endif
+		
 		<form method="POST" action="{{ route('payroll.store') }}" id="add_payroll">
 			<div class="card-body">
 				@csrf

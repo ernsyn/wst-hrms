@@ -37,6 +37,9 @@ use App\Enums\PayrollReportEnum;
 use App\Http\Controllers\Popo\payrollreport\PayrollReport;
 use PDF;
 use App\Repositories\Payroll\ReportRepository;
+use App\EmployeeJob;
+use App\Addition;
+use App\Deduction;
 
 class PayrollController extends Controller
 {
@@ -107,11 +110,6 @@ class PayrollController extends Controller
         $currentUser = auth()->user()->id;
         // validate and store
         $validated = $request->validated();
-        // check if payroll period exists
-        // $payrollPeriodExists = PayrollMaster::where([
-        // ['year_month', $validated['year_month'].'-01'],
-        // ['period', $validated['period']]
-        // ])->exists();
         // TODO: refactor to service
         $data = array(
             'year_month' => $validated['year_month'].'-01', 
@@ -123,124 +121,126 @@ class PayrollController extends Controller
             $msg = 'Payroll month ' . $validated['year_month'] . ' has already been created.';
             return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
         }
-        // dd($payrollPeriodExists);
 
         // Process
         DB::beginTransaction();
-        // Step 1. Find all companies, generate all companies' payroll.
-        $companyList = Company::where('status', 'Active')->get();
-        // dd($companyList);
+        
+        // Step 1. get company
+        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        
         // Step 2. Create payroll.
-        foreach ($companyList as $company) {
-            $payroll = new PayrollMaster();
-            $payroll->company_id = $company->id;
-            $payroll->year_month = $validated['year_month'] . '-01';
-            $payroll->period = $validated['period'];
-            $payroll->created_by = $currentUser; 
-            $payroll->updated_by = $currentUser; 
-            $payroll->start_date = $this->payrollService->getPayrollStartDate($data);
-            $payroll->end_date = date('Y-m-d', strtotime('-1 days'));
-            $payroll->save();
+        $payroll = new PayrollMaster();
+        $payroll->company_id = $company->id;
+        $payroll->year_month = $validated['year_month'] . '-01';
+        $payroll->period = $validated['period'];
+        $payroll->created_by = $currentUser; 
+        $payroll->updated_by = $currentUser; 
+        $payroll->start_date = $this->payrollService->getPayrollStartDate($data);
+        $payroll->end_date = date('Y-m-d', strtotime('-1 days'));
+        $payroll->save();
 
-            $payrollId = $payroll->id;
-            $firstDayOfMonth = date('Y-m-d', strtotime($validated['year_month'] . '-01'));
+        // Step 3. Find all employees under this company, generate all employees' payroll trx.
+        $payrollId = $payroll->id;
+        $firstDayOfMonth = date('Y-m-d', strtotime($validated['year_month'] . '-01'));
             
-            // Step 3. Find all employees under this company, generate all employees' payroll trx.
-            $employeeList = Employee::leftJoin('employee_jobs', 'employee_jobs.emp_id', '=', 'employees.id')->where([
-                ['company_id', $company->id]
-            ])
-            ->where(function ($query) use ($firstDayOfMonth) {
-                // Either default or month/year greater or same
-                $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
-            })
-                ->get();
-//             dd($employeeList);
-            foreach ($employeeList as $employee) {
+        $employeeList = Employee::leftJoin('employee_jobs', 'employee_jobs.emp_id', '=', 'employees.id')->where([
+            ['company_id', $company->id]
+        ])
+        ->where(function ($query) use ($firstDayOfMonth) {
+            // Either default or month/year greater or same
+            $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
+        })
+        ->get();
+          
+        foreach ($employeeList as $employee) {
+            // Step 4. Find employee's payroll's required info.
+//             dd($employee);
+//             $employeeJob = $employee->employee_jobs->sortByDesc('start_date', SORT_REGULAR)->first();
+            $employeeJob = EmployeeJob::find($employee->id);
+//             dd($employeeJob);
+            $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
+            // dd($basicSalary);
+            $costCentre = CostCentre::where('id', $employeeJob->cost_centre_id)->get();
+            $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
+            // dd($seniorityPay);
+            //TODO:
+            $payback = PayrollHelper::getPayback($employee, $validated['year_month']);
 
-                // Step 4. Find employee's payroll's required info.
-                $employeeJob = $employee->employee_jobs->sortByDesc('start_date', SORT_REGULAR)->first();
-                // dd($employeeJob);
-                $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
-                // dd($basicSalary);
-                $costCentre = CostCentre::where('id', $employeeJob->cost_centre_id)->get();
-                $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
-                // dd($seniorityPay);
-                $payback = PayrollHelper::getPayback($employee, $validated['year_month']);
-
-                $epfFilter = array();
-                $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
-                $epfFilter['nationality'] = $employee->nationality;
-                $epfFilter['salary'] = $basicSalary;
-                $epf = new Epf();
-                $epf = $this->epfRepository->findByFilter($epfFilter);
+            $epfFilter = array();
+            $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
+            $epfFilter['nationality'] = $employee->nationality;
+            $epfFilter['salary'] = $basicSalary;
+            $epf = new Epf();
+            $epf = $this->epfRepository->findByFilter($epfFilter);
 //                 dd($epf);
-                $eis = new Eis();
-                $eis = $this->eisRepository->findBySalary($basicSalary);
-                $socso = new Socso();
-                $socso = $this->socsoRepository->findBySalary($basicSalary);
-                $pcbFilter = array();
-                $pcbFilter['salary'] = $basicSalary;
-                $pcbFilter['pcbGroup'] = $employee->pcb_group;
-                $pcbFilter['noOfChildren'] = $employee->total_child;
-                $pcb = new Pcb();
-                $pcb = $this->pcbRepository->findByFilter($pcbFilter);
-                // Step 5. Create payroll trx.
-                $payrollTrxData = array();
-                $payrollTrxData['payroll_master_id'] = $payrollId;
-                $payrollTrxData['employee_id'] = $employee->emp_id;
-                $payrollTrxData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
-                $payrollTrxData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
-                $payrollTrxData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
-                $payrollTrxData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
-                $payrollTrxData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
-                $payrollTrxData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
-                $payrollTrxData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
-                $payrollTrxData['seniority_pay'] = $seniorityPay;
-                $payrollTrxData['basic_salary'] = $basicSalary;
-                $payrollTrxData['take_home_pay'] = 0;
-                $payrollTrxData['created_by'] = $currentUser;
-                $payrollTrxData['updated_by'] = $currentUser;
+            $eis = new Eis();
+            $eis = $this->eisRepository->findBySalary($basicSalary);
+            $socso = new Socso();
+            $socso = $this->socsoRepository->findBySalary($basicSalary);
+            $pcbFilter = array();
+            $pcbFilter['salary'] = $basicSalary;
+            $pcbFilter['pcbGroup'] = $employee->pcb_group;
+            $pcbFilter['noOfChildren'] = $employee->total_child;
+            $pcb = new Pcb();
+            $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+            
+            // Step 5. Create payroll trx.
+            $payrollTrxData = array();
+            $payrollTrxData['payroll_master_id'] = $payrollId;
+            $payrollTrxData['employee_id'] = $employee->emp_id;
+            $payrollTrxData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
+            $payrollTrxData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
+            $payrollTrxData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
+            $payrollTrxData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
+            $payrollTrxData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
+            $payrollTrxData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
+            $payrollTrxData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
+            $payrollTrxData['seniority_pay'] = $seniorityPay;
+            $payrollTrxData['basic_salary'] = $basicSalary;
+            $payrollTrxData['take_home_pay'] = 0;
+            $payrollTrxData['created_by'] = $currentUser;
+            $payrollTrxData['updated_by'] = $currentUser;
 //                 dd($payrollTrxData);
-                $payrollTrxId = $this->payrollTrxRepository->create($payrollTrxData)->id;
+            $payrollTrxId = $this->payrollTrxRepository->create($payrollTrxData)->id;
 
-                // Step 6. Insert addition & deduction.
-                $additionDeductionFilter = array();
-                $additionDeductionFilter['companyId'] = $company->id;
-                $additionDeductionFilter['status'] = $employee->status;
-                $additionDeductionFilter['idJobMasterCategory'] = $employee->id_JobMaster_category;
-                $additionDeductionFilter['idJobMasterGrade'] = $employee->id_JobMaster_grade;
-                $additionList = $this->additionRepository->findByFilter($additionDeductionFilter)->toArray();
-                $deductionList = $this->deductionRepository->findByFilter($additionDeductionFilter)->toArray();
-                $additionArray = [];
-                if (count($additionList)) {
-                    foreach ($additionList as $addition) {
-                        if ($addition['code'] == 'TAC' && $employee->payroll_type != 'HQ with travel allowance')
-                            continue;
-                        $data = [
-                            'id_PayrollTrx' => $payrollTrxId,
-                            'id_AdditionMaster' => $addition['id'],
-                            'amount' => $addition['amount']
-                        ];
+            // Step 6. Insert addition & deduction.
+            $additionDeductionFilter = array();
+            $additionDeductionFilter['companyId'] = $company->id;
+            $additionDeductionFilter['status'] = $employee->status;
+            $additionDeductionFilter['idJobMasterCategory'] = $employee->id_JobMaster_category;
+            $additionDeductionFilter['idJobMasterGrade'] = $employee->id_JobMaster_grade;
+            $additionList = $this->additionRepository->findByFilter($additionDeductionFilter)->toArray();
+            $deductionList = $this->deductionRepository->findByFilter($additionDeductionFilter)->toArray();
+            $additionArray = [];
+            if (count($additionList)) {
+                foreach ($additionList as $addition) {
+                    if ($addition['code'] == 'TAC' && $employee->payroll_type != 'HQ with travel allowance')
+                        continue;
+                    $data = [
+                        'payroll_trx_id' => $payrollTrxId,
+                        'additions_id' => $addition['id'],
+                        'amount' => $addition['amount']
+                    ];
 
-                        $additionArray[] = $data;
-                    }
-                    $this->payrollTrxAdditionRepository->storeArray($additionArray);
+                    $additionArray[] = $data;
                 }
+                $this->payrollTrxAdditionRepository->storeArray($additionArray);
+            }
 
-                $deductionArray = [];
-                if (count($deductionList)) {
-                    foreach ($deductionList as $deduction) {
-                        $data = [
-                            'id_PayrollTrx' => $payrollTrxId,
-                            'id_DeductionMaster' => $deduction['id'],
-                            'amount' => $deduction['amount']
-                        ];
-                        $deductionArray[] = $data;
-                    }
-                    $this->payrollTrxDeductionRepository->storeArray($deductionArray);
+            $deductionArray = [];
+            if (count($deductionList)) {
+                foreach ($deductionList as $deduction) {
+                    $data = [
+                        'payroll_trx_id' => $payrollTrxId,
+                        'deductions_id' => $deduction['id'],
+                        'amount' => $deduction['amount']
+                    ];
+                    $deductionArray[] = $data;
                 }
+                $this->payrollTrxDeductionRepository->storeArray($deductionArray);
             }
         }
+        
         DB::commit();
         return redirect('/payroll')->with('success', 'Payroll month has been added');
 
@@ -365,27 +365,22 @@ class PayrollController extends Controller
          * 9. Summary
          */
         $info = $this->payrollTrx->find($id)->first();
-//         dd($info);
-//         $company = $this->company->find($info->company_id);
-        //TODO: get report to 
         $currentUser = auth()->user()->id;
-        $isKpiProposer = $this->employeeReportToRepository->isKpiProposer($info->employee_id, $currentUser); //$this->employeereportto->find_employee_in_charge($info->employee_id, Auth::user()->id);
-        $info->is_in_charge = $isKpiProposer;
-//         dd($isKpiProposer);
+        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $info->isKpiProposer = $this->employeeReportToRepository->isKpiProposer($info->employee_id, $currentUser);
         $employee = $this->employeeRepository->find($info->employee_id)->first();
-        $payrolltrx_additionForm = $this->payrollTrxAdditionRepository->findByPayrollTrxId($id);
-        $payrolltrx_deductionForm = $this->payrollTrxDeductionRepository->findByPayrollTrxId($id);
-//         dd($payrolltrx_additionForm);
-        $employee_forms = ['employee_id', 'full_name', 'joined_date', 'resignation_date', 'confirmation_date', 'increment_date'];
-        $salary_form;// = $this->payrolltrx->salary_form(@$info);
-        $bonus_form;// = $this->payrolltrx->bonus_form(@$info);
-//         $payrolltrx_additionForm = $this->payrollTrx->addition_form($payrolltrx_additionList);
-//         $payrolltrx_deductionForm;// = $this->payrolltrx->deduction_form($payrolltrx_deductionList);
-        $employeeContribution_form;// = $this->payrolltrx->employeeContribution_form(@$info);
-        $employerContribution_form;// = $this->payrolltrx->employerContribution_form(@$info);
-        
+        $payrollTrxAdditionList = $this->payrollTrxAdditionRepository->findByPayrollTrxId($id);
+        $payrollTrxDeductionList = $this->payrollTrxDeductionRepository->findByPayrollTrxId($id);
+        $additions = Addition::where([
+            ['company_id', $company->id],
+            ['status', 'Active']
+        ])->get();
+        $deductions = Deduction::where([
+            ['company_id', $company->id],
+            ['status', 'Active']
+        ])->get();
         $title = 'Payroll';
-        $payroll_id = $info->id_PayrollMaster;
+        $payrollId = $info->payroll_master_id;
         $addition_days_array = PayrollHelper::payroll_addition_with_days();
         $addition_hours_array = PayrollHelper::payroll_addition_with_hours();
         $deduction_days_array = PayrollHelper::payroll_deduction_with_days();
@@ -393,12 +388,13 @@ class PayrollController extends Controller
         $total_days = cal_days_in_month(CAL_GREGORIAN, substr($year_month,5,2), substr($year_month,0,4));
         $start_date = $year_month.'-01';
         $joined_date = $info->joined_date;
+        
         if(strtotime($joined_date) > strtotime($start_date)) {
             $different_of_dates = date_diff(date_create($start_date), date_create($joined_date));
             $total_days = $total_days - $different_of_dates->format('%a')+1;
         }
-//         dd($info->is_in_charge);
-        return view('pages.payroll.show-payroll-trx', compact('id', 'payroll_id', 'title', 'employee_forms', 'salary_form', 'bonus_form', 'payrolltrx_additionForm', 'payrolltrx_deductionForm', 'employeeContribution_form', 'employerContribution_form', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 'year_month', 'total_days', 'is_in_charge'));
+
+        return view('pages.payroll.show-payroll-trx', compact('id', 'payrollId', 'title', 'additions', 'deductions', 'payrollTrxAdditionList', 'payrollTrxDeductionList', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 'year_month', 'total_days'));
     }
     
     public function updatePayrollTrx(Request $request, $id)

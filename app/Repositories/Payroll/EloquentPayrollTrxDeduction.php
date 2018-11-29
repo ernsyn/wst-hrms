@@ -7,7 +7,18 @@ class EloquentPayrollTrxDeduction implements PayrollTrxDeductionRepository
 {
     public function storeArray(array $data)
     {
-        if(count($data)) PayrollTrxDeduction::insert($data);
+        if(count($data)) {
+            $currentUser = auth()->user()->id;
+            foreach ($data as $d) {
+                $payrollTrxDeduction = new PayrollTrxDeduction();
+                $payrollTrxDeduction->payroll_trx_id = $d['payroll_trx_id'];
+                $payrollTrxDeduction->deductions_id = $d['deductions_id'];
+                $payrollTrxDeduction->amount = $d['amount'];
+                $payrollTrxDeduction->created_by = $currentUser;
+                $payrollTrxDeduction->updated_by = $currentUser;
+                $payrollTrxDeduction->save();
+            }
+        }
     }
     
     public function query(){

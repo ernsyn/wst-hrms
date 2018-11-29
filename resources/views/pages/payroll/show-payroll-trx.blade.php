@@ -95,31 +95,31 @@
 				<div class="card-header">Bonus</div>
 				<div class="card-body">
 					@php
-					$disable = '';
+    					$disable = '';
+    					
+    					if(!$info->isKpiProposer)
+    						$disable = 'disabled'
 					@endphp
-					@if(!$info->is_in_charge)
-						{{ $disable = 'disabled' }};
-					@endif
 					<div class="row p-2">
 						<div class="col-sm-4 mb15">Bonus (BN)</div>
 						<div class="col-sm-8 mb15">
-							<input class="form-control " placeholder="0.00" id="bonus" name="bonus" type="number" value="{{ $info->bonus }}" {{ $disable }} >
+							<input class="form-control" step="any" placeholder="0.00" id="bonus" name="bonus" type="number" value="{{ $info->bonus }}" {{ $disable }} >
 						</div>
 					</div>
 					<div class="row p-2">
 						<div class="col-sm-4 mb15">KPI (0.5-1.5)</div>
 						<div class="col-sm-8 mb15">
-							<input class="form-control " step="any" placeholder="0.00" id="kpi" name="kpi" type="number" value="{!! $info->kpi !!}" {{ $disable }}>
+							<input class="form-control" step="any" placeholder="0.00" id="kpi" name="kpi" type="number" value="{!! $info->kpi !!}" {{ $disable }}>
 						</div>
 					</div>
 					<div class="row p-2">
 						<div class="col-sm-4 mb15">Total (TL)</div>
 						<div class="col-sm-8 mb15">
-							<input class="form-control " readonly="" placeholder="0.00" id="total_bonus" name="total_bonus" type="text" value="{{ $info->bonus * $info->kpi }}">
+							<input class="form-control" readonly="" placeholder="0.00" id="total_bonus" name="total_bonus" type="text" value="{{ $info->bonus * $info->kpi }}">
 						</div>
 					</div>
 					
-					@if($info->is_in_charge)
+					@if($info->isKpiProposer)
 					<div class="row p-2">
 						<div class="col-sm-4 mb15"></div>
 						<div class="col-sm-8 mb15 text-right">
@@ -136,7 +136,7 @@
 			<div class="card">
 				<div class="card-header">Additions<br>*Enter number of days or hours to calculate amount.</div>
 				<div class="card-body">
-					@foreach($payrolltrx_additionForm as $row)
+					@foreach($additions as $row)
     					@if(in_array($row->name, PayrollHelper::payroll_addition_with_days()))
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
     						<div class="col-sm-6 mb15">{{ $row->name }}</div>
@@ -171,7 +171,7 @@
 			</div></span> <span class="float-right col-md-6"><div class="card">
 				<div class="card-header">Deductions<br/>*Enter number of days or hours to calculate amount.</div>
 				<div class="card-body">
-					@foreach($payrolltrx_deductionForm as $row)
+					@foreach($deductions as $row)
     					@if(in_array($row->name, PayrollHelper::payroll_deduction_with_days()))
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
     						<div class="col-sm-6 mb15">{{ $row->name }}</div>

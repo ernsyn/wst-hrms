@@ -12,7 +12,7 @@ class PayrollHelper
          * If worked for less than a full moth (eg. Those joined the company on 5th of April)
          * - Basic salary / calendar days on that month * number of days worked in that month
          */
-        $basicSalary = $employee->basic_salary;var_dump($basicSalary);
+        $basicSalary = $employee->basic_salary;
         $payrollStartDate = date_create($payrollMonth.'-01');//var_dump($payrollStartDate);
         $employeeJoinedDate = date_create($employee->start_date);//var_dump($employeeJoinedDate);
         $dateDiff = date_diff($payrollStartDate, $employeeJoinedDate)->format('%R%a');
