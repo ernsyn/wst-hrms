@@ -1,22 +1,36 @@
 <?php
-
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
+
     protected $table = 'employees';
 
-    public function payrollTrx()
-    {
-        return $this->hasMany('App\PayrollTrx');
-    }
-
     protected $fillable = [
-        'user_id', 'address', 'company_id','contact_no','dob',
-        'gender','race','nationality','marital_status','total_children','ic_no','tax_no',
-        'epf_no','driver_license_no','driver_license_expiry_date','created_by','main_security_group_id'
+        'user_id',
+        'address',
+        'company_id',
+        'contact_no',
+        'dob',
+        'gender',
+        'race',
+        'nationality',
+        'marital_status',
+        'total_children',
+        'ic_no',
+        'tax_no',
+        'epf_no',
+        'driver_license_no',
+        'driver_license_expiry_date',
+        'created_by',
+        'main_security_group_id'
+    ];
+
+    protected $dates = [
+        'dob',
+        'driver_license_expiry_date'
     ];
 
     public function user()
@@ -28,16 +42,16 @@ class Employee extends Model
     {
         return $this->belongsTo('App\SecurityGroup', 'main_security_group_id');
     }
+
     public function report_to_emp_id()
     {
-        return $this->belongsTo('App\EmployeeReportTo', 'user_id','emp_id');
+        return $this->belongsTo('App\EmployeeReportTo', 'user_id', 'emp_id');
     }
 
     public function report_to()
     {
-        return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
+        return $this->belongsTo('App\EmployeeReportTo', 'user_id', 'report_to_emp_id');
     }
-
 
     public function employee_jobs()
     {
@@ -54,46 +68,46 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeBankAccount', 'emp_id');
     }
 
-    public function dependents()
+    public function employee_dependents()
     {
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
     }
 
-      public function leave_requests()
+    public function leave_requests()
     {
         return $this->hasMany('App\LeaveRequest', 'emp_id');
     }
 
     public function employee_security_groups()
-    
     {
-
         return $this->hasMany('App\EmployeeSecurityGroup', 'emp_id');
-        
     }
+
     public function employee_experiences()
     {
         return $this->hasMany('App\EmployeeExperience', 'emp_id');
     }
+
     public function employee_educations()
     {
         return $this->hasMany('App\EmployeeEducation', 'emp_id');
     }
+
     public function employee_skills()
     {
         return $this->hasMany('App\EmployeeSkill', 'emp_id');
     }
-    
+
     public function employee_visas()
     {
         return $this->hasMany('App\EmployeeVisa', 'emp_id');
     }
-    
+
     public function employee_immigrations()
     {
         return $this->hasMany('App\EmployeeImmigration', 'emp_id');
     }
-    
+
     public function employee_attachments()
     {
         return $this->hasMany('App\EmployeeAttachment', 'emp_id');
@@ -111,6 +125,11 @@ class Employee extends Model
 
     public function company()
     {
-        return $this->hasMany('App\Company','id','company_id');
+        return $this->hasMany('App\Company', 'id', 'company_id');
+    }
+
+    public function payrollTrx()
+    {
+        return $this->hasMany('App\PayrollTrx');
     }
 }
