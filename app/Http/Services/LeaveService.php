@@ -106,6 +106,23 @@ class LeaveService
         if($startDate.greaterThan($endDate)) {
             return self::error("Start date is after end date.");
         }
+        
+        $working_day = $employee->working_day;
+        if(empty($working_day)) {
+            return self::error("Employees working days not set yet.");
+        }
+        // Check if start/end day is non-working day or holiday
+        // if(!isWorkingDay($working_day, $startDate)) {
+        //     return self::error("Start date cannot be a non-working day.");
+        // } else if(/* */) {
+
+        // }
+
+        // if(!isWorkingDay($working_day, $endDate)) {
+        //     return self::error("End date cannot be a non-working day.");
+        // } else if(/* */) {
+
+        }
 
         $leaveType = LeaveType::with('applied_rules')->where('id', $leave_type_id)->first();
 
@@ -475,4 +492,29 @@ class LeaveService
         ];
     }
 
+    private function isWorkingDay($workingDays, $time) {
+        switch($time->dayOfWeek) {
+            case Carbon::MONDAY;
+                return $workingDays->monday > 0;
+                break;
+            case Carbon::TUESDAY;
+                return $workingDays->tuesday > 0;
+                break;
+            case Carbon::WEDNESDAY;
+                return $workingDays->wednesday > 0;
+                break;
+            case Carbon::THURSDAY;
+                return $workingDays->thursday > 0;
+                break;
+            case Carbon::FRIDAY;
+                return $workingDays->friday > 0;
+                break;
+            case Carbon::SATURDAY;
+                return $workingDays->saturday > 0;
+                break;
+            case Carbon::SUNDAY;
+                return $workingDays->sunday > 0;
+                break;
+        }
+    }
 }
