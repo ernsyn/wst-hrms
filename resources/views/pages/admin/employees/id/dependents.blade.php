@@ -178,25 +178,25 @@
 </script>
 
 <script type="text/javascript">
-    $('#dob-dependent').datepicker({
-        altField: "#alt-dob-dependent",
-        altFormat: 'yy-mm-dd',
-        format: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-80:+0"
-    });
-
-    $('#dob-dependent-edit').datepicker({
-        altField: "#alt-dob-dependent-edit",
-        altFormat: 'yy-mm-dd',
-        format: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-80:+0"
-    });
-
     $(function(){
+        //datepicker
+        $('#dob-dependent').datepicker({
+            altField: "#alt-dob-dependent",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-80:+0"
+        });
+
+        $('#dob-dependent-edit').datepicker({
+            altField: "#alt-dob-dependent-edit",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-80:+0"
+        });
         // ADD
         $('#add-dependent-popup').on('show.bs.modal', function (event) {
             clearDependentsError('#add-dependent-form');
@@ -302,7 +302,7 @@
                                         $('#edit-dependent-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'dob':
-                                        $('#edit-dependent-form #dob-dependent').addClass('is-invalid');
+                                        $('#edit-dependent-form #dob-dependent-edit').addClass('is-invalid');
                                         $('#edit-dependent-form #dob-dependent-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }

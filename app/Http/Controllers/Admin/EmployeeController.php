@@ -124,7 +124,6 @@ class EmployeeController extends Controller
         ->editColumn('dob', function ($dependent) {
             return date('d/m/Y', strtotime($dependent->dob) );
         })
-
         ->editColumn('alt_dob', function ($dependent) {
             return date('Y-m-d', strtotime($dependent->dob) );
         })
@@ -141,6 +140,12 @@ class EmployeeController extends Controller
         })
         ->editColumn('expiry_date', function ($immigration) {
             return date('d/m/Y', strtotime($immigration->expiry_date) );
+        })
+        ->editColumn('alt_issued_date', function ($immigration) {
+            return date('Y-m-d', strtotime($immigration->issued_date) );
+        })
+        ->editColumn('alt_expiry_date', function ($immigration) {
+            return date('Y-m-d', strtotime($immigration->expiry_date) );
         })
         ->make(true);
     }
