@@ -149,11 +149,33 @@ public function postAddPublicHoliday(Request $request)
 }
 
 
-public function editPublicHolidays(Request $request, $id) {
-    $holiday = Holiday::find($id);
+public function editHoliday(Request $request, $id) {
+    $holidays = Holiday::find($id);
 
-    return view('pages.admin.e-leave.configuration.edit-leave-holiday', ['holiday' => $holiday]);
+    return view('pages.admin.e-leave.configuration.edit-leave-holidays', ['holidays' => $holidays]);
 }
+
+
+public function postEditHoliday(Request $request, $id)
+{
+
+    $holidayData = $request->validate([
+        'name' => 'required',
+        'start_date' =>'required',
+        'end_date' => 'required',
+        'total_days' =>'required',
+         'repeat_annually' => 'required',
+        'status' =>'required',
+        'note'=>'',
+
+
+    ]);
+
+    Holiday::where('id', $id)->update($holidayData);
+
+    return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
+}
+
 
     public function postEditLeaveType(Request $request, $id) {
         $leaveType = LeaveType::where('id', $id)->first();

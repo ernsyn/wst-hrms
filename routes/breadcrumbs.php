@@ -56,7 +56,10 @@ Breadcrumbs::for('employee.e-leave.add-leave-request', function ($trail, $id) {
     $trail->push('Approve Leave', route('employee.e-leave.add-leave-request', $id));
 });
 
-
+Breadcrumbs::for('admin.e-leave.configuration.leave-holidays.edit', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Edit Holiday', route('admin.e-leave.configuration.leave-holidays.edit', $id));
+});
 Breadcrumbs::for('employee.e-leave.add-leave-request-disapprove', function ($trail, $id) {
     $trail->parent('admin.dashboard');
     $trail->push('Approve Leave', route('employee.e-leave.add-leave-request-disapprove', $id));
