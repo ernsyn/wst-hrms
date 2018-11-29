@@ -33,15 +33,15 @@
                                 <div class="col-sm-6 px-0">
                                     <label class="col-sm-12 col-form-label">Start Date</label>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control" id="startDate" readonly required data-parsley-error-message="Please choose Start Date">
-                                        <input type="text" class="form-control" name="altStart" id="altStart" hidden>
+                                        <input type="text" class="form-control" id="start-date" required data-parsley-error-message="Please choose Start Date">
+                                        <input type="text" class="form-control" name="alt-start-date" id="alt-start-date" hidden>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 px-0">
                                     <label class="col-sm-12 col-form-label">End Date</label>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control" id="endDate" readonly required>
-                                        <input type="text" class="form-control" name="altEnd" id="altEnd" hidden>
+                                        <input type="text" class="form-control" id="end-date" required>
+                                        <input type="text" class="form-control" name="alt-end-date" id="alt-end-date" hidden>
                                     </div>
                                 </div>
                             </div>
@@ -74,8 +74,10 @@
                             </div>
                             {{-- </div> --}}
                             
-                            <input type="text" class="form-control" id="totalLeave" name="totalLeave" hidden>
                             <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <div id="error-message" class="error-message"></div>
+                                </div>
                                 <div class="col-sm-12">
                                     <button id="add-leave-request-submit" type="submit" class="btn btn-primary btn-block" disabled>Apply for
                                         <span class="totaldays"><b>0.0</b> days</span>
@@ -96,182 +98,221 @@
 @endsection
 @section('scripts')
 <script type="text/javascript">
-    $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
-        $.each(leaveTypeData, function(key, leaveType){
-            var leaveTypeOption = $('#templates .leave-type-option').clone();
-            leaveTypeOption.data('leave-type', leaveType);
-            leaveTypeOption.val(leaveType.id);
-            leaveTypeOption.text(leaveType.name);
-            leaveTypeOption.appendTo('#leave-types');
-        });
-    });
-
-    $.ajax({
-        url: "{{ route('employee.e-leave.ajax.request.check') }}",
-        type: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            start_date: '24-12-2018',
-            end_date: '26-12-2018',
-            leave_type: '10'
-        },
-        success: function(data) {
-            console.log(data);
-        },
-        error: function(xhr) {
-            console.log("Error: ", xhr);
-        }
-    });
-
-    // change day according to selected value
-    $("#leave-half-day-am").click(function(){  
-        $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
-        $("#totalLeave").val(0.5);
-    });
-
-    $("#leave-half-day-pm").click(function(){  
-        $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
-        $("#totalLeave").val(0.5);
-    });
-
-    $("#leave-full-day").click(function(){  
-        $("span.totaldays").replaceWith("<span class='totaldays'><b>1</b> days</span>");
-        $("#totalLeave").val(1);
-    });
-
-    let getltAppliedRuleRouteTemplate = '{{ route('employee.e-leave.rules.ajax.get', ['leave_type_id' => '<<id>>']) }}';
-    let getWorkingDaysRouteTemplate = '{{ route('employee.e-leave.days.ajax.get', ['start_date' => '<<start_date>>', 'end_date' => '<<end_date>>']) }}';
-
-    var min_apply_days_before = [];
-    var leave_calculation = {};
-    
-    $('#leave-types').on('change', function() {
-        var leave_type_data = $(this).find('option:selected').data('leave-type');
-        
-        $("#available_days").text(leave_type_data.available_days.toFixed(1));
-        $("#leave-description").text(leave_type_data.description);
-
-        if(leave_type_data.available_days == 0) {
-            $("#add-leave-request-submit").prop('disabled', true);
-        }
-        else {
-            $("#add-leave-request-submit").prop('disabled', false);
-        }
-
-        // var getBalancesRoute = getBalancesRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
-        // var getltAppliedRuleRoute = getltAppliedRuleRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
-
-        // var allocated_days = 0;
-        // var spent_days = 0;
-
-        // $.get(getltAppliedRuleRoute, function(data, status) {
-        //     min_apply_days_before = [];
-        //     leave_calculation = {}
-
-        //     $.each(data, function(key, value) {
-        //         if(value.rule == "min_apply_days_before") {
-        //             min_apply_days_before = JSON.parse(value.configuration);
-        //         }
-        //         else if(value.rule == "leave_calculation") {
-        //             leave_calculation = JSON.parse(value.configuration);
-        //         }
-        //     });
-        // });
-    });
-
-
-
-    $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
-        e.preventDefault();
-
-        var total_days = parseFloat($('.totaldays b').html());
-        var balance_days = parseFloat($("#available_days").html());
-        var startDate = $('#startDate').val();
-        var endDate = $('#endDate').val();
-
-        var getWorkingDaysRoute = getWorkingDaysRouteTemplate.replace(encodeURI('<<start_date>>'), startDate.split("/").join("-"));
-        getWorkingDaysRoute = getWorkingDaysRoute.replace(encodeURI('<<end_date>>'), endDate.split("/").join("-"));
-
-        $.get(getWorkingDaysRoute, function(data, status) {
-            console.log('Actual Days ->', data);
-        });
-
-        var min_days_before = 0;
-
-        var errorMsg = '';
-
-        if(total_days > balance_days) {
-            errorMsg += "You are not allowed to exceed your balance allocation of " + balance_days + ", ";
-        }
-
-        if(min_apply_days_before.length > 0) {
-            $.each(min_apply_days_before, function(key, value) {
-                if(total_days >= value.min_leave_days) {
-                    min_days_before = value.min_apply_days_before;
-                }
+    $(function(){
+        $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
+            $.each(leaveTypeData, function(key, leaveType){
+                var leaveTypeOption = $('#templates .leave-type-option').clone();
+                leaveTypeOption.data('leave-type', leaveType);
+                leaveTypeOption.val(leaveType.id);
+                leaveTypeOption.text(leaveType.name);
+                leaveTypeOption.appendTo('#leave-types');
             });
-
-            var today = new Date();
-            var thisMonth = today.getMonth() + 1;
-            var todayDate = today.getDate() + "/" + thisMonth + "/" + today.getFullYear();
-            var dateDiff = dateDifference(parseDate(todayDate), parseDate(startDate));
-
-            if(dateDiff < min_days_before) {
-                errorMsg += "You need to request your leave(s) " + min_days_before + " days in advance, ";
-            }
-        }
-
-        if(errorMsg) {
-            console.log(errorMsg);
-        }
-
-        $.ajax({
-            {{--url: "{{ route('admin.employees.working-days.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                monday: $('#add-working-day-form #monday').val(),
-                tuesday: $('#add-working-day-form #tuesday').val(),
-                wednesday: $('#add-working-day-form #wednesday').val(),
-                thursday: $('#add-working-day-form #thursday').val(),
-                friday: $('#add-working-day-form #friday').val(),
-                saturday: $('#add-working-day-form #saturday').val(),
-                sunday: $('#add-working-day-form #sunday').val(),
-                start_work_time: $("#add-working-day-form #start_work_time").val(),
-                end_work_time: $("#add-working-day-form #end_work_time").val()
-            },
-            success: function(data) {
-                getEmployeeWorkingDaysData();
-                showAlert(data.success);
-                $('#add-working-day-popup').modal('toggle');
-            },
-            error: function(xhr) {
-                if(xhr.status == 422) {
-                    var errors = xhr.responseJSON.errors;
-                    console.log("Error: ", xhr);
-
-                    for (var errorField in errors) {
-                        if (errors.hasOwnProperty(errorField)) {
-                            console.log("Error: ", errorField);
-                        }
-                    }
-                }
-
-                showAlert("Oops! Operation failed, please try again.");
-                $('#add-working-day-popup').modal('toggle');
-            }--}}
         });
+
+        $("#start-date").datepicker({
+            altField: "#alt-start-date",
+            altFormat: 'yy-mm-dd',
+            dateFormat: 'dd-mm-yy',
+            minDate: 0,
+            onSelect: function onSelect(selectedDate) {
+                $("#end-date").datepicker("option", "minDate", selectedDate);
+
+                if($('#start-date').val() && $('#end-date').val()) {
+                    $.ajax({
+                        url: "{{ route('employee.e-leave.ajax.request.check') }}",
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            start_date: $('#add-leave-request-form #start-date').val(),
+                            end_date: $('#add-leave-request-form #end-date').val(),
+                            leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val()
+                        },
+                        success: function(data) {
+                            if(data.error) {
+                                $('#error-message').text(data.message);
+                            }
+
+                            if(data.total_days) {
+                                $('#totaldays').text(data.total_days);
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                }     
+            },
+            onClose: function onClose() {
+                $(this).parsley().validate();
+            }
+        });
+
+        $('#end-date').datepicker({
+            altField: "#alt-end-date",
+            altFormat: 'yy-mm-dd',
+            dateFormat: 'dd-mm-yy',
+            minDate: 0,
+            onSelect: function onSelect(selectedDate) {
+                $("#start-date").datepicker("option", "maxDate", selectedDate);
+
+                // var start = $("#startDate").datepicker("getDate");
+                // var end = $("#endDate").datepicker("getDate");
+                // var days = (end - start) / (1000 * 60 * 60 * 24) + 1;
+                // // $("span.totaldays").replaceWith("<span class='totaldays'><b>" + days + "</b> days</span>");
+                // $("#totalLeave").val(days);
+
+                // if (days > 1) {
+                //     $("#selectPeriod").hide();
+                // } else {
+                //     $("#selectPeriod").show();
+                // }
+
+                if($('#start-date').val() && $('#end-date').val()) {
+                    $.ajax({
+                        url: "{{ route('employee.e-leave.ajax.request.check') }}",
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            start_date: $('#add-leave-request-form #start-date').val(),
+                            end_date: $('#add-leave-request-form #end-date').val(),
+                            leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val()
+                        },
+                        success: function(data) {
+                            if(data.error) {
+                                $('#error-message').text(data.message);
+                            }
+
+                            if(data.total_days) {
+                                $('#totaldays').text(data.total_days);
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                }     
+            },
+            onClose: function onClose() {
+                $(this).parsley().validate();
+            }
+        });
+
+        // change day according to selected value
+        $("#leave-half-day-am").click(function(){  
+            $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
+            $("#totalLeave").val(0.5);
+        });
+
+        $("#leave-half-day-pm").click(function(){  
+            $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
+            $("#totalLeave").val(0.5);
+        });
+
+        $("#leave-full-day").click(function(){  
+            $("span.totaldays").replaceWith("<span class='totaldays'><b>1</b> days</span>");
+            $("#totalLeave").val(1);
+        });
+
+        let getltAppliedRuleRouteTemplate = '{{ route('employee.e-leave.rules.ajax.get', ['leave_type_id' => '<<id>>']) }}';
+        let getWorkingDaysRouteTemplate = '{{ route('employee.e-leave.days.ajax.get', ['start_date' => '<<start_date>>', 'end_date' => '<<end_date>>']) }}';
+
+        var min_apply_days_before = [];
+        var leave_calculation = {};
+        
+        $('#leave-types').on('change', function() {
+            var leave_type_data = $(this).find('option:selected').data('leave-type');
+            
+            $("#available_days").text(leave_type_data.available_days.toFixed(1));
+            $("#leave-description").text(leave_type_data.description);
+
+            if(leave_type_data.available_days == 0) {
+                $("#add-leave-request-submit").prop('disabled', true);
+            }
+            else {
+                $("#add-leave-request-submit").prop('disabled', false);
+            }
+
+            // var getBalancesRoute = getBalancesRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
+            // var getltAppliedRuleRoute = getltAppliedRuleRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
+
+            // var allocated_days = 0;
+            // var spent_days = 0;
+
+            // $.get(getltAppliedRuleRoute, function(data, status) {
+            //     min_apply_days_before = [];
+            //     leave_calculation = {}
+
+            //     $.each(data, function(key, value) {
+            //         if(value.rule == "min_apply_days_before") {
+            //             min_apply_days_before = JSON.parse(value.configuration);
+            //         }
+            //         else if(value.rule == "leave_calculation") {
+            //             leave_calculation = JSON.parse(value.configuration);
+            //         }
+            //     });
+            // });
+        });
+
+        $("#start-date").on('change', function(){
+            console.log('start-date changed');   
+        });
+
+
+        $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
+            e.preventDefault();
+
+            // var total_days = parseFloat($('.totaldays b').html());
+            // var balance_days = parseFloat($("#available_days").html());
+            // var startDate = $('#startDate').val();
+            // var endDate = $('#endDate').val();
+
+            // var getWorkingDaysRoute = getWorkingDaysRouteTemplate.replace(encodeURI('<<start_date>>'), startDate.split("/").join("-"));
+            // getWorkingDaysRoute = getWorkingDaysRoute.replace(encodeURI('<<end_date>>'), endDate.split("/").join("-"));
+
+            // $.get(getWorkingDaysRoute, function(data, status) {
+            //     console.log('Actual Days ->', data);
+            // });
+
+            // var min_days_before = 0;
+
+            // var errorMsg = '';
+
+            // if(total_days > balance_days) {
+            //     errorMsg += "You are not allowed to exceed your balance allocation of " + balance_days + ", ";
+            // }
+
+            // if(min_apply_days_before.length > 0) {
+            //     $.each(min_apply_days_before, function(key, value) {
+            //         if(total_days >= value.min_leave_days) {
+            //             min_days_before = value.min_apply_days_before;
+            //         }
+            //     });
+
+            //     var today = new Date();
+            //     var thisMonth = today.getMonth() + 1;
+            //     var todayDate = today.getDate() + "/" + thisMonth + "/" + today.getFullYear();
+            //     var dateDiff = dateDifference(parseDate(todayDate), parseDate(startDate));
+
+            //     if(dateDiff < min_days_before) {
+            //         errorMsg += "You need to request your leave(s) " + min_days_before + " days in advance, ";
+            //     }
+            // }
+
+            // if(errorMsg) {
+            //     console.log(errorMsg);
+            // }
+        });
+
+        // function parseDate(str) {
+        //     var mdy = str.split('/');
+        //     return new Date(mdy[2], mdy[1], mdy[0]);
+        // }
+
+        // function dateDifference(first, second) {
+        //     // Take the difference between the dates and divide by milliseconds per day.
+        //     // Round to nearest whole number to deal with DST.
+        //     return Math.round((second-first)/(1000*60*60*24));
+        // }
     });
-
-    function parseDate(str) {
-        var mdy = str.split('/');
-        return new Date(mdy[2], mdy[1], mdy[0]);
-    }
-
-    function dateDifference(first, second) {
-        // Take the difference between the dates and divide by milliseconds per day.
-        // Round to nearest whole number to deal with DST.
-        return Math.round((second-first)/(1000*60*60*24));
-    }
 </script>
 @append
