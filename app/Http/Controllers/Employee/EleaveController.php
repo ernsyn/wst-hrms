@@ -319,7 +319,7 @@ class ELeaveController extends Controller
     //         $leaveAllocationDataEntry = $leaveAllocationData + $total_days;
 
 
-            if ($multiple_approval_levels_required == false) {
+            if ($multiple_approval_levels_required == true) {
 
                 if ($leave_request_approval == $employee_report_to){   
                     
@@ -344,7 +344,7 @@ class ELeaveController extends Controller
         
 
                 }
-                if ($leave_request_approval < $employee_report_to){
+            elseif ($leave_request_approval < $employee_report_to){
                     LeaveRequest::where('id',$id)->update(array('status' => 'new'));
                     $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
                     $leaveRquestData = $request->validate([
