@@ -20,6 +20,8 @@ use App\EmployeeSkill;
 use App\EmployeeAttachment;
 use App\EmployeeEmergencyContact;
 use App\EmployeeReportTo;
+use App\EmployeeSecurityGroup;
+use App\EmployeeWorkingDay;
 
 class EmployeeController extends Controller
 {
@@ -68,20 +70,49 @@ class EmployeeController extends Controller
     {
         $dependents = EmployeeDependent::where('emp_id', Auth::user()->employee->id)->get();
 
-        return DataTables::of($dependents)->make(true);
+        return DataTables::of($dependents)
+        ->editColumn('dob', function ($dependent) {
+            return date('d/m/Y', strtotime($dependent->dob) );
+        })
+        ->make(true);
     }
 
     public function getDataTableImmigrations()
     {
         $immigrations = EmployeeImmigration::where('emp_id', Auth::user()->employee->id)->get();
 
-        return DataTables::of($immigrations)->make(true);
+        return DataTables::of($immigrations)
+        ->editColumn('issued_date', function ($immigration) {
+            return date('d/m/Y', strtotime($immigration->issued_date) );
+        })
+        ->editColumn('expiry_date', function ($immigration) {
+            return date('d/m/Y', strtotime($immigration->expiry_date) );
+        })
+        ->make(true);
     }
 
     public function getDataTableVisas()
     {
-        $visa = EmployeeVisa::where('emp_id', Auth::user()->employee->id)->get();
-        return DataTables::of($visa)->make(true);
+        $visas = EmployeeVisa::where('emp_id', Auth::user()->employee->id)->get();
+        return DataTables::of($visas)
+        ->editColumn('issued_date', function ($visa) {
+            return date('d/m/Y', strtotime($visa->issued_date) );
+        })
+        ->editColumn('expiry_date', function ($visa) {
+            return date('d/m/Y', strtotime($visa->expiry_date) );
+        })
+        ->make(true);
+    }
+
+
+    public function getDataTableJobs()
+    {
+        $jobs = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', Auth::user()->employee->id)->get();
+        return DataTables::of($jobs)
+        ->editColumn('start_date', function ($job) {
+            return date('d/m/Y', strtotime($job->start_date) );
+        })
+        ->make(true);
     }
 
     public function getDataTableBankAccounts()
@@ -90,16 +121,17 @@ class EmployeeController extends Controller
         return DataTables::of($banks)->make(true);
     }
 
-    public function getDataTableJobs()
-    {
-        $job = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', Auth::user()->employee->id)->get();
-        return DataTables::of($job)->make(true);
-    }
-
     public function getDataTableExperiences()
     {
         $experiences = EmployeeExperience::where('emp_id', Auth::user()->employee->id)->get();
-        return DataTables::of($experiences)->make(true);
+        return DataTables::of($experiences)
+        ->editColumn('start_date', function ($experience) {
+            return date('d/m/Y', strtotime($experience->start_date) );
+        })
+        ->editColumn('end_date', function ($experience) {
+            return date('d/m/Y', strtotime($experience->end_date) );
+        })
+        ->make(true);
     }
 
     public function getDataTableEducation()
@@ -130,6 +162,18 @@ class EmployeeController extends Controller
     {
         $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($reportTos)->make(true);
+    }
+
+    public function getDataTableMainSecurityGroup()
+    {
+        $employee = Employee::with('security_groups')->where('emp_id', Auth::user()->employee->id)->get();
+        return DataTables::of($employee)->make(true);
+    }
+
+    public function getDataTableSecurityGroup()
+    {
+        $security_groups = EmployeeSecurityGroup::with('security_groups')->where('emp_id', Auth::user()->employee->id)->get();
+        return DataTables::of($security_groups)->make(true);
     }
 
     // SECTION: Add

@@ -28,6 +28,11 @@ class Employee extends Model
         'main_security_group_id'
     ];
 
+    protected $dates = [
+        'dob',
+        'driver_license_expiry_date'
+    ];
+
     public function user()
     {
         return $this->belongsTo('App\User');
