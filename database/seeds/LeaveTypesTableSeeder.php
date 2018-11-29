@@ -117,7 +117,7 @@ class LeaveTypesTableSeeder extends Seeder
         
         $leaveType = App\LeaveType::create([
             'code' => 'PATERNITY',
-            'name' => 'Paterity Leave',
+            'name' => 'Paternity Leave',
             'description' => 'Leave allocated to fathers post-partum.',
             'is_custom' => false,
             'entitled_days' => 10,
