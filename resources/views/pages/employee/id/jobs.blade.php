@@ -1,6 +1,6 @@
 {{-- Table --}}
 <div class="tab-pane fade show p-3" id="nav-job" role="tabpanel" aria-labelledby="nav-job-tab">
-    <div class="row pb-3">
+    {{-- <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
             <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
@@ -10,7 +10,7 @@
                         Resign
                     </button>
         </div>
-    </div>
+    </div> --}}
     <table class="hrms-primary-data-table w-100" id="employee-jobs-table">
         <thead>
             <tr>
@@ -23,7 +23,7 @@
                 <th>Grade</th>
                 <th>Basic Salary</th>
                 <th>Status</th>
-                <th>Action</th>
+                {{-- <th>Action</th> --}}
             </tr>
         </thead>
     </table>
@@ -311,9 +311,6 @@
     </div>
 </div>
 
-
-
-
 @section('scripts')
 <script>
 var jobsTable = $('#employee-jobs-table').DataTable({
@@ -351,10 +348,10 @@ var jobsTable = $('#employee-jobs-table').DataTable({
         {
             "data": "status"
         },
-        {
-            "data": null, // can be null or undefined
-            "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#jobModal"><i class="far fa-edit"></i></button>'
-        }
+        // {
+        //     "data": null, // can be null or undefined
+        //     "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#jobModal"><i class="far fa-edit"></i></button>'
+        // }
     ]
 });
 

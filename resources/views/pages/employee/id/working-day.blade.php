@@ -66,7 +66,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="monday"><strong>Monday*</strong></label>
-                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday" value="" required>
+                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday" value="" readonly>
                             <div id="monday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="tuesday"><strong>Tuesday*</strong></label>
-                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday" value="" required>
+                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday" value="" readonly>
                             <div id="tuesday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="wednesday"><strong>Wednesday*</strong></label>
-                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday" value="" required>
+                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday" value="" readonly>
                             <div id="wednesday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -90,7 +90,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="thursday"><strong>Thursday*</strong></label>
-                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder="" name="thursday" value="" required>
+                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder="" name="thursday" value="" readonly>
                             <div id="thursday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="friday"><strong>Friday*</strong></label>
-                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday" value="" required>
+                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday" value="" readonly>
                             <div id="friday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="saturday"><strong>Saturday*</strong></label>
-                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday" value="" required>
+                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday" value="" readonly>
                             <div id="saturday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -114,7 +114,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="sunday"><strong>Sunday*</strong></label>
-                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday" value="" required>
+                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday" value="" readonly>
                             <div id="sunday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
-                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="" required>
+                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="" readonly>
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
-                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="" required>
+                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="" readonly>
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="monday"><strong>Monday*</strong></label>
-                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday" value="" required>
+                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday" value="" readonly>
                             <div id="monday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -180,7 +180,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="tuesday"><strong>Tuesday*</strong></label>
-                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday" value="" required>
+                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday" value="" readonly>
                             <div id="tuesday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -188,7 +188,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="wednesday"><strong>Wednesday*</strong></label>
-                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday" value="" required>
+                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday" value="" readonly>
                             <div id="wednesday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -196,7 +196,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="thursday"><strong>Thursday*</strong></label>
-                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder="" name="thursday" value="" required>
+                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder="" name="thursday" value="" readonly>
                             <div id="thursday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -204,7 +204,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="friday"><strong>Friday*</strong></label>
-                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday" value="" required>
+                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday" value="" readonly>
                             <div id="friday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -212,7 +212,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="saturday"><strong>Saturday*</strong></label>
-                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday" value="" required>
+                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday" value="" readonly>
                             <div id="saturday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -220,7 +220,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="sunday"><strong>Sunday*</strong></label>
-                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday" value="" required>
+                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday" value="" readonly>
                             <div id="sunday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -228,7 +228,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
-                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="" required>
+                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="" readonly>
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -236,7 +236,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
-                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="" required>
+                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="" readonly>
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>

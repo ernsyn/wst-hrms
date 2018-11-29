@@ -1,5 +1,5 @@
 <!-- ADD -->
-<div class="modal fade" id="add-bank-accounts-popup" tabindex="-1" role="dialog" aria-labelledby="add-bank-accounts-label"
+{{-- <div class="modal fade" id="add-bank-accounts-popup" tabindex="-1" role="dialog" aria-labelledby="add-bank-accounts-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -15,7 +15,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Bank Name*</strong></label>
-                            <input id="bank-code" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="bank-code" type="text" class="form-control" placeholder="" value="" readonly>
                             <div id="bank-code-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -23,7 +23,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Number*</strong></label>
-                            <input id="acc-no" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="acc-no" type="text" class="form-control" placeholder="" value="" readonly>
                             <div id="acc-no-error" class="invalid-feedback">
 
                             </div>
@@ -32,7 +32,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Status*</strong></label>
-                            <select name="acc-status" id="acc-status" type="text" class="form-control" placeholder="" value="" required>
+                            <select name="acc-status" id="acc-status" type="text" class="form-control" placeholder="" value="" readonly>
                                 <option value="">Select Type</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
@@ -50,7 +50,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> --}}
 
 <!-- UPDATE -->
 <div class="modal fade" id="edit-bank-accounts-popup" tabindex="-1" role="dialog" aria-labelledby="edit-bank-accounts-label"
@@ -58,7 +58,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-bank-accounts-label">Edit Bank</h5>
+                <h5 class="modal-title" id="edit-bank-accounts-label">View Bank</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -69,7 +69,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Bank Name*</strong></label>
-                            <input id="bank-code" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="bank-code" type="text" class="form-control" placeholder="" value="" readonly>
                             <div id="bank-code-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Number*</strong></label>
-                            <input id="acc-no" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="acc-no" type="text" class="form-control" placeholder="" value="" readonly>
                             <div id="acc-no-error" class="invalid-feedback">
 
                             </div>
@@ -86,18 +86,20 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Status*</strong></label>
-                            <select name="acc-status" id="acc-status" type="text" class="form-control" placeholder="" value="" required>
+                            {{-- <select name="acc-status" id="acc-status" type="text" class="form-control" placeholder="" value="" readonly>
                                 <option value="">Select Type</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
-                            </select>
+                            </select> --}}
+                            <input id="acc-status" type="text" class="form-control" placeholder="" value="" readonly>
+
                             <div id="acc-status-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="edit-bank-accounts-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+                    {{-- <button id="edit-bank-accounts-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button> --}}
                 </div>
             </form>
         </div>
@@ -105,7 +107,7 @@
 </div>
 
 {{-- DELETE --}}
-<div class="modal fade" id="confirm-delete-bank-account-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+{{-- <div class="modal fade" id="confirm-delete-bank-account-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -123,17 +125,17 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <div class="tab-pane fade show p-3" id="nav-bank" role="tabpanel" aria-labelledby="nav-bank-tab">
-    <div class="row pb-3">
+    {{-- <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
             <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-bank-accounts-popup">
                 Add Bank
             </button>
         </div>
-    </div>
+    </div> --}}
     <table class="table table-bordered table-hover w-100" id="employee-bank-accounts-table">
         <thead>
             <tr>
@@ -177,8 +179,8 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-bank-accounts-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-bank-account-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-bank-accounts-popup"><i class="far fa-eye"></i></button>`;
+                        // `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-bank-account-modal"><i class="far fa-trash-alt"></i></button>`;
                 }
             }
         ]
@@ -188,56 +190,55 @@
 <script type="text/javascript">
     $(function(){
         // ADD
-        $('#add-bank-accounts-popup').on('show.bs.modal', function (event) {
-            clearBankAccountError('#add-bank-accounts-form');
-        });
-        $('#add-bank-accounts-form #add-bank-accounts-submit').click(function(e){
-            e.preventDefault();
-            clearBankAccountError('#add-bank-accounts-form');
-            $.ajax({
-                url: "{{ route('employee.bank-accounts.post', ['id' => $id]) }}",
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    // Form Data
-                    bank_code: $('#add-bank-accounts-form #bank-code').val(),
-                    acc_no: $('#add-bank-accounts-form #acc-no').val(),
-                    acc_status: $('#add-bank-accounts-form #acc-status').val()
-                },
-                success: function(data) {
-                    showAlert(data.success);
-                    bankAccountsTable.ajax.reload();
-                    $('#add-bank-accounts-popup').modal('toggle');
-                    clearBankAccountModal('#add-bank-accounts-form');
-                },
-                error: function(xhr) {
-                    if(xhr.status == 422) {
-                        var errors = xhr.responseJSON.errors;
-                        console.log("Error: ", xhr);
-                        for (var errorField in errors) {
-                            if (errors.hasOwnProperty(errorField)) {
-                                console.log("Error: ", errorField);
-                                switch(errorField) {
-                                    case 'bank_code':
-                                        $('#add-bank-accounts-form #bank-code').addClass('is-invalid');
-                                        $('#add-bank-accounts-form #bank-code-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
-                                    case 'acc_no':
-                                        $('#add-bank-accounts-form #acc-no').addClass('is-invalid');
-                                        $('#add-bank-accounts-form #acc-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
-                                    case 'acc_status':
-                                        $('#add-bank-accounts-form #acc-status').addClass('is-invalid');
-                                        $('#add-bank-accounts-form #acc-status-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-
+        // $('#add-bank-accounts-popup').on('show.bs.modal', function (event) {
+        //     clearBankAccountError('#add-bank-accounts-form');
+        // });
+        // $('#add-bank-accounts-form #add-bank-accounts-submit').click(function(e){
+        //     e.preventDefault();
+        //     clearBankAccountError('#add-bank-accounts-form');
+        //     $.ajax({
+        //         url: "{{ route('employee.bank-accounts.post', ['id' => $id]) }}",
+        //         type: 'POST',
+        //         data: {
+        //             _token: '{{ csrf_token() }}',
+        //             // Form Data
+        //             bank_code: $('#add-bank-accounts-form #bank-code').val(),
+        //             acc_no: $('#add-bank-accounts-form #acc-no').val(),
+        //             acc_status: $('#add-bank-accounts-form #acc-status').val()
+        //         },
+        //         success: function(data) {
+        //             showAlert(data.success);
+        //             bankAccountsTable.ajax.reload();
+        //             $('#add-bank-accounts-popup').modal('toggle');
+        //             clearBankAccountModal('#add-bank-accounts-form');
+        //         },
+        //         error: function(xhr) {
+        //             if(xhr.status == 422) {
+        //                 var errors = xhr.responseJSON.errors;
+        //                 console.log("Error: ", xhr);
+        //                 for (var errorField in errors) {
+        //                     if (errors.hasOwnProperty(errorField)) {
+        //                         console.log("Error: ", errorField);
+        //                         switch(errorField) {
+        //                             case 'bank_code':
+        //                                 $('#add-bank-accounts-form #bank-code').addClass('is-invalid');
+        //                                 $('#add-bank-accounts-form #bank-code-error').html('<strong>' + errors[errorField][0] + "</strong>");
+        //                             break;
+        //                             case 'acc_no':
+        //                                 $('#add-bank-accounts-form #acc-no').addClass('is-invalid');
+        //                                 $('#add-bank-accounts-form #acc-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+        //                             break;
+        //                             case 'acc_status':
+        //                                 $('#add-bank-accounts-form #acc-status').addClass('is-invalid');
+        //                                 $('#add-bank-accounts-form #acc-status-error').html('<strong>' + errors[errorField][0] + '</strong>');
+        //                             break;
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     });
+        // });
 
         // EDIT
         var editId = null;
@@ -254,88 +255,88 @@
             $('#edit-bank-accounts-form #acc-status').val(currentData.acc_status);
         });
 
-        var editRouteTemplate = "{{ route('employee.bank-accounts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        $('#edit-bank-accounts-submit').click(function(e){
-            var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
-            clearBankAccountError('#edit-bank-accounts-form');
-            e.preventDefault();
-            $.ajax({
-                url: editRoute,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    bank_code: $('#edit-bank-accounts-form #bank-code').val(),
-                    acc_no: $('#edit-bank-accounts-form #acc-no').val(),
-                    acc_status: $('#edit-bank-accounts-form #acc-status').val()
-                },
-                success: function(data) {
-                    showAlert(data.success);
-                    bankAccountsTable.ajax.reload();
-                    $('#edit-bank-accounts-popup').modal('toggle');
-                    clearBankAccountModal('#edit-bank-accounts-form');
-                },
-                error: function(xhr) {
-                    if(xhr.status == 422) {
-                        var errors = xhr.responseJSON.errors;
-                        console.log("Error: ", xhr);
-                        for (var errorField in errors) {
-                            if (errors.hasOwnProperty(errorField)) {
-                                console.log("Error: ", errorField);
-                                switch(errorField) {
-                                    case 'bank_code':
-                                        $('#edit-bank-accounts-form #bank-code').addClass('is-invalid');
-                                        $('#edit-bank-accounts-form #bank-code-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
-                                    case 'acc_no':
-                                        $('#edit-bank-accounts-form #acc-no').addClass('is-invalid');
-                                        $('#edit-bank-accounts-form #acc-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
-                                    case 'acc_status':
-                                        $('#edit-bank-accounts-form #acc-status').addClass('is-invalid');
-                                        $('#edit-bank-accounts-form #acc-status-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
+        // var editRouteTemplate = "{{ route('employee.bank-accounts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        // $('#edit-bank-accounts-submit').click(function(e){
+        //     var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
+        //     clearBankAccountError('#edit-bank-accounts-form');
+        //     e.preventDefault();
+        //     $.ajax({
+        //         url: editRoute,
+        //         type: 'POST',
+        //         data: {
+        //             _token: '{{ csrf_token() }}',
+        //             bank_code: $('#edit-bank-accounts-form #bank-code').val(),
+        //             acc_no: $('#edit-bank-accounts-form #acc-no').val(),
+        //             acc_status: $('#edit-bank-accounts-form #acc-status').val()
+        //         },
+        //         success: function(data) {
+        //             showAlert(data.success);
+        //             bankAccountsTable.ajax.reload();
+        //             $('#edit-bank-accounts-popup').modal('toggle');
+        //             clearBankAccountModal('#edit-bank-accounts-form');
+        //         },
+        //         error: function(xhr) {
+        //             if(xhr.status == 422) {
+        //                 var errors = xhr.responseJSON.errors;
+        //                 console.log("Error: ", xhr);
+        //                 for (var errorField in errors) {
+        //                     if (errors.hasOwnProperty(errorField)) {
+        //                         console.log("Error: ", errorField);
+        //                         switch(errorField) {
+        //                             case 'bank_code':
+        //                                 $('#edit-bank-accounts-form #bank-code').addClass('is-invalid');
+        //                                 $('#edit-bank-accounts-form #bank-code-error').html('<strong>' + errors[errorField][0] + "</strong>");
+        //                             break;
+        //                             case 'acc_no':
+        //                                 $('#edit-bank-accounts-form #acc-no').addClass('is-invalid');
+        //                                 $('#edit-bank-accounts-form #acc-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+        //                             break;
+        //                             case 'acc_status':
+        //                                 $('#edit-bank-accounts-form #acc-status').addClass('is-invalid');
+        //                                 $('#edit-bank-accounts-form #acc-status-error').html('<strong>' + errors[errorField][0] + '</strong>');
+        //                             break;
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     });
+        // });
 
         // DELETE
-        var deleteId = null;
-        $('#confirm-delete-bank-account-modal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var currentData = JSON.parse(decodeURI(button.data('current')))
-            console.log('Data: ', currentData)
-            deleteId = currentData.id;
-        });
+        // var deleteId = null;
+        // $('#confirm-delete-bank-account-modal').on('show.bs.modal', function (event) {
+        //     var button = $(event.relatedTarget)
+        //     var currentData = JSON.parse(decodeURI(button.data('current')))
+        //     console.log('Data: ', currentData)
+        //     deleteId = currentData.id;
+        // });
 
-        var deleteRouteTemplate = "{{ route('employee.bank-accounts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        $('#delete-bank-accounts-submit').click(function(e){
-            var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
-            e.preventDefault();
-            $.ajax({
-                url: deleteRoute,
-                type: 'GET',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: deleteId
-                },
-                success: function(data) {
-                    showAlert(data.success);
-                    bankAccountsTable.ajax.reload();
-                    $('#confirm-delete-bank-account-modal').modal('toggle');
-                },
-                error: function(xhr) {
-                    if(xhr.status == 422) {
-                        var errors = xhr.responseJSON.errors;
-                        console.log("Error 422: ", xhr);
-                    }
-                    console.log("Error: ", xhr);
-                }
-            });
-        });
+        // var deleteRouteTemplate = "{{ route('employee.bank-accounts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        // $('#delete-bank-accounts-submit').click(function(e){
+        //     var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
+        //     e.preventDefault();
+        //     $.ajax({
+        //         url: deleteRoute,
+        //         type: 'GET',
+        //         data: {
+        //             _token: '{{ csrf_token() }}',
+        //             id: deleteId
+        //         },
+        //         success: function(data) {
+        //             showAlert(data.success);
+        //             bankAccountsTable.ajax.reload();
+        //             $('#confirm-delete-bank-account-modal').modal('toggle');
+        //         },
+        //         error: function(xhr) {
+        //             if(xhr.status == 422) {
+        //                 var errors = xhr.responseJSON.errors;
+        //                 console.log("Error 422: ", xhr);
+        //             }
+        //             console.log("Error: ", xhr);
+        //         }
+        //     });
+        // });
     });
 
 

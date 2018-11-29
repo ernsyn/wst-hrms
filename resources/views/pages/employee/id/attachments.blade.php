@@ -14,7 +14,7 @@
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="name"><strong>Name*</strong></label>
-                                <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                                <input id="name" type="text" class="form-control" placeholder="" value="" readonly>
                                 <div id="name-error" class="invalid-feedback">
                                 </div>
                             </div>
@@ -22,7 +22,7 @@
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="notes"><strong>Notes*</strong></label>
-                                <input id="notes" type="text" class="form-control" placeholder="" value="" required>
+                                <input id="notes" type="text" class="form-control" placeholder="" value="" readonly>
                                 <div id="notes-error" class="invalid-feedback">
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="edit-attachment-label">Edit Attachment</h5>
+                    <h5 class="modal-title" id="edit-attachment-label">View Attachment</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -54,7 +54,7 @@
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="name"><strong>Name*</strong></label>
-                                <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                                <input id="name" type="text" class="form-control" placeholder="" value="" readonly>
                                 <div id="name-error" class="invalid-feedback">
                                 </div>
                             </div>
@@ -62,17 +62,17 @@
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="notes"><strong>Notes*</strong></label>
-                                <input id="notes" type="text" class="form-control" placeholder="" value="" required>
+                                <input id="notes" type="text" class="form-control" placeholder="" value="" readonly>
                                 <div id="notes-error" class="invalid-feedback">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    {{-- <div class="modal-footer">
                         <button id="edit-attachment-submit" type="submit" class="btn btn-primary">
                             {{ __('Submit') }}
                         </button>
-                    </div>
+                    </div> --}}
                 </form>
             </div>
         </div>
@@ -102,14 +102,14 @@
 
     {{-- TABLE --}}
     <div class="tab-pane fade show p-3" id="nav-attachments" role="tabpanel" aria-labelledby="nav-attachments-tab">
-        <div class="row pb-3">
+        {{-- <div class="row pb-3">
             <div class="col-auto mr-auto"></div>
             <div class="col-auto">
                 <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-attachment-popup">
                     Add Attachment
                 </button>
             </div>
-        </div>
+        </div> --}}
         <table class="hrms-primary-data-table table  w-100" id="attachments-table">
             <thead>
                 <tr>
@@ -149,8 +149,8 @@
                 {
                     "data": null,
                     render: function (data, type, row, meta) {
-                        return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attachment-popup"><i class="far fa-edit"></i></button>` +
-                            `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>`;
+                        return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attachment-popup"><i class="far fa-eye"></i></button>`;
+                            // `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>`;
                     }
                 }
             ]

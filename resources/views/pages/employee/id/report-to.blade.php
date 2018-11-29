@@ -1,186 +1,190 @@
+TABLE
 <div class="tab-pane fade show p-3" id="nav-reportto" role="tabpanel" aria-labelledby="nav-reportto-tab">
-        <div class="row pb-3">
-            <div class="col-auto mr-auto"></div>
-            <div class="col-auto">
-                <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-report-to-popup">
+    {{-- <div class="row pb-3">
+        <div class="col-auto mr-auto"></div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-report-to-popup">
                     Add Report To
                 </button>
-            </div>
         </div>
-        <table class="table table-bordered table-hover w-100" id="report-to-table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Full Name</th>
-                    <th>Type</th>
-                    <th>Note</th>
-                    <th>KPI Proposer</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-    {{-- ADD --}}
-    <div class="modal fade" id="add-report-to-popup" tabindex="-1" role="dialog" aria-labelledby="add-report-to-label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="add-report-to-label">Assign Report To</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    </div> --}}
+    <table class="table table-bordered table-hover w-100" id="report-to-table">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Full Name</th>
+                <th>Type</th>
+                <th>Note</th>
+                <th>KPI Proposer</th>
+                {{-- <th>Action</th> --}}
+            </tr>
+        </thead>
+    </table>
+</div>
+{{-- ADD --}}
+<div class="modal fade" id="add-report-to-popup" tabindex="-1" role="dialog" aria-labelledby="add-report-to-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-report-to-label">Assign Report To</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                </div>
-                <form id="add-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
-                    <div class="modal-body">
-                        @csrf
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="report-to"><strong>Report To*</strong></label>
-                                <select class="form-control" name="report-to" id="report-to">
+            </div>
+            <form id="add-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="report-to"><strong>Report To*</strong></label>
+                            <select class="form-control" name="report-to" id="report-to">
                                     <option value="">Select Name</option>
                                     @foreach(App\Employee::with('user')->get() as $employee)
                                     <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
                                     @endforeach
                                 </select>
-                                <div id="report-to-error" class="invalid-feedback">
-                                </div>
+                            <div id="report-to-error" class="invalid-feedback">
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="type"><strong>Type*</strong></label>
-                                <select class="form-control" id="type" name="type">
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="type"><strong>Type*</strong></label>
+                            <select class="form-control" id="type" name="type">
                                     <option value="">Select Name</option>
                                     <option value="Direct">Direct</option>
                                     <option value="Indirect">Indirect</option>
                                 </select>
-                                <div id="type-error" class="invalid-feedback">
+                            <div id="type-error" class="invalid-feedback">
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-
-                                <input type="hidden" value="0" checked>
-                                <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
-                                <div id="kpi-proposer-error" class="invalid-feedback">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="notes"><strong>Notes*</strong></label>
-                                <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="notes-error" class="invalid-feedback">
-
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button id="add-report-to-submit" type="submit" class="btn btn-primary">
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
+
+                            <input type="hidden" value="0" checked>
+                            <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
+                            <div id="kpi-proposer-error" class="invalid-feedback">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="notes"><strong>Notes*</strong></label>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" readonly>
+                            <div id="notes-error" class="invalid-feedback">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="add-report-to-submit" type="submit" class="btn btn-primary">
                         {{ __('Submit') }}
                     </button>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    {{-- UPDATE --}}
-    <div class="modal fade" id="edit-report-to-popup" tabindex="-1" role="dialog" aria-labelledby="edit-report-to-label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="edit-report-to-label">Edit Assign Report To</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+{{-- UPDATE --}}
+<div class="modal fade" id="edit-report-to-popup" tabindex="-1" role="dialog" aria-labelledby="edit-report-to-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-report-to-label">View Assign Report To</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                </div>
-                <form id="edit-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
-                    <div class="modal-body">
-                        @csrf
-                        <div class="form-row" class="form_validate" data-parsley-errors-messages-disabled>
-                            <div class="col-md-12 mb-3">
-                                <label for="report-to"><strong>Report To*</strong></label>
-                                <select class="form-control" name="report-to" id="report-to">
+            </div>
+            <form id="edit-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-row" class="form_validate" data-parsley-errors-messages-disabled>
+                        <div class="col-md-12 mb-3">
+                            <label for="report-to"><strong>Report To*</strong></label>
+                            {{-- <select class="form-control" name="report-to" id="report-to">
                                         @foreach(App\Employee::with('user')->get() as $employee)
                                         <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
                                         @endforeach
-                                    </select>
-                                <div id="report-to-error" class="invalid-feedback">
-                                </div>
+                                    </select> --}}
+                            <input id="report-to" type="text" class="form-control" placeholder="" value="" readonly>
+                            <div id="report-to-error" class="invalid-feedback">
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="type"><strong>Type*</strong></label>
-                                <select class="form-control" id="type" name="type">
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="type"><strong>Type*</strong></label>
+                            {{-- <select class="form-control" id="type" name="type">
                                         <option value="Direct">Direct</option>
                                         <option value="Indirect">Indirect</option>
-                                    </select>
-                                <div id="type-error" class="invalid-feedback">
-                                </div>
+                                    </select> --}}
+                            <input id="type" type="text" class="form-control" placeholder="" value="" readonly>
+                            <div id="type-error" class="invalid-feedback">
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                                <input type="hidden" value="0" checked>
-                                <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
-                                <div id="kpi-proposer-error" class="invalid-feedback">
-                                </div>
+                    </div>
+                    {{-- <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
+                            <input type="hidden" value="0" checked>
+                            <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
+                            <div id="kpi-proposer-error" class="invalid-feedback">
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="notes"><strong>Notes*</strong></label>
-                                <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="notes-error" class="invalid-feedback">
+                    </div> --}}
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="notes"><strong>Notes*</strong></label>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" readonly>
+                            <div id="notes-error" class="invalid-feedback">
 
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button id="edit-report-to-submit" type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    {{-- DELETE EXP--}}
-    <div class="modal fade" id="confirm-delete-report-to-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-report-to-label"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirm-delete-report-to-label">Confirm Delete</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                </div>
-                <div class="modal-body">
-                    <p></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="delete-report-to-submit">Delete</button>
+                    {{-- <button id="edit-report-to-submit" type="submit" class="btn btn-primary">
+                            {{ __('Submit') }}
+                        </button> --}}
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- DELETE EXP--}}
+<div class="modal fade" id="confirm-delete-report-to-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-report-to-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-report-to-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-report-to-submit">Delete</button>
             </div>
         </div>
     </div>
+</div>
 
-    @section('scripts')
-    <script>
-        var reportTosTable = $('#report-to-table').DataTable({
+
+@section('scripts')
+<script>
+    var reportTosTable = $('#report-to-table').DataTable({
             "bInfo": true,
             "bDeferRender": true,
             "serverSide": true,
@@ -203,19 +207,18 @@
                 {
                     "data": "kpi_proposer",
                 },
-                {
-                    "data": null,
-                    render: function (data, type, row, meta) {
-                        return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-report-to-popup"><i class="far fa-edit"></i></button>` +
-                            `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-report-to-modal"><i class="far fa-trash-alt"></i></button>`;
-                    }
-                }
+                // {
+                //     "data": null,
+                //     render: function (data, type, row, meta) {
+                //         return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-report-to-popup"><i class="far fa-eye"></i></button>`;
+                //             // `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-report-to-modal"><i class="far fa-trash-alt"></i></button>`;
+                //     }
+                // }
             ]
         });
-
-    </script>
-    <script type="text/javascript">
-        $(function(){
+</script>
+<script type="text/javascript">
+    $(function(){
             // ADD
             $('#add-report-to-popup').on('show.bs.modal', function (event) {
                 clearReportToError('#add-report-to-form');
@@ -406,6 +409,5 @@
                 </button>
                 </div>`)
         }
-
-    </script>
-    @append
+</script>
+@append
