@@ -406,7 +406,7 @@ class LeaveService
     }
 
     public static function getLeaveTypesForEmployee(Employee $employee) {
-        $leaveTypes = LeaveType::with('applied_rules')->get();
+        $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
         $employee->gender;
 
         Carbon::THURSDAY;
