@@ -201,6 +201,32 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
+        public function ajaxPostCreateLeaveRequest(Request $request)
+        {
+            $requestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => '',
+                'reason' => 'required',
+                'attachment' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $attachment_data_url = null;
+            if(array_key_exists('attachment', $requestData)) {
+                $attachment_data_url = $requestData['attachment'];
+            }
+
+            $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
+
+            return response()->json($result);
+        }
+
         public function ajaxPostCheckLeaveRequest(Request $request)
         {
             $requestData = $request->validate([

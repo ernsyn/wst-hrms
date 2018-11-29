@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\DB;
+
 use App\LeaveAllocation;
 use App\LeaveRequest;
 use App\LeaveType;
@@ -98,6 +100,64 @@ class LeaveService
                 ]);
             }
         }
+    }
+
+    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url) {
+        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm);
+        if(array_key_exist('error', $result)) {
+            return $result;
+        }
+
+        if(array_key_exist('end_date', $result)) {
+            $end_date = $result['end_date'];
+        }
+
+        $totalDays = $result['total_days'];
+
+        $attachment_required = false;
+        if(LeaveAppliedRule::where('leave_type_id', $leave_type_id)->where('rule', LeaveTypeRule::REQUIRED_ATTACHMENT)->count() > 0) {
+            $attachment_required = true;
+            if(empty($attachment)) {
+                return self::error("Attachment required for this leave type.");
+            }
+        }
+
+        $now = Carbon::now();
+        $leaveAllocation = LeaveAllocation::where('emp_id', $employee->id)
+        ->where('leave_type_id', $leave_type_id)
+        ->where('valid_from_date', '<=', $now)
+        ->where('valid_until_date', '>=', $now)
+        ->first();
+
+        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason, $attachment_data_url, $attachment_required) {
+            $leaveRequest = LeaveRequest::create([
+                'emp_id' => $employee->id,
+                'leave_type_id' => $leave_type_id,
+                'leave_allocation_id' => $leaveAllocation->id,
+                'start_date' => $start_date,
+                'end_date' => $end_date, 
+                'am_pm' => $am_pm, 
+                'applied_days' =>  $totalDays,
+                'reason' => $reason,
+                'status' => 'new'
+            ]);
+            
+            if($attachment_required) {
+                $attachmentData = self::processBase64DataUrl($attachment_data_url);
+                $attachmentMedia = Media::create([
+                    'category' => 'leave-request-attachment',
+                    'mimetype' => $attachmentData['mime_type'],
+                    'data' => $attachmentData['data'],
+                    'size' => $attachmentData['size'],
+                    'filename' => 'lr_attachmment_'.($employee->id).'_'.date('Y-m-d_H:i:s').".".$attachmentData['extension']
+                ]);
+
+                $leaveRequest->attachment()->associate($attachmentMedia);
+                $leaveRequest->save();
+            }
+            
+        });
+        
     }
 
     public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm) {
@@ -265,7 +325,7 @@ class LeaveService
             if(!empty($leaveAllocation)) {
                 $calcEndDate = $startDate->copy()->addDays($leaveAllocation->allocated_days);
                 if(!$calcEndDate->equalTo($endDate)) {
-                    $additionalResponseData['end_date'] = $calcEndDate->toDateTimeString();
+                    $additionalResponseData['end_date'] = $calcEndDate->toDateString();
                     $endDate = $calcEndDate;
                 }   
             }
@@ -593,5 +653,22 @@ class LeaveService
         }
 
         return $totalAllocatedDays - $totalSpentDays;
+    }
+
+    private static function processBase64DataUrl($dataUrl) {
+        $parts = explode(',', $dataUrl);
+
+        preg_match('#data:(.*?);base64#', $parts[0], $matches);
+        $mimeType = $matches[1];
+        $extension = explode('/', $mimeType)[1];
+
+        $data = base64_decode($parts[1]);
+
+        return [
+            'data' => $data,
+            'mime_type' => $mimeType,
+            'size' => mb_strlen($data),
+            'extension' => $extension
+        ];
     }
 }
