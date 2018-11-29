@@ -10,31 +10,40 @@
                         <h3>Basic Details</h3>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-center">
-                        <i class="default-user-logo-dark fas fa-user-circle fa-10x"></i>
+                        <div class="form-group row d-flex justify-content-center">
+                            <i class="default-user-logo-dark fas fa-user-circle fa-10x"></i>
+                            <img src="" id="profile-img-tag" class="img-thumbnail rounded-circle" style="position: absolute; object-fit:cover; display:none; width:150px; height:150px">
+                            <div class="col-lg-12 text-center">
+                                {{-- <input type="file" class="form-control-file btn-block" name="file" id="profile-img"
+                                    required> --}}
+                                <div class="input-group mt-3">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="profile-img" required>
+                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-8">
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label text-right text-right">Name</label>
                             <div class="col-lg-6">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
-                                    required>
-                                @if ($errors->has('name'))
+                                    required> @if ($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('name') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label text-right">Email</label>
                             <div class="col-lg-6">
                                 <input id="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}"
-                                    required>
-                                @if ($errors->has('email'))
+                                    required> @if ($errors->has('email'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('email') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -42,12 +51,10 @@
                             <label class="col-lg-2 col-form-label text-right">Password</label>
                             <div class="col-lg-6">
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password"
-                                    value="{{ old('password') }}" required>
-                                @if ($errors->has('password'))
+                                    value="{{ old('password') }}" required> @if ($errors->has('password'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -55,12 +62,10 @@
                             <label class="col-lg-2 col-form-label text-right">Contact No</label>
                             <div class="col-lg-6">
                                 <input id="contact_no" type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" name="contact_no"
-                                    value="{{ old('contact_no') }}" required>
-                                @if ($errors->has('contact_no'))
+                                    value="{{ old('contact_no') }}" required> @if ($errors->has('contact_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('contact_no') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -68,12 +73,10 @@
                             <label class="col-lg-2 col-form-label text-right">Address</label>
                             <div class="col-lg-6">
                                 <textarea id="address" type="Address" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }} text-left" name="address"
-                                    value="{{ old('address') }}" required></textarea>
-                                @if ($errors->has('address'))
+                                    value="{{ old('address') }}" required></textarea> @if ($errors->has('address'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('address') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                     </div>
@@ -89,12 +92,10 @@
                             <label class="col-lg-4 col-form-label text-right">IC No:</label>
                             <div class="col-lg-6">
                                 <input id="ic_no" type="text" class="form-control{{ $errors->has('ic_no') ? ' is-invalid' : '' }}" name="ic_no" value="{{ old('ic_no') }}"
-                                    required>
-                                @if ($errors->has('ic_no'))
+                                    required> @if ($errors->has('ic_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('ic_no') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -104,12 +105,10 @@
                                 <select name="gender" id="gender" class="form-control">
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
-                                </select>
-                                @if ($errors->has('gender'))
+                                </select> @if ($errors->has('gender'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('gender') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
 
@@ -118,7 +117,8 @@
                             <label class="col-md-4 col-form-label text-right">Date of Birth:</label>
                             <div class="col-md-6">
                                 <div class="input-group mb-3">
-                                    <input id="dob-date" type="text" class="form-control" placeholder="Date of Birth" aria-label="Date of Birth" aria-describedby="dob-icon" name="dob" readonly>
+                                    <input id="dob-date" type="text" class="form-control" placeholder="Date of Birth" aria-label="Date of Birth" aria-describedby="dob-icon"
+                                        name="dob" readonly>
                                     <input id="alt-dob-date" type="text" class="form-control" name="dob" hidden>
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="dob-icon"><i class="far fa-calendar-alt"></i></span>
@@ -129,8 +129,7 @@
                                 <span class="invalid-feedback" role="alert">
                                     {{-- <strong>{{ $errors->first('dob') }}</strong> --}}
                                     <strong>error dob</strong>
-                                </span>
-                                {{-- @endif --}}
+                                </span> {{-- @endif --}}
                             </div>
                         </div>
                         <div class="form-group row">
@@ -141,12 +140,10 @@
                                     <option selected disabled>Select Marital Status</option>
                                     <option value="Single">Single</option>
                                     <option value="Married">Married</option>
-                                </select>
-                                @if ($errors->has('marital_status'))
+                                </select> @if ($errors->has('marital_status'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('marital_status') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -154,12 +151,10 @@
                             <label class="col-lg-4 col-form-label text-right">Race:</label>
                             <div class="col-lg-6">
                                 <input id="race" type="text" class="form-control{{ $errors->has('race') ? ' is-invalid' : '' }}" name="race" value="{{ old('race') }}"
-                                    required>
-                                    @if ($errors->has('race'))
-                                    <span class="invalid-feedback" role="alert">
+                                    required> @if ($errors->has('race'))
+                                <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('race') }}</strong>
-                                    </span>
-                                    @endif
+                                    </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -170,12 +165,10 @@
                                     @foreach($countries as $country)
                                     <option value="{{ $country->citizenship }}">{{ $country->citizenship }}</option>
                                     @endforeach
-                                </select>
-                                @if ($errors->has('nationality'))
+                                </select> @if ($errors->has('nationality'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('nationality') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -183,12 +176,10 @@
                             <label class="col-md-4 col-form-label text-right">Number of Children:</label>
                             <div class="col-md-6">
                                 <input id="total_children" type="text" class="form-control{{ $errors->has('total_children') ? ' is-invalid' : '' }}" name="total_children"
-                                    value="{{ old('total_children') }}" required>
-                                @if ($errors->has('total_children'))
+                                    value="{{ old('total_children') }}" required> @if ($errors->has('total_children'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('total_children') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -196,19 +187,18 @@
                             <label class="col-lg-4 col-form-label text-right">Driver License No:</label>
                             <div class="col-lg-6">
                                 <input id="driver_license_no" type="text" class="form-control{{ $errors->has('driver_license_no') ? ' is-invalid' : '' }}"
-                                    name="driver_license_no" value="{{ old('driver_license_no') }}" required>
-                                    @if ($errors->has('driver_license_no'))
-                                    <span class="invalid-feedback" role="alert">
+                                    name="driver_license_no" value="{{ old('driver_license_no') }}" required>                                @if ($errors->has('driver_license_no'))
+                                <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('driver_license_no') }}</strong>
-                                    </span>
-                                    @endif
+                                    </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-right">License Expiry Date:</label>
                             <div class="col-md-6">
                                 <div class="input-group mb-3">
-                                    <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date" aria-describedby="license-expiry-date-icon" readonly>
+                                    <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date"
+                                        aria-describedby="license-expiry-date-icon" readonly>
                                     <input id="alt-license-expiry-date" type="text" class="form-control" name="driver_license_expiry_date" hidden>
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="license-expiry-date-icon"><i class="far fa-calendar-alt"></i></span>
@@ -217,8 +207,7 @@
                                 @if ($errors->has('driver_license_expiry_date'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('driver_license_expiry_date') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                     </div>
@@ -230,25 +219,24 @@
                         <h3>Company Details</h3>
                     </div>
                     <div class="col-lg-12">
-                        {{-- <div class="form-group row">
+                        {{--
+                        <div class="form-group row">
                             <label class="col-md-4 col-form-label text-right">Employee ID:</label>
                             <div class="col-md-6">
                                 <input type="text" class="form-control" readonly>
                             </div>
-                        </div> --}}
-                        {{-- <div class="form-group row">
+                        </div> --}} {{--
+                        <div class="form-group row">
                             <label class="col-md-4 col-form-label text-right">Department:</label>
                             <div class="col-md-6">
                                 <select class="form-control{{ $errors->has('departments') ? ' is-invalid' : '' }}" name="departments" id="departments">
                                     @foreach(App\Department::all() as $department)
                                     <option value="{{ $department->id }}">{{ $department->name }}</option>
                                     @endforeach
-                                </select>
-                                @if ($errors->has('departments'))
+                                </select> @if ($errors->has('departments'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('departments') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div> --}}
                         <div class="form-group row">
@@ -296,24 +284,20 @@
                                     @foreach(App\EmployeePosition::all() as $position)
                                     <option value="{{ $position->id }}">{{ $position->name }}</option>
                                     @endforeach
-                                </select>
-                                @if ($errors->has('position'))
+                                </select> @if ($errors->has('position'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('position') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-right">Tax No:</label>
                             <div class="col-md-6">
                                 <input id="tax_no" type="text" class="form-control{{ $errors->has('tax_no') ? ' is-invalid' : '' }}" name="tax_no" value="{{ old('tax_no') }}"
-                                    required>
-                                @if ($errors->has('tax_no'))
+                                    required> @if ($errors->has('tax_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('tax_no') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -360,5 +344,24 @@
         changeYear: true,
         yearRange: "-80:+0"
     });
+
+    function readURL(input) {
+
+    if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+        $('#profile-img-tag').attr('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+    }
+    }
+
+    $("#profile-img").change(function() {
+    readURL(this);
+    $('#profile-img-tag').show();
+    });
+
 </script>
 @append
