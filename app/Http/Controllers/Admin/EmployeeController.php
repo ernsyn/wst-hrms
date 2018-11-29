@@ -160,6 +160,12 @@ class EmployeeController extends Controller
         ->editColumn('expiry_date', function ($visa) {
             return date('d/m/Y', strtotime($visa->expiry_date) );
         })
+        ->editColumn('alt_issued_date', function ($visa) {
+            return date('Y-m-d', strtotime($visa->issued_date) );
+        })
+        ->editColumn('alt_expiry_date', function ($visa) {
+            return date('Y-m-d', strtotime($visa->expiry_date) );
+        })
         ->make(true);
     }
 
