@@ -361,6 +361,14 @@ var jobsTable = $('#employee-jobs-table').DataTable({
 </script>
 <script type="text/javascript">
     $(function(){
+        // INIT
+        $('#jobDate').datepicker({
+            altField: "#altjobDate",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy'
+        });
+
+
         // ADD
        $('#add-job-form #add-submit').click(function(e){
           e.preventDefault();

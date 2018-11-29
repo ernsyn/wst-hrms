@@ -14,7 +14,6 @@ class UpdateMainSecurityGroupIdToEmployees extends Migration
     public function up()
     {
         Schema::table('employees', function($table) {
-  
             $table->integer('main_security_group_id')->nullable();
             $table->integer('eis_no')->nullable();
         });//

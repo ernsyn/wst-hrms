@@ -12,6 +12,7 @@ class LeaveRequestApproval extends Model
 
     protected $fillable = [
         'approved_by_emp_id',
+        'leave_request_id',
     ];
 
     protected $dates = ['deleted_at'];

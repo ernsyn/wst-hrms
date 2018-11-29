@@ -75,11 +75,11 @@
                             <a href="{{ route('admin.e-leave.configuration') }}">Configuration</a>
                         </li>
                         {{-- OPTION: PH Setup --}}
-                        {{-- <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
-                            <a href="{{ route('admin.e-leave.configuration.leaveholidays') }}">PH Setup</a>
+                      <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
+                            <a href="{{ route('admin.e-leave.configuration.leave-holidays') }}">Holidays Setup</a>
                         </li>
 
-                        <li class="menu-option {{ request()->is('admin/e-leave/configuration/leavetypes') ? 'active' : '' }}">
+                   {{--     <li class="menu-option {{ request()->is('admin/e-leave/configuration/leavetypes') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration.leavetypes') }}">Leave Type Setup</a>
                         </li> --}}
                        

@@ -169,7 +169,7 @@
                         </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                    <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -257,8 +257,12 @@
 <script type="text/javascript">
     $(function(){
         // ADD VISA
+        $('#add-visa-popup').on('show.bs.modal', function (event) {
+            clearVisasError('#add-visa-form');
+        });
         $('#add-visa-form #add-visa-submit').click(function(e){
           e.preventDefault();
+            clearVisasError('#add-visa-form');
           $.ajax({
             url: "{{ route('admin.employees.visas.post', ['id' => $id]) }}",
             type: 'POST',
@@ -327,6 +331,7 @@
         var editVisaId = null;
         // Function: On Modal Clicked Handler
         $('#edit-visa-popup').on('show.bs.modal', function (event) {
+            clearVisasError('#edit-visa-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -346,6 +351,7 @@
         $('#edit-visa-submit').click(function(e){
             var editVisaRoute = editVisaRouteTemplate.replace(encodeURI('<<id>>'), editVisaId);
             e.preventDefault();
+            clearVisasError('#edit-visa-form');
             $.ajax({
                 url: editVisaRoute,
                 type: 'POST',
@@ -458,6 +464,16 @@
         $(htmlId + ' #issued-date').val('');
         $(htmlId + ' #family-members').val('');
 
+        $(htmlId + ' #type').removeClass('is-invalid');
+        $(htmlId + ' #visa-number').removeClass('is-invalid');
+        $(htmlId + ' #passport-no').removeClass('is-invalid');
+        $(htmlId + ' #expiry-date').removeClass('is-invalid');
+        $(htmlId + ' #issued-by').removeClass('is-invalid');
+        $(htmlId + ' #issued-date').removeClass('is-invalid');
+        $(htmlId + ' #family-members').removeClass('is-invalid');
+    }
+
+    function clearVisasError(htmlId) {
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
         $(htmlId + ' #passport-no').removeClass('is-invalid');
