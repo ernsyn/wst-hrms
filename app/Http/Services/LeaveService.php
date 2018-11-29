@@ -165,7 +165,20 @@ class LeaveService
                 // case LeaveTypeRule::REQUIRED_ATTACHMENT:
                 // break;
                 case LeaveTypeRule::MIN_APPLY_DAYS_BEFORE:
-                    $min_apply_days_before_config = json_decode($rule->configuration);
+                    $configuration = json_decode($rule->configuration);
+                    // [{"min_leave_days": 2, "min_apply_days_before": 7}, {"min_leave_days": 5, "min_apply_days_before": 30}]
+                    $days_before = date_diff($now, $startDate)->days;
+                    $applied_days_length = date_diff($startDate, $endDate)->days;
+                    foreach($configuration as $conditionEntry) {
+                        if($applied_days_length >= $conditionEntry->min_leave_days) {
+                            if($days_before < $conditionEntry->min_apply_days_before) {
+                                $invalid = true;
+                                $invalidErrorMessage = "To apply for leave equal or more than ".$conditionEntry->min_leave_day." days, you have to apply more than ".$conditionEntry->min_apply_days_before." days before."; 
+
+                                break;
+                            }
+                        }
+                    }
                     break;
                 case LeaveTypeRule::CONSECUTIVE:
                     $consecutive = true;
