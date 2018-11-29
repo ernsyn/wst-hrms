@@ -223,7 +223,6 @@ class ELeaveController extends Controller
             }
 
             $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
-
             return response()->json($result);
         }
 

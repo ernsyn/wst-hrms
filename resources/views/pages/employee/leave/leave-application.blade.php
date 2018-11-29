@@ -49,9 +49,9 @@
                             <div class="form-group row" id="select-period">
                                 <div class="col-sm-12">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" id="leave-full-day" class="btn btn-outline-primary leave-day">Full Day</button>
-                                        <button type="button" id="leave-half-day-am" class="btn btn-outline-primary leave-day">AM</button>
-                                        <button type="button" id="leave-half-day-pm" class="btn btn-outline-primary leave-day">PM</button>
+                                        <button type="button" id="leave-full-day" class="btn btn-outline-primary leave-day" >Full Day</button>
+                                        <button type="button" id="leave-half-day-am" class="btn btn-outline-primary leave-day" data-value="am">AM</button>
+                                        <button type="button" id="leave-half-day-pm" class="btn btn-outline-primary leave-day" data-value="pm">PM</button>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                                     <label class="col-sm-12 col-form-label" id="required-attachment-label">Attachment</label>                                 
                                 </div>
                                 <div class="col-sm-6 px-0">
-                                    <input type="file" id="required-attachment" name="required-attachment" class="form-control-file">
+                                    <input type="file" name="required-attachment" class="form-control-file">
                                 </div>
                             </div>
                             {{-- </div> --}}
@@ -99,6 +99,8 @@
 @section('scripts')
 <script type="text/javascript">
     $(function(){
+        var attachmentRequired = false;
+
         $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
             $.each(leaveTypeData, function(key, leaveType){
                 var leaveTypeOption = $('#templates .leave-type-option').clone();
@@ -180,10 +182,12 @@
             }
 
             if(leave_type_data.required_attachment) {
+                attachmentRequired = true;
                 $("#required-attachment-label").text(leave_type_data.attachment_type + " Attachment");
                 $("#required-attachment").show();
             }
             else {
+                attachmentRequired = false;
                 $("#required-attachment-label").text("Attachment");
                 $("#required-attachment").hide();
             }
@@ -192,40 +196,52 @@
         $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
             e.preventDefault();
 
-            var file = document.querySelector('#required-attachment').files[0];
+            var file = document.querySelector('input[name=required-attachment]').files[0];
 
-            console.log(form_data);
+            console.log(file);
 
+            var data = {
+                _token: '{{ csrf_token() }}',
+                start_date: $('#add-leave-request-form #alt-start-date').val(),
+                end_date: $('#add-leave-request-form #alt-end-date').val(),
+                leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
+                am_pm: $('#add-leave-request-form button.selected-day').data('value'),
+                reason: $('#add-leave-request-form #reason').val(),
+            };
+
+            if(attachmentRequired) {
+                getBase64(file, function(attachmentDataUrl) {
+                    data.attachment = attachmentDataUrl;
+                    postLeaveRequest(data);
+                });
+            } else {
+                postLeaveRequest(data);
+            }
+            
+        });
+
+        function postLeaveRequest(data) {
             $.ajax({
                 url: "{{ route('employee.e-leave.ajax.request') }}",
                 type: 'POST',
-                processData: false,
-                contentType: false,
-                cache: false,
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    start_date: $('#add-leave-request-form #start-date').val(),
-                    end_date: $('#add-leave-request-form #end-date').val(),
-                    leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
-                    am_pm: $('#add-leave-request-form button.selected-day').text() ? $('#add-leave-request-form button.selected-day').text() : '',
-                    reason: $('#add-leave-request-form #reason').text(),
-                    attachment: file ? getBase64(file) : null
-                },
+                // processData: false,
+                // contentType: false,
+                // cache: false,
+                data: data,
                 success: function(data) {
                     console.log(data);
                 },
                 error: function(xhr) {
                     console.log("Error: ", xhr);
                 }
-            });
-        });
-
-        function getBase64(file) {
+            }); 
+        }
+        function getBase64(file, onLoad) {
             var reader = new FileReader();
             reader.readAsDataURL(file);
 
             reader.onload = function () {
-                console.log(reader.result);
+                onLoad(reader.result);
             };
             reader.onerror = function (error) {
                 console.log('Error: ', error);
