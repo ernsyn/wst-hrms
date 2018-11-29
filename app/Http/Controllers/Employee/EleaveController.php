@@ -206,10 +206,16 @@ class ELeaveController extends Controller
             $requestData = $request->validate([
                 'start_date' => 'required',
                 'end_date' => 'required',
-                'leave_type' => 'required'
+                'leave_type' => 'required',
+                'am_pm' => ''
             ]);
 
-            $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date']);
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm);
 
             return response()->json($result);
         }
