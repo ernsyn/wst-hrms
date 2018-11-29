@@ -1,6 +1,6 @@
 <nav id="sidebar">
     <div id="header-logo" class="sidebar-header text-center">
-        <img src="{{asset('img/oppologo.png')}}">
+        <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
     @hasanyrole('super-admin|admin')
     <div id="hrms-mode-container">
@@ -55,35 +55,31 @@
                     <a href="{{ route('employee.profile') }}">View My Profile</a>
                 </li>
             </ul>
+            
 
         </li>
-
-        <ul id="menu-container" class="list-unstyled">
-                <li class="menu-section {{ request()->is('e-leave*') ? 'active' : '' }}">
-                    <a class="info dropdown-toggle" href="#e-leaveSubmenu" data-toggle="collapse" aria-expanded="false">
-                        <div class="row">
-                            <div class="col-1">
-                                <i class="far fa-calendar-alt"></i>
-                            </div>
-                            <div class="col-10">
-                                E-Leave Application
-                            </div>
-                        </div>
-                    </a>
-                    <ul class="collapse list-unstyled {{ request()->is('e-leave*','') ? 'show' : '' }}" id="e-leaveSubmenu">
-                   
-                        <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
-                                <a href="{{ route('leaveapplication') }}">Apply Leave</a>
-                            </li>
-                            <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
-                                    <a href="{{ route('leaverequest') }}">Leave Approval</a>
-                                </li>
-                                <li class="menu-option {{ request()->is('leavehistory') ? 'active' : '' }}">
-                                        <a href="{{ route('leavehistory') }}">Leave Requests</a>
-                                    </li>
-                    </ul>
-        
+        <li class="menu-section {{ request()->is('profile*') ? 'active' : '' }}">
+            <a class="info dropdown-toggle" href="#leave-submenu" data-toggle="collapse" aria-expanded="false">
+                <div class="row">
+                    <div class="col-1">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <div class="col-10">
+                        E-Leave
+                    </div>
+                </div>
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('e-leave*','') ? 'show' : '' }}" id="leave-submenu">
+                <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
+                    <a href="{{ route('leaveapplication') }}">Leave Application</a>
                 </li>
+                <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
+                    <a href="{{ route('leaverequest') }}">Leave Approval</a>
+                </li>
+            </ul>
+        </li>
+
+       
         {{-- <li class="menu-section {{ request()->is('leave*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">

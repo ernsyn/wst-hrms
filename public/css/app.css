@@ -17970,3 +17970,14 @@ button.dropdown-toggle::after {
   background-color: #e0e5f3;
 }
 
+#page-leave-application .leave-description {
+  color: #999999;
+  font-size: 13px;
+}
+
+#page-leave-application .error-message {
+  color: #FF0000;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+

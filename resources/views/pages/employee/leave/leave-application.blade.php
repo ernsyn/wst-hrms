@@ -1,16 +1,13 @@
 @extends('layouts.base') 
 @section('pageTitle', 'Leave Application') 
 @section('content')
-<div class="p-4">
+<div class="p-4" id="page-leave-application">
     <div class="row">
-        <div class="col-xl-8">
-      
+        <div class="col-xl-8">      
                 <div class="card-body-leave" >
                     <div class="container-fluid">
-                        <div id='calendarleave' class="calendar-leave"></div>
-                        
-                    </div>
-               
+                        <div id='calendarleave' class="calendar-leave"></div>                        
+                    </div>               
             </div>
         </div>
         <div class="col-xl-4">
@@ -18,42 +15,33 @@
                 <div class="card-body-leave">
                     <div class="container-fluid">
                        
-                        <form  method="POST" action="{{ route('add_leave_application') }}" id="add_leave_application" data-parsley-validate>
+                        <form id="add-leave-request-form" data-parsley-validate>
                             @csrf
                             <div class="form-group row">
-
                                 <label class="col-sm-12 col-form-label">Leave Type</label>
                                 <div class="col-sm-8">
-                                    <select name="type" id="type" onchange="document.getElementById('department-form').submit()" class="custom-select" >
-                                    {{-- required data-required-message="Please select leave type">                                --}}
+                                    <select name="leave-types" id="leave-types" class="custom-select">
                                         <option selected disabled>Select Leave</option>
-                                        {{-- @foreach($leave as $type)
-                                        <option value='{"balance":{{$type['balance']}}, "id":{{$type['id']}}}'>{{$type['name']}}</option>
-                                        @endforeach --}}
-                                    </select>
-                                    {{-- <input type="text" class="form-control" id="leaveTypeId" name="leaveTypeId" hidden>
-                                    <input type="text" class="form-control" id="leaveBalance" name="leaveBalance" hidden> --}}
-                                    <input type="text" class="form-control" id="leave-type-id" name="leave-type-id" hidden>
-                                    <input type="text" class="form-control" id="leave-balance" name="leave-balance" hidden>
-                                    
+                                    </select>                    
+                                </div>                                
+                                <div class="leavedays col-sm-4"><span><b id="available_days">0.0</b> days available</span></div>
+                                <div class="col-sm-12">
+                                    <div id="leave-description" class="leave-description"></div>
                                 </div>
-                                
-                                <div class="leavedays col-sm-4"><span><b>0.0</b> days available</span></div>
                             </div>
-                            <div class="dropdown-divider pb-3"></div>
                             <div class="form-group row">
                                 <div class="col-sm-6 px-0">
                                     <label class="col-sm-12 col-form-label">Start Date</label>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control" id="startDate" readonly required data-parsley-error-message="Please choose Start Date">
-                                        <input type="text" class="form-control" name="altStart" id="altStart" hidden>
+                                        <input type="text" class="form-control" id="start-date" required data-parsley-error-message="Please choose Start Date">
+                                        <input type="text" class="form-control" name="alt-start-date" id="alt-start-date" hidden>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 px-0">
                                     <label class="col-sm-12 col-form-label">End Date</label>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control" id="endDate" readonly required>
-                                        <input type="text" class="form-control" name="altEnd" id="altEnd" hidden>
+                                        <input type="text" class="form-control" id="end-date" required>
+                                        <input type="text" class="form-control" name="alt-end-date" id="alt-end-date" hidden>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +55,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="dropdown-divider"></div>
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Reason</label>
@@ -78,22 +65,22 @@
                             </div>
                             <div class="dropdown-divider pb-3"></div>
                             <div class="form-group row">
-                                    <div class="col-sm-6 px-0">
-                                        <label class="col-sm-12 col-form-label">Attachment</label>
-                                 
-                                    </div>
-                                    <div class="col-sm-6 px-0">
-                                           <input type="file" class="form-control-file">
-                                        </div>
-                                    </div>
+                                <div class="col-sm-6 px-0">
+                                    <label class="col-sm-12 col-form-label">Attachment</label>                                 
                                 </div>
-
+                                <div class="col-sm-6 px-0">
+                                    <input type="file" class="form-control-file">
+                                </div>
+                            </div>
+                            {{-- </div> --}}
                             
-                            <input type="text" class="form-control" id="totalLeave" name="totalLeave" hidden>
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Apply for
-                                               <span class="font-weight-bold totaldays">0.0</span> days
+                                    <div id="error-message" class="error-message"></div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <button id="add-leave-request-submit" type="submit" class="btn btn-primary btn-block" disabled>Apply for
+                                        <span class="totaldays"><b>0.0</b> days</span>
                                     </button>
                                 </div>
                             </div>
@@ -104,104 +91,228 @@
         </div>
     </div>
 </div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-
-		$(document).on('change','.typelist',function(){
-			// console.log("hmm its change");
-
-			var id_type_leave=$(this).val();
-			// console.log(id_type_leave);
-			var div=$(this).parent();
-
-			var op=" ";
-
-			$.ajax({
-				type:'get',
-				url:'{!!URL::to('findTypeLeave')!!}',
-				data:{'id':id_type_leave},
-				success:function(data){
-					//console.log('success');
-
-					//console.log(data);
-
-					//console.log(data.length);
-					op+='<option value="0" selected disabled>chose product</option>';
-					for(var i=0;i<data.length;i++){
-					op+='<option value="'+data[i].id+'">'+data[i].name+'</option>';
-				   }
-
-				   div.find('.name').html(" ");
-				   div.find('.name').append(op);
-				},
-				error:function(){
-
-				}
-			});
-		});
-
-		$(document).on('change','.typelist',function () {
-			var prod_id=$(this).val();
-
-			var a=$(this).parent();
-			console.log(prod_id);
-			var op="";
-			$.ajax({
-				type:'get',
-				url:'{!!URL::to('findPrice')!!}',
-				data:{'id':prod_id},
-				dataType:'json',//return data will be json
-				success:function(data){
-					console.log("price");
-					console.log(data.price);
-
-					// here price is coloumn name in products table data.coln name
-
-					a.find('.prod_price').val(data.price);
-
-				},
-				error:function(){
-
-				}
-			});
-
-
-		});
-
-    });
-
-});
-</script>
-
-<script>
-//change day according to selected value
-$('#type-balance').on('change', function() {
-
-var txt = this.value;
-var obj = JSON.parse(txt);
-
-$( "div.leavedays" ).replaceWith( "<div class='leavedays col-sm-4'><b>"+ obj.balance +"</b> days available</span></div>" );
-$("#leave-type-id").val(obj.id);
-$("#leave-balance").val(obj.balance);
-});
-</script>
-<script>
-$("#leave-half-day-am").click(function(){  
-    $( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
-    $("#totalLeave").val(0.5);
-});
-
-$("#leave-half-day-pm").click(function(){  
-$( "span.totaldays").replaceWith( "<span class='totaldays'><b>0.5</b> days</span>" );
-$("#totalLeave").val(0.5);
-});
-
-$("#leave-full-day").click(function(){  
-$( "span.totaldays").replaceWith( "<span class='totaldays'><b>1</b> days</span>" );
-$("#totalLeave").val(1);
-});     
-</script>
+<div id="templates" hidden>
+    <option class="leave-type-option"></option>
+</div>
 
 @endsection
+@section('scripts')
+<script type="text/javascript">
+    $(function(){
+        $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
+            $.each(leaveTypeData, function(key, leaveType){
+                var leaveTypeOption = $('#templates .leave-type-option').clone();
+                leaveTypeOption.data('leave-type', leaveType);
+                leaveTypeOption.val(leaveType.id);
+                leaveTypeOption.text(leaveType.name);
+                leaveTypeOption.appendTo('#leave-types');
+            });
+        });
+
+        $("#start-date").datepicker({
+            altField: "#alt-start-date",
+            altFormat: 'yy-mm-dd',
+            dateFormat: 'dd-mm-yy',
+            minDate: 0,
+            onSelect: function onSelect(selectedDate) {
+                $("#end-date").datepicker("option", "minDate", selectedDate);
+
+                if($('#start-date').val() && $('#end-date').val()) {
+                    $.ajax({
+                        url: "{{ route('employee.e-leave.ajax.request.check') }}",
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            start_date: $('#add-leave-request-form #start-date').val(),
+                            end_date: $('#add-leave-request-form #end-date').val(),
+                            leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val()
+                        },
+                        success: function(data) {
+                            if(data.error) {
+                                $('#error-message').text(data.message);
+                            }
+
+                            if(data.total_days) {
+                                $('#totaldays').text(data.total_days);
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                }     
+            },
+            onClose: function onClose() {
+                $(this).parsley().validate();
+            }
+        });
+
+        $('#end-date').datepicker({
+            altField: "#alt-end-date",
+            altFormat: 'yy-mm-dd',
+            dateFormat: 'dd-mm-yy',
+            minDate: 0,
+            onSelect: function onSelect(selectedDate) {
+                $("#start-date").datepicker("option", "maxDate", selectedDate);
+
+                // var start = $("#startDate").datepicker("getDate");
+                // var end = $("#endDate").datepicker("getDate");
+                // var days = (end - start) / (1000 * 60 * 60 * 24) + 1;
+                // // $("span.totaldays").replaceWith("<span class='totaldays'><b>" + days + "</b> days</span>");
+                // $("#totalLeave").val(days);
+
+                // if (days > 1) {
+                //     $("#selectPeriod").hide();
+                // } else {
+                //     $("#selectPeriod").show();
+                // }
+
+                if($('#start-date').val() && $('#end-date').val()) {
+                    $.ajax({
+                        url: "{{ route('employee.e-leave.ajax.request.check') }}",
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            start_date: $('#add-leave-request-form #start-date').val(),
+                            end_date: $('#add-leave-request-form #end-date').val(),
+                            leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val()
+                        },
+                        success: function(data) {
+                            if(data.error) {
+                                $('#error-message').text(data.message);
+                            }
+
+                            if(data.total_days) {
+                                $('#totaldays').text(data.total_days);
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                }     
+            },
+            onClose: function onClose() {
+                $(this).parsley().validate();
+            }
+        });
+
+        // change day according to selected value
+        $("#leave-half-day-am").click(function(){  
+            $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
+            $("#totalLeave").val(0.5);
+        });
+
+        $("#leave-half-day-pm").click(function(){  
+            $("span.totaldays").replaceWith("<span class='totaldays'><b>0.5</b> days</span>");
+            $("#totalLeave").val(0.5);
+        });
+
+        $("#leave-full-day").click(function(){  
+            $("span.totaldays").replaceWith("<span class='totaldays'><b>1</b> days</span>");
+            $("#totalLeave").val(1);
+        });
+
+        let getltAppliedRuleRouteTemplate = '{{ route('employee.e-leave.rules.ajax.get', ['leave_type_id' => '<<id>>']) }}';
+        let getWorkingDaysRouteTemplate = '{{ route('employee.e-leave.days.ajax.get', ['start_date' => '<<start_date>>', 'end_date' => '<<end_date>>']) }}';
+
+        var min_apply_days_before = [];
+        var leave_calculation = {};
+        
+        $('#leave-types').on('change', function() {
+            var leave_type_data = $(this).find('option:selected').data('leave-type');
+            
+            $("#available_days").text(leave_type_data.available_days.toFixed(1));
+            $("#leave-description").text(leave_type_data.description);
+
+            if(leave_type_data.available_days == 0) {
+                $("#add-leave-request-submit").prop('disabled', true);
+            }
+            else {
+                $("#add-leave-request-submit").prop('disabled', false);
+            }
+
+            // var getBalancesRoute = getBalancesRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
+            // var getltAppliedRuleRoute = getltAppliedRuleRouteTemplate.replace(encodeURI('<<id>>'), leave_type_id);
+
+            // var allocated_days = 0;
+            // var spent_days = 0;
+
+            // $.get(getltAppliedRuleRoute, function(data, status) {
+            //     min_apply_days_before = [];
+            //     leave_calculation = {}
+
+            //     $.each(data, function(key, value) {
+            //         if(value.rule == "min_apply_days_before") {
+            //             min_apply_days_before = JSON.parse(value.configuration);
+            //         }
+            //         else if(value.rule == "leave_calculation") {
+            //             leave_calculation = JSON.parse(value.configuration);
+            //         }
+            //     });
+            // });
+        });
+
+        $("#start-date").on('change', function(){
+            console.log('start-date changed');   
+        });
+
+
+        $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
+            e.preventDefault();
+
+            // var total_days = parseFloat($('.totaldays b').html());
+            // var balance_days = parseFloat($("#available_days").html());
+            // var startDate = $('#startDate').val();
+            // var endDate = $('#endDate').val();
+
+            // var getWorkingDaysRoute = getWorkingDaysRouteTemplate.replace(encodeURI('<<start_date>>'), startDate.split("/").join("-"));
+            // getWorkingDaysRoute = getWorkingDaysRoute.replace(encodeURI('<<end_date>>'), endDate.split("/").join("-"));
+
+            // $.get(getWorkingDaysRoute, function(data, status) {
+            //     console.log('Actual Days ->', data);
+            // });
+
+            // var min_days_before = 0;
+
+            // var errorMsg = '';
+
+            // if(total_days > balance_days) {
+            //     errorMsg += "You are not allowed to exceed your balance allocation of " + balance_days + ", ";
+            // }
+
+            // if(min_apply_days_before.length > 0) {
+            //     $.each(min_apply_days_before, function(key, value) {
+            //         if(total_days >= value.min_leave_days) {
+            //             min_days_before = value.min_apply_days_before;
+            //         }
+            //     });
+
+            //     var today = new Date();
+            //     var thisMonth = today.getMonth() + 1;
+            //     var todayDate = today.getDate() + "/" + thisMonth + "/" + today.getFullYear();
+            //     var dateDiff = dateDifference(parseDate(todayDate), parseDate(startDate));
+
+            //     if(dateDiff < min_days_before) {
+            //         errorMsg += "You need to request your leave(s) " + min_days_before + " days in advance, ";
+            //     }
+            // }
+
+            // if(errorMsg) {
+            //     console.log(errorMsg);
+            // }
+        });
+
+        // function parseDate(str) {
+        //     var mdy = str.split('/');
+        //     return new Date(mdy[2], mdy[1], mdy[0]);
+        // }
+
+        // function dateDifference(first, second) {
+        //     // Take the difference between the dates and divide by milliseconds per day.
+        //     // Round to nearest whole number to deal with DST.
+        //     return Math.round((second-first)/(1000*60*60*24));
+        // }
+    });
+</script>
+@append

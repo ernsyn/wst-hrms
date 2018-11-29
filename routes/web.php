@@ -95,11 +95,14 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
     Route::get('leaverequest','Employee\ELeaveController@displayLeaveRequestReportTo')->name('leaverequest');
     Route::get('leavehistory','Employee\ELeaveController@displayLeaveRequests')->name('leavehistory');
-
-
-
-
-
+    Route::get('e-leave/rules/{leave_type_id}', 'Employee\EleaveController@ajaxGetLeaveRules')->name('employee.e-leave.rules.ajax.get')->where('leave_type_id', '[0-9]+');
+    Route::get('e-leave/days/{start_date}/{end_date}', 'Employee\EleaveController@ajaxCalculateActualLeaveDays')
+    ->name('employee.e-leave.days.ajax.get')->where(['start_date' => '[A-Za-z0-9\-\/]+', 'end_date' => '[A-Za-z0-9\-\/]+']);
+    Route::post('e-leave/working-day','Employee\EleaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
+    
+    Route::get('e-leave/types', 'Employee\EleaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
+    Route::post('e-leave/request/check', 'Employee\EleaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
+    Route::post('e-leave/request', 'Employee\EleaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
 });
 
 // MODE: Admin
@@ -174,6 +177,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{emp_id}/attachments/{id}/edit','Admin\EmployeeController@postEditAttachment')->name('admin.employees.attachments.edit.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/report-to/{id}/edit','Admin\EmployeeController@postEditReportTo')->name('admin.employees.report-to.edit.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/working-day/edit','Admin\EmployeeController@postEditWorkingDay')->name('admin.employees.working-day.edit.post')->where('id', '[0-9]+');
+    Route::post('employees/{emp_id}/jobs/{id}/edit','Admin\EmployeeController@postEditJob')->name('admin.employees.jobs.edit.post')->where('id', '[0-9]+');
 
 
     //admin/employee/delete
@@ -188,6 +192,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees/{emp_id}/attachments/{id}/delete','Admin\EmployeeController@deleteAttachment')->name('admin.settings.attachments.delete')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/report-tos/{id}/delete','Admin\EmployeeController@deleteReportTo')->name('admin.settings.report-tos.delete')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/security-groups/{id}/delete','Admin\EmployeeController@deleteSecurityGroup')->name('admin.settings.security-groups.delete')->where('id', '[0-9]+');
+
+    // Actions
+    Route::get('employees/{id}/action/resign', 'Admin\EmployeeController@actionResign')->name('admin.employees.id.action.resign')->where('id', '[0-9]+');
 
 
     // SECTION: SETTINGS
@@ -354,6 +361,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     // Route::post('disapprove_leave', 'Admin\ELeaveController@disapprovedLeaveRequest')->name('disapprove_leave'); // merge
     // Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance');
     Route::get('company/{id}/dt/company-banks', 'Admin\SettingsController@getDataTableCompanyBank')->name('admin.companies.dt.company-banks')->where('id', '[0-9]+');
+
 
 
     // SECTION: E-Leave

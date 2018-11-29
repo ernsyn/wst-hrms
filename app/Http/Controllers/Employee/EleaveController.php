@@ -40,6 +40,11 @@ use App\LeaveRequestApproval;
 use App\LeaveAllocation;
 use App\LTAppliedRule;
 
+
+
+use DatePeriod;
+use DateInterval;
+
 use DB;
 use App\User;
 use App\EmployeeInfo;
@@ -50,6 +55,8 @@ use \DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Auth;
+
+use App\Http\Services\LeaveService;
 
 class ELeaveController extends Controller
 {
@@ -105,12 +112,176 @@ class ELeaveController extends Controller
         }
 
           
-        public function addLeaveApproval(Request $request, $id) {
-    
-            $leaveRequest = LeaveRequest::find($id);
 
-            return view('pages.employee.leave.add-leave-request', ['leaveRequest' => $leaveRequest]);
-        }       
+        public function ajaxGetLeaveTypes()
+        {
+            $leaveTypes = LeaveService::getLeaveTypesForEmployee(Auth::user()->employee);
+
+            return response()->json($leaveTypes);
+        }
+
+        public function ajaxPostCreateLeaveRequest(Request $request)
+        {
+            $requestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => '',
+                'reason' => 'required',
+                'attachment' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $attachment_data_url = null;
+            if(array_key_exists('attachment', $requestData)) {
+                $attachment_data_url = $requestData['attachment'];
+            }
+
+            $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
+
+            return response()->json($result);
+        }
+
+        public function ajaxPostCheckLeaveRequest(Request $request)
+        {
+            $requestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm);
+
+            return response()->json($result);
+        }
+
+        public function ajaxGetLeaveRules($leave_type_id)
+        {
+            $emp_id = Auth::user()->employee->id;
+
+            $now = Carbon::now();
+            $ltAppliedRule = LTAppliedRule::where('leave_type_id', $leave_type_id)
+            ->whereNull('deleted_at')
+            ->get();
+
+            return response()->json($ltAppliedRule);
+        }
+
+        public function ajaxCalculateActualLeaveDays($start_date, $end_date)
+        {
+            $start_date = explode("-", $start_date);
+            $start_string = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
+
+            $end_date = explode("-", $end_date);
+            $end_string = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
+
+            $start = new DateTime($start_string);
+            $end = new DateTime($end_string);
+
+            // Add the previous Sunday to leave period if start is a Monday
+            if($start->format('D') == 'Mon') {
+                $start->modify('-1 day');
+            }
+            
+            $end->modify('+1 day'); // fix for end date is excluded
+
+            $interval = $end->diff($start);
+
+            // total days
+            $days = $interval->days;
+
+            $getHolidays = Holiday::where('start_date', '>=', $start->format('Y-m-d'))->where('status', 'active')->get();
+
+            // Array of holidays to check the dates against
+            $holidays = array();
+
+            foreach ($getHolidays as $getHoliday) {
+                $includeDatesBetween = new DatePeriod(
+                     new DateTime($getHoliday->start_date),
+                     new DateInterval('P1D'),
+                     new DateTime($getHoliday->end_date.'+1 day') // fix for excluding end_date
+                );
+
+                foreach($includeDatesBetween as $date) { 
+                    if(!in_array($date->format('Y-m-d'), $holidays, true)) {
+                        array_push($holidays, $date->format('Y-m-d'));
+                    } 
+                }
+            }
+
+            // Create an iterateable period of date (P1D equates to 1 day)
+            $period = new DatePeriod($start, new DateInterval('P1D'), $end);
+
+            foreach($period as $dt) {
+                $curr = $dt->format('D');
+
+                // Substract if Saturday or Sunday
+                if ($curr == 'Sat' || $curr == 'Sun') {
+                    $days--;
+                    
+                    // Subtract if Holidays falls on a Sunday
+                    if($curr == 'Sun' && in_array($dt->format('Y-m-d'), $holidays)) {
+                        $days--;
+                    }
+                }
+
+                // Subtract Holidays 
+                elseif (in_array($dt->format('Y-m-d'), $holidays)) {
+                    $days--;
+                }
+            }
+
+            return $days;
+        }
+
+        public function postLeaveRequest(Request $request, $id)
+        {
+            $leaveRequestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'reason' => 'required'
+            ]);
+
+            $leaveRequestData['is_template'] = false;
+
+
+            $leaveRequest = new LeaveRequest($leaveRequestData);
+
+            $employee = Employee::find($id);
+            $employee->leave_request()->save($leaveRequest);
+
+            return response()->json(['success' => 'Leave Request is successfully added']);
+        }
+
+        public function displayLeaveBalance()
+        {
+            $leavebalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
+            ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+            ->join('users','users.id','=','employees.user_id')
+            ->select('users.name as name','users.id as user_id',
+            'leave_balance.balance as balance','leave_balance.id as balance_id',
+            'leave_balance.carry_forward as carry',
+            'leave_types.name as leave','leave_types.id as type_id')
+            ->get();
+    
+        }
+
+            public function addLeaveApproval(Request $request, $id) {
+    
+                $leaveRequest = LeaveRequest::find($id);
+    
+                return view('pages.employee.leave.add-leave-request', ['leaveRequest' => $leaveRequest]);
+            }        
         
         public function rejectLeaveApproval(Request $request, $id) {
     
@@ -229,6 +400,11 @@ class ELeaveController extends Controller
                     $employee->leave_request_approvals()->save($leaveRquestData);
         
                     return redirect()->route('leaverequest');
+            // $spentDay
+            // LeaveAllocation::where('em_id',$id)->update(array('spent_days'));
+    
+        //     return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
+        // }
     
             }
     

@@ -38,7 +38,7 @@
                             <div class="div"><strong>Applied Rules</strong></div>
                             @foreach ($leaveType->applied_rules as $applied_rule)
                                 @if($applied_rule->rule != 'leave_calculation')
-                                <div class="div"><i class="fas fa-angle-double-right"></i> {{ App\Constants\Naming::$leaveTypeRule[$applied_rule->rule] }}</div>
+                                <div class="div"><i class="fas fa-angle-double-right"></i> {{ App\Constants\Naming::leaveTypeRule($applied_rule->rule) }}</div>
                                 @endif
                             @endforeach
                         </div>
@@ -88,7 +88,7 @@
                             <div class="div"><strong>Applied Rules</strong></div>
                             @foreach ($leaveType->applied_rules as $applied_rule)
                                 @if($applied_rule->rule != 'leave_calculation')
-                                <div class="div"><i class="fas fa-angle-double-right"></i> {{ App\Constants\Naming::$leaveTypeRule[$applied_rule->rule] }}</div>
+                                <div class="div"><i class="fas fa-angle-double-right"></i> {{ App\Constants\Naming::leaveTypeRule($applied_rule->rule) }}</div>
                                 @endif
                             @endforeach
                         </div>
