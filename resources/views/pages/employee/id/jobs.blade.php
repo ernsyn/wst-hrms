@@ -11,7 +11,7 @@
                     </button>
         </div>
     </div>
-    <table class="hrms-primary-data-table table table-bordered table-hover w-100" id="employee-jobs-table">
+    <table class="hrms-primary-data-table w-100" id="employee-jobs-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -51,7 +51,7 @@
                                 Looks good!
                                 </div> --}}
                                 <div id="basic-salary-error" class="invalid-feedback">
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                             <input id="basic_salary" type="number" class="form-control" name="basic_salary"
                                 value="" min="0" step=".01" required>
                                 <div id="basic-salary-error" class="invalid-feedback">
-                            
+
                                     </div>
                         </div>
                     </div> --}}
@@ -89,7 +89,7 @@
                                 Looks good!
                                 </div> --}}
                                 <div id="cost-centre-error" class="invalid-feedback">
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                                 Looks good!
                                 </div> --}}
                                 <div id="department-error" class="invalid-feedback">
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -148,7 +148,7 @@
                                 Looks good!
                                 </div> --}}
                                 <div id="team-error" class="invalid-feedback">
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -177,7 +177,7 @@
                                 Looks good!
                                 </div> --}}
                                 <div id="main-position-error" class="invalid-feedback">
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -206,7 +206,7 @@
                                 Looks good!
                                 </div> --}}
                                 <div id="grade-error" class="invalid-feedback">
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -235,7 +235,7 @@
                                 Looks good!
                                 </div> --}}
                                 <div id="branch-error" class="invalid-feedback">
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -274,7 +274,7 @@
                                 Looks good!
                                 </div> --}}
                                 <div id="employment-status-error" class="invalid-feedback">
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -295,7 +295,7 @@
                             Looks good!
                             </div> --}}
                             <div id="specification-error" class="invalid-feedback">
-                            
+
                             </div>
                         </div>
                     </div>
@@ -347,10 +347,10 @@ var jobsTable = $('#employee-jobs-table').DataTable({
         },
         {
             "data": "basic_salary"
-        },        
+        },
         {
             "data": "status"
-        },        
+        },
         {
             "data": null, // can be null or undefined
             "defaultContent": '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#jobModal"><i class="far fa-edit"></i></button>'
@@ -397,42 +397,42 @@ var jobsTable = $('#employee-jobs-table').DataTable({
                                         $('#add-job-form #name').addClass('is-invalid');
                                         $('#add-job-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'emp_mainposition_id':     
-                                        $('#add-job-form #main-position').addClass('is-invalid');   
+                                    case 'emp_mainposition_id':
+                                        $('#add-job-form #main-position').addClass('is-invalid');
                                         $('#add-job-form #main-position-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'department_id':    
-                                        $('#add-job-form #department').addClass('is-invalid');   
+                                    case 'department_id':
+                                        $('#add-job-form #department').addClass('is-invalid');
                                         $('#add-job-form #department-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
-                                    case 'team_id':     
-                                        $('#add-job-form #team').addClass('is-invalid');   
+                                    case 'team_id':
+                                        $('#add-job-form #team').addClass('is-invalid');
                                         $('#add-job-form #team-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
-                                    case 'cost_centre_id':     
-                                        $('#add-job-form #centre').addClass('is-invalid');   
+                                    case 'cost_centre_id':
+                                        $('#add-job-form #centre').addClass('is-invalid');
                                         $('#add-job-form #centre-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
-                                    case 'emp_grade_id':     
-                                    $('#add-job-form #grade').addClass('is-invalid');   
+                                    case 'emp_grade_id':
+                                    $('#add-job-form #grade').addClass('is-invalid');
                                     $('#add-job-form #grade-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
-                                    case 'start_date':     
-                                    $('#add-job-form #jobDate').addClass('is-invalid');   
+                                    case 'start_date':
+                                    $('#add-job-form #jobDate').addClass('is-invalid');
                                     $('#add-job-form #jobDate-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
-                                    case 'basic_salary':     
-                                    $('#add-job-form #basic-salary').addClass('is-invalid');   
+                                    case 'basic_salary':
+                                    $('#add-job-form #basic-salary').addClass('is-invalid');
                                     $('#add-job-form #basic-salary-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
-                                    case 'specification':     
-                                    $('#add-job-form #specification').addClass('is-invalid');   
+                                    case 'specification':
+                                    $('#add-job-form #specification').addClass('is-invalid');
                                     $('#add-job-form #specification-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
                                 }
                             }
                         }
-                }               
+                }
              }
           });
        });
@@ -452,7 +452,7 @@ var jobsTable = $('#employee-jobs-table').DataTable({
             $('#edit-emergency-contact-form #relationship').val(currentData.relationship);
             $('#edit-emergency-contact-form #contact-no').val(currentData.contact_no);
         });
-       
+
        var editRouteTemplate = "{{ route('employee.emergency-contacts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
        $('#edit-job-form #edit-submit').click(function(e){
            var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
@@ -496,11 +496,11 @@ var jobsTable = $('#employee-jobs-table').DataTable({
                                 }
                             }
                         }
-                }               
+                }
              }
           });
        });
-        
+
     });
 
     // DELETE

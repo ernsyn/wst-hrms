@@ -1,217 +1,218 @@
 <!-- ADD VISA -->
 <div class="modal fade" id="add-visa-popup" tabindex="-1" role="dialog" aria-labelledby="add-visa-label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="add-visa-label">Add Visa</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-visa-label">Add Visa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                </div>
-                <form id="add-visa-form">
-                    <div class="modal-body">
-                        @csrf
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="type"><strong>Type*</strong></label>
-                                <input id="type" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="type-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="visa-number"><strong>Visa Number*</strong></label>
-                                <input id="visa-number" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="visa-number-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="passport-no"><strong>Passport Number*</strong></label>
-                                <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="passport-no-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="expiry-date"><strong>Expiry Date*</strong></label>
-                                <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="expiry-date-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="issued-by"><strong>Issued By*</strong></label>
-                                <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="issued-by-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="issued-date"><strong>Issued Date*</strong></label>
-                                <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="issued-date-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="family-members"><strong>Family Members*</strong></label>
-                                <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="family-members-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="add-visa-submit" type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                        </button>
-                    </div>
-                </form>
             </div>
-        </div>
-    </div>
-
-    <!-- UPDATE VISA -->
-    <div class="modal fade" id="edit-visa-popup" tabindex="-1" role="dialog" aria-labelledby="edit-visa-label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="edit-visa-label">Edit Visa</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                </div>
-                <form id="edit-visa-form">
-                    <div class="modal-body">
-                        @csrf
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="type"><strong>Type*</strong></label>
-                                <input id="type" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="type-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="visa-number"><strong>Visa Number*</strong></label>
-                                <input id="visa-number" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="visa-number-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="passport-no"><strong>Passport Number*</strong></label>
-                                <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="passport-no-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="expiry-date"><strong>Expiry Date*</strong></label>
-                                <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="expiry-date-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="issued-by"><strong>Issued By*</strong></label>
-                                <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="issued-by-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="issued-date"><strong>Issued Date*</strong></label>
-                                <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="issued-date-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="family-members"><strong>Family Members*</strong></label>
-                                <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="family-members-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="edit-visa-submit" type="submit" class="btn btn-primary">
-                                {{ __('Submit') }}
-                            </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    {{-- DELETE VISA --}}
-    <div class="modal fade" id="confirm-delete-visa-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-visa-label"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirm-delete-visa-label">Confirm Delete</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                </div>
+            <form id="add-visa-form">
                 <div class="modal-body">
-                        <p>Are you sure want to delete?</p>
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="type"><strong>Type*</strong></label>
+                            <input id="type" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="type-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="visa-number"><strong>Visa Number*</strong></label>
+                            <input id="visa-number" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="visa-number-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="passport-no"><strong>Passport Number*</strong></label>
+                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="passport-no-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="expiry-date"><strong>Expiry Date*</strong></label>
+                            <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="expiry-date-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="issued-by"><strong>Issued By*</strong></label>
+                            <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="issued-by-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="issued-date"><strong>Issued Date*</strong></label>
+                            <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="issued-date-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="family-members-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="delete-visa-submit">Delete</button>
+                    <button id="add-visa-submit" type="submit" class="btn btn-primary">
+                            {{ __('Submit') }}
+                        </button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- UPDATE VISA -->
+<div class="modal fade" id="edit-visa-popup" tabindex="-1" role="dialog" aria-labelledby="edit-visa-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-visa-label">Edit Visa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+            </div>
+            <form id="edit-visa-form">
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="type"><strong>Type*</strong></label>
+                            <input id="type" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="type-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="visa-number"><strong>Visa Number*</strong></label>
+                            <input id="visa-number" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="visa-number-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="passport-no"><strong>Passport Number*</strong></label>
+                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="passport-no-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="expiry-date"><strong>Expiry Date*</strong></label>
+                            <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="expiry-date-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="issued-by"><strong>Issued By*</strong></label>
+                            <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="issued-by-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="issued-date"><strong>Issued Date*</strong></label>
+                            <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="issued-date-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
+                            <div id="family-members-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="edit-visa-submit" type="submit" class="btn btn-primary">
+                                {{ __('Submit') }}
+                            </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- DELETE VISA --}}
+<div class="modal fade" id="confirm-delete-visa-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-visa-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-visa-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-visa-submit">Delete</button>
             </div>
         </div>
     </div>
+</div>
 
-    {{-- TABLE --}}
-    <div class="tab-pane fade show p-3" id="nav-visa" role="tabpanel" aria-labelledby="nav-visa-tab">
-        <div class="row pb-3">
-            <div class="col-auto mr-auto"></div>
-            <div class="col-auto">
-                <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-visa-popup">
+{{-- TABLE --}}
+<div class="tab-pane fade show p-3" id="nav-visa" role="tabpanel" aria-labelledby="nav-visa-tab">
+    <div class="row pb-3">
+        <div class="col-auto mr-auto"></div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-visa-popup">
                     Add Visa
                 </button>
-            </div>
         </div>
-        <table class="hrms-primary-data-table table w-100" id="employeeVisaTable">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Type</th>
-                    <th>Visa Number</th>
-                    <th>Passport No</th>
-                    <th>Expiry Date</th>
-                    <th>Issued By</th>
-                    <th>Issued Date</th>
-                    <th>Family Members</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-        </table>
     </div>
+    <table class="hrms-primary-data-table table w-100" id="employeeVisaTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Type</th>
+                <th>Visa Number</th>
+                <th>Passport No</th>
+                <th>Expiry Date</th>
+                <th>Issued By</th>
+                <th>Issued Date</th>
+                <th>Family Members</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 
 
 
 
-    @section('scripts')
-    <script>
-        var visasTable = $('#employeeVisaTable').DataTable({
+
+@section('scripts')
+<script>
+    var visasTable = $('#employeeVisaTable').DataTable({
             "bInfo": true,
             "bDeferRender": true,
             "serverSide": true,
@@ -219,7 +220,7 @@
             "ajax": "{{ route('employee.dt.visas', ['id' => $id]) }}",
             "columns": [{
                     render: function (data, type, row, meta) {
-                        return meta.row + meta.employee._iDisplayStart + 1;
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
                 {
@@ -252,10 +253,9 @@
                 }
             ]
         });
-
-    </script>
-    <script type="text/javascript">
-        $(function(){
+</script>
+<script type="text/javascript">
+    $(function(){
             // ADD VISA
             $('#add-visa-popup').on('show.bs.modal', function (event) {
                 clearVisasError('#add-visa-form');
@@ -491,6 +491,5 @@
                 </button>
                 </div>`)
         }
-
-    </script>
-    @append
+</script>
+@append

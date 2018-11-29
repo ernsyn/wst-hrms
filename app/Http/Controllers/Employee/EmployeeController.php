@@ -20,6 +20,8 @@ use App\EmployeeSkill;
 use App\EmployeeAttachment;
 use App\EmployeeEmergencyContact;
 use App\EmployeeReportTo;
+use App\EmployeeSecurityGroup;
+use App\EmployeeWorkingDay;
 
 class EmployeeController extends Controller
 {
@@ -91,10 +93,13 @@ class EmployeeController extends Controller
 
     public function getDataTableVisas()
     {
-        $visa = EmployeeVisa::where('emp_id', Auth::user()->employee->id)->get();
+        $visas = EmployeeVisa::where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($visas)
         ->editColumn('issued_date', function ($visa) {
             return date('d/m/Y', strtotime($visa->issued_date) );
+        })
+        ->editColumn('expiry_date', function ($visa) {
+            return date('d/m/Y', strtotime($visa->expiry_date) );
         })
         ->make(true);
     }
@@ -102,7 +107,7 @@ class EmployeeController extends Controller
 
     public function getDataTableJobs()
     {
-        $job = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', Auth::user()->employee->id)->get();
+        $jobs = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
             return date('d/m/Y', strtotime($job->start_date) );
@@ -157,6 +162,18 @@ class EmployeeController extends Controller
     {
         $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($reportTos)->make(true);
+    }
+
+    public function getDataTableMainSecurityGroup()
+    {
+        $employee = Employee::with('security_groups')->where('emp_id', Auth::user()->employee->id)->get();
+        return DataTables::of($employee)->make(true);
+    }
+
+    public function getDataTableSecurityGroup()
+    {
+        $security_groups = EmployeeSecurityGroup::with('security_groups')->where('emp_id', Auth::user()->employee->id)->get();
+        return DataTables::of($security_groups)->make(true);
     }
 
     // SECTION: Add

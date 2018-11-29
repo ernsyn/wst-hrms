@@ -191,13 +191,13 @@
                     {{-- Attachment --}}
                     @include('pages.employee.id.attachments', ['id' => $employee->id])
                     {{-- Work Days --}}
-                    {{-- @include('pages.employee.id.working-day', ['id' => $employee->id]) --}}
+                    @include('pages.employee.id.working-day', ['id' => $employee->id])
                     {{-- Report To --}}
                     @include('pages.employee.id.report-to', ['id' => $employee->id])
                     {{-- History --}}
                     @include('pages.employee.id.history', ['id' => $employee->id])
                     {{-- Security Group --}}
-                    {{-- @include('pages.employee.id.security-group', ['id' => $employee->id]) --}}
+                    @include('pages.employee.id.security-group', ['id' => $employee->id])
                 </div>
             </div>
         </div>

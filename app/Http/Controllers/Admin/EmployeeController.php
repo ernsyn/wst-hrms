@@ -148,6 +148,9 @@ class EmployeeController extends Controller
         ->editColumn('issued_date', function ($visa) {
             return date('d/m/Y', strtotime($visa->issued_date) );
         })
+        ->editColumn('expiry_date', function ($visa) {
+            return date('d/m/Y', strtotime($visa->expiry_date) );
+        })
         ->make(true);
     }
 
@@ -178,7 +181,6 @@ class EmployeeController extends Controller
         ->editColumn('end_date', function ($experience) {
             return date('d/m/Y', strtotime($experience->end_date) );
         })
-
         ->make(true);
     }
 
