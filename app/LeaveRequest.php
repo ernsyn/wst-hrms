@@ -19,6 +19,11 @@ class LeaveRequest extends Model
         'is_approved',
     ];
 
+    protected $casts = [
+
+        'applied_days' => 'float',
+    ];
+
     protected $dates = ['deleted_at'];
 
     public function approvals() {
@@ -37,4 +42,14 @@ class LeaveRequest extends Model
     public function leave_type() {
         return $this->belongsTo('App\LeaveType','leave_type_id'); 
     }
+
+    public function employee() {
+        return $this->belongsTo('App\Employee','emp_id'); 
+    }
+
+    public function leave_allocation() {
+        return $this->belongsTo('App\LeaveAllocation','leave_allocation_id'); 
+    }
+
+
 }
