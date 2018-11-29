@@ -39,9 +39,11 @@
                                             <label class="col-md-12 col-form-label">Allocated Days*</label>
                                             <div class="col-md-12">
         
-                                                   <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
-                                                            name="name" value="{{$leaveRequest->leave_allocation->allocated_days}}" readonly> 
-                                                    </div>
+                                                    <input id="leave_type_id" type="text" class="form-control{{ $errors->has('leave_type_id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
+                                                    name="leave_type_id" value="{{$leaveRequest->leave_type_id}}" hidden>
+                                                        <input id="leave_type_name" type="text" class="form-control{{ $errors->has('leave_type_name') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
+                                                            name="leave_type_name" value="{{$leaveRequest->leave_type->name}}" readonly>
+                                                     </div>
                 
                                         </div>
 

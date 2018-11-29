@@ -239,15 +239,26 @@ class ELeaveController extends Controller
             {          
     
                 $id = $request->input('id');     
+                $emp_id = $request->input('emp_id');    
+                $leave_type_id = $request->input('leave_type_id');   
+                $total_days =$request->input('total_days');  
+
+            $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
+            ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+     
+     
+            $leaveAllocationData = number_format($leaveAllocationData1,1);
+            $total_days =number_format($total_days,1);
+            $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+
+
                 LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
                 $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-                $leaveAllocationData = LeaveAllocation::find( $id );
-                $leaveAllocationData->spent_days += 1;
-                $leaveAllocationData->save();
-            
-        
 
-        
+
+                $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+                ->where('leave_type_id',$leave_type_id)
+                ->update(array('spent_days'=>$leaveAllocationDataEntry));
                     return redirect()->route('leaverequest');
     
                 }

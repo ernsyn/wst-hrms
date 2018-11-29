@@ -21,6 +21,8 @@ class ELeaveController extends Controller
         $this->middleware(['role:super-admin|admin']);
     }
 
+
+    
     public function displayConfiguration() 
     {
         $defaultLeaveTypes = LeaveType::default()->get();
@@ -145,6 +147,14 @@ public function postAddPublicHoliday(Request $request)
 
     return redirect()->route('admin.e-leave.configuration.leave-holidays');
 }
+
+
+public function editPublicHolidays(Request $request, $id) {
+    $holiday = Holiday::find($id);
+
+    return view('pages.admin.e-leave.configuration.edit-leave-holiday', ['holiday' => $holiday]);
+}
+
     public function postEditLeaveType(Request $request, $id) {
         $leaveType = LeaveType::where('id', $id)->first();
         if($leaveType->is_custom) {
