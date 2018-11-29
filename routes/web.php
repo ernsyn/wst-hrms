@@ -42,6 +42,17 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
     Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
 
+    Route::post('employee/approve_leave', 'Employee\ELeaveController@approvedLeaveRequest')->name('approve_leave'); // also for manager
+   
+    Route::get('employee/approve_leave/{id}/add','Employee\ELeaveController@addLeaveApproval')->name('employee.e-leave.add-leave-request')->where('id', '[0-9]+');
+    Route::get('employee/disapprove_leave/{id}/add','Employee\ELeaveController@rejectLeaveApproval')->name('employee.e-leave.add-leave-request-disapprove')->where('id', '[0-9]+');
+    
+    Route::post('employee/approve_leaves/{id}/add','Employee\ELeaveController@postAddApproval')->name('employee.e-leave.add-leave-request.post')->where('id', '[0-9]+');
+    Route::post('employee/approve_leaves/{id}/reject','Employee\ELeaveController@postDisapproved')->name('employee.e-leave.add-leave-request-disapprove.post')->where('id', '[0-9]+');
+   
+    // Route::get('employee/approve_leave/add','Employee\ELeaveController@addLeaveApproval')->name('employee.e-leave.add-leave-request');
+    // Route::post('employee/approve_leaves/add','Employee\ELeaveController@postAddApproval')->name('employee.e-leave.add-leave-request.post');
+
     // Data Tables
     Route::get('employee/dt/dependents', 'Employee\EmployeeController@getDataTableDependents')->name('employee.dt.dependents');
     Route::get('employee/dt/immigrations', 'Employee\EmployeeController@getDataTableImmigrations')->name('employee.dt.immigrations');
