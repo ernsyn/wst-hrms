@@ -5,34 +5,11 @@
     <link rel="stylesheet" href="{{asset('css/report/government_report.css')}}" type="text/css"/>
     <link rel="stylesheet" href="{{asset('css/report/carousel.css')}}" type="text/css"/>
 
-<!--    <div class="row">
-        <div class="carousel">
-            <div class="carousel-row">
-                @foreach($sliders as $slider)
-                <div class="carousel-tile">
-                    <div class="m-portlet m-portlet--skin-dark m-portlet--bordered-semi {{$slider->getReportCss()}} port-item" data-toggle="collapse" data-target="#{{$slider->getReportTarget()}}">
-                    <div class="m-portlet__head" style="padding-top:12pt;align-items: center;height: 20pt;">
-                            <div class="m-portlet__head-caption">
-                                <div class="m-portlet__head-title">
-                                    <div class="m-portlet__head-icon" style="float:left;">
-                                        <i class="far fa-file-pdf" style="font-size: 13pt;"></i>
-                                    </div>
-                                    <div class="m-portlet__head-text">
-                                        &nbsp;{{$slider->getReportGroup()}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="m-portlet__body" style="text-align: center;height: 70pt;font-size: 30pt;">
-                            {{$slider->getReportName()}}
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </div>-->
-
+    @if(session()->has('message'))
+    <div id="government-report-alert" class="alert alert-warning">
+        {{ session()->get('message') }}
+    </div>
+    @endif
     <div class="row">
         <div class="carousel">
             <div class="carousel-row">
@@ -126,25 +103,21 @@
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
+                                @if ($form->getShowYear() == 'true')
+                                <label for="exampleFormYear">Year</label>
+                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                    @foreach($year as $value)
+                                    <option value="{{$value->year}}">{{$value->year}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
                                 @if ($form->getShowPeriod() == 'true')
-
-                                <div class="row">
-                                <div class="col-md-6 mx-auto">
-                                    <label for="exampleFormDate">Date</label>
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mx-auto">
-                                    <label for="exampleFormPeriod">Periods</label>
-                                    <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                        <option value="0">--Select--</option>
-                                        @foreach($period['period'] as $key => $value)
-                                        <option value="{{$key}}">{{$value}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                </div>
+                                <label for="exampleFormPeriod">Periods</label>
+                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                    @foreach($period as $key => $value)
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    @endforeach
+                                </select>
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
@@ -263,12 +236,19 @@
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
+                                @if ($form->getShowYear() == 'true')
+                                <label for="exampleFormYear">Year</label>
+                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                    @foreach($year as $value)
+                                    <option value="{{$value->year}}">{{$value->year}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                    <option value="0">--Select--</option>
-                                    @foreach($period['period'] as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    @foreach($period as $key => $value)
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -390,12 +370,19 @@
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
+                                @if ($form->getShowYear() == 'true')
+                                <label for="exampleFormYear">Year</label>
+                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                    @foreach($year as $value)
+                                    <option value="{{$value->year}}">{{$value->year}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                    <option value="0">--Select--</option>
-                                    @foreach($period['period'] as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    @foreach($period as $key => $value)
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -517,12 +504,19 @@
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
+                                @if ($form->getShowYear() == 'true')
+                                <label for="exampleFormYear">Year</label>
+                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                    @foreach($year as $value)
+                                    <option value="{{$value->year}}">{{$value->year}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                    <option value="0">--Select--</option>
-                                    @foreach($period['period'] as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    @foreach($period as $key => $value)
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -643,12 +637,19 @@
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
+                                @if ($form->getShowYear() == 'true')
+                                <label for="exampleFormYear">Year</label>
+                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                    @foreach($year as $value)
+                                    <option value="{{$value->year}}">{{$value->year}}</option>
+                                    @endforeach
+                                </select>
+                                @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                    <option value="0">--Select--</option>
-                                    @foreach($period['period'] as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    @foreach($period as $key => $value)
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif

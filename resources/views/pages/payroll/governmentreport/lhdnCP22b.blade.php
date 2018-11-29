@@ -397,13 +397,13 @@
                     Wajib
                 </div>
                 <div class="table-border" style="height: 12pt;float: left; padding-top: 1pt;padding-bottom: 1pt; padding-left: 5pt; padding-right: 5pt; margin-left: 5pt;">
-                    0
+                    &nbsp;
                 </div>
                 <div style="float: left; margin-left: 10pt">
                     Pilihan
                 </div>
                 <div class="table-border" style="height: 12pt;float: left; padding-top: 1pt;padding-bottom: 1pt; padding-left: 5pt; padding-right: 5pt; margin-left: 5pt">
-                    0
+                    &nbsp;
                 </div>
             </td>
             <td class="border_right"></td>
@@ -707,7 +707,7 @@
                     d) No. Telefon
                 </div>
                 <div class="table-border" style="float: left; margin-left: 10pt;padding-left: 5pt;display: table-cell;width: 50%;">
-                    {{$data->getLegalRepresentativeNoTelA()}}
+                    &nbsp;{{$data->getLegalRepresentativeNoTelA()}}
                 </div>
             </td>
             <td class="tg-0lax"></td>
@@ -874,7 +874,7 @@
         <tr>
             <td class="text_center border_bottom border_right" height="20%">Dari</td>
             <td class="text_center border_bottom border_right">Hingga</td>
-            <td class="text_center border_bottom border_right">RM</td>
+            <td class="text_center border_bottom border_right" width="10%">RM</td>
         </tr>
         <tr class="border_bottom border_left border_right">
             <td class="pleft" style="width: 18pt;border-right-style: none;">1)</td>

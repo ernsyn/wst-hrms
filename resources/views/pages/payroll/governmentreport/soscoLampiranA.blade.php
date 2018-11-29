@@ -27,7 +27,7 @@
             <div class="t m0 x3 h2 y6 ff1 fs0 fc0 sc0 ls0 ws0">(Melalui Sistem Penghantaran Pita/Disket)</div>
             <div class="t m0 x3 h2 y7 ff1 fs0 fc0 sc0 ls0 ws0">Bilangan Pekerja : {{$data->getEmployeeTotalNumber()}}</div>
             <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls0 ws0"> Cek/Kiriman Wang/Wang Pos/Draf Bank<span class="_ _1"> </span> Amaun</div>
-            <div class="t m0 x4 h3 y9 ff1 fs0 fc0 sc0 ls0 ws0"> No : <span class="ff2">{{$data->getNoCheck()}}</span> <span>disertakan</span> <span class="_ _2"> </span><span class="ff2"><b> RM  {{number_format($data->getAmount(),2)}}</b></span></div>
+            <div class="t m0 x4 h3 y9 ff1 fs0 fc0 sc0 ls0 ws0"> No : <span class="ff2">{{$data->getNoCheck()}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>disertakan</span> <span class="_ _2"> </span><span class="ff2"><b> RM  {{number_format($data->getAmount(),2)}}</b></span></div>
             <div class="t m0 x5 h2 ya ff1 fs0 fc0 sc0 ls0 ws0"> Kod Majikan<span class="_ _3"> </span>:<span class="_ _4"></span>{{$data->getEmployerCode()}}</div>
             <div class="t m0 x5 h2 yb ff1 fs0 fc0 sc0 ls0 ws0"> Nama Majikan<span class="_ _5"> </span>:<span class="_ _4"></span>{{$data->getCompanyName()}}  {{$data->getCompanyRegistrationNo()}}</div>
             <div class="t m0 x5 h2 yc ff1 fs0 fc0 sc0 ls0 ws0"> Alamat<span class="_ _6"> </span>:<span class="_ _4"></span>{{$data->getAddress1()}}</div>

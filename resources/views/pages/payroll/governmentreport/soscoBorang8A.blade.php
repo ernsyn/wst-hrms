@@ -15,9 +15,9 @@
             border: 1px solid grey;
         }
 
-/*                .table-border-all table, td, th{
-                    border: 1px solid grey;
-                }*/
+        /*                .table-border-all table, td, th{
+                            border: 1px solid grey;
+                        }*/
 
         .padded td.pleft { padding-left:3pt; }
         .padded td.pright { padding-right:3pt; }
@@ -148,9 +148,37 @@
 <body>
 <div id="page-container">
 
+    <!-- page  -->
+    @php
+    $total_items = count($empData);
+    $num_per_page = 18;
+    $num_pages = ceil($total_items / $num_per_page);
+    $count=0;
+    $start=0;
+    $end=$num_per_page;
+    $cur_page=1;
+
+    //total amount
+    $totalEmployeeContribution=0;
+    @endphp
+
+    @for($i=0; $i<$num_pages; $i++)
+    @php
+    if($i != 0){
+    $start += $num_per_page;
+    }
+
+    //amount
+    $employeeContribution=0;
+    @endphp
+
+    @if($cur_page > 1)
+    <div style="page-break-before:always">&nbsp;</div>
+    @endif
+
     <table class="padded" style="margin-top: 48pt;">
         <tr>
-            <th rowspan="6" width="10%"><img style="width: 89pt;height: 94pt;" alt="" src="{{asset('img/report/perkeso_grey.png')}}"/></th>
+            <th rowspan="6" width="10%"><img style="width: 89pt;height: 94pt;" alt="" src="{{public_path('img/report/perkeso_grey.png')}}"/></th>
             <th colspan="5" class="text_center" style="font-size: 16pt;word-spacing: 1pt;">PERTUBUHAN KESELAMATAN SOSIAL</th>
             <td class="text_1"></td>
         </tr>
@@ -168,9 +196,9 @@
         </tr>
         <tr>
             <td class="text_1 text_center" width="50%">CARUMAN GAJI  BULAN </td>
-            <td class="text_1 table-border pleft" width="5%">08</td>
+            <td class="text_1 table-border pleft" width="5%">{{$data->getMonth()}}</td>
             <td class="text_1" width="2%">&nbsp;&nbsp;/&nbsp;&nbsp;</td>
-            <td class="text_1 table-border pleft" width="5%">2018</td>
+            <td class="text_1 table-border pleft" width="5%">{{$data->getYear()}}</td>
             <td class="text_1" width="10%"></td>
             <td class="text_1 text_right" width="13%">BORANG 8A</td>
         </tr>
@@ -187,13 +215,13 @@
             <td class="table-border text_center" width="28%" colspan="2">Amaun Caruman (RM)</td>
         </tr>
         <tr>
-            <td class="table-border pleft">B3200090304M</td>
-            <td class="table-border pleft">1075187-D</td>
-            <td class="table-border text_center" colspan="2">12,525.60</td>
+            <td class="table-border pleft">{{$data->getCompanyReferenceNo()}}</td>
+            <td class="table-border pleft">{{$data->getCompanyBusinessRegistrationNo()}}</td>
+            <td class="table-border text_center" colspan="2">{{number_format($totalContribution,2)}}</td>
         </tr>
         <tr class="border_left border_right">
             <td class="pleft" colspan="3">Amaun caruman di atas hendaklah dibayar kepada PERKESO/EJEN PEMUNGUT tidak lewat daripada</td>
-            <td class="text_right pright5">15/09/2018</td>
+            <td class="text_right pright5">{{$data->getPayNotBeforeDate()}}</td>
         </tr>
         <tr style="background: #E5E5E5">
             <td class="pleft table-border" colspan="2">Nama dan Alamat Majikan</td>
@@ -202,13 +230,13 @@
         </tr>
         <tr>
             <td class="pleft table-border" colspan="2" rowspan="4" valign="top">
-                OPPO ELECTRONICS SDN BHD<br>
-                LEVEL 15, TOWER 1, PJ 33,<br>
-                JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,<br>
-                SELANGOR. Poskod: 46200<br>
+                {{$data->getCompanyName()}}<br>
+                {{$data->getCompanyAddress1()}}<br>
+                {{$data->getCompanyAddress2()}}<br>
+                {{$data->getCompanyAddress3()}} Poskod: {{$data->getCompanyPostcode()}}<br>
             </td>
-            <td class="pleft table-border">1</td>
-            <td class="text_center table-border">208</td>
+            <td class="pleft table-border">{{$cur_page}}</td>
+            <td class="text_center table-border">{{$data->getTotalEmployee()}}</td>
         </tr>
         <tr>
             <td class="pleft table-border" colspan="2" style="background: #E5E5E5">Kegunaan Ejen Pemungut</td>
@@ -236,60 +264,48 @@
             <td class="tg-s268 table-border pleft" width="48%">NAMA PEKERJA (MENGIKUT  KAD  PENGENALAN) <br><br>(4)</td>
             <td class="text_right table-border" width="15%">CARUMAN<br>(RM)<br>(5)</td>
         </tr>
+
+        @foreach(array_slice($empData,$start,$end) as $emp )
         <tr>
-            <td class="tg-s268 table-border pleft">31/08/2018</td>
-            <td class="tg-s268 table-border text_center">H</td>
-            <td class="tg-s268 table-border pleft">000821081283</td>
-            <td class="tg-s268 table-border pleft">ABDUL HALIM BIN  MOHAMED  AYOOB</td>
-            <td class="text_right table-border"> 70.90</td>
+            <td class="tg-s268 table-border pleft">{{$emp->getJobDate()}}</td>
+            <td class="tg-s268 table-border text_center">{{$emp->getStatus()}}</td>
+            <td class="tg-s268 table-border pleft">{{$emp->getEmployeeIcNo()}}</td>
+            <td class="tg-s268 table-border pleft">{{$emp->getEmployeeName()}}</td>
+            <td class="text_right table-border">{{number_format($emp->getEmployeeContribution(),2)}}</td>
         </tr>
-        <tr>
-            <td class="tg-s268 table-border pleft"></td>
-            <td class="tg-s268 table-border text_center"></td>
-            <td class="tg-s268 table-border pleft">990112145323</td>
-            <td class="tg-s268 table-border pleft">ABDUL IKMAL BIN AL  AHFIZ</td>
-            <td class="text_right table-border">52.90</td>
-        </tr>
-        <tr>
-            <td class="tg-s268 table-border pleft"></td>
-            <td class="tg-s268 table-border text_center"></td>
-            <td class="tg-s268 table-border pleft">981019105621</td>
-            <td class="tg-s268 table-border pleft">AHMAD IZZAT SYAZWAN  BIN  WAN  CHIK</td>
-            <td class="text_right table-border">86.60</td>
-        </tr>
-        <tr>
-            <td class="tg-s268 table-border pleft">31/08/2018</td>
-            <td class="tg-s268 table-border text_center">B</td>
-            <td class="tg-s268 table-border pleft">000821081283</td>
-            <td class="tg-s268 table-border pleft">ABDUL HALIM BIN  MOHAMED  AYOOB</td>
-            <td class="text_right table-border"> 70.90</td>
-        </tr>
-        <tr>
-            <td class="tg-s268 table-border pleft"></td>
-            <td class="tg-s268 table-border text_center"></td>
-            <td class="tg-s268 table-border pleft">990112145323</td>
-            <td class="tg-s268 table-border pleft">ABDUL IKMAL BIN AL  AHFIZ</td>
-            <td class="text_right table-border">52.90</td>
-        </tr>
-        <tr>
-            <td class="tg-s268 table-border pleft"></td>
-            <td class="tg-s268 table-border text_center"></td>
-            <td class="tg-s268 table-border pleft">981019105621</td>
-            <td class="tg-s268 table-border pleft">AHMAD IZZAT SYAZWAN  BIN  WAN  CHIK</td>
-            <td class="text_right table-border">86.60</td>
-        </tr>
+        @php
+        //sum of amount
+        $employeeContribution += $emp->getEmployeeContribution();
+
+        $count++
+        @endphp
+        @endforeach
+
+        @php
+        //total amount of end page
+        $totalEmployeeContribution += $employeeContribution;
+        @endphp
+
         <tr>
             <td class="empty_row table-border" colspan="4"></td>
             <td class="empty_row table-border"></td>
         </tr>
+
         <tr>
             <td class="table-border text_right pright10" colspan="4">JUMLAH MUKA SURAT  INI</td>
-            <td class="table-border text_right">1,139.30</td>
+            <td class="table-border text_right">{{number_format($employeeContribution,2)}}</td>
         </tr>
+        @if($cur_page == $num_pages)
+        <tr>
+            <td class="table-border text_right pright10" colspan="4">JUMLAH BESAR</td>
+            <td class="table-border text_right">{{number_format($totalEmployeeContribution,2)}}</td>
+        </tr>
+        @else
         <tr>
             <td class="table-border text_right pright10" colspan="4">JUMLAH DIBAWA  KE  LEMBARAN  HADAPAN</td>
-            <td class="table-border text_right"> 1,139.30</td>
+            <td class="table-border text_right">{{number_format($totalEmployeeContribution,2)}}</td>
         </tr>
+        @endif
     </table>
 
     <table class="padded" style="margin-top: 40pt;border-collapse: collapse;">
@@ -327,7 +343,8 @@
             <td class="tg-s268" colspan="2">No. Cek/Kiriman Wang:_________________________</td>
         </tr>
     </table>
-
+    @php($cur_page++)
+    @endfor
 </div>
 </body>
 </html>

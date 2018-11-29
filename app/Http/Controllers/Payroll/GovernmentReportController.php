@@ -22,6 +22,10 @@ class GovernmentReportController extends Controller
 
     public function viewGovernmentReport(){
 
+        //get company information based on user login
+        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $officers = GenerateReportsHelper::getListOfficerInformation($company->id);
+
         //get slider data
         $arr = GovernmentReport::getGovernmentReportSlider();
         $form = GovernmentReport::getGovernmentReportForm();
@@ -29,11 +33,8 @@ class GovernmentReportController extends Controller
         $departments = GenerateReportsHelper::getDepartments();
         $branches = GenerateReportsHelper::getBranches();
         $positions = GenerateReportsHelper::getPosition();
-        $period = PayrollPeriodEnum::list();
-
-        //get company information based on user login
-        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
-        $officers = GenerateReportsHelper::getListOfficerInformation($company->id);
+        $period = GenerateReportsHelper::getPeriod($company->id);
+        $year = GenerateReportsHelper::getYear($company->id);
 
         return view('pages.payroll.government-report')->with([
             'sliders' => $arr['slider'] ,
@@ -51,20 +52,19 @@ class GovernmentReportController extends Controller
             'branches' => $branches,
             'positions' => $positions,
             'period' => $period,
+            'year' => $year,
             'officers' => $officers
         ]);
     }
 
     public function generateReport(Request $request){
-        $year = "";
-        $month = "";
 
         $this->validate($request, [
             'reportName' => 'required'
         ]);
 
         $reportName = $request->input('reportName');
-        $date = $request->input('yearMonth');
+        $year = $request->input('selectYear');
         $periods = $request->input('selectPeriod');
         $officerId = $request->input('selectOfficer');
 
@@ -90,117 +90,149 @@ class GovernmentReportController extends Controller
             $value = 0;
         }
 
-        //checking yearMonth
-        if(empty($yearMonth)){
-            $year = date("Y");
-            $month;
-        }
-
         $filterOption = GenerateReportsHelper::getFilterKey($filter,$value);
-        return $this->generate($reportName,$periods,$officerId,$date,$filterOption);
+        $result = $this->generate($reportName,$periods,$year,$officerId,$filterOption);
+        if(!empty($result)){
+            return $result;
+        }else{
+            return redirect()->route('payroll/government_report')->with('message', 'No record found!');
+        }
     }
 
-    private function generate($reportName,$periods,$officerId,$date,$filter){
+
+    private function generate($reportName,$periods,$year,$officerId,$filter){
         switch ($reportName) {
             case "LHDN_borangE":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnBorangE',
-                    [
-                        'data' => $arr['data'] ,
-                        'empData' => $arr['data1'] ,
-                    ])->setOrientation('landscape');
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnBorangE',
+                        [
+                            'data' => $arr['data'],
+                            'empData' => $arr['empData'],
+                        ])->setOrientation('landscape');
 
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('lhdnBorangE.pdf');
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdnBorangE.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "LHDN_cp21":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP21',
-                    [
-                        'dataArr' => $arr['data']
-                    ]);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP21',
+                        [
+                            'dataArr' => $arr['data']
+                        ]);
 
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('lhdn_cp21.pdf');
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdn_cp21.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "LHDN_cp22":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22',
-                    [
-                        'dataArr' => $arr['data']
-                    ]);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22',
+                        [
+                            'dataArr' => $arr['data']
+                        ]);
 
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('lhdn_cp22.pdf');
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdn_cp22.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "LHDN_cp22a":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22a',
-                    [
-                        'dataArr' => $arr['data']
-                    ]);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22a',
+                        [
+                            'dataArr' => $arr['data']
+                        ]);
 
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('lhdn_cp22a.pdf');
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdn_cp22a.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "LHDN_cp22b":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22b',
-                    [
-                        'dataArr' => $arr['data']
-                    ]);
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('lhdn_cp22b.pdf');
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22b',
+                        [
+                            'dataArr' => $arr['data']
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdn_cp22b.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "LHDN_cp39":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39',
-                    [
-                        'data' => $arr['data'] ,
-                        'empData' => $arr['empData'],
-                        'totalPcb' => $arr['totalPcb'],
-                        'totalcp38' => $arr['totalcp38'],
-                        'totalAmountofPCBAndCP8' => $arr['totalAmountofPCBAndCP8']
-                    ] )->setOrientation('landscape');
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('lhdn_cp39.pdf');
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39',
+                        [
+                            'data' => $arr['data'],
+                            'empData' => $arr['empData'],
+                            'totalPcb' => $arr['totalPcb'],
+                            'totalcp38' => $arr['totalcp38'],
+                            'totalAmountofPCBAndCP8' => $arr['totalAmountofPCBAndCP8']
+                        ])->setOrientation('landscape');
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdn_cp39.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "LHDN_cp39lieu":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39_lieu',
-                    [
-                        'dataArr' => $arr['data']
-                    ]);
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('lhdn_cp39lieu.pdf');
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39_lieu',
+                        [
+                            'dataArr' => $arr['data']
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdn_cp39lieu.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "LHDN_eaform":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnEaForm',
-                    [
-                        'dataArr' => $arr['data']
-                    ]);
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('lhdn_eaForm.pdf');
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)){
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnEaForm',
+                        [
+                            'dataArr' => $arr['data']
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('lhdn_eaForm.pdf');
+                }  else{
+                    return;
+                }
                 break;
 
             case "Tabung_Haji_caruman":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
+/*                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
                 $pdf = PDF::loadView('pages/payroll/governmentreport/tabunghaji_caruman',
                     [
                         'data' => $arr['data'] ,
@@ -208,55 +240,96 @@ class GovernmentReportController extends Controller
                     ] )->setOrientation('landscape');
                 $pdf->setTemporaryFolder(storage_path("temp"));
                 // download pdf
-                return $pdf->download('tabunghaji_caruman.pdf');
+                return $pdf->download('tabunghaji_caruman.pdf');*/
+                return;
                 break;
 
             case "Tabung_Haji_df":
+                return;
                 break;
 
             case "EPF_bbcd":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/epf_bbcd',
-                    [
-                        'data' => $arr['data']
-                    ]);
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('epf_bbcd.pdf');
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/epf_bbcd',
+                        [
+                            'data' => $arr['data']
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('epf_bbcd.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "EPF_borangA":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/epf_borangA',
-                    [
-                        'data' => $arr['data'] ,
-                        'empData' => $arr['empData'],
-                        'totalOverallContributionEmp' => $arr['totalOverallContributionEmp'],
-                    ]);
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('epf_borangA.pdf');
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/epf_borangA',
+                        [
+                            'data' => $arr['data'],
+                            'empData' => $arr['empData'],
+                            'totalOverallContributionEmp' => $arr['totalOverallContributionEmp'],
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('epf_borangA.pdf');
+                }else{
+                    return;
+                }
                 break;
 
             case "SOSCO_lampiranA":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
-                $pdf = PDF::loadView('pages/payroll/governmentreport/soscoLampiranA',
-                    [
-                        'data' => $arr['data']
-                    ]);
-                $pdf->setTemporaryFolder(storage_path("temp"));
-                // download pdf
-                return $pdf->download('sosco_LampiranA.pdf');
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/soscoLampiranA',
+                        [
+                            'data' => $arr['data']
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('sosco_LampiranA.pdf');
+                }else{
+                    return;
+                }
                 break;
 
-            case "LHDN_eaform":
+            case "SOSCO_borang8A":
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/soscoBorang8A',
+                        [
+                            'data' => $arr['data'],
+                            'empData' => $arr['empData'],
+                            'totalContribution' => $arr['totalContribution']
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('sosco_Borang8A.pdf');
+                }else{
+                    return;
+                }
                 break;
 
-            case "LHDN_eaform":
+            case "PTPTN_monthly":
+                return;
+                break;
+
+            case "ZAKAT_montly":
+                return;
+                break;
+
+            case "ASBN_monthly":
+                return;
+                break;
+
+            case "EIS_lampiran1":
+                return;
                 break;
 
             case "test":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$date,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
                 break;
             default:
                 echo "None";

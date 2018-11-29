@@ -315,10 +315,10 @@
         <tr class="border_right border_left">
             <th class="" width="2%"></th>
             <td class="pleft15">TARIKH LAHIR  </td>
-            <td class="table-border pleft">{{$data->getForeignerBirthDate()}}</td>
+            <td class="table-border pleft"> {!! $data->getForeignerBirthDate() !!} </td>
             <td class=""></td>
             <td class="pleft15">NO. PASPORT</td>
-            <td class="table-border pleft">{{$data->getForeignerPassportNo()}}</td>
+            <td class="table-border pleft"> {!! $data->getForeignerPassportNo() !!} </td>
             <td class="" width="40%"></td>
         </tr>
         <tr class="empty_row30 border_left border_right">
@@ -390,10 +390,10 @@
         <tr class="border_right border_left">
             <th class="" width="2%"></th>
             <td class="pleft15">TARIKH LAHIR  </td>
-            <td class="table-border pleft">{{$data->getForeignerSpouseBirthDate()}}</td>
+            <td class="table-border pleft"> {!! $data->getForeignerSpouseBirthDate() !!} </td>
             <td class=""></td>
             <td class="pleft15">NO. PASPORT</td>
-            <td class="table-border pleft">{{$data->getForeignerSpousePassportNo()}}</td>
+            <td class="table-border pleft"> {!! $data->getForeignerSpousePassportNo() !!} </td>
             <td class="" width="40%"></td>
         </tr>
         <tr class="empty_row30 border_left border_right border_bottom">

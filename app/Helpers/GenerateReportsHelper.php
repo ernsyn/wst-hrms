@@ -26,11 +26,13 @@ use App\Http\Controllers\Popo\governmentreport\TabungHajiCarumanBean;
 use App\Http\Controllers\Popo\governmentreport\EpfBBCDBean;
 use App\Http\Controllers\Popo\governmentreport\EpfBorangABean;
 use App\Http\Controllers\Popo\governmentreport\SoscoLampiranABean;
+use App\Http\Controllers\Popo\governmentreport\SocsoBorang8ABean;
 
 use App\PayrollMaster;
 use App\User;
 use App\Company;
 use App\Employee;
+use App\Enums\PayrollPeriodEnum;
 use Illuminate\Support\Facades\Auth;
 use \DB;
 use \Carbon;
@@ -38,103 +40,90 @@ use \Carbon;
 class GenerateReportsHelper
 {
 
-    public static function generateBean($reportName,$periods,$date,$officerId,$filter){
+    public static function generateBean($reportName,$periods,$year,$officerId,$filter){
         switch ($reportName) {
             case "LHDN_borangE":
 
-                //query from table company
-                $company = Company::where('status', 1)->first();
-                $totalEmployee = Employee::count();
+                //set pojo
+                $data = array();
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$year);
+                $totalEmployeeActiveAndResign = self::getEmployeeTotalActiveAndResigned($companyInformation->id,$filter,null,$year);
 
-                //set popo
-                $data = new LhdnBorangEBean([
-/*                    'employerName' => !empty($company) ? $company->name : '',
-                    'employerNoE' => !empty($company) ? $company->code : '',
-                    'businessStatus' => 1,
-                    'ssmNo' => !empty($company) ? $company->registration_no : '',
-                    'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                    'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                    'address3' => 'SELANGOR.',
-                    'postcode' => 46200,
-                    'telNo' => !empty($company) ? $company->phone : '',
-                    'email' => 'oppo.amandachong@gmail.com',
-                    'totalEmployee' => !empty($totalEmployee) ? $totalEmployee : '',
-                    'totalEmployeeWithPCB' => 7,
-                    'totalNewEmployee' => 9,
-                    'totalEmployeeResigned' => 15,
-                    'totalEmployeeResignedLeaveMalaysia' => 1,
-                    'reportLHDNM' => 1,
-                    'officerName' => 'CHONG HWEE MIN',
-                    'officerIC' => '861819891291',
-                    'officerPosition' => 'HUMAN RESOURCES OFFICER'*/
-                    'employerName' => 'OPPO ELECTRONICS SDN BHD',
-                    'employerNoE' => 'E9119707907',
-                    'employerStatus' => 2,
-                    'businessStatus' => 1,
-                    'incomeTaxNo' => 'SG10234567090',
-                    'icNo' => 'B3200090304M',
-                    'passportNo' => 'A320000304',
-                    'ssmNo' => 'B32000304M',
-                    'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                    'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                    'address3' => 'SELANGOR.',
-                    'postcode' => 46200,
-                    'telNo' => '03-7931 3550',
-                    'mobileNo' => '013-7931 3550',
-                    'email' => 'oppo.amandachong@gmail.com',
-                    'CP8D' => 1,
-                    'totalEmployee' => 9,
-                    'totalEmployeeWithPCB' => 7,
-                    'totalNewEmployee' => 9,
-                    'totalEmployeeResigned' => 15,
-                    'totalEmployeeResignedLeaveMalaysia' => 1,
-                    'reportLHDNM' => 1,
-                    'officerName' => 'CHONG HWEE MIN',
-                    'officerIC' => '861819891291',
-                    'officerPosition' => 'HUMAN RESOURCES OFFICER'
-                ]);
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    $data = new LhdnBorangEBean([
+                        'employerName' => $companyInformation->name,
+                        'employerNoE' => 'E9119707907',
+                        //'employerStatus' => 2,
+                        'businessStatus' => 1,
+                        //'incomeTaxNo' => 'SG10234567090',
+                        //'icNo' => 'B3200090304M',
+                        //'passportNo' => 'A320000304',
+                        'ssmNo' => $companyInformation->registration_no,
+                        'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                        'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'address3' => 'SELANGOR.',
+                        'postcode' => 46200,
+                        'telNo' => $companyInformation->phone,
+                        //'mobileNo' => '013-7931 3550',
+                        //'email' => 'oppo.amandachong@gmail.com',
+                        //'CP8D' => 1,
+                        'totalEmployee' => $totalEmployeeActiveAndResign->total_employee,
+                        'totalEmployeeWithPCB' => $totalEmployeeActiveAndResign->total_employee_have_pcb,
+                        'totalNewEmployee' => $totalEmployeeActiveAndResign->total_new_employee,
+                        'totalEmployeeResigned' => $totalEmployeeActiveAndResign->total_employee_resigned,
+                        //'totalEmployeeResignedLeaveMalaysia' => 1,
+                        //'reportLHDNM' => 1,
+                        'officerName' => $officerInformation->name,
+                        'officerIC' => $officerInformation->ic_no,
+                        'officerPosition' => $officerInformation->position
+                    ]);
 
-                $data1 = array();
-                //example
-                for($count=0;$count < 55; $count++){
-                    $emp = new LhdnCP8EmployeeDetail();
-                    $emp->setIncomeTaxNo("JAZLI AMIRUL BIN RAMLI");
-                    $emp->setIcNo("981101121221");
-                    $emp->setEmployeeCategory(1);
-                    $emp->setTaxPayByEmployer("Tidak");
-                    $emp->setTotalChildren(0);
-                    $emp->setAmountOfDeparture(0.00);
-                    $emp->setTotalGrossRemuneration(16951.54);
-                    $emp->setBenefitsOfGoods(0.00);
-                    $emp->setValuePlaceOfResidence(0.00);
-                    $emp->setBenefitsOfESOS(0.00);
-                    $emp->setTaxExemptPerquisites(0.00);
-                    $emp->setTP1Departure(0.00);
-                    $emp->setTP1Zakat(0.00);
-                    $emp->setEmployeeEPFContributions(1631.00);
-                    $emp->setZakatDeductions(0.00);
-                    $emp->setTaxDeductionOfPCB(143.60);
-                    $emp->setTaxDeductionOfCP38(0.00);
-                    $data1[] = $emp;
+                    //example
+                    $empData = array();
+                    //example
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $emp = new LhdnCP8EmployeeDetail([
+                            'incomeTaxNo' => $userPayroll->tax_no,
+                            'icNo' => $userPayroll->ic_no,
+                            //'employeeCategory' => $userPayroll->name,
+                            'taxPayByEmployer' => 'Tidak',
+                            'totalChildren' => $userPayroll->total_children,
+                            //'amountOfDeparture' => $userPayroll->name,
+                            'totalGrossRemuneration' => $userPayroll->total_gross_salary,
+                            //'benefitsOfGoods' => $userPayroll->name,
+                            //'valuePlaceOfResidence' => $userPayroll->name,
+                            //'benefitsOfESOS' => $userPayroll->name,
+                            //'taxExemptPerquisites' => $userPayroll->name,
+                            //'TP1Departure' => $userPayroll->name,
+                            //'TP1Zakat' => $userPayroll->name,
+                            'employeeEPFContributions' => $userPayroll->total_epf,
+                            //'zakatDeductions' => $userPayroll->name,
+                            'taxDeductionOfPCB' => $userPayroll->total_pcb
+                            //'taxDeductionOfCP38' => $userPayroll->name
+                        ]);
+                        $empData[] = $emp;
+                    }
+
+                    $arr = array("data" => $data, "empData" => $empData);
+                    return $arr;
                 }
-                //foreach (self::getYearlyGrossPay() as )
-
-                $arr = array("data"=>$data, "data1"=>$data1);
-                return $arr;
             break;
 
             case "LHDN_cp21":
                     //set pojo
                     $data = array();
-                    $date="";
-                    $year="2018";
-                    $month="";
                     $companyInformation = self::getUserLogonCompanyInfomation();
                     $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                    $userInfoAndPayrollList = self::getListUserInfomationAndPayroll($companyInformation->id,$filter,$month,$year);
+                    $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$year);
 
-
-                    foreach($userInfoAndPayrollList as $userPayroll) {
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
                         $obj = new LhdnCP21Bean([
                             'employerName' => $companyInformation->name,
                             'employerNoE' => 'E9119707907',
@@ -176,451 +165,494 @@ class GenerateReportsHelper
                         ]);
                         $data[] = $obj;
                     }
-                    $arr = array("data"=>$data);
+                    $arr = array("data" => $data);
                     return $arr;
+                }
             break;
 
             case "LHDN_cp22":
                 //set pojo
                 $data = array();
-                $date="";
-                $year="2018";
-                $month="11";
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInfomationAndPayroll($companyInformation->id,$filter,$month,$year);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
 
-                foreach($userInfoAndPayrollList as $userPayroll) {
-                    $obj = new LhdnCP22Bean([
-                        'companyName' => $companyInformation->name,
-                        'companyNoE' => 'E9119707907',
-                        'companyNoTel' => $companyInformation->phone,
-                        'addressTo1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'addressTo2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'addressTo3' => 'SELANGOR.',
-                        'postcodeTo' => 46200,
-                        'addressFrom1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'addressFrom2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'addressFrom3' => 'SELANGOR.',
-                        'postcodeFrom' => 46200,
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $obj = new LhdnCP22Bean([
+                            'companyName' => $companyInformation->name,
+                            'companyNoE' => 'E9119707907',
+                            'companyNoTel' => $companyInformation->phone,
+                            'addressTo1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                            'addressTo2' => 'JALAN SEMANGAT, PETALING JAYA,',
+                            'addressTo3' => 'SELANGOR.',
+                            'postcodeTo' => 46200,
+                            'addressFrom1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                            'addressFrom2' => 'JALAN SEMANGAT, PETALING JAYA,',
+                            'addressFrom3' => 'SELANGOR.',
+                            'postcodeFrom' => 46200,
 
-                        'name_A' => $userPayroll->name,
-                        'incomeTaxNo_A' => $userPayroll->tax_no,
-                        'jobRole_A' => $userPayroll->position,
-                        'noIc_A' => $userPayroll->ic_no,
-                        'employmentStartDate_A' => self::changeMalaysianDate($userPayroll->job_start_date),
-                        'employmentExpectedDate_A' => '05/03/2018',
-                        'immigrationNo_A' => $userPayroll->immigration_passport_no,
-                        'address1_A' => 'No 7 ,Simpang Empat',
-                        'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'address3_A' => 'SELANGOR.',
-                        'postcode_A' => 46200,
-                        'birthDate_A' => self::changeMalaysianDate($userPayroll->dob),
-                        'maritalStatus_A' => $userPayroll->marital_status,
-                        'signX_A' => '',
+                            'name_A' => $userPayroll->name,
+                            'incomeTaxNo_A' => $userPayroll->tax_no,
+                            'jobRole_A' => $userPayroll->position,
+                            'noIc_A' => $userPayroll->ic_no,
+                            'employmentStartDate_A' => self::changeMalaysianDate($userPayroll->job_start_date),
+                            'employmentExpectedDate_A' => '05/03/2018',
+                            'immigrationNo_A' => $userPayroll->immigration_passport_no,
+                            'address1_A' => 'No 7 ,Simpang Empat',
+                            'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
+                            'address3_A' => 'SELANGOR.',
+                            'postcode_A' => 46200,
+                            'birthDate_A' => self::changeMalaysianDate($userPayroll->dob),
+                            'maritalStatus_A' => $userPayroll->marital_status,
+                            'signX_A' => '',
 
-                        'fixedMontlyRemunerationRate_B' => $userPayroll->total_gross_salary,
+                            'fixedMontlyRemunerationRate_B' => $userPayroll->total_gross_salary,
 
-                        'officerSignature_C' => '',
-                        'officerName_C' => $officerInformation->name,
-                        'officerRole_C' => $officerInformation->position,
-                        'date_C' => self::getCurrentDate()
-                    ]);
-                    $data[] = $obj;
+                            'officerSignature_C' => '',
+                            'officerName_C' => $officerInformation->name,
+                            'officerRole_C' => $officerInformation->position,
+                            'date_C' => self::getCurrentDate()
+                        ]);
+                        $data[] = $obj;
+                    }
+                    $arr = array("data" => $data);
+                    return $arr;
                 }
-                $arr = array("data"=>$data);
-                return $arr;
             break;
 
             case "LHDN_cp22a":
                 //set pojo
                 $data = array();
-                $date="";
-                $year="2018";
-                $month="11";
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInfomationAndPayroll($companyInformation->id,$filter,$month,$year);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
 
-                foreach($userInfoAndPayrollList as $userPayroll) {
-                    $obj = new LhdnCP22aBean([
-                        'employerName' => $companyInformation->name,
-                        'employerNoE' => 'E9119707907',
-                        'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'employerAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'employerAddress3' => 'SELANGOR.',
-                        'employerPostcode' => 46200,
-                        'employerNoTel' => $companyInformation->phone,
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $obj = new LhdnCP22aBean([
+                            'employerName' => $companyInformation->name,
+                            'employerNoE' => 'E9119707907',
+                            'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                            'employerAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
+                            'employerAddress3' => 'SELANGOR.',
+                            'employerPostcode' => 46200,
+                            'employerNoTel' => $companyInformation->phone,
 
-                        'name_A' => $userPayroll->name,
-                        'telNo_A' => $userPayroll->contact_no,
-                        'commencementDate_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
-                        'address1_A' => 'No 7 ,Simpang Empat',
-                        'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'address3_A' => 'SELANGOR.',
-                        'postcode_A' => 46200,
-                        'resignDate_A' => self::changeTwoDigitDate($userPayroll->job_end_date),
-                        'birthDate_A' => self::changeTwoDigitDate($userPayroll->dob),
-                        //'resignType_A' => 'X',
-                        //'signX' => '',
-                        'icNo_A' => $userPayroll->ic_no,
+                            'name_A' => $userPayroll->name,
+                            'telNo_A' => $userPayroll->contact_no,
+                            'commencementDate_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
+                            'address1_A' => 'No 7 ,Simpang Empat',
+                            'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
+                            'address3_A' => 'SELANGOR.',
+                            'postcode_A' => 46200,
+                            'resignDate_A' => self::changeTwoDigitDate($userPayroll->job_end_date),
+                            'birthDate_A' => self::changeTwoDigitDate($userPayroll->dob),
+                            //'resignType_A' => 'X',
+                            //'signX' => '',
+                            'icNo_A' => $userPayroll->ic_no,
 
-                        'incomeTaxNo_A' => $userPayroll->tax_no,
-                        'marriedStatus_A' => $userPayroll->marital_status,
-                        'childrenNo_A' => $userPayroll->total_children,
-                        'totalIncomeTaxChild_A' => '0.00',
-                        //'spouseName_A' => 'SUZANNAH IBRAHIM',
-                        //'spouseIc_A' => '871898176765',
-                        //'spouseIncomeTax_A' => 'OG12345678910',
+                            'incomeTaxNo_A' => $userPayroll->tax_no,
+                            'marriedStatus_A' => $userPayroll->marital_status,
+                            'childrenNo_A' => $userPayroll->total_children,
+                            'totalIncomeTaxChild_A' => '0.00',
+                            //'spouseName_A' => 'SUZANNAH IBRAHIM',
+                            //'spouseIc_A' => '871898176765',
+                            //'spouseIncomeTax_A' => 'OG12345678910',
 
-                        'salaryFrom_B' => self::changeMalaysianDate($userPayroll->remuneration_start_date),
-                        'salaryUntil_B' => self::changeMalaysianDate($userPayroll->remuneration_end_date),
-                        'salaryAmount_B' => $userPayroll->total_gross_salary,
-/*                        'leavePayFrom_B' => '01/01/2018',
-                        'leavePayUntil_B' => '01/04/1212',
-                        'leavePayAmount_B' => 74.19,
-                        'commissionFrom_B' => '01/01/2018',
-                        'commissionUntil_B' => '01/04/1212',
-                        'commissionAmount_B' => 4.19,
-                        'gratuityFrom_B' => '01/01/2018',
-                        'gratuityUntil_B' => '01/04/1212',
-                        'gratuityAmount_B' => 74.19,
-                        'compensationFrom_B' => '01/01/2018',
-                        'compensationUntil_B' => '01/04/1212',
-                        'compensationAmount_B' => 4.19,
-                        'cashAllowanceFrom_B' => '01/01/2018',
-                        'cashAllowanceUntil_B' => '01/04/1212',
-                        'cashAllowanceAmount_B' => 74.19,
-                        'pensionFrom_B' => '01/01/2018',
-                        'pensionUntil_B' => '01/04/1212',
-                        'pensionAmount_B' => 4.19,
-                        'benefitSubjectToTaxFrom_B' => '01/01/2018',
-                        'benefitSubjectToTaxUntil_B' => '01/04/1212',
-                        'benefitSubjectToTaxAmount_B' => 74.19,
-                        'transportFrom_B' => '01/01/2018',
-                        'transportUntil_B' => '01/04/1212',
-                        'transportAmount_B' => 4.29,
-                        'otherAllowanceFrom_B' => '01/01/2018',
-                        'otherAllowanceUntil_B' => '01/04/1212',
-                        'otherAllowanceAmount_B' => 74.19,
-                        'otherPaymentsFrom_B' => '01/01/2018',
-                        'otherPaymentsUntil_B' => '01/04/1212',
-                        'otherPaymentsAmount_B' => 4.19,
-                        'dateOptionGranted_B' => '010118',
-                        'dateExistingOptionCanExecuted_B' => '010118',
-                        'dateOptionExecuted_B' => '010118',
-                        'totalBenefit' => 12.00,*/
-                        //TODO calculate sum of
-                        'total_B' => $userPayroll->total_gross_salary,
+                            'salaryFrom_B' => self::changeMalaysianDate($userPayroll->remuneration_start_date),
+                            'salaryUntil_B' => self::changeMalaysianDate($userPayroll->remuneration_end_date),
+                            'salaryAmount_B' => $userPayroll->total_gross_salary,
+                            /*                        'leavePayFrom_B' => '01/01/2018',
+                                                    'leavePayUntil_B' => '01/04/1212',
+                                                    'leavePayAmount_B' => 74.19,
+                                                    'commissionFrom_B' => '01/01/2018',
+                                                    'commissionUntil_B' => '01/04/1212',
+                                                    'commissionAmount_B' => 4.19,
+                                                    'gratuityFrom_B' => '01/01/2018',
+                                                    'gratuityUntil_B' => '01/04/1212',
+                                                    'gratuityAmount_B' => 74.19,
+                                                    'compensationFrom_B' => '01/01/2018',
+                                                    'compensationUntil_B' => '01/04/1212',
+                                                    'compensationAmount_B' => 4.19,
+                                                    'cashAllowanceFrom_B' => '01/01/2018',
+                                                    'cashAllowanceUntil_B' => '01/04/1212',
+                                                    'cashAllowanceAmount_B' => 74.19,
+                                                    'pensionFrom_B' => '01/01/2018',
+                                                    'pensionUntil_B' => '01/04/1212',
+                                                    'pensionAmount_B' => 4.19,
+                                                    'benefitSubjectToTaxFrom_B' => '01/01/2018',
+                                                    'benefitSubjectToTaxUntil_B' => '01/04/1212',
+                                                    'benefitSubjectToTaxAmount_B' => 74.19,
+                                                    'transportFrom_B' => '01/01/2018',
+                                                    'transportUntil_B' => '01/04/1212',
+                                                    'transportAmount_B' => 4.29,
+                                                    'otherAllowanceFrom_B' => '01/01/2018',
+                                                    'otherAllowanceUntil_B' => '01/04/1212',
+                                                    'otherAllowanceAmount_B' => 74.19,
+                                                    'otherPaymentsFrom_B' => '01/01/2018',
+                                                    'otherPaymentsUntil_B' => '01/04/1212',
+                                                    'otherPaymentsAmount_B' => 4.19,
+                                                    'dateOptionGranted_B' => '010118',
+                                                    'dateExistingOptionCanExecuted_B' => '010118',
+                                                    'dateOptionExecuted_B' => '010118',
+                                                    'totalBenefit' => 12.00,*/
+                            //TODO calculate sum of
+                            'total_B' => $userPayroll->total_gross_salary,
 
-                        //'moneyWithheldByEmployer_D' => 74.19,
-                        'monthlyTaxDeductions_D' => $userPayroll->total_pcb,
-                        //'amountOfZakatPaid_D' => 74.19,
-                        'contributionsToEmployeeProvidentFund_D' => $userPayroll->total_epf,
+                            //'moneyWithheldByEmployer_D' => 74.19,
+                            'monthlyTaxDeductions_D' => $userPayroll->total_pcb,
+                            //'amountOfZakatPaid_D' => 74.19,
+                            'contributionsToEmployeeProvidentFund_D' => $userPayroll->total_epf,
 
-                        'officerName_E' => $officerInformation->name,
-                        'officerDesignation_E' => $officerInformation->position,
-                        'officerSignature_E' => '',
-                        'date_E' => self::getCurrentTwoDigitDate()
-                    ]);
-                    $data[] = $obj;
+                            'officerName_E' => $officerInformation->name,
+                            'officerDesignation_E' => $officerInformation->position,
+                            'officerSignature_E' => '',
+                            'date_E' => self::getCurrentTwoDigitDate()
+                        ]);
+                        $data[] = $obj;
+                    }
+                    $arr = array("data" => $data);
+                    return $arr;
                 }
-                $arr = array("data"=>$data);
-                return $arr;
             break;
 
             case "LHDN_cp22b":
                 //set pojo
                 $data = array();
-                for($count=0;$count < 5; $count++) {
-                    $obj = new LhdnCP22bBean([
-                        'employerName' => 'OPPO ELECTRONICS SDN BHD',
-                        'employerNoE' => 'E9119707907',
-                        'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'employerAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'employerAddress3' => 'SELANGOR.',
-                        'employerPostcode' => 46200,
-                        'employerNoTel' => '03-19220112',
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
 
-                        'name_A' => 'Shahril Abu Bakar',
-                        'telNo_A' => '0345674734',
-                        'commencementDate_A' => '190993',
-                        'address1_A' => 'No 7 ,Simpang Empat',
-                        'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'address3_A' => 'SELANGOR.',
-                        'postcode_A' => 46200,
-                        'resignDate_A' => '190993',
-                        'birthDate_A' => '190993',
-                        'resignType_A' => 'X',
-                        'signX' => '',
-                        'icNo_A' => '860110781723',
-                        'legalRepresentativeName_A' => 'SHAHRIL ABU BAKAR',
-                        'legalRepresentativeIc_A' => '871898176765',
-                        'legalRepresentativeAddress1_A' => 'No 7 ,Simpang Empat',
-                        'legalRepresentativeAddress2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'legalRepresentativeAddress3_A' => 'SELANGOR.',
-                        'legalRepresentativeNoTel_A' => '0345467453',
-                        'incomeTaxNo_A' => 'OG12345678910',
-                        'marriedStatus_A' => 'SINGLE',
-                        'childrenNo_A' => '01',
-                        'totalIncomeTaxChild_A' => '12300',
-                        'spouseName_A' => 'SUZANNAH IBRAHIM',
-                        'spouseIc_A' => '871898176765',
-                        'spouseIncomeTax_A' => 'OG12345678910',
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $obj = new LhdnCP22bBean([
+                            'employerName' => $companyInformation->name,
+                            'employerNoE' => 'E9119707907',
+                            'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                            'employerAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
+                            'employerAddress3' => 'SELANGOR.',
+                            'employerPostcode' => 46200,
+                            'employerNoTel' => $companyInformation->phone,
 
-                        'salaryFrom_B' => '01/01/2018',
-                        'salaryUntil_B' => '01/04/1212',
-                        'salaryAmount_B' => 9774.19,
-                        'leavePayFrom_B' => '01/01/2018',
-                        'leavePayUntil_B' => '01/04/1212',
-                        'leavePayAmount_B' => 74.19,
-                        'commissionFrom_B' => '01/01/2018',
-                        'commissionUntil_B' => '01/04/1212',
-                        'commissionAmount_B' => 4.19,
-                        'gratuityFrom_B' => '01/01/2018',
-                        'gratuityUntil_B' => '01/04/1212',
-                        'gratuityAmount_B' => 74.19,
-                        'compensationFrom_B' => '01/01/2018',
-                        'compensationUntil_B' => '01/04/1212',
-                        'compensationAmount_B' => 4.19,
-                        'cashAllowanceFrom_B' => '01/01/2018',
-                        'cashAllowanceUntil_B' => '01/04/1212',
-                        'cashAllowanceAmount_B' => 74.19,
-                        'pensionFrom_B' => '01/01/2018',
-                        'pensionUntil_B' => '01/04/1212',
-                        'pensionAmount_B' => 4.19,
-                        'benefitSubjectToTaxFrom_B' => '01/01/2018',
-                        'benefitSubjectToTaxUntil_B' => '01/04/1212',
-                        'benefitSubjectToTaxAmount_B' => 74.19,
-                        'transportFrom_B' => '01/01/2018',
-                        'transportUntil_B' => '01/04/1212',
-                        'transportAmount_B' => 4.29,
-                        'otherAllowanceFrom_B' => '01/01/2018',
-                        'otherAllowanceUntil_B' => '01/04/1212',
-                        'otherAllowanceAmount_B' => 74.19,
-                        'otherPaymentsFrom_B' => '01/01/2018',
-                        'otherPaymentsUntil_B' => '01/04/1212',
-                        'otherPaymentsAmount_B' => 4.19,
-                        'total_B' => 0,
+                            'name_A' => $userPayroll->name,
+                            'telNo_A' => $userPayroll->contact_no,
+                            'commencementDate_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
+                            'address1_A' => 'No 7 ,Simpang Empat',
+                            'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
+                            'address3_A' => 'SELANGOR.',
+                            'postcode_A' => 46200,
+                            'resignDate_A' => self::changeTwoDigitDate($userPayroll->job_end_date),
+                            'birthDate_A' => self::changeTwoDigitDate($userPayroll->dob),
+                            /*                        'resignType_A' => 'X',
+                                                    'signX' => '',*/
+                            'icNo_A' => $userPayroll->ic_no,
+                            /*                        'legalRepresentativeName_A' => 'SHAHRIL ABU BAKAR',
+                                                    'legalRepresentativeIc_A' => '871898176765',
+                                                    'legalRepresentativeAddress1_A' => 'No 7 ,Simpang Empat',
+                                                    'legalRepresentativeAddress2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
+                                                    'legalRepresentativeAddress3_A' => 'SELANGOR.',
+                                                    'legalRepresentativeNoTel_A' => '0345467453',*/
+                            'incomeTaxNo_A' => $userPayroll->tax_no,
+                            'marriedStatus_A' => $userPayroll->marital_status,
+                            'childrenNo_A' => $userPayroll->total_children,
+                            'totalIncomeTaxChild_A' => '0.00',
+                            /*                        'spouseName_A' => 'SUZANNAH IBRAHIM',
+                                                    'spouseIc_A' => '871898176765',
+                                                    'spouseIncomeTax_A' => 'OG12345678910',*/
 
-                        'typeOfIncome1_C' => 'Online Business',
-                        'typeOfIncome2_C' => 'Online Business',
-                        'typeOfIncome3_C' => 'Online Business',
-                        'yearForWhichPaid1_C' => '01/01/2018',
-                        'yearForWhichPaid2_C' => '01/04/1212',
-                        'yearForWhichPaid3_C' => '01/04/1212',
-                        'totalIncome1_C' => 74.19,
-                        'totalIncome2_C' => 74.19,
-                        'totalIncome3_C' => 74.19,
-                        'pensionFund1_C' => 4.19,
-                        'pensionFund2_C' => 4.19,
-                        'pensionFund3_C' => 4.19,
+                            'salaryFrom_B' => self::changeMalaysianDate($userPayroll->remuneration_start_date),
+                            'salaryUntil_B' => self::changeMalaysianDate($userPayroll->remuneration_end_date),
+                            'salaryAmount_B' => $userPayroll->total_gross_salary,
+                            /*                        'leavePayFrom_B' => '01/01/2018',
+                                                    'leavePayUntil_B' => '01/04/1212',
+                                                    'leavePayAmount_B' => 74.19,
+                                                    'commissionFrom_B' => '01/01/2018',
+                                                    'commissionUntil_B' => '01/04/1212',
+                                                    'commissionAmount_B' => 4.19,
+                                                    'gratuityFrom_B' => '01/01/2018',
+                                                    'gratuityUntil_B' => '01/04/1212',
+                                                    'gratuityAmount_B' => 74.19,
+                                                    'compensationFrom_B' => '01/01/2018',
+                                                    'compensationUntil_B' => '01/04/1212',
+                                                    'compensationAmount_B' => 4.19,
+                                                    'cashAllowanceFrom_B' => '01/01/2018',
+                                                    'cashAllowanceUntil_B' => '01/04/1212',
+                                                    'cashAllowanceAmount_B' => 74.19,
+                                                    'pensionFrom_B' => '01/01/2018',
+                                                    'pensionUntil_B' => '01/04/1212',
+                                                    'pensionAmount_B' => 4.19,
+                                                    'benefitSubjectToTaxFrom_B' => '01/01/2018',
+                                                    'benefitSubjectToTaxUntil_B' => '01/04/1212',
+                                                    'benefitSubjectToTaxAmount_B' => 74.19,
+                                                    'transportFrom_B' => '01/01/2018',
+                                                    'transportUntil_B' => '01/04/1212',
+                                                    'transportAmount_B' => 4.29,
+                                                    'otherAllowanceFrom_B' => '01/01/2018',
+                                                    'otherAllowanceUntil_B' => '01/04/1212',
+                                                    'otherAllowanceAmount_B' => 74.19,
+                                                    'otherPaymentsFrom_B' => '01/01/2018',
+                                                    'otherPaymentsUntil_B' => '01/04/1212',
+                                                    'otherPaymentsAmount_B' => 4.19,*/
+                            //TODO calculate sum of
+                            'total_B' => $userPayroll->total_gross_salary,
 
-                        'moneyWithheldByEmployer_D' => 74.19,
-                        'monthlyTaxDeductions_D' => 1501.00,
-                        'amountOfZakatPaid_D' => 74.19,
-                        'contributionsToEmployeeProvidentFund_D' => 1501.00,
+                            /*                        'typeOfIncome1_C' => 'Online Business',
+                                                    'typeOfIncome2_C' => 'Online Business',
+                                                    'typeOfIncome3_C' => 'Online Business',
+                                                    'yearForWhichPaid1_C' => '01/01/2018',
+                                                    'yearForWhichPaid2_C' => '01/04/1212',
+                                                    'yearForWhichPaid3_C' => '01/04/1212',
+                                                    'totalIncome1_C' => 74.19,
+                                                    'totalIncome2_C' => 74.19,
+                                                    'totalIncome3_C' => 74.19,
+                                                    'pensionFund1_C' => 4.19,
+                                                    'pensionFund2_C' => 4.19,
+                                                    'pensionFund3_C' => 4.19,*/
 
-                        'officerName_E' => 'CHONG HWEE MIN',
-                        'officerDesignation_E' => 'HUMAN RESOURCES OFFICER',
-                        'officerSignature_E' => '',
-                        'date_E' => '011018'
+                            //'moneyWithheldByEmployer_D' => 74.19,
+                            'monthlyTaxDeductions_D' => $userPayroll->total_pcb,
+                            //'amountOfZakatPaid_D' => 74.19,
+                            'contributionsToEmployeeProvidentFund_D' => $userPayroll->total_epf,
 
-                    ]);
-                    $data[] = $obj;
+                            'officerName_E' => $officerInformation->name,
+                            'officerDesignation_E' => $officerInformation->position,
+                            'officerSignature_E' => '',
+                            'date_E' => self::getCurrentTwoDigitDate()
+
+                        ]);
+                        $data[] = $obj;
+                    }
+                    $arr = array("data" => $data);
+                    return $arr;
                 }
-                $arr = array("data"=>$data);
-                return $arr;
             break;
 
             case "LHDN_cp39":
                 //set popo
-                $data = new LhdnCP39Bean([
-                    'companyName' => 'OPPO ELECTRONICS SDN BHD',
-                    'companyRegistrationNo' => '1075187-D',
-                    'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                    'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                    'companyAddress3' => 'SELANGOR.',
-                    'companyPostcode' => 46200,
-
-                    'employerNoE' => 'E9119707907',
-                    'pcbTotalCut' => 4581.65,
-                    'pcbTotalWorker' => 23,
-                    'pcbTotalAmount' => 4581.65,
-                    'pcbBranchNo' => '',
-                    'cp38TotalCut' => '',
-                    'cp38TotalWorker' => 0,
-
-                    'officerSignature' => '',
-                    'officerName' => 'CHONG HWEE MIN',
-                    'officerIcNo' => '891787654321',
-                    'officerPosition' => 'HUMAN RESOURCES OFFICER',
-                    'officerNoTel' => '03-7931 3550'
-                ]);
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
 
                 $empData = array();
                 $totalPcb = 0;
                 $totalcp38 = 0;
                 $totalAmountofPCBAndCP8 = 0;
 
-                //example
-                for($count=0;$count < 55; $count++){
-                    $emp = new LhdnCP39Bean([
-                        'incomeTaxNo' => 'SG67676776767',
-                        'name' => 'MUHAMMAD SHAHRIL B. ABU BAKAR',
-                        'oldIcNo' => '',
-                        'newIcNo' => '881876876767',
-                        'staffNo' => '12473',
-                        'foreignerPassportNo' => '',
-                        'foreignerCountry' => '',
-                        'pcbAmount' => 163.80,
-                        'cp38Amount' => 0
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    //example
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $emp = new LhdnCP39Bean([
+                            'incomeTaxNo' => $userPayroll->tax_no,
+                            'name' => $userPayroll->name,
+                            'oldIcNo' => '',
+                            'newIcNo' => $userPayroll->ic_no,
+                            'staffNo' => '12473',
+                            'foreignerPassportNo' => $userPayroll->immigration_passport_no,
+                            'foreignerCountry' => '',
+                            'pcbAmount' => $userPayroll->total_pcb,
+                            'cp38Amount' => 0.00
+                        ]);
+                        //sum of pcb/cp8
+                        $totalPcb += $emp->getPcbAmount();
+                        $totalcp38 += $emp->getCp38Amount();
+
+                        //sum of total pcb/cp8
+                        $totalAmountofPCBAndCP8 = ($totalPcb + $totalcp38);
+
+                        $empData[] = $emp;
+                    }
+
+                    $data = new LhdnCP39Bean([
+                        'companyName' => $companyInformation->name,
+                        'companyRegistrationNo' => $companyInformation->registration_no,
+                        'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                        'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'companyAddress3' => 'SELANGOR.',
+                        'companyPostcode' => 46200,
+
+                        'employerNoE' => 'E9119707907',
+                        'pcbTotalCut' => $totalPcb,
+                        'pcbTotalWorker' => count($userInfoAndPayrollList),
+                        'pcbTotalAmount' => $totalPcb,
+                        'pcbBranchNo' => '',
+                        'cp38TotalCut' => '',
+                        'cp38TotalWorker' => 0,
+
+                        'officerSignature' => '',
+                        'officerName' => $officerInformation->name,
+                        'officerIcNo' => $officerInformation->ic_no,
+                        'officerPosition' => $officerInformation->position,
+                        'officerNoTel' => $officerInformation->contact_no
                     ]);
-                    //sum of pcb/cp8
-                    $totalPcb += $emp->getPcbAmount();
-                    $totalcp38 += $emp->getCp38Amount();
 
-                    //sum of total pcb/cp8
-                    $totalAmountofPCBAndCP8 = ($totalPcb + $totalcp38);
-
-                    $empData[] = $emp;
+                    $arr = array(
+                        "data" => $data,
+                        "empData" => $empData,
+                        "totalPcb" => $totalPcb,
+                        "totalcp38" => $totalcp38,
+                        "totalAmountofPCBAndCP8" => $totalAmountofPCBAndCP8
+                    );
+                    return $arr;
                 }
-
-                $arr = array(
-                    "data"=>$data,
-                    "empData"=>$empData,
-                    "totalPcb"=>$totalPcb,
-                    "totalcp38"=>$totalcp38,
-                    "totalAmountofPCBAndCP8"=>$totalAmountofPCBAndCP8
-                );
-                return $arr;
             break;
 
             case "LHDN_cp39lieu":
                 //set pojo
                 $data = array();
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
 
-                for($count=0;$count < 1; $count++) {
-                    $obj = new LhdnCP39LieuBean([
-                        'employerName' => 'OPPO ELECTRONICS SDN BHD',
-                        'employerNoE' => 'E9119707907',
-                        'name' => 'SHAHRIL ABU BAKAR',
-                        'salaryNo' => 13113,
-                        'icOldNo' => '18281A811',
-                        'icNewNo' => '781819117867',
-                        'referenceTaxRevenueNo' => 'A320000304',
-                        'marriageStatus' => 'MARRIED',
-                        'marriageDate' => '19/09/1993',
-                        'gender' => 'MALE',
-                        'pcbMadeYears' => '1922',
-                        'workStartedDate' => '01/05/2017',
-                        'monthlySalary' => 'RM 1,500.00',
-                        'address1' => 'No 7 ,Simpang Empat',
-                        'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                        'address3' => 'SELANGOR.',
-                        'postcode' => 46200,
-                        'foreignerBirthDate' => '01/05/2017',
-                        'foreignerPassportNo' => '71817111A',
-                        'spouseName' => 'KIMBERLY SWAZER',
-                        'spouseIcOldNo' => '78711818918',
-                        'spouseIcNewNo' => '931212818119',
-                        'spouseReferenceTaxRevenueNo' => '8171811',
-                        'foreignerSpouseBirthDate' => '01/04/1212',
-                        'foreignerSpousePassportNo' => '1212221'
-                    ]);
-                    $data[] = $obj;
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $obj = new LhdnCP39LieuBean([
+                            'employerName' => $companyInformation->name,
+                            'employerNoE' => 'E9119707907',
+                            'name' => $userPayroll->name,
+                            'salaryNo' => 13113,
+                            //'icOldNo' => '18281A811',
+                            'icNewNo' => $userPayroll->ic_no,
+                            'referenceTaxRevenueNo' => $userPayroll->tax_no,
+                            'marriageStatus' => $userPayroll->marital_status,
+                            //'marriageDate' => '19/09/1993',
+                            'gender' => $userPayroll->gender,
+                            //'pcbMadeYears' => '1922',
+                            'workStartedDate' => self::changeMalaysianDate($userPayroll->job_start_date),
+                            'monthlySalary' => $userPayroll->total_gross_salary,
+                            'address1' => 'No 7 ,Simpang Empat',
+                            'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                            'address3' => 'SELANGOR.',
+                            'postcode' => 46200,
+                        /*  'foreignerBirthDate' => '01/05/2017',
+                            'foreignerPassportNo' => '71817111A',
+                            'spouseName' => 'KIMBERLY SWAZER',
+                            'spouseIcOldNo' => '78711818918',
+                            'spouseIcNewNo' => '931212818119',
+                            'spouseReferenceTaxRevenueNo' => '8171811',
+                            'foreignerSpouseBirthDate' => '01/04/1212',
+                            'foreignerSpousePassportNo' => '1212221'*/
+                        ]);
+                        $data[] = $obj;
+                    }
+                    $arr = array("data" => $data);
+                    return $arr;
                 }
-                $arr = array("data"=>$data);
-                return $arr;
             break;
 
             case "LHDN_eaform":
                 //set pojo
                 $data = array();
-                for($count=0;$count < 5; $count++) {
-                    $obj = new LhdnEAFormBean([
-                        'serialNo' => 'A000755',
-                        'incomeTaxNo' => 'OG12345678910',
-                        'employerNoE' => 'E9119707907',
-                        'lhdnmBranch' => 'PORT KLANG',
-                        'name' => 'SHAHRIL ABU BAKAR',
-                        'jobPosition' => 'SOFTWARE ENGINEER',
-                        'salaryNo' => 4003,
-                        'icNo' => '891723181212',
-                        'passportNo' => 'M81292123',
-                        'kwspNo' => 'P91819111',
-                        'perkesoNo' => '919191',
-                        'childNoforTax' => 3,
-                        'startDateLessOneYear' => '20/01/1997',
-                        'endDateLessOneYear' => '20/01/1997',
-                        'netSalary' => 5000,
-                        'commission' => 20000,
-                        'tip' => 1200,
-                        'employerIncomeTax' => 1200,
-                        'esos' => 34,
-                        'reward' => 1000,
-                        'benefitsOfMerchandise' => 1200,
-                        'residenceValue' => 1200000,
-                        'failedRefund' => 340,
-                        'lostJobReparation' => 340,
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$year);
 
-                        'pension' => 12000,
-                        'annuity' => 1000,
-                        'total' => 40000,
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else{
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $obj = new LhdnEAFormBean([
+                            'serialNo' => 'A000755',
+                            'incomeTaxNo' => $userPayroll->tax_no,
+                            'employerNoE' => 'E9119707907',
+                            'lhdnmBranch' => 'PORT KLANG',
+                            'name' => $userPayroll->name,
+                            'jobPosition' => $userPayroll->position,
+                            'salaryNo' => $userPayroll->id,
+                            'icNo' => $userPayroll->ic_no,
+                            //'passportNo' => 'M81292123',
+                            'kwspNo' => $userPayroll->epf_no,
+                            'perkesoNo' => $userPayroll->socso_no,
+                            //'childNoforTax' => 3,
+                            //'startDateLessOneYear' => '20/01/1997',
+                            //'endDateLessOneYear' => '20/01/1997',
+                            'netSalary' => $userPayroll->total_gross_salary,
+                            //'commission' => 20000,
+                            //'tip' => 1200,
+                            //'employerIncomeTax' => 1200,
+                            //'esos' => 34,
+                            //'reward' => 1000,
+                            //'benefitsOfMerchandise' => 1200,
+                            //'residenceValue' => 1200000,
+                            //'failedRefund' => 340,
+                            //'lostJobReparation' => 340,
 
-                        'pcb' => 340,
-                        'deductionsInstructionsCP38' => 340,
-                        'zakatPaidThroughSalaryDeductions' => 12000,
-                        'tp1Release' => 1000,
-                        'tp1Zakat' => 40000,
-                        'totalDisbursementForEligibleChildren' => 40000,
+                            //'pension' => 12000,
+                            //'annuity' => 1000,
+                            //TODO ,need add up
+                            'total' => $userPayroll->total_gross_salary,
 
-                        'nameOfFund' => 'KUMPULAN SIMPANAN WANG MALAYSIA',
-                        'amountOfContribution' => 340,
-                        'amountOfContributionPerkeso' => 12000,
-                        'totalAllowance' => 1000,
+                            'pcb' => $userPayroll->total_pcb,
+                            //'deductionsInstructionsCP38' => 340,
+                            //'zakatPaidThroughSalaryDeductions' => 12000,
+                            //'tp1Release' => 1000,
+                            //'tp1Zakat' => 40000,
+                            //'totalDisbursementForEligibleChildren' => 40000,
 
-                        'date' => '05/03/2018',
-                        'officerName' => 'CHONG HWEE MIN',
-                        'officerPosition' => 'HUMAN RESOURCES OFFICER',
-                        'companyName' => 'OPPO ELECTRONICS SDN BHD',
-                        'companyAddress1' => 'No 7 ,Simpang Empat',
-                        'companyAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                        'companyAddress3' => 'SELANGOR.',
-                        'companyPostcode' => 46200,
-                        'companyNoTel' => '03454332133'
-                    ]);
-                    $data[] = $obj;
+                            'nameOfFund' => 'KUMPULAN SIMPANAN WANG MALAYSIA',
+                            'amountOfContribution' => $userPayroll->total_epf,
+                            'amountOfContributionPerkeso' => $userPayroll->total_socso,
+                            //'totalAllowance' => 1000,
+
+                            'date' => self::getCurrentDate(),
+                            'officerName' => $officerInformation->name,
+                            'officerPosition' => $officerInformation->position,
+                            'companyName' => $companyInformation->name,
+                            'companyAddress1' => 'No 7 ,Simpang Empat',
+                            'companyAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
+                            'companyAddress3' => 'SELANGOR.',
+                            'companyPostcode' => 46200,
+                            'companyNoTel' => $companyInformation->phone
+                        ]);
+                        $data[] = $obj;
+                    }
+                    $arr = array("data" => $data);
+                    return $arr;
                 }
-                $arr = array("data"=>$data);
-                return $arr;
             break;
 
             case "Tabung_Haji_caruman":
                 //set popo
-                $data = new TabungHajiCarumanBean([
-                    'companyName' => 'OPPO ELECTRONICS SDN BHD',
-                    'employerCode' => 'AX2019211',
-                    'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                    'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                    'address3' => 'SELANGOR.',
-                    'postcode' => 46200,
-                ]);
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
 
-                $empData = array();
-                //example
-                for($count=0;$count < 55; $count++){
-                    $emp = new TabungHajiCarumanBean([
-                        'employeeNoAccount' => 'E9119707907',
-                        'employeeNo' => 'A5645',
-                        'employeeIcNo' => '876756453421',
-                        'employeeName' => 'Shahril Abu Bakar',
-                        'employeeContribution' => 234.89,
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    $data = new TabungHajiCarumanBean([
+                        'companyName' => $companyInformation->name,
+                        'employerCode' => 'AX2019211',
+                        'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                        'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'address3' => 'SELANGOR.',
+                        'postcode' => 46200,
                     ]);
-                    $empData[] = $emp;
+
+                    $empData = array();
+                    //example
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $emp = new TabungHajiCarumanBean([
+                            'employeeNoAccount' => 'E9119707907',
+                            'employeeNo' => 'A5645',
+                            'employeeIcNo' => '876756453421',
+                            'employeeName' => 'Shahril Abu Bakar',
+                            'employeeContribution' => 234.89,
+                        ]);
+                        $empData[] = $emp;
+                    }
+                    $arr = array("data" => $data, "empData" => $empData);
+                    return $arr;
                 }
-                $arr = array("data"=>$data, "empData"=>$empData);
-                return $arr;
             break;
 
             case "Tabung_Haji_df":
@@ -628,8 +660,11 @@ class GenerateReportsHelper
 
             case "EPF_bbcd":
                 //set popo
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+
                 $data = new EpfBBCDBean([
-                    'employerReferenceNo' => '018884828',
+                    //'employerReferenceNo' => '018884828',
                     'contributionAmount' => 5902.00,
 
                     'paymentCheck' => 'X',
@@ -641,10 +676,10 @@ class GenerateReportsHelper
                     'companyAddress3' => 'SELANGOR.',
                     'companyPostcode' => 46200,
 
-                    'officerName' => 'CHONG HWEE MIN',
-                    'officerICNo' => '931027-14-6428',
-                    'officerPosition' => 'HUMAN RESOURCES OFFICER',
-                    'officerTelNo' => '03-7931 3550',
+                    'officerName' => $officerInformation->name,
+                    'officerICNo' => $officerInformation->ic_no,
+                    'officerPosition' => $officerInformation->position,
+                    'officerTelNo' => $officerInformation->contact_no,
                 ]);
                 $arr = array("data"=>$data);
                 return $arr;
@@ -652,94 +687,171 @@ class GenerateReportsHelper
 
             case "EPF_borangA":
                 //set popo
-                $data = new EpfBorangABean([
-                    'employerReferenceNo' => '018884828',
-                    'contributionAmount' => 4356.78,
-                    'referenceNo' => '1234',
-                    'paymentCheck' => 'X',
-
-                    'companyName' => 'OPPO ELECTRONICS SDN BHD',
-                    'companyRegNo' => '1075187-D',
-                    'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                    'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                    'companyAddress3' => 'SELANGOR.',
-                    'companyPostcode' => 46200,
-                    'employeeTotal' => 204,
-
-                    'officerName' => 'CHONG HWEE MIN',
-                    'officerIC' => '	897865765645',
-                    'officerPosition' => 'HUMAN RESOURCES OFFICER',
-                    'officerTelNo' => '03-7931 3550',
-                    'officerEmail' => 'oppo.amandachong@gmail.com',
-                ]);
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
 
                 $empData = array();
                 $totalEmployerContribution = 0;
                 $totalEmployeeContribution = 0;
                 $totalOverallContributionEmp = 0;
 
-                //example
-                for($count=0;$count < 55; $count++){
-                    $emp = new EpfBorangABean([
-                        'employeeKwspNo' => 220610,
-                        'employeeIcNo' => '881876876767',
-                        'employeeName' => 'MUHAMMAD SHAHRIL B. ABU BAKAR',
-                        'employeeWages' => 2631.31,
-                        'employerContribution' => 344,
-                        'employeeContribution' => 291
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    //example
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $emp = new EpfBorangABean([
+                            'employeeKwspNo' => $userPayroll->epf_no,
+                            'employeeIcNo' => $userPayroll->ic_no,
+                            'employeeName' => $userPayroll->name,
+                            'employeeWages' => $userPayroll->total_gross_salary,
+                            'employerContribution' => $userPayroll->employer_epf_contribution,
+                            'employeeContribution' => $userPayroll->total_epf
+                        ]);
+                        //sum of contribution
+                        $totalEmployerContribution += $emp->getEmployerContribution();
+                        $totalEmployeeContribution += $emp->getEmployeeContribution();
+
+                        //sum of total contribution
+                        $totalOverallContributionEmp = ($totalEmployerContribution + $totalEmployeeContribution);
+
+                        $empData[] = $emp;
+                    }
+
+                    $data = new EpfBorangABean([
+                        'employerReferenceNo' => '018884828',
+                        'contributionAmount' => $totalOverallContributionEmp,
+                        //'referenceNo' => '1234',
+                        'paymentCheck' => 'X',
+
+                        'companyName' => $companyInformation->name,
+                        'companyRegNo' => $companyInformation->registration_no,
+                        'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                        'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'companyAddress3' => 'SELANGOR.',
+                        'companyPostcode' => 46200,
+                        'employeeTotal' => count($userInfoAndPayrollList),
+
+                        'officerName' => $officerInformation->name,
+                        'officerIC' => $officerInformation->ic_no,
+                        'officerPosition' => $officerInformation->position,
+                        'officerTelNo' => $officerInformation->contact_no,
+                        'officerEmail' => $officerInformation->email,
                     ]);
-                    //sum of contribution
-                    $totalEmployerContribution += $emp->getEmployerContribution();
-                    $totalEmployeeContribution += $emp->getEmployeeContribution();
 
-                    //sum of total contribution
-                    $totalOverallContributionEmp = ($totalEmployerContribution + $totalEmployeeContribution);
-
-                    $empData[] = $emp;
+                    $arr = array("data" => $data, "empData" => $empData, "totalOverallContributionEmp" => $totalOverallContributionEmp);
+                    return $arr;
                 }
-                $arr = array("data"=>$data, "empData"=>$empData, "totalOverallContributionEmp"=>$totalOverallContributionEmp);
-                return $arr;
             break;
 
             case "SOSCO_lampiranA":
                 //set popo
-                $data = new SoscoLampiranABean([
-                    'fromMonth' => 'Ogos',
-                    'toMonth' => 'Ogos',
-                    'employeeTotalNumber' => '15',
-                    'noCheck' => '888888888888888888',
-                    'amount' => 576.30,
-                    'employerCode' => 'B3200090304M',
-                    'companyName' => 'OPPO ELECTRONICS SDN BHD',
-                    'companyRegistrationNo' => '1075187-D',
-                    'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                    'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                    'address3' => 'SELANGOR.',
-                    'postcode' => 46200,
-                    'officerName' => 'CHONG HWEE MIN',
-                    'officerTelNo' => '03-7931 3550'
-                ]);
-                $arr = array("data"=>$data);
-                return $arr;
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+                $month = self::getPayrollMonth($periods,$companyInformation->id);
+
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    $totalSocso = 0;
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $totalSocso += $userPayroll->total_socso;
+                    }
+
+                    $data = new SoscoLampiranABean([
+
+                        'fromMonth' => self::malaysianMonth($month),
+                        'toMonth' => self::malaysianMonth($month),
+                        'employeeTotalNumber' => count($userInfoAndPayrollList),
+                        'noCheck' => '',
+                        'amount' => $totalSocso,
+                        'employerCode' => 'B3200090304M',
+                        'companyName' => $companyInformation->name,
+                        'companyRegistrationNo' => $companyInformation->registration_no,
+                        'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                        'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'address3' => 'SELANGOR.',
+                        'postcode' => 46200,
+                        'officerName' => $officerInformation->name,
+                        'officerTelNo' => $officerInformation->contact_no
+                    ]);
+                    $arr = array("data" => $data);
+                    return $arr;
+                }
             break;
 
-            case "LHDN_eaform":
+            case "SOSCO_borang8A":
+                //set popo
+                $companyInformation = self::getUserLogonCompanyInfomation();
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                $active = self::getSocsoEmployeeActiveList($companyInformation->id,$periods);
+                $nonActive = self::getSocsoEmployeeResignList($companyInformation->id,$periods);
+
+                if(count($active) == 0 || count($nonActive) ==0) {
+                    return;
+                }else {
+                    $empData = array();
+                    $totalContribution = 0;
+                    //TODO : Need rework
+                    foreach ($active as $obj) {
+                        $emp = new SocsoBorang8ABean([
+                            'jobDate' => $obj->job_start_date,
+                            'status' => 'B',
+                            'employeeIcNo' => $obj->ic_no,
+                            'employeeName' => $obj->name,
+                            'employeeContribution' => $obj->total_socso,
+                        ]);
+
+                        $totalContribution += $emp->getEmployeeContribution();
+                        $empData[] = $emp;
+                    }
+
+                    foreach ($nonActive as $obj) {
+                        $emp = new SocsoBorang8ABean([
+                            'jobDate' => $obj->job_end_date,
+                            'status' => 'H',
+                            'employeeIcNo' => $obj->ic_no,
+                            'employeeName' => $obj->name,
+                            'employeeContribution' => $obj->total_socso,
+                        ]);
+
+                        $totalContribution += $emp->getEmployeeContribution();
+                        $empData[] = $emp;
+                    }
+
+                    $data = new SocsoBorang8ABean([
+                        'month' => '11',
+                        'year' => '2018',
+                        'companyReferenceNo' => 'B3200090304M',
+                        'companyBusinessRegistrationNo' => $companyInformation->registration_no,
+                        'totalContribution' => $totalContribution,
+                        //'payNotBeforeDate' => '',
+                        'companyName' => $companyInformation->name,
+                        'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                        'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'companyAddress3' => 'SELANGOR.',
+                        'companyPostcode' => 46200,
+                        'totalEmployee' => count($empData),
+                        'officerName' => $companyInformation->name,
+                        'officerTelNo' => $officerInformation->contact_no,
+                    ]);
+
+                    $arr = array("data" => $data, "empData" => $empData, "totalContribution" => $totalContribution);
+                    return $arr;
+                }
                 break;
 
             case "LHDN_eaform":
                 break;
 
             case "test":
-                 $companyInformation = self::getUserLogonCompanyInfomation();
-                 self::getEmployeeInformation($officerId,$companyInformation->id);
-                $year="2018";
-                $month="";
-                //self::getListUserInfomationAndPayroll($companyInformation->id,$filter,$month,$year);
+                 //$companyInformation = self::getUserLogonCompanyInfomation();
+                 //self::getEmployeeInformation($officerId,$companyInformation->id);
+                 //echo "huheue";
+                //echo self::getPeriod(1);
 
-                //$user->compan
-/*                foreach ($list as $emp){
-                    echo $emp->name;
-                }*/
                 break;
 
             default:
@@ -832,10 +944,37 @@ class GenerateReportsHelper
         return EmployeePosition::get();
     }
 
+    public static function getPeriod($company_id){
+        $period = self::getPeriodList($company_id);
+        $data = array();
+        foreach($period as $val){
+            $period_desc = PayrollPeriodEnum::getDescription($val->period);
+            array_push($data,[
+                'id' => $val->id,
+                'yearmonth' => $val->yearmonth,
+                'period_id' => $val->period,
+                'period_desc' => $period_desc
+            ]);
+        }
+        return $data;
+    }
+
+    public static function getYear($company_id){
+        return self::getPayrollYear($company_id);
+    }
+
+    public static function getPeriodList($company_id){;
+        //  sample query : ->toSql()
+        return DB::table('payroll_master')
+            ->select(DB::raw('id, EXTRACT( YEAR_MONTH FROM `year_month` ) as yearmonth, period'))
+            ->where('company_id', $company_id)->get();
+
+    }
+
     public static function getEmployeeInformation($emp_id,$company_id){;
      //  sample query : ->toSql()
         return DB::table('employees')
-            ->select(DB::raw('users.id,users.name,employees.ic_no,employees.contact_no,employee_positions.name as position'))
+            ->select(DB::raw('users.id,users.name,employees.ic_no,employees.contact_no,employee_positions.name as position,users.email'))
             ->join('users', 'employees.user_id', '=', 'users.id')
             ->join('employee_jobs','employees.id','employee_jobs.emp_id')
             ->join('employee_positions','employee_jobs.emp_mainposition_id','employee_positions.id')
@@ -862,7 +1001,7 @@ class GenerateReportsHelper
 
     }
 
-    public static function getListUserInfomationAndPayroll($companyId,$filter,$month,$year){
+    public static function getListUserInformationAndPayroll($companyId,$filter,$periods,$year){
 
         $query = DB::table('payroll_master')
             ->select(
@@ -872,12 +1011,19 @@ class GenerateReportsHelper
                 DB::raw('employees.driver_license_expiry_date, employees.confirmed_date, users.email, employee_positions.name as position'),
                 DB::raw('employee_jobs.start_date as job_start_date, employee_jobs.end_date as job_end_date'),
                 DB::raw('employee_immigrations.passport_no as immigration_passport_no'),
-                DB::raw('max(employees.total_children) as total_children'),
 
-                DB::raw('sum(payroll_trx.gross_pay) as total_gross_salary ,sum(payroll_trx.basic_salary) as total_basic_salary'),
-                DB::raw('sum(payroll_trx.employee_epf) as total_epf,sum(payroll_trx.employee_eis) as total_eis'),
-                DB::raw('sum(payroll_trx.employee_socso) as total_socso,sum(payroll_trx.employee_pcb) as total_pcb'),
-                DB::raw('min(payroll_master.start_date) as remuneration_start_date , max(payroll_master.end_date) as remuneration_end_date')
+                DB::raw('max(employees.total_children) as total_children'),
+                DB::raw('sum(payroll_trx.gross_pay) as total_gross_salary '),
+                DB::raw('sum(payroll_trx.basic_salary) as total_basic_salary'),
+                DB::raw('sum(payroll_trx.employee_epf) as total_epf'),
+                DB::raw('sum(payroll_trx.employee_eis) as total_eis'),
+                DB::raw('sum(payroll_trx.employee_socso) as total_socso'),
+                DB::raw('sum(payroll_trx.employee_pcb) as total_pcb'),
+                DB::raw('sum(payroll_trx.employer_epf) as employer_epf_contribution'),
+                DB::raw('sum(payroll_trx.employer_eis) as employer_eis_contribution'),
+                DB::raw('sum(payroll_trx.employer_socso) as employer_socso_contribution'),
+                DB::raw('min(payroll_master.start_date) as remuneration_start_date'),
+                DB::raw('max(payroll_master.end_date) as remuneration_end_date')
             )
             ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
@@ -892,21 +1038,108 @@ class GenerateReportsHelper
                 $query->where(array_keys($filter)[0], array_values($filter)[0]);
             }
 
-            if(!empty($month)){
-                $query->whereMonth('payroll_master.year_month', $month);
+            if(!empty($year)){
+                $query->whereYear('payroll_master.year_month', $year);
+            }
+
+            if(!empty($periods) && $periods != 0){
+                $query->where('payroll_master.period', $periods);
+            }
+
+        $query->where('payroll_master.company_id', $companyId)
+            ->groupBy(DB::raw("payroll_trx.employee_id"));
+
+        $result= $query->get();
+
+        return $result;
+    }
+
+    public static function getSocsoEmployeeActiveList($companyId,$period){
+        return DB::table('payroll_master')
+            ->select(
+                DB::raw('users.name,employees.ic_no,employee_jobs.start_date as job_start_date'),
+                DB::raw('employee_jobs.end_date as job_end_date'),
+                DB::raw('sum(payroll_trx.employee_socso) as total_socso')
+            )
+            ->leftjoin('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->leftjoin('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
+            ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id')
+            ->leftjoin('users', 'employees.user_id', 'users.id')
+            ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id')
+            ->whereRaw('employee_jobs.end_date IS NULL')
+            ->whereRaw('`payroll_master`.`period` =  '.$period)
+            ->whereRaw('`payroll_master`.`company_id` =  '.$companyId)
+            ->groupBy(DB::raw("payroll_trx.employee_id"))
+            ->orderBy(DB::raw("employee_jobs.start_date"))->get();
+    }
+
+    public static function getSocsoEmployeeResignList($companyId,$period){
+        return DB::table('payroll_master')
+            ->select(
+                DB::raw('users.name,employees.ic_no,employee_jobs.start_date as job_start_date'),
+                DB::raw('employee_jobs.end_date as job_end_date'),
+                DB::raw('sum(payroll_trx.employee_socso) as total_socso')
+            )
+            ->leftjoin('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->leftjoin('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
+            ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id')
+            ->leftjoin('users', 'employees.user_id', 'users.id')
+            ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id')
+            ->whereRaw('employee_jobs.end_date IS NOT NULL')
+            ->whereRaw('`payroll_master`.`period` =  '.$period)
+            ->whereRaw('`payroll_master`.`company_id` =  '.$companyId)
+            ->groupBy(DB::raw("payroll_trx.employee_id"))
+            ->orderBy(DB::raw("employee_jobs.start_date"))->get();
+    }
+
+    public static function getEmployeeTotalActiveAndResigned($companyId,$filter,$periods,$year){
+        $query = DB::table('payroll_master')
+            ->select(
+                DB::raw('count(DISTINCT payroll_trx.employee_id) as total_employee'),
+                DB::raw('SUM(CASE WHEN YEAR(employee_jobs.start_date) = 2018 THEN 1 ELSE 0 END) AS total_new_employee'),
+                DB::raw('SUM(CASE WHEN employee_jobs.end_date IS NOT NULL OR employee_jobs.end_date != "" THEN 1 ELSE 0 END) AS total_employee_resigned'),
+                DB::raw('SUM(CASE WHEN employees.pcb_group IS NOT NULL OR employee_jobs.end_date != "" THEN 1 ELSE 0 END) AS total_employee_have_pcb')
+            )
+            ->leftjoin('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->leftjoin('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
+            ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id');
+
+            //filter
+            if(!empty($filter)){
+                $query->where(array_keys($filter)[0], array_values($filter)[0]);
             }
 
             if(!empty($year)){
                 $query->whereYear('payroll_master.year_month', $year);
             }
 
-        $query->where('payroll_master.company_id', $companyId)
-            ->where('users.status', 'Active')
-            ->groupBy(DB::raw("payroll_trx.employee_id"));
+            if(!empty($periods) && $periods != 0){
+                $query->where('payroll_master.period', $periods);
+            }
 
-        $result= $query->get();
+        $query->where('payroll_master.company_id', $companyId);
+
+        $result= $query->first(['total_employee,total_new_employee,total_employee_resigned,total_employee_have_pcb']);
 
         return $result;
+    }
+
+    public static function getPayrollYear($companyId){
+        return DB::table('payroll_master')
+            ->select(
+                DB::raw('EXTRACT( YEAR FROM `year_month` ) as year')
+            )
+            ->where('company_id',$companyId)
+            ->groupBy(DB::raw("year"))->get();
+    }
+
+    public static function getPayrollMonth($id,$companyId){
+        return DB::table('payroll_master')
+            ->select(
+                DB::raw('EXTRACT( MONTH FROM `year_month` ) as month')
+            )
+            ->where('id',$id)
+            ->where('company_id',$companyId)->value('month');
     }
 
 
@@ -927,5 +1160,48 @@ class GenerateReportsHelper
 
     public static function changeMalaysianDate($date){
         return date_format(date_create($date),"d/m/Y");
+    }
+
+    private static function malaysianMonth($month){
+        switch ($month) {
+            case "01":
+                return "Januari";
+            break;
+            case "02":
+                return "Februari";
+            break;
+            case "03":
+                return "Mac";
+            break;
+            case "04":
+                return "April";
+            break;
+            case "05":
+                return "Mei";
+            break;
+            case "06":
+                return "Jun";
+            break;
+            case "07":
+                return "Julai";
+            break;
+            case "08":
+                return "Ogos";
+            break;
+            case "09":
+                return "September";
+            break;
+            case "10":
+                return "Oktober";
+            break;
+            case "11":
+                return "November";
+            break;
+            case "12":
+                return "Disember";
+            break;
+            default:
+                return "";
+        }
     }
 }

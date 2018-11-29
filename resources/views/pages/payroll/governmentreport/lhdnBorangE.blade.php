@@ -730,18 +730,18 @@
         <tr class="border_top border_bottom">
             <td class="pleft"></td>
             <th class="tg-s268 pleft" colspan="5">Jumlah</th>
-            <td class="tg-0lax pleft">{{$totalAmountOfDeparture}}</td>
-            <td class="tg-0lax pleft">{{$totalGrossRemuneration}}</td>
-            <td class="tg-0lax pleft">{{$totalBenefitsOfGoods}}</td>
-            <td class="tg-0lax pleft">{{$totalValuePlaceOfResidence}}</td>
-            <td class="tg-0lax pleft">{{$totalBenefitsOfESOS}}</td>
-            <td class="tg-0lax pleft">{{$totalTaxExemptPerquisites}}</td>
-            <td class="tg-0lax pleft">{{$totalTP1Departure}}</td>
-            <td class="tg-0lax pleft">{{$totalTP1Zakat}}</td>
-            <td class="tg-0lax pleft">{{$totalEmployeeEPFContributions}}</td>
-            <td class="tg-0lax pleft">{{$totalZakatDeductions}}</td>
-            <td class="tg-0lax pleft">{{$totalTaxDeductionOfPCB}}</td>
-            <td class="tg-0lax pleft">{{$taxDeductionOfCP38}}</td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalAmountOfDeparture,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalGrossRemuneration,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalBenefitsOfGoods,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalValuePlaceOfResidence,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalBenefitsOfESOS,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalTaxExemptPerquisites,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalTP1Departure,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalTP1Zakat,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalEmployeeEPFContributions,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalZakatDeductions,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($totalTaxDeductionOfPCB,2)}}</b></td>
+            <td class="tg-0lax pleft"><b>{{number_format($taxDeductionOfCP38,2)}}</b></td>
         </tr>
         @endif
     </table>

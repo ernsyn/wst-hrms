@@ -55,14 +55,14 @@ class LhdnCP39LieuBean
         $this->address2 = isset($array['address2']) ? $array['address2'] : null;
         $this->address3 = isset($array['address3']) ? $array['address3'] : null;
         $this->postcode = isset($array['postcode']) ? $array['postcode'] : null;
-        $this->foreignerBirthDate = isset($array['foreignerBirthDate']) ? $array['foreignerBirthDate'] : null;
-        $this->foreignerPassportNo = isset($array['foreignerPassportNo']) ? $array['foreignerPassportNo'] : null;
+        $this->foreignerBirthDate = isset($array['foreignerBirthDate']) ? $array['foreignerBirthDate'] : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        $this->foreignerPassportNo = isset($array['foreignerPassportNo']) ? $array['foreignerPassportNo'] : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         $this->spouseName = isset($array['spouseName']) ? $array['spouseName'] : null;
         $this->spouseIcOldNo = isset($array['spouseIcOldNo']) ? $array['spouseIcOldNo'] : null;
         $this->spouseIcNewNo = isset($array['spouseIcNewNo']) ? $array['spouseIcNewNo'] : null;
         $this->spouseReferenceTaxRevenueNo = isset($array['spouseReferenceTaxRevenueNo']) ? $array['spouseReferenceTaxRevenueNo'] : null;
-        $this->foreignerSpouseBirthDate = isset($array['foreignerSpouseBirthDate']) ? $array['foreignerSpouseBirthDate'] : null;
-        $this->foreignerSpousePassportNo = isset($array['foreignerSpousePassportNo']) ? $array['foreignerSpousePassportNo'] : null;
+        $this->foreignerSpouseBirthDate = isset($array['foreignerSpouseBirthDate']) ? $array['foreignerSpouseBirthDate'] : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        $this->foreignerSpousePassportNo = isset($array['foreignerSpousePassportNo']) ? $array['foreignerSpousePassportNo'] : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
     }
 
     public function getEmployerName() {

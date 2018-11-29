@@ -35,18 +35,18 @@ class LhdnCP8EmployeeDetail
         $this->employeeCategory = isset($array['employeeCategory']) ? $array['employeeCategory'] : null;
         $this->taxPayByEmployer = isset($array['taxPayByEmployer']) ? $array['taxPayByEmployer'] : null;
         $this->totalChildren = isset($array['totalChildren']) ? $array['totalChildren'] : null;
-        $this->amountOfDeparture = isset($array['amountOfDeparture']) ? $array['amountOfDeparture'] : null;
-        $this->totalGrossRemuneration = isset($array['totalGrossRemuneration']) ? $array['totalGrossRemuneration'] : null;
-        $this->benefitsOfGoods = isset($array['benefitsOfGoods']) ? $array['benefitsOfGoods'] : null;
-        $this->valuePlaceOfResidence = isset($array['valuePlaceOfResidence']) ? $array['valuePlaceOfResidence'] : null;
-        $this->benefitsOfESOS = isset($array['benefitsOfESOS']) ? $array['benefitsOfESOS'] : null;
-        $this->taxExemptPerquisites = isset($array['taxExemptPerquisites']) ? $array['taxExemptPerquisites'] : null;
-        $this->TP1Departure = isset($array['TP1Departure']) ? $array['TP1Departure'] : null;
-        $this->TP1Zakat = isset($array['TP1Zakat']) ? $array['TP1Zakat'] : null;
-        $this->employeeEPFContributions = isset($array['employeeEPFContributions']) ? $array['employeeEPFContributions'] : null;
-        $this->zakatDeductions = isset($array['zakatDeductions']) ? $array['zakatDeductions'] : null;
-        $this->taxDeductionOfPCB = isset($array['taxDeductionOfPCB']) ? $array['taxDeductionOfPCB'] : null;
-        $this->taxDeductionOfCP38 = isset($array['taxDeductionOfCP38']) ? $array['taxDeductionOfCP38'] : null;
+        $this->amountOfDeparture = isset($array['amountOfDeparture']) ? $array['amountOfDeparture'] : 0;
+        $this->totalGrossRemuneration = isset($array['totalGrossRemuneration']) ? $array['totalGrossRemuneration'] : 0;
+        $this->benefitsOfGoods = isset($array['benefitsOfGoods']) ? $array['benefitsOfGoods'] : 0;
+        $this->valuePlaceOfResidence = isset($array['valuePlaceOfResidence']) ? $array['valuePlaceOfResidence'] : 0;
+        $this->benefitsOfESOS = isset($array['benefitsOfESOS']) ? $array['benefitsOfESOS'] : 0;
+        $this->taxExemptPerquisites = isset($array['taxExemptPerquisites']) ? $array['taxExemptPerquisites'] : 0;
+        $this->TP1Departure = isset($array['TP1Departure']) ? $array['TP1Departure'] : 0;
+        $this->TP1Zakat = isset($array['TP1Zakat']) ? $array['TP1Zakat'] : 0;
+        $this->employeeEPFContributions = isset($array['employeeEPFContributions']) ? $array['employeeEPFContributions'] : 0;
+        $this->zakatDeductions = isset($array['zakatDeductions']) ? $array['zakatDeductions'] : 0;
+        $this->taxDeductionOfPCB = isset($array['taxDeductionOfPCB']) ? $array['taxDeductionOfPCB'] : 0;
+        $this->taxDeductionOfCP38 = isset($array['taxDeductionOfCP38']) ? $array['taxDeductionOfCP38'] : 0;
     }
 
     public function getIncomeTaxNo() {
