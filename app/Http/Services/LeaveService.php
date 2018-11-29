@@ -104,7 +104,7 @@ class LeaveService
         $startDate = Carbon::parse($start_date);
         $endDate = Carbon::parse($end_date);
         $now = Carbon::now();
-
+        
         if($startDate->greaterThan($endDate)) {
             return self::error("Start date is after end date.");
         }
@@ -113,7 +113,7 @@ class LeaveService
         if(empty($working_day)) {
             return self::error("Employees working days not set yet.");
         }
-
+        
         // Check if start/end day is non-working day or holiday
         if(!self::isWorkingDay($working_day, $startDate)) {
             return self::error("Start date cannot be a non-working day.");
@@ -124,7 +124,7 @@ class LeaveService
             if($count > 0) {
                 return self::error("Start date cannot fall on a holiday.");
             }
-
+            
         }
         if(!self::isWorkingDay($working_day, $endDate)) {
             return self::error("End date cannot be a non-working day.");
@@ -136,10 +136,10 @@ class LeaveService
                 return self::error("End date cannot fall on a holiday.");
             }
         }
-
+        
         // Process applied rules for leave type
         $leaveType = LeaveType::with('applied_rules')->where('id', $leave_type_id)->first();
-
+        
         $invalid = false;
         $invalidErrorMessage;
         // Related To: Leave Calculation
@@ -156,7 +156,8 @@ class LeaveService
                 case LeaveTypeRule::GENDER:
                     $configuration = json_decode($rule->configuration);
                     if(strcasecmp($employee->gender, $configuration->gender) != 0) {
-                        $includeLeaveType = false;
+                        $invalid = true;
+                        $invalidErrorMessage = "This leave does not apply to you.";
                     }
                     break;
                 // case LeaveTypeRule::CAN_CARRY_FORWARD:
@@ -254,6 +255,7 @@ class LeaveService
 
         $additionalResponseData = array();
         if($consecutive) {
+
             $leaveAllocation = LeaveAllocation::where('emp_id', $employee->id)
             ->where('leave_type_id', $leave_type_id)
             ->where('valid_from_date', '<=', $now)
@@ -261,8 +263,8 @@ class LeaveService
             ->first();
 
             if(!empty($leaveAllocation)) {
-                $calcEndDate = $startDate->addDays($leaveAllocation->allocated_days);
-                if(!$calcEndDate.equalTo($endDate)) {
+                $calcEndDate = $startDate->copy()->addDays($leaveAllocation->allocated_days);
+                if(!$calcEndDate->equalTo($endDate)) {
                     $additionalResponseData['end_date'] = $calcEndDate->toDateTimeString();
                     $endDate = $calcEndDate;
                 }   
@@ -270,22 +272,17 @@ class LeaveService
         }
 
         // Calculate Leave
-        // $start_date = explode("-", $start_date);
-        // $start_string = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
+        $totalDays = date_diff($startDate, $endDate)->days + 1;
 
-        // $end_date = explode("-", $end_date);
-        // $end_string = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
-
-        // $start = Carbon::parse($startDate);
-        // $end = Carbon::parse($endDate);
-
-        // Add the previous Sunday to leave period if start is a Monday
-        // if($startDate->format('D') == 'Mon') {
-        //     $startDate->modify('-1 day');
-        // }
         
-        // $endDate->modify('+1 day'); // fix for end date is excluded
-        $totalDays = date_diff($startDate, $endDate)->days;
+        if(!empty($inc_off_days_based_on_applied_days_config)) {
+            $inc_off_days_min_apply_days = $inc_off_days_based_on_applied_days_config->min_apply_days;
+            if($totalDays >= $inc_off_days_min_apply_days) {
+                $inc_off_days = true;
+            }
+        }
+        
+        
 
         if(!$inc_off_days) {
             $nextDayIsHoliday = false;  
@@ -325,71 +322,15 @@ class LeaveService
        // NEXT STAGE: Check leave days available
         if(!empty($max_days_per_application)) {
             if($totalDays > $max_days_per_application) {
-                return self::error("Max days (".$max_days_per_application." days) per application exceeded (".$totalDays." leave days applied)");
+                return self::error("Max days (".$max_days_per_application." days) per application exceeded (".$totalDays." leave days applied).");
             }
         }
 
         $availableDays = self::getLeaveAllocationsAvailableDays($employee->id, $leave_type_id, $now);
         if($availableDays < $totalDays) {
-            return self::error("Insufficient days (".$availableDays." days) for application (".$totalDays." leave days applied)");
+            return self::error("Insufficient days (".$availableDays." days) for application (".$totalDays." leave days applied).");
         }
 
-
-
-        // $interval = $endDate->diff($startDate);
-
-        // // total days
-        // $days = $interval->days;
-
-        // $getHolidays = Holiday::where('start_date', '>=', $startDate->format('Y-m-d'))
-        // ->where('start_date', '<=', $endDate->format('Y-m-d'))
-        // ->where('end_date', '>=', $startDate->format('Y-m-d'))
-        // ->where('end_date', '>=', $endDate->format('Y-m-d'))
-        // ->where('status', 'active')->get();
-
-        // // Array of holidays to check the dates against
-        // $holidays = array();
-
-        // foreach ($getHolidays as $getHoliday) {
-        //     $includeDatesBetween = new DatePeriod(
-        //             new DateTime($getHoliday->start_date),
-        //             new DateInterval('P1D'),
-        //             new DateTime($getHoliday->end_date.'+1 day') // fix for excluding end_date
-        //     );
-
-        //     foreach($includeDatesBetween as $date) { 
-        //         if(!in_array($date->format('Y-m-d'), $holidays, true)) {
-        //             array_push($holidays, $date->format('Y-m-d'));
-        //         } 
-        //     }
-        // }
-
-        // // Create an iterateable period of date (P1D equates to 1 day)
-        // $period = new DatePeriod($start, new DateInterval('P1D'), $end);
-
-        // foreach($period as $dt) {
-        //     $curr = $dt->format('D');
-
-        //     if(!isWorkingDay($working_day, $dt->format('Y-m-d')))
-        //     {
-        //         $days--;
-        //     }
-
-        //     // Substract if Saturday or Sunday
-        //     if ($curr == 'Sat' || $curr == 'Sun') {
-        //         $days--;
-                
-        //         // Subtract if Holidays falls on a Sunday
-        //         if($curr == 'Sun' && in_array($dt->format('Y-m-d'), $holidays)) {
-        //             $days--;
-        //         }
-        //     }
-
-        //     // Subtract Holidays 
-        //     elseif (in_array($dt->format('Y-m-d'), $holidays)) {
-        //         $days--;
-        //     }
-        // }
 
         return array_merge(
             [
@@ -397,7 +338,6 @@ class LeaveService
             ], 
             $additionalResponseData
         );
-        // return $days;
     }
 
     public static function getLeaveTypesForEmployee(Employee $employee) {
@@ -520,17 +460,6 @@ class LeaveService
         return false;
     }
 
-    // private static function leaveTypeGetRule($leaveType, $rule) {
-    //     foreach($leaveType->applied_rules as $applied_rule) {
-    //         Log::debug($applied_rule->rule." ".$rule);
-    //         if($applied_rule->rule == $rule) {
-    //             return $applied_rule;
-    //         }
-    //     }
-
-    //     return null;
-    // }
-
     private static function calculateEntitledDays($leaveType, $yearsOfService, $grade_id) {
         $entitledDays = 0;
         if(empty($leaveType->entitled_days)) {
@@ -538,7 +467,6 @@ class LeaveService
             foreach($leaveType->lt_entitlements_grade_groups as $gradeGroup) {
                 $gradeInGroup = false;
                 foreach($gradeGroup->grades as $grade) {
-                    // dd("Grade ".$grade_id." ".$grade->id);
                     if($grade_id == $grade->id) {
                         $gradeInGroup = true;
                         break;
