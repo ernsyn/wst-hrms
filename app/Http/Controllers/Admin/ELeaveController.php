@@ -164,7 +164,7 @@ public function postEditHoliday(Request $request, $id)
         'start_date' =>'required',
         'end_date' => 'required',
         'total_days' =>'required',
-         'repeat_annually' => 'required',
+        'repeat_annually' => 'required',
         'status' =>'required',
         'note'=>'',
 

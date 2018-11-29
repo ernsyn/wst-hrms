@@ -90,11 +90,11 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 
 
 //to be edit
-    Route::post('add_leave_application','Employee\EleaveController@addLeaveApplication')->name('add_leave_application');
-    Route::get('leaveapplication','Employee\EleaveController@displayLeaveApplication')->name('leaveapplication');
+    Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
+    Route::get('leaveapplication','Employee\ELeaveController@displayLeaveApplication')->name('leaveapplication');
    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
-    Route::get('leaverequest','Employee\EleaveController@displayLeaveRequestReportTo')->name('leaverequest');
-    Route::get('leavehistory','Employee\EleaveController@displayLeaveRequests')->name('leavehistory');
+    Route::get('leaverequest','Employee\ELeaveController@displayLeaveRequestReportTo')->name('leaverequest');
+    Route::get('leavehistory','Employee\ELeaveController@displayLeaveRequests')->name('leavehistory');
 
 
 
@@ -294,7 +294,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
   //  Route::post('settings/security-groups/add','Admin\SettingsController@postAddSecurityGroup')->name('admin.settings.security-groups.add.post');
 
   Route::get('e-leave/configuration/holiday/{id}/edit','Admin\ELeaveController@editHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
-  Route::post('e-leave/configuration/holiday/{id}/edit','Admin\EleaveController@postEditHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
+  Route::post('e-leave/configuration/holiday/{id}/edit','Admin\ELeaveController@postEditHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
 
     // > Edit
 
