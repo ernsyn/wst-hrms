@@ -165,12 +165,6 @@
             $("span.total-days").replaceWith("<span class='total-days'><b>1</b> days</span>");
             $("#totalLeave").val(1);
         });
-
-        let getltAppliedRuleRouteTemplate = '{{ route('employee.e-leave.rules.ajax.get', ['leave_type_id' => '<<id>>']) }}';
-        let getWorkingDaysRouteTemplate = '{{ route('employee.e-leave.days.ajax.get', ['start_date' => '<<start_date>>', 'end_date' => '<<end_date>>']) }}';
-
-        var min_apply_days_before = [];
-        var leave_calculation = {};
         
         $('#leave-types').on('change', function() {
             var leave_type_data = $(this).find('option:selected').data('leave-type');
