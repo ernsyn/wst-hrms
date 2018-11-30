@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSoftDeletesCompanyBanksTable extends Migration
+class UpdateEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddSoftDeletesCompanyBanksTable extends Migration
      */
     public function up()
     {
-        Schema::table('company_bank', function($table) {
-
-                  $table->softDeletes();
+        Schema::table('employees', function (Blueprint $table) {
+            $table->integer('eis_no')->nullable();
         });
     }
 
@@ -26,7 +25,8 @@ class AddSoftDeletesCompanyBanksTable extends Migration
      */
     public function down()
     {
-
-
+        Schema::table('employees', function (Blueprint $table) {
+            $table->dropColumn('eis_no');
+        });
     }
 }
