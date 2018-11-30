@@ -20,6 +20,7 @@ class EmployeeJob extends Model
         'basic_salary',
         'specification',
         'status',
+        'created_by'
     ];
 
     public function main_position()
