@@ -30,7 +30,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="start-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-start-date-experience" type="text" class="form-control" hidden>
+                            <input id="start-date-experience" type="text" class="form-control" readonly>
                             <div id="start-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -38,7 +39,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="end-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-end-date-experience" type="text" class="form-control" hidden>
+                            <input id="end-date-experience" type="text" class="form-control" readonly>
                             <div id="end-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -201,7 +203,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-experience-label">Add Experience</h5>
+                <h5 class="modal-title" id="edit-experience-label">Edit Experience</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -228,7 +230,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="start-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-start-date-experience-edit" type="text" class="form-control">
+                            <input id="start-date-experience-edit" type="text" class="form-control" readonly>
                             <div id="start-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -236,7 +239,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="end-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-end-date-experience-edit" type="text" class="form-control">
+                            <input id="end-date-experience-edit" type="text" class="form-control" readonly>
                             <div id="end-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -265,7 +269,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-education-label">Add Education</h5>
+                <h5 class="modal-title" id="edit-education-label">Edit Education</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -533,10 +537,6 @@
 </div>
 
 
-
-
-
-
 @section('scripts')
 <script>
     var experiencesTable = $('#employee-companies-table').DataTable({
@@ -650,6 +650,40 @@ var skillsTable = $('#employee-skill-table').DataTable({
 {{-- EXPERIENCES --}}
 <script type="text/javascript">
     $(function(){
+        //datepicker
+        $('#start-date-experience').datepicker({
+            altField: "#alt-start-date-experience",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+        $('#end-date-experience').datepicker({
+            altField: "#alt-end-date-experience",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+
+        $('#start-date-experience-edit').datepicker({
+            altField: "#alt-start-date-experience-edit",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+        $('#end-date-experience-edit').datepicker({
+            altField: "#alt-end-date-experience-edit",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
         // ADD EXPERIENCES
         $('#add-experience-popup').on('show.bs.modal', function (event) {
             clearExperiencesError('#add-experience-form');
@@ -665,8 +699,8 @@ var skillsTable = $('#employee-skill-table').DataTable({
                     // Form Data
                     company: $('#add-experience-form #company').val(),
                     position: $('#add-experience-form #position').val(),
-                    start_date: $('#add-experience-form #start-date').val(),
-                    end_date: $('#add-experience-form #end-date').val(),
+                    start_date: $('#add-experience-form #alt-start-date-experience').val(),
+                    end_date: $('#add-experience-form #alt-end-date-experience').val(),
                     notes: $('#add-experience-form #notes').val()
                 },
                 success: function(data) {
@@ -692,11 +726,11 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#add-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
-                                        $('#add-experience-form #start-date').addClass('is-invalid');
+                                        $('#add-experience-form #start-date-experience').addClass('is-invalid');
                                         $('#add-experience-form #start-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'end_date':
-                                        $('#add-experience-form #end-date').addClass('is-invalid');
+                                        $('#add-experience-form #end-date-experience').addClass('is-invalid');
                                         $('#add-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'notes':
@@ -724,8 +758,11 @@ var skillsTable = $('#employee-skill-table').DataTable({
 
             $('#edit-experience-form #company').val(currentData.company);
             $('#edit-experience-form #position').val(currentData.position);
-            $('#edit-experience-form #start-date').val(currentData.start_date);
-            $('#edit-experience-form #end-date').val(currentData.end_date);
+            $('#edit-experience-form #start-date-experience-edit').val(currentData.start_date);
+            $('#edit-experience-form #end-date-experience-edit').val(currentData.end_date);
+
+            $('#edit-experience-form #alt-start-date-experience-edit').val(currentData.alt_start_date);
+            $('#edit-experience-form #alt-end-date-experience-edit').val(currentData.alt_end_date);
             $('#edit-experience-form #notes').val(currentData.notes);
         });
 
@@ -741,8 +778,8 @@ var skillsTable = $('#employee-skill-table').DataTable({
                     _token: '{{ csrf_token() }}',
                     company: $('#edit-experience-form #company').val(),
                     position: $('#edit-experience-form #position').val(),
-                    start_date: $('#edit-experience-form #start-date').val(),
-                    end_date: $('#edit-experience-form #end-date').val(),
+                    start_date: $('#edit-experience-form #alt-start-date-experience-edit').val(),
+                    end_date: $('#edit-experience-form #alt-end-date-experience-edit').val(),
                     notes: $('#edit-experience-form #notes').val()
                 },
                 success: function(data) {
@@ -768,11 +805,11 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
-                                        $('#edit-experience-form #start-date').addClass('is-invalid');
+                                        $('#edit-experience-form #start-date-experience-edit').addClass('is-invalid');
                                         $('#edit-experience-form #start-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'end_date':
-                                        $('#edit-experience-form #end-date').addClass('is-invalid');
+                                        $('#edit-experience-form #end-date-experience-edit').addClass('is-invalid');
                                         $('#edit-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'notes':
@@ -830,21 +867,21 @@ var skillsTable = $('#employee-skill-table').DataTable({
     function clearExperiencesModal(htmlId) {
         $(htmlId + ' #company').val('');
         $(htmlId + ' #position').val('');
-        $(htmlId + ' #start-date').val('');
-        $(htmlId + ' #end-date').val('');
+        $(htmlId + ' #start-date-experience').val('');
+        $(htmlId + ' #end-date-experience').val('');
         $(htmlId + ' #notes').val('');
 
         $(htmlId + ' #company').removeClass('is-invalid');
         $(htmlId + ' #position').removeClass('is-invalid');
-        $(htmlId + ' #start-date').removeClass('is-invalid');
-        $(htmlId + ' #end-date').removeClass('is-invalid');
+        $(htmlId + ' #start-date-experience').removeClass('is-invalid');
+        $(htmlId + ' #end-date-experience').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
     }
     function clearExperiencesError(htmlId) {
         $(htmlId + ' #company').removeClass('is-invalid');
         $(htmlId + ' #position').removeClass('is-invalid');
-        $(htmlId + ' #start-date').removeClass('is-invalid');
-        $(htmlId + ' #end-date').removeClass('is-invalid');
+        $(htmlId + ' #start-date-experience').removeClass('is-invalid');
+        $(htmlId + ' #end-date-experience').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
     }
 

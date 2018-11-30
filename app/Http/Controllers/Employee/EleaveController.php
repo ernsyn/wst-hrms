@@ -37,6 +37,11 @@ use App\Deduction;
 use App\Bank;
 use App\EaForm;
 
+use App\LeaveAllocation;
+use App\LTAppliedRule;
+use DatePeriod;
+use DateInterval;
+
 use DB;
 use App\User;
 use App\EmployeeInfo;
@@ -47,6 +52,8 @@ use \DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Auth;
+
+use App\Http\Services\LeaveService;
 
 class ELeaveController extends Controller
 {
@@ -187,7 +194,75 @@ class ELeaveController extends Controller
             return view('pages.employee.leave.leave-application', ['leavebalance'=>$leavebalance]);
         }
 
-        
+        public function ajaxGetLeaveTypes()
+        {
+            $leaveTypes = LeaveService::getLeaveTypesForEmployee(Auth::user()->employee);
+
+            return response()->json($leaveTypes);
+        }
+
+        public function ajaxPostCreateLeaveRequest(Request $request)
+        {
+            $requestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => '',
+                'reason' => 'required',
+                'attachment' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $attachment_data_url = null;
+            if(array_key_exists('attachment', $requestData)) {
+                $attachment_data_url = $requestData['attachment'];
+            }
+
+            $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
+            return response()->json($result);
+        }
+
+        public function ajaxPostCheckLeaveRequest(Request $request)
+        {
+            $requestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm);
+
+            return response()->json($result);
+        }
+
+        public function postLeaveRequest(Request $request, $id)
+        {
+            $leaveRequestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'reason' => 'required'
+            ]);
+
+            $leaveRequestData['is_template'] = false;
+
+
+            $leaveRequest = new LeaveRequest($leaveRequestData);
+
+            $employee = Employee::find($id);
+            $employee->leave_request()->save($leaveRequest);
+
+            return response()->json(['success' => 'Leave Request is successfully added']);
+        }
 
         public function displayLeaveBalance()
         {
