@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSoftDeletesCompanyBanksTable extends Migration
+class UpdateLeaveTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddSoftDeletesCompanyBanksTable extends Migration
      */
     public function up()
     {
-        Schema::table('company_bank', function($table) {
-
-                  $table->softDeletes();
+        Schema::table('leave_types', function (Blueprint $table) {
+            $table->dropUnique(['code']);
+            $table->dropUnique(['name']);
         });
     }
 
@@ -26,7 +26,6 @@ class AddSoftDeletesCompanyBanksTable extends Migration
      */
     public function down()
     {
-
-
+        
     }
 }

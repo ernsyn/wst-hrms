@@ -96,11 +96,13 @@ class EmployeeController extends Controller
             'contact_no' => 'required|numeric',
             'marital_status' => 'required',
             'race' => 'required|alpha',
-            'total_children' => 'required|numeric',
-            'driver_license_no' => 'required',
-            'driver_license_expiry_date' => 'required|date',
+            'total_children' => 'nullable|numeric',
+            'driver_license_no' => 'nullable',
+            'driver_license_expiry_date' => 'nullable',
             'epf_no' => 'required',
-            'tax_no' => 'required'
+            'tax_no' => 'required',
+            'eis_no' => 'required',
+            'socso_no' => 'required'
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
@@ -127,6 +129,9 @@ class EmployeeController extends Controller
         ->editColumn('dob', function ($dependent) {
             return date('d/m/Y', strtotime($dependent->dob) );
         })
+        ->editColumn('alt_dob', function ($dependent) {
+            return date('Y-m-d', strtotime($dependent->dob) );
+        })
         ->make(true);
     }
 
@@ -141,6 +146,12 @@ class EmployeeController extends Controller
         ->editColumn('expiry_date', function ($immigration) {
             return date('d/m/Y', strtotime($immigration->expiry_date) );
         })
+        ->editColumn('alt_issued_date', function ($immigration) {
+            return date('Y-m-d', strtotime($immigration->issued_date) );
+        })
+        ->editColumn('alt_expiry_date', function ($immigration) {
+            return date('Y-m-d', strtotime($immigration->expiry_date) );
+        })
         ->make(true);
     }
 
@@ -154,6 +165,12 @@ class EmployeeController extends Controller
         ->editColumn('expiry_date', function ($visa) {
             return date('d/m/Y', strtotime($visa->expiry_date) );
         })
+        ->editColumn('alt_issued_date', function ($visa) {
+            return date('Y-m-d', strtotime($visa->issued_date) );
+        })
+        ->editColumn('alt_expiry_date', function ($visa) {
+            return date('Y-m-d', strtotime($visa->expiry_date) );
+        })
         ->make(true);
     }
 
@@ -163,6 +180,9 @@ class EmployeeController extends Controller
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
             return date('d/m/Y', strtotime($job->start_date) );
+        })
+        ->editColumn('alt_start_date', function ($job) {
+            return date('Y-m-d', strtotime($job->start_date) );
         })
         ->make(true);
     }
@@ -183,6 +203,12 @@ class EmployeeController extends Controller
         })
         ->editColumn('end_date', function ($experience) {
             return date('d/m/Y', strtotime($experience->end_date) );
+        })
+        ->editColumn('alt_start_date', function ($experience) {
+            return date('Y-m-d', strtotime($experience->start_date) );
+        })
+        ->editColumn('alt_end_date', function ($experience) {
+            return date('Y-m-d', strtotime($experience->end_date) );
         })
         ->make(true);
     }
@@ -243,25 +269,30 @@ class EmployeeController extends Controller
             'contact_no' => 'required',
             'address' => 'required',
             'company_id' => 'required',
-            'dob' => 'required',
+            'dob' => 'required|date',
             'gender' => 'required',
             'race' => 'required',
-            'nationality' => '',
-            'marital_status' => '',
-            'total_children' => '',
+            'nationality' => 'nullable',
+            'marital_status' => 'required',
+            'total_children' => 'nullable|numeric',
             'ic_no' => 'required',
             'tax_no' => 'required',
             'epf_no' => 'required',
-            'driver_license_no' => '',
-            'driver_license_expiry_date' => ''
+            'eis_no' => 'required',
+            'socso_no' => 'required',
+            'driver_license_no' => 'nullable',
+            'driver_license_expiry_date' => 'nullable|date'
         ]);
-        // dd($validatedData);
-        $user = User::create($validatedUserData);
-        $user->assignRole('employee');
+        // dd($validatedEmployeeData);
 
-        $validatedEmployeeData['user_id'] = $user->id;
-        $validatedEmployeeData['created_by'] = auth()->user()->id;
-        $employee = Employee::create($validatedEmployeeData);
+        DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
+            $user = User::create($validatedUserData);
+            $user->assignRole('employee');
+    
+            $validatedEmployeeData['user_id'] = $user->id;
+            $validatedEmployeeData['created_by'] = auth()->user()->id;
+            $employee = Employee::create($validatedEmployeeData);
+        });
 
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
     }
@@ -275,9 +306,8 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'contact_no' => 'required|numeric',
         ]);
-
+        $emergencyContactData['created_by'] = auth()->user()->id;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
-
 
         $employee = Employee::find($id);
         $employee->employee_emergency_contacts()->save($emergencyContact);
@@ -292,10 +322,8 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'dob' => 'required|date',
         ]);
-        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
-
+        $dependentData['created_by'] = auth()->user()->id;
         $dependent = new EmployeeDependent($dependentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_dependents()->save($dependent);
@@ -306,14 +334,13 @@ class EmployeeController extends Controller
     public function postImmigration(Request $request, $id)
     {
         $immigrationData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
         ]);
-
+        $immigrationData['created_by'] = auth()->user()->id;
         $immigration = new EmployeeImmigration($immigrationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_immigrations()->save($immigration);
@@ -325,16 +352,15 @@ class EmployeeController extends Controller
     {
         $visaData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
             'family_members' => 'required'
         ]);
-
+        $visaData['created_by'] = auth()->user()->id;
         $visa = new EmployeeVisa($visaData);
-
 
         $employee = Employee::find($id);
         $employee->employee_visas()->save($visa);
@@ -344,18 +370,28 @@ class EmployeeController extends Controller
 
     public function postJob(Request $request, $id)
     {
+        // Add a new job
+
         $jobData = $request->validate([
-            'branch_id' => 'required',
-            'emp_mainposition_id' => 'required',
+            'basic_salary' => 'required|numeric',
+            'cost_centre_id' => 'required',
             'department_id' => 'required',
             'team_id' => 'required',
-            'cost_centre_id' => 'required',
+            'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
-            'start_date' => 'required',
             'basic_salary' => 'required',
             'specification' => 'required',
-            'status' => 'required'
+            'branch_id' => 'required',
+            'start_date' => 'required|date',
+            'status' => 'required',
         ]);
+
+        $jobData['created_by'] = auth()->user()->id;
+        // $jobData['status'] = 'active';
+        // $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
+        // $end_date = EmployeeJob::where('id', $id)
+        // ->whereNull('end_date');
 
         // $jobData['status'] = 'active';
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
@@ -363,12 +399,12 @@ class EmployeeController extends Controller
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
-            
+
             if(!empty($currentJob)) {
                 $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                 LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
             }
-    
+
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
@@ -378,11 +414,14 @@ class EmployeeController extends Controller
     }
 
     public function actionResign(Request $request, $id) {
+        // EmployeeJob::where('emp_id', $id)
+        // ->whereNull('end_date')
+        // ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
+        $job = new EmployeeJob($jobData);
 
 
         $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
-            
         $currentDate = date("Y-m-d");
         if(!empty($currentJob)) {
             $currentJob->update(['end_date'=> $currentDate ]);
@@ -397,9 +436,8 @@ class EmployeeController extends Controller
             'acc_no' => 'required',
             'acc_status' => 'required'
         ]);
-
+        $bankAccountData['created_by'] = auth()->user()->id;
         $bankAccount = new EmployeeBankAccount($bankAccountData);
-
 
         $employee = Employee::find($id);
         $employee->employee_bank_accounts()->save($bankAccount);
@@ -430,7 +468,7 @@ class EmployeeController extends Controller
             'end_date' => 'required|date',
             'notes' => 'required'
         ]);
-
+        $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
 
         $employee = Employee::find($id);
@@ -450,9 +488,8 @@ class EmployeeController extends Controller
             'gpa' => 'required|between:0,99.99',
             'description' => 'required'
         ]);
-
+        $educationData['created_by'] = auth()->user()->id;
         $education = new EmployeeEducation($educationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_educations()->save($education);
@@ -467,9 +504,8 @@ class EmployeeController extends Controller
             'years_of_experience' => 'required',
             'competency' => 'required'
         ]);
-
+        $skillData['created_by'] = auth()->user()->id;
         $skill = new EmployeeSkill($skillData);
-
 
         $employee = Employee::find($id);
         $employee->employee_skills()->save($skill);
@@ -483,9 +519,8 @@ class EmployeeController extends Controller
             'name' => 'required',
             'notes' => 'required'
         ]);
-
+        $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_attachments()->save($attachment);
@@ -507,10 +542,8 @@ class EmployeeController extends Controller
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
-
         $workingDaysData['is_template'] = false;
-
-
+        $workingDaysData['created_by'] = auth()->user()->id;
         $workingDay = new EmployeeWorkingDay($workingDayData);
 
         $employee = Employee::find($id);
@@ -533,9 +566,7 @@ class EmployeeController extends Controller
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
-
         $workingDayUpdateData['is_template'] = false;
-
         EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
@@ -560,13 +591,20 @@ class EmployeeController extends Controller
         $reportToData = $request->validate([
             'report_to_emp_id' => 'required',
             'type' => 'required',
-            'kpi_proposer' => 'required',
+        
             'notes' => 'required',
-            'report_to_level' =>'required'
+            'report_to_level' =>'required',
+            'kpi_proposer' => 'sometimes|required',
+            'notes' => 'required'
         ]);
+        if($request->get('kpi_proposer') == null){
+            $reportToData['kpi_proposer'] = 0;
+        } else {
+            $reportToData['kpi_proposer'] = request('kpi_proposer');
+        }
 
+        $reportToData['created_by'] = auth()->user()->id;
         $reportTo = new EmployeeReportTo($reportToData);
-
 
         $employee = Employee::find($id);
         $employee->report_tos()->save($reportTo);
@@ -579,7 +617,7 @@ class EmployeeController extends Controller
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
-
+        $securityGroupData['created_by'] = auth()->user()->id;
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
 
         $employee = Employee::find($id);
@@ -592,8 +630,7 @@ class EmployeeController extends Controller
     public function postMainSecurityGroup(Request $request, $id)
     {
         $mainSecurityGroupData = $request->validate([
-            'main_security_group_id' => 'required',
-
+            'main_security_group_id' => 'required'
         ]);
 
         Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
@@ -632,7 +669,7 @@ class EmployeeController extends Controller
     public function postEditImmigration(Request $request, $emp_id, $id)
     {
         $immigrationUpdatedData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
@@ -647,8 +684,8 @@ class EmployeeController extends Controller
     {
         $visaUpdatedData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
@@ -755,7 +792,7 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Report To was successfully updated.']);
     }
-    
+
     public function postEditAttachment(Request $request, $emp_id, $id)
     {
         $attachmentUpdatedData = $request->validate([
@@ -800,7 +837,7 @@ class EmployeeController extends Controller
         EmployeeBankAccount::find($id)->delete();
         return response()->json(['success'=>'Bank Account was successfully deleted.']);
     }
-    
+
     public function deleteExperience(Request $request, $emp_id, $id)
     {
         EmployeeExperience::find($id)->delete();

@@ -31,7 +31,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="add-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="add-report-to-form">
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
@@ -40,7 +40,7 @@
                             <select class="form-control" name="report-to" id="report-to">
                                 <option value="">Select Name</option>
                                 @foreach(App\Employee::with('user')->get() as $employee)
-                                <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
+                                <option value="{{ $employee->user->id }}">{{ $employee->user->id }}</option>
                                 @endforeach
                             </select>
                             <div id="report-to-error" class="invalid-feedback">
@@ -121,10 +121,10 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="edit-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="edit-report-to-form">
                 <div class="modal-body">
                     @csrf
-                    <div class="form-row" class="form_validate" data-parsley-errors-messages-disabled>
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
                             <select class="form-control" name="report-to" id="report-to">
@@ -212,7 +212,7 @@
                 }
             },
             {
-                "data": "report_to.user.name"
+                "data": "report_to.user.id"
             },
             {
                 "data": "type"
@@ -416,7 +416,7 @@
     function clearReportToModal(htmlId) {
         $(htmlId + ' #report-to').val('');
         $(htmlId + ' #type').val('');
-        $(htmlId + ' #kpi-proposer').val('');
+        $(htmlId + ' #kpi-proposer').val();
         $(htmlId + ' #notes').val('');
         $(htmlId + ' #report-to-level').val('');
 

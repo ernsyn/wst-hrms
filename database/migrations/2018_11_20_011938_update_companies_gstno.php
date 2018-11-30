@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateMainSecurityGroupIdToEmployees extends Migration
+class UpdateCompaniesGstno extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,21 @@ class UpdateMainSecurityGroupIdToEmployees extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function($table) {
-            $table->integer('main_security_group_id')->nullable();
-
-        });//
+        Schema::table('companies', function (Blueprint $table) {
+            $table->string('gst_no', 50)->nullable()->change();
+        });
     }
 
+    ///
     /**
      * Reverse the migrations.
-     *
+     * 
      * @return void
      */
     public function down()
-    { Schema::table('employees', function($table) {
-
- 
-  
-    });
+    {
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('gst_no');
+        });
     }
 }

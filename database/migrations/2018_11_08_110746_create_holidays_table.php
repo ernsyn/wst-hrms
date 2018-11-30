@@ -19,7 +19,7 @@ class CreateHolidaysTable extends Migration
 			$table->date('start_date')->nullable();
 			$table->date('end_date')->nullable();
 			$table->decimal('total_days',5,2)->nullable();
-			$table->integer('repeat_annually')->nullable();
+			$table->integer('repeat_manually')->nullable();
 			$table->string('status')->nullable();
 			$table->string('note')->nullable();
 			$table->integer('created_by')->nullable();

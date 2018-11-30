@@ -22,6 +22,8 @@ class Employee extends Model
         'ic_no',
         'tax_no',
         'epf_no',
+        'eis_no',
+        'socso_no',
         'driver_license_no',
         'driver_license_expiry_date',
         'created_by',
@@ -128,4 +130,8 @@ class Employee extends Model
         return $this->hasMany('App\LeaveRequestApproval', 'id','approved_by_emp_id');
     }
 
+    public function attendances()
+    {
+        return $this->hasMany('App\EmployeeAttendance', 'emp_id');
+    }
 }

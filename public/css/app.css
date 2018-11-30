@@ -17981,3 +17981,8 @@ button.dropdown-toggle::after {
   margin-bottom: 10px;
 }
 
+#page-leave-application .selected-day {
+  background-color: #18b775;
+  color: #FFFFFF;
+}
+

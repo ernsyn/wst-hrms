@@ -57,6 +57,10 @@
             </ul>
             
 
+                <li class="menu-option {{ request()->is('leavehistory') ? 'active' : '' }}">
+                    <a href="{{ route('leavehistory') }}">Leave Requests</a>
+                </li>
+            </ul>
         </li>
         <li class="menu-section {{ request()->is('profile*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leave-submenu" data-toggle="collapse" aria-expanded="false">
@@ -75,10 +79,6 @@
                 </li>
                 <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
                     <a href="{{ route('leaverequest') }}">Leave Approval</a>
-                </li>
-
-                <li class="menu-option {{ request()->is('leavehistory') ? 'active' : '' }}">
-                    <a href="{{ route('leavehistory') }}">Leave Requests</a>
                 </li>
             </ul>
         </li>

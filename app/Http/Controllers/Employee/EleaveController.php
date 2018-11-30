@@ -37,10 +37,13 @@ use App\Deduction;
 use App\Bank;
 use App\EaForm;
 use App\LeaveRequestApproval;
+
 use App\LeaveAllocation;
 use App\LTAppliedRule;
 use DatePeriod;
 use DateInterval;
+use \stdClass;
+
 use DB;
 use App\User;
 use App\EmployeeInfo;
@@ -52,6 +55,8 @@ use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Auth;
 use App\Http\Services\LeaveService;
+
+
 
 class ELeaveController extends Controller
 {
@@ -152,13 +157,97 @@ class ELeaveController extends Controller
             return view('pages.employee.leave.leave-application', ['leavebalance'=>$leavebalance]);
         }
 
-          
-
         public function ajaxGetLeaveTypes()
         {
             $leaveTypes = LeaveService::getLeaveTypesForEmployee(Auth::user()->employee);
 
             return response()->json($leaveTypes);
+        }
+
+        public function ajaxGetLeaveRequestSingle($id)
+        {
+            dd("hellop");
+            $leaveRequest = LeaveService::getLeaveRequestSingle($id);
+
+            return response()->json($leaveRequest);
+        }
+
+        public function ajaxGetEmployeeLeaves($status)
+        {
+            $leaveRequest = LeaveService::getEmployeeLeaves(Auth::user()->employee->id, $status);
+            
+            $result = array();
+
+            foreach ($leaveRequest as $row) 
+            {
+                $leave = new stdClass();
+
+                if($row->am_pm) 
+                {
+                    $leave->allDay = false;
+                }
+                else
+                {
+                    $leave->allDay = true;
+                }
+
+                $leave->id = $row->id;
+                $leave->title = $row->reason;
+                $leave->start = $row->start_date;
+                $leave->end = $row->end_date;
+                $leave->status = $row->status;
+                $result[] = $leave;
+            }
+
+            return $result;
+        }
+
+        public function ajaxGetEmployeeWorkingDays()
+        {
+            $working_day = Auth::user()->employee->working_day;
+        
+            if(empty($working_day)) {
+                return self::error("Employees working days not set yet.");
+            }
+            
+            $result = array();
+
+            if($working_day->sunday > 0)
+            {
+                array_push($result, 0);
+            }
+
+            if($working_day->monday > 0)
+            {
+                array_push($result, 1);
+            }
+
+            if($working_day->tuesday > 0)
+            {
+                array_push($result, 2);
+            }
+
+            if($working_day->wednesday > 0)
+            {
+                array_push($result, 3);
+            }
+
+            if($working_day->thursday > 0)
+            {
+                array_push($result, 4);
+            }
+
+            if($working_day->friday > 0)
+            {
+                array_push($result, 5);
+            }
+
+            if($working_day->saturday > 0)
+            {
+                array_push($result, 6);
+            }
+
+            return $result;
         }
 
         public function ajaxPostCreateLeaveRequest(Request $request)
@@ -183,8 +272,33 @@ class ELeaveController extends Controller
             }
 
             $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
-
             return response()->json($result);
+        }
+
+        public function ajaxPostEditLeaveRequest(Request $request, $id)
+        {
+            $leaveRequestUpdateData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => '',
+                'reason' => 'required',
+                'attachment' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $attachment_data_url = null;
+            if(array_key_exists('attachment', $requestData)) {
+                $attachment_data_url = $requestData['attachment'];
+            }
+
+            LeaveRequest::where('id', $id)->update($leaveRequestUpdateData);
+
+            return response()->json(['success'=>'Working Day was successfully updated.']);
         }
 
         public function ajaxPostCheckLeaveRequest(Request $request)
@@ -204,85 +318,6 @@ class ELeaveController extends Controller
             $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm);
 
             return response()->json($result);
-        }
-
-        public function ajaxGetLeaveRules($leave_type_id)
-        {
-            $emp_id = Auth::user()->employee->id;
-
-            $now = Carbon::now();
-            $ltAppliedRule = LTAppliedRule::where('leave_type_id', $leave_type_id)
-            ->whereNull('deleted_at')
-            ->get();
-
-            return response()->json($ltAppliedRule);
-        }
-
-        public function ajaxCalculateActualLeaveDays($start_date, $end_date)
-        {
-            $start_date = explode("-", $start_date);
-            $start_string = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
-
-            $end_date = explode("-", $end_date);
-            $end_string = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
-
-            $start = new DateTime($start_string);
-            $end = new DateTime($end_string);
-
-            // Add the previous Sunday to leave period if start is a Monday
-            if($start->format('D') == 'Mon') {
-                $start->modify('-1 day');
-            }
-            
-            $end->modify('+1 day'); // fix for end date is excluded
-
-            $interval = $end->diff($start);
-
-            // total days
-            $days = $interval->days;
-
-            $getHolidays = Holiday::where('start_date', '>=', $start->format('Y-m-d'))->where('status', 'active')->get();
-
-            // Array of holidays to check the dates against
-            $holidays = array();
-
-            foreach ($getHolidays as $getHoliday) {
-                $includeDatesBetween = new DatePeriod(
-                     new DateTime($getHoliday->start_date),
-                     new DateInterval('P1D'),
-                     new DateTime($getHoliday->end_date.'+1 day') // fix for excluding end_date
-                );
-
-                foreach($includeDatesBetween as $date) { 
-                    if(!in_array($date->format('Y-m-d'), $holidays, true)) {
-                        array_push($holidays, $date->format('Y-m-d'));
-                    } 
-                }
-            }
-
-            // Create an iterateable period of date (P1D equates to 1 day)
-            $period = new DatePeriod($start, new DateInterval('P1D'), $end);
-
-            foreach($period as $dt) {
-                $curr = $dt->format('D');
-
-                // Substract if Saturday or Sunday
-                if ($curr == 'Sat' || $curr == 'Sun') {
-                    $days--;
-                    
-                    // Subtract if Holidays falls on a Sunday
-                    if($curr == 'Sun' && in_array($dt->format('Y-m-d'), $holidays)) {
-                        $days--;
-                    }
-                }
-
-                // Subtract Holidays 
-                elseif (in_array($dt->format('Y-m-d'), $holidays)) {
-                    $days--;
-                }
-            }
-
-            return $days;
         }
 
         public function postLeaveRequest(Request $request, $id)

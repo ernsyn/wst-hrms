@@ -14,9 +14,12 @@ class LeaveRequest extends Model
         'emp_id',
         'leave_type_id',
         'leave_allocation_id',
+        'start_date',
+        'end_date', 
+        'am_pm', 
         'applied_days',
         'reason',
-        'is_approved',
+        'status' 
     ];
 
     protected $casts = [
@@ -31,7 +34,7 @@ class LeaveRequest extends Model
     }
 
     public function attachment() {
-        return $this->belongsTo('App\Media'); 
+        return $this->belongsTo('App\Media', 'attachment_media_id'); 
     }
 
     public function report_to()
