@@ -41,6 +41,7 @@ use App\LeaveAllocation;
 use App\LTAppliedRule;
 use DatePeriod;
 use DateInterval;
+use \stdClass;
 
 use DB;
 use App\User;
@@ -201,6 +202,92 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
+        public function ajaxGetLeaveRequestSingle($id)
+        {
+            dd("hellop");
+            $leaveRequest = LeaveService::getLeaveRequestSingle($id);
+
+            return response()->json($leaveRequest);
+        }
+
+        public function ajaxGetEmployeeLeaves($status)
+        {
+            $leaveRequest = LeaveService::getEmployeeLeaves(Auth::user()->employee->id, $status);
+            
+            $result = array();
+
+            foreach ($leaveRequest as $row) 
+            {
+                $leave = new stdClass();
+
+                if($row->am_pm) 
+                {
+                    $leave->allDay = false;
+                }
+                else
+                {
+                    $leave->allDay = true;
+                }
+
+                $leave->id = $row->id;
+                $leave->title = $row->reason;
+                $leave->start = $row->start_date;
+                $leave->end = $row->end_date;
+                $leave->status = $row->status;
+                $result[] = $leave;
+            }
+
+            return $result;
+        }
+
+        public function ajaxGetEmployeeWorkingDays()
+        {
+            $working_day = Auth::user()->employee->working_day;
+        
+            if(empty($working_day)) {
+                return self::error("Employees working days not set yet.");
+            }
+            
+            $result = array();
+
+            if($working_day->sunday > 0)
+            {
+                array_push($result, 0);
+            }
+
+            if($working_day->monday > 0)
+            {
+                array_push($result, 1);
+            }
+
+            if($working_day->tuesday > 0)
+            {
+                array_push($result, 2);
+            }
+
+            if($working_day->wednesday > 0)
+            {
+                array_push($result, 3);
+            }
+
+            if($working_day->thursday > 0)
+            {
+                array_push($result, 4);
+            }
+
+            if($working_day->friday > 0)
+            {
+                array_push($result, 5);
+            }
+
+            if($working_day->saturday > 0)
+            {
+                array_push($result, 6);
+            }
+
+            return $result;
+        }
+
         public function ajaxPostCreateLeaveRequest(Request $request)
         {
             $requestData = $request->validate([
@@ -224,6 +311,32 @@ class ELeaveController extends Controller
 
             $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
             return response()->json($result);
+        }
+
+        public function ajaxPostEditLeaveRequest(Request $request, $id)
+        {
+            $leaveRequestUpdateData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => '',
+                'reason' => 'required',
+                'attachment' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $attachment_data_url = null;
+            if(array_key_exists('attachment', $requestData)) {
+                $attachment_data_url = $requestData['attachment'];
+            }
+
+            LeaveRequest::where('id', $id)->update($leaveRequestUpdateData);
+
+            return response()->json(['success'=>'Working Day was successfully updated.']);
         }
 
         public function ajaxPostCheckLeaveRequest(Request $request)
