@@ -53,7 +53,7 @@ class LeaveRequest extends Model
 
 public function leave_request_approval()
 {
- return $this->belongsTo('App\LeaveRequestApproval','leave_request_id'); 
+ return $this->hasMany('App\LeaveRequestApproval'); 
 
 }
 }

@@ -125,7 +125,7 @@ class Employee extends Model
 
     public function leave_request_approvals()
     {
-        return $this->hasMany('App\LeaveRequestApproval', 'emp_id');
+        return $this->hasMany('App\LeaveRequestApproval', 'id','approved_by_emp_id');
     }
 
 }

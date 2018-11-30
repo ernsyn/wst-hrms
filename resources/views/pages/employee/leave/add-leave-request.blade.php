@@ -35,17 +35,7 @@
             
                                     </div>
 
-                                    <div class="col-8">
-                                            <label class="col-md-12 col-form-label">Allocated Days*</label>
-                                            <div class="col-md-12">
-        
-                                                    <input id="leave_type_id" type="text" class="form-control{{ $errors->has('leave_type_id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
-                                                    name="leave_type_id" value="{{$leaveRequest->leave_type_id}}" hidden>
-                                                        <input id="leave_type_name" type="text" class="form-control{{ $errors->has('leave_type_name') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
-                                                            name="leave_type_name" value="{{$leaveRequest->leave_type->name}}" readonly>
-                                                     </div>
-                
-                                        </div>
+                        
 
                         <div class="col-8">
                             <label class="col-md-12 col-form-label">Leave Type*</label>
@@ -54,11 +44,13 @@
                                     
                                     <input id="id" type="text" class="form-control{{ $errors->has('id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
                                     name="id" value="{{ $leaveRequest->id }}" hidden>
-
+                                    <input id="leave_type_id" type="text" class="form-control{{ $errors->has('leave_type_id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
+                                    name="leave_type_id" value="{{$leaveRequest->leave_type_id}}" hidden>
+                               
                                     <input id="total_days" type="text" class="form-control{{ $errors->has('total_days') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
                                     name="total_days" value="{{ $leaveRequest->applied_days }}" hidden>
-                                        <input id="leave_type_id" type="text" class="form-control{{ $errors->has('leave_type_id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
-                                            name="leave_type_id" value="{{$leaveRequest->leave_type->name}}" readonly>
+                                        <input id="leave_type_name" type="text" class="form-control{{ $errors->has('leave_type_name') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
+                                            name="leave_type_name" value="{{$leaveRequest->leave_type->name}}" readonly>
                                        
                                     </div>
 
