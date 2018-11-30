@@ -136,25 +136,89 @@
 			<div class="card">
 				<div class="card-header">Additions<br>*Enter number of days or hours to calculate amount.</div>
 				<div class="card-body">
-					@foreach($additions as $row)
+					@foreach($payrollTrxAdditionList as $row)
     					@if(in_array($row->name, PayrollHelper::payroll_addition_with_days()))
+    					@php
+    						$tooltip = '';
+    						$days = 0;
+    						$amount = 0;
+    					
+        					if($row->code == 'ALP' && count($annualLeaves) > 0) {
+        						foreach($annualLeaves as $al){
+        							$tooltip .= 'from '.$al->start_date.' to '.$al->end_date.' ('.$al->applied_days.' day(s))<br>';
+        							$days += $al->applied_days;
+        						}
+        						
+        						$amount = ($info->bs >= 2000)? $info->bs / $total_days * $days : $info->bs / 26 * $days;
+        						
+        					} else if ($row->code == 'CFLP' && count($carryForwardLeaves) > 0) {
+        						foreach($carryForwardLeaves as $cfl){
+        							$tooltip .= 'from '.$cfl->start_date.' to '.$cfl->end_date.' ('.$cfl->applied_days.' day(s))<br>';
+        							$days += $cfl->applied_days;
+        						}
+        						
+        						$amount = ($info->bs >= 2000)? $info->bs / $total_days * $days : $info->bs / 26 * $days;
+        					
+        					} else if ($row->code == 'PH' && count($ph) > 0) {
+        						foreach($ph as $p){
+        							$diff = date_diff(date_create($o->clock_in_time), date_create($o->clock_out_time));
+        							$tooltip .= 'from '.$p->clock_in_time.' to '.$p->clock_out_time.' ('.$diff->format('%d').' day(s))<br>';
+        							$days += $diff->format('%d');
+        						}
+        						
+        						$amount = $info->bs / 26 * 2 * $days;
+        					
+        					} else if ($row->code == 'RD' && count($rd) > 0) {
+        						foreach($rd as $r){
+        							$diff = date_diff(date_create($r->clock_in_time), date_create($r->clock_out_time));
+        							$tooltip .= 'from '.$r->clock_in_time.' to '.$r->clock_out_time.' ('.$diff->format('%d').' day(s))<br>';
+        							$days += $diff->format('%d');
+        						}
+        						
+        						$amount = $info->bs / 26 * $days;
+        					
+        					} else {
+        						$days = $row->days;
+        						$amount = $row->amount;
+        					}
+    					@endphp
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
     						<div class="col-sm-6 mb15">{{ $row->name }}</div>
     						<div class="col-sm-2 mb15">
-    							<input class="form-control additions_days" placeholder="0" name="payrolltrxaddition_id_days_{{$loop->iteration}}" type="number">
+    							<input class="form-control additions_days" readonly="" placeholder="0" name="payrolltrxaddition_id_days_{{$loop->iteration}}" type="number" value="{{ $days }}" data-toggle="tooltip" rel="tooltip" title="{{ $tooltip }}">
     						</div>
     						<div class="col-sm-4 mb15">
-    							<input class="form-control additions" readonly=""placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="0.00">
+    							<input class="form-control additions" readonly="" placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="{{ $amount }}">
     						</div>
     					</div>
     					@elseif(in_array($row->name, PayrollHelper::payroll_addition_with_hours()))
+    					@php
+    						$tooltip = '';
+    						$hours = 0;
+    						$amount = 0;
+    					
+        					if ($row->code == 'OT' && count($ot) > 0) {
+        						foreach($ot as $o){
+            						$diff = date_diff(date_create($o->clock_in_time), date_create($o->clock_out_time));
+            							
+        							$tooltip .= 'from '.$o->clock_in_time.' to '.$o->clock_out_time.' ('.$diff->format('%h').' hour(s))<br>';
+        							$hours += $diff->format('%h');
+        						}
+        						
+        						$amount = $info->bs / 26 /8 * 1.5 * $hours; 
+        					
+        					} else {
+        						$hours = $row->hours;
+        						$amount = $row->amount;
+        					}
+    					@endphp
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
     						<div class="col-sm-6 mb15">{{ $row->name }}</div>
     						<div class="col-sm-2 mb15">
-    							<input class="form-control additions_hours" placeholder="0" name="payrolltrxaddition_id_hours_{{$loop->iteration}}" type="number">
+    							<input class="form-control additions_hours" readonly="" placeholder="0" name="payrolltrxaddition_id_hours_{{$loop->iteration}}" type="number" value="{{ $hours }}">
     						</div>
     						<div class="col-sm-4 mb15">
-    							<input class="form-control additions" readonly=""placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="0.00">
+    							<input class="form-control additions" readonly="" placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="{{ $amount }}">
     						</div>
     					</div>
     					@else
@@ -162,32 +226,50 @@
                         <div class="col-sm-6 mb15">{{ $row->name}}</div>
                                                  
                             <div class="col-sm-6 mb15">
-                                <input class="form-control additions" placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="0.00">
+                                <input class="form-control additions" placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="{{ $row->amount }}">
                             </div>
-                                            </div>
+                        </div>
     					@endif
 					@endforeach
 				</div>
 			</div></span> <span class="float-right col-md-6"><div class="card">
 				<div class="card-header">Deductions<br/>*Enter number of days or hours to calculate amount.</div>
 				<div class="card-body">
-					@foreach($deductions as $row)
+					@foreach($payrollTrxDeductionList as $row)
     					@if(in_array($row->name, PayrollHelper::payroll_deduction_with_days()))
+    					@php
+    						$tooltip = '';
+    						$days = 0;
+    						$amount = 0;
+    					
+        					if($row->code == 'UL' && count($unpaidLeaves) > 0) {
+        						foreach($unpaidLeaves as $ul){
+        							$tooltip .= 'from '.$ul->start_date.' to '.$ul->end_date.' ('.$ul->applied_days.' day(s))<br>';
+        							$days += $ul->applied_days;
+        						}
+        						
+        						$amount = $info->bs / $total_days * $days;
+        					} else {
+        						$days = $row->days;
+        						$amount = $row->amount;
+        					}
+    					@endphp
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
     						<div class="col-sm-6 mb15">{{ $row->name }}</div>
     						<div class="col-sm-2 mb15">
-    							<input class="form-control deductions_days" placeholder="0" name="payrolltrxdeduction_id_days_{{$loop->iteration}}" type="number">
+    							<input class="form-control deductions_days" readonly="" placeholder="0" name="payrolltrxdeduction_id_days_{{$loop->iteration}}" type="number" value="{{ $days }}" data-toggle="tooltip" rel="tooltip" title="{{ $tooltip }}">
     						</div>
     						<div class="col-sm-4 mb15">
-    							<input class="form-control deductions" readonly=""placeholder="0.00" name="payrolltrxdeduction_id_{{$loop->iteration}}" type="number" value="0.00">
+    							<input class="form-control deductions" readonly="" placeholder="0.00" name="payrolltrxdeduction_id_{{$loop->iteration}}" type="number" value="{{ $amount }}">
     						</div>
     					</div>
+    					
     					@else
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
                         <div class="col-sm-6 mb15">{{ $row->name}}</div>
                                                  
                             <div class="col-sm-6 mb15">
-                                <input class="form-control deductions" placeholder="0.00" name="payrolltrxdeduction_id_{{$loop->iteration}}" type="number" value="0.00">
+                                <input class="form-control deductions" placeholder="0.00" name="payrolltrxdeduction_id_{{$loop->iteration}}" type="number" value="{{ $row->amount }}">
                             </div>
                                             </div>
     					@endif
@@ -277,6 +359,7 @@
 		</div>
 	</div>
 
+@if($info->status == 0)
 <div class="row mb15 p-4">
 	<div class="col-sm-9"></div>
 	<div class="col-sm-3 text-right">
@@ -285,11 +368,20 @@
 			value="1">Save &amp; Next</button>
 	</div>
 </div>
+@endif
 </form>
 @section('scripts')
+<style>
+.tooltip-inner {
+    max-width: 350px;
+    /* If max-width does not work, try using width instead */
+    width: 350px; 
+}
+</style>
 <script type="text/javascript">
-
         $(document).ready(function() {
+        	$('[data-toggle="tooltip"]').tooltip({html:true});
+        	
         	$('#kpi, #bonus').on('change keyup', function() {
         		  var kpi = $("#kpi").val();
         		  var bonus = $("#bonus").val();

@@ -40,6 +40,8 @@ use App\Repositories\Payroll\ReportRepository;
 use App\EmployeeJob;
 use App\Addition;
 use App\Deduction;
+use App\LeaveRequestApproval;
+use App\EmployeeAttendance;
 
 class PayrollController extends Controller
 {
@@ -316,6 +318,7 @@ class PayrollController extends Controller
                 $query->where('ert.report_to_emp_id', $currentUser);
             }
         })
+        ->whereNull('ert.deleted_at')
         ->orderby('payroll_trx.id', 'ASC')->get();
 
         // Condition
@@ -393,8 +396,60 @@ class PayrollController extends Controller
             $different_of_dates = date_diff(date_create($start_date), date_create($joined_date));
             $total_days = $total_days - $different_of_dates->format('%a')+1;
         }
-
-        return view('pages.payroll.show-payroll-trx', compact('id', 'payrollId', 'title', 'additions', 'deductions', 'payrollTrxAdditionList', 'payrollTrxDeductionList', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 'year_month', 'total_days'));
+        
+        //TODO: UL, show last 3 month, save update payroll_trx_id
+        $unpaidLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
+        ->where([
+            ['payroll_trx_id', $id],
+            ['lr.leave_type_id', 5]
+        ])
+        ->select('leave_request_approvals.*', 'lr.*')
+        ->get();
+        
+        // ALP
+        $annualLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
+        ->where([
+            ['payroll_trx_id', $id],
+            ['lr.leave_type_id', 1]
+        ])
+        ->select('leave_request_approvals.*', 'lr.*')
+        ->get();
+        
+        //CFLP
+        $carryForwardLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
+        ->where([
+            ['payroll_trx_id', $id],
+            ['lr.leave_type_id', 6]
+        ])
+        ->select('leave_request_approvals.*', 'lr.*')
+        ->get();
+        
+        //PH
+        $ph = EmployeeAttendance::where([
+            ['clock_in_status', 'ph'],
+            ['emp_id', $info->employee_id]
+        ])
+        ->get();
+        
+        //RD
+        $rd = EmployeeAttendance::where([
+            ['clock_in_status', 'rest'],
+            ['emp_id', $info->employee_id]
+        ])
+        ->get();
+        
+        //OT
+        $ot = EmployeeAttendance::where([
+            ['clock_in_status', 'ot'],
+            ['emp_id', $info->employee_id]
+        ])
+        ->get();
+        
+        
+//                 dd($unpaidLeaves);
+        return view('pages.payroll.show-payroll-trx', compact('id', 'payrollId', 'title', 'additions', 'deductions', 'payrollTrxAdditionList', 
+            'payrollTrxDeductionList', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 
+            'year_month', 'total_days', 'unpaidLeaves', 'annualLeaves', 'carryForwardLeaves', 'ot', 'ph', 'rd'));
     }
     
     public function updatePayrollTrx(Request $request, $id)
