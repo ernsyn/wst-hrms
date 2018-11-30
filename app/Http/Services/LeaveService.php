@@ -130,8 +130,8 @@ class LeaveService
         ->where('valid_until_date', '>=', $now)
         ->first();
 
-
-        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason, $attachment_data_url, $attachment_required) {
+        $leaveRequest = null;
+        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason, $attachment_data_url, $attachment_required, &$leaveRequest) {
             $leaveRequest = LeaveRequest::create([
                 'emp_id' => $employee->id,
                 'leave_type_id' => $leave_type_id,
@@ -164,6 +164,20 @@ class LeaveService
             
         });
         
+        return $leaveRequest;
+    }
+
+    public static function getLeaveRequestsForEmployee($employee, $start_date, $end_date) {
+        return LeaveRequest::where('emp_id', $employee->id)
+        ->where(function($q) use ($start_date, $end_date) {
+            $q->where('start_date', '>=', $start_date);
+            $q->where('start_date', '<=', $end_date);
+        })
+        ->OrWhere(function($q) use ($start_date, $end_date) {
+            $q->where('end_date', '>=', $start_date);
+            $q->where('end_date', '<=', $end_date);
+        })
+        ->get();
     }
 
     public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm) {

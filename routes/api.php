@@ -31,6 +31,7 @@ Route::group(['prefix' => 'attendance', 'middleware' => 'auth:api'], function() 
 
 Route::group(['prefix' => 'e-leave', 'middleware' => 'auth:api'], function() {
     Route::get('types', 'Api\ELeaveController@getLeaveTypes');
-    Route::post('request/check', 'Api\ELeaveController@postCreateLeaveRequest');
-    Route::post('request', 'Api\ELeaveController@postCheckLeaveRequest');
+    Route::post('get-requests', 'Api\ELeaveController@postGetLeaveRequests');
+    Route::post('request/check', 'Api\ELeaveController@postCheckLeaveRequest');
+    Route::post('request', 'Api\ELeaveController@postCreateLeaveRequest');
 });
