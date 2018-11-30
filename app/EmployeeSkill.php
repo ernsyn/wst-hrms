@@ -12,7 +12,8 @@ class EmployeeSkill extends Model
     protected $fillable = [
         'name',
         'years_of_experience',
-        'competency'
+        'competency',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

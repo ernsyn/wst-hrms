@@ -9,13 +9,31 @@ class Employee extends Model
     protected $table = 'employees';
 
     protected $fillable = [
-        'user_id', 'address', 'company_id','contact_no','dob',
-        'gender','race','nationality','marital_status','total_children','ic_no','tax_no',
-        'epf_no','driver_license_no','driver_license_expiry_date','created_by','main_security_group_id'
+        'user_id',
+        'address',
+        'company_id',
+        'contact_no',
+        'dob',
+        'gender',
+        'race',
+        'nationality',
+        'marital_status',
+        'total_children',
+        'ic_no',
+        'tax_no',
+        'epf_no',
+        'eis_no',
+        'socso_no',
+        'driver_license_no',
+        'driver_license_expiry_date',
+        'created_by',
+        'main_security_group_id'
     ];
 
-
-
+    protected $dates = [
+        'dob',
+        'driver_license_expiry_date'
+    ];
 
     public function user()
     {
@@ -52,7 +70,7 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeBankAccount', 'emp_id');
     }
 
-    public function dependents()
+    public function employee_dependents()
     {
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
     }
@@ -63,11 +81,11 @@ class Employee extends Model
     }
 
     public function employee_security_groups()
-    
+
     {
 
         return $this->hasMany('App\EmployeeSecurityGroup', 'emp_id');
-        
+
     }
     public function employee_experiences()
     {
@@ -81,17 +99,17 @@ class Employee extends Model
     {
         return $this->hasMany('App\EmployeeSkill', 'emp_id');
     }
-    
+
     public function employee_visas()
     {
         return $this->hasMany('App\EmployeeVisa', 'emp_id');
     }
-    
+
     public function employee_immigrations()
     {
         return $this->hasMany('App\EmployeeImmigration', 'emp_id');
     }
-    
+
     public function employee_attachments()
     {
         return $this->hasMany('App\EmployeeAttachment', 'emp_id');
@@ -105,5 +123,10 @@ class Employee extends Model
     public function working_day()
     {
         return $this->hasOne('App\EmployeeWorkingDay', 'emp_id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany('App\EmployeeAttendance', 'emp_id');
     }
 }

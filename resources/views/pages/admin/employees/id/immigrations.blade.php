@@ -30,7 +30,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="issued-date"><strong>Issued Date*</strong></label>
-                            <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-issued-date-immigration" type="text" class="form-control" hidden>
+                            <input id="issued-date-immigration" type="text" class="form-control" readonly>
                             <div id="issued-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -38,7 +39,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="expiry-date"><strong>Expiry Date*</strong></label>
-                            <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-expiry-date-immigration" type="text" class="form-control" hidden>
+                            <input id="expiry-date-immigration" type="text" class="form-control" readonly>
                             <div id="expiry-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -54,7 +56,8 @@
     </div>
 </div>
 <!-- UPDATE -->
-<div class="modal fade" id="edit-immigration-popup" tabindex="-1" role="dialog" aria-labelledby="edit-immigration-label" aria-hidden="true">
+<div class="modal fade" id="edit-immigration-popup" tabindex="-1" role="dialog" aria-labelledby="edit-immigration-label"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -85,7 +88,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="issued-date"><strong>Issued Date*</strong></label>
-                            <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-issued-date-immigration-edit" type="text" class="form-control" hidden>
+                            <input id="issued-date-immigration-edit" type="text" class="form-control issued-date" readonly>
                             <div id="issued-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -93,7 +97,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="expiry-date"><strong>Expiry Date*</strong></label>
-                            <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-expiry-date-immigration-edit" type="text" class="form-control" hidden>
+                            <input id="expiry-date-immigration-edit" type="text" class="form-control expiry-date" readonly>
                             <div id="expiry-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -120,7 +125,7 @@
                         </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -152,10 +157,6 @@
         </thead>
     </table>
 </div>
-
-
-
-
 
 
 @section('scripts')
@@ -193,36 +194,75 @@
             }
         ]
     });
+
 </script>
 <script type="text/javascript">
     $(function(){
+        //datepicker
+        $('#issued-date-immigration').datepicker({
+            altField: "#alt-issued-date-immigration",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+        $('#expiry-date-immigration').datepicker({
+            altField: "#alt-expiry-date-immigration",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+
+        $('#issued-date-immigration-edit').datepicker({
+            altField: "#alt-issued-date-immigration-edit",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+        $('#expiry-date-immigration-edit').datepicker({
+            altField: "#alt-expiry-date-immigration-edit",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
         // ADD IMMIGRATIONS
+        $('#add-immigration-popup').on('show.bs.modal', function (event) {
+            clearImmigrationsError('#add-immigration-form'); //clear error if close or cancel
+        });
         $('#add-immigration-form #add-immigration-submit').click(function(e){
-          e.preventDefault();
-          $.ajax({
-            url: "{{ route('admin.employees.immigrations.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                // Form Data
-                passport_no: $('#add-immigration-form #passport-no').val(),
-                issued_by: $('#add-immigration-form #issued-by').val(),
-                issued_date: $('#add-immigration-form #issued-date').val(),
-                expiry_date: $('#add-immigration-form #expiry-date').val()
-            },
-            success: function(data) {
-                showAlert(data.success);
-                immigrationsTable.ajax.reload();
-                $('#add-immigration-popup').modal('toggle');
-                clearImmigrationsModal('#add-immigration-form');
-            },
-            error: function(xhr) {
-                if(xhr.status == 422) {
-                    var errors = xhr.responseJSON.errors;
-                        console.log("Error: ", xhr);
+            e.preventDefault();
+            clearImmigrationsError('#add-immigration-form');
+            $.ajax({
+                url: "{{ route('admin.employees.immigrations.post', ['id' => $id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // Form Data
+                    passport_no: $('#add-immigration-form #passport-no').val(),
+                    issued_by: $('#add-immigration-form #issued-by').val(),
+                    issued_date: $('#add-immigration-form #alt-issued-date-immigration').val(),
+                    expiry_date: $('#add-immigration-form #alt-expiry-date-immigration').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    immigrationsTable.ajax.reload();
+                    $('#add-immigration-popup').modal('toggle');
+                    clearImmigrationsModal('#add-immigration-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error xhr: ", xhr);
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
-                                console.log("Error: ", errorField);
+                                console.log("Error errorfield: ", errorField);
                                 switch(errorField) {
                                     case 'passport_no':
                                         $('#add-immigration-form #passport-no').addClass('is-invalid');
@@ -233,11 +273,11 @@
                                         $('#add-immigration-form #issued-by-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'issued_date':
-                                        $('#add-immigration-form #issued-date').addClass('is-invalid');
+                                        $('#add-immigration-form #issued-date-immigration').addClass('is-invalid');
                                         $('#add-immigration-form #issued-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'expiry_date':
-                                        $('#add-immigration-form #expiry-date').addClass('is-invalid');
+                                        $('#add-immigration-form #expiry-date-immigration').addClass('is-invalid');
                                         $('#add-immigration-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -252,6 +292,7 @@
         var editImmigrationId = null;
         // Function: On Modal Clicked Handler
         $('#edit-immigration-popup').on('show.bs.modal', function (event) {
+            clearImmigrationsError('#edit-immigration-form'); //clear error if close or cancel
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -259,15 +300,19 @@
             editImmigrationId = currentData.id;
 
             $('#edit-immigration-form #passport-no').val(currentData.passport_no);
-            $('#edit-immigration-form #issued-date').val(currentData.issued_date);
             $('#edit-immigration-form #issued-by').val(currentData.issued_by);
-            $('#edit-immigration-form #expiry-date').val(currentData.expiry_date);
+            $('#edit-immigration-form #issued-date-immigration-edit').val(currentData.issued_date);
+            $('#edit-immigration-form #expiry-date-immigration-edit').val(currentData.expiry_date);
+
+            $('#edit-immigration-form #alt-issued-date-immigration-edit').val(currentData.alt_issued_date);
+            $('#edit-immigration-form #alt-expiry-date-immigration-edit').val(currentData.alt_expiry_date);
         });
 
         var editImmigrationRouteTemplate = "{{ route('admin.employees.immigrations.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-immigration-submit').click(function(e){
             var editImmigrationRoute = editImmigrationRouteTemplate.replace(encodeURI('<<id>>'), editImmigrationId);
             e.preventDefault();
+            clearImmigrationsError('#edit-immigration-form');
             $.ajax({
                 url: editImmigrationRoute,
                 type: 'POST',
@@ -275,8 +320,8 @@
                     _token: '{{ csrf_token() }}',
                     passport_no: $('#edit-immigration-form #passport-no').val(),
                     issued_by: $('#edit-immigration-form #issued-by').val(),
-                    issued_date: $('#edit-immigration-form #issued-date').val(),
-                    expiry_date: $('#edit-immigration-form #expiry-date').val()
+                    issued_date: $('#edit-immigration-form #alt-issued-date-immigration-edit').val(),
+                    expiry_date: $('#edit-immigration-form #alt-expiry-date-immigration-edit').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -301,11 +346,11 @@
                                         $('#edit-immigration-form #issued-by-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'issued_date':
-                                        $('#edit-immigration-form #issued-date').addClass('is-invalid');
+                                        $('#edit-immigration-form #issued-date-immigration-edit').addClass('is-invalid');
                                         $('#edit-immigration-form #issued-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'expiry_date':
-                                        $('#edit-immigration-form #expiry-date').addClass('is-invalid');
+                                        $('#edit-immigration-form #expiry-date-immigration-edit').addClass('is-invalid');
                                         $('#edit-immigration-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -359,13 +404,20 @@
     function clearImmigrationsModal(htmlId) {
         $(htmlId + ' #passport-no').val('');
         $(htmlId + ' #issued-by').val('');
-        $(htmlId + ' #issued-date').val('');
-        $(htmlId + ' #expiry-date').val('');
+        $(htmlId + ' #issued-date-immigration').val('');
+        $(htmlId + ' #expiry-date-immigration').val('');
 
         $(htmlId + ' #passport-no').removeClass('is-invalid');
         $(htmlId + ' #issued-by').removeClass('is-invalid');
-        $(htmlId + ' #issued-date').removeClass('is-invalid');
-        $(htmlId + ' #expiry-date').removeClass('is-invalid');
+        $(htmlId + ' #issued-date-immigration').removeClass('is-invalid');
+        $(htmlId + ' #expiry-date-immigration').removeClass('is-invalid');
+    }
+
+    function clearImmigrationsError(htmlId) {
+        $(htmlId + ' #passport-no').removeClass('is-invalid');
+        $(htmlId + ' #issued-by').removeClass('is-invalid');
+        $(htmlId + ' #issued-date-immigration').removeClass('is-invalid');
+        $(htmlId + ' #expiry-date-immigration').removeClass('is-invalid');
     }
 
     function showAlert(message) {

@@ -23,6 +23,9 @@ class EmployeeWorkingDay extends Model
         'friday',
         'saturday',
         'sunday',
+        'start_work_time',
+        'end_work_time',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

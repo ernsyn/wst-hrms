@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Hash;
-use DB;
 
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Yajra\DataTables\Facades\DataTables;
@@ -38,6 +39,8 @@ use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
 
+use App\Http\Services\LeaveService;
+
 use App\Http\Requests\Admin\AddEmployee;
 
 class EmployeeController extends Controller
@@ -62,7 +65,7 @@ class EmployeeController extends Controller
 
     public function dsplaySecurityGroup($id)
     {
-        
+
         $employees = Employee::all();
 
         return view('pages.admin.employees.id.security-group', ['employees'=> $employees]);
@@ -84,6 +87,29 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.id', ['employee' => $employee]);
     }
 
+    public function postEditProfile(Request $request, $id)
+    {
+        $profileUpdatedData = $request->validate([
+            'ic_no' => 'required|numeric',
+            'dob' => 'required|date',
+            'gender' => 'required',
+            'contact_no' => 'required|numeric',
+            'marital_status' => 'required',
+            'race' => 'required|alpha',
+            'total_children' => 'nullable|numeric',
+            'driver_license_no' => 'nullable',
+            'driver_license_expiry_date' => 'nullable',
+            'epf_no' => 'required',
+            'tax_no' => 'required',
+            'eis_no' => 'required',
+            'socso_no' => 'required'
+        ]);
+
+        Employee::where('id', $id)->update($profileUpdatedData);
+
+        return response()->json(['success'=>'Profile was successfully updated.']);
+    }
+
     public function add()
     {
         $countries = Country::all();
@@ -99,20 +125,63 @@ class EmployeeController extends Controller
     {
         $dependents = EmployeeDependent::where('emp_id', $id)->get();
 
-        return DataTables::of($dependents)->make(true);
+        return DataTables::of($dependents)
+        ->editColumn('dob', function ($dependent) {
+            return date('d/m/Y', strtotime($dependent->dob) );
+        })
+        ->editColumn('alt_dob', function ($dependent) {
+            return date('Y-m-d', strtotime($dependent->dob) );
+        })
+        ->make(true);
     }
 
     public function getDataTableImmigrations($id)
     {
         $immigrations = EmployeeImmigration::where('emp_id', $id)->get();
 
-        return DataTables::of($immigrations)->make(true);
+        return DataTables::of($immigrations)
+        ->editColumn('issued_date', function ($immigration) {
+            return date('d/m/Y', strtotime($immigration->issued_date) );
+        })
+        ->editColumn('expiry_date', function ($immigration) {
+            return date('d/m/Y', strtotime($immigration->expiry_date) );
+        })
+        ->editColumn('alt_issued_date', function ($immigration) {
+            return date('Y-m-d', strtotime($immigration->issued_date) );
+        })
+        ->editColumn('alt_expiry_date', function ($immigration) {
+            return date('Y-m-d', strtotime($immigration->expiry_date) );
+        })
+        ->make(true);
     }
 
     public function getDataTableVisas($id)
     {
-        $visa = EmployeeVisa::where('emp_id', $id)->get();
-        return DataTables::of($visa)->make(true);
+        $visas = EmployeeVisa::where('emp_id', $id)->get();
+        return DataTables::of($visas)
+        ->editColumn('issued_date', function ($visa) {
+            return date('d/m/Y', strtotime($visa->issued_date) );
+        })
+        ->editColumn('expiry_date', function ($visa) {
+            return date('d/m/Y', strtotime($visa->expiry_date) );
+        })
+        ->editColumn('alt_issued_date', function ($visa) {
+            return date('Y-m-d', strtotime($visa->issued_date) );
+        })
+        ->editColumn('alt_expiry_date', function ($visa) {
+            return date('Y-m-d', strtotime($visa->expiry_date) );
+        })
+        ->make(true);
+    }
+
+    public function getDataTableJobs($id)
+    {
+        $jobs = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', $id)->get();
+        return DataTables::of($jobs)
+        ->editColumn('start_date', function ($job) {
+            return date('d/m/Y', strtotime($job->start_date) );
+        })
+        ->make(true);
     }
 
     public function getDataTableBankAccounts($id)
@@ -121,16 +190,24 @@ class EmployeeController extends Controller
         return DataTables::of($banks)->make(true);
     }
 
-    public function getDataTableJobs($id)
-    {
-        $job = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', $id)->get();
-        return DataTables::of($job)->make(true);
-    }
 
     public function getDataTableExperiences($id)
     {
         $experiences = EmployeeExperience::where('emp_id', $id)->get();
-        return DataTables::of($experiences)->make(true);
+        return DataTables::of($experiences)
+        ->editColumn('start_date', function ($experience) {
+            return date('d/m/Y', strtotime($experience->start_date) );
+        })
+        ->editColumn('end_date', function ($experience) {
+            return date('d/m/Y', strtotime($experience->end_date) );
+        })
+        ->editColumn('alt_start_date', function ($experience) {
+            return date('Y-m-d', strtotime($experience->start_date) );
+        })
+        ->editColumn('alt_end_date', function ($experience) {
+            return date('Y-m-d', strtotime($experience->end_date) );
+        })
+        ->make(true);
     }
 
     public function getDataTableEducation($id)
@@ -189,81 +266,33 @@ class EmployeeController extends Controller
             'contact_no' => 'required',
             'address' => 'required',
             'company_id' => 'required',
-            'dob' => 'required',
+            'dob' => 'required|date',
             'gender' => 'required',
             'race' => 'required',
-            'nationality' => '',
-            'marital_status' => '',
-            'total_children' => '',
+            'nationality' => 'nullable',
+            'marital_status' => 'required',
+            'total_children' => 'nullable|numeric',
             'ic_no' => 'required',
             'tax_no' => 'required',
             'epf_no' => 'required',
-            'driver_license_number',
-            'driver_license_expiry_date',
+            'eis_no' => 'required',
+            'socso_no' => 'required',
+            'driver_license_no' => 'nullable',
+            'driver_license_expiry_date' => 'nullable|date'
         ]);
-        // dd($validatedData);
-
+        // dd($validatedEmployeeData);
         $user = User::create($validatedUserData);
         $user->assignRole('employee');
 
-
         $validatedEmployeeData['user_id'] = $user->id;
+        $validatedEmployeeData['created_by'] = auth()->user()->id;
         $employee = Employee::create($validatedEmployeeData);
-
-        // $user->employee()->save($employee);
-
-        // $input = $request->all();
-        // $input['password'] = Hash::make($input['password']);
-
-        // $contact_no = $request->input('contact_no');
-        // $address = $request->input('address');
-        // $company_id = $request->input('company_id');
-        // $dob = $request->input('dob');
-        // $gender = $request->input('gender');
-        // $race = $request->input('race');
-        // $nationality = $request->input('nationality');
-        // $marital_status =  $request->input('marital_status');
-        // $total_children = $request->input('total_child');
-        // $ic_no = $request->input('ic_no');
-        // $tax_no = $request->input('tax_no');
-        // $epf_no = $request->input('epf_no');
-        // $driver_license_no = $request->input('driver_license_number');
-        // $driver_license_expiry_date = $request->input('driver_license_expiry_date');
-        // $created_by = auth()->user()->id;
-
-        // $user = User::create($input);
-        // $user->assignRole('employee');
-
-        // $employee =  new Employee();
-        // $employee->user_id = $user->id;
-        // $employee->address =$address;
-        // $employee->company_id =$company_id;
-        // $employee->contact_no =$contact_no;
-        // $employee->dob=$dob;
-        // $employee->gender =$gender;
-        // $employee->race =$race;
-        // $employee->nationality=$nationality;
-
-        // $employee->marital_status=$marital_status;
-        // $employee->total_children =$total_children;
-        // $employee->ic_no =$ic_no;
-        // $employee->tax_no=$tax_no;
-
-
-        // $employee->epf_no=$epf_no;
-        // $employee->driver_license_no =$driver_license_no;
-        // $employee->driver_license_expiry_date =$driver_license_expiry_date;
-        // $employee->created_by=$created_by;
-        // // Populate other fields
-        // $employee->save();
-
 
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
     }
 
 
     // SECTION: Add
-
     public function postEmergencyContact(Request $request, $id)
     {
         $emergencyContactData = $request->validate([
@@ -271,9 +300,8 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'contact_no' => 'required|numeric',
         ]);
-
+        $emergencyContactData['created_by'] = auth()->user()->id;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
-
 
         $employee = Employee::find($id);
         $employee->employee_emergency_contacts()->save($emergencyContact);
@@ -281,160 +309,32 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Record is successfully added']);
     }
 
-    public function postSecurityGroup(Request $request, $id)
-    {
-        $securityGroupData = $request->validate([
-            'security_group_id' => 'required',
-    
-
-        ]);
-
-        $securityGroup = new EmployeeSecurityGroup($securityGroupData);
-
-
-        $employee = Employee::find($id);
-        $employee->employee_security_groups()->save($securityGroup);
-
-        return response()->json(['success'=>'Security Group was successfully updated.']);
-    }
-
-
-    public function postMainSecurityGroup(Request $request, $id)
-    {
-        $mainSecurityGroupData = $request->validate([
-            'main_security_group_id' => 'required',
-
-        ]);
-
-
-        Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
-
-        return response()->json(['success'=>'Security Group was successfully updated.']);
-    }
-
-    
-
-
-    public function postReportTo(Request $request, $id)
-    {
-        $reportToData = $request->validate([
-            'report_to_emp_id' => 'required',
-            'type' => 'required',
-            'kpi_proposer' => 'required',
-            'notes' => 'required'
-        ]);
-
-        $reportTo = new EmployeeReportTo($reportToData);
-
-
-        $employee = Employee::find($id);
-        $employee->report_tos()->save($reportTo);
-
-        return response()->json(['success'=>'Record is successfully added']);
-    }
-
-    public function postWorkingDay(Request $request, $id)
-    {
-        $workingDayData = $request->validate([
-            'monday' => 'required',
-            'tuesday' => 'required',
-            'wednesday' => 'required',
-            'thursday' => 'required',
-            'friday' => 'required',
-            'saturday' => 'required',
-            'sunday' => 'required',
-        ]);
-
-        $workingDaysData['is_template'] = false;
-
-
-        $workingDay = new EmployeeWorkingDay($workingDayData);
-   
-        $employee = Employee::find($id);
-        $employee->working_day()->save($workingDay);
-
-        return response()->json(['success' => 'Record is successfully added']);
-
-    }
-
-    public function getWorkingDay($id)
-    {       
-        $working_day = EmployeeWorkingDay::templates()->where('id', $id)->get();
-    
-        return response()->json($working_day);
-    }
-
-    public function getEmployeeWorkingDay($emp_id)
-    {       
-        $working_day = EmployeeWorkingDay::templates()->where('emp_id', $emp_id)->get();
-    
-        return response()->json($working_day);
-    }
-
-    public function postJob(Request $request, $id)
-    {
-
-        $jobData = $request->validate([
-            'branch_id' => 'required',
-            'emp_mainposition_id' => 'required',
-            'department_id' => 'required',
-            'team_id' => 'required',
-            'cost_centre_id' => 'required',
-            'emp_grade_id' => 'required',
-            'start_date' => 'required',
-            'basic_salary' => 'required',
-            'specification' => 'required',
-     
-        ]);
-
-        $jobData['status'] = 'active';
-        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-   //     $jobData['end_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-
-        $job = new EmployeeJob($jobData);
-
-         $end_date=   EmployeeJob::where('id', $id)
-        ->whereNull('end_date');
-
-        EmployeeJob::where('emp_id', $id)
-        ->whereNull('end_date')
-        ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
-
-        $employee = Employee::find($id);
-        $employee->employee_jobs()->save($job);
-
-        return response()->json(['success'=>'Job is successfully added']);
-    }
-
     public function postDependent(Request $request, $id)
     {
         $dependentData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'dob' => 'required',
+            'dob' => 'required|date',
         ]);
-        $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
-
+        $dependentData['created_by'] = auth()->user()->id;
         $dependent = new EmployeeDependent($dependentData);
 
-
         $employee = Employee::find($id);
-        $employee->dependents()->save($dependent);
+        $employee->employee_dependents()->save($dependent);
 
-        return response()->json(['success'=>'Record is successfully added']);
+        return response()->json(['success'=>'Dependent is successfully added']);
     }
 
     public function postImmigration(Request $request, $id)
     {
         $immigrationData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
         ]);
-
+        $immigrationData['created_by'] = auth()->user()->id;
         $immigration = new EmployeeImmigration($immigrationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_immigrations()->save($immigration);
@@ -446,21 +346,82 @@ class EmployeeController extends Controller
     {
         $visaData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
             'family_members' => 'required'
         ]);
-
+        $visaData['created_by'] = auth()->user()->id;
         $visa = new EmployeeVisa($visaData);
-
 
         $employee = Employee::find($id);
         $employee->employee_visas()->save($visa);
 
         return response()->json(['success'=>'Visa is successfully added']);
+    }
+
+    public function postJob(Request $request, $id)
+    {
+        // Add a new job
+
+        $jobData = $request->validate([
+            'basic_salary' => 'required|numeric',
+            'cost_centre_id' => 'required',
+            'department_id' => 'required',
+            'team_id' => 'required',
+            'emp_mainposition_id' => 'required',
+            'emp_grade_id' => 'required',
+            'basic_salary' => 'required',
+            'specification' => 'required',
+            'branch_id' => 'required',
+            'start_date' => 'required|date',
+            'status' => 'required',
+        ]);
+
+        $jobData['created_by'] = auth()->user()->id;
+        // $jobData['status'] = 'active';
+        // $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
+        // $end_date = EmployeeJob::where('id', $id)
+        // ->whereNull('end_date');
+
+        // $jobData['status'] = 'active';
+        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
+        DB::transaction(function() use ($jobData, $id) {
+            $currentJob = EmployeeJob::where('emp_id', $id)
+            ->whereNull('end_date')->first();
+
+            if(!empty($currentJob)) {
+                $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
+            }
+
+            $employee = Employee::find($id);
+            $employee->employee_jobs()->save(new EmployeeJob($jobData));
+            LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
+        });
+
+        return response()->json(['success'=>'Job is successfully added']);
+    }
+
+    public function actionResign(Request $request, $id) {
+        // EmployeeJob::where('emp_id', $id)
+        // ->whereNull('end_date')
+        // ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
+        $job = new EmployeeJob($jobData);
+
+
+        $currentJob = EmployeeJob::where('emp_id', $id)
+            ->whereNull('end_date')->first();
+
+        $currentDate = date("Y-m-d");
+        if(!empty($currentJob)) {
+            $currentJob->update(['end_date'=> $currentDate ]);
+            LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
+        }
     }
 
     public function postBankAccount(Request $request, $id)
@@ -470,9 +431,8 @@ class EmployeeController extends Controller
             'acc_no' => 'required',
             'acc_status' => 'required'
         ]);
-
+        $bankAccountData['created_by'] = auth()->user()->id;
         $bankAccount = new EmployeeBankAccount($bankAccountData);
-
 
         $employee = Employee::find($id);
         $employee->employee_bank_accounts()->save($bankAccount);
@@ -503,7 +463,7 @@ class EmployeeController extends Controller
             'end_date' => 'required|date',
             'notes' => 'required'
         ]);
-
+        $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
 
         $employee = Employee::find($id);
@@ -523,9 +483,8 @@ class EmployeeController extends Controller
             'gpa' => 'required|between:0,99.99',
             'description' => 'required'
         ]);
-
+        $educationData['created_by'] = auth()->user()->id;
         $education = new EmployeeEducation($educationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_educations()->save($education);
@@ -540,9 +499,8 @@ class EmployeeController extends Controller
             'years_of_experience' => 'required',
             'competency' => 'required'
         ]);
-
+        $skillData['created_by'] = auth()->user()->id;
         $skill = new EmployeeSkill($skillData);
-
 
         $employee = Employee::find($id);
         $employee->employee_skills()->save($skill);
@@ -556,9 +514,8 @@ class EmployeeController extends Controller
             'name' => 'required',
             'notes' => 'required'
         ]);
-
+        $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_attachments()->save($attachment);
@@ -566,18 +523,114 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Attachment is successfully added']);
     }
 
-    // SECTION: Edit
-
-    public function postEditDependent(Request $request, $emp_id, $id)
+    // SECTION: Employee Working Day Setup
+    public function postWorkingDay(Request $request, $id)
     {
-        $name = $request->input('name');
-        $relationship = $request->input('relationship');
+        $workingDayData = $request->validate([
+            'monday' => 'required',
+            'tuesday' => 'required',
+            'wednesday' => 'required',
+            'thursday' => 'required',
+            'friday' => 'required',
+            'saturday' => 'required',
+            'sunday' => 'required',
+            'start_work_time' => 'required',
+            'end_work_time' => 'required',
+        ]);
+        $workingDaysData['is_template'] = false;
+        $workingDaysData['created_by'] = auth()->user()->id;
+        $workingDay = new EmployeeWorkingDay($workingDayData);
 
-        EmployeeDependent::where('id', $id)->update(array('name' => $name,'relationship' => $relationship));
+        $employee = Employee::find($id);
+        $employee->working_day()->save($workingDay);
 
-        return redirect()->route('admin.employees.id', ['id' => $emp_id]);
+        return response()->json(['success' => 'Working Day is successfully added']);
+
     }
 
+    public function postEditWorkingDay(Request $request, $id)
+    {
+        $workingDayUpdateData = $request->validate([
+            'monday' => 'required',
+            'tuesday' => 'required',
+            'wednesday' => 'required',
+            'thursday' => 'required',
+            'friday' => 'required',
+            'saturday' => 'required',
+            'sunday' => 'required',
+            'start_work_time' => 'required',
+            'end_work_time' => 'required',
+        ]);
+        $workingDayUpdateData['is_template'] = false;
+        EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
+
+        return response()->json(['success'=>'Working Day was successfully updated.']);
+    }
+
+    public function getWorkingDay($id)
+    {
+        $working_day = EmployeeWorkingDay::templates()->where('id', $id)->get();
+
+        return response()->json($working_day);
+    }
+
+    public function getEmployeeWorkingDay($emp_id)
+    {
+        $working_day = EmployeeWorkingDay::where('emp_id', $emp_id)->get();
+
+        return response()->json($working_day);
+    }
+
+    public function postReportTo(Request $request, $id)
+    {
+        $reportToData = $request->validate([
+            'report_to_emp_id' => 'required',
+            'type' => 'required',
+            'kpi_proposer' => 'sometimes|required',
+            'notes' => 'required'
+        ]);
+        if($request->get('kpi_proposer') == null){
+            $reportToData['kpi_proposer'] = 0;
+        } else {
+            $reportToData['kpi_proposer'] = request('kpi_proposer');
+        }
+
+        $reportToData['created_by'] = auth()->user()->id;
+        $reportTo = new EmployeeReportTo($reportToData);
+
+        $employee = Employee::find($id);
+        $employee->report_tos()->save($reportTo);
+
+        return response()->json(['success'=>'Record is successfully added']);
+    }
+
+    public function postSecurityGroup(Request $request, $id)
+    {
+        $securityGroupData = $request->validate([
+            'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
+        ]);
+        $securityGroupData['created_by'] = auth()->user()->id;
+        $securityGroup = new EmployeeSecurityGroup($securityGroupData);
+
+        $employee = Employee::find($id);
+        $employee->employee_security_groups()->save($securityGroup);
+
+        return response()->json(['success'=>'Security Group was successfully updated.']);
+    }
+
+
+    public function postMainSecurityGroup(Request $request, $id)
+    {
+        $mainSecurityGroupData = $request->validate([
+            'main_security_group_id' => 'required'
+        ]);
+
+        Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
+
+        return response()->json(['success'=>'Security Group was successfully updated.']);
+    }
+
+    // SECTION: Edit
     public function postEditEmergencyContact(Request $request, $emp_id, $id)
     {
         $emergencyContactUpdatedData = $request->validate([
@@ -591,10 +644,24 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Emergency Contact was successfully updated.']);
     }
 
+    public function postEditDependent(Request $request, $emp_id, $id)
+    {
+        $dependentUpdatedData = $request->validate([
+            'name' => 'required',
+            'relationship' => 'required',
+            'dob' => 'required|date',
+        ]);
+        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
+
+        EmployeeDependent::where('id', $id)->update($dependentUpdatedData);
+
+        return response()->json(['success'=>'Dependent was successfully updated.']);
+    }
+
     public function postEditImmigration(Request $request, $emp_id, $id)
     {
         $immigrationUpdatedData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
@@ -609,8 +676,8 @@ class EmployeeController extends Controller
     {
         $visaUpdatedData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
@@ -620,6 +687,30 @@ class EmployeeController extends Controller
         EmployeeVisa::where('id', $id)->update($visaUpdatedData);
 
         return response()->json(['success'=>'Visa was successfully updated.']);
+    }
+
+    public function postEditJob(Request $request, $emp_id, $id)
+    {
+
+        $jobData = $request->validate([
+            'branch_id' => 'required',
+            'emp_mainposition_id' => 'required',
+            'department_id' => 'required',
+            'team_id' => 'required',
+            'cost_centre_id' => 'required',
+            'emp_grade_id' => 'required',
+            'start_date' => 'required',
+            'basic_salary' => 'required',
+            'specification' => 'required',
+            'status' => 'required'
+        ]);
+
+        // $jobData['status'] = 'active';
+        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
+        EmployeeJob::where('id', $id)->update($jobData);
+
+        return response()->json(['success'=>'Job is successfully updated.']);
     }
 
     public function postEditBankAccount(Request $request, $emp_id, $id)
@@ -693,7 +784,7 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Report To was successfully updated.']);
     }
-    
+
     public function postEditAttachment(Request $request, $emp_id, $id)
     {
         $attachmentUpdatedData = $request->validate([
@@ -715,12 +806,30 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
 
+    public function deleteDependent(Request $request, $emp_id, $id)
+    {
+        EmployeeDependent::find($id)->delete();
+        return response()->json(['success'=>'Dependent was successfully deleted.']);
+    }
+
+    public function deleteImmigration(Request $request, $emp_id, $id)
+    {
+        EmployeeImmigration::find($id)->delete();
+        return response()->json(['success'=>'Immigration was successfully deleted.']);
+    }
+
+    public function deleteVisa(Request $request, $emp_id, $id)
+    {
+        EmployeeVisa::find($id)->delete();
+        return response()->json(['success'=>'Visa was successfully deleted.']);
+    }
+
     public function deleteBankAccount(Request $request, $emp_id, $id)
     {
         EmployeeBankAccount::find($id)->delete();
         return response()->json(['success'=>'Bank Account was successfully deleted.']);
     }
-    
+
     public function deleteExperience(Request $request, $emp_id, $id)
     {
         EmployeeExperience::find($id)->delete();
@@ -738,28 +847,21 @@ class EmployeeController extends Controller
         EmployeeSkill::find($id)->delete();
         return response()->json(['success'=>'Skill was successfully deleted.']);
     }
-    
+    public function deleteAttachment(Request $request, $emp_id, $id)
+    {
+        EmployeeAttachment::find($id)->delete();
+        return response()->json(['success'=>'Attachment was successfully deleted.']);
+    }
+
     public function deleteReportTo(Request $request, $emp_id, $id)
     {
         EmployeeReportTo::find($id)->delete();
         return response()->json(['success'=>'Report To was successfully deleted.']);
     }
-    
-    public function deleteVisa(Request $request, $emp_id, $id)
-    {
-        EmployeeVisa::find($id)->delete();
-        return response()->json(['success'=>'Visa was successfully deleted.']);
-    }
 
-    public function deleteImmigration(Request $request, $emp_id, $id)
+    public function deleteSecurityGroup(Request $request, $emp_id, $id)
     {
-        EmployeeImmigration::find($id)->delete();
-        return response()->json(['success'=>'Immigration was successfully deleted.']);
-    }
-    
-    public function deleteAttachment(Request $request, $emp_id, $id)
-    {
-        EmployeeAttachment::find($id)->delete();
-        return response()->json(['success'=>'Attachment was successfully deleted.']);
+        EmployeeSecurityGroup::find($id)->delete();
+        return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 }

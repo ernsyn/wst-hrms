@@ -51,15 +51,15 @@ Breadcrumbs::for('admin.employees.add', function ($trail) {
 });
 
 // Home > Settings > Leave Holiday
-Breadcrumbs::for('admin.e-leave.configuration.leaveholidays', function ($trail) {
+Breadcrumbs::for('admin.e-leave.configuration.leave-holidays', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Settings: Holidays', route('admin.e-leave.configuration.leaveholidays'));
+    $trail->push('Settings: Holidays', route('admin.e-leave.configuration.leave-holidays'));
 });
 
 // Home > Settings > Leave Holiday- Add
-Breadcrumbs::for('admin.e-leave.configuration.leaveholidays.add', function ($trail) {
+Breadcrumbs::for('admin.e-leave.configuration.leave-holidays.add', function ($trail) {
     $trail->parent('admin.settings.companies');
-    $trail->push('Add Leave', route('admin.e-leave.configuration.leaveholidays.add'));
+    $trail->push('Add Leave', route('admin.e-leave.configuration.leave-holidays.add'));
 });
 // Home > Settings > Leave Holiday
 Breadcrumbs::for('admin.e-leave.configuration.leavetypes', function ($trail) {
@@ -504,6 +504,11 @@ Breadcrumbs::for('admin.e-leave.configuration', function ($trail) {
 Breadcrumbs::for('admin.e-leave.configuration.leave-types.add', function ($trail) {
     $trail->parent('admin.e-leave.configuration');
     $trail->push('Add Leave Type', route('admin.e-leave.configuration.leave-types.add'));
+});
+
+Breadcrumbs::for('admin.e-leave.configuration.leave-types.edit', function ($trail, $id) {
+    $trail->parent('admin.e-leave.configuration');
+    $trail->push('Edit Leave Type', route('admin.e-leave.configuration.leave-types.edit', $id));
 });
 
 Breadcrumbs::for('add_team', function ($trail) {

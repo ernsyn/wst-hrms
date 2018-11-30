@@ -30,7 +30,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="start-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-start-date-experience" type="text" class="form-control" hidden>
+                            <input id="start-date-experience" type="text" class="form-control" readonly>
                             <div id="start-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -38,7 +39,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="end-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-end-date-experience" type="text" class="form-control" hidden>
+                            <input id="end-date-experience" type="text" class="form-control" readonly>
                             <div id="end-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -201,7 +203,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-experience-label">Add Experience</h5>
+                <h5 class="modal-title" id="edit-experience-label">Edit Experience</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -228,7 +230,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="start-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-start-date-experience-edit" type="text" class="form-control">
+                            <input id="start-date-experience-edit" type="text" class="form-control" readonly>
                             <div id="start-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -236,7 +239,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="end-date" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="alt-end-date-experience-edit" type="text" class="form-control">
+                            <input id="end-date-experience-edit" type="text" class="form-control" readonly>
                             <div id="end-date-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -265,7 +269,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-education-label">Add Education</h5>
+                <h5 class="modal-title" id="edit-education-label">Edit Education</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -533,10 +537,6 @@
 </div>
 
 
-
-
-
-
 @section('scripts')
 <script>
     var experiencesTable = $('#employee-companies-table').DataTable({
@@ -650,30 +650,68 @@ var skillsTable = $('#employee-skill-table').DataTable({
 {{-- EXPERIENCES --}}
 <script type="text/javascript">
     $(function(){
+        //datepicker
+        $('#start-date-experience').datepicker({
+            altField: "#alt-start-date-experience",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+        $('#end-date-experience').datepicker({
+            altField: "#alt-end-date-experience",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+
+        $('#start-date-experience-edit').datepicker({
+            altField: "#alt-start-date-experience-edit",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
+        $('#end-date-experience-edit').datepicker({
+            altField: "#alt-end-date-experience-edit",
+            altFormat: 'yy-mm-dd',
+            format: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-10:+20"
+        });
         // ADD EXPERIENCES
-        $('#add-experience-form #add-experience-submit').click(function(e){
-          e.preventDefault();
-          $.ajax({
-            url: "{{ route('admin.employees.companies.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                // Form Data
-                company: $('#add-experience-form #company').val(),
-                position: $('#add-experience-form #position').val(),
-                start_date: $('#add-experience-form #start-date').val(),
-                end_date: $('#add-experience-form #end-date').val(),
-                notes: $('#add-experience-form #notes').val()
-            },
-            success: function(data) {
-                showAlert(data.success);
-                experiencesTable.ajax.reload();
-                $('#add-experience-popup').modal('toggle');
-                clearExperiencesModal('#add-experience-form');
-            },
-            error: function(xhr) {
-                if(xhr.status == 422) {
-                    var errors = xhr.responseJSON.errors;
+        $('#add-experience-popup').on('show.bs.modal', function (event) {
+            clearExperiencesError('#add-experience-form');
+        });
+            $('#add-experience-form #add-experience-submit').click(function(e){
+            clearExperiencesError('#add-experience-form');
+            e.preventDefault();
+            $.ajax({
+                url: "{{ route('admin.employees.companies.post', ['id' => $id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // Form Data
+                    company: $('#add-experience-form #company').val(),
+                    position: $('#add-experience-form #position').val(),
+                    start_date: $('#add-experience-form #alt-start-date-experience').val(),
+                    end_date: $('#add-experience-form #alt-end-date-experience').val(),
+                    notes: $('#add-experience-form #notes').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    experiencesTable.ajax.reload();
+                    $('#add-experience-popup').modal('toggle');
+                    clearExperiencesModal('#add-experience-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
                         console.log("Error: ", xhr);
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
@@ -688,11 +726,11 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#add-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
-                                        $('#add-experience-form #start-date').addClass('is-invalid');
+                                        $('#add-experience-form #start-date-experience').addClass('is-invalid');
                                         $('#add-experience-form #start-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'end_date':
-                                        $('#add-experience-form #end-date').addClass('is-invalid');
+                                        $('#add-experience-form #end-date-experience').addClass('is-invalid');
                                         $('#add-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'notes':
@@ -711,6 +749,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
         var editExperienceId = null;
         // Function: On Modal Clicked Handler
         $('#edit-experience-popup').on('show.bs.modal', function (event) {
+            clearExperiencesError('#edit-experience-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -719,14 +758,18 @@ var skillsTable = $('#employee-skill-table').DataTable({
 
             $('#edit-experience-form #company').val(currentData.company);
             $('#edit-experience-form #position').val(currentData.position);
-            $('#edit-experience-form #start-date').val(currentData.start_date);
-            $('#edit-experience-form #end-date').val(currentData.end_date);
+            $('#edit-experience-form #start-date-experience-edit').val(currentData.start_date);
+            $('#edit-experience-form #end-date-experience-edit').val(currentData.end_date);
+
+            $('#edit-experience-form #alt-start-date-experience-edit').val(currentData.alt_start_date);
+            $('#edit-experience-form #alt-end-date-experience-edit').val(currentData.alt_end_date);
             $('#edit-experience-form #notes').val(currentData.notes);
         });
 
         var editExperienceRouteTemplate = "{{ route('admin.employees.companies.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-experience-submit').click(function(e){
             var editExperienceRoute = editExperienceRouteTemplate.replace(encodeURI('<<id>>'), editExperienceId);
+            clearExperiencesError('#edit-experience-form');
             e.preventDefault();
             $.ajax({
                 url: editExperienceRoute,
@@ -735,8 +778,8 @@ var skillsTable = $('#employee-skill-table').DataTable({
                     _token: '{{ csrf_token() }}',
                     company: $('#edit-experience-form #company').val(),
                     position: $('#edit-experience-form #position').val(),
-                    start_date: $('#edit-experience-form #start-date').val(),
-                    end_date: $('#edit-experience-form #end-date').val(),
+                    start_date: $('#edit-experience-form #alt-start-date-experience-edit').val(),
+                    end_date: $('#edit-experience-form #alt-end-date-experience-edit').val(),
                     notes: $('#edit-experience-form #notes').val()
                 },
                 success: function(data) {
@@ -762,11 +805,11 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
-                                        $('#edit-experience-form #start-date').addClass('is-invalid');
+                                        $('#edit-experience-form #start-date-experience-edit').addClass('is-invalid');
                                         $('#edit-experience-form #start-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'end_date':
-                                        $('#edit-experience-form #end-date').addClass('is-invalid');
+                                        $('#edit-experience-form #end-date-experience-edit').addClass('is-invalid');
                                         $('#edit-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'notes':
@@ -824,14 +867,21 @@ var skillsTable = $('#employee-skill-table').DataTable({
     function clearExperiencesModal(htmlId) {
         $(htmlId + ' #company').val('');
         $(htmlId + ' #position').val('');
-        $(htmlId + ' #start-date').val('');
-        $(htmlId + ' #end-date').val('');
+        $(htmlId + ' #start-date-experience').val('');
+        $(htmlId + ' #end-date-experience').val('');
         $(htmlId + ' #notes').val('');
 
         $(htmlId + ' #company').removeClass('is-invalid');
         $(htmlId + ' #position').removeClass('is-invalid');
-        $(htmlId + ' #start-date').removeClass('is-invalid');
-        $(htmlId + ' #end-date').removeClass('is-invalid');
+        $(htmlId + ' #start-date-experience').removeClass('is-invalid');
+        $(htmlId + ' #end-date-experience').removeClass('is-invalid');
+        $(htmlId + ' #notes').removeClass('is-invalid');
+    }
+    function clearExperiencesError(htmlId) {
+        $(htmlId + ' #company').removeClass('is-invalid');
+        $(htmlId + ' #position').removeClass('is-invalid');
+        $(htmlId + ' #start-date-experience').removeClass('is-invalid');
+        $(htmlId + ' #end-date-experience').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
     }
 
@@ -850,31 +900,35 @@ var skillsTable = $('#employee-skill-table').DataTable({
 <script type="text/javascript">
     $(function(){
         // ADD EDUCATION
-        $('#add-education-form #add-education-submit').click(function(e){
-          e.preventDefault();
-          $.ajax({
-            url: "{{ route('admin.employees.educations.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                // Form Data
-                institution: $('#add-education-form #institution').val(),
-                start_year: $('#add-education-form #start-year').val(),
-                end_year: $('#add-education-form #end-year').val(),
-                level: $('#add-education-form #level').val(),
-                major: $('#add-education-form #major').val(),
-                gpa: $('#add-education-form #gpa').val(),
-                description: $('#add-education-form #description').val()
-            },
-            success: function(data) {
-                showAlert(data.success);
-                educationsTable.ajax.reload();
-                $('#add-education-popup').modal('toggle');
-                clearEducationsModal('#add-education-form');
-            },
-            error: function(xhr) {
-                if(xhr.status == 422) {
-                    var errors = xhr.responseJSON.errors;
+        $('#add-education-popup').on('show.bs.modal', function (event) {
+            clearEducationsError('#add-education-form');
+        });
+            $('#add-education-form #add-education-submit').click(function(e){
+            clearEducationsError('#add-education-form');
+            e.preventDefault();
+            $.ajax({
+                url: "{{ route('admin.employees.educations.post', ['id' => $id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // Form Data
+                    institution: $('#add-education-form #institution').val(),
+                    start_year: $('#add-education-form #start-year').val(),
+                    end_year: $('#add-education-form #end-year').val(),
+                    level: $('#add-education-form #level').val(),
+                    major: $('#add-education-form #major').val(),
+                    gpa: $('#add-education-form #gpa').val(),
+                    description: $('#add-education-form #description').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    educationsTable.ajax.reload();
+                    $('#add-education-popup').modal('toggle');
+                    clearEducationsModal('#add-education-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
                         console.log("Error: ", xhr);
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
@@ -920,6 +974,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
         var editEducationId = null;
         // Function: On Modal Clicked Handler
         $('#edit-education-popup').on('show.bs.modal', function (event) {
+            clearEducationsError('#edit-education-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -938,6 +993,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
         var editEducationRouteTemplate = "{{ route('admin.employees.educations.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-education-submit').click(function(e){
             var editEducationRoute = editEducationRouteTemplate.replace(encodeURI('<<id>>'), editEducationId);
+            clearEducationsError('#edit-education-form');
             e.preventDefault();
             $.ajax({
                 url: editEducationRoute,
@@ -1060,6 +1116,16 @@ var skillsTable = $('#employee-skill-table').DataTable({
         $(htmlId + ' #description').removeClass('is-invalid');
     }
 
+    function clearEducationsError(htmlId) {
+        $(htmlId + ' #institution').removeClass('is-invalid');
+        $(htmlId + ' #start-year').removeClass('is-invalid');
+        $(htmlId + ' #end-year').removeClass('is-invalid');
+        $(htmlId + ' #level').removeClass('is-invalid');
+        $(htmlId + ' #major').removeClass('is-invalid');
+        $(htmlId + ' #gpa').removeClass('is-invalid');
+        $(htmlId + ' #description').removeClass('is-invalid');
+    }
+
     function showAlert(message) {
         $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
             <span id="alert-message">${message}</span>
@@ -1076,27 +1142,31 @@ var skillsTable = $('#employee-skill-table').DataTable({
 <script type="text/javascript">
     $(function(){
         // ADD SKILLS
-       $('#add-skill-form #add-skill-submit').click(function(e){
-          e.preventDefault();
-          $.ajax({
-            url: "{{ route('admin.employees.skills.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                // Form Data
-                name: $('#add-skill-form #name').val(),
-                years_of_experience: $('#add-skill-form #years-of-experience').val(),
-                competency: $('#add-skill-form #competency').val()
-            },
-            success: function(data) {
-                showAlert(data.success);
-                skillsTable.ajax.reload();
-                $('#add-skill-popup').modal('toggle');
-                clearSkillsModal('#add-skill-form');
-            },
-            error: function(xhr) {
-                if(xhr.status == 422) {
-                    var errors = xhr.responseJSON.errors;
+        $('#add-skill-popup').on('show.bs.modal', function (event) {
+            clearSkillsError('#add-skill-form');
+        });
+        $('#add-skill-form #add-skill-submit').click(function(e){
+            e.preventDefault();
+            clearSkillsError('#add-skill-form');
+            $.ajax({
+                url: "{{ route('admin.employees.skills.post', ['id' => $id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // Form Data
+                    name: $('#add-skill-form #name').val(),
+                    years_of_experience: $('#add-skill-form #years-of-experience').val(),
+                    competency: $('#add-skill-form #competency').val()
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    skillsTable.ajax.reload();
+                    $('#add-skill-popup').modal('toggle');
+                    clearSkillsModal('#add-skill-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
                         console.log("Error: ", xhr);
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
@@ -1122,11 +1192,11 @@ var skillsTable = $('#employee-skill-table').DataTable({
             });
         });
 
-
         // EDIT SKILLS
         var editSkillId = null;
         // Function: On Modal Clicked Handler
         $('#edit-skill-popup').on('show.bs.modal', function (event) {
+            clearSkillsError('#edit-skill-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
@@ -1141,6 +1211,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
         var editSkillRouteTemplate = "{{ route('admin.employees.skills.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-skill-submit').click(function(e){
             var editSkillRoute = editSkillRouteTemplate.replace(encodeURI('<<id>>'), editSkillId);
+            clearSkillsError('#edit-skill-form');
             e.preventDefault();
             $.ajax({
                 url: editSkillRoute,
@@ -1230,6 +1301,12 @@ var skillsTable = $('#employee-skill-table').DataTable({
         $(htmlId + ' #years-of-experience').val('');
         $(htmlId + ' #competency').val('');
 
+        $(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #years-of-experience').removeClass('is-invalid');
+        $(htmlId + ' #competency').removeClass('is-invalid');
+    }
+
+    function clearSkillsError(htmlId) {
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #years-of-experience').removeClass('is-invalid');
         $(htmlId + ' #competency').removeClass('is-invalid');
