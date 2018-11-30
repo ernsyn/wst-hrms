@@ -16,7 +16,8 @@ class EmployeeVisa extends Model
         'expiry_date',
         'issued_by',
         'issued_date',
-        'family_members'
+        'family_members',
+        'created_by'
     ];
     protected $dates = ['deleted_at'];
 }

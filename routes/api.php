@@ -28,3 +28,10 @@ Route::group(['prefix' => 'attendance', 'middleware' => 'auth:api'], function() 
     Route::post('clock-in', 'Api\AttendanceController@postClockIn');
     Route::post('clock-out', 'Api\AttendanceController@postClockOut');
 });
+
+Route::group(['prefix' => 'e-leave', 'middleware' => 'auth:api'], function() {
+    Route::get('types', 'Api\ELeaveController@getLeaveTypes');
+    Route::post('get-requests', 'Api\ELeaveController@postGetLeaveRequests');
+    Route::post('request/check', 'Api\ELeaveController@postCheckLeaveRequest');
+    Route::post('request', 'Api\ELeaveController@postCreateLeaveRequest');
+});

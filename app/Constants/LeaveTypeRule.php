@@ -24,6 +24,7 @@ class LeaveTypeRule
     const MAX_APPLICATIONS =  'max_applications';
     const NO_LIMIT =  'no_limit';
     const MAX_DAYS_PER_APPLICATION =  'max_days_per_application';
+    const NON_PRORATED = 'non_prorated';
     // const LEAVE_CALCULATION =  'leave_calculation';
 }
 
