@@ -35,8 +35,8 @@ class ELeaveController extends Controller
 
     public function postAddLeaveType(Request $request) {
         $leaveTypeData = $request->validate([
-            "code" => 'required|unique:leave_types',
-            "name" => 'required|unique:leave_types',
+            "code" => 'required|unique:leave_types,code,NULL,id,deleted_at,NULL',
+            "name" => 'required|unique:leave_types,name,NULL,id,deleted_at,NULL',
             "description" => 'required',
             "entitled_days" => '',
         ]);

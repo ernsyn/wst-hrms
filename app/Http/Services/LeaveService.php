@@ -166,6 +166,19 @@ class LeaveService
         
         return $leaveRequest;
     }
+    
+    public static function getAllLeaveRequestsForEmployee($employee) {
+        return LeaveRequest::where('emp_id', $employee->id)
+        // ->where(function($q) use ($start_date, $end_date) {
+        //     $q->where('start_date', '>=', $start_date);
+        //     $q->where('start_date', '<=', $end_date);
+        // })
+        // ->OrWhere(function($q) use ($start_date, $end_date) {
+        //     $q->where('end_date', '>=', $start_date);
+        //     $q->where('end_date', '<=', $end_date);
+        // })
+        ->get();
+    }
 
     public static function getLeaveRequestsForEmployee($employee, $start_date, $end_date) {
         return LeaveRequest::where('emp_id', $employee->id)
