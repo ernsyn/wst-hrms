@@ -175,14 +175,9 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">License Expiry Date</label>
                             <div class="col-lg-6">
-                                <div class="input-group mb-3">
-                                    <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date"
-                                        aria-describedby="license-expiry-date-icon" readonly>
-                                    <input id="alt-license-expiry-date" type="text" class="form-control" name="driver_license_expiry_date" hidden>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="license-expiry-date-icon"><i class="far fa-calendar-alt"></i></span>
-                                    </div>
-                                </div>
+                                <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date"
+                                    aria-describedby="license-expiry-date-icon" readonly>
+                                <input id="alt-license-expiry-date" type="text" class="form-control" name="driver_license_expiry_date" hidden>
                                 @if ($errors->has('driver_license_expiry_date'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('driver_license_expiry_date') }}</strong>
