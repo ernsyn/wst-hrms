@@ -1,6 +1,5 @@
 <?php
 
-use App\Bank;
 use Illuminate\Database\Seeder;
 
 class BankCodeTableSeeder extends Seeder
@@ -12,265 +11,265 @@ class BankCodeTableSeeder extends Seeder
      */
     public function run()
     {
-        Bank::create( [
+        Bankcode::create( [
             'id'=>1,
             'name'=>'Affin Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'AFF'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'AFF'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>2,
             'name'=>'Alliance Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'ALLC'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'ALLC'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>3,
             'name'=>'AmBank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'AMB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'AMB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>4,
             'name'=>'Bangkok Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'BGKK'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'BGKK'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>5,
             'name'=>'Bank Islam',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'BI'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'BI'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>6,
             'name'=>'Bank Muamalat',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'MUA'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'MUA'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>7,
             'name'=>'Bank of America',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'BOC'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'BOA'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>8,
             'name'=>'Bank of China',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'BOA'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'BOA'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>9,
             'name'=>'Bank of Tokyo-Mitsubishi UFJ',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'BOTM'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'BOTM'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>10,
             'name'=>'Bank Rakyat',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'BRK'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'BRK'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>11,
             'name'=>'BNP Paribas',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'BNP'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'BNP'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>12,
             'name'=>'CIMB Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'CIMB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'CIMB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>13,
             'name'=>'Citibank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'CTB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'CTB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>14,
             'name'=>'Deutsche Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'DEU'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'DEU'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>15,
             'name'=>'Hong Leong Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'HLB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'HLB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>16,
             'name'=>'HSBC Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'HSBC'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'HSBC'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>17,
             'name'=>'India International Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'IIB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'IIB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>18,
             'name'=>'Industrial and Commercial Bank of China',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'ICBC'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'ICBC'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>19,
             'name'=>'J.P. Morgan Chase Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'JPM'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'JPM'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>20,
             'name'=>'Maybank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'MBB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'MBB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>21,
             'name'=>'Mizuho Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'MZH'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'MZH'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>22,
             'name'=>'National Bank of Abu Dhabi',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'NBAD'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'NBAD'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>23,
             'name'=>'OCBC Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'OCBC'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'OCBC'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>24,
             'name'=>'Public Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'PBB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'PBB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>25,
             'name'=>'RHB Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'RHB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'RHB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>26,
             'name'=>'Standard Chartered Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'SCB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'SCB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>27,
             'name'=>'Sumitomo Mitsui Banking Corporation',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'SMBC'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'SMBC'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>28,
             'name'=>'The Bank of Nova Scotia Berhad',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'NSB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'NSB'
             ] );
                         
-            Bank::create( [
+            Bankcode::create( [
             'id'=>29,
             'name'=>'United Overseas Bank',
-            
+            'status'=>'Active',
             'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'code'=>'UOB'
+            'created_on'=>'2017-12-28 09:34:54',
+            'bank_code'=>'UOB'
             ] );
     }
 }

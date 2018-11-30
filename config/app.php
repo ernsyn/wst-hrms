@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'HRMS'),
+    'name' => env('APP_NAME', 'HRIS'),
 
     /*
     |--------------------------------------------------------------------------
@@ -161,9 +161,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-        App\Providers\RepositoryServiceProvider::class,
-        Barryvdh\Snappy\ServiceProvider::class,
-
     ],
 
     /*
@@ -212,15 +209,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-		'PayrollPeriodEnum' => App\Enums\PayrollPeriodEnum::class,
-        'DateHelper' => App\Helpers\DateHelper::class,
-        'PayrollHelper' => App\Helpers\PayrollHelper::class,
-        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
-        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
-        'PayrollReportEnum' => App\Enums\PayrollReportEnum::class,
 
     ],
 
-
+ 
 
 ];
