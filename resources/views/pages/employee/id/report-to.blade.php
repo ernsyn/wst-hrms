@@ -1,13 +1,14 @@
+{{-- TABLE --}}
 <div class="tab-pane fade show p-3" id="nav-reportto" role="tabpanel" aria-labelledby="nav-reportto-tab">
-    <div class="row pb-3">
+    {{-- <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
             <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-report-to-popup">
-                Add Report To
-            </button>
+                    Add Report To
+                </button>
         </div>
-    </div>
-    <table class="table table-bordered table-hover" id="report-to-table">
+    </div> --}}
+    <table class="table table-bordered table-hover w-100" id="report-to-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -15,98 +16,34 @@
                 <th>Type</th>
                 <th>Note</th>
                 <th>KPI Proposer</th>
-                <th>Action</th>
+                {{-- <th>Action</th> --}}
             </tr>
         </thead>
     </table>
 </div>
-
-<!-- ADD -->
-{{-- <div class="modal fade" id="add-report-to-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Report To</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{{ route('add_report_to') }}" id="add_report_to">
-                        @csrf
-                        <div class="row pb-5">
-                            <div class="col-xl-8">
-                                <label class="col-md-5 col-form-label">Report To*</label>
-                                <div class="col-md-7">
-                                    <select class="form-control{{ $errors->has('employees') ? ' is-invalid' : '' }}" name="employees" id="employees">
-                                        @foreach(App\Employee::with('user')->get() as $employee)
-                                        <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if ($errors->has('employees'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('employees') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <label class="col-md-7 col-form-label">Type*</label>
-                                <div class="col-md-10">
-                                    <select class="form-control" id="type" name="type">
-                                        <option value="Direct">Direct</option>
-                                        <option value="Indirect">Indirect</option>
-                                    </select>
-                                </div>
-                                <label class="col-md-12 col-form-label">KPI Proposer*</label>
-                                <div class="col-md-7">
-                                    <input type="hidden" value="0" checked id="kpi_proposer" name="kpi_proposer">   
-                                    <input type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
-                                </div>
-                                <label class="col-md-5 col-form-label">Note</label> 
-                                <div class="col-md-10">                                     
-                                    <textarea name="note" id="note" class="form-control"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Submit') }}
-                                </button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-</div> --}}
-
-<div class="modal fade" id="add-report-to-popup" tabindex="-1" role="dialog" aria-labelledby="add-report-to-label"
-    aria-hidden="true">
+{{-- ADD --}}
+<div class="modal fade" id="add-report-to-popup" tabindex="-1" role="dialog" aria-labelledby="add-report-to-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="add-report-to-label">Assign Report To</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
             </div>
-            <form id="add-report-to-form">
-            <div class="modal-body">
+            <form id="add-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+                <div class="modal-body">
                     @csrf
-
-
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
                             <select class="form-control" name="report-to" id="report-to">
-                                @foreach(App\Employee::with('user')->get() as $employee)
-                                <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
-                                @endforeach
-                            </select>
-                            {{-- <div class="valid-feedback">
-                            Looks good!
-                            </div> --}}
+                                    <option value="">Select Name</option>
+                                    @foreach(App\Employee::with('user')->get() as $employee)
+                                    <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
+                                    @endforeach
+                                </select>
                             <div id="report-to-error" class="invalid-feedback">
-                            
                             </div>
                         </div>
                     </div>
@@ -115,184 +52,362 @@
                         <div class="col-md-12 mb-3">
                             <label for="type"><strong>Type*</strong></label>
                             <select class="form-control" id="type" name="type">
-                                <option value="Direct">Direct</option>
-                                <option value="Indirect">Indirect</option>
-                            </select>
-                            {{-- <div class="valid-feedback">
-                            Looks good!
-                            </div> --}}
+                                    <option value="">Select Name</option>
+                                    <option value="Direct">Direct</option>
+                                    <option value="Indirect">Indirect</option>
+                                </select>
                             <div id="type-error" class="invalid-feedback">
-                            
+
                             </div>
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                            
-                            <input type="hidden" value="0" checked>   
+
+                            <input type="hidden" value="0" checked>
                             <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
-                            {{-- <div class="valid-feedback">
-                            Looks good!
-                            </div> --}}
                             <div id="kpi-proposer-error" class="invalid-feedback">
-                            
+
                             </div>
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            {{-- <div class="valid-feedback">
-                            Looks good!
-                            </div> --}}
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" readonly>
                             <div id="notes-error" class="invalid-feedback">
-                            
+
                             </div>
                         </div>
                     </div>
-
-                    {{--  --}}
-            </div>
-            <div class="modal-footer">
-                <button id="add-submit" type="submit" class="btn btn-primary">
-                    {{ __('Submit') }}
-                </button>
-                {{-- <button id="add-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="add-report-to-submit" type="submit" class="btn btn-primary">
+                        {{ __('Submit') }}
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
+{{-- UPDATE --}}
+<div class="modal fade" id="edit-report-to-popup" tabindex="-1" role="dialog" aria-labelledby="edit-report-to-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-report-to-label">View Assign Report To</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+            </div>
+            <form id="edit-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-row" class="form_validate" data-parsley-errors-messages-disabled>
+                        <div class="col-md-12 mb-3">
+                            <label for="report-to"><strong>Report To*</strong></label>
+                            {{-- <select class="form-control" name="report-to" id="report-to">
+                                        @foreach(App\Employee::with('user')->get() as $employee)
+                                        <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
+                                        @endforeach
+                                    </select> --}}
+                            <input id="report-to" type="text" class="form-control" placeholder="" value="" readonly>
+                            <div id="report-to-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="type"><strong>Type*</strong></label>
+                            {{-- <select class="form-control" id="type" name="type">
+                                        <option value="Direct">Direct</option>
+                                        <option value="Indirect">Indirect</option>
+                                    </select> --}}
+                            <input id="type" type="text" class="form-control" placeholder="" value="" readonly>
+                            <div id="type-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
+                            <input type="hidden" value="0" checked>
+                            <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
+                            <div id="kpi-proposer-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="notes"><strong>Notes*</strong></label>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" readonly>
+                            <div id="notes-error" class="invalid-feedback">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{-- <button id="edit-report-to-submit" type="submit" class="btn btn-primary">
+                            {{ __('Submit') }}
+                        </button> --}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- DELETE EXP--}}
+<div class="modal fade" id="confirm-delete-report-to-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-report-to-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-report-to-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-report-to-submit">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section('scripts')
 <script>
-    var dependentsTable = $('#report-to-table').DataTable({
-        "bInfo": true,
-        "bDeferRender": true,
-        "serverSide": true,
-        "bStateSave": true,
-        "ajax": "{{ route('employee.dt.report-to', ['id' => $id]) }}",
-        "columns": [{
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                }
-            },
-            {
-                "data": "report_to.user.name"
-            },
-            {
-                "data": "type"
-            },
-            {
-                "data": "notes",
-            },
-            {
-                "data": "kpi_proposer",
-            },
-            {
-                data: "update_url",
-                render: function (data, type, row, meta) {
-                    return '<button type="button" class="open-update-dependent-modal btn btn-success btn-sm" data-toggle="modal" data-action="' + encodeURI(JSON.stringify(row)) + '" data-target="#dependentModal"><i class="far fa-edit"></i></button>' ;
-                }
-            }
-        ]
-    });
-
-    // $(function () {
-    //     $(document).on("click", ".open-update-dependent-modal", function () {
-    //         console.log("Updating route: ", JSON.parse(decodeURI($(this).data('action'))));
-    //         $('#edit-dependent-form').attr("action", $(this).data('action'));
-    //         $('#dependentModal').modal('show');
-    //     });
-
-    //     $('#my_modal').on('show.bs.modal', function(e) {
-
-    //         //get data-id attribute of the clicked element
-    //         var bookId = $(e.relatedTarget).data('book-id');
-
-    //         //populate the textbox
-    //         $(e.currentTarget).find('input[name="bookId"]').val(bookId);
-    //     });
-    // });
-
+    var reportTosTable = $('#report-to-table').DataTable({
+            "bInfo": true,
+            "bDeferRender": true,
+            "serverSide": true,
+            "bStateSave": true,
+            "ajax": "{{ route('employee.dt.report-to', ['id' => $id]) }}",
+            "columns": [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    "data": "report_to.user.name"
+                },
+                {
+                    "data": "type"
+                },
+                {
+                    "data": "notes",
+                },
+                {
+                    "data": "kpi_proposer",
+                },
+                // {
+                //     "data": null,
+                //     render: function (data, type, row, meta) {
+                //         return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-report-to-popup"><i class="far fa-eye"></i></button>`;
+                //             // `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-report-to-modal"><i class="far fa-trash-alt"></i></button>`;
+                //     }
+                // }
+            ]
+        });
 </script>
 <script type="text/javascript">
     $(function(){
-        // ADD
-       $('#add-report-to-form #add-submit').click(function(e){
-          e.preventDefault();
-          $.ajax({
-            url: "{{ route('employee.report-to.post', ['id' => $id]) }}",
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                report_to_emp_id: $('#add-report-to-form #report-to').val(),
-                type: $('#add-report-to-form #type').val(),
-                kpi_proposer: $('#add-report-to-form #kpi-proposer').val(),
-                notes: $('#add-report-to-form #notes').val()
-            },
-            success: function(data) {
-                showAlert(data.success);
-                dependentsTable.ajax.reload();
-                $('#add-report-to-popup').modal('toggle');
-                clearReportToModal('#add-report-to-form');
-            },
-            error: function(xhr) {
-                if(xhr.status == 422) {
-                    var errors = xhr.responseJSON.errors;
-                        console.log("Error: ", xhr);
-                        for (var errorField in errors) {
-                            if (errors.hasOwnProperty(errorField)) {
-                                console.log("Error: ", errorField);
-                                switch(errorField) {
-                                    case 'report_to_emp_id':
-                                        $('#add-report-to-form #report-to').addClass('is-invalid');
-                                        $('#add-report-to-form #report-to-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
-                                    case 'type':
-                                        $('#add-report-to-form #type').addClass('is-invalid');
-                                        $('#add-report-to-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
-                                    case 'kpi_proposer':
-                                        $('#add-report-to-form #kpi-proposer').addClass('is-invalid');
-                                        $('#add-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
-                                    case 'notes':
-                                        $('#add-report-to-form #notes').addClass('is-invalid');
-                                        $('#add-report-to-form #notes-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
+            // ADD
+            $('#add-report-to-popup').on('show.bs.modal', function (event) {
+                clearReportToError('#add-report-to-form');
+            });
+            $('#add-report-to-form #add-report-to-submit').click(function(e){
+                clearReportToError('#add-report-to-form');
+                e.preventDefault();
+                $.ajax({
+                    url: "{{ route('employee.report-to.post', ['id' => $id]) }}",
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        report_to_emp_id: $('#add-report-to-form #report-to').val(),
+                        type: $('#add-report-to-form #type').val(),
+                        kpi_proposer: $('#add-report-to-form #kpi-proposer').val(),
+                        notes: $('#add-report-to-form #notes').val()
+                    },
+                    success: function(data) {
+                        showAlert(data.success);
+                        reportTosTable.ajax.reload();
+                        $('#add-report-to-popup').modal('toggle');
+                        clearReportToModal('#add-report-to-form');
+                    },
+                    error: function(xhr) {
+                        if(xhr.status == 422) {
+                            var errors = xhr.responseJSON.errors;
+                            console.log("Error: ", xhr);
+                            for (var errorField in errors) {
+                                if (errors.hasOwnProperty(errorField)) {
+                                    console.log("Error: ", errorField);
+                                    switch(errorField) {
+                                        case 'report_to_emp_id':
+                                            $('#add-report-to-form #report-to').addClass('is-invalid');
+                                            $('#add-report-to-form #report-to-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        break;
+                                        case 'type':
+                                            $('#add-report-to-form #type').addClass('is-invalid');
+                                            $('#add-report-to-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        break;
+                                        case 'kpi_proposer':
+                                            $('#add-report-to-form #kpi-proposer').addClass('is-invalid');
+                                            $('#add-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        break;
+                                        case 'notes':
+                                            $('#add-report-to-form #notes').addClass('is-invalid');
+                                            $('#add-report-to-form #notes-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        break;
+                                    }
                                 }
                             }
                         }
-                }               
-             }
-          });
-       });
-    });
+                    }
+                });
+            });
 
-    // GENERAL FUNCTIONS
-    function clearReportToModal(htmlId) {
-        $(htmlId + ' #name').val('');
-        $(htmlId + ' #relationship').val('');
-        $(htmlId + ' #dobDate').val('');
+            // EDIT REPORT TO
+            var editReportToId = null;
+            // Function: On Modal Clicked Handler
+            $('#edit-report-to-popup').on('show.bs.modal', function (event) {
+                clearReportToError('#edit-report-to-form');
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+                console.log('Data: ', currentData)
 
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #relationship').removeClass('is-invalid');
-        $(htmlId + ' #dobDate').removeClass('is-invalid');
-    }
+                editReportToId = currentData.id;
 
-    function showAlert(message) {
-        $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
-            <span id="alert-message">${message}</span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>`)
-    }
+                $('#edit-report-to-form #report-to').val(currentData.report_to_emp_id);
+                $('#edit-report-to-form #type').val(currentData.type);
+                $('#edit-report-to-form #kpi-proposer').val(currentData.kpi_proposer);
+                $('#edit-report-to-form #notes').val(currentData.notes);
+            });
 
+            var editReportToRouteTemplate = "{{ route('employee.report-to.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+            $('#edit-report-to-submit').click(function(e){
+                clearReportToError('#edit-report-to-form');
+                var editReportToRoute = editReportToRouteTemplate.replace(encodeURI('<<id>>'), editReportToId);
+                e.preventDefault();
+                $.ajax({
+                    url: editReportToRoute,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        report_to_emp_id: $('#edit-report-to-form #report-to').val(),
+                        type: $('#edit-report-to-form #type').val(),
+                        kpi_proposer: $('#edit-report-to-form #kpi-proposer').val(),
+                        notes: $('#edit-report-to-form #notes').val()
+                    },
+                    success: function(data) {
+                        showAlert(data.success);
+                        reportTosTable.ajax.reload();
+                        $('#edit-report-to-popup').modal('toggle');
+                        clearReportToModal('#edit-report-to-form');
+                    },
+                    error: function(xhr) {
+                        if(xhr.status == 422) {
+                            var errors = xhr.responseJSON.errors;
+                            console.log("Error: ", xhr);
+                            for (var errorField in errors) {
+                                if (errors.hasOwnProperty(errorField)) {
+                                    console.log("Error: ", errorField);
+                                    switch(errorField) {
+                                        case 'report_to_emp_id':
+                                            $('#edit-report-to-form #report-to').addClass('is-invalid');
+                                            $('#edit-report-to-form #report-to-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        break;
+                                        case 'type':
+                                            $('#edit-report-to-form #type').addClass('is-invalid');
+                                            $('#edit-report-to-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        break;
+                                        case 'kpi_proposer':
+                                            $('#edit-report-to-form #kpi-proposer').addClass('is-invalid');
+                                            $('#edit-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        break;
+                                        case 'notes':
+                                            $('#edit-report-to-form #notes').addClass('is-invalid');
+                                            $('#edit-report-to-form #notes-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            // DELETE REPORT TO
+            var deleteReportToId = null;
+            // Function: On Modal Clicked Handler
+            $('#confirm-delete-report-to-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
+                console.log('Data: ', currentData)
+
+                deleteReportToId = currentData.id;
+            });
+            var deleteReportToRouteTemplate = "{{ route('employee.report-tos.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+            $('#delete-report-to-submit').click(function(e){
+                var deleteReportToRoute = deleteReportToRouteTemplate.replace(encodeURI('<<id>>'), deleteReportToId);
+                e.preventDefault();
+                $.ajax({
+                    url: deleteReportToRoute,
+                    type: 'GET',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: deleteReportToId
+                    },
+                    success: function(data) {
+                        showAlert(data.success);
+                        reportTosTable.ajax.reload();
+                        $('#confirm-delete-report-to-modal').modal('toggle');
+                    },
+                    error: function(xhr) {
+                        if(xhr.status == 422) {
+                            var errors = xhr.responseJSON.errors;
+                            console.log("Error 422: ", xhr);
+                        }
+                        console.log("Error: ", xhr);
+                    }
+                });
+            });
+        });
+
+        // GENERAL FUNCTIONS
+        function clearReportToModal(htmlId) {
+            $(htmlId + ' #report-to').val('');
+            $(htmlId + ' #type').val('');
+            $(htmlId + ' #kpi-proposer').val('');
+            $(htmlId + ' #notes').val('');
+
+            $(htmlId + ' #report-to').removeClass('is-invalid');
+            $(htmlId + ' #type').removeClass('is-invalid');
+            $(htmlId + ' #kpi-proposer').removeClass('is-invalid');
+            $(htmlId + ' #notes').removeClass('is-invalid');
+        }
+
+        function clearReportToError(htmlId) {
+            $(htmlId + ' #report-to').removeClass('is-invalid');
+            $(htmlId + ' #type').removeClass('is-invalid');
+            $(htmlId + ' #kpi-proposer').removeClass('is-invalid');
+            $(htmlId + ' #notes').removeClass('is-invalid');
+        }
+
+        function showAlert(message) {
+            $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <span id="alert-message">${message}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>`)
+        }
 </script>
 @append
