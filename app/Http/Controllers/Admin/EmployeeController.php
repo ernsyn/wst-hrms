@@ -561,7 +561,8 @@ class EmployeeController extends Controller
             'report_to_emp_id' => 'required',
             'type' => 'required',
             'kpi_proposer' => 'required',
-            'notes' => 'required'
+            'notes' => 'required',
+            'report_to_level' =>'required'
         ]);
 
         $reportTo = new EmployeeReportTo($reportToData);
