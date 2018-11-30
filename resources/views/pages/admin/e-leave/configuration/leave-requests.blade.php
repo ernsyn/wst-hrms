@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.admin-base')
 @section('content')
 <div class="container">
     @if (session('status'))
@@ -74,14 +74,14 @@
                             <td>             @if ($leaveRequest['status'] == 'new')
                                 
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{$leaveRequest['id']}}"onclick="window.location='{{ route('employee.e-leave.add-leave-request', ['id' => $leaveRequest->id]) }}';" 
+                                    data-leaverequest-id="{{$leaveRequest['id']}}"onclick="window.location='{{ route('admin.e-leave.add-leave-request', ['id' => $leaveRequest->id]) }}';" 
                                     {{-- data-target="#approveLeaverequest" --}}
                                     >
                                     <span class="fas fa-check-circle"></span></button>
                                     <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
                                     data-leaverequest-id="{{$leaveRequest['id']}}
                                     {{-- data-target="#disapproveLeaverequest" --}}
-                                    "onclick="window.location='{{ route('employee.e-leave.add-leave-request-disapprove', ['id' => $leaveRequest->id]) }}';" 
+                                    "onclick="window.location='{{ route('admin.e-leave.add-leave-request-disapprove', ['id' => $leaveRequest->id]) }}';" 
                                     ><span class="fas fa-times-circle"></span></button>                                            
                                 @else
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"

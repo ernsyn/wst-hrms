@@ -265,7 +265,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('e-leave/configuration/leavetypes', 'Admin\ELeaveController@displayLeaveTypes')->name('admin.e-leave.configuration.leavetypes');
     Route::get('e-leave/configuration/leaverequests', 'Admin\ELeaveController@displayLeaveRequests')->name('admin.e-leave.configuration.leaverequests');
 
-
+    Route::get('admin/approve_leave/{id}/add','Admin\ELeaveController@addLeaveApproval')->name('admin.e-leave.add-leave-request')->where('id', '[0-9]+');
+    Route::get('admin/disapprove_leave/{id}/add','Admin\ELeaveController@rejectLeaveApproval')->name('admin.e-leave.add-leave-request-disapprove')->where('id', '[0-9]+');
+    
+    Route::post('admin/approve_leaves/{id}/add','Admin\ELeaveController@postAddApproval')->name('admin.e-leave.add-leave-request.post')->where('id', '[0-9]+');
+    Route::post('admin/approve_leaves/{id}/reject','Admin\ELeaveController@postDisapproved')->name('admin.e-leave.add-leave-request-disapprove.post')->where('id', '[0-9]+');
+   
 
     //leave public holidays setup
     // Route::get('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@addPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.add');
