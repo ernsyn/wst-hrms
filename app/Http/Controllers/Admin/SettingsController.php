@@ -457,7 +457,7 @@ class SettingsController extends Controller
             'contact_no_secondary' => '',
             'fax_no' =>'',
             'address'=>'required',
-            'country_code'=> '',
+            'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric'
