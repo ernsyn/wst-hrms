@@ -90,7 +90,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="float-right">
-                                <button type="button" class="edit-btn btn btn-primary-outline btn-sm"><i class="fas fa-pen"></i></button>                                 
+                                <button type="button" class="edit-btn btn btn-primary-outline btn-sm" onclick="window.location.href='{{ route('admin.e-leave.configuration.leave-types.edit', ['id' => $leaveType->id]) }}'"><i class="fas fa-pen"></i></button>                                 
                                 @if($leaveType->active)
                                 <button type="submit" class="deactivate-btn action-btn ml-1 btn btn-secondary btn-sm" data-action="{{ route('admin.e-leave.configuration.leave-types.deactivate.post', ['id' => $leaveType->id]) }}">Deactivate</button>                                
                                 @else
