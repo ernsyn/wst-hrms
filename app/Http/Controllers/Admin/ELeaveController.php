@@ -145,6 +145,7 @@ public function postAddPublicHoliday(Request $request)
 
     return redirect()->route('admin.e-leave.configuration.leave-holidays');
 }
+
     public function postEditLeaveType(Request $request, $id) {
         $leaveType = LeaveType::where('id', $id)->first();
         if($leaveType->is_custom) {
@@ -222,5 +223,17 @@ public function postAddPublicHoliday(Request $request)
         }
 
         return response()->json(['success'=>'Record is successfully added']);
+    }
+
+    public function postDeactivateLeaveType(Request $request, $id) {
+        $leaveType = LeaveType::where('id', $id)->update(['active' => false]);
+
+        return response()->json(['success'=>'Leave type has been deactivated.']);
+    }
+
+    public function postActivateLeaveType(Request $request, $id) {
+        $leaveType = LeaveType::where('id', $id)->update(['active' => true]);
+
+        return response()->json(['success'=>'Leave type has been activated.']);
     }
 }
