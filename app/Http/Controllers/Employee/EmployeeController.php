@@ -186,9 +186,8 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'contact_no' => 'required|numeric',
         ]);
-
+        $emergencyContactData['created_by'] = auth()->user()->id;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
-
 
         $employee = Employee::find($id);
         $employee->employee_emergency_contacts()->save($emergencyContact);
@@ -203,10 +202,8 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'dob' => 'required|date',
         ]);
-        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
-
+        $dependentData['created_by'] = auth()->user()->id;
         $dependent = new EmployeeDependent($dependentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_dependents()->save($dependent);
@@ -222,9 +219,8 @@ class EmployeeController extends Controller
             'issued_by' => 'required',
             'issued_date' => 'required|date'
         ]);
-
+        $immigrationData['created_by'] = auth()->user()->id;
         $immigration = new EmployeeImmigration($immigrationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_immigrations()->save($immigration);
@@ -243,9 +239,8 @@ class EmployeeController extends Controller
             'issued_date' => 'required|date',
             'family_members' => 'required'
         ]);
-
+        $visaData['created_by'] = auth()->user()->id;
         $visa = new EmployeeVisa($visaData);
-
 
         $employee = Employee::find($id);
         $employee->employee_visas()->save($visa);
@@ -266,13 +261,12 @@ class EmployeeController extends Controller
             'basic_salary' => 'required',
             'specification' => 'required'
         ]);
+        $jobData['created_by'] = auth()->user()->id;
 
         $jobData['status'] = 'active';
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-   //     $jobData['end_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
-
-         $end_date=   EmployeeJob::where('id', $id)
+        $end_date=   EmployeeJob::where('id', $id)
         ->whereNull('end_date');
 
         EmployeeJob::where('emp_id', $id)
@@ -292,9 +286,8 @@ class EmployeeController extends Controller
             'acc_no' => 'required|numeric',
             'acc_status' => 'required'
         ]);
-
+        $bankAccountData['created_by'] = auth()->user()->id;
         $bankAccount = new EmployeeBankAccount($bankAccountData);
-
 
         $employee = Employee::find($id);
         $employee->employee_bank_accounts()->save($bankAccount);
@@ -311,7 +304,7 @@ class EmployeeController extends Controller
             'end_date' => 'required|date',
             'notes' => 'required'
         ]);
-
+        $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
 
         $employee = Employee::find($id);
@@ -331,9 +324,8 @@ class EmployeeController extends Controller
             'gpa' => 'required|numeric|between:0.00,4.00',
             'description' => 'required'
         ]);
-
+        $educationData['created_by'] = auth()->user()->id;
         $education = new EmployeeEducation($educationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_educations()->save($education);
@@ -348,9 +340,8 @@ class EmployeeController extends Controller
             'years_of_experience' => 'required|numeric',
             'competency' => 'required'
         ]);
-
+        $skillData['created_by'] = auth()->user()->id;
         $skill = new EmployeeSkill($skillData);
-
 
         $employee = Employee::find($id);
         $employee->employee_skills()->save($skill);
@@ -364,9 +355,8 @@ class EmployeeController extends Controller
             'name' => 'required',
             'notes' => 'required'
         ]);
-
+        $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_attachments()->save($attachment);
@@ -388,10 +378,8 @@ class EmployeeController extends Controller
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
-
         $workingDaysData['is_template'] = false;
-
-
+        $workingDaysData['created_by'] = auth()->user()->id;
         $workingDay = new EmployeeWorkingDay($workingDayData);
 
         $employee = Employee::find($id);
@@ -414,9 +402,7 @@ class EmployeeController extends Controller
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
-
         $workingDayUpdateData['is_template'] = false;
-
         EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
@@ -444,9 +430,8 @@ class EmployeeController extends Controller
             'kpi_proposer' => 'required',
             'notes' => 'required'
         ]);
-
+        $reportToData['created_by'] = auth()->user()->id;
         $reportTo = new EmployeeReportTo($reportToData);
-
 
         $employee = Employee::find($id);
         $employee->report_tos()->save($reportTo);
@@ -459,7 +444,7 @@ class EmployeeController extends Controller
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
-
+        $securityGroupData['created_by'] = auth()->user()->id;
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
 
         $employee = Employee::find($id);
@@ -472,8 +457,7 @@ class EmployeeController extends Controller
     public function postMainSecurityGroup(Request $request, $id)
     {
         $mainSecurityGroupData = $request->validate([
-            'main_security_group_id' => 'required',
-
+            'main_security_group_id' => 'required'
         ]);
 
         Employee::update(array('main_security_group_id' => $mainSecurityGroupData));

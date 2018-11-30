@@ -14,7 +14,8 @@ class EmployeeImmigration extends Model
         'passport_no',
         'expiry_date',
         'issued_by',
-        'issued_date'
+        'issued_date',
+        'created_by'
     ];
     protected $dates = ['deleted_at'];
 }

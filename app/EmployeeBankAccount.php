@@ -13,7 +13,8 @@ class EmployeeBankAccount extends Model
     protected $fillable = [
         'bank_code',
         'acc_no',
-        'acc_status'
+        'acc_status',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

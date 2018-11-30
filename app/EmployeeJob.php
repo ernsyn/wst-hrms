@@ -21,6 +21,7 @@ class EmployeeJob extends Model
         'end_date',
         'status',
         'end_date',
+        'created_by'
     ];
 
     public function main_position()

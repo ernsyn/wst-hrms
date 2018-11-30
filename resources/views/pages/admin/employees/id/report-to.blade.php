@@ -39,7 +39,7 @@
                             <select class="form-control" name="report-to" id="report-to">
                                 <option value="">Select Name</option>
                                 @foreach(App\Employee::with('user')->get() as $employee)
-                                <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
+                                <option value="{{ $employee->user->id }}">{{ $employee->user->id }}</option>
                                 @endforeach
                             </select>
                             <div id="report-to-error" class="invalid-feedback">
@@ -63,9 +63,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-
-                            <input type="hidden" value="0" checked>
-                            <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
+                            {{-- <input type="hidden" name="kpi_proposer" value="0"> --}}
+                            <input type="checkbox" id="kpi-proposer" value="1" checked>
                             <div id="kpi-proposer-error" class="invalid-feedback">
 
                             </div>
@@ -192,7 +191,7 @@
                 }
             },
             {
-                "data": "report_to.user.name"
+                "data": "report_to.user.id"
             },
             {
                 "data": "type"
@@ -382,7 +381,7 @@
     function clearReportToModal(htmlId) {
         $(htmlId + ' #report-to').val('');
         $(htmlId + ' #type').val('');
-        $(htmlId + ' #kpi-proposer').val('');
+        $(htmlId + ' #kpi-proposer').val();
         $(htmlId + ' #notes').val('');
 
         $(htmlId + ' #report-to').removeClass('is-invalid');
