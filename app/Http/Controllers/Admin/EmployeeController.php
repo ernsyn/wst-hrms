@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Hash;
-use DB;
 
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Yajra\DataTables\Facades\DataTables;
@@ -37,6 +38,8 @@ use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+
+use App\Http\Services\LeaveService;
 
 use App\Http\Requests\Admin\AddEmployee;
 
@@ -357,6 +360,7 @@ class EmployeeController extends Controller
 
         $visa = new EmployeeVisa($visaData);
 
+        
 
         $employee = Employee::find($id);
         $employee->employee_visas()->save($visa);
@@ -366,6 +370,8 @@ class EmployeeController extends Controller
 
     public function postJob(Request $request, $id)
     {
+        // Add a new job
+
         $jobData = $request->validate([
             'basic_salary' => 'required|numeric',
             'cost_centre_id' => 'required',
@@ -373,36 +379,55 @@ class EmployeeController extends Controller
             'team_id' => 'required',
             'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
+            'basic_salary' => 'required',
+            'specification' => 'required',
             'branch_id' => 'required',
             'start_date' => 'required|date',
             'status' => 'required',
-            'specification' => 'required'
         ]);
 
-        $jobData['status'] = 'active';
+        // $jobData['status'] = 'active';
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-   //     $jobData['end_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
+        DB::transaction(function() use ($jobData, $id) {
+            $currentJob = EmployeeJob::where('emp_id', $id)
+            ->whereNull('end_date')->first();
+            
+            if(!empty($currentJob)) {
+                $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
+            }
+    
+            $employee = Employee::find($id);
+            $employee->employee_jobs()->save(new EmployeeJob($jobData));
+            LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
+        });
 
-         $end_date=   EmployeeJob::where('id', $id)
-        ->whereNull('end_date');
+        return response()->json(['success'=>'Job is successfully added']);
+    }
 
+    public function actionResign(Request $request, $id) {
         // EmployeeJob::where('emp_id', $id)
         // ->whereNull('end_date')
         // ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
         $job = new EmployeeJob($jobData);
 
-        $employee = Employee::find($id);
-        $employee->employee_jobs()->save($job);
 
-        return response()->json(['success'=>'Job is successfully added']);
+        $currentJob = EmployeeJob::where('emp_id', $id)
+            ->whereNull('end_date')->first();
+            
+        $currentDate = date("Y-m-d");
+        if(!empty($currentJob)) {
+            $currentJob->update(['end_date'=> $currentDate ]);
+            LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
+        }
     }
 
     public function postBankAccount(Request $request, $id)
     {
         $bankAccountData = $request->validate([
             'bank_code' => 'required',
-            'acc_no' => 'required|numeric',
+            'acc_no' => 'required',
             'acc_status' => 'required'
         ]);
 
@@ -413,6 +438,20 @@ class EmployeeController extends Controller
         $employee->employee_bank_accounts()->save($bankAccount);
 
         return response()->json(['success'=>'Record is successfully added']);
+
+        // $type = $request->input('type');
+        // $bank_code = Input::get('bank_list');
+        // $acc_no = $request->input('acc_no');
+        // $status = Input::get('status');
+        // $created_by = auth()->user()->id;
+
+        // DB::insert('insert into employee_bank_accounts
+        // (emp_id, type, bank_code, acc_no, acc_status, created_by)
+        // values
+        // (?,?,?,?,?,?)',
+        // [$id, $type, $bank_code, $acc_no, $status, $created_by]);
+
+        // return redirect()->route('admin.employees.id', ['id' => $id]);
     }
 
     public function postCompany(Request $request, $id)
@@ -441,7 +480,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|numeric|between:0.00,4.00',
+            'gpa' => 'required|between:0,99.99',
             'description' => 'required'
         ]);
 
@@ -458,7 +497,7 @@ class EmployeeController extends Controller
     {
         $skillData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required|numeric',
+            'years_of_experience' => 'required',
             'competency' => 'required'
         ]);
 
@@ -653,6 +692,30 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Visa was successfully updated.']);
     }
 
+    public function postEditJob(Request $request, $emp_id, $id)
+    {
+
+        $jobData = $request->validate([
+            'branch_id' => 'required',
+            'emp_mainposition_id' => 'required',
+            'department_id' => 'required',
+            'team_id' => 'required',
+            'cost_centre_id' => 'required',
+            'emp_grade_id' => 'required',
+            'start_date' => 'required',
+            'basic_salary' => 'required',
+            'specification' => 'required',
+            'status' => 'required'
+        ]);
+
+        // $jobData['status'] = 'active';
+        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
+        EmployeeJob::where('id', $id)->update($jobData);
+
+        return response()->json(['success'=>'Job is successfully updated.']);
+    }
+
     public function postEditBankAccount(Request $request, $emp_id, $id)
     {
         $bankAccountUpdateData = $request->validate([
@@ -689,7 +752,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|numeric|between:0.00,4.00',
+            'gpa' => 'required|between:0,99.99',
             'description' => 'required'
         ]);
 
@@ -702,7 +765,7 @@ class EmployeeController extends Controller
     {
         $skillUpdatedData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required|numeric',
+            'years_of_experience' => 'required',
             'competency' => 'required',
         ]);
 
@@ -724,7 +787,7 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Report To was successfully updated.']);
     }
-
+    
     public function postEditAttachment(Request $request, $emp_id, $id)
     {
         $attachmentUpdatedData = $request->validate([
@@ -742,7 +805,7 @@ class EmployeeController extends Controller
     //delete function
     public function deleteEmergencyContact(Request $request, $emp_id, $id)
     {
-        EmployeeEmergencyContact::find($id)->delete();
+        EmployeeImmigration::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
 
@@ -769,7 +832,7 @@ class EmployeeController extends Controller
         EmployeeBankAccount::find($id)->delete();
         return response()->json(['success'=>'Bank Account was successfully deleted.']);
     }
-
+    
     public function deleteExperience(Request $request, $emp_id, $id)
     {
         EmployeeExperience::find($id)->delete();
@@ -787,7 +850,6 @@ class EmployeeController extends Controller
         EmployeeSkill::find($id)->delete();
         return response()->json(['success'=>'Skill was successfully deleted.']);
     }
-
     public function deleteAttachment(Request $request, $emp_id, $id)
     {
         EmployeeAttachment::find($id)->delete();

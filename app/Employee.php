@@ -124,6 +124,11 @@ class Employee extends Model
     {
         return $this->hasOne('App\EmployeeWorkingDay', 'emp_id');
     }
+    
+    public function attendances()
+    {
+        return $this->hasMany('App\EmployeeAttendance', 'emp_id');
+    }
 
     public function company()
     {
