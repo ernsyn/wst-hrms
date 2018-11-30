@@ -678,4 +678,13 @@ class LeaveService
             'extension' => $extension
         ];
     }
+
+    public static function getEmployeeLeaves($emp_id) {
+        $leaveRequests = LeaveRequest::where('emp_id', $emp_id)
+            // ->where('valid_from_date', '<=', $now)
+            // ->where('valid_until_date', '>=', $now)
+            ->get();
+
+        return $leaveRequests;
+    }
 }

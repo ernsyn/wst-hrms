@@ -592,14 +592,3 @@ $('#check_job_grade_de').change(function() {
         $('#job_grade_de').prop('disabled', true);
     }
 });
-$('#calendarleave').fullCalendar({
-    themeSystem: 'jquery-ui',
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'month,agendaWeek,agendaDay,listMonth'
-    },
-    weekNumbers: true,
-    eventLimit: true, // allow "more" link when too many events
-    // events: 'https://fullcalendar.io/demo-events.json'
-  });

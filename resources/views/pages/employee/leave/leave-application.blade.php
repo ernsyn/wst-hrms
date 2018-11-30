@@ -4,10 +4,10 @@
 <div class="p-4" id="page-leave-application">
     <div class="row">
         <div class="col-xl-8">      
-                <div class="card-body-leave" >
-                    <div class="container-fluid">
-                        <div id='calendarleave' class="calendar-leave"></div>                        
-                    </div>               
+            <div class="card-body-leave" >
+                <div class="container-fluid">
+                    <div id='calendar-leave' class="calendar-leave"></div>                        
+                </div>               
             </div>
         </div>
         <div class="col-xl-4">
@@ -100,6 +100,7 @@
 <script type="text/javascript">
     $(function(){
         var attachmentRequired = false;
+        var employeeLeaves = [];
 
         $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
             $.each(leaveTypeData, function(key, leaveType){
@@ -216,17 +217,43 @@
                 });
             } else {
                 postLeaveRequest(data);
-            }
-            
+            }            
+        });
+
+        $.get("{{ route('employee.e-leave.ajax.leaves') }}", function(leavesData, status) {
+            var leavesObject = {};
+
+            $.each(leavesData, function(key, leaveData){
+                var addLeavesObject = jQuery.extend({}, leavesObject); //create a shallow
+                addLeavesObject.title = leaveData.reason;
+                addLeavesObject.start = leaveData.start_date;
+                addLeavesObject.end = leaveData.end_date;
+                employeeLeaves.push(addLeavesObject);
+            });
+
+            console.log(employeeLeaves);
+        });
+
+        $('#calendar-leave').fullCalendar({
+            themeSystem: 'jquery-ui',
+            header: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'month,agendaWeek,agendaDay,listMonth'
+            },
+            weekNumbers: false,
+            eventLimit: false, // allow "more" link when too many events
+            eventSources: [{
+                events: employeeLeaves,
+                color: 'blue',
+                textColor: 'white'
+            }]
         });
 
         function postLeaveRequest(data) {
             $.ajax({
                 url: "{{ route('employee.e-leave.ajax.request') }}",
                 type: 'POST',
-                // processData: false,
-                // contentType: false,
-                // cache: false,
                 data: data,
                 success: function(data) {
                     console.log(data);
@@ -236,6 +263,7 @@
                 }
             }); 
         }
+
         function getBase64(file, onLoad) {
             var reader = new FileReader();
             reader.readAsDataURL(file);

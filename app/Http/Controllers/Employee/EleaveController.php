@@ -201,6 +201,13 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
+        public function ajaxGetEmployeeLeaves()
+        {
+            $result = LeaveService::getEmployeeLeaves(Auth::user()->employee->id);
+
+            return response()->json($result);
+        }
+
         public function ajaxPostCreateLeaveRequest(Request $request)
         {
             $requestData = $request->validate([
