@@ -9,7 +9,7 @@ class Company extends Model
 {
     use SoftDeletes;
     protected $table = 'companies';
-    
+
     protected $fillable = [
         'name',
         'url',
@@ -25,14 +25,7 @@ class Company extends Model
         'status',
     ];
 
-	protected $dates = ['deleted_at'];    
-    
-    public function payrollMaster()
-    {
-        return $this->hasMany('App\PayrollMaster');
-    }
-
-	public function companybank()
+    public function companybank()
     {
         return $this->hasOne('App\CompanyBank');
     }
@@ -41,4 +34,9 @@ class Company extends Model
     {
         return $this->hasOne('App\SecurityGroup');
     }
+
+
+ 
+
+    protected $dates = ['deleted_at'];
 }
