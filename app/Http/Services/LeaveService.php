@@ -166,6 +166,19 @@ class LeaveService
         
         return $leaveRequest;
     }
+    
+    public static function getAllLeaveRequestsForEmployee($employee) {
+        return LeaveRequest::with('leave_type')->where('emp_id', $employee->id)
+        // ->where(function($q) use ($start_date, $end_date) {
+        //     $q->where('start_date', '>=', $start_date);
+        //     $q->where('start_date', '<=', $end_date);
+        // })
+        // ->OrWhere(function($q) use ($start_date, $end_date) {
+        //     $q->where('end_date', '>=', $start_date);
+        //     $q->where('end_date', '<=', $end_date);
+        // })
+        ->get();
+    }
 
     public static function getLeaveRequestsForEmployee($employee, $start_date, $end_date) {
         return LeaveRequest::where('emp_id', $employee->id)
@@ -187,6 +200,23 @@ class LeaveService
         
         if($startDate->greaterThan($endDate)) {
             return self::error("Start date is after end date.");
+        }
+
+        // Check if already has a leave on that day
+        if(
+            LeaveRequest::where('emp_id', $employee->id)
+            ->where(function($q) use ($start_date, $end_date) {
+                $q->where('start_date', '>=', $start_date);
+                $q->where('start_date', '<=', $end_date);
+            })
+            ->OrWhere(function($q) use ($start_date, $end_date) {
+                $q->where('end_date', '>=', $start_date);
+                $q->where('end_date', '<=', $end_date);
+            })
+            ->where('status', '!=', 'rejected')
+            ->count() > 0
+        ) {
+            return self::error("You already have a leave request for this day.");
         }
         
         $working_day = $employee->working_day;

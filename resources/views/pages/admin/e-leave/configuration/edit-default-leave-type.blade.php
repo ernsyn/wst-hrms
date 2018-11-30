@@ -34,24 +34,6 @@
                     </div>
                     <div class="card-body">
                         <div id="leave-rules-list">
-                            <div id="rule-leave-calculation" class="card rule-entry">
-                                <div class="card-body">
-                                    <h5 class="title text-primary">Leave Calculation</h5>
-                                    <input type="number" name="id" hidden>
-                                    <div class="form-check mt-2">
-                                        <input class="form-check-input" type="checkbox" id="consecutive-input">
-                                        <label class="form-check-label" for="consecutive-input">
-                                            Consecutive
-                                        </label>
-                                    </div>
-                                    <div class="form-check mt-2">
-                                        <input class="form-check-input" type="checkbox" id="include-off-days">
-                                        <label class="form-check-label" for="include-off-days">
-                                            Include Holidays / Weekends / Off Days
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
                             {{-- INSERT RULES HERE --}}
                         </div>
                     </div>
@@ -128,7 +110,7 @@
     {{-- RULE: Restrict: By Gender --}}
     <div id="rule-restrict-gender" class="card rule-entry mt-2">
         <div class="card-body">
-            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+            {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
             </a> --}}
             <h5 class="title text-primary">Restrict: By Gender</h5>
@@ -175,8 +157,23 @@
 
         </div>
     </div>
+    {{-- RULE: Required: Attachment --}}
+    <div id="rule-required-attachment" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Required: Attachment</h5>
+            <div class="form-group">
+                <label for="attachment-type"><strong>Attachment Type*</strong></label>
+                <div class=" input-group">
+                    <input id="attachment-type" name="attachment-type" type="text" class="form-control" placeholder="eg. Medical Certificate">
+                </div>
+            </div>
+        </div>
+    </div>
     {{-- RULE: Multiple Approval Levels Required --}}
-    <div id="rule-multiple-approval-levels-required" class="card rule-entry mt-2">
+    <div id="rule-multiple-approval-levels-needed" class="card rule-entry mt-2">
         <div class="card-body">
             <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
                 Remove
@@ -184,6 +181,138 @@
             <h5 class="title text-primary">Multiple Approval Levels Required</h5>
         </div>
     </div>
+    {{-- RULE: Consecutive --}}
+    <div id="rule-consecutive" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Application Must Be Consecutive</h5>
+        </div>
+    </div>
+    {{-- RULE: Min Employment Period --}}
+    <div id="rule-min-employment-period" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Minimum Employment Period</h5>
+            <div class="form-group">
+                <label for="min-days"><strong>Minimum Days Employed*</strong></label>
+                <div class=" input-group">
+                    <input id="min-days" name="min-days" type="number" class="form-control" placeholder="eg. 3">
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- RULE: Max No of Children --}}
+    <div id="rule-max-no-of-children" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Maximum Number of Children</h5>
+            <div class="form-group">
+                <label for="max-no-of-children"><strong>Max Children*</strong></label>
+                <div class=" input-group">
+                    <input id="max-no-of-children" name="max-no-of-children" type="number" class="form-control" placeholder="eg. 3">
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- RULE: Unpaid --}}
+    <div id="rule-unpaid" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Unpaid</h5>
+        </div>
+    </div>
+    {{-- RULE: Employee Cannot Apply --}}
+    <div id="rule-employee-cannot-apply" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Employee Cannot Apply</h5>
+        </div>
+    </div>
+    {{-- RULE: Include Off Days --}}
+    <div id="rule-inc-off-days" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Include Off Days</h5>
+        </div>
+    </div>
+    {{-- RULE: Max No of Children --}}
+    <div id="rule-max-after-applied-days" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Only Allowed To Apply Maximum After Days</h5>
+            <div class="form-group">
+                <label for="max-after-applied-days"><strong>After Days*</strong></label>
+                <div class=" input-group">
+                    <input id="max-after-applied-days" name="max-after-applied-days" type="number" class="form-control" placeholder="eg. 3">
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- RULE: Maximum Applications --}}
+    <div id="rule-max-applications" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Maximum Applications</h5>
+            <div class="form-group">
+                <label for="max-applications"><strong>Maximum Applications*</strong></label>
+                <div class=" input-group">
+                    <input id="max-applications" name="max-applications" type="number" class="form-control" placeholder="eg. 3">
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- RULE: No Applied Days Limit --}}
+    <div id="rule-no-limit" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">No Applied Days Limit</h5>
+        </div>
+    </div>
+    {{-- RULE: Maximum Days Per Application --}}
+    <div id="rule-max-days-per-application" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Maximum Days Per Application</h5>
+            <div class="form-group">
+                <label for="max-days-per-application"><strong>Maximum Days Per Application*</strong></label>
+                <div class=" input-group">
+                    <input id="max-days-per-application" name="max-days-per-application" type="number" class="form-control" placeholder="eg. 3">
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- RULE: No Applied Days Limit --}}
+    <div id="rule-non-prorated" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> {{-- <a role="button" class="remove-rule float-right btn btn-danger text-white btn-sm">
+                Remove
+            </a> --}}
+            <h5 class="title text-primary">Non Prorated</h5>
+        </div>
+    </div>
+    
+    {{-- (TODO) RULE: Deduct Other Leave Types if Insufficient --}}
+    {{-- (TODO) RULE: Include Off Days (Based on Minimum Applied Days) --}}
 </div>
 <div id="leave-type-entitled-days-by-years-template" hidden>
     <div class="entitlement-by-years-entry input-group mt-2">
@@ -264,19 +393,19 @@
                         console.log("Rule configuration: ", configuration);
                     } 
                     switch(rule.rule) {
-                        case 'leave_calculation': // rule-leave-calculation
-                            let leaveCalculation = leaveRulesList.find('#rule-leave-calculation');
-                            console.log("Configuration: ", configuration)
-                            if(JSON.parse(configuration.consecutive) == true) {
-                                leaveCalculation.find('#consecutive-input').prop("checked", true);
-                            }
+                        // case 'leave_calculation': // rule-leave-calculation
+                        //     let leaveCalculation = leaveRulesList.find('#rule-leave-calculation');
+                        //     console.log("Configuration: ", configuration)
+                        //     if(JSON.parse(configuration.consecutive) == true) {
+                        //         leaveCalculation.find('#consecutive-input').prop("checked", true);
+                        //     }
 
-                            if(JSON.parse(configuration.include_off_days) == true) {
-                                leaveCalculation.find('#include-off-days').prop("checked", true);
-                            }
-                        break;
-                        case 'multiple_approval_levels_required': // 'rule-multiple-approval-levels-required':
-                            let multipleApprovalLevelsReq = leaveRulesTemplates.find('#rule-multiple-approval-levels-required');
+                        //     if(JSON.parse(configuration.include_off_days) == true) {
+                        //         leaveCalculation.find('#include-off-days').prop("checked", true);
+                        //     }
+                        // break;
+                        case 'multiple_approval_levels_needed': // 'rule-multiple-approval-levels-needed':
+                            let multipleApprovalLevelsReq = leaveRulesTemplates.find('#rule-multiple-approval-levels-needed');
                             
                             multipleApprovalLevelsReq.find('input[name=id]').val(rule.id);
                             
@@ -299,6 +428,86 @@
                             
                             canCarryForward.appendTo('#leave-rules-list');
                         break;
+                        case 'required_attachment':
+                            let requiredAttachment = leaveRulesTemplates.find('#rule-required-attachment');
+                            requiredAttachment.find('input[name=id]').val(rule.id);
+                            requiredAttachment.find('input[name=attachment-type]').val(configuration.attachment_type);
+
+                            requiredAttachment.appendTo('#leave-rules-list');
+                            break;
+                        case 'consecutive':
+                            let consecutive = leaveRulesTemplates.find('#rule-consecutive');
+                            consecutive.find('input[name=id]').val(rule.id);
+
+                            consecutive.appendTo('#leave-rules-list');
+                            break;
+                        case 'min_employment_period':
+                            let minEmploymentPeriod = leaveRulesTemplates.find('#rule-min-employment-period');
+                            minEmploymentPeriod.find('input[name=id]').val(rule.id);
+                            minEmploymentPeriod.find('input[name=min-days]').val(configuration.min_days);
+                            
+                            minEmploymentPeriod.appendTo('#leave-rules-list');
+                            break;
+                        case 'max_no_of_children':
+                            let maxNoOfChildren = leaveRulesTemplates.find('#rule-max-no-of-children');
+                            maxNoOfChildren.find('input[name=id]').val(rule.id);
+                            maxNoOfChildren.find('input[name=max-no-of-children]').val(configuration.max_no_of_children);
+
+                            maxNoOfChildren.appendTo('#leave-rules-list');
+                            break;
+                        case 'unpaid':
+                            let unpaid = leaveRulesTemplates.find('#rule-unpaid');
+                            unpaid.find('input[name=id]').val(rule.id);
+
+                            unpaid.appendTo('#leave-rules-list');
+                            break;
+                        case 'employee_cannot_apply':
+                            let employeeCannotApply = leaveRulesTemplates.find('#rule-employee-cannot-apply');
+                            employeeCannotApply.find('input[name=id]').val(rule.id);
+
+                            employeeCannotApply.appendTo('#leave-rules-list');
+                            break;
+                        case 'inc_off_days':
+                            let incOffDays = leaveRulesTemplates.find('#rule-inc-off-days');
+                            incOffDays.find('input[name=id]').val(rule.id);
+
+                            incOffDays.appendTo('#leave-rules-list');
+                            break;
+                        case 'max_after_applied_days':
+                            let maxAfterAppliedDays = leaveRulesTemplates.find('#rule-max-after-applied-days');
+                            maxAfterAppliedDays.find('input[name=id]').val(rule.id);
+                            maxAfterAppliedDays.find('input[name=max-after-applied-days]').val(configuration.max_after_applied_days);
+
+                            maxAfterAppliedDays.appendTo('#leave-rules-list');
+                            break;
+                        case 'max_applications':
+                            let maxApplications = leaveRulesTemplates.find('#rule-max-applications');
+                            maxApplications.find('input[name=id]').val(rule.id);
+                            maxApplications.find('input[name=max-applications]').val(configuration.max_applications);
+
+                            maxApplications.appendTo('#leave-rules-list');
+                            break;
+                        case 'no_limit':
+                            let noLimit = leaveRulesTemplates.find('#rule-no-limit');
+                            noLimit.find('input[name=id]').val(rule.id);
+
+                            noLimit.appendTo('#leave-rules-list');
+                            break;
+                        case 'max_days_per_application':
+                            let maxDaysPerApplication = leaveRulesTemplates.find('#rule-max-days-per-application');
+                            maxDaysPerApplication.find('input[name=id]').val(rule.id);
+                            maxDaysPerApplication.find('input[name=max-days-per-application]').val(configuration.max_days_per_application);
+
+                            maxDaysPerApplication.appendTo('#leave-rules-list');
+                            break;
+                        case 'non_prorated':
+                            let nonProrated = leaveRulesTemplates.find('#rule-non-prorated');
+                            nonProrated.find('input[name=id]').val(rule.id);
+
+                            nonProrated.appendTo('#leave-rules-list');
+                            break;
+                        // rule-min-apply-days-before
+                        // rule-deduct-after-leave-types-insufficient
                     }
                 }
             }
@@ -416,7 +625,7 @@
         //         // case 'rule-select-min-apply-days-before':
         //         // break;
         //         case 'rule-select-multiple-approval-levels-required':
-        //             $('#leave-type-rule-templates #rule-multiple-approval-levels-required').appendTo('#leave-rules-list');
+        //             $('#leave-type-rule-templates #rule-multiple-approval-levels-needed').appendTo('#leave-rules-list');
         //             $(e.target).attr('hidden', true);
         //             break;
         //         case 'rule-select-can-carry-forward':
@@ -436,7 +645,7 @@
         //     switch(parent.get(0).id) {
         //         // case 'rule-select-min-apply-days-before':
         //         // break;
-        //         case 'rule-multiple-approval-levels-required':
+        //         case 'rule-multiple-approval-levels-needed':
         //             $('#rule-select-multiple-approval-levels-required').removeAttr('hidden');
         //         break;
         //         case 'rule-can-carry-forward':
@@ -573,33 +782,84 @@
                     ruleData.id = null;
                 }
                 switch(leaveRuleEl.id) {
-                    case 'rule-leave-calculation':
-                        console.log("Leave Calculation: ", leaveRuleEl);
+                    // case 'rule-leave-calculation':
+                    //     console.log("Leave Calculation: ", leaveRuleEl);
                         
-                        ruleData.rule = 'leave_calculation';
-                        ruleData.configuration = {
-                            consecutive: leaveRule.find('#consecutive-input').prop('checked'),
-                            include_off_days: leaveRule.find('#include-off-days').prop('checked')
-                        };
-                    break;
-                    case 'rule-multiple-approval-levels-required':
+                    //     ruleData.rule = 'leave_calculation';
+                    //     ruleData.configuration = {
+                    //         consecutive: leaveRule.find('#consecutive-input').prop('checked'),
+                    //         include_off_days: leaveRule.find('#include-off-days').prop('checked')
+                    //     };
+                    // break;
+                    case 'rule-multiple-approval-levels-needed':
                         console.log("Multiple Approval Levels Required: ", leaveRuleEl);
-                        ruleData.rule = 'multiple_approval_levels_required';
+                        ruleData.rule = 'multiple_approval_levels_needed';
                     break;
                     case 'rule-restrict-gender':
-                        console.log("Gender: ", leaveRuleEl);
                         ruleData.rule = 'gender';
                         ruleData.configuration = {
                             gender: leaveRule.find('#gender-input').val(),
                         };
                     break;
                     case 'rule-can-carry-forward':
-                        console.log("Can Carry Forward: ", leaveRuleEl);
                         ruleData.rule = 'can_carry_forward';
                         ruleData.configuration = {
                             max_carry_forward_days: +(leaveRule.find('#max-carry-forward-days').val()),
                             valid_till_end_month: +(leaveRule.find('#valid-until-end-month').val()),
                         };
+                    break;
+                    case 'rule-required-attachment':
+                        ruleData.rule = 'required_attachment';
+                        ruleData.configuration = {
+                            attachment_type: leaveRule.find('#attachment-type').val(),
+                        };
+                    break;
+                    case 'rule-consecutive':
+                        ruleData.rule = 'consecutive';
+                    break;
+                    case 'rule-min-employment-period':
+                        ruleData.rule = 'min_employment_period';
+                        ruleData.configuration = {
+                            min_days: +(leaveRule.find('#min-days').val()),
+                        };
+                    case 'rule-max-no-of-children':
+                        ruleData.rule = 'max_no_of_children';
+                        ruleData.configuration = {
+                            max_no_of_children: +(leaveRule.find('#max-no-of-children').val()),
+                        };
+                    break;
+                    case 'rule-unpaid':
+                        ruleData.rule = 'unpaid';
+                    break;
+                    case 'rule-employee-cannot-apply':
+                        ruleData.rule = 'employee_cannot_apply';
+                    break;
+                    case 'rule-inc-off-days':
+                        ruleData.rule = 'inc_off_days';
+                    break;
+                    case 'rule-max-after-applied-days':
+                        ruleData.rule = 'max_after_applied_days';
+                        ruleData.configuration = {
+                            max_after_applied_days: +(leaveRule.find('#max-after-applied-days').val()),
+                        };
+                    break;
+                    case 'rule-max-applications':
+                        ruleData.rule = 'max_applications';
+                        ruleData.configuration = {
+                            max_applications: +(leaveRule.find('#max-applications').val()),
+                        };
+                    break;
+                    case 'rule-no-limit':
+                        ruleData.rule = 'no_limit';
+                    break;
+                    case 'rule-max-days-per-application':
+                        ruleData.rule = 'max_days_per_application';
+                        ruleData.configuration = {
+                            max_days_per_application: +(leaveRule.find('#max-days-per-application').val()),
+                        };
+                    break;
+                    case 'rule-non-prorated':
+                        ruleData.rule = 'non_prorated';
                     break;
                 }
 
@@ -615,7 +875,7 @@
                 data: data,
                 success: function(response) {
                     // console.log("SUCCESS", response);
-                    // window.location = '{{ route("admin.e-leave.configuration") }}'
+                    window.location = '{{ route("admin.e-leave.configuration") }}'
                     // showAlert(data.success);
                     // emergencyContactsTable.ajax.reload();
                     // $('#confirm-delete-modal').modal('toggle');

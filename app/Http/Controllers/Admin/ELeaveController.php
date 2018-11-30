@@ -35,8 +35,8 @@ class ELeaveController extends Controller
 
     public function postAddLeaveType(Request $request) {
         $leaveTypeData = $request->validate([
-            "code" => 'required',
-            "name" => 'required',
+            "code" => 'required|unique:leave_types,code,NULL,id,deleted_at,NULL',
+            "name" => 'required|unique:leave_types,name,NULL,id,deleted_at,NULL',
             "description" => 'required',
             "entitled_days" => '',
         ]);
@@ -145,6 +145,7 @@ public function postAddPublicHoliday(Request $request)
 
     return redirect()->route('admin.e-leave.configuration.leave-holidays');
 }
+
     public function postEditLeaveType(Request $request, $id) {
         $leaveType = LeaveType::where('id', $id)->first();
         if($leaveType->is_custom) {
@@ -222,5 +223,23 @@ public function postAddPublicHoliday(Request $request)
         }
 
         return response()->json(['success'=>'Record is successfully added']);
+    }
+
+    public function postDeactivateLeaveType(Request $request, $id) {
+        $leaveType = LeaveType::where('id', $id)->update(['active' => false]);
+
+        return response()->json(['success'=>'Leave type has been deactivated.']);
+    }
+
+    public function postActivateLeaveType(Request $request, $id) {
+        $leaveType = LeaveType::where('id', $id)->update(['active' => true]);
+
+        return response()->json(['success'=>'Leave type has been activated.']);
+    }
+
+    public function deleteLeaveType(Request $request, $id) {
+        $leaveType = LeaveType::where('id', $id)->delete();
+
+        return response()->json(['success'=>'Leave type has been deleted.']);
     }
 }

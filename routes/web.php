@@ -234,16 +234,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('e-leave/configuration/leaverequests', 'Admin\ELeaveController@displayLeaveRequests')->name('admin.e-leave.configuration.leaverequests');
 
 
-
-    //leave public holidays setup
-    // Route::get('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@addPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.add');
-    // Route::post('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@postAddPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.add.post');
-
-    // Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.edit')->where('id', '[0-9]+');
-    // Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.edit.post')->where('id', '[0-9]+');
-
-
-
     // > Add
     Route::get('settings/companies/add','Admin\SettingsController@addCompany')->name('admin.settings.companies.add');
     Route::post('settings/companies/add','Admin\SettingsController@postAddCompany')->name('admin.settings.companies.add.post');
@@ -379,15 +369,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
    Route::get('e-leave/configuration/leave-types/{id}/edit', 'Admin\ELeaveController@editLeaveType')->name('admin.e-leave.configuration.leave-types.edit');
    Route::post('e-leave/configuration/leave-types/{id}/edit', 'Admin\ELeaveController@postEditLeaveType')->name('admin.e-leave.configuration.leave-types.edit.post');
 
+   Route::post('e-leave/configuration/leave-types/{id}/activate', 'Admin\ELeaveController@postActivateLeaveType')->name('admin.e-leave.configuration.leave-types.activate.post');
+   Route::post('e-leave/configuration/leave-types/{id}/deactivate', 'Admin\ELeaveController@postDeactivateLeaveType')->name('admin.e-leave.configuration.leave-types.deactivate.post')->where('id', '[0-9]+');
+   Route::delete('e-leave/configuration/leave-types/{id}/delete', 'Admin\ELeaveController@deleteLeaveType')->name('admin.e-leave.configuration.leave-types.delete');
+
 
 
    Route::get('e-leave/configuration/leaveholidays', 'Admin\ELeaveController@displayPublicHolidays')->name('admin.e-leave.configuration.leave-holidays');
-      //leave public holidays setup
-      Route::get('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@addPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.add');
-      Route::post('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@postAddPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.add.post');
+    //leave public holidays setup
+    Route::get('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@addPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.add');
+    Route::post('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@postAddPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.add.post');
 
-      Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
-      Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
+    Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
+    Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
 
       // Edit later
     Route::get('/admin/report-to', 'AdminController@displayReportTo')->name('admin/report-to');
