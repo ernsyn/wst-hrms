@@ -14,7 +14,7 @@ class UpdateEmployeeReportTos extends Migration
     public function up()
     {
         Schema::table('employee_report_to', function (Blueprint $table) {
-            $table->integer('report_to_level')->nullable();
+       $table->integer('report_to_level')->nullable();     
         });
     }
 
