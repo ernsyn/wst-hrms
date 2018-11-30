@@ -76,6 +76,9 @@ class EmployeeController extends Controller
         ->editColumn('dob', function ($dependent) {
             return date('d/m/Y', strtotime($dependent->dob) );
         })
+        ->editColumn('alt_dob', function ($dependent) {
+            return date('Y-m-d', strtotime($dependent->dob) );
+        })
         ->make(true);
     }
 
@@ -217,7 +220,7 @@ class EmployeeController extends Controller
     public function postImmigration(Request $request, $id)
     {
         $immigrationData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
@@ -236,11 +239,11 @@ class EmployeeController extends Controller
     {
         $visaData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
-            'expiry_date' => 'required|date',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
+            'expiry_date' => 'required|date',
             'family_members' => 'required'
         ]);
 
@@ -512,7 +515,7 @@ class EmployeeController extends Controller
     public function postEditImmigration(Request $request, $emp_id, $id)
     {
         $immigrationUpdatedData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
@@ -527,8 +530,8 @@ class EmployeeController extends Controller
     {
         $visaUpdatedData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',

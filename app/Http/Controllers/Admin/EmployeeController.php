@@ -126,6 +126,9 @@ class EmployeeController extends Controller
         ->editColumn('dob', function ($dependent) {
             return date('d/m/Y', strtotime($dependent->dob) );
         })
+        ->editColumn('alt_dob', function ($dependent) {
+            return date('Y-m-d', strtotime($dependent->dob) );
+        })
         ->make(true);
     }
 
@@ -140,6 +143,12 @@ class EmployeeController extends Controller
         ->editColumn('expiry_date', function ($immigration) {
             return date('d/m/Y', strtotime($immigration->expiry_date) );
         })
+        ->editColumn('alt_issued_date', function ($immigration) {
+            return date('Y-m-d', strtotime($immigration->issued_date) );
+        })
+        ->editColumn('alt_expiry_date', function ($immigration) {
+            return date('Y-m-d', strtotime($immigration->expiry_date) );
+        })
         ->make(true);
     }
 
@@ -152,6 +161,12 @@ class EmployeeController extends Controller
         })
         ->editColumn('expiry_date', function ($visa) {
             return date('d/m/Y', strtotime($visa->expiry_date) );
+        })
+        ->editColumn('alt_issued_date', function ($visa) {
+            return date('Y-m-d', strtotime($visa->issued_date) );
+        })
+        ->editColumn('alt_expiry_date', function ($visa) {
+            return date('Y-m-d', strtotime($visa->expiry_date) );
         })
         ->make(true);
     }
@@ -182,6 +197,12 @@ class EmployeeController extends Controller
         })
         ->editColumn('end_date', function ($experience) {
             return date('d/m/Y', strtotime($experience->end_date) );
+        })
+        ->editColumn('alt_start_date', function ($experience) {
+            return date('Y-m-d', strtotime($experience->start_date) );
+        })
+        ->editColumn('alt_end_date', function ($experience) {
+            return date('Y-m-d', strtotime($experience->end_date) );
         })
         ->make(true);
     }
@@ -307,7 +328,7 @@ class EmployeeController extends Controller
     public function postImmigration(Request $request, $id)
     {
         $immigrationData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
@@ -326,8 +347,8 @@ class EmployeeController extends Controller
     {
         $visaData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
@@ -346,14 +367,15 @@ class EmployeeController extends Controller
     public function postJob(Request $request, $id)
     {
         $jobData = $request->validate([
-            'branch_id' => 'required',
-            'emp_mainposition_id' => 'required',
+            'basic_salary' => 'required|numeric',
+            'cost_centre_id' => 'required',
             'department_id' => 'required',
             'team_id' => 'required',
-            'cost_centre_id' => 'required',
+            'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
-            'start_date' => 'required',
-            'basic_salary' => 'required',
+            'branch_id' => 'required',
+            'start_date' => 'required|date',
+            'status' => 'required',
             'specification' => 'required'
         ]);
 
@@ -365,9 +387,10 @@ class EmployeeController extends Controller
          $end_date=   EmployeeJob::where('id', $id)
         ->whereNull('end_date');
 
-        EmployeeJob::where('emp_id', $id)
-        ->whereNull('end_date')
-        ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
+        // EmployeeJob::where('emp_id', $id)
+        // ->whereNull('end_date')
+        // ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
+        $job = new EmployeeJob($jobData);
 
         $employee = Employee::find($id);
         $employee->employee_jobs()->save($job);
@@ -602,7 +625,7 @@ class EmployeeController extends Controller
     public function postEditImmigration(Request $request, $emp_id, $id)
     {
         $immigrationUpdatedData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
@@ -617,8 +640,8 @@ class EmployeeController extends Controller
     {
         $visaUpdatedData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
