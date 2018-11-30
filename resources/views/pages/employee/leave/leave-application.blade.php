@@ -13,9 +13,8 @@
         <div class="col-xl-4">
             <div class="card calendar-leave">
                 <div class="card-body-leave">
-                    <div class="container-fluid">
-                       
-                        <form id="add-leave-request-form" enctype="multipart/form-data" data-parsley-validate>
+                    <div class="container-fluid">                       
+                        <form id="add-leave-request-form" data-parsley-validate>
                             @csrf
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Leave Type</label>
@@ -79,6 +78,7 @@
                                     <div id="error-message" class="error-message"></div>
                                 </div>
                                 <div class="col-sm-12">
+                                    <input type="hidden" id="mode" value="add">
                                     <button id="add-leave-request-submit" type="submit" class="btn btn-primary btn-block" disabled>Apply for
                                         <span id="total-days" class="total-days"><b>0.0</b> days</span>
                                     </button>
@@ -94,13 +94,120 @@
 <div id="templates" hidden>
     <option class="leave-type-option"></option>
 </div>
+<div class="modal fade" id="leave-request-response" tabindex="-1" role="dialog" aria-labelledby="leave-request-response-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-report-to-label">Leave Request Accepted</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @csrf
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <p>We have received your leave request subject to approval, thank you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="leave-details" tabindex="-1" role="dialog" aria-labelledby="leave-details-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-report-to-label">Leave Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @csrf
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <div><strong>From:</strong> <span id="start-time"></span></div>
+                        <div><strong>To:</strong> <span id="end-time"></span><br></div>
+                        <div id="leave-info"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="can-edit-delete">
+                <span id="leave-request-id" hidden></span>
+                <button id="edit-leave-request-button" type="button" class="btn btn-danger">
+                    Edit
+                </button>
+                {{-- <button id="delete-leave-request-button" type="button" class="btn btn-danger">
+                    Delete
+                </button> --}}
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 @section('scripts')
 <script type="text/javascript">
     $(function(){
         var attachmentRequired = false;
-        var employeeLeaves = [];
+        var workingDays = [];
+
+        $.get("{{ route('employee.e-leave.ajax.working-days') }}", function(workingDaysData, status) {
+            workingDays = workingDaysData;
+            initCalendar();
+        });
+
+        function initCalendar() {
+            $('#calendar-leave').fullCalendar({
+                themeSystem: 'jquery-ui',
+                header: {
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'month,agendaWeek,agendaDay,listMonth'
+                },
+                weekNumbers: false,
+                eventLimit: true, // allow "more" link when too many events
+                eventSources: [{
+                    url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'new']) }}",
+                    color: '#CCCCCC',
+                    textColor: 'black'
+                },
+                {
+                    url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'approved']) }}",
+                    color: 'blue',
+                    textColor: 'white'
+                },
+                {
+                    url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'rejected']) }}",
+                    color: 'red',
+                    textColor: 'white'
+                }],
+                businessHours: {  
+                    dow: workingDays
+                },
+                eventRender: function (event, element) {
+                    element.attr('href', 'javascript:void(0);');
+                    element.click(function() {
+                        event_start = new Date(event.start);
+                        event_end = event.end ? new Date(event.end) : event_start;
+
+                        if(event.status == "new") {
+                            $("#can-edit-delete").show();
+                        }
+                        else {
+                            $("#can-edit-delete").hide();
+                        }
+
+                        $("#leave-info").text(event.title);
+                        $("#start-time").text(event_start.toDateString());
+                        $("#end-time").text(event_end.toDateString());
+                        $("#leave-request-id").text(event.id);                    
+                        $("#leave-details").modal('toggle');
+                    });
+                }
+            });
+        }       
 
         $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
             $.each(leaveTypeData, function(key, leaveType){
@@ -113,10 +220,27 @@
         });
 
         $("#required-attachment").hide();
+        $("#can-edit-delete").hide();
 
         $("button.leave-day").on('click', function(){
             $("button.leave-day").removeClass("selected-day");
             $(this).addClass("selected-day");
+        });
+
+        $("#edit-leave-request-button").on('click', function() {
+            $("#leave-details").modal('toggle');
+
+            let getEditLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.leaves.edit', ['id' => '<<id>>']) }}';
+
+            var getEditLeaveRequest = getEditLeaveRequestTemplate.replace(encodeURI('<<id>>'), $("#leave-request-id").text());
+
+            $.get(getEditLeaveRequest, function(leaveRequestData, status) {
+                console.log(leaveRequestData);
+
+                $('#mode').val('edit');
+            });
+
+            // checkLeaveRequest($('#start-date').val(), $('#end-date').val());
         });
 
         $("#start-date").datepicker({
@@ -220,43 +344,14 @@
             }            
         });
 
-        $.get("{{ route('employee.e-leave.ajax.leaves') }}", function(leavesData, status) {
-            var leavesObject = {};
-
-            $.each(leavesData, function(key, leaveData){
-                var addLeavesObject = jQuery.extend({}, leavesObject); //create a shallow
-                addLeavesObject.title = leaveData.reason;
-                addLeavesObject.start = leaveData.start_date;
-                addLeavesObject.end = leaveData.end_date;
-                employeeLeaves.push(addLeavesObject);
-            });
-
-            console.log(employeeLeaves);
-        });
-
-        $('#calendar-leave').fullCalendar({
-            themeSystem: 'jquery-ui',
-            header: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'month,agendaWeek,agendaDay,listMonth'
-            },
-            weekNumbers: false,
-            eventLimit: false, // allow "more" link when too many events
-            eventSources: [{
-                events: employeeLeaves,
-                color: 'blue',
-                textColor: 'white'
-            }]
-        });
-
         function postLeaveRequest(data) {
             $.ajax({
                 url: "{{ route('employee.e-leave.ajax.request') }}",
                 type: 'POST',
                 data: data,
                 success: function(data) {
-                    console.log(data);
+                    $("#leave-request-response").modal('toggle');
+                    $("#calendar-leave").fullCalendar('refetchEvents');
                 },
                 error: function(xhr) {
                     console.log("Error: ", xhr);

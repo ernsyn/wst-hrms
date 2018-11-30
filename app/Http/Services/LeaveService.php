@@ -692,12 +692,13 @@ class LeaveService
         ];
     }
 
-    public static function getEmployeeLeaves($emp_id) {
-        $leaveRequests = LeaveRequest::where('emp_id', $emp_id)
-            // ->where('valid_from_date', '<=', $now)
-            // ->where('valid_until_date', '>=', $now)
+    public static function getEmployeeLeaves($emp_id, $status) {
+        return LeaveRequest::where('emp_id', $emp_id)
+            ->where('status', $status)
             ->get();
+    }
 
-        return $leaveRequests;
+    public static function getLeaveRequestSingle($id) {
+        return LeaveRequest::where('id', $id)->first();
     }
 }
