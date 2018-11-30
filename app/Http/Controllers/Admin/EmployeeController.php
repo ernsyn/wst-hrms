@@ -284,12 +284,15 @@ class EmployeeController extends Controller
             'driver_license_expiry_date' => 'nullable|date'
         ]);
         // dd($validatedEmployeeData);
-        $user = User::create($validatedUserData);
-        $user->assignRole('employee');
 
-        $validatedEmployeeData['user_id'] = $user->id;
-        $validatedEmployeeData['created_by'] = auth()->user()->id;
-        $employee = Employee::create($validatedEmployeeData);
+        DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
+            $user = User::create($validatedUserData);
+            $user->assignRole('employee');
+    
+            $validatedEmployeeData['user_id'] = $user->id;
+            $validatedEmployeeData['created_by'] = auth()->user()->id;
+            $employee = Employee::create($validatedEmployeeData);
+        });
 
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
     }
