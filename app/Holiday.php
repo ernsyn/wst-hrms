@@ -16,7 +16,8 @@ class Holiday extends Model
     'note',
     'status',
    'repeat_annually',
-    'total_days'
+    'total_days',
+    'state'
 
 
     ];
