@@ -35,8 +35,8 @@ class ELeaveController extends Controller
 
     public function postAddLeaveType(Request $request) {
         $leaveTypeData = $request->validate([
-            "code" => 'required',
-            "name" => 'required',
+            "code" => 'required|unique:leave_types',
+            "name" => 'required|unique:leave_types',
             "description" => 'required',
             "entitled_days" => '',
         ]);
@@ -235,5 +235,11 @@ public function postAddPublicHoliday(Request $request)
         $leaveType = LeaveType::where('id', $id)->update(['active' => true]);
 
         return response()->json(['success'=>'Leave type has been activated.']);
+    }
+
+    public function deleteLeaveType(Request $request, $id) {
+        $leaveType = LeaveType::where('id', $id)->delete();
+
+        return response()->json(['success'=>'Leave type has been deleted.']);
     }
 }
