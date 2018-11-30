@@ -78,7 +78,9 @@
                       <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration.leave-holidays') }}">Holidays Setup</a>
                         </li>
-
+                        <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
+                                <a href="{{ route('admin.e-leave.configuration.leave-holidays') }}">Leave Requests</a>
+                            </li>
                    {{--     <li class="menu-option {{ request()->is('admin/e-leave/configuration/leavetypes') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration.leavetypes') }}">Leave Type Setup</a>
                         </li> --}}
