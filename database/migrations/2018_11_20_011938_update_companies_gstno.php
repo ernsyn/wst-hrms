@@ -27,7 +27,6 @@ class UpdateCompaniesGstno extends Migration
     public function down()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->dropForeign(['gst_no']);
             $table->dropColumn('gst_no');
         });
     }
