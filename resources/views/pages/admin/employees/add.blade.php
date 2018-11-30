@@ -101,7 +101,7 @@
 
                         <div class="form-group row">
 
-                            <label class="col-md-4 col-form-label text-right">Date of Birth:</label>
+                            <label class="col-md-4 col-form-label text-right">Date of Birth*</label>
                             <div class="col-md-6">
                                 <input id="dob-date" type="text" class="form-control" placeholder="Date of Birth" aria-label="Date of Birth" aria-describedby="dob-icon"
                                     name="dob" readonly required>
@@ -155,7 +155,7 @@
                             <label class="col-lg-4 col-form-label text-lg-right">Number of Children</label>
                             <div class="col-lg-6">
                                 <input id="total_children" type="text" class="form-control{{ $errors->has('total_children') ? ' is-invalid' : '' }}" name="total_children"
-                                    value="{{ old('total_children') }}" required> @if ($errors->has('total_children'))
+                                    value="{{ old('total_children') }}"> @if ($errors->has('total_children'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('total_children') }}</strong>
                                 </span> @endif
@@ -166,7 +166,7 @@
                             <label class="col-lg-4 col-form-label text-lg-right">Driver License No</label>
                             <div class="col-lg-6">
                                 <input id="driver_license_no" type="text" class="form-control{{ $errors->has('driver_license_no') ? ' is-invalid' : '' }}"
-                                    name="driver_license_no" value="{{ old('driver_license_no') }}" required>                                @if ($errors->has('driver_license_no'))
+                                    name="driver_license_no" value="{{ old('driver_license_no') }}">                                @if ($errors->has('driver_license_no'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('driver_license_no') }}</strong>
                                     </span> @endif
@@ -337,6 +337,8 @@
         altField: "#alt-license-expiry-date",
         altFormat: 'yy-mm-dd',
         format: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
         onClose: function () {
             $(this).parsley().validate();
         }
