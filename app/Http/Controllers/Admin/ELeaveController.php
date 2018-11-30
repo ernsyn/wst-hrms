@@ -13,7 +13,10 @@ use App\Holiday;
 use App\LTAppliedRule;
 use App\LTEntitlementGradeGroup;
 use App\LeaveRequest;
-
+use Auth;
+use App\LeaveAllocation;
+use App\EmployeeReportTo;
+use App\LeaveRequestApproval;
 class ELeaveController extends Controller
 {
     public function __construct()
@@ -266,4 +269,78 @@ public function postEditHoliday(Request $request, $id)
 
         return response()->json(['success'=>'Record is successfully added']);
     }
+
+    public function addLeaveApproval(Request $request, $id) {
+    
+        $leaveRequest = LeaveRequest::find($id);
+
+        return view('pages.admin.e-leave.application.add-leave-request', ['leaveRequest' => $leaveRequest]);
+    }        
+
+    public function rejectLeaveApproval(Request $request, $id) {
+
+    $leaveRequest = LeaveRequest::find($id);
+
+    return view('pages.admin.e-leave.application.reject-leave-request', ['leaveRequest' => $leaveRequest]);
+}
+
+  public function postAddApproval(Request $request)
+        {          
+
+            $id = $request->input('id');     
+            $emp_id = $request->input('emp_id');    
+            $leave_type_id = $request->input('leave_type_id');   
+            $total_days =$request->input('total_days');  
+ 
+            LeaveRequest::where('id',$id)->update(array('status' => 'approved'));
+            $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+            $leaveRequestData = $request->validate([
+                ]);
+  
+
+            $leaveRequestData['leave_request_id'] =$id;
+            $leaveRequestData['approved_by_emp_id'] = 1;
+
+            $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
+           // $employee = Employee::find($report_to_emp_id);
+      
+            $leaveRequestData->save();
+
+            // $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+            // ->where('leave_type_id',$leave_type_id)
+            // ->update(array('spent_days'=>$leaveAllocationDataEntry));
+                return redirect()->route('admin.e-leave.configuration.leave-requests');
+
+    
+
+        }
+
+        public function postDisapproved(Request $request)
+        {          
+
+            $id = $request->input('id');     
+            $emp_id = $request->input('emp_id');    
+            $leave_type_id = $request->input('leave_type_id');   
+            $total_days =$request->input('total_days');  
+
+          $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
+           ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+ 
+ 
+            $leaveAllocationData = number_format($leaveAllocationData1,1);
+            $total_days =number_format($total_days,1);
+           $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+
+
+            LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
+            $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+ 
+
+            $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+            ->where('leave_type_id',$leave_type_id)
+            ->update(array('spent_days'=>$leaveAllocationDataEntry));
+                return redirect()->route('admin.e-leave.configuration.leave-requests');
+
+            }
+
 }

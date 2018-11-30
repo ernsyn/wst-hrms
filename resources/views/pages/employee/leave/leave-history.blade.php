@@ -11,34 +11,6 @@
     @endif
 
     {{-- Approved Leave Request --}}
-<div class="modal fade" id="approveLeaverequest" tabindex="-1" role="dialog" aria-labelledby="approveLeaverequest" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="updateContactLabel">Approve Leave Request</h5>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ route('approve_leave')}} ">
-                    @csrf
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                                {{-- <input id="id" type="text" class="form-control{{ $errors->has('id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
-                                name="id" value="{{ $leaveRequest->id }}" readonly> --}}
-                            <label class="col-md-8 col-form-label">Approve this leave?</label>                     
-                        </div>
-                    </div>     
-                    
-                    <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">
-                                Approve
-                            </button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                </form>
-            </div>
-          </div>
-        </div>
-</div>
 
     <div class="row">
         <div class="col-md-12">
@@ -72,22 +44,20 @@
 
                             <td>{{$leaveRequest['status']}}</td>
 
-                            {{-- <td> --}}
-                                {{-- @if ($leaveRequest['is_approved'] == '0')
+                            <td>
+                                @if ($leaveRequest['status']== 'new')
                                 
-                                    <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{['id' => $leaveRequest->id]}}"
-                                    data-target="#approveLeaverequest"><span class="fas fa-check-circle"></span></button>
-                                    <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{['id' => $leaveRequest->id]}}"
-                                    data-target="#disapproveLeaverequest"><span class="fas fa-times-circle"></span></button>                                            
+                                <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                disabled><span class="fas fa-check-circle"></span></button>
+                                <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
+                                disabled><span class="fas fa-times-circle"></span></button>        
                                 @else
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     disabled><span class="fas fa-check-circle"></span></button>
                                     <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
                                     disabled><span class="fas fa-times-circle"></span></button>                                            
-                                @endif                                                                                         --}}
-                            {{-- </td> --}}
+                                @endif                                                                                        
+                            </td>
                         </tr>
                         @endforeach
                 </tbody>

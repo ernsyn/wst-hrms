@@ -36,7 +36,7 @@ class LeaveRequest extends Model
 
     public function report_to()
     {
-        return $this->hasMany('App\EmployeeReportTo');
+        return $this->hasMany('App\EmployeeReportTo','emp_id');
     }
 
     public function leave_type() {

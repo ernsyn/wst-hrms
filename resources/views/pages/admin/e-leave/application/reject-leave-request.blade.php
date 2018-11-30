@@ -6,7 +6,7 @@
      
           
            
-    <form method="POST" action="{{ route('employee.e-leave.add-leave-request-disapprove.post', ['id' => $leaveRequest->id]) }}" id="form_validate"
+    <form method="POST" action="{{ route('admin.e-leave.add-leave-request-disapprove.post', ['id' => $leaveRequest->id]) }}" id="form_validate"
             data-parsley-validate>
         <div class="card-body">
                 @csrf 
