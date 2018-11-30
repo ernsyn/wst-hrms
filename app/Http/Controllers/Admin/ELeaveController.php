@@ -12,7 +12,11 @@ use App\LeaveType;
 use App\Holiday;
 use App\LTAppliedRule;
 use App\LTEntitlementGradeGroup;
-
+use App\LeaveRequest;
+use Auth;
+use App\LeaveAllocation;
+use App\EmployeeReportTo;
+use App\LeaveRequestApproval;
 class ELeaveController extends Controller
 {
     public function __construct()
@@ -21,6 +25,8 @@ class ELeaveController extends Controller
         $this->middleware(['role:super-admin|admin']);
     }
 
+
+    
     public function displayConfiguration() 
     {
         $defaultLeaveTypes = LeaveType::default()->get();
@@ -101,6 +107,14 @@ class ELeaveController extends Controller
 
 
 
+        // List Of Leave Public Holidays List
+public function displayLeaveRequests()
+{       
+    $leaveRequests = LeaveRequest::all();
+    
+    return view('pages.admin.e-leave.configuration.leave-requests', ['leaveRequests' => $leaveRequests]);
+}
+
     // List Of Leave Public Holidays List
 public function displayPublicHolidays()
 {       
@@ -122,6 +136,7 @@ public function postAddPublicHoliday(Request $request)
         'end_date' => 'required',
         // 'total_days' => 'required',
         'repeat_annually'=>'required',
+        'state'=>'required',
 
        //'status' => 'required',
        'note' => 'required',
@@ -145,6 +160,36 @@ public function postAddPublicHoliday(Request $request)
 
     return redirect()->route('admin.e-leave.configuration.leave-holidays');
 }
+
+
+public function editHoliday(Request $request, $id) {
+    $holidays = Holiday::find($id);
+
+    return view('pages.admin.e-leave.configuration.edit-leave-holidays', ['holidays' => $holidays]);
+}
+
+
+public function postEditHoliday(Request $request, $id)
+{
+
+    $holidayData = $request->validate([
+        'name' => 'required',
+        'start_date' =>'required',
+        'end_date' => 'required',
+        'total_days' =>'required',
+        'repeat_annually' => 'required',
+        'status' =>'required',
+        'note'=>'',
+        'state'=>'required'
+
+
+    ]);
+
+    Holiday::where('id', $id)->update($holidayData);
+
+    return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
+}
+
 
     public function postEditLeaveType(Request $request, $id) {
         $leaveType = LeaveType::where('id', $id)->first();
@@ -224,6 +269,79 @@ public function postAddPublicHoliday(Request $request)
 
         return response()->json(['success'=>'Record is successfully added']);
     }
+
+    public function addLeaveApproval(Request $request, $id) {
+    
+        $leaveRequest = LeaveRequest::find($id);
+
+        return view('pages.admin.e-leave.application.add-leave-request', ['leaveRequest' => $leaveRequest]);
+    }        
+
+    public function rejectLeaveApproval(Request $request, $id) {
+
+    $leaveRequest = LeaveRequest::find($id);
+
+    return view('pages.admin.e-leave.application.reject-leave-request', ['leaveRequest' => $leaveRequest]);
+}
+
+  public function postAddApproval(Request $request)
+        {          
+
+            $id = $request->input('id');     
+            $emp_id = $request->input('emp_id');    
+            $leave_type_id = $request->input('leave_type_id');   
+            $total_days =$request->input('total_days');  
+ 
+            LeaveRequest::where('id',$id)->update(array('status' => 'approved'));
+            $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+            $leaveRequestData = $request->validate([
+                ]);
+  
+
+            $leaveRequestData['leave_request_id'] =$id;
+            $leaveRequestData['approved_by_emp_id'] = 1;
+
+            $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
+           // $employee = Employee::find($report_to_emp_id);
+      
+            $leaveRequestData->save();
+
+            // $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+            // ->where('leave_type_id',$leave_type_id)
+            // ->update(array('spent_days'=>$leaveAllocationDataEntry));
+                return redirect()->route('admin.e-leave.configuration.leave-requests');
+
+    
+
+        }
+
+        public function postDisapproved(Request $request)
+        {          
+
+            $id = $request->input('id');     
+            $emp_id = $request->input('emp_id');    
+            $leave_type_id = $request->input('leave_type_id');   
+            $total_days =$request->input('total_days');  
+
+          $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
+           ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+ 
+ 
+            $leaveAllocationData = number_format($leaveAllocationData1,1);
+            $total_days =number_format($total_days,1);
+           $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+
+
+            LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
+            $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+ 
+
+            $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+            ->where('leave_type_id',$leave_type_id)
+            ->update(array('spent_days'=>$leaveAllocationDataEntry));
+                return redirect()->route('admin.e-leave.configuration.leave-requests');
+
+            }
 
     public function postDeactivateLeaveType(Request $request, $id) {
         $leaveType = LeaveType::where('id', $id)->update(['active' => false]);
