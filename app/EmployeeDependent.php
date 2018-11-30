@@ -13,7 +13,8 @@ class EmployeeDependent extends Model
     protected $fillable = [
         'name',
         'relationship',
-        'dob'
+        'dob',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

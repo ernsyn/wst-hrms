@@ -11,7 +11,8 @@ class EmployeeAttachment extends Model
     protected $table = 'employee_attachments';
     protected $fillable = [
         'name',
-        'notes'
+        'notes',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];
