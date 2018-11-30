@@ -30,7 +30,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="add-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="add-report-to-form">
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
@@ -101,10 +101,10 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="edit-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="edit-report-to-form">
                 <div class="modal-body">
                     @csrf
-                    <div class="form-row" class="form_validate" data-parsley-errors-messages-disabled>
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
                             <select class="form-control" name="report-to" id="report-to">
