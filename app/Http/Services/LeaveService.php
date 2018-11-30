@@ -48,9 +48,8 @@ class LeaveService
             $validUntilDate->day = 31;
 
             $allocatedDays = 0;
-            if(self::leaveTypeHasRule($leaveType, 'non_prorated')) {
+            if(self::leaveTypeHasRule($leaveType, LeaveTypeRule::NON_PRORATED)) {
                 $allocatedDays = $allocatedDaysInAYear;
-                
             } else {
                 $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
                 $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
@@ -87,7 +86,7 @@ class LeaveService
         ->get();
 
         foreach($leaveAllocations as $leaveAllocation) {
-            if(!self::leaveTypeHasRule($leaveAllocation->leave_type, 'non_prorated')) {
+            if(!self::leaveTypeHasRule($leaveAllocation->leave_type, LeaveTypeRule::NON_PRORATED)) {
                 $allocationValidFromDate = Carbon::parse($leaveAllocation->valid_from_date);
                 $allocationValidUntilDate = Carbon::parse($leaveAllocation->valid_until_date);
                 $totalAllocationMonths = $allocationValidUntilDate->month - $allocationValidFromDate->month + 1;
@@ -131,8 +130,8 @@ class LeaveService
         ->where('valid_until_date', '>=', $now)
         ->first();
 
-
-        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason, $attachment_data_url, $attachment_required) {
+        $leaveRequest = null;
+        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason, $attachment_data_url, $attachment_required, &$leaveRequest) {
             $leaveRequest = LeaveRequest::create([
                 'emp_id' => $employee->id,
                 'leave_type_id' => $leave_type_id,
@@ -165,6 +164,20 @@ class LeaveService
             
         });
         
+        return $leaveRequest;
+    }
+
+    public static function getLeaveRequestsForEmployee($employee, $start_date, $end_date) {
+        return LeaveRequest::where('emp_id', $employee->id)
+        ->where(function($q) use ($start_date, $end_date) {
+            $q->where('start_date', '>=', $start_date);
+            $q->where('start_date', '<=', $end_date);
+        })
+        ->OrWhere(function($q) use ($start_date, $end_date) {
+            $q->where('end_date', '>=', $start_date);
+            $q->where('end_date', '<=', $end_date);
+        })
+        ->get();
     }
 
     public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm) {
