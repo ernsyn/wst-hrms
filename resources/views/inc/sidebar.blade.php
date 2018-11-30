@@ -101,5 +101,44 @@
             </ul>
 
         </li> --}}
+        @if(PayrollHelper::isKpiProposer())
+        <li class="menu-section {{ request()->is('') ? 'active' : '' }}">
+            <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
+                <div class="row">
+                    <div class="col-1">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <div class="col-10">
+                        Payroll
+                    </div>
+                </div>
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('','') ? 'show' : '' }}" id="payrollSubmenu">
+                <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+                    <a href="{{ route('payroll') }}">Payroll</a>
+                </li>
+            </ul>
+
+        </li>
+        @endif
+        
+        <li class="menu-section {{ request()->is('') ? 'active' : '' }}">
+            <a class="info dropdown-toggle" href="#payslipSubmenu" data-toggle="collapse" aria-expanded="false">
+                <div class="row">
+                    <div class="col-1">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <div class="col-10">
+                        Payslip
+                    </div>
+                </div>
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('','') ? 'show' : '' }}" id="payslipSubmenu">
+                <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+                    <a href="{{ route('payslip.show') }}">Download Payslip</a>
+                </li>
+            </ul>
+
+        </li>
     </ul>
 </nav>

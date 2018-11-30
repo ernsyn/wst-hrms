@@ -3,7 +3,7 @@
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
 
-    @hasanyrole('super-admin|admin')
+    @hasanyrole('super-admin|admin|hr-exec')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -57,6 +57,32 @@
                     <li class="menu-option {{ request()->is('admin/employees') ? 'active' : '' }}">
                         <a href="{{ route('admin.employees') }}">Employee List</a>
                     </li>
+                </ul>
+            </li>
+            
+            {{-- SECTION: Payroll --}}
+            <li class="menu-section {{ request()->is('payroll','government_report', 'payroll-report') ? 'active' : '' }}">
+                <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
+                    <div class="row">
+                        <div class="col-1"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="col-10">Payroll</div>
+                    </div>
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('payroll','government_report', 'payroll-report') ? 'show' : '' }}" id="payrollSubmenu">
+                    <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+                        <a href="{{ route('payroll') }}">Payroll</a>
+                    </li>
+                    @hasrole('admin')
+                    <li class="menu-option {{ request()->is('government_report') ? 'active' : '' }}">
+                        <a href="{{ route('payroll/government_report') }}">Government Reports</a>
+                    </li>
+                    <li class="menu-option {{ request()->is('payroll-report') ? 'active' : '' }}">
+                        <a href="{{ route('payroll.report.show') }}">Reports</a>
+                    </li>
+                    <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+                        <a href="">Payroll Setup</a>
+                    </li>
+                    @endhasrole
                 </ul>
             </li>
             
