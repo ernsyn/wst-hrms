@@ -24,13 +24,13 @@ class EmployeeAttendance extends Model
         'clock_out_status',
         'clock_out_reason',
     ];
-
+    
     protected $dates = ['deleted_at'];
-
+    
     public function clock_in_image() {
         return $this->belongsTo('App\Media', 'clock_in_image_media_id');
     }
-
+    
     public function clock_out_image() {
         return $this->belongsTo('App\Media', 'clock_out_image_media_id');
     }
