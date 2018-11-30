@@ -367,7 +367,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
    Route::post('e-leave/configuration/leave-types/{id}/activate', 'Admin\ELeaveController@postActivateLeaveType')->name('admin.e-leave.configuration.leave-types.activate.post');
    Route::post('e-leave/configuration/leave-types/{id}/deactivate', 'Admin\ELeaveController@postDeactivateLeaveType')->name('admin.e-leave.configuration.leave-types.deactivate.post')->where('id', '[0-9]+');
-   Route::delete('e-leave/configuration/leave-types/{id}/delete', 'Admin\ELeaveController@postDeleteLeaveType')->name('admin.e-leave.configuration.leave-types.delete');
+   Route::delete('e-leave/configuration/leave-types/{id}/delete', 'Admin\ELeaveController@deleteLeaveType')->name('admin.e-leave.configuration.leave-types.delete');
 
 
 
