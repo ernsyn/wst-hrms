@@ -178,7 +178,7 @@
 </div>
 
 <!-- UPDATE -->
-{{-- <div class="modal fade" id="edit-job-popup" tabindex="-1" role="dialog" aria-labelledby="edit-job-label" aria-hidden="true">
+<div class="modal fade" id="edit-job-popup" tabindex="-1" role="dialog" aria-labelledby="edit-job-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -273,8 +273,9 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
-                            <input id="jobDate" autocomplete="off" type="text" class="form-control" readonly>
-                            <input name="jobDate" id="altjobDate" type="text" class="form-control" hidden>
+                            <input id="alt-date-job-edit" type="text" class="form-control">
+                            <input id="date-job-edit" type="text" class="form-control" readonly>
+                            <div id="date-job-error" class="invalid-feedback"></div>
                         </div>
                     </div>
 
@@ -309,7 +310,7 @@
             </form>
         </div>
     </div>
-</div> --}}
+</div>
 
 
 @section('scripts')
@@ -364,6 +365,14 @@
     //datepicker
     $('#date-job').datepicker({
         altField: "#alt-date-job",
+        altFormat: 'yy-mm-dd',
+        format: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-80:+0"
+    });
+    $('#date-job-edit').datepicker({
+        altField: "#alt-date-job-edit",
         altFormat: 'yy-mm-dd',
         format: 'dd/mm/yy',
         changeMonth: true,
@@ -464,12 +473,12 @@
         var editId = null;
         // Function: On Modal Clicked Handler
         $('#edit-job-popup').on('show.bs.modal', function (event) {
+            clearJobError('#edit-job-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
             console.log('Data: ', currentData)
 
             editId = currentData.id;
-
             $('#edit-job-form #branch').val(currentData.branch_id);
             $('#edit-job-form #main-position').val(currentData.emp_mainposition_id);
             $('#edit-job-form #department').val(currentData.department_id);
