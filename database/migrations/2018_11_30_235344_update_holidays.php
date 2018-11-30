@@ -28,6 +28,7 @@ class UpdateHolidays extends Migration
     {
         Schema::table('holidays', function (Blueprint $table) {
             $table->dropColumn('state');
+            //table
         });
     }
 }
