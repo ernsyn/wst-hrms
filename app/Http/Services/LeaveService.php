@@ -48,9 +48,8 @@ class LeaveService
             $validUntilDate->day = 31;
 
             $allocatedDays = 0;
-            if(self::leaveTypeHasRule($leaveType, 'non_prorated')) {
+            if(self::leaveTypeHasRule($leaveType, LeaveTypeRule::NON_PRORATED)) {
                 $allocatedDays = $allocatedDaysInAYear;
-                
             } else {
                 $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
                 $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
@@ -87,7 +86,7 @@ class LeaveService
         ->get();
 
         foreach($leaveAllocations as $leaveAllocation) {
-            if(!self::leaveTypeHasRule($leaveAllocation->leave_type, 'non_prorated')) {
+            if(!self::leaveTypeHasRule($leaveAllocation->leave_type, LeaveTypeRule::NON_PRORATED)) {
                 $allocationValidFromDate = Carbon::parse($leaveAllocation->valid_from_date);
                 $allocationValidUntilDate = Carbon::parse($leaveAllocation->valid_until_date);
                 $totalAllocationMonths = $allocationValidUntilDate->month - $allocationValidFromDate->month + 1;
