@@ -168,7 +168,7 @@ class LeaveService
     }
     
     public static function getAllLeaveRequestsForEmployee($employee) {
-        return LeaveRequest::where('emp_id', $employee->id)
+        return LeaveRequest::with('leave_type')->where('emp_id', $employee->id)
         // ->where(function($q) use ($start_date, $end_date) {
         //     $q->where('start_date', '>=', $start_date);
         //     $q->where('start_date', '<=', $end_date);
