@@ -69,62 +69,16 @@ class ELeaveController extends Controller
         $report_to_emp_id = $user->employee->id;
      //   $leave_request_approval = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)->count();
     
-     //select emp_id which have in the list
-$report_to = EmployeeReportTo::select('emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
+        $report_to = EmployeeReportTo::select('emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
 
-//select level for each employee_report_to
-$report_to_level = EmployeeReportTo::select('report_to_level')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
+        $leaveRequests =LeaveRequest::with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
 
-        //report_to_level_1
-        $report_to_level_1 = EmployeeReportTo::select('emp_id')
-        ->where('report_to_emp_id',$report_to_emp_id)
-        ->where('report_to_level',1)->get()->toArray();
-
-        //report_to_level_2
-        $report_to_level_2 = EmployeeReportTo::select('emp_id')
-        ->where('report_to_emp_id',$report_to_emp_id)
-        ->where('report_to_level',2)->get()->toArray();
-      
-//select leave_id for leave_request_approval 
-
-$leaveRequests =LeaveRequest::select('id')->with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
-
-
-        $leaveRequestApproval = LeaveRequestApproval::where('leave_request_id','=',$leaveRequests)
-        ->WhereIn('approved_by_emp_id',$report_to_employee)
-        ->count();
-
-        $leaveRequestApproval1 = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)
-        ->WhereIn('leave_request_id',$leaveRequests)
-        ->count();
-          //ori
-        $leaveRequests =LeaveRequest::select('id')
-        ->with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->count();
-        
-        dd($leaveRequestApproval1);
-
-  
-
-           $leaveRequests =LeaveRequest::with('leave_type','leave_request_approval')
-           ->whereIn('emp_id',$report_to)
-           ->get();
-        
         // $leave = LeaveRequest::find(1);
         // $exists = $leave->leave_request_approval->contains($id);
         // $leaveRequests->leave_request_approval; // Collection with 1 or more items, evaluates to true as well
         // count($leaveRequests->leave_request_approval); // 
-        // $client = Client::find(1);
-        // $exists = $client->products()->where('products.id', $productId)->exists();
-        
-        // $exists1 = DB::table('leave_requests')
-        // ->where('leave_request_approval',$id)
-        // ->count()> 0;
 
-//         $leave = LeaveRequest::with('leave_request_approval')
-//         ->exists();
-// dd($leave);
-
-
+        $employee = LeaveRequest::with('report_to')->get();
 
         return view('pages.employee.leave.leave-request', ['leaveRequests' => $leaveRequests]);   
     }

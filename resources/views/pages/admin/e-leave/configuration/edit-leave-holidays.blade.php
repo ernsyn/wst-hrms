@@ -64,7 +64,7 @@
                                         </div>
                                 </div>
                             </div>
-                        <div class="col-8">
+                            <div class="col-8">
                                 <label class="col-md-12 col-form-label">Note*</label>
                                 <div class="col-md-12">
                                     <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder="Total Day here"
@@ -74,21 +74,40 @@
                                         </span> @endif
                                 </div>
                             </div>
+
+
+                            <div class="col-4">
+                                <div class="form-group">
+                                        <label class="col-md-12 col-form-label">Status*</label>
+                                        <div class="col-md-12">
+                                    <select class="form-control{{ $errors->has('status') ? ' is-invalid' : '' }}" id="holidaysStatus" name="status" value="{{ $holidays->status }}">
+                                              <option>Active</option>
+                                              <option>Inactive</option>
+                                            </select>
+                                        </div>
+                                </div>
+                            </div>
+
            
-              
+                            <div class="col-8">
+                                <label class="col-md-5 col-form-label">State*</label>
+                                <div class="col-md-7">
+                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $holidays->state }}">
+                                            @foreach(App\Constants\MalaysianStates::$all as $state)
+                                            <option value="{{$state }}">{{ $state }}</option value="">
+                                            @endforeach
+                                        </select> @if ($errors->has('state'))
+                                        <span class="invalid-feedback" role="alert">
+                                                                  <strong>{{ $errors->first('state') }}</strong>
+                                                              </span> @endif
+                                    </select>
+                                    <div id="state-error" class="invalid-feedback">
+                                    </div>
+                                </div>
+                            </div>
              
                   
-                        <div class="col-4">
-                            <div class="form-group">
-                                    <label class="col-md-12 col-form-label">Status*</label>
-                                    <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('status') ? ' is-invalid' : '' }}" id="holidaysStatus" name="status" value="{{ $holidays->status }}">
-                                          <option>Active</option>
-                                          <option>Inactive</option>
-                                        </select>
-                                    </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 </div>
