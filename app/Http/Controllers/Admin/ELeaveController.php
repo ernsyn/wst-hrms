@@ -12,6 +12,7 @@ use App\LeaveType;
 use App\Holiday;
 use App\LTAppliedRule;
 use App\LTEntitlementGradeGroup;
+use App\LeaveRequest;
 
 class ELeaveController extends Controller
 {
@@ -103,6 +104,14 @@ class ELeaveController extends Controller
 
 
 
+        // List Of Leave Public Holidays List
+public function displayLeaveRequests()
+{       
+    $leaveRequests = LeaveRequest::all();
+    
+    return view('pages.admin.e-leave.configuration.leave-requests', ['leaveRequests' => $leaveRequests]);
+}
+
     // List Of Leave Public Holidays List
 public function displayPublicHolidays()
 {       
@@ -168,6 +177,7 @@ public function postEditHoliday(Request $request, $id)
         'repeat_annually' => 'required',
         'status' =>'required',
         'note'=>'',
+        'state'=>'required'
 
 
     ]);

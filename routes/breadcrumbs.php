@@ -51,6 +51,12 @@ Breadcrumbs::for('register_employee4', function ($trail) {
 });
 
 
+
+Breadcrumbs::for('admin.e-leave.configuration.leave-requests', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Leave History', route('admin.e-leave.configuration.leave-requests'));
+});
+
 Breadcrumbs::for('employee.e-leave.add-leave-request', function ($trail, $id) {
     $trail->parent('admin.dashboard');
     $trail->push('Approve Leave', route('employee.e-leave.add-leave-request', $id));
