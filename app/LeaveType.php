@@ -26,7 +26,7 @@ class LeaveType extends Model
     }
 
     public function lt_conditional_entitlements() {
-        return $this->hasMany('App\LTConditionalEntitlement'); 
+        return $this->hasMany('App\LTConditionalEntitlement')->orderBy('min_years'); 
     }
 
     public function lt_entitlements_grade_groups() {

@@ -37,6 +37,11 @@ use App\Deduction;
 use App\Bank;
 use App\EaForm;
 
+use App\LeaveAllocation;
+use App\LTAppliedRule;
+use DatePeriod;
+use DateInterval;
+
 use DB;
 use App\User;
 use App\EmployeeInfo;
@@ -47,6 +52,8 @@ use \DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Auth;
+
+use App\Http\Services\LeaveService;
 
 class ELeaveController extends Controller
 {
@@ -80,13 +87,12 @@ class ELeaveController extends Controller
     
         $report_to_emp_id = $user->employee->id;
      $report_to = EmployeeReportTo::where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
-        // $leaverequest = LeaveRequest::with('report_to')->where('emp_id',$userEmail)->get();
-        // $leaverequest = LeaveRequest::where('emp_id',$emp_id)->get();-
-$leaverequest =LeaveRequest::with('leave_types')->whereIn('emp_id',$report_to)->get();
+
+    $leaveRequests =LeaveRequest::with('leave_types')->whereIn('emp_id',$report_to)->get();
 
 // dd($leaverequest);
 
-        return view('pages.employee.leave.leave-request', ['leaverequest' => $leaverequest]);
+        return view('pages.employee.leave.leave-request', ['leaveRequests' => $leaveRequests]);
 
 
         
@@ -113,59 +119,6 @@ $leaverequest =LeaveRequest::with('leave_types')->whereIn('emp_id',$report_to)->
             return view('pages.employee.profile')->with('user',$user);
         }
     
-    
-    
-        public function displayEmergencyContact()
-        {
-            $contacts = EmergencyContact::where('emp_id', auth()->user()->id)->get();
-            // return view('pages.employee.emergency-contact', ['contacts'=>$contacts]);
-            return DataTables::of($contacts)->make(true);
-        }
-    
-        public function displayEmployeeDependent()
-        {       
-            $dependents = EmployeeDependent::where('emp_id', auth()->user()->id)->get();
-            // return view('pages.employee.employee-dependent', ['dependents'=>$dependents]);
-            return DataTables::of($dependents)->make(true);
-        }
-    
-        public function displayImmigration()
-        {
-            $immigrations = EmployeeImmigration::where('emp_id', auth()->user()->id)->get();
-            // return view('pages.employee.employee-immigration', ['immigrations'=>$immigrations]);
-            return DataTables::of($immigrations)->make(true);
-        }
-    
-        public function displayVisa()
-        {       
-            $visa = EmployeeVisa::where('emp_id', auth()->user()->id)->get();
-            // return view('pages.employee.employee-visa', ['visa'=>$visa]);
-            return DataTables::of($visa)->make(true);
-    
-        }
-    
-        public function displayQualificationCompanies()
-        {
-            $companies = EmployeeExperience::where('emp_id', auth()->user()->id)->get();
-            
-            // return view('pages.employee.qualification', ['companies'=>$companies, 'educations'=>$educations,'skills'=>$skills]);
-            return DataTables::of($companies)->make(true);
-        }
-        public function displayQualificationEducations() {
-            $educations = EmployeeEducation::where('emp_id', auth()->user()->id)->get();
-            return DataTables::of($educations)->make(true);
-        }
-        public function displayQualificationSkills() {
-            $skills = EmployeeSkills::where('emp_id', auth()->user()->id)->get();
-            return DataTables::of($skills)->make(true);
-        }
-    
-        public function displayBank()
-        {       
-            $banks = EmployeeBankAccount::where('emp_id', auth()->user()->id)->get();
-            // return view('pages.employee.bank', ['banks'=>$banks]);
-            return DataTables::of($banks)->make(true);
-        }
     
         public function displayJob()
         {       
@@ -241,7 +194,75 @@ $leaverequest =LeaveRequest::with('leave_types')->whereIn('emp_id',$report_to)->
             return view('pages.employee.leave.leave-application', ['leavebalance'=>$leavebalance]);
         }
 
-        
+        public function ajaxGetLeaveTypes()
+        {
+            $leaveTypes = LeaveService::getLeaveTypesForEmployee(Auth::user()->employee);
+
+            return response()->json($leaveTypes);
+        }
+
+        public function ajaxPostCreateLeaveRequest(Request $request)
+        {
+            $requestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => '',
+                'reason' => 'required',
+                'attachment' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $attachment_data_url = null;
+            if(array_key_exists('attachment', $requestData)) {
+                $attachment_data_url = $requestData['attachment'];
+            }
+
+            $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
+            return response()->json($result);
+        }
+
+        public function ajaxPostCheckLeaveRequest(Request $request)
+        {
+            $requestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm);
+
+            return response()->json($result);
+        }
+
+        public function postLeaveRequest(Request $request, $id)
+        {
+            $leaveRequestData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'reason' => 'required'
+            ]);
+
+            $leaveRequestData['is_template'] = false;
+
+
+            $leaveRequest = new LeaveRequest($leaveRequestData);
+
+            $employee = Employee::find($id);
+            $employee->leave_request()->save($leaveRequest);
+
+            return response()->json(['success' => 'Leave Request is successfully added']);
+        }
 
         public function displayLeaveBalance()
         {
@@ -258,6 +279,22 @@ $leaverequest =LeaveRequest::with('leave_types')->whereIn('emp_id',$report_to)->
             $types = LeaveType::all();
     
             return view('pages.employee.leave-balance', ['leavebalance'=>$leavebalance,'users'=>$users,'types'=>$types]);        
+        }
+    
+
+        public function approvedLeaveRequest(Request $request)
+        {          
+           
+            $req_id = $request->input('req_id');
+            LeaveRequest::where('id',$req_id)->update(array('is_approved' => '1'));
+           
+            // $leaveRequest = LeaveRequest::
+            // ->get();
+
+            // $spentDay
+            // LeaveAllocation::where('em_id',$id)->update(array('spent_days'));
+    
+            return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
         }
     
         // public function displayLeaveRequest() 25112018
@@ -560,24 +597,6 @@ $leaverequest =LeaveRequest::with('leave_types')->whereIn('emp_id',$report_to)->
     //     // return View::make('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
     // }
 
-    // public function approvedLeaveRequest(Request $request)
-    // {          
-       
-    //     $req_id = $request->input('req_id');
-    //     LeaveRequest::where('id',$req_id)->update(array('status' => 'Approved'));
-       
-    //     $leaverequest = LeaveRequest:: join('employees','employees.user_id','=','leave_employees_requests.user_id')
-    //     ->join('users','users.id','=','leave_employees_requests.user_id')
-    //     // ->join('employee_jobs','employee_jobs.emp_id','=','leave_employees_requests.user_id')
-    //     ->join('leave_types','leave_types.id','=','leave_employees_requests.id_leave_type')
-    //     ->select('leave_employees_requests.id as request_id','leave_employees_requests.start_date as start_date',
-    //     'leave_employees_requests.end_date as end_date','leave_employees_requests.total_days as total_days',
-    //     'users.name as name','leave_employees_requests.user_id as emp','leave_types.name as leave_type',
-    //     'leave_employees_requests.status as status')
-    //     ->get();
-
-    //     return view('pages.admin.leave-request', ['leaverequest'=>$leaverequest]);
-    // }
 
     // public function disapprovedLeaveRequest(Request $request)
     // {          

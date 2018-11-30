@@ -27,7 +27,7 @@ class CreateLeaveRequestsTable extends Migration
 
             $table->date('start_date');
             $table->date('end_date');
-            $table->date('am_pm')->nullable();
+            $table->enum('am_pm', ['am', 'pm'])->nullable();
 
             $table->decimal('applied_days', 4, 1);
             $table->string('reason', 200)->nullable();
