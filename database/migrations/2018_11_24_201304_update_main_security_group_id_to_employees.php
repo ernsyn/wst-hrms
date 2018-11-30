@@ -15,6 +15,7 @@ class UpdateMainSecurityGroupIdToEmployees extends Migration
     {
         Schema::table('employees', function($table) {
             $table->integer('main_security_group_id')->nullable();
+            $table->integer('eis_no')->nullable();
         });//
     }
 
@@ -24,9 +25,10 @@ class UpdateMainSecurityGroupIdToEmployees extends Migration
      * @return void
      */
     public function down()
-    { 
-        Schema::table('employees', function($table) {
-            $table->dropColumn('main_security_group_id');
-        });
+    { Schema::table('employees', function($table) {
+
+ 
+  
+    });
     }
 }
