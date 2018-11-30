@@ -66,7 +66,8 @@
                                         <span class="invalid-feedback" role="alert">
                                                                   <strong>{{ $errors->first('state') }}</strong>
                                                               </span> @endif
-                                    </select>
+                                    </select> 
+                                    
                                     <div id="type-error" class="invalid-feedback">
                                     </div>
                                 </div>
