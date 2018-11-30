@@ -70,13 +70,10 @@ class ELeaveController extends Controller
      //   $leave_request_approval = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)->count();
     
      //select emp_id which have in the list
-        $report_to = EmployeeReportTo::select('emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
-        
-$report_to_employee = EmployeeReportTo::select('report_to_emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
+$report_to = EmployeeReportTo::select('emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
 
 //select level for each employee_report_to
-        $report_to_level = EmployeeReportTo::select('report_to_level')
-        ->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
+$report_to_level = EmployeeReportTo::select('report_to_level')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
 
         //report_to_level_1
         $report_to_level_1 = EmployeeReportTo::select('emp_id')
@@ -88,9 +85,9 @@ $report_to_employee = EmployeeReportTo::select('report_to_emp_id')->where('repor
         ->where('report_to_emp_id',$report_to_emp_id)
         ->where('report_to_level',2)->get()->toArray();
       
+//select leave_id for leave_request_approval 
 
-        $leaveRequests =LeaveRequest::select('id')
-        ->with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
+$leaveRequests =LeaveRequest::select('id')->with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
 
 
         $leaveRequestApproval = LeaveRequestApproval::where('leave_request_id','=',$leaveRequests)
@@ -98,7 +95,7 @@ $report_to_employee = EmployeeReportTo::select('report_to_emp_id')->where('repor
         ->count();
 
         $leaveRequestApproval1 = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)
-        // ->WhereIn('approved_by_emp_id',$leaveRequests)
+        ->WhereIn('leave_request_id',$leaveRequests)
         ->count();
           //ori
         $leaveRequests =LeaveRequest::select('id')
