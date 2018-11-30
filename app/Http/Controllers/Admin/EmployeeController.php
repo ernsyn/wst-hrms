@@ -181,6 +181,9 @@ class EmployeeController extends Controller
         ->editColumn('start_date', function ($job) {
             return date('d/m/Y', strtotime($job->start_date) );
         })
+        ->editColumn('alt_start_date', function ($job) {
+            return date('Y-m-d', strtotime($job->start_date) );
+        })
         ->make(true);
     }
 
