@@ -472,7 +472,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="{{route('admin.settings.security-groups.edit.post')}}" id="security_group">
+            @foreach($company as $company_security_group)
+            <form method="POST" action="{{ route('admin.settings.security-groups.edit.post', ['id' => $company_security_group->id])}} "
+                id="add_security_group">
+                   @endforeach @csrf
                 @csrf
                 <div class="modal-body">
                     <div class="row pb-5">

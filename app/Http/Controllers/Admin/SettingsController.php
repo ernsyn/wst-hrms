@@ -1096,21 +1096,7 @@ public function postEditCompanyBank(Request $request)
     CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
     return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been updated.');
 }
-// public function postEditTravelAllowance(Request $request)
-// {      $additionData = $request->validate([
-//             'code' => 'required',
-//             'rate' => 'required',
-//             'countries_id'=>'required',
 
-//         ]);
-
-//      //   $additionData['status'] = 'active';
-//         $additionData['created_by'] = auth()->user()->id;
-
-//     CompanyTravelAllowance::where('id',  $request->travel_id)->update($additionData);
-
-//     return redirect()->route('admin.settings.companies');
-// }
 public function deleteCompanyBank(Request $request, $id)
 {
     CompanyBank::find($id)->delete();
@@ -1118,14 +1104,17 @@ public function deleteCompanyBank(Request $request, $id)
     return redirect()->route('admin.settings.company.company-details', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');
 }
 
-public function postEditSecurityGroup(Request $request, $id)
-{      $additionData = $request->validate([
+public function postEditSecurityGroup(Request $request)
+{     
+    $id = $request->id;
+    $additionData = $request->validate([
             'name' => 'required',
             'description' => 'required'
 
         ]);
         $additionData['company_id']= $id;
         $additionData['created_by'] = auth()->user()->id;
+      
 
     SecurityGroup::where('id',  $request->security_group_id)->update($additionData);
 
@@ -1166,24 +1155,24 @@ public function editCompanySecurities(Request $request, $id) {
     return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
 }
 
-public function postEditCompanySecurities(Request $request, $id)
-{
+// public function postEditCompanySecurities(Request $request, $id)
+// {
 
-    $deductionData = $request->validate([
+//     $deductionData = $request->validate([
 
-        'id_company_master' => 'required',
-        'code' => 'required',
-        'name' => 'required',
-        'type' => 'required',
-        'amount' => 'required',
+//         'id_company_master' => 'required',
+//         'code' => 'required',
+//         'name' => 'required',
+//         'type' => 'required',
+//         'amount' => 'required',
 
 
-    ]);
+//     ]);
 
-    Deduction::where('id', 1)->update($deductionData);
+//     Deduction::where('id', 1)->update($deductionData);
 
-    return redirect()->route('admin.settings.company.company-details',['id'=>$id]);
-}
+//     return redirect()->route('admin.settings.company.company-details',['id'=>$id]);
+// }
 
 
 
