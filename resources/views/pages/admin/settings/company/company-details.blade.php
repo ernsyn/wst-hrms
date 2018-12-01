@@ -1074,22 +1074,27 @@
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <input id="travel_id" name="travel_id" type="hidden">
-                            <label class="col-md-12 col-form-label">Code*</label>
+                            <label class="col-md-12 col-form-label">Name*</label>
                             <div class="col-md-12">
                                 <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
                                     required>
                             </div>
-                            <label class="col-md-12 col-form-label">Name*</label>
+                            <label class="col-md-12 col-form-label">Rate*</label>
                             <div class="col-md-12">
                                 <input id="rate" type="text" class="form-control{{ $errors->has('rate') ? ' is-invalid' : '' }}" name="rate" value="{{ old('rate') }}"
                                     required>
                             </div>
-                            <label class="col-md-12 col-form-label">Type*</label>
+                            <label class="col-md-12 col-form-label">Country*</label>
                             <div class="col-md-12">
-                                {{-- <select class="form-control" id="type" name="type">
-                                        <option value="Fixed">Fixed</option>
-                                        <option value="Custom">Custom</option>
-                                    </select> --}}
+                                    <select class="form-control{{ $errors->has('countries_id') ? ' is-invalid' : '' }}" name="countries_id" id="countries_id" required>
+                                            <option value=""></option>
+                                            @foreach(App\Country::all() as $company)
+                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                            @endforeach
+                                        </select> @if ($errors->has('countries_id'))
+                                        <span class="invalid-feedback" role="alert">
+                                                                  <strong>{{ $errors->first('countries_id') }}</strong>
+                                                              </span> @endif
                             </div>
                         </div>
                     </div>

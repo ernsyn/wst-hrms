@@ -1212,11 +1212,11 @@ public function postAddCompanyTravelAllowance(Request $request,$id)
   return redirect()->route('admin.settings.company.company-details',['id'=>$id]);
 }
 
-public function editCompanyTravelAllowance(Request $request, $id) {
-    $deduction = Deduction::find($id);
+// public function editCompanyTravelAllowance(Request $request, $id) {
+//     $deduction = Deduction::find($id);
 
-    return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
-}
+//     return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
+// }
 
 
 
@@ -1225,7 +1225,7 @@ public function postEditTravelAllowance(Request $request)
 {      $additionData = $request->validate([
             'code' => 'required',
             'rate' => 'required',
-
+            'countries_id'=>'required',
 
         ]);
 
