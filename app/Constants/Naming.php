@@ -23,7 +23,8 @@ class Naming
         LeaveTypeRule::DEDUCT_AFTER_LEAVE_TYPES_INSUFFICIENT => 'Deduct Other Leave Types if Insufficient',
         LeaveTypeRule::MAX_APPLICATIONS => 'Maximum Applications',
         LeaveTypeRule::NO_LIMIT => 'No Applied Days Limit',
-        LeaveTypeRule::MAX_DAYS_PER_APPLICATION => 'Maximum Days Per Application'
+        LeaveTypeRule::MAX_DAYS_PER_APPLICATION => 'Maximum Days Per Application',
+        LeaveTypeRule::NON_PRORATED => 'Non-Prorated'
     ];
 
     public static function leaveTypeRule($rule) {
