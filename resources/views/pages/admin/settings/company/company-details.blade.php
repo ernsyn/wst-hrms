@@ -369,7 +369,7 @@
                             <div class="col-md-12">
                                 <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" value="{{ old('bank_code') }}">
                                     @foreach(App\BankCode::all() as $banks)
-                                    <option value="{{ $banks->bank_code }}">{{ $banks->name }}</option>
+                                    <option value="{{ $banks->id }}">{{ $banks->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
