@@ -52,6 +52,9 @@
             </div>
             <form id="add-main-security-group-form">
                 <div class="modal-body">
+                        @foreach($employees as $security_groups)
+                        <form method="POST" action="{{ route('admin.employees.main-security-groups.post', ['id' => $security_groups->main_security_emp_id ])}} " id="form_validate">
+                            @endforeach
                     @csrf
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
@@ -62,7 +65,7 @@
                                     <option value="{{ $company->id }}">{{ $company->name }}</option>
                                     @endforeach
                                 </select>
-                                <div id="security-group-id-error" class="invalid-feedback"></div>
+                                <div id="main-security-group-id-error" class="invalid-feedback"></div>
                             </div>
                         </div>
                     </div>
