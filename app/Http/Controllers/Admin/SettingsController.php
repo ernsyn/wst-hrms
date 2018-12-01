@@ -454,10 +454,10 @@ class SettingsController extends Controller
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,NULL,id,deleted_at,NULL',
             'contact_no_primary' =>'required|numeric',
-            'contact_no_secondary' => 'required|numeric',
-            'fax_no' =>'required|numeric',
+            'contact_no_secondary' => '',
+            'fax_no' =>'',
             'address'=>'required',
-            'country_code'=> 'required|numeric',
+            'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric'
@@ -505,10 +505,10 @@ class SettingsController extends Controller
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,'.$id.',id,deleted_at,NULL',
             'contact_no_primary' =>'required|numeric',
-            'contact_no_secondary' => 'required|numeric',
-            'fax_no' =>'required|numeric',
+            'contact_no_secondary' => '',
+            'fax_no' =>'',
             'address'=>'required',
-            'country_code'=> 'required|numeric',
+            'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric'
