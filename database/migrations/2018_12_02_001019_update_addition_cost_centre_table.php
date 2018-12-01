@@ -38,8 +38,21 @@ class UpdateAdditionCostCentreTable extends Migration
      */
     public function down()
     {
+        Schema::table('company_bank', function (Blueprint $table) {
+            $table->dropColumn('acc_name');
+            $table->dropColumn('status');
+        });
+
+        Schema::table('deduction_cost_centre', function (Blueprint $table) {
+            $table->dropColumn('updated_at');
+            $table->dropColumn('created_at');
+            $table->dropColumn('deleted_at');
+        });
+
         Schema::table('addition_cost_centre', function (Blueprint $table) {
-            //
+            $table->dropColumn('updated_at');
+            $table->dropColumn('created_at');
+            $table->dropColumn('deleted_at');
         });
     }
 }

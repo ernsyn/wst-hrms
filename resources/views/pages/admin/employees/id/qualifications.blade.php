@@ -48,9 +48,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
-                            </div>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+                        
                         </div>
                     </div>
                 </div>
@@ -248,9 +247,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
-                            </div>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+                            
                         </div>
                     </div>
                 </div>
@@ -733,10 +731,10 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#add-experience-form #end-date-experience').addClass('is-invalid');
                                         $('#add-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'notes':
-                                        $('#add-experience-form #notes').addClass('is-invalid');
-                                        $('#add-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+                                    // case 'notes':
+                                    //     $('#add-experience-form #notes').addClass('is-invalid');
+                                    //     $('#add-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    // break;
                                 }
                             }
                         }
@@ -812,10 +810,10 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-experience-form #end-date-experience-edit').addClass('is-invalid');
                                         $('#edit-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'notes':
-                                        $('#edit-experience-form #notes').addClass('is-invalid');
-                                        $('#edit-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+                                    // case 'notes':
+                                    //     $('#edit-experience-form #notes').addClass('is-invalid');
+                                    //     $('#edit-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    // break;
                                 }
                             }
                         }
