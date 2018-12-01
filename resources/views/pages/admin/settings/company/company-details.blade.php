@@ -65,7 +65,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{$companybanks->company->name}}</td>
                                                     <td>{{$companybanks['account_name']}}</td>
-                                                    <td>{{$companybanks['bank_code']}}</td>
+                                                    <td>{{$companybanks->bank->name}}</td>
                                                     <td>{{$companybanks['created_at']}}</td>
                                                     <td>{{$companybanks['status']}}</td>
 
