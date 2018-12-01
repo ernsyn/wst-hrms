@@ -13,9 +13,14 @@ class CompanyTravelAllowance extends Model
         'company_id',
         'rate',
         'country_id',
+        'code',
      
     ];
 
+    public function countries()
+    {
+        return $this->belongsTo('App\Country');
+    }
 
 
  

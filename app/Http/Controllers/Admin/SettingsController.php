@@ -655,13 +655,14 @@ class SettingsController extends Controller
         $security = SecurityGroup::where('company_id', $id)->get();
         $additions = Addition::where('company_id', $id)->get();
         $deductions = Deduction::where('company_id', $id)->get();
-        $travels = CompanyTravelAllowance::where('company_id', $id)->get();
+        $company_travel_allowance = CompanyTravelAllowance::where('company_id', $id)->get();
+    //    $employee = Employee::with('user', 'employee_jobs')->find($id);
 
         $bank_list = Bank::all();
         $ea_form = EaForm::all();
         $cost_centre = CostCentre::all();
         $grade = EmployeeGrade::all();
-        $company_travel_allowance = CompanyTravelAllowance::where('company_id', $id)->get();
+     //   $company_travel_allowance = CompanyTravelAllowance::where('company_id', $id)->get();
 
         return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
         'security'=>$security, 'additions'=>$additions, 'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company,
@@ -912,7 +913,7 @@ public function postAddCompanyDeduction(Request $request, $id)
     $deduction->cost_centres()->sync($validatedDeductionCostCentreData['cost_centres']);
 
   //  $user->save();
-    return redirect()->route('admin.settings.deductions');
+    return redirect()->route('admin.settings.companies');
 }
 
 
@@ -999,7 +1000,7 @@ public function postAddCompanyAddition(Request $request, $id)
         $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
 
 
-    return redirect()->route('admin.settings.additions');
+    return redirect()->route('admin.settings.companies');
 
 }
 
@@ -1169,8 +1170,13 @@ public function postEditCompanySecurities(Request $request, $id)
 
 
 public function displayTravelAllowance()
+
+
+
 {
-    $travel = TravelAllowance::all();
+
+       $employee = Employee::with('user', 'employee_jobs')->find($id);
+ //fb   $travel = TravelAllowance::all();
     return view('pages.admin.settings.travel', ['travel' => $travel]);
 
 }
@@ -1186,8 +1192,8 @@ public function postAddCompanyTravelAllowance(Request $request,$id)
    $validateSecurityGroup = $request->validate([
 
    'rate' => 'required',
-   'code' => 'required',
    'countries_id'=>'required',
+   'code'=>'required',
 
     ]);
 
@@ -1197,7 +1203,7 @@ public function postAddCompanyTravelAllowance(Request $request,$id)
     // $security = SecurityGroup::create($validateSecurityGroup);
 
     $validateSecurityGroup['created_by'] = auth()->user()->id;
-    SecurityGroup::create($validateSecurityGroup);
+    CompanyTravelAllowance::create($validateSecurityGroup);
 
 
 

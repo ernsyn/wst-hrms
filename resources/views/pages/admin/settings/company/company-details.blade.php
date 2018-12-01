@@ -244,9 +244,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Code</th>
                                                     <th>Name</th>
-                                                    <th>Amount</th>
+                                                    <th>Country</th>
+                                                    <th>Rate</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -255,9 +255,9 @@
                                                 @foreach($company_travel_allowance as $company_travel_allowances)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{$company_travel_allowances['company_id']}}</td>
-                                                    <td>{{$company_travel_allowances['rate']}}</td>
                                                     <td>{{$company_travel_allowances['code']}}</td>
+                                                    <td>{{$company_travel_allowances['countries_id']}}</td>
+                                                    <td>{{$company_travel_allowances['rate']}}</td>
                                                     <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                                             data-travel-id="{{$company_travel_allowances['id']}}" data-travel-code="{{$company_travel_allowances['code']}}"
                                                             data-travel-rate="{{$company_travel_allowances['rate']}}" data-travel-status="{{$company_travel_allowances['status']}}"
@@ -293,9 +293,13 @@
             <span aria-hidden="true">&times;</span>
             </button>
             </div>
-            @foreach($bank as $banks)
-            <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->company_id ])}} " id="form_validate">
-                @endforeach
+            @foreach($company as $banks)
+        
+
+                <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->id])}} "
+
+                        id="add_company_bank">
+                        @endforeach
                 <div class="modal-body">
                     @csrf
                     <div class="row p-3">
@@ -305,7 +309,7 @@
                                 <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" required>
                                 <option value="">Please Select</option>
                                 @foreach(App\BankCode::all() as $banks)
-                                <option value="{{ $banks->bank_code }}">{{ $banks->name }}</option>
+                                <option value="{{ $banks->id }}">{{ $banks->name }}</option>
                                 @endforeach
                             </select> @if ($errors->has('bank_code'))
                                 <span class="invalid-feedback" role="alert">
@@ -424,7 +428,7 @@
 
                 @foreach($company as $company_security_group)
                 <form method="POST" action="{{ route('admin.settings.security-groups.add.post', ['id' => $company_security_group->id])}} "
-                    id="add_company_bank">
+                    id="add_security_group">
                     @endforeach @csrf @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -1015,18 +1019,34 @@
                     @endforeach @csrf @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
-                            <label class="col-md-12 col-form-label">Security Group Name*</label>
+                            <label class="col-md-12 col-form-label">Travel Allowance Name*</label>
                             <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
+                                <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
                                     required>
                             </div>
-                            <label class="col-md-12 col-form-label">Description*</label>
+                            <label class="col-md-12 col-form-label">Rate*</label>
+                            <div class="col-md-12">
+                                <input id="rate" type="text" class="form-control{{ $errors->has('rate') ? ' is-invalid' : '' }}" name="rate" value="{{ old('rate') }}"
+                                    required>
+                            </div>                                         
+                            <label class="col-md-12 col-form-label">Country*</label>
                             <div class="col-md-10">
-                                <textarea name="description" class="form-control"></textarea>
-                            </div>
-
+                                        <select class="form-control{{ $errors->has('countries_id') ? ' is-invalid' : '' }}" name="countries_id" id="countries_id" required>
+                                            <option value=""></option>
+                                            @foreach(App\Country::all() as $company)
+                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                            @endforeach
+                                        </select> @if ($errors->has('countries_id'))
+                                        <span class="invalid-feedback" role="alert">
+                                                                  <strong>{{ $errors->first('countries_id') }}</strong>
+                                                              </span> @endif
+                                  
+                                </div>
                         </div>
                     </div>
+
+
+
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">
                             {{ __('Submit') }}
