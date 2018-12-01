@@ -1229,7 +1229,11 @@ public function postAddCompanyTravelAllowance(Request $request,$id)
 
 
 public function postEditTravelAllowance(Request $request)
-{      $additionData = $request->validate([
+{   
+   
+    $id =$request->travel_allowance_id;  
+    
+     $additionData = $request->validate([
             'code' => 'required',
             'rate' => 'required',
             'countries_id'=>'required',
@@ -1241,7 +1245,9 @@ public function postEditTravelAllowance(Request $request)
 
     CompanyTravelAllowance::where('id',  $request->travel_id)->update($additionData);
 
-    return redirect()->route('admin.settings.companies');
+
+    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Travel Allowance has successfully been updated.');
+
 }
 
 

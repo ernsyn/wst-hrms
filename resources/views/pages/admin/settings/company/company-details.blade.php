@@ -256,7 +256,8 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{$company_travel_allowances['code']}}</td>
-                                                    <td>{{$company_travel_allowances['countries_id']}}</td>
+                                                    
+                                                    <td>{{$company_travel_allowances->countries->full_name}}</td>
                                                     <td>{{$company_travel_allowances['rate']}}</td>
                                                     <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                                             data-travel-id="{{$company_travel_allowances['id']}}" data-travel-code="{{$company_travel_allowances['code']}}"
@@ -1019,7 +1020,7 @@
                 @foreach($company as $company_travel)
                 <form method="POST" action="{{ route('admin.settings.company-travel-allowance.add.post', ['id' => $company_travel->id])}} "
                     id="add_company_bank">
-                    @endforeach @csrf @csrf
+                    @endforeach @csrf 
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <label class="col-md-12 col-form-label">Travel Allowance Name*</label>
@@ -1072,8 +1073,12 @@
                     </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{route('admin.settings.travel-allowance.edit.post')}}" id="travel_allowance">
-                    @csrf
+           
+                    @foreach($company_travel_allowance as $travel_allowance)
+                    <form method="POST" action="{{ route('admin.settings.travel-allowance.edit.post', ['travel_allowance_id' => $travel_allowance->company_id])}} "
+                        id="company_travel_allowance">
+                        @endforeach @csrf 
+                    
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <input id="travel_id" name="travel_id" type="hidden">

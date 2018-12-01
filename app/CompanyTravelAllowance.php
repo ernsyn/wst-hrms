@@ -19,9 +19,10 @@ class CompanyTravelAllowance extends Model
 
     public function countries()
     {
-        return $this->belongsTo('App\Country');
+        return $this->belongsTo('App\Country','countries_id');
     }
 
+   
 
  
 }
