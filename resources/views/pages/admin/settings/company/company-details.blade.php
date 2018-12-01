@@ -164,9 +164,12 @@
                                                     <td>{{$additions['name']}}</td>
                                                     <td>{{$additions['amount']}}</td>
                                                     <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                        
+                                            
                                                             data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
-                                                            data-addition-accout-name="{{$additions['name']}}" data-addition-status="{{$additions['status']}}"
-                                                            data-target="#editCompanyAdditionPopup"><i class="fas fa-pencil-alt"></i></button></td>
+                                                            data-addition-name="{{$additions['name']}}" data-addition-type="{{$additions['type']}}"
+                                                            data-addition-amount="{{$additions['amount']}}" data-addition-confirmed_employee="{{$additions['confirmed_employee']}}"
+                                                            data-addition-status="{{$additions['status']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-pencil-alt"></i></button></td>
 
 
                                                 </tr>
