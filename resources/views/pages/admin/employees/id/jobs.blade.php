@@ -159,10 +159,9 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="specification"><strong>Specification*</strong></label>
-                            <textarea id="specification" type="number" class="form-control" placeholder="" value=""
-                                required></textarea>
-                            <div id="specification-error" class="invalid-feedback">
+                            <label for="remarks"><strong>Remarks</strong></label>
+                            <textarea id="remarks" type="number" class="form-control" placeholder="" value=""></textarea>
+                            <div id="remarks-error" class="invalid-feedback">
 
                             </div>
                         </div>
@@ -299,10 +298,9 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="specification"><strong>Specification*</strong></label>
-                            <textarea id="specification" type="number" class="form-control" placeholder="" value=""
-                                required></textarea>
-                            <div id="specification-error" class="invalid-feedback">
+                            <label for="remarks"><strong>Remarks</strong></label>
+                            <textarea id="remarks" type="number" class="form-control" placeholder="" value=""></textarea>
+                            <div id="remarks-error" class="invalid-feedback">
 
                             </div>
                         </div>
@@ -441,13 +439,12 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="specification"><strong>Specification*</strong></label>
-                            <textarea id="specification" type="number" class="form-control" placeholder="" value=""
-                                required></textarea> {{--
+                            <label for="remarks"><strong>Remarks</strong></label>
+                            <textarea id="remarks" type="number" class="form-control" placeholder="" value=""></textarea> {{--
                             <div class="valid-feedback">
                                 Looks good!
                             </div> --}}
-                            <div id="specification-error" class="invalid-feedback">
+                            <div id="remarks-error" class="invalid-feedback">
 
                             </div>
                         </div>
@@ -566,7 +563,7 @@
                     branch_id: $('#add-job-form #branch').val(),
                     start_date: $('#add-job-form #alt-date-job').val(),
                     status: $('#add-job-form #employment-status').val(),
-                    specification: $('#add-job-form #specification').val()
+                    remarks: $('#add-job-form #remarks').val()
                 },
                 success: function (data) {
                     $(e.target).removeAttr('disabled');
@@ -578,7 +575,7 @@
                 },
                 error: function (xhr) {
                     $(e.target).removeAttr('disabled');
-                    
+
                     if (xhr.status == 422) {
                         var errors = xhr.responseJSON.errors;
                         console.log("Error: ", xhr);
@@ -641,10 +638,10 @@
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
-                                    case 'specification':
-                                        $('#add-job-form #specification').addClass(
+                                    case 'remarks':
+                                        $('#add-job-form #remarks').addClass(
                                             'is-invalid');
-                                        $('#add-job-form #specification-error').html(
+                                        $('#add-job-form #remarks-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
@@ -681,7 +678,7 @@
             $('#edit-job-form #branch').val(currentData.branch_id);
             $('#edit-job-form #date-job-edit').val(currentData.start_date);
             $('#edit-job-form #employment-status').val(currentData.status);
-            $('#edit-job-form #specification').val(currentData.specification);
+            $('#edit-job-form #remarks').val(currentData.remarks);
 
             $('#edit-job-form #alt-date-job-edit').val(currentData.alt_start_date);
         });
@@ -706,7 +703,7 @@
                     branch_id: $('#edit-job-form #branch').val(),
                     start_date: $('#edit-job-form #alt-date-job-edit').val(),
                     status: $('#edit-job-form #employment-status').val(),
-                    specification: $('#edit-job-form #specification').val()
+                    remarks: $('#edit-job-form #remarks').val()
                 },
                 success: function (data) {
                     showAlert(data.success);
@@ -778,10 +775,10 @@
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
-                                    case 'specification':
-                                        $('#edit-job-form #specification').addClass(
+                                    case 'remarks':
+                                        $('#edit-job-form #remarks').addClass(
                                             'is-invalid');
-                                        $('#edit-job-form #specification-error').html(
+                                        $('#edit-job-form #remarks-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
@@ -807,7 +804,7 @@
         $(htmlId + ' #date-job').val('');
         $(htmlId + ' #date-job-edit').val('');
         $(htmlId + ' #employment-status').val('');
-        $(htmlId + ' #specification').val('');
+        $(htmlId + ' #remarks').val('');
 
         $(htmlId + ' #basic-salary').removeClass('is-invalid');
         $(htmlId + ' #cost-centre').removeClass('is-invalid');
@@ -819,7 +816,7 @@
         $(htmlId + ' #date-job').removeClass('is-invalid');
         $(htmlId + ' #date-job-edit').removeClass('is-invalid');
         $(htmlId + ' #employment-status').removeClass('is-invalid');
-        $(htmlId + ' #specification').removeClass('is-invalid');
+        $(htmlId + ' #remarks').removeClass('is-invalid');
     }
 
     function clearJobError(htmlId) {
@@ -833,7 +830,7 @@
         $(htmlId + ' #date-job').removeClass('is-invalid');
         $(htmlId + ' #date-job-edit').removeClass('is-invalid');
         $(htmlId + ' #employment-status').removeClass('is-invalid');
-        $(htmlId + ' #specification').removeClass('is-invalid');
+        $(htmlId + ' #remarks').removeClass('is-invalid');
     }
 
     function showAlert(message) {

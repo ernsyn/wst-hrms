@@ -379,7 +379,7 @@ class SettingsController extends Controller
         $created_by = auth()->user()->id;
 
         DB::insert('insert into employee_jobs
-        (emp_id, branch_id, specification,
+        (emp_id, branch_id, remarks,
         emp_mainposition_id, department_id, team_id,
         cost_centre_id, emp_grade_id,start_date,
         basic_salary, status, created_by)
