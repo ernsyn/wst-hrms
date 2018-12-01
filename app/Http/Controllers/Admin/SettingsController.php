@@ -454,10 +454,10 @@ class SettingsController extends Controller
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,NULL,id,deleted_at,NULL',
             'contact_no_primary' =>'required|numeric',
-            'contact_no_secondary' => 'required|numeric',
-            'fax_no' =>'required|numeric',
+            'contact_no_secondary' => '',
+            'fax_no' =>'',
             'address'=>'required',
-            'country_code'=> 'required|numeric',
+            'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric'
@@ -484,7 +484,7 @@ class SettingsController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'template_name' => 'required|unique:employee_working_days,template_name,{$id},id,deleted_at,NULL',
+            'template_name' => "required|unique:employee_working_days,template_name,{$id},id,deleted_at,NULL",
             'monday' => 'required',
             'tuesday' => 'required',
             'wednesday' => 'required',
@@ -494,7 +494,7 @@ class SettingsController extends Controller
             'sunday' => 'required',
         ]);
 
-        EmployeeWorkingDay::where('id', $id)->update($workingDayData);
+        EmployeeWorkingDay::templates()->where('id', $id)->update($workingDayData);
 
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been updated.');
     }
@@ -505,10 +505,10 @@ class SettingsController extends Controller
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,'.$id.',id,deleted_at,NULL',
             'contact_no_primary' =>'required|numeric',
-            'contact_no_secondary' => 'required|numeric',
-            'fax_no' =>'required|numeric',
+            'contact_no_secondary' => '',
+            'fax_no' =>'',
             'address'=>'required',
-            'country_code'=> 'required|numeric',
+            'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric'

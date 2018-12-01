@@ -43,7 +43,7 @@
             <a class="info dropdown-toggle" href="#profileSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1">
-                        <i class="far fa-calendar-alt"></i>
+                            <i class="far fa-address-card"></i>
                     </div>
                     <div class="col-10">
                         Employee Profile
@@ -76,8 +76,13 @@
                 <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
                     <a href="{{ route('leaverequest') }}">Leave Approval</a>
                 </li>
+
+                <li class="menu-option {{ request()->is('leavehistory') ? 'active' : '' }}">
+                    <a href="{{ route('leavehistory') }}">Leave Requests</a>
+                </li>
             </ul>
         </li>
+
 
        
         {{-- <li class="menu-section {{ request()->is('leave*') ? 'active' : '' }}">

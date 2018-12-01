@@ -12,11 +12,17 @@ class LeaveRequestApproval extends Model
 
     protected $fillable = [
         'approved_by_emp_id',
+        'leave_request_id',
     ];
 
     protected $dates = ['deleted_at'];
 
     public function approved_by() {
         return $this->belongsTo('App\Employee', 'approved_by_emp_id'); 
+    }
+
+    public function leave_request_approval_id(){
+
+        return $this->belongsTo('App\LeaveRequest', 'leave_request_id');   
     }
 }

@@ -41,6 +41,8 @@ use App\LeaveAllocation;
 use App\LTAppliedRule;
 use DatePeriod;
 use DateInterval;
+use \stdClass;
+
 use DB;
 use App\User;
 use App\EmployeeInfo;
@@ -52,6 +54,8 @@ use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Auth;
 use App\Http\Services\LeaveService;
+
+
 
 class ELeaveController extends Controller
 {
@@ -74,37 +78,37 @@ class ELeaveController extends Controller
         
         $report_to_employee = EmployeeReportTo::select('report_to_emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
 
-//select level for each employee_report_to
-        $report_to_level = EmployeeReportTo::select('report_to_level')
-        ->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
+// //select level for each employee_report_to
+//         $report_to_level = EmployeeReportTo::select('report_to_level')
+//         ->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
 
-        //report_to_level_1
-        $report_to_level_1 = EmployeeReportTo::select('emp_id')
-        ->where('report_to_emp_id',$report_to_emp_id)
-        ->where('report_to_level',1)->get()->toArray();
+//         //report_to_level_1
+//         $report_to_level_1 = EmployeeReportTo::select('emp_id')
+//         ->where('report_to_emp_id',$report_to_emp_id)
+//         ->where('report_to_level',1)->get()->toArray();
 
-        //report_to_level_2
-        $report_to_level_2 = EmployeeReportTo::select('emp_id')
-        ->where('report_to_emp_id',$report_to_emp_id)
-        ->where('report_to_level',2)->get()->toArray();
+//         //report_to_level_2
+//         $report_to_level_2 = EmployeeReportTo::select('emp_id')
+//         ->where('report_to_emp_id',$report_to_emp_id)
+//         ->where('report_to_level',2)->get()->toArray();
       
 
-        $leaveRequests =LeaveRequest::select('id')
-        ->with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
+//         $leaveRequests =LeaveRequest::select('id')
+//         ->with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
 
 
-        $leaveRequestApproval = LeaveRequestApproval::where('leave_request_id','=',$leaveRequests)
-        ->WhereIn('approved_by_emp_id',$report_to_employee)
-        ->count();
+//         $leaveRequestApproval = LeaveRequestApproval::where('leave_request_id','=',$leaveRequests)
+//         ->WhereIn('approved_by_emp_id',$report_to_employee)
+//         ->count();
 
-        $leaveRequestApproval1 = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)
-        // ->WhereIn('approved_by_emp_id',$leaveRequests)
-        ->count();
-          //ori
-        $leaveRequests =LeaveRequest::select('id')
-        ->with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->count();
+//         $leaveRequestApproval1 = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)
+//         // ->WhereIn('approved_by_emp_id',$leaveRequests)
+//         ->count();
+//           //ori
+//         $leaveRequests =LeaveRequest::select('id')
+//         ->with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->count();
         
-        dd($leaveRequestApproval1);
+//         dd($leaveRequestApproval1);
 
   
 
@@ -128,6 +132,17 @@ class ELeaveController extends Controller
 // dd($leave);
 
 
+
+        $report_to = EmployeeReportTo::select('emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
+
+        $leaveRequests =LeaveRequest::with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
+
+        // $leave = LeaveRequest::find(1);
+        // $exists = $leave->leave_request_approval->contains($id);
+        // $leaveRequests->leave_request_approval; // Collection with 1 or more items, evaluates to true as well
+        // count($leaveRequests->leave_request_approval); // 
+
+        $employee = LeaveRequest::with('report_to')->get();
 
         return view('pages.employee.leave.leave-request', ['leaveRequests' => $leaveRequests]);   
     }
@@ -210,6 +225,92 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
+        public function ajaxGetLeaveRequestSingle($id)
+        {
+            dd("hellop");
+            $leaveRequest = LeaveService::getLeaveRequestSingle($id);
+
+            return response()->json($leaveRequest);
+        }
+
+        public function ajaxGetEmployeeLeaves($status)
+        {
+            $leaveRequest = LeaveService::getEmployeeLeaves(Auth::user()->employee->id, $status);
+            
+            $result = array();
+
+            foreach ($leaveRequest as $row) 
+            {
+                $leave = new stdClass();
+
+                if($row->am_pm) 
+                {
+                    $leave->allDay = false;
+                }
+                else
+                {
+                    $leave->allDay = true;
+                }
+
+                $leave->id = $row->id;
+                $leave->title = $row->reason;
+                $leave->start = $row->start_date;
+                $leave->end = $row->end_date;
+                $leave->status = $row->status;
+                $result[] = $leave;
+            }
+
+            return $result;
+        }
+
+        public function ajaxGetEmployeeWorkingDays()
+        {
+            $working_day = Auth::user()->employee->working_day;
+        
+            if(empty($working_day)) {
+                return self::error("Employees working days not set yet.");
+            }
+            
+            $result = array();
+
+            if($working_day->sunday > 0)
+            {
+                array_push($result, 0);
+            }
+
+            if($working_day->monday > 0)
+            {
+                array_push($result, 1);
+            }
+
+            if($working_day->tuesday > 0)
+            {
+                array_push($result, 2);
+            }
+
+            if($working_day->wednesday > 0)
+            {
+                array_push($result, 3);
+            }
+
+            if($working_day->thursday > 0)
+            {
+                array_push($result, 4);
+            }
+
+            if($working_day->friday > 0)
+            {
+                array_push($result, 5);
+            }
+
+            if($working_day->saturday > 0)
+            {
+                array_push($result, 6);
+            }
+
+            return $result;
+        }
+
         public function ajaxPostCreateLeaveRequest(Request $request)
         {
             $requestData = $request->validate([
@@ -234,6 +335,32 @@ class ELeaveController extends Controller
             $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
 
             return response()->json($result);
+        }
+
+        public function ajaxPostEditLeaveRequest(Request $request, $id)
+        {
+            $leaveRequestUpdateData = $request->validate([
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'leave_type' => 'required',
+                'am_pm' => '',
+                'reason' => 'required',
+                'attachment' => ''
+            ]);
+
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+
+            $attachment_data_url = null;
+            if(array_key_exists('attachment', $requestData)) {
+                $attachment_data_url = $requestData['attachment'];
+            }
+
+            LeaveRequest::where('id', $id)->update($leaveRequestUpdateData);
+
+            return response()->json(['success'=>'Working Day was successfully updated.']);
         }
 
         public function ajaxPostCheckLeaveRequest(Request $request)
