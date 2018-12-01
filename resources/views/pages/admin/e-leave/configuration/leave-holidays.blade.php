@@ -38,7 +38,7 @@
                        
 
                         <td> 
-                            <button onclick="window.location='{{ route('admin.e-leave.configuration.leave-holidays.edit.post', ['id' => $holidays->id]) }}';"
+                            <button onclick="window.location='{{ route('admin.e-leave.configuration.leave-holidays.edit', ['id' => $holidays->id]) }}';"
                                     class="round-btn btn btn-default fas fa-edit btn-segment">
                                 </button>
                         </td>

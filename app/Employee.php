@@ -124,7 +124,12 @@ class Employee extends Model
     {
         return $this->hasOne('App\EmployeeWorkingDay', 'emp_id');
     }
-    
+
+    public function leave_request_approvals()
+    {
+        return $this->hasMany('App\LeaveRequestApproval', 'id','approved_by_emp_id');
+    }
+
     public function attendances()
     {
         return $this->hasMany('App\EmployeeAttendance', 'emp_id');
