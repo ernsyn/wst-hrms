@@ -42,6 +42,8 @@ use App\Addition;
 use App\Deduction;
 use App\LeaveRequestApproval;
 use App\EmployeeAttendance;
+use App\SecurityGroup;
+use App\EmployeeSecurityGroup;
 
 class PayrollController extends Controller
 {
@@ -216,7 +218,7 @@ class PayrollController extends Controller
             $additionArray = [];
             if (count($additionList)) {
                 foreach ($additionList as $addition) {
-                    if ($addition['code'] == 'TAC' && $employee->payroll_type != 'HQ with travel allowance')
+                    if ($addition['code'] == 'TAC')
                         continue;
                     $data = [
                         'payroll_trx_id' => $payrollTrxId,
@@ -284,7 +286,8 @@ class PayrollController extends Controller
         $companyId = @$request['company_id'];
         $isHrAdminOrHrExec = Auth::user()->hasAnyRole('admin|hr-exec'); 
         $currentUser = auth()->user()->id;
-
+        $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',$currentUser)->select('security_group_id')->get();
+//         dd($securityGroupAccess);
         $list = PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employees as e', 'e.id', '=', 'payroll_trx.employee_id')
             ->join('users as u', 'u.id', '=', 'e.user_id') 
@@ -294,6 +297,7 @@ class PayrollController extends Controller
             })
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
             ->leftjoin('employee_report_to as ert', 'ert.emp_id', '=', 'e.id')
+//             ->leftjoin('employee_security_groups as esg', 'emp.emp_id', '=', 'e.id')
         /* ->join('job_master as JM2', 'JM2.id', '=', 'EJ.id_category')  */
         // ->leftjoin('EmployeeGroup as EG', 'EG.id_EmployeeMaster', '=', 'EM.id')
         /* ->leftjoin('employee_bank as EB', function($join){
@@ -313,9 +317,11 @@ class PayrollController extends Controller
                 $query->where('payroll_trx.payroll_master_id', $id);
             }
         })
-        ->where(function($query) use($isHrAdminOrHrExec, $currentUser){
+        ->where(function($query) use($isHrAdminOrHrExec, $currentUser, $securityGroupAccess){
             if(!$isHrAdminOrHrExec) {
                 $query->where('ert.report_to_emp_id', $currentUser);
+            } else {
+                $query->whereIn('e.main_security_group_id', $securityGroupAccess);
             }
         })
         ->whereNull('ert.deleted_at')
@@ -446,7 +452,7 @@ class PayrollController extends Controller
         ->get();
         
         
-//                 dd($unpaidLeaves);
+//         dd($payrollTrxAdditionList);
         return view('pages.payroll.show-payroll-trx', compact('id', 'payrollId', 'title', 'additions', 'deductions', 'payrollTrxAdditionList', 
             'payrollTrxDeductionList', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 
             'year_month', 'total_days', 'unpaidLeaves', 'annualLeaves', 'carryForwardLeaves', 'ot', 'ph', 'rd'));

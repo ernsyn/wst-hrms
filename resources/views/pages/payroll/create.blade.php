@@ -28,7 +28,7 @@
 						<div class="col-4">
 							<label class="col-md-12 col-form-label">Payroll Month*</label>
 							<div class="col-md-12">
-								<input id="year_month" type="text" class="form-control{{ $errors->has('year_month') ? ' is-invalid' : '' }}" placeholder="YYYY-DD" name="year_month" value="{{ old('year_month') }}" required> 
+								<input id="year_month" autocomplete="off" type="text" class="form-control{{ $errors->has('year_month') ? ' is-invalid' : '' }}" placeholder="YYYY-DD" name="year_month" value="{{ old('year_month') }}" required > 
 								@if ($errors->has('year_month')) 
 									<span class="invalid-feedback" role="alert"> <strong>{{ $errors->first('year_month') }}</strong></span>
 								@endif
@@ -60,22 +60,42 @@
 @endsection 
 @section('scripts')
 <script>
-    $('#year_month').datepicker({
+ /*    $('#year_month').datepicker({
     	changeMonth: true,
         changeYear: true,
-        showButtonPanel: true,
         dateFormat: 'yy-mm',
+        viewMode: 'years',
+        changeMonth: true,
+        changeYear: true,
+        durration: 0,
+
+		autoclose: true,
 
 	    onClose: function(dateText, inst) {  
             var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val(); 
             var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val(); 
             $(this).datepicker('setDate', new Date(year, month, 1)); 
-        }
-    });
+        } 
+    }); */
+
+    $('#year_month').datepicker({
+    	  changeMonth: true,
+    	  changeYear: true,
+    	  dateFormat: "yy-mm",
+//     	  showButtonPanel: true,
+//     	  currentText: "This Month",
+    	  onChangeMonthYear: function (year, month, inst) {
+    	    $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month - 1, 1)));
+    	  },
+    	  onClose: function(dateText, inst) {
+    	    var month = $(".ui-datepicker-month :selected").val();
+    	    var year = $(".ui-datepicker-year :selected").val();
+    	    $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month, 1)));
+    	  }
+    	}).focus(function () {
+    	  $(".ui-datepicker-calendar").hide();
+    	});
+
+
 </script>
-<style>
-.ui-datepicker-calendar {
-    display: none;
-}
-</style>
 @append
