@@ -903,7 +903,7 @@
             <div class="modal-body">
                 <form method="POST" action="{{route('admin.settings.company-deduction.edit.post')}}" id="deduction">
                     @csrf
-                    @csrf
+                
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <input id="company_deduction_id" name="company_deduction_id" type="hidden">
@@ -962,10 +962,10 @@
                             <label class="col-md-12 col-form-label">Applies To</label>
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
-                                <input type="checkbox" id="check_cost_centre_a" name="applies[]" value="PCB"> Cost Centre
+                                <input type="checkbox" id="check_cost_centre_de" name="applies[]" value="PCB"> Cost Centre
                             </label>
                                 <label class="checkbox-inline">
-                                <input type="checkbox" id="check_job_grade_a" name="applies[]" value="EPF"> Job Grade
+                                <input type="checkbox" id="check_job_grade_de" name="applies[]" value="EPF"> Job Grade
                             </label>
                                 <label class="checkbox-inline">
                                 <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
@@ -973,7 +973,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre_a"
+                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre_de"
                                     name="cost_centres" required disabled>
                                     @foreach(App\CostCentre::all() as $cost_centre)
                                     <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
@@ -988,7 +988,7 @@
                         </div>
                         <label class="col-md-12 col-form-label">Job Grade</label>
                         <div class="col-md-12">
-                            <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]"
+                            <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_de" name="job_grade[]"
                                 required disabled>
                                                           @foreach(App\EmployeeGrade::all() as $grade)
                                                           <option value="{{ $grade->id }}">{{ $grade->name }}</option>
