@@ -107,6 +107,10 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->socso_no}}</span>
                                                 </div>
+                                                <span class="col-lg-5 p-3">Security Group</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->main_security_groups->name}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -335,6 +339,18 @@
                             <div id="socso-no-error" class="invalid-feedback"></div>
                         </div>
                     </div>
+
+                    <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="socso-no"><strong>Security Group Id*</strong></label>
+                                <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                                        @foreach(App\SecurityGroup::all() as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                        @endforeach
+                                    </select>
+                                <div id="main-security-group-id-error" class="invalid-feedback"></div>
+                            </div>
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <button id="edit-profile-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
@@ -385,6 +401,7 @@
             $('#edit-profile-form #tax-no').val(currentData.tax_no);
             $('#edit-profile-form #eis-no').val(currentData.eis_no);
             $('#edit-profile-form #socso-no').val(currentData.socso_no);
+            $('#edit-profile-form #main-security-group-id').val(currentData.main_security_group_id);
 
             if(currentData.dob!=null) {
                 formatDob = $.datepicker.formatDate("d/mm/yy", new Date(currentData.dob));
@@ -422,7 +439,9 @@
                     epf_no: $('#edit-profile-form #epf-no').val(),
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),
-                    socso_no: $('#edit-profile-form #socso-no').val()
+                    socso_no: $('#edit-profile-form #socso-no').val(),
+                    
+                    main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -490,6 +509,11 @@
                                     case 'socso_no':
                                         $('#edit-profile-form #socso-no').addClass('is-invalid');
                                         $('#edit-profile-form #socso-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+
+                                    case 'main_security_group_id':
+                                        $('#edit-profile-form #main-security-group-id').addClass('is-invalid');
+                                        $('#edit-profile-form #main-security-group-id-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
                             }
