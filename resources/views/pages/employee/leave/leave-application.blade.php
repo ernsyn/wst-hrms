@@ -1,19 +1,22 @@
 @extends('layouts.base') 
 @section('pageTitle', 'Leave Application') 
 @section('content')
-<div class="p-4" id="page-leave-application">
+<div  id="page-leave-application" class="container p-4">
     <div class="row">
-        <div class="col-xl-8">      
+        <div class="col-xl-8 pb-5">      
             <div class="card-body-leave" >
                 <div class="container-fluid">
-                    <div id='calendar-leave' class="calendar-leave"></div>                        
+                    <div id='calendar-leave' class="calendar-leave">
+                            <div class="progress m-3">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                            </div>
+                    </div>                        
                 </div>               
             </div>
         </div>
         <div class="col-xl-4">
             <div class="card calendar-leave">
-                <div class="card-body-leave">
-                    <div class="container-fluid">                       
+                <div class="card-body card-body-leave">
                         <form id="add-leave-request-form" data-parsley-validate>
                             @csrf
                             <div class="form-group row">
@@ -86,7 +89,6 @@
                             </div>
                         </form>
                     </div>
-                </div>
             </div>
         </div>
     </div>
@@ -160,7 +162,7 @@
 
         function initCalendar() {
             $('#calendar-leave').fullCalendar({
-                themeSystem: 'jquery-ui',
+                themeSystem: 'bootstrap4',
                 header: {
                   left: 'prev,next today',
                   center: 'title',
@@ -170,17 +172,17 @@
                 eventLimit: true, // allow "more" link when too many events
                 eventSources: [{
                     url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'new']) }}",
-                    color: '#CCCCCC',
+                    color: '#b8c1bb',
                     textColor: 'black'
                 },
                 {
                     url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'approved']) }}",
-                    color: 'blue',
+                    color: '#128A58',
                     textColor: 'white'
                 },
                 {
                     url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'rejected']) }}",
-                    color: 'red',
+                    color: '#e23a36',
                     textColor: 'white'
                 }],
                 businessHours: {  
@@ -205,6 +207,9 @@
                         $("#leave-request-id").text(event.id);                    
                         $("#leave-details").modal('toggle');
                     });
+                }, 
+                eventAfterAllRender: function (view) {
+                    $('#calendar-leave .progress').attr('hidden', true);
                 }
             });
         }       
