@@ -1,6 +1,6 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
+<div class="container pb-5">
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.working-days.edit.post', ['id' => $working_day->id]) }}" id="form_validate" data-parsley-validate>
             <div class="card-body">
