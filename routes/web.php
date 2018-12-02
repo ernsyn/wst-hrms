@@ -166,6 +166,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     // > View
     Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
     Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
+    
+    
+    Route::post('employees/{id}/change-password','Admin\EmployeeController@postChangePassword')->name('admin.employees.change-password.post')->where('id', '[0-9]+');
+    Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
 
     // > Data Tables
     Route::get('employees/{id}/dt/dependents', 'Admin\EmployeeController@getDataTableDependents')->name('admin.employees.dt.dependents')->where('id', '[0-9]+');

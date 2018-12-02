@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Hash;
 
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -119,6 +120,48 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.add', compact('countries','roles'));
     }
 
+    public function postChangePassword(Request $request, $id) {
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+        
+        // dd(bcrypt($data['new_password']));
+
+        // if (!(Hash::check($data['current_password'], $employee->user->password))) {
+        //     response()->json(['errors'=> [
+        //         'current_password' => ['The current password is incorrect.']
+        //     ]], 422);
+        // }
+
+        User::where('id', $employee->user->id)->update([
+            'password' => bcrypt($data['new_password'])
+        ]);
+
+        return response()->json(['success'=>'Password was successfully updated.']);
+    }
+
+
+    public function postToggleRoleAdmin(Request $request, $id) {
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'assign_remove' => 'required',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+        switch($data['assign_remove']) {
+            case "assign":
+                $employee->user->assignRole('admin');
+                break;
+            case "remove":
+                $employee->user->removeRole('admin');
+                break;
+        }
+
+        return response()->json(['success'=>'Employee roles were successfully updated.']);
+    }
 
     // SECTION: Data Tables
 
@@ -261,7 +304,7 @@ class EmployeeController extends Controller
         $validatedUserData = $request->validate([
             'name' => 'required|min:5',
             'email' => 'required|unique:users|email',
-            'password' => 'required',
+            'password' => 'required|required_with:confirm_password|same:confirm_password',
         ]);
         $validatedUserData['password'] = Hash::make($validatedUserData['password']);
 
