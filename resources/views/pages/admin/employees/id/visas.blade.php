@@ -55,7 +55,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <label for="family-members"><strong>Relationship*</strong></label>
                             <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
                             <div id="family-members-error" class="invalid-feedback">
                             </div>
@@ -129,7 +129,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <label for="family-members"><strong>Relationship*</strong></label>
                             <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
                             <div id="family-members-error" class="invalid-feedback">
                             </div>
