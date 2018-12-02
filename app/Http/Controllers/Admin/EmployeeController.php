@@ -7,10 +7,13 @@ use App\Http\Controllers\Controller;
 use Hash;
 
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 use App\Country;
 use App\Roles;
@@ -21,6 +24,8 @@ use App\Branch;
 use App\Team;
 use App\EmployeePosition;
 use App\Company;
+use App\Holiday;
+use App\LeaveRequest;
 
 use App\User;
 use App\Employee;
@@ -38,6 +43,7 @@ use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+use App\EmployeeAttendance;
 
 use App\Http\Services\LeaveService;
 
@@ -119,6 +125,48 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.add', compact('countries','roles'));
     }
 
+    public function postChangePassword(Request $request, $id) {
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+        
+        // dd(bcrypt($data['new_password']));
+
+        // if (!(Hash::check($data['current_password'], $employee->user->password))) {
+        //     response()->json(['errors'=> [
+        //         'current_password' => ['The current password is incorrect.']
+        //     ]], 422);
+        // }
+
+        User::where('id', $employee->user->id)->update([
+            'password' => bcrypt($data['new_password'])
+        ]);
+
+        return response()->json(['success'=>'Password was successfully updated.']);
+    }
+
+
+    public function postToggleRoleAdmin(Request $request, $id) {
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'assign_remove' => 'required',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+        switch($data['assign_remove']) {
+            case "assign":
+                $employee->user->assignRole('admin');
+                break;
+            case "remove":
+                $employee->user->removeRole('admin');
+                break;
+        }
+
+        return response()->json(['success'=>'Employee roles were successfully updated.']);
+    }
 
     // SECTION: Data Tables
 
@@ -261,7 +309,7 @@ class EmployeeController extends Controller
         $validatedUserData = $request->validate([
             'name' => 'required|min:5',
             'email' => 'required|unique:users|email',
-            'password' => 'required',
+            'password' => 'required|required_with:confirm_password|same:confirm_password',
         ]);
         $validatedUserData['password'] = Hash::make($validatedUserData['password']);
 
@@ -289,7 +337,7 @@ class EmployeeController extends Controller
         DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
-    
+
             $validatedEmployeeData['user_id'] = $user->id;
             $validatedEmployeeData['created_by'] = auth()->user()->id;
             $employee = Employee::create($validatedEmployeeData);
@@ -468,7 +516,7 @@ class EmployeeController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'notes'=>''
-          
+
         ]);
         $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
@@ -534,13 +582,13 @@ class EmployeeController extends Controller
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'monday' => 'required',
-            'tuesday' => 'required',
-            'wednesday' => 'required',
-            'thursday' => 'required',
-            'friday' => 'required',
-            'saturday' => 'required',
-            'sunday' => 'required',
+            'monday' => 'required|in:0,0.5,1',
+            'tuesday' => 'required|in:0,0.5,1',
+            'wednesday' => 'required|in:0,0.5,1',
+            'thursday' => 'required|in:0,0.5,1',
+            'friday' => 'required|in:0,0.5,1',
+            'saturday' => 'required|in:0,0.5,1',
+            'sunday' => 'required|in:0,0.5,1',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -558,13 +606,13 @@ class EmployeeController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayUpdateData = $request->validate([
-            'monday' => 'required',
-            'tuesday' => 'required',
-            'wednesday' => 'required',
-            'thursday' => 'required',
-            'friday' => 'required',
-            'saturday' => 'required',
-            'sunday' => 'required',
+            'monday' => 'required|in:0,0.5,1',
+            'tuesday' => 'required|in:0,0.5,1',
+            'wednesday' => 'required|in:0,0.5,1',
+            'thursday' => 'required|in:0,0.5,1',
+            'friday' => 'required|in:0,0.5,1',
+            'saturday' => 'required|in:0,0.5,1',
+            'sunday' => 'required|in:0,0.5,1',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -593,11 +641,11 @@ class EmployeeController extends Controller
         $reportToData = $request->validate([
             'report_to_emp_id' => 'required',
             'type' => 'required',
-        
+
             'notes' => '',
             'report_to_level' =>'required',
             'kpi_proposer' => 'sometimes|required',
-           
+
         ]);
         if($request->get('kpi_proposer') == null){
             $reportToData['kpi_proposer'] = 0;
@@ -813,7 +861,7 @@ class EmployeeController extends Controller
     //delete function
     public function deleteEmergencyContact(Request $request, $emp_id, $id)
     {
-        EmployeeImmigration::find($id)->delete();
+        EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
 
@@ -878,20 +926,20 @@ class EmployeeController extends Controller
 
 
     public function postDisapproved(Request $request)
-    {          
+    {
 
-        $id = $request->input('id');     
-        $emp_id = $request->input('emp_id');    
-        $leave_type_id = $request->input('leave_type_id');   
-        $total_days =$request->input('total_days');  
+        $id = $request->input('id');
+        $emp_id = $request->input('emp_id');
+        $leave_type_id = $request->input('leave_type_id');
+        $total_days =$request->input('total_days');
 
-    $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
-    ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+        $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
+        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
 
 
-    $leaveAllocationData = number_format($leaveAllocationData1,1);
-    $total_days =number_format($total_days,1);
-    $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+        $leaveAllocationData = number_format($leaveAllocationData1,1);
+        $total_days =number_format($total_days,1);
+        $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
 
         LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
@@ -903,5 +951,173 @@ class EmployeeController extends Controller
         ->update(array('spent_days'=>$leaveAllocationDataEntry));
             return redirect()->route('leaverequest');
 
+    }
+
+    public function ajaxGetAttendances(Request $request, $id) {
+        $now = Carbon::now();
+        $startOfMonth = $now->copy()->startOfMonth();
+        $endOfMonth = $now->copy()->endOfMonth();
+
+        $workingDays = EmployeeWorkingDay::where('emp_id', $id)->first();
+        if(empty($workingDays)) {
+            return [
+                'error' => true,
+                'errorMessage' => 'No working days set.'
+            ];
         }
+
+        $attendances = EmployeeAttendance::where('emp_id', $id)->whereMonth('clock_in_time', $now->month)->get();
+        $holidays = Holiday::where('start_date', '>=', $startOfMonth)
+        ->where(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where('start_date', '>=', $startOfMonth);
+            $q->where('start_date', '<=', $endOfMonth);
+        })
+        ->OrWhere(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where('end_date', '>=', $startOfMonth);
+            $q->where('end_date', '<=', $endOfMonth);
+        })
+        ->where('status', 'active')->get();
+
+        $leaveRequests = LeaveRequest::with('leave_type')->where('emp_id', $id)->where('start_date', '>=', $startOfMonth)
+        ->where(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where(function($q) use ($startOfMonth, $endOfMonth) {
+                $q->where('start_date', '>=', $startOfMonth);
+                $q->where('start_date', '<=', $endOfMonth);
+            })
+            ->OrWhere(function($q) use ($startOfMonth, $endOfMonth) {
+                $q->where('end_date', '>=', $startOfMonth);
+                $q->where('end_date', '<=', $endOfMonth);
+            });
+        })
+        ->where('status', 'approved')->get();
+
+        $workingDaysIntArray = $this->getWorkingDaysInIntegerArray($workingDays);
+
+        $period = CarbonPeriod::between($startOfMonth, $endOfMonth);
+        $workDaysFilter = function ($date) use ($workingDaysIntArray) {
+            return in_array($date->dayOfWeek, $workingDaysIntArray);
+        };
+        $period->addFilter($workDaysFilter);
+        $future = false;
+        foreach ($period as $date) {
+            $holiday = $this->isAHoliday($holidays, $date);
+            if(!empty($holiday)) {
+                $days[] = [
+                    'date' => $date->toFormattedDateString(),
+                    'type' => 'holiday',
+                    'name' => $holiday->name
+                ]; 
+            } else {
+                $leaveRequest = $this->isOnLeave($leaveRequests, $date);
+                if(!empty($leaveRequest)) {
+                    $days[] = [
+                        'date' => $date->toFormattedDateString(),
+                        'type' => 'leave',
+                        'name' => $leaveRequest->leave_type->name,
+                    ]; 
+                } else {
+                    if($future) {
+                        $days[] = [
+                            'date' => $date->toFormattedDateString(),
+                            'type' => 'future',
+                            'name' => 'Future Date'
+                        ]; 
+                    } else {
+                        $attendance = $this->hasAttendance($attendances, $date);
+                        if(!empty($attendance)) {
+                            $days[] = [
+                                'date' => $date->toFormattedDateString(),
+                                'type' => 'attendance',
+                                'name' => 'Clocked-In Attendance',
+                                'clock_in_status' => $attendance->clock_in_status,
+                                'clock_in_time' => $attendance->clock_in_time,
+                                'clock_in_address' => $attendance->clock_in_address,
+                                'clock_out_status' => $attendance->clock_out_status,
+                                'clock_out_time' => $attendance->clock_out_time,
+                                'clock_out_address' => $attendance->clock_out_address,
+                            ]; 
+                        } else {
+                           
+                            $days[] = [
+                                'date' => $date->toFormattedDateString(),
+                                'type' => 'missing',
+                                'name' => "Missing Attendance",
+                            ]; 
+                            
+                        }
+                    } 
+                }
+                
+            } 
+
+            if($date->isToday()) {
+                $future = true;
+            }
+        }
+
+
+        return $days;
+    }
+
+    private function getWorkingDaysInIntegerArray($workingDays) {
+        $arr = array();
+        if($workingDays->sunday > 0) {
+            array_push($arr, Carbon::SUNDAY);
+        }
+        if($workingDays->monday > 0) {
+            array_push($arr, Carbon::MONDAY);
+        }
+        if($workingDays->tuesday > 0) {
+            array_push($arr, Carbon::TUESDAY);
+        }
+        if($workingDays->wednesday > 0) {
+            array_push($arr, Carbon::WEDNESDAY);
+        }
+        if($workingDays->thursday > 0) {
+            array_push($arr, Carbon::THURSDAY);
+        }
+        if($workingDays->friday > 0) {
+            array_push($arr, Carbon::FRIDAY);
+        }
+        if($workingDays->saturday > 0) {
+            array_push($arr, Carbon::SATURDAY);
+        }
+        
+        return $arr;
+    }
+
+    private function isAHoliday($holidays, Carbon $date) {
+        foreach($holidays as $holiday) {
+            $startDate = Carbon::parse($holiday->start_date);
+            $endDate = Carbon::parse($holiday->end_date);
+            if($date->between($startDate, $endDate)) {
+                return $holiday;
+            }
+        }
+
+        return null;
+    }
+
+    private function isOnLeave($leaveRequests, Carbon $date) {
+        foreach($leaveRequests as $leaveRequest) {
+            $startDate = Carbon::parse($leaveRequest->start_date);
+            $endDate = Carbon::parse($leaveRequest->end_date);
+            if($date->between($startDate, $endDate)) {
+                return $leaveRequest;
+            }
+        }
+
+        return null;
+    }
+
+    private function hasAttendance($attendances, Carbon $date) {
+        foreach($attendances as $attendance) {
+            $clockInTime = Carbon::parse($attendance->clock_in_time);
+            if($date->isSameDay($clockInTime)) {
+                return $attendance;
+            }
+        }
+
+        return null;
+    }
 }

@@ -39,12 +39,21 @@
     </div>
     @endhasanyrole
 
-        <ul id="menu-container" class="list-unstyled">
+    <ul id="menu-container" class="list-unstyled">
+            <li id="dashboard-option" class="menu-section {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+                <a class="info" href="{{ route('admin.dashboard') }}">
+                    <div class="row">
+                        <div class="col-1"><i class="fas fa-grip-horizontal"></i></div>
+                        <div class="col-10">Dashboard</div>
+                    </div>
+                </a>
+            </li>
+            {{-- SECTION: Employees --}}
             <li class="menu-section {{ request()->is('admin/employees*') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#employee-setup" data-toggle="collapse" aria-expanded="false">
                     <div class="row">
                         <div class="col-1"><i class="fas fa-users"></i></div>
-                        <div class="col-10">Employee</div>
+                        <div class="col-10">Employees</div>
                     </div>
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('admin/employees*') ? 'show' : '' }}" id="employee-setup">
