@@ -109,7 +109,8 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Security Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->main_security_groups->name}}</span>
+                                                        <span class="field-value">      {{ isset($employee->main_security_groups->name) ? $employee->main_security_groups->name : '' }}
+                                                 </span>
                                                 </div>
                                             </div>
                                         </div>
