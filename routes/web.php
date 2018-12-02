@@ -190,6 +190,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
     Route::get('employees/{id}/details/security-groups', 'Admin\EmployeeController@displaySecurityGroup')->name('admin.employees.id.security-groups')->where('id', '[0-9]+');
 
+    // > Ajax
+    Route::get('employees/{id}/attendances', 'Admin\EmployeeController@ajaxGetAttendances')->name('admin.employees.attendances.get')->where('id', '[0-9]+');
 
     // > Add / Edit
     Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add');

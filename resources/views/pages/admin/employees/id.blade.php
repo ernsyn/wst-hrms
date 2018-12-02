@@ -79,6 +79,8 @@
                             aria-selected="false">History</a>
                         <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"
                             aria-selected="true">Security Group</a>
+                        <a class="nav-item nav-link" id="nav-attendance-tab" data-toggle="tab" href="#nav-attendance" role="tab" aria-controls="nav-attendance"
+                            aria-selected="true">Attendance</a>
                     </div>
                 </nav>
                 {{-- Tab Content --}}
@@ -217,6 +219,8 @@
                     @include('pages.admin.employees.id.history', ['id' => $employee->id])
                     {{-- Security Group --}}
                     @include('pages.admin.employees.id.security-group', ['id' => $employee->id])
+                    {{-- Attendance --}}
+                    @include('pages.admin.employees.id.attendance', ['id' => $employee->id])
                 </div>
             </div>
         </div>

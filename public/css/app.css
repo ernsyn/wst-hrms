@@ -17974,6 +17974,14 @@ button.dropdown-toggle::after {
   background-color: #e0e5f3;
 }
 
+#nav-attendance .attendance-log .type {
+  font-weight: 700;
+}
+
+#nav-attendance .attendance-log .future {
+  background-color: #ececec;
+}
+
 #page-leave-application .leave-description {
   color: #999999;
   font-size: 13px;

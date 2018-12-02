@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 use App\Country;
 use App\Roles;
@@ -22,6 +24,8 @@ use App\Branch;
 use App\Team;
 use App\EmployeePosition;
 use App\Company;
+use App\Holiday;
+use App\LeaveRequest;
 
 use App\User;
 use App\Employee;
@@ -39,6 +43,7 @@ use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+use App\EmployeeAttendance;
 
 use App\Http\Services\LeaveService;
 
@@ -928,13 +933,13 @@ class EmployeeController extends Controller
         $leave_type_id = $request->input('leave_type_id');
         $total_days =$request->input('total_days');
 
-    $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
-    ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+        $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
+        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
 
 
-    $leaveAllocationData = number_format($leaveAllocationData1,1);
-    $total_days =number_format($total_days,1);
-    $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+        $leaveAllocationData = number_format($leaveAllocationData1,1);
+        $total_days =number_format($total_days,1);
+        $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
 
         LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
@@ -946,5 +951,173 @@ class EmployeeController extends Controller
         ->update(array('spent_days'=>$leaveAllocationDataEntry));
             return redirect()->route('leaverequest');
 
+    }
+
+    public function ajaxGetAttendances(Request $request, $id) {
+        $now = Carbon::now();
+        $startOfMonth = $now->copy()->startOfMonth();
+        $endOfMonth = $now->copy()->endOfMonth();
+
+        $workingDays = EmployeeWorkingDay::where('emp_id', $id)->first();
+        if(empty($workingDays)) {
+            return [
+                'error' => true,
+                'errorMessage' => 'No working days set.'
+            ];
         }
+
+        $attendances = EmployeeAttendance::where('emp_id', $id)->whereMonth('clock_in_time', $now->month)->get();
+        $holidays = Holiday::where('start_date', '>=', $startOfMonth)
+        ->where(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where('start_date', '>=', $startOfMonth);
+            $q->where('start_date', '<=', $endOfMonth);
+        })
+        ->OrWhere(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where('end_date', '>=', $startOfMonth);
+            $q->where('end_date', '<=', $endOfMonth);
+        })
+        ->where('status', 'active')->get();
+
+        $leaveRequests = LeaveRequest::with('leave_type')->where('emp_id', $id)->where('start_date', '>=', $startOfMonth)
+        ->where(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where(function($q) use ($startOfMonth, $endOfMonth) {
+                $q->where('start_date', '>=', $startOfMonth);
+                $q->where('start_date', '<=', $endOfMonth);
+            })
+            ->OrWhere(function($q) use ($startOfMonth, $endOfMonth) {
+                $q->where('end_date', '>=', $startOfMonth);
+                $q->where('end_date', '<=', $endOfMonth);
+            });
+        })
+        ->where('status', 'approved')->get();
+
+        $workingDaysIntArray = $this->getWorkingDaysInIntegerArray($workingDays);
+
+        $period = CarbonPeriod::between($startOfMonth, $endOfMonth);
+        $workDaysFilter = function ($date) use ($workingDaysIntArray) {
+            return in_array($date->dayOfWeek, $workingDaysIntArray);
+        };
+        $period->addFilter($workDaysFilter);
+        $future = false;
+        foreach ($period as $date) {
+            $holiday = $this->isAHoliday($holidays, $date);
+            if(!empty($holiday)) {
+                $days[] = [
+                    'date' => $date->toFormattedDateString(),
+                    'type' => 'holiday',
+                    'name' => $holiday->name
+                ]; 
+            } else {
+                $leaveRequest = $this->isOnLeave($leaveRequests, $date);
+                if(!empty($leaveRequest)) {
+                    $days[] = [
+                        'date' => $date->toFormattedDateString(),
+                        'type' => 'leave',
+                        'name' => $leaveRequest->leave_type->name,
+                    ]; 
+                } else {
+                    if($future) {
+                        $days[] = [
+                            'date' => $date->toFormattedDateString(),
+                            'type' => 'future',
+                            'name' => 'Future Date'
+                        ]; 
+                    } else {
+                        $attendance = $this->hasAttendance($attendances, $date);
+                        if(!empty($attendance)) {
+                            $days[] = [
+                                'date' => $date->toFormattedDateString(),
+                                'type' => 'attendance',
+                                'name' => 'Clocked-In Attendance',
+                                'clock_in_status' => $attendance->clock_in_status,
+                                'clock_in_time' => $attendance->clock_in_time,
+                                'clock_in_address' => $attendance->clock_in_address,
+                                'clock_out_status' => $attendance->clock_out_status,
+                                'clock_out_time' => $attendance->clock_out_time,
+                                'clock_out_address' => $attendance->clock_out_address,
+                            ]; 
+                        } else {
+                           
+                            $days[] = [
+                                'date' => $date->toFormattedDateString(),
+                                'type' => 'missing',
+                                'name' => "Missing Attendance",
+                            ]; 
+                            
+                        }
+                    } 
+                }
+                
+            } 
+
+            if($date->isToday()) {
+                $future = true;
+            }
+        }
+
+
+        return $days;
+    }
+
+    private function getWorkingDaysInIntegerArray($workingDays) {
+        $arr = array();
+        if($workingDays->sunday > 0) {
+            array_push($arr, Carbon::SUNDAY);
+        }
+        if($workingDays->monday > 0) {
+            array_push($arr, Carbon::MONDAY);
+        }
+        if($workingDays->tuesday > 0) {
+            array_push($arr, Carbon::TUESDAY);
+        }
+        if($workingDays->wednesday > 0) {
+            array_push($arr, Carbon::WEDNESDAY);
+        }
+        if($workingDays->thursday > 0) {
+            array_push($arr, Carbon::THURSDAY);
+        }
+        if($workingDays->friday > 0) {
+            array_push($arr, Carbon::FRIDAY);
+        }
+        if($workingDays->saturday > 0) {
+            array_push($arr, Carbon::SATURDAY);
+        }
+        
+        return $arr;
+    }
+
+    private function isAHoliday($holidays, Carbon $date) {
+        foreach($holidays as $holiday) {
+            $startDate = Carbon::parse($holiday->start_date);
+            $endDate = Carbon::parse($holiday->end_date);
+            if($date->between($startDate, $endDate)) {
+                return $holiday;
+            }
+        }
+
+        return null;
+    }
+
+    private function isOnLeave($leaveRequests, Carbon $date) {
+        foreach($leaveRequests as $leaveRequest) {
+            $startDate = Carbon::parse($leaveRequest->start_date);
+            $endDate = Carbon::parse($leaveRequest->end_date);
+            if($date->between($startDate, $endDate)) {
+                return $leaveRequest;
+            }
+        }
+
+        return null;
+    }
+
+    private function hasAttendance($attendances, Carbon $date) {
+        foreach($attendances as $attendance) {
+            $clockInTime = Carbon::parse($attendance->clock_in_time);
+            if($date->isSameDay($clockInTime)) {
+                return $attendance;
+            }
+        }
+
+        return null;
+    }
 }
