@@ -20,11 +20,10 @@ Route::group(['middleware' => ['guest']], function () {
 
 Auth::routes();
 
+Route::get('', 'HomeController@index')->name('employee.dashboard');
 
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
-    Route::get('', 'HomeController@index')->name('employee.dashboard');
-
     // Route::get('/employee','EmployeeController@displayProfile')->name('employee');
     // Route::get('profile','EmployeeController@displayProfile')->name('profile');
     Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
