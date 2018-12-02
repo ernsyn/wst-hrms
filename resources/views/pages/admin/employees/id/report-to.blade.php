@@ -147,14 +147,32 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                            <input type="hidden" value="0" checked>
-                            <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
-                            <div id="kpi-proposer-error" class="invalid-feedback">
+                            <div class="col-md-12 mb-3">
+                                <label for="report_to_level"><strong>Report To Level*</strong></label>
+                                <select class="form-control" id="report-to-level" name="report_to_level">
+                                    <option value="">Select Level</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                                <div id="report-to-level-error" class="invalid-feedback">
+    
+                                </div>
                             </div>
                         </div>
-                    </div>
+    
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
+                                <select class="form-control" id="kpi-proposer" name="kpi_proposer">
+                                <option value="">Select Level</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                                <div id="kpi-proposer-error" class="invalid-feedback">
+    
+                                </div>
+                            </div>
+                        </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
