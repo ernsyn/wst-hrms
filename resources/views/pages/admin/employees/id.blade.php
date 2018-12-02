@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div id="end-btn-group">
-                    <button id="emp-roles-btn" type="button" class="btn btn-sm text-white rounded">
+                    <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
                         {{-- <i class="fas fa-pen"></i> --}}
                         Roles
                     </button>
@@ -411,6 +411,36 @@
         </div>
     </div>
 </div>
+
+{{-- Change Password --}}
+<div class="modal fade" id="roles-popup" tabindex="-1" role="dialog" aria-labelledby="roles-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roles-label">Roles</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-check">
+                    @if($employee->user->hasRole('admin'))
+                    <input class="form-check-input" type="checkbox" id="role-admin-checkbox" checked>
+                    @else
+                    <input class="form-check-input" type="checkbox" id="role-admin-checkbox" >
+                    @endif
+                    <label class="form-check-label" for="role-admin-checkbox">Admin</label>
+                    <div id="role-admin-error" class="invalid-feedback">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="save-role-changes-btn" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -697,6 +727,40 @@
         // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
         //     console.log("ON: Change Password Clicked!");
         // });
+        // var asdsf = $('#save-role-changes-btn')
+        // console.log("asdad", asdsf);
+        
+        $('#save-role-changes-btn').click(function () {
+            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"), 
+            function (data) {
+                showAlert(data.success);
+                $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');
+                $('#roles-popup').modal('toggle');
+            },
+            function () {
+                // $(e.target).button('toggle');
+                $('#roles-popup #role-admin-checkbox').addClass('is-invalid');
+                $('#roles-popup #role-admin-error').html('<strong>Failed to update roles</strong>');
+            });
+        });
+
+        function assignRemoveAdminRole(assign, onSuccess, onFail) {
+            $.ajax({
+                url: "{{ route('admin.employees.roles.admin.post', ['id' => $employee->id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // current_password: $('#change-password-form input[name=current_password]').val(),
+                    assign_remove: assign ? 'assign': 'remove',
+                },
+                success: function(data) {
+                    onSuccess(data);
+                },
+                error: function(xhr) {
+                    onFail();
+                }
+            });
+        }
     });
 </script>
 @append

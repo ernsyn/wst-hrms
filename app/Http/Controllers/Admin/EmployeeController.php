@@ -144,6 +144,25 @@ class EmployeeController extends Controller
     }
 
 
+    public function postToggleRoleAdmin(Request $request, $id) {
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'assign_remove' => 'required',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+        switch($data['assign_remove']) {
+            case "assign":
+                $employee->user->assignRole('admin');
+                break;
+            case "remove":
+                $employee->user->removeRole('admin');
+                break;
+        }
+
+        return response()->json(['success'=>'Employee roles were successfully updated.']);
+    }
+
     // SECTION: Data Tables
 
     public function getDataTableDependents($id)
