@@ -158,6 +158,10 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
     "serverSide": true,
     "bStateSave": true,
     "ajax": "{{ route('employee.dt.emergency-contacts', ['id' => $id]) }}",
+    "columnDefs": [ {
+        "targets": 4,
+        "orderable": false
+    } ],
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;

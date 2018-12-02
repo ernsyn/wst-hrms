@@ -289,7 +289,7 @@ class EmployeeController extends Controller
         DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
-    
+
             $validatedEmployeeData['user_id'] = $user->id;
             $validatedEmployeeData['created_by'] = auth()->user()->id;
             $employee = Employee::create($validatedEmployeeData);
@@ -468,7 +468,7 @@ class EmployeeController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'notes'=>''
-          
+
         ]);
         $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
@@ -534,13 +534,13 @@ class EmployeeController extends Controller
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'monday' => 'required',
-            'tuesday' => 'required',
-            'wednesday' => 'required',
-            'thursday' => 'required',
-            'friday' => 'required',
-            'saturday' => 'required',
-            'sunday' => 'required',
+            'monday' => 'required|in:0,0.5,1',
+            'tuesday' => 'required|in:0,0.5,1',
+            'wednesday' => 'required|in:0,0.5,1',
+            'thursday' => 'required|in:0,0.5,1',
+            'friday' => 'required|in:0,0.5,1',
+            'saturday' => 'required|in:0,0.5,1',
+            'sunday' => 'required|in:0,0.5,1',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -558,13 +558,13 @@ class EmployeeController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayUpdateData = $request->validate([
-            'monday' => 'required',
-            'tuesday' => 'required',
-            'wednesday' => 'required',
-            'thursday' => 'required',
-            'friday' => 'required',
-            'saturday' => 'required',
-            'sunday' => 'required',
+            'monday' => 'required|in:0,0.5,1',
+            'tuesday' => 'required|in:0,0.5,1',
+            'wednesday' => 'required|in:0,0.5,1',
+            'thursday' => 'required|in:0,0.5,1',
+            'friday' => 'required|in:0,0.5,1',
+            'saturday' => 'required|in:0,0.5,1',
+            'sunday' => 'required|in:0,0.5,1',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -593,11 +593,11 @@ class EmployeeController extends Controller
         $reportToData = $request->validate([
             'report_to_emp_id' => 'required',
             'type' => 'required',
-        
+
             'notes' => '',
             'report_to_level' =>'required',
             'kpi_proposer' => 'sometimes|required',
-           
+
         ]);
         if($request->get('kpi_proposer') == null){
             $reportToData['kpi_proposer'] = 0;
@@ -813,7 +813,7 @@ class EmployeeController extends Controller
     //delete function
     public function deleteEmergencyContact(Request $request, $emp_id, $id)
     {
-        EmployeeImmigration::find($id)->delete();
+        EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
 
@@ -878,12 +878,12 @@ class EmployeeController extends Controller
 
 
     public function postDisapproved(Request $request)
-    {          
+    {
 
-        $id = $request->input('id');     
-        $emp_id = $request->input('emp_id');    
-        $leave_type_id = $request->input('leave_type_id');   
-        $total_days =$request->input('total_days');  
+        $id = $request->input('id');
+        $emp_id = $request->input('emp_id');
+        $leave_type_id = $request->input('leave_type_id');
+        $total_days =$request->input('total_days');
 
     $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
     ->where('leave_type_id',$leave_type_id)->first()->spent_days;
