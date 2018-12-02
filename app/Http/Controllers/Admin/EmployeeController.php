@@ -381,7 +381,7 @@ class EmployeeController extends Controller
             'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
             'basic_salary' => 'required',
-            'specification' => 'required',
+            'remarks' => '',
             'branch_id' => 'required',
             'start_date' => 'required|date',
             'status' => 'required',
@@ -711,7 +711,7 @@ class EmployeeController extends Controller
             'emp_grade_id' => 'required',
             'start_date' => 'required',
             'basic_salary' => 'required',
-            'specification' => 'required',
+            'remarks' => '',
             'status' => 'required'
         ]);
 
