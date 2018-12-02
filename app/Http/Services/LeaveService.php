@@ -164,7 +164,7 @@ class LeaveService
             
         });
         
-        return $leaveRequest;
+        return $leaveRequest->id;
     }
     
     public static function getAllLeaveRequestsForEmployee($employee) {
