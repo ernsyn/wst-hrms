@@ -18,7 +18,7 @@ class EmployeeJob extends Model
         'start_date',
         'end_date',
         'basic_salary',
-        'specification',
+        'remarks',
         'status',
         'created_by'
     ];

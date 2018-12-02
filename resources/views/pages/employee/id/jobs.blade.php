@@ -289,12 +289,12 @@
                     </div> --}}
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="specification"><strong>Specification*</strong></label>
-                            <textarea id="specification" type="number" class="form-control" placeholder="" value="" required></textarea>
+                            <label for="remarks"><strong>Specification*</strong></label>
+                            <textarea id="remarks" type="number" class="form-control" placeholder="" value="" required></textarea>
                             {{-- <div class="valid-feedback">
                             Looks good!
                             </div> --}}
-                            <div id="specification-error" class="invalid-feedback">
+                            <div id="remarks-error" class="invalid-feedback">
 
                             </div>
                         </div>
@@ -374,7 +374,7 @@ var jobsTable = $('#employee-jobs-table').DataTable({
                 emp_grade_id: $('#add-job-form #grade').val(),
                 start_date: $('#add-job-form #jobDate').val(),
                 basic_salary: $('#add-job-form #basic-salary').val(),
-                specification: $('#add-job-form #specification').val(),
+                remarks: $('#add-job-form #remarks').val(),
             },
             success: function(data) {
                 showAlert(data.success);
@@ -422,9 +422,9 @@ var jobsTable = $('#employee-jobs-table').DataTable({
                                     $('#add-job-form #basic-salary').addClass('is-invalid');
                                     $('#add-job-form #basic-salary-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
-                                    case 'specification':
-                                    $('#add-job-form #specification').addClass('is-invalid');
-                                    $('#add-job-form #specification-error').html('<strong>' + errors[errorField][0] +'</strong>');
+                                    case 'remarks':
+                                    $('#add-job-form #remarks').addClass('is-invalid');
+                                    $('#add-job-form #remarks-error').html('<strong>' + errors[errorField][0] +'</strong>');
                                     break;
                                 }
                             }

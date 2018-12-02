@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateEmployeesTable extends Migration
+class UpdateEmployeeJobsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function (Blueprint $table) {
-            $table->integer('eis_no')->nullable();
+        Schema::table('employee_jobs', function (Blueprint $table) {
+            $table->text('remarks')->nullable()->change();
         });
     }
 
@@ -25,8 +25,8 @@ class UpdateEmployeesTable extends Migration
      */
     public function down()
     {
-        Schema::table('employees', function (Blueprint $table) {
-            $table->dropColumn('eis_no');
+        Schema::table('employee_jobs', function (Blueprint $table) {
+
         });
     }
 }

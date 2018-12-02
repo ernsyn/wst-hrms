@@ -262,7 +262,7 @@ class EmployeeController extends Controller
             'emp_grade_id' => 'required',
             'start_date' => 'required',
             'basic_salary' => 'required',
-            'specification' => 'required'
+            'remarks' => ''
         ]);
         $jobData['created_by'] = auth()->user()->id;
 
