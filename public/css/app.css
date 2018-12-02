@@ -17783,10 +17783,15 @@ select:-webkit-autofill:focus {
 }
 
 #employee-profile-card #employee-profile-details #end-btn-group {
-  padding: 10px;
+  padding: 20px;
   position: absolute;
   top: 0px;
   right: 0px;
+}
+
+#employee-profile-card #employee-profile-details #end-btn-group .btn {
+  background-color: #16aa6c;
+  font-weight: 600;
 }
 
 #page-login {

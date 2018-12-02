@@ -32,18 +32,22 @@
                             <span class="field-name mr-2">Gender</span>
                             <span class="field-value">{{ ucfirst($employee->gender) }}</span>
                         </div>
-                        <div class="field pb-1">
+                        {{-- <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">{!! $employee->nationality ? $employee->nationality:'<strong>(not set)</strong>' !!}</span>
-                        </div>
+                            <span class="field-value">{!! $employee->nationality ? App\Country::where('id', $employee->nationality)->first() :'<strong>(not set)</strong>' !!}</span>
+                        </div> --}}
                     </div>
                 </div>
-                {{-- Ignore --}} {{--
                 <div id="end-btn-group">
-                    <button type="button" class="btn btn-primary rounded">
-                        <i class="fas fa-pen"></i>
+                    <button id="emp-roles-btn" type="button" class="btn btn-sm text-white rounded">
+                        {{-- <i class="fas fa-pen"></i> --}}
+                        Roles
                     </button>
-                </div> --}}
+                    <button id="emp-change-password-btn" data-toggle="modal" data-target="#change-password-popup" type="button" class="btn btn-sm text-white rounded">
+                        {{-- <i class="fas fa-pen"></i> --}}
+                        Change Password
+                    </button>
+                </div>
             </div>
 
         </div>
@@ -360,6 +364,53 @@
         </div>
     </div>
 </div>
+{{-- Change Password --}}
+<div class="modal fade" id="change-password-popup" tabindex="-1" role="dialog" aria-labelledby="change-password-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="change-password-label">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <form id="change-password-form">
+                <div class="modal-body">
+                    @csrf
+                    {{-- <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Current Password*</strong></label>
+                            <input name="current_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="current-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>New Password*</strong></label>
+                            <input name="new_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="new-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Confirm New Password*</strong></label>
+                            <input name="confirm_new_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="confirm-new-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="change-password-submit" type="submit" class="btn btn-primary">
+                        {{ __('Submit') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -582,5 +633,70 @@
             </div>`)
     }
 
+</script>
+<script>
+    $(function () {
+        $('#change-password-submit').click(function(e){
+            e.preventDefault();
+            $(e.target).attr('disabled', true);
+
+            $.ajax({
+                url: "{{ route('admin.employees.change-password.post', ['id' => $employee->id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // current_password: $('#change-password-form input[name=current_password]').val(),
+                    new_password: $('#change-password-form input[name=new_password]').val(),
+                    confirm_new_password: $('#change-password-form input[name=confirm_new_password]').val(),
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    clearChangePasswordModal('#change-password-form');
+                    $('#change-password-popup').modal('toggle');
+                    $(e.target).removeAttr('disabled');
+                },
+                error: function(xhr) {
+                    clearChangePasswordModal('#change-password-form');
+                    $(e.target).removeAttr('disabled');
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    // case 'current_password':
+                                    //     $('#change-password-form input[name=current_password]').addClass('is-invalid');
+                                    //     $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    // break;
+                                    case 'new_password':
+                                        $('#change-password-form input[name=new_password]').addClass('is-invalid');
+                                        $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    // case 'confirm_new_password':
+                                    //     $('#change-password-form input[name=confirm_new_password]').addClass('is-invalid');
+                                    //     $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    // break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+        });
+
+        function clearChangePasswordModal(htmlId) {
+            let form = $(htmlId);
+            form.find("input[name=new_password]").removeClass('is-invalid');
+        }
+        // $('#employee-profile-details #emp-roles-btn').click(function (e) {
+        //     console.log("ON: Roles Clicked!");
+        // });
+        
+        // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
+        //     console.log("ON: Change Password Clicked!");
+        // });
+    });
 </script>
 @append
