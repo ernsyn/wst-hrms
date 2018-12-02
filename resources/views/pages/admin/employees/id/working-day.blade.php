@@ -2,15 +2,15 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" id="assign-working-day-button" data-toggle="modal" data-target="#add-working-day-popup">
+            <button type="button" class="btn btn-primary waves-effect" id="assign-working-day-button" data-toggle="modal" data-target="#add-working-day-popup">
                 Assign Working Day
             </button>
-            <button type="button" class="btn btn-outline-info waves-effect" id="edit-working-day-button" data-toggle="modal" data-target="#edit-working-day-popup">
+            <button type="button" class="btn btn-primary waves-effect" id="edit-working-day-button" data-toggle="modal" data-target="#edit-working-day-popup">
                 Edit Working Day
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="warking-day-table">
+    <table class="hrms-primary-data-table table w-100" id="warking-day-table">
         <thead>
             <tr>
                 <th>Monday</th>
