@@ -172,7 +172,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-visa-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-visa-popup">
                 Add Visa
             </button>
         </div>

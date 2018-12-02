@@ -2,12 +2,12 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-report-to-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-report-to-popup">
                 Add Report To
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="report-to-table">
+    <table class="hrms-primary-data-table table w-100" id="report-to-table">
         <thead>
             <tr>
                 <th>No</th>
