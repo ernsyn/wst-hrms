@@ -354,7 +354,7 @@ class EmployeeController extends Controller
         $visaData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            'passport_no' => 'required|alpha_num',
+            // 'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
@@ -467,7 +467,8 @@ class EmployeeController extends Controller
             'position' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'notes' => 'required'
+            'notes'=>''
+          
         ]);
         $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
@@ -593,10 +594,10 @@ class EmployeeController extends Controller
             'report_to_emp_id' => 'required',
             'type' => 'required',
         
-            'notes' => 'required',
+            'notes' => '',
             'report_to_level' =>'required',
             'kpi_proposer' => 'sometimes|required',
-            'notes' => 'required'
+           
         ]);
         if($request->get('kpi_proposer') == null){
             $reportToData['kpi_proposer'] = 0;
@@ -686,7 +687,7 @@ class EmployeeController extends Controller
         $visaUpdatedData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            'passport_no' => 'required|alpha_num',
+            // 'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
@@ -759,7 +760,7 @@ class EmployeeController extends Controller
             'level' => 'required',
             'major' => 'required',
             'gpa' => 'required|between:0,99.99',
-            'description' => 'required'
+            'description' => ''
         ]);
 
         EmployeeEducation::where('id', $id)->update($educationUpdatedData);

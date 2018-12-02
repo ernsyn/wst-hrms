@@ -91,10 +91,8 @@
                     <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="notes"><strong>Notes*</strong></label>
-                                <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="notes-error" class="invalid-feedback">
-    
-                                </div>
+                                <input id="notes" type="text" class="form-control" placeholder="" value="" >
+                               
                             </div>
                         </div>
                  
@@ -160,10 +158,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
-
-                            </div>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+                            
                         </div>
                     </div>
                 </div>
@@ -211,8 +207,9 @@
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
+
             {
-                "data": "report_to.user.id"
+                "data": "report_to.user.name"
             },
             {
                 "data": "type"
@@ -222,7 +219,19 @@
             },
             {
                 "data": "kpi_proposer",
-            },
+
+                render: function(data) { 
+                    if(data ==1) {
+                      return '<i class="fas fa-check-circle" style="color:green"></i>'
+
+                    }
+                    else {
+                      return '<i class="fas fa-times-circle" style="color:red"></i>'
+                    }
+    
+                  },
+                  defaultContent: ''
+                },
             {
                 "data": "report_to_level",
             },
@@ -283,10 +292,7 @@
                                         $('#add-report-to-form #kpi-proposer').addClass('is-invalid');
                                         $('#add-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'notes':
-                                        $('#add-report-to-form #notes').addClass('is-invalid');
-                                        $('#add-report-to-form #notes-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
+                                  
                                     case 'report_to_level':
                                         $('#add-report-to-form #report_to_level').addClass('is-invalid');
                                         $('#add-report-to-form #report-to-level-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -359,10 +365,7 @@
                                         $('#edit-report-to-form #kpi-proposer').addClass('is-invalid');
                                         $('#edit-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'notes':
-                                        $('#edit-report-to-form #notes').addClass('is-invalid');
-                                        $('#edit-report-to-form #notes-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
+                                 
                                     case 'report_to_level':
                                         $('#edit-report-to-form #report_to_level').addClass('is-invalid');
                                         $('#edit-report-to-form #report-to-level-error').html('<strong>' + errors[errorField][0] + "</strong>");
