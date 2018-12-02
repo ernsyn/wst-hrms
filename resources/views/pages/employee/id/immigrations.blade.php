@@ -165,7 +165,10 @@
             "serverSide": true,
             "bStateSave": true,
             "ajax": "{{ route('employee.dt.immigrations', ['id' => $id]) }}",
-
+            "columnDefs": [ {
+                "targets": 5,
+                "orderable": false
+            } ],
             "columns": [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;

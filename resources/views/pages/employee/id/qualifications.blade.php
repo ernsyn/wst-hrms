@@ -546,6 +546,10 @@
             "serverSide": true,
             "bStateSave": true,
             "ajax": "{{ route('employee.dt.experiences', ['id' => $id]) }}",
+            "columnDefs": [ {
+                "targets": 6,
+                "orderable": false
+            } ],
             "columns": [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
@@ -581,6 +585,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('employee.dt.education', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 8,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -622,6 +630,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('employee.dt.skills', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;

@@ -204,6 +204,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.visas', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 7,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -215,7 +219,6 @@
             {
                 "data": "visa_number"
             },
-    
             {
                 "data": "issued_by"
             },
@@ -317,7 +320,7 @@
                                         $('#add-visa-form #visa-number').addClass('is-invalid');
                                         $('#add-visa-form #visa-number-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                
+
                                     case 'issued_by':
                                         $('#add-visa-form #issued-by').addClass('is-invalid');
                                         $('#add-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
@@ -355,7 +358,7 @@
 
             $('#edit-visa-form #type').val(currentData.type);
             $('#edit-visa-form #visa-number').val(currentData.visa_number);
-           
+
             $('#edit-visa-form #issued-by').val(currentData.issued_by);
             $('#edit-visa-form #issued-date-visa-edit').val(currentData.issued_date);
             $('#edit-visa-form #expiry-date-visa-edit').val(currentData.expiry_date);
@@ -377,7 +380,7 @@
                     _token: '{{ csrf_token() }}',
                     type: $('#edit-visa-form #type').val(),
                     visa_number: $('#edit-visa-form #visa-number').val(),
-                 
+
                     issued_by: $('#edit-visa-form #issued-by').val(),
                     issued_date: $('#edit-visa-form #alt-issued-date-visa-edit').val(),
                     expiry_date: $('#edit-visa-form #alt-expiry-date-visa-edit').val(),
@@ -405,7 +408,7 @@
                                         $('#edit-visa-form #visa-number').addClass('is-invalid');
                                         $('#edit-visa-form #visa-number-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                               
+
                                     case 'issued_by':
                                         $('#edit-visa-form #issued-by').addClass('is-invalid');
                                         $('#edit-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
@@ -473,7 +476,7 @@
     function clearVisasModal(htmlId) {
         $(htmlId + ' #type').val('');
         $(htmlId + ' #visa-number').val('');
-    
+
         $(htmlId + ' #issued-by').val('');
         $(htmlId + ' #issued-date-visa').val('');
         $(htmlId + ' #expiry-date-visa').val('');
@@ -481,7 +484,7 @@
 
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
-     
+
         $(htmlId + ' #issued-by').removeClass('is-invalid');
         $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
         $(htmlId + ' #expiry-date-visa').removeClass('is-invalid');
@@ -491,7 +494,7 @@
     function clearVisasError(htmlId) {
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
-     
+
         $(htmlId + ' #issued-by').removeClass('is-invalid');
         $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
         $(htmlId + ' #expiry-date-visa').removeClass('is-invalid');

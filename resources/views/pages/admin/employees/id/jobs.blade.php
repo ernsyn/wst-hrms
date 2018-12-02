@@ -466,6 +466,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.jobs', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 8,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -843,7 +847,7 @@
             </div>`
         )
     }
-    }); 
-   
+    });
+
 </script>
 @append

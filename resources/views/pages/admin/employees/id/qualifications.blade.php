@@ -541,6 +541,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.experiences', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 6,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -570,76 +574,84 @@
             }
         ]
     });
-var educationsTable = $('#employee-education-table').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "{{ route('admin.employees.dt.education', ['id' => $id]) }}",
-    "columns": [{
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
+    var educationsTable = $('#employee-education-table').DataTable({
+        "bInfo": true,
+        "bDeferRender": true,
+        "serverSide": true,
+        "bStateSave": true,
+        "ajax": "{{ route('admin.employees.dt.education', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 8,
+            "orderable": false
+        } ],
+        "columns": [{
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            {
+                "data": "institution"
+            },
+            {
+                "data": "start_year"
+            },
+            {
+                "data": "end_year"
+            },
+            {
+                "data": "level"
+            },
+            {
+                "data": "major"
+            },
+            {
+                "data": "gpa"
+            },
+            {
+                "data": "description"
+            },
+            {
+                "data": null,
+                render: function (data, type, row, meta) {
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>` +
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
+                }
             }
-        },
-        {
-            "data": "institution"
-        },
-        {
-            "data": "start_year"
-        },
-        {
-            "data": "end_year"
-        },
-        {
-            "data": "level"
-        },
-        {
-            "data": "major"
-        },
-        {
-            "data": "gpa"
-        },
-        {
-            "data": "description"
-        },
-        {
-            "data": null,
-            render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>` +
-                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
+        ]
+    });
+    var skillsTable = $('#employee-skill-table').DataTable({
+        "bInfo": true,
+        "bDeferRender": true,
+        "serverSide": true,
+        "bStateSave": true,
+        "ajax": "{{ route('admin.employees.dt.skills', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+        } ],
+        "columns": [{
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "years_of_experience"
+            },
+            {
+                "data": "competency"
+            },
+            {
+                "data": null,
+                render: function (data, type, row, meta) {
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
+                }
             }
-        }
-    ]
-});
-var skillsTable = $('#employee-skill-table').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "{{ route('admin.employees.dt.skills', ['id' => $id]) }}",
-    "columns": [{
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        {
-            "data": "name"
-        },
-        {
-            "data": "years_of_experience"
-        },
-        {
-            "data": "competency"
-        },
-        {
-            "data": null,
-            render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
-                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
-            }
-        }
-    ]
-});
+        ]
+    });
 
 </script>
 
