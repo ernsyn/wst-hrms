@@ -682,23 +682,23 @@ class ELeaveController extends Controller
         return response()->json(['success'=>'Record is successfully added']);
     }
     
-        public function addLeaveApplication(Request $request)
-        {         
-            
-            $leaveApllicationData =$request->validate([
-
-
-
-            ]);
-
-            return redirect()->route('employees');
+    public function addLeaveApplication(Request $request)
+    {         
         
+        $leaveApllicationData =$request->validate([
 
 
 
+        ]);
 
-        
-        }
+        return redirect()->route('employees');
     }
-           
+    
+    private static function error($message) {
+        return [
+            'error' => true,
+            'message' => $message
+        ];
+    }
+}    
     
