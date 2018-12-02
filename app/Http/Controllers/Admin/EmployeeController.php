@@ -102,7 +102,8 @@ class EmployeeController extends Controller
             'epf_no' => 'required',
             'tax_no' => 'required',
             'eis_no' => 'required',
-            'socso_no' => 'required'
+            'socso_no' => 'required',
+            'main_security_group_id'=>''
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
@@ -353,7 +354,7 @@ class EmployeeController extends Controller
         $visaData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            'passport_no' => 'required|alpha_num',
+            // 'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
@@ -380,7 +381,7 @@ class EmployeeController extends Controller
             'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
             'basic_salary' => 'required',
-            'remarks' => '',
+            'specification' => 'required',
             'branch_id' => 'required',
             'start_date' => 'required|date',
             'status' => 'required',
@@ -466,7 +467,8 @@ class EmployeeController extends Controller
             'position' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'notes' => 'required'
+            'notes'=>''
+          
         ]);
         $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
@@ -592,10 +594,10 @@ class EmployeeController extends Controller
             'report_to_emp_id' => 'required',
             'type' => 'required',
         
-            'notes' => 'required',
+            'notes' => '',
             'report_to_level' =>'required',
             'kpi_proposer' => 'sometimes|required',
-            'notes' => 'required'
+           
         ]);
         if($request->get('kpi_proposer') == null){
             $reportToData['kpi_proposer'] = 0;
@@ -685,7 +687,7 @@ class EmployeeController extends Controller
         $visaUpdatedData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            'passport_no' => 'required|alpha_num',
+            // 'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
@@ -709,7 +711,7 @@ class EmployeeController extends Controller
             'emp_grade_id' => 'required',
             'start_date' => 'required',
             'basic_salary' => 'required',
-            'remarks' => '',
+            'specification' => 'required',
             'status' => 'required'
         ]);
 
@@ -758,7 +760,7 @@ class EmployeeController extends Controller
             'level' => 'required',
             'major' => 'required',
             'gpa' => 'required|between:0,99.99',
-            'description' => 'required'
+            'description' => ''
         ]);
 
         EmployeeEducation::where('id', $id)->update($educationUpdatedData);

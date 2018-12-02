@@ -929,7 +929,7 @@ public function postEditCompanyDeduction(Request $request)
 {
 
 
-    $validatedAdditionData = $request->validate([
+    $validateDeductionData = $request->validate([
         'code' => 'required',
         'name' => 'required',
         'type' => 'required',
@@ -943,15 +943,15 @@ public function postEditCompanyDeduction(Request $request)
     // ]);
 
     // dd($validatedData);
-    $validatedAdditionData['statutory'] = implode(",", $request->statutory);
-    $validatedAdditionData['status'] = 'active';
+    // $validateDeductionData['statutory'] = implode(",", $request->statutory);
+    // $validateDeductionData['status'] = 'active';
    // $validatedAdditionData['company_id']=$id;
    // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
 
 
 
 
-     $addition =Deduction::where('id', $request->company_deduction_id)->update($validatedAdditionData);
+     $deduction =Deduction::where('id', $request->company_deduction_id)->update($validateDeductionData);
   //  $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
 
     return redirect()->route('admin.settings.companies');
@@ -959,6 +959,9 @@ public function postEditCompanyDeduction(Request $request)
 
 
 }
+
+
+
 
 public function displayCompanyAddition()
 {
