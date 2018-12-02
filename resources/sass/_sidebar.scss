@@ -94,6 +94,8 @@
                     color: inherit;
                     text-decoration: none;
                 }
+
+                
             }  
 
             .menu-option {
@@ -114,8 +116,11 @@
                     background: $app-primary-darkened;
        
                 }
+                
             }
         }
+
+        
     }
 
     a[data-toggle="collapse"] {

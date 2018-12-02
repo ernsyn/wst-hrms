@@ -17935,6 +17935,14 @@ button.dropdown-toggle::after {
   width: 130px;
 }
 
+#page-admin-dashboard #emp-joined-card {
+  background: #1c6197;
+}
+
+#page-admin-dashboard #leave-requests-card {
+  background: #e0551d;
+}
+
 #page-add-leave-type .entitlement-by-years-entry .min-years-input {
   background-color: #18b775;
 }
