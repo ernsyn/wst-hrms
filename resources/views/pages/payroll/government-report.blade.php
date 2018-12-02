@@ -115,7 +115,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -248,7 +248,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -382,7 +382,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -516,7 +516,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -649,7 +649,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif

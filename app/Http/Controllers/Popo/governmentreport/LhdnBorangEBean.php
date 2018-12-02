@@ -28,6 +28,7 @@ class LhdnBorangEBean
     private $mobileNo;
     private $email;
     private $CP8D; // 1=Bersama Borang E  2=Melalui Data Praisi  3=Cakera Padat
+    private $year;
 
     private $totalEmployee;
     private $totalEmployeeWithPCB;
@@ -57,6 +58,7 @@ class LhdnBorangEBean
         $this->mobileNo = isset($array['mobileNo']) ? $array['mobileNo'] : null;
         $this->email = isset($array['email']) ? $array['email'] : null;
         $this->CP8D = isset($array['CP8D']) ? $array['CP8D'] : null;
+        $this->year = isset($array['year']) ? $array['year'] : null;
 
         $this->totalEmployee = isset($array['totalEmployee']) ? $array['totalEmployee'] : null;
         $this->totalEmployeeWithPCB = isset($array['totalEmployeeWithPCB']) ? $array['totalEmployeeWithPCB'] : null;
@@ -221,6 +223,15 @@ class LhdnBorangEBean
 
     public function setCP8D($CP8D) {
         $this->CP8D = $CP8D;
+        return $this;
+    }
+
+    public function getYear() {
+        return $this->year;
+    }
+
+    public function setYear($year) {
+        $this->year = $year;
         return $this;
     }
 

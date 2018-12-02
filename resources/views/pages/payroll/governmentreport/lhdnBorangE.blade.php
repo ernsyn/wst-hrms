@@ -140,7 +140,7 @@
         <tr>
             <td class="text_center" rowspan="3" style="font-size: 36pt;" valign="top"><b>E</b></td>
             <td class="text_center" valign="bottom"><b>PENYATA OLEH MAJIKAN<b></td>
-            <td class="text_center" rowspan="2" style="font-size: 26pt;letter-spacing: 7pt;" valign="top"><b>{{ date("Y") }}</b></td>
+            <td class="text_center" rowspan="2" style="font-size: 26pt;letter-spacing: 7pt;" valign="top"><b>{{ $data->getYear() }}</b></td>
         </tr>
         <tr>
             <td class="text_center"><b>DI BAWAH SUBSEKSYEN 83(1) AKTA CUKAI PENDAPATAN 1967</b></td>
@@ -420,7 +420,7 @@
     <table class="pf padded " style="margin-top: 15pt;">
         <tbody><tr>
             <td class="table-header-grey pleft" colspan="19">
-                BAHAGIAN A: MAKLUMAT BILANGAN PEKERJA BAGI TAHUN BERAKHIR 31 DISEMBER 2018
+                BAHAGIAN A: MAKLUMAT BILANGAN PEKERJA BAGI TAHUN BERAKHIR 31 DISEMBER {{$data->getYear()}}
             </td>
         </tr>
         </tbody>
@@ -666,7 +666,7 @@
         </tr>
         <tr>
             <th class="table-border pleft">Bil.</th>
-            <th class="table-border pleft">No. Cukai Pendapatan</th>
+            <th class="table-border pleft" width="15%">No. Cukai Pendapatan</th>
             <th class="table-border pleft">No.Pengenalan / Passport</th>
             <th class="table-border pleft">Kategori Pekerja</th>
             <th class="table-border pleft">Cukai dibayar Majikan</th>
@@ -687,23 +687,27 @@
         @foreach(array_slice($empData,$start,$end) as $emp )
             <tr class="border_bottom" style="height: 35pt;">
                 <td class="pleft">{{$count+1}}</td>
-                <td class="tg-s268 pleft">{{$emp->getIncomeTaxNo()}}</td>
+                <td class="tg-s268 pleft">
+                    {{$emp->getEmployeeName()}}
+                    <br>
+                    {{$emp->getIncomeTaxNo()}}
+                </td>
                 <td class="tg-s268 pleft">{{$emp->getIcNo()}}</td>
                 <td class="tg-s268 pleft">{{$emp->getEmployeeCategory()}}</td>
                 <td class="tg-s268 pleft">{{$emp->getTaxPayByEmployer()}}</td>
                 <td class="tg-0lax pleft">{{$emp->getTotalChildren()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getAmountOfDeparture()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getTotalGrossRemuneration()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getBenefitsOfGoods()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getValuePlaceOfResidence()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getBenefitsOfESOS()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getTaxExemptPerquisites()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getTP1Departure()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getTP1Zakat()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getEmployeeEPFContributions()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getZakatDeductions()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getTaxDeductionOfPCB()}}</td>
-                <td class="tg-0lax pleft">{{$emp->getTaxDeductionOfCP38()}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getAmountOfDeparture(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getTotalGrossRemuneration(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getBenefitsOfGoods(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getValuePlaceOfResidence(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getBenefitsOfESOS(),2) }}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getTaxExemptPerquisites(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getTP1Departure(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getTP1Zakat(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getEmployeeEPFContributions(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getZakatDeductions(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getTaxDeductionOfPCB(),2)}}</td>
+                <td class="tg-0lax pleft">{{number_format($emp->getTaxDeductionOfCP38(),2)}}</td>
             </tr>
         @php
             //total amount

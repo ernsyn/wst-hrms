@@ -48,7 +48,7 @@ class GenerateReportsHelper
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$year);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,null,$year);
                 $totalEmployeeActiveAndResign = self::getEmployeeTotalActiveAndResigned($companyInformation->id,$filter,null,$year);
 
                 if(count($userInfoAndPayrollList) == 0) {
@@ -67,10 +67,11 @@ class GenerateReportsHelper
                         'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
                         'address3' => 'SELANGOR.',
                         'postcode' => 46200,
-                        'telNo' => $companyInformation->phone,
+                        'phoneNo' => $companyInformation->phone,
                         //'mobileNo' => '013-7931 3550',
                         //'email' => 'oppo.amandachong@gmail.com',
                         //'CP8D' => 1,
+                        'year' => $year,
                         'totalEmployee' => $totalEmployeeActiveAndResign->total_employee,
                         'totalEmployeeWithPCB' => $totalEmployeeActiveAndResign->total_employee_have_pcb,
                         'totalNewEmployee' => $totalEmployeeActiveAndResign->total_new_employee,
@@ -87,6 +88,7 @@ class GenerateReportsHelper
                     //example
                     foreach ($userInfoAndPayrollList as $userPayroll) {
                         $emp = new LhdnCP8EmployeeDetail([
+                            'employeeName' => $userPayroll->name,
                             'incomeTaxNo' => $userPayroll->tax_no,
                             'icNo' => $userPayroll->ic_no,
                             //'employeeCategory' => $userPayroll->name,
@@ -118,7 +120,7 @@ class GenerateReportsHelper
                     $data = array();
                     $companyInformation = self::getUserLogonCompanyInfomation();
                     $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                    $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$year);
+                    $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,null,$year);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -134,10 +136,10 @@ class GenerateReportsHelper
                             'employerNoTel' => $companyInformation->phone,
                             'name_A' => $userPayroll->name,
                             'dateOfCommencement_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
-                            'address1_A' => 'No 7 ,Simpang Empat',
-                            'address2_A' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                            'address3_A' => 'SELANGOR.',
-                            'postcode_A' => 46200,
+                            //'address1_A' => 'No 7 ,Simpang Empat',
+                            //'address2_A' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                            //'address3_A' => 'SELANGOR.',
+                            //'postcode_A' => 46200,
                             'expectedDatetoLeaveMalaysia_A' => '',
                             'xAddressBelongsToTaxAgent_A' => '',
                             'ic_A' => $userPayroll->ic_no,
@@ -175,7 +177,11 @@ class GenerateReportsHelper
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+
+                //Generate for new staff
+                $date = self::getPayrollYearMonth($periods,$companyInformation->id);
+                $extraFilter = 'year(`employee_jobs`.`start_date`) = '.$date->year.' and month(`employee_jobs`.`start_date`) = '.$date->month;
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$extraFilter,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -228,7 +234,10 @@ class GenerateReportsHelper
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+
+                //generate for resigned staff
+                $extraFilter = 'employee_jobs.end_date IS NOT NULL';
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$extraFilter,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -326,7 +335,10 @@ class GenerateReportsHelper
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+
+                //generate for resigned staff
+                $extraFilter = 'employee_jobs.end_date IS NOT NULL';
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$extraFilter,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -438,7 +450,7 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
 
                 $empData = array();
                 $totalPcb = 0;
@@ -509,7 +521,7 @@ class GenerateReportsHelper
                 //set pojo
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInfomation();
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -554,7 +566,7 @@ class GenerateReportsHelper
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$year);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,null,$filter,null,$year);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -624,7 +636,7 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -689,7 +701,7 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
 
                 $empData = array();
                 $totalEmployerContribution = 0;
@@ -749,7 +761,7 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInfomation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
                 $month = self::getPayrollMonth($periods,$companyInformation->id);
 
                 if(count($userInfoAndPayrollList) == 0) {
@@ -960,7 +972,7 @@ class GenerateReportsHelper
     }
 
     public static function getYear($company_id){
-        return self::getPayrollYear($company_id);
+        return self::getListPayrollYear($company_id);
     }
 
     public static function getPeriodList($company_id){;
@@ -1001,7 +1013,7 @@ class GenerateReportsHelper
 
     }
 
-    public static function getListUserInformationAndPayroll($companyId,$filter,$periods,$year){
+    public static function getListUserInformationAndPayroll($companyId,$filter,$extraFilter,$periods,$year){
 
         $query = DB::table('payroll_master')
             ->select(
@@ -1044,6 +1056,11 @@ class GenerateReportsHelper
 
             if(!empty($periods) && $periods != 0){
                 $query->where('payroll_master.period', $periods);
+            }
+
+            //extra filter
+            if(!empty($extraFilter)){
+                $query->whereRaw($extraFilter);
             }
 
         $query->where('payroll_master.company_id', $companyId)
@@ -1124,7 +1141,7 @@ class GenerateReportsHelper
         return $result;
     }
 
-    public static function getPayrollYear($companyId){
+    public static function getListPayrollYear($companyId){
         return DB::table('payroll_master')
             ->select(
                 DB::raw('EXTRACT( YEAR FROM `year_month` ) as year')
@@ -1140,6 +1157,16 @@ class GenerateReportsHelper
             )
             ->where('id',$id)
             ->where('company_id',$companyId)->value('month');
+    }
+
+    public static function getPayrollYearMonth($period,$companyId){
+        return DB::table('payroll_master')
+            ->select(
+                DB::raw('EXTRACT( MONTH FROM `year_month` ) as month'),
+                DB::raw('EXTRACT( YEAR FROM `year_month` ) as year')
+            )
+            ->where('period',$period)
+            ->where('company_id',$companyId)->first();
     }
 
 

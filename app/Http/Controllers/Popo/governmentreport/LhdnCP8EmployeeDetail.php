@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Popo\governmentreport;
 
 class LhdnCP8EmployeeDetail
 {
+    private $employeeName;
     private $incomeTaxNo;
     private $icNo;
     private $employeeCategory;
@@ -30,6 +31,7 @@ class LhdnCP8EmployeeDetail
     private $taxDeductionOfCP38;
 
     public function __construct(array $array = []) {
+        $this->employeeName = isset($array['employeeName']) ? $array['employeeName'] : null;
         $this->incomeTaxNo = isset($array['incomeTaxNo']) ? $array['incomeTaxNo'] : null;
         $this->icNo = isset($array['icNo']) ? $array['icNo'] : null;
         $this->employeeCategory = isset($array['employeeCategory']) ? $array['employeeCategory'] : null;
@@ -47,6 +49,15 @@ class LhdnCP8EmployeeDetail
         $this->zakatDeductions = isset($array['zakatDeductions']) ? $array['zakatDeductions'] : 0;
         $this->taxDeductionOfPCB = isset($array['taxDeductionOfPCB']) ? $array['taxDeductionOfPCB'] : 0;
         $this->taxDeductionOfCP38 = isset($array['taxDeductionOfCP38']) ? $array['taxDeductionOfCP38'] : 0;
+    }
+
+    public function getEmployeeName() {
+        return $this->employeeName;
+    }
+
+    public function setEmployeeName($employeeName) {
+        $this->employeeName = $employeeName;
+        return $this;
     }
 
     public function getIncomeTaxNo() {
