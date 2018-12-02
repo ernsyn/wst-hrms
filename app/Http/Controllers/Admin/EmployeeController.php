@@ -760,7 +760,7 @@ class EmployeeController extends Controller
             'level' => 'required',
             'major' => 'required',
             'gpa' => 'required|between:0,99.99',
-            'description' => 'required'
+            'description' => ''
         ]);
 
         EmployeeEducation::where('id', $id)->update($educationUpdatedData);

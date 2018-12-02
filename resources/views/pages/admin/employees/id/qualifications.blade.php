@@ -127,9 +127,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="description"><strong>Description*</strong></label>
-                            <input id="description" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="description-error" class="invalid-feedback">
-                            </div>
+                            <input id="description" type="text" class="form-control" placeholder="" value="" >
+                           
                         </div>
                     </div>
                 </div>
@@ -326,9 +325,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="description"><strong>Description*</strong></label>
-                            <input id="description" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="description-error" class="invalid-feedback">
-                            </div>
+                            <input id="description" type="text" class="form-control" placeholder="" value="" >
+                        
                         </div>
                     </div>
                 </div>
@@ -956,10 +954,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#add-education-form #gpa').addClass('is-invalid');
                                         $('#add-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'description':
-                                        $('#add-education-form #description').addClass('is-invalid');
-                                        $('#add-education-form #description-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+                                
                                 }
                             }
                         }
@@ -1044,10 +1039,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-education-form #gpa').addClass('is-invalid');
                                         $('#edit-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'description':
-                                        $('#edit-education-form #description').addClass('is-invalid');
-                                        $('#edit-education-form #description-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+                               
                                 }
                             }
                         }
