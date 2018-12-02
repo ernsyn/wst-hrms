@@ -3,7 +3,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
                 Add Job
             </button> @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
             <button type="button" class="btn btn-outline-danger waves-effect" onclick="window.location='{{ route('admin.employees.id.action.resign', ['id' => $id ]) }}';">
@@ -13,7 +13,7 @@
             @endif
         </div>
     </div>
-    <table class="hrms-primary-data-table table table-bordered table-hover w-100" id="employee-jobs-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-jobs-table">
         <thead>
             <tr>
                 <th>No</th>

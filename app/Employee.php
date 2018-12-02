@@ -40,7 +40,7 @@ class Employee extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function security_groups()
+    public function main_security_groups()
     {
         return $this->belongsTo('App\SecurityGroup', 'main_security_group_id');
     }
