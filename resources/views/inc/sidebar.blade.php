@@ -107,7 +107,7 @@
 
         </li> --}}
         @if(PayrollHelper::isKpiProposer())
-        <li class="menu-section {{ request()->is('') ? 'active' : '' }}">
+        <li class="menu-section {{ request()->is('payroll') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1">
@@ -118,8 +118,8 @@
                     </div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('','') ? 'show' : '' }}" id="payrollSubmenu">
-                <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+            <ul class="collapse list-unstyled {{ request()->is('payroll') ? 'show' : '' }}" id="payrollSubmenu">
+                <li class="menu-option {{ request()->is('payroll') ? 'active' : '' }}">
                     <a href="{{ route('payroll') }}">Payroll</a>
                 </li>
             </ul>
@@ -127,7 +127,7 @@
         </li>
         @endif
         
-        <li class="menu-section {{ request()->is('') ? 'active' : '' }}">
+        <li class="menu-section {{ request()->is('payslip.show') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payslipSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1">
@@ -138,8 +138,8 @@
                     </div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('','') ? 'show' : '' }}" id="payslipSubmenu">
-                <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+            <ul class="collapse list-unstyled {{ request()->is('payslip.show') ? 'show' : '' }}" id="payslipSubmenu">
+                <li class="menu-option {{ request()->is('payslip.show') ? 'active' : '' }}">
                     <a href="{{ route('payslip.show') }}">Download Payslip</a>
                 </li>
             </ul>

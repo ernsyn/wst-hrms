@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Payroll;
 
+use App\Enums\PayrollPeriodEnum;
+use App\Helpers\DateHelper;
 use App\Helpers\GenerateReportsHelper;
 use App\Http\Controllers\Controller;
 use App\Repositories\Company\CompanyRepository;
@@ -9,6 +11,7 @@ use App\Services\PayrollService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Mpdf\Output\Destination;
+use App\Http\Controllers\Popo\payrollreport\PayrollReport;
 
 class PayrollReportController extends Controller
 {
@@ -73,26 +76,32 @@ class PayrollReportController extends Controller
             'companyId' => $company->id
         );
         // Condition
-        $payroll = $this->payrollService->findByPayrollMonthPeriod($data)->first();
-//         if($payroll->status !== 1) $error = 'Payroll must be locked before report generation.';
-//         dd($request);
-//         $is_exist = $this->payroll_report->check_exist($request->input());
-//         if(@$is_exist && !@$error) $error = 'Report already generated. Kindly refer to the report menu.';
-//         if(@$error) return redirect($request->server('HTTP_REFERER'))->with('error', $error);
+        $payroll = $this->payrollService->findByPayrollMonthPeriod($data);
+        if (count($payroll) > 0) {
+            $payroll = $payroll->first();
+            
+            if($payroll->status !== 1) {
+                $error = 'Payroll must be locked before report generation.';
+                return redirect($request->server('HTTP_REFERER'))->withErrors([$error]);
+            }
+        } else {
+            $msg = 'Report ' . $validated['year_month'] . ' does not exist.';
+            return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
+        }
+//         dd($payroll);
         
         // Process
         DB::beginTransaction();
 
 //         $company_list = $this->company->all(false, ['status'=>'Active']);
-        
         $extra = [
-            'period'    => strtoupper($payroll->period.'-'.$payroll->month_name.'-'.$payroll->year),
+            'period'    => strtoupper(PayrollPeriodEnum::getDescription($payroll->period).'-'.DateHelper::dateWithFormat($payroll->year_month, 'M-Y')),
         ];
         $request_data = [
             'payroll_master_id'  => $payroll->id,
             'type'              => $type,
         ];
-        
+//         dd($company,$filter_data,$request_data,$extra);
         switch ($type) {
             case '1':
                 // Document 1. Got two types to generate - Group by department, Group by department and cost-center (HQ)
@@ -141,14 +150,14 @@ class PayrollReportController extends Controller
                 break;
             case '5':
                 // Document 5. Group by bank
-                
+//                 dd();
                 $filter_data['groupby'] = ['EM.id', 'BM.id'];
                 $this->generate_report($company, $filter_data, $request_data, $extra);
                 break;
             case '6':
                 // Document 6. Summary
                 $filter_data['groupby'] = ['CM.id'];
-                $this->generate_report(null, $filter_data, $request_data, $extra);
+                $this->generate_report($company, $filter_data, $request_data, $extra);
                 break;
             case '7':
                 // Document 7. Payroll Details
@@ -177,24 +186,34 @@ class PayrollReportController extends Controller
                 
                 switch ($filter_data['type']) {
                     case '1':
+                        $file_name = 'doc1.pdf';
                         $request_data['document_name'] = 'Doc 1. Payment Form Group By Department - '.$company->name;
                         if(@$filter_data['costcentres']) $request_data['document_name'] .= ' (HQ)';
                         break;
                     case '2':
+                        $file_name = 'doc2.pdf';
                         $request_data['document_name'] = 'Doc 2. Payment Form Group By Department & Cost Center - '.$company->name;
                         break;
                     case '3':
+                        $file_name = 'doc3.pdf';
                         $request_data['document_name'] = 'Doc 3. Supplier Payment Form [Cost Center] - '.$company->name;
                         if(count($filter_data['groupby']) > 1) $request_data['document_name'] = 'Doc 3. Supplier Payment Form [Department - Cost Center] - '.$company->name;
                         if(@$filter_data['cost_center']) $request_data['document_name'] .= ' (HQ)';
                         break;
                     case '4':
+                        $file_name = 'doc4.pdf';
                         $request_data['document_name'] = 'Doc 4. Cash Transfer Document [Department] - '.$company->name;
                         break;
                     case '5':
+                        $file_name = 'doc5.pdf';
                         $request_data['document_name'] = 'Doc 5. Group By Bank - '.$company->name;
                         break;
+                    case '6':
+                        $file_name = 'doc6.pdf';
+                        $request_data['document_name'] = 'Doc 6. Payroll Summary';
+                        break;
                     case '7':
+                        $file_name = 'doc7.pdf';
                         $request_data['document_name'] = 'Doc 7. Payroll Details - '.$company->name;
                         break;
                     default:
@@ -379,7 +398,8 @@ class PayrollReportController extends Controller
                         </tr>
                     ';
                     
-                    if(count($info->additional_list) > 0) {
+                    /* TODO: 
+                     * if(count($info->additional_list) > 0) {
                         $row = '';
                         foreach($info->additional_list as $key => $additional) {
                             if(!@$additional->code) break;
@@ -395,7 +415,7 @@ class PayrollReportController extends Controller
                                 <td colspan="15">'.$row.'</td>
                             </tr>
                         ';
-                    }
+                    } */
                 }
                 
                 $final_addition_list = '';
@@ -651,7 +671,7 @@ class PayrollReportController extends Controller
                         </tr>
                         <tr>
                             <td align="center"> (Amanda Chong) </td>
-                            <td align="center"> (Crandice Liu) </td>
+                            <td align="center"> (Candice Liu) </td>
                             <td align="center"> (CEO William Fang) </td>
                         </tr>
                     </table>
@@ -786,6 +806,7 @@ class PayrollReportController extends Controller
                 $total_employee = 0;
                 $total_gross_pay = 0;
                 $total_net_pay = 0;
+                $period = $extra['period'];
                 
                 foreach ($list as $key => $info) {
                     $content .= '
@@ -834,7 +855,7 @@ class PayrollReportController extends Controller
                         <thead>
                             <tr>
                                 <th class="w-20p"> </th>
-                                <th align="left" class="w-60p" style="text-decoration:underline;"> 2018 MAY PART 1 </th>
+                                <th align="left" class="w-60p" style="text-decoration:underline;"> '.$period.' </th>
                                 <th class="w-20p"> </th>
                             </tr>
                         </thead>

@@ -12,23 +12,26 @@
             border-color: black;
         }
         td{
-            border: 1px solid;
+            border-top-style: solid;
+            border-right-style: solid;
+            border-bottom-style: solid;
+            border-left-style: solid;
             padding: 10px;
         }
         .bl0{
-            border-left: 0px solid;
+            border-left-style: none;
         }
         .br0{
-            border-right: 0px solid;
+            border-right-style: none;
         }
-        .bb0 td{
-            border-bottom: 0px solid;
+        .bb0{
+            border-bottom-style: none;
         }
         .bb1{
-            border-bottom: 1px solid;
+            border-bottom-style: solid;
         }
-        .bt0 td{
-            border-top: 0px solid;
+        .bt0{
+            border-top-style: none;
         }
         .line{
             text-decoration: underline;
@@ -46,40 +49,41 @@
         <thead></thead>
         <tbody>
             <tr>
-                <td colspan="2" class="br0">
+                <td colspan="2" class="br0" width="50%">
                     <p>COMP: {{ @$info->company_name }}</p>
                     <p>NAME: {{ @$info->name }}</p>
                     <p>I/C #: {{ @$info->ic_no }}</p>
-                    <p>SEX: {{ @$info->employee->gender }}</p>
+                    <p>SEX: {{ strtoupper(@$info->gender) }}</p>
                 </td>
-                <td colspan="2" class="bl0">
-                    <p>{{ strtoupper(str_replace(' month', '', @$info->salary->period)).'-'.@$info->salary->month_name.'-'.@$info->salary->year }}</p>
-                    <p>EMPL#: {{ @$info->employee->employee_id }}</p>
-                    <p>DEPT#: {{ @$info->employee->branch }}</p>
+                <td colspan="2" class="bl0" valign="top" width="50%">
+                    <p>{{ strtoupper(str_replace(' Month', '', PayrollPeriodEnum::getDescription($info->period)).'-'.DateHelper::dateWithFormat($info->year_month, 'M-Y')) }}</p>
+                    <p>EMPL#: {{ @$info->employee_code }}</p>
+                    <p>DEPT#: {{ @$info->branch }}</p>
                 </td>
             </tr>
-            <tr class="bb0">
-                <td class="line">EARNINGS DESCRIPTION</td>
-                <td class="line text-right">RM</td>
-                <td class="line">DEDUCTION DESCRIPTION</td>
-                <td class="line text-right">RM</td>
+            <tr>
+                <td class="line bt0" style="border-bottom-style:none;">EARNINGS DESCRIPTION</td>
+                <td class="line text-right" style="border:none;border-bottom-style:none;">RM</td>
+                <td class="line" style="border-bottom-style:none;">DEDUCTION DESCRIPTION</td>
+                <td class="line text-right" style="border:none;border-bottom-style:none;">RM</td>
             </tr>
+            
 
             @for($i = 0; $i < $info->extra_count; $i++)
-                <tr class="bt0 bb0">
+                <tr>
                     @if(@$info->addition[$i])
-                        <td> {!! $info->addition[$i]->name !!} </td>
-                        <td class="text-right"> {!! number_format($info->addition[$i]->amount, 2) !!} </td>
+                        <td class="br0 bt0" style="border:none;"> {!! $info->addition[$i]->name !!} </td>
+                        <td class="text-right" style="border:none;"> {!! number_format($info->addition[$i]->amount, 2) !!} </td>
                     @else
-                        <td></td>
-                        <td></td>
+                        <td class="br0 bt0" style="border:none;"></td>
+                        <td style="border:none;"></td>
                     @endif
                     @if(@$info->deduction[$i])
-                        <td> {!! $info->deduction[$i]->name !!} </td>
-                        <td class="text-right"> {!! number_format($info->deduction[$i]->amount, 2) !!}</td>
+                        <td class="br0 bt0" style="border:none;"> {!! $info->deduction[$i]->name !!} </td>
+                        <td class="text-right" style="border:none;"> {!! number_format($info->deduction[$i]->amount, 2) !!}</td>
                     @else
-                        <td></td>
-                        <td></td>
+                        <td class="br0 bt0" style="border:none;"></td>
+                        <td style="border:none;"></td>
                     @endif
                 </tr>
             @endfor
@@ -125,8 +129,8 @@
         <thead></thead>
         <tbody>
             <tr class="bt0">
-                <td colspan="5" class="text-center bl0 br0">Current Month</td>
-                <td colspan="5" class="text-center bl0 br0">Year to Date</td>
+                <td colspan="5" class="text-center bl0 br0 bt0">Current Month</td>
+                <td colspan="5" class="text-center bl0 br0 bt0">Year to Date</td>
             </tr>
             <tr class="bt0 bb0 text-right-all">
                 <td></td>
@@ -140,50 +144,49 @@
                 <td class="line">EIS</td>
                 <td class="line">TAX</td>
             </tr>
-            <tr class="bt0 bb0 text-right-all">
-                <td>Employee:</td>
+            <tr class="bt0 bb0 text-right-all"  style="border-bottom: 0px solid;">
+                <td align="left">Employee:</td>
                 <td>{!! number_format(@$info->salary->employee_epf,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_socso,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_eis,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_pcb,2) !!}</td>
-                <td>Employee:</td>
+                <td align="left">Employee:</td>
                 <td>{!! number_format(@$info->salary->employee_epf,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_socso,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_eis,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_pcb,2) !!}</td>
             </tr>
-            <tr class="bt0 bb0 text-right-all">
-                <td>Employer:</td>
+            <tr class="bt0 bb0 text-right-all"  style="border-bottom: 0px solid;">
+                <td align="left">Employer:</td>
                 <td>{!! number_format(@$info->salary->employer_epf,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employer_socso,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employer_eis,2) !!}</td>
                 <td></td>
-                <td>Employer:</td>
+                <td align="left">Employer:</td>
                 <td>{!! number_format(@$info->salary->employer_epf,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employer_socso,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employer_eis,2) !!}</td>
                 <td></td>
             </tr>
-            <tr class="bt0 text-right-all">
-                <td>Total:</td>
+            <tr class="bt0 text-right-all" style="border-bottom: 0px solid;">
+                <td align="left">Total:</td>
                 <td>{!! number_format(@$info->salary->employee_epf+@$info->salary->employer_epf,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_socso+@$info->salary->employer_socso,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_eis+@$info->salary->employer_eis,2) !!}</td>
                 <td></td>
-                <td>Total:</td>
+                <td align="left">Total:</td>
                 <td>{!! number_format(@$info->salary->employee_epf+@$info->salary->employer_epf,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_socso+@$info->salary->employer_socso,2) !!}</td>
                 <td>{!! number_format(@$info->salary->employee_eis+@$info->salary->employer_eis,2) !!}</td>
                 <td></td>
-            </tr>
-            <tr class="bt0 bb0">
-                <td colspan="8" class="bl0 br0"></td>
-            </tr>
-            <tr class="bt0 bb0">
-                <td colspan="4" class="bl0 br0">APPROVED BY: ___________________________</td>
-                <td colspan="4" class="bl0 br0">RECEIVED BY: ___________________________</td>
             </tr>
         </tbody>
+    </table>
+    <table width="100%" cellspacing="0" cellpadding="0" style="border: none;">
+    	<tr>
+            <td width="50%" style="border: none;">APPROVED BY: ___________________________</td>
+            <td width="50%" style="border: none;">RECEIVED BY: ___________________________</td>
+        </tr>
     </table>
 </body>
 </html>

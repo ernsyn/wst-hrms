@@ -603,6 +603,6 @@ Breadcrumbs::for('payroll.report.show', function ($trail) {
 });
 
 Breadcrumbs::for('payslip.show', function ($trail) {
-    $trail->parent('admin.dashboard');
+//     $trail->parent('admin.dashboard');
     $trail->push('Payslip', route('payslip.show'));
 });

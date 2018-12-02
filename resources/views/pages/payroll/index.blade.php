@@ -1,5 +1,5 @@
-@extends('layouts.admin-base') 
-@section('pageTitle', 'Payroll')
+@extends(PayrollHelper::isKpiProposer() ? 'layouts.base' : 'layouts.admin-base')
+
 @section('content')
 
 <!-- todo: pigination, search -->

@@ -1533,16 +1533,25 @@ class PayrollController extends Controller
         if (count($payroll) > 0) {
             $payrollMasterId = $payroll->first()->id;
             $info = $this->payrollTrx->findByEmployee($payrollMasterId, $employee->id);
+           
+            $addition = $this->payrollTrxAdditionRepository->findByPayrollTrxId($info->id);
+            $deduction = $this->payrollTrxDeductionRepository->findByPayrollTrxId($info->id);
+            
+            $info->extra_count = (count($addition) > count($deduction))? count($addition) : count($deduction);
+            //addition
+            //deduction
         } else {
             $msg = 'Payslip ' . $validated['year_month'] . ' does not exist.';
             return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
         }
         
         //TODO: year to date
-//         dd($info);
+//         dd($addition,$info);
         $pdf = PDF::loadView('pages/payroll/payslip/payslip',
             [
-                'info' => $info
+                'info' => $info,
+                'addition' => $addition,
+                'deduction' => $deduction
             ])->setOrientation('landscape');
             
             $pdf->setTemporaryFolder(storage_path("temp"));

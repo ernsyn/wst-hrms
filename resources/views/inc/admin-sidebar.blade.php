@@ -72,7 +72,7 @@
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                         <a href="{{ route('payroll') }}">Payroll</a>
                     </li>
-                    @hasrole('admin')
+                    @hasanyrole('super-admin|admin')
                     <li class="menu-option {{ request()->is('government_report') ? 'active' : '' }}">
                         <a href="{{ route('payroll/government_report') }}">Government Reports</a>
                     </li>
@@ -82,7 +82,7 @@
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                         <a href="">Payroll Setup</a>
                     </li>
-                    @endhasrole
+                    @endhasanyrole
                 </ul>
             </li>
             

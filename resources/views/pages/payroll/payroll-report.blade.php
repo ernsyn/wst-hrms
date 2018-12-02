@@ -4,7 +4,23 @@
 <div class="p-4">
     <link rel="stylesheet" href="{{asset('css/report/government_report.css')}}" type="text/css"/>
     <link rel="stylesheet" href="{{asset('css/report/carousel.css')}}" type="text/css"/>
-
+@if($errors->any())
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			{{$errors->first()}}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		@endif 
+		
+		@if(session()->get('success'))
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			{{ session()->get('success') }}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		@endif
 <div class="row">
         <div class="carousel">
             <div class="carousel-row">
@@ -26,6 +42,10 @@
                         <div class="m-portlet__body engraved-text" style="text-align: center;height: 70pt;">
                         	@php
                         		echo wordwrap($slider->getReportName(),30,"<br>");
+                        		if($slider->getReportTarget() !='report2') {
+                        			echo "<br>";
+                        			echo "<br>";
+                        		}
                         	@endphp
                         </div>
                     </div>
@@ -106,7 +126,7 @@
                                 <div class="col-md-6 mx-auto">
                                     <label for="exampleFormDate">Date</label>
                                     <div class="input-group date">
-                                        <input type="text" class="form-control" name="year_month" id="payroll_month_{{$form->getReportTarget()}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                        <input type="text" class="form-control" name="year_month" autocomplete="off" readonly id="payroll_month_{{$form->getReportTarget()}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mx-auto">
@@ -188,7 +208,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\PayrollController@generateReport')}}">
+                    <form method="post" action="{{action('Payroll\PayrollReportController@export_report')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -243,7 +263,7 @@
                                 <div class="col-md-6 mx-auto">
                                     <label for="exampleFormDate">Date</label>
                                     <div class="input-group date">
-                                        <input type="text" class="form-control" name="year_month" id="payroll_month_{{$form->getReportTarget()}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                        <input type="text" class="form-control" name="year_month"  autocomplete="off" readonly id="payroll_month_{{$form->getReportTarget()}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mx-auto">
@@ -284,18 +304,24 @@
 @endsection 
 @section('scripts')
 <script>
-$("[id^=payroll_month_report]").datepicker({
-    	changeMonth: true,
-        changeYear: true,
-        showButtonPanel: true,
-        dateFormat: 'yy-mm',
 
-	    onClose: function(dateText, inst) {  
-            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val(); 
-            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val(); 
-            $(this).datepicker('setDate', new Date(year, month, 1)); 
-        }
-    });
+$("[id^=payroll_month_report]").datepicker({
+	  changeMonth: true,
+	  changeYear: true,
+	  dateFormat: "yy-mm",
+//	  showButtonPanel: true,
+//	  currentText: "This Month",
+	  onChangeMonthYear: function (year, month, inst) {
+	    $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month - 1, 1)));
+	  },
+	  onClose: function(dateText, inst) {
+	    var month = $(".ui-datepicker-month :selected").val();
+	    var year = $(".ui-datepicker-year :selected").val();
+	    $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month, 1)));
+	  }
+	}).focus(function () {
+	  $(".ui-datepicker-calendar").hide();
+	});
 
 </script>
 <style>

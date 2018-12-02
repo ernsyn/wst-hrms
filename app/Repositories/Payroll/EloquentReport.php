@@ -29,7 +29,8 @@ class EloquentReport implements ReportRepository
         ->leftjoin('banks as BM', 'BM.code', '=', 'EB.bank_code')
         ->join('departments as JM_department', 'JM_department.id', '=', 'EJ.department_id')
         ->join('cost_centres as JM_category', 'JM_category.id', '=', 'EJ.cost_centre_id')
-        ->join('companies as CM', 'CM.id', '=', 'EM.company_id');
+        ->join('companies as CM', 'CM.id', '=', 'EM.company_id')
+        ->join('users as u', 'u.id','=','EM.user_id');
     }
     
     public function find_by_company_id($company_id, $request_data = null)
@@ -178,7 +179,7 @@ class EloquentReport implements ReportRepository
                     IFNULL((SELECT SUM(SUB_PTA.amount) FROM payroll_trx_addition AS SUB_PTA
                         JOIN additions AS SUB_AM
                             ON SUB_AM.id = SUB_PTA.additions_id AND SUB_AM.company_id = "0" AND SUB_AM.code != "OT"
-                        JOIN PayrollTrx AS SUB_PT
+                        JOIN payroll_trx AS SUB_PT
                             ON SUB_PT.id = SUB_PTA.payroll_trx_id
                         JOIN payroll_master AS SUB_PM
                             ON SUB_PM.id = SUB_PT.payroll_master_id
@@ -186,10 +187,10 @@ class EloquentReport implements ReportRepository
                             ON SUB_EM.id = SUB_PT.employee_id
                         JOIN employee_jobs as SUB_EJ
                             ON SUB_EJ.emp_id = SUB_EM.id AND SUB_EJ.basic_salary = SUB_PT.basic_salary
-                        JOIN JobMaster as SUB_JM_DEPARTMENT
+                        JOIN departments as SUB_JM_DEPARTMENT
                             ON SUB_JM_DEPARTMENT.id = SUB_EJ.department_id
-                        JOIN JobMaster as SUB_JM_CATEGORY
-                            ON SUB_JM_CATEGORY.id = SUB_EJ.id_JobMaster_category
+                        JOIN cost_centres as SUB_JM_CATEGORY
+                            ON SUB_JM_CATEGORY.id = SUB_EJ.cost_centre_id
                         WHERE SUB_PM.year_month = "'.$date.'" AND SUB_JM_DEPARTMENT.id = JM_department.id AND SUB_JM_CATEGORY.id = JM_category.id
                     ),0.00) AS total_default_addition
                 '),
@@ -202,7 +203,7 @@ class EloquentReport implements ReportRepository
                     IFNULL((SELECT SUM(SUB_PTA.amount) FROM payroll_trx_addition AS SUB_PTA
                         JOIN additions AS SUB_AM
                             ON SUB_AM.id = SUB_PTA.additions_id AND SUB_AM.company_id != "0"
-                        JOIN PayrollTrx AS SUB_PT
+                        JOIN payroll_trx AS SUB_PT
                             ON SUB_PT.id = SUB_PTA.payroll_trx_id
                         JOIN payroll_master AS SUB_PM
                             ON SUB_PM.id = SUB_PT.payroll_master_id
@@ -210,10 +211,10 @@ class EloquentReport implements ReportRepository
                             ON SUB_EM.id = SUB_PT.employee_id
                         JOIN employee_jobs as SUB_EJ
                             ON SUB_EJ.emp_id = SUB_EM.id AND SUB_EJ.basic_salary = SUB_PT.basic_salary
-                        JOIN JobMaster as SUB_JM_DEPARTMENT
+                        JOIN departments as SUB_JM_DEPARTMENT
                             ON SUB_JM_DEPARTMENT.id = SUB_EJ.department_id
-                        JOIN JobMaster as SUB_JM_CATEGORY
-                            ON SUB_JM_CATEGORY.id = SUB_EJ.id_JobMaster_category
+                        JOIN cost_centres as SUB_JM_CATEGORY
+                            ON SUB_JM_CATEGORY.id = SUB_EJ.cost_centre_id
                         WHERE SUB_PM.year_month = "'.$date.'" AND SUB_JM_DEPARTMENT.id = JM_department.id AND SUB_JM_CATEGORY.id = JM_category.id
                     ),0.00) AS total_other_addition
                 '),
@@ -230,7 +231,7 @@ class EloquentReport implements ReportRepository
                     IFNULL((SELECT SUM(SUB_PTD.amount) FROM payroll_trx_deduction AS SUB_PTD
                         JOIN deductions AS SUB_DM
                             ON SUB_DM.id = SUB_PTD.deductions_id AND SUB_DM.company_id != "0"
-                        JOIN PayrollTrx AS SUB_PT
+                        JOIN payroll_trx AS SUB_PT
                             ON SUB_PT.id = SUB_PTD.payroll_trx_id
                         JOIN payroll_master AS SUB_PM
                             ON SUB_PM.id = SUB_PT.payroll_master_id
@@ -238,15 +239,15 @@ class EloquentReport implements ReportRepository
                             ON SUB_EM.id = SUB_PT.employee_id
                         JOIN employee_jobs as SUB_EJ
                             ON SUB_EJ.emp_id = SUB_EM.id AND SUB_EJ.basic_salary = SUB_PT.basic_salary
-                        JOIN JobMaster as SUB_JM_DEPARTMENT
+                        JOIN departments as SUB_JM_DEPARTMENT
                             ON SUB_JM_DEPARTMENT.id = SUB_EJ.department_id
-                        JOIN JobMaster as SUB_JM_CATEGORY
-                            ON SUB_JM_CATEGORY.id = SUB_EJ.id_JobMaster_category
+                        JOIN cost_centres as SUB_JM_CATEGORY
+                            ON SUB_JM_CATEGORY.id = SUB_EJ.cost_centre_id
                         WHERE SUB_PM.year_month = "'.$date.'" AND SUB_JM_DEPARTMENT.id = JM_department.id AND SUB_JM_CATEGORY.id = JM_category.id
                     ),0.00) AS total_other_deduction
                 '),
                         DB::raw('
-                    SUM(payroll_trx.final_payment) as total_net_pay,
+                    SUM(payroll_trx.take_home_pay) as total_net_pay,
                     SUM(payroll_trx.employer_epf) as total_employer_epf,
                     0.00 as total_employer_vol,
                     SUM(payroll_trx.employer_socso) as total_employer_socso,
@@ -259,9 +260,9 @@ class EloquentReport implements ReportRepository
                     if(count($groupby)>1) $query = $query->groupby($groupby[1]); // Department or Category ID
                     $query = $query->select('JM_department.name as department', 'JM_category.name as cost_center',
                         DB::raw('
-                            SUM(payroll_trx.final_payment) as total_net_pay,
+                            SUM(payroll_trx.take_home_pay) as total_net_pay,
                             COUNT(EM.id) as total_employee,
-                            ROUND(AVG(payroll_trx.final_payment),2) as average_net_pay
+                            ROUND(AVG(payroll_trx.take_home_pay),2) as average_net_pay
                         ')
                         );
                 } else if($type == 5) {
@@ -269,12 +270,12 @@ class EloquentReport implements ReportRepository
                     ->groupby($groupby[0]) // Employee ID
                     ->groupby($groupby[1]) // Bank ID
                     ->orderby('EM.code', 'ASC')
-                    ->select('BM.name as bank', 'EM.full_name', 'EM.code', 'EM.ic_no', 'EB.account_number', 'payroll_trx.final_payment as net_pay');
+                    ->select('BM.name as bank', 'u.name', 'EM.code', 'EM.ic_no', 'EB.acc_no', 'payroll_trx.take_home_pay as net_pay');
                 } else if($type == 6) {
                     $query = $query->groupby($groupby[0]) // Company ID
                     ->select('CM.name as company_name',
                         DB::raw('
-                    SUM(payroll_trx.final_payment) as total_net_pay,
+                    SUM(payroll_trx.take_home_pay) as total_net_pay,
                     ROUND(SUM((payroll_trx.kpi*payroll_trx.bonus) + payroll_trx.basic_salary + payroll_trx.seniority_pay),2) as total_gross_pay,
                     COUNT(EM.id) as total_employee
                 ')
@@ -285,7 +286,7 @@ class EloquentReport implements ReportRepository
                     ->select(
                         'JM_department.name as department',
                         'EM.code',
-                        'EM.full_name',
+                        'u.name',
                         'payroll_trx.basic_salary as total_basic_salary',
                         'payroll_trx.seniority_pay as total_seniority_pay',
                         'PTD.amount as total_unpaid_leave',
@@ -294,7 +295,7 @@ class EloquentReport implements ReportRepository
                     IFNULL((SELECT SUM(SUB_PTA.amount) FROM payroll_trx_addition AS SUB_PTA
                         JOIN additions AS SUB_AM
                             ON SUB_AM.id = SUB_PTA.additions_id AND SUB_AM.company_id = "0" AND SUB_AM.code != "OT"
-                        JOIN PayrollTrx AS SUB_PT
+                        JOIN payroll_trx AS SUB_PT
                             ON SUB_PT.id = SUB_PTA.payroll_trx_id
                         JOIN payroll_master AS SUB_PM
                             ON SUB_PM.id = SUB_PT.payroll_master_id
@@ -302,7 +303,7 @@ class EloquentReport implements ReportRepository
                             ON SUB_EM.id = SUB_PT.employee_id
                         JOIN employee_jobs as SUB_EJ
                             ON SUB_EJ.emp_id = SUB_EM.id AND SUB_EJ.basic_salary = SUB_PT.basic_salary
-                        JOIN JobMaster as SUB_JM_DEPARTMENT
+                        JOIN payroll_trx as SUB_JM_DEPARTMENT
                             ON SUB_JM_DEPARTMENT.id = SUB_EJ.department_id
                         WHERE SUB_PM.year_month = "'.$date.'" AND SUB_EM.id = EM.id
                     ),0.00) AS total_default_addition
@@ -314,7 +315,7 @@ class EloquentReport implements ReportRepository
                     IFNULL((SELECT SUM(SUB_PTA.amount) FROM payroll_trx_addition AS SUB_PTA
                         JOIN additions AS SUB_AM
                             ON SUB_AM.id = SUB_PTA.additions_id AND SUB_AM.company_id != "0"
-                        JOIN PayrollTrx AS SUB_PT
+                        JOIN payroll_trx AS SUB_PT
                             ON SUB_PT.id = SUB_PTA.payroll_trx_id
                         JOIN payroll_master AS SUB_PM
                             ON SUB_PM.id = SUB_PT.payroll_master_id
@@ -322,7 +323,7 @@ class EloquentReport implements ReportRepository
                             ON SUB_EM.id = SUB_PT.employee_id
                         JOIN employee_jobs as SUB_EJ
                             ON SUB_EJ.emp_id = SUB_EM.id AND SUB_EJ.basic_salary = SUB_PT.basic_salary
-                        JOIN JobMaster as SUB_JM_DEPARTMENT
+                        JOIN departments as SUB_JM_DEPARTMENT
                             ON SUB_JM_DEPARTMENT.id = SUB_EJ.department_id
                         WHERE SUB_PM.year_month = "'.$date.'" AND SUB_EM.id = EM.id
                     ),0.00) AS total_other_addition,
@@ -335,7 +336,7 @@ class EloquentReport implements ReportRepository
                     IFNULL((SELECT SUM(SUB_PTD.amount) FROM payroll_trx_deduction AS SUB_PTD
                         JOIN deductions AS SUB_DM
                             ON SUB_DM.id = SUB_PTD.deductions_id AND SUB_DM.company_id != "0"
-                        JOIN PayrollTrx AS SUB_PT
+                        JOIN payroll_trx AS SUB_PT
                             ON SUB_PT.id = SUB_PTD.payroll_trx_id
                         JOIN payroll_master AS SUB_PM
                             ON SUB_PM.id = SUB_PT.payroll_master_id
@@ -343,11 +344,11 @@ class EloquentReport implements ReportRepository
                             ON SUB_EM.id = SUB_PT.employee_id
                         JOIN employee_jobs as SUB_EJ
                             ON SUB_EJ.emp_id = SUB_EM.id AND SUB_EJ.basic_salary = SUB_PT.basic_salary
-                        JOIN JobMaster as SUB_JM_DEPARTMENT
+                        JOIN departments as SUB_JM_DEPARTMENT
                             ON SUB_JM_DEPARTMENT.id = SUB_EJ.department_id
                         WHERE SUB_PM.year_month = "'.$date.'" AND SUB_EM.id = EM.id
                     ),0.00) AS total_other_deduction,
-                    payroll_trx.final_payment as total_net_pay,
+                    payroll_trx.take_home_pay as total_net_pay,
                     payroll_trx.employer_epf as total_employer_epf,
                     0.00 as total_employer_vol,
                     payroll_trx.employer_socso as total_employer_socso,
@@ -366,7 +367,7 @@ class EloquentReport implements ReportRepository
                         ->join('payroll_trx_addition as PTA', 'PTA.payroll_trx_id', '=', 'payroll_trx.id')
                         ->join('additions as AM', function($join){
                             $join->on('AM.id', '=', 'PTA.additions_id')
-                            ->on('AM.id_companies', '<>', DB::raw('"0"'));
+                            ->on('AM.company_id', '<>', DB::raw('"0"'));
                         })
                         ->where('JM_department.id', $info->department_id)
                         ->where(function($query) use($type, $category_id){
@@ -383,7 +384,7 @@ class EloquentReport implements ReportRepository
                             ->join('payroll_trx_deduction as PTD', 'PTD.payroll_trx_id', '=', 'payroll_trx.id')
                             ->join('deductions as DM', function($join){
                                 $join->on('DM.id', '=', 'PTD.deductions_id')
-                                ->on('DM.id_companies', '<>', DB::raw('"0"'));
+                                ->on('DM.company_id', '<>', DB::raw('"0"'));
                             })
                             ->where('JM_department.id', $info->department_id)
                             ->where(function($query) use($type, $category_id){

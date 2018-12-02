@@ -108,7 +108,9 @@ class PayrollHelper
     public static function isKpiProposer(){
         $isKpiProposer = false;
         $currentUser = auth()->user()->id;
-        $employeeReportTo = EmployeeReportTo::where([['report_to_emp_id', $currentUser], ['kpi_proposer',1]])->get();
+        $employeeReportTo = EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
+        ->where([['employees.user_id', $currentUser], ['kpi_proposer',1]])->get();
+        
 //         dd($currentUser);
         if(count($employeeReportTo) > 0){
             $isKpiProposer = true;
