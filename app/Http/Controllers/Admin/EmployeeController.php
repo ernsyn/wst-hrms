@@ -102,7 +102,8 @@ class EmployeeController extends Controller
             'epf_no' => 'required',
             'tax_no' => 'required',
             'eis_no' => 'required',
-            'socso_no' => 'required'
+            'socso_no' => 'required',
+            'main_security_group_id'=>''
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
@@ -380,7 +381,7 @@ class EmployeeController extends Controller
             'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
             'basic_salary' => 'required',
-            'remarks' => '',
+            'specification' => 'required',
             'branch_id' => 'required',
             'start_date' => 'required|date',
             'status' => 'required',
@@ -709,7 +710,7 @@ class EmployeeController extends Controller
             'emp_grade_id' => 'required',
             'start_date' => 'required',
             'basic_salary' => 'required',
-            'remarks' => '',
+            'specification' => 'required',
             'status' => 'required'
         ]);
 
