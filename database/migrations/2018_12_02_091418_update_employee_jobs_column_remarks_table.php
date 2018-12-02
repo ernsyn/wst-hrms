@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateEmployeeJobsTable extends Migration
+class UpdateEmployeeJobsColumnRemarksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -26,7 +26,7 @@ class UpdateEmployeeJobsTable extends Migration
     public function down()
     {
         Schema::table('employee_jobs', function (Blueprint $table) {
-
+            //
         });
     }
 }
