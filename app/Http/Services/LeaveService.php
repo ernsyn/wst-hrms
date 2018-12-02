@@ -164,7 +164,7 @@ class LeaveService
             
         });
         
-        return $leaveRequest;
+        return $leaveRequest->id;
     }
     
     public static function getAllLeaveRequestsForEmployee($employee) {
@@ -373,7 +373,7 @@ class LeaveService
             ->first();
 
             if(!empty($leaveAllocation)) {
-                $calcEndDate = $startDate->copy()->addDays($leaveAllocation->allocated_days);
+                $calcEndDate = $startDate->copy()->addDays($leaveAllocation->allocated_days-1);
                 if(!$calcEndDate->equalTo($endDate)) {
                     $additionalResponseData['end_date'] = $calcEndDate->toDateString();
                     $endDate = $calcEndDate;

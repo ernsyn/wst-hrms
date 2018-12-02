@@ -68,7 +68,7 @@
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-security-group-popup">
                 Add Security Group
             </button>
-     
+
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="security-groups-table">
@@ -92,6 +92,10 @@
     "serverSide": true,
     "bStateSave": true,
     "ajax": "{{ route('admin.employees.dt.security-groups', ['id' => $id]) }}",
+    "columnDefs": [ {
+        "targets": 2,
+        "orderable": false
+    } ],
     "columns": [
         {
             render: function (data, type, row, meta) {

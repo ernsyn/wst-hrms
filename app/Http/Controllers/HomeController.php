@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\LeaveRequest;
 
+use Auth;
+
 class HomeController extends Controller
 {
     /**
@@ -24,6 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user = Auth::user();
+        if($user->hasRole('employee')) {
+            return redirect()->route('leaveapplication');
+        } else if($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        } else if($user->hasRole('super-admin')) {
+            return redirect()->route('super-admin.dashboard');
+        }
+
+        abort(404);
     }
 }

@@ -38,10 +38,15 @@
             }
         }
         #end-btn-group {
-            padding: 10px;
+            padding: 20px;
             position: absolute;
             top: 0px;
             right: 0px;
+
+            .btn {
+                background-color: lighten($app-primary-darkened, 12%);
+                font-weight: 600;
+            }
         }
     }
 }

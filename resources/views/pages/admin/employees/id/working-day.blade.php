@@ -24,7 +24,7 @@
             <tr id="working-day-values">
             </tr>
         </thead>
-    </table>    
+    </table>
     <div class="row pb-3" id="working_time_container">
         <div class="col-md-12">
             <label class="working-day"><strong><u>Working Time:</u></strong></label>
@@ -66,7 +66,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="monday"><strong>Monday*</strong></label>
-                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday" value="" required>
+                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="monday" value="" required>
                             <div id="monday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -74,7 +75,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="tuesday"><strong>Tuesday*</strong></label>
-                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday" value="" required>
+                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="tuesday" value="" required>
                             <div id="tuesday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -82,7 +84,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="wednesday"><strong>Wednesday*</strong></label>
-                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday" value="" required>
+                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="wednesday" value="" required>
                             <div id="wednesday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -90,7 +93,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="thursday"><strong>Thursday*</strong></label>
-                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder="" name="thursday" value="" required>
+                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="thursday" value="" required>
                             <div id="thursday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -98,7 +102,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="friday"><strong>Friday*</strong></label>
-                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday" value="" required>
+                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="friday" value="" required>
                             <div id="friday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -106,7 +111,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="saturday"><strong>Saturday*</strong></label>
-                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday" value="" required>
+                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="saturday" value="" required>
                             <div id="saturday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -114,7 +120,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="sunday"><strong>Sunday*</strong></label>
-                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday" value="" required>
+                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="sunday" value="" required>
                             <div id="sunday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -122,7 +129,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
-                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="" required>
+                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
+                                placeholder="" name="start_work_time" value="" required>
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -130,7 +138,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
-                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="" required>
+                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
+                                placeholder="" name="end_work_time" value="" required>
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -147,7 +156,8 @@
 </div>
 
 {{-- EDIT --}}
-<div class="modal fade" id="edit-working-day-popup" tabindex="-1" role="dialog" aria-labelledby="edit-working-day-label" aria-hidden="true">
+<div class="modal fade" id="edit-working-day-popup" tabindex="-1" role="dialog" aria-labelledby="edit-working-day-label"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -172,7 +182,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="monday"><strong>Monday*</strong></label>
-                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday" value="" required>
+                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="monday" value="" required>
                             <div id="monday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -180,7 +191,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="tuesday"><strong>Tuesday*</strong></label>
-                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday" value="" required>
+                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="tuesday" value="" required>
                             <div id="tuesday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -188,7 +200,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="wednesday"><strong>Wednesday*</strong></label>
-                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday" value="" required>
+                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="wednesday" value="" required>
                             <div id="wednesday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -196,7 +209,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="thursday"><strong>Thursday*</strong></label>
-                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder="" name="thursday" value="" required>
+                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="thursday" value="" required>
                             <div id="thursday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -204,7 +218,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="friday"><strong>Friday*</strong></label>
-                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday" value="" required>
+                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="friday" value="" required>
                             <div id="friday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -212,7 +227,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="saturday"><strong>Saturday*</strong></label>
-                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday" value="" required>
+                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="saturday" value="" required>
                             <div id="saturday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -220,7 +236,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="sunday"><strong>Sunday*</strong></label>
-                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday" value="" required>
+                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="sunday" value="" required>
                             <div id="sunday-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -228,7 +245,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
-                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="" required>
+                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
+                                placeholder="" name="start_work_time" value="" required>
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -236,7 +254,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
-                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="" required>
+                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
+                                placeholder="" name="end_work_time" value="" required>
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -252,6 +271,7 @@
     </div>
 </div>
 
+
 @section('scripts')
 <script>
     $("#assign-working-day-button").hide();
@@ -265,11 +285,11 @@
     $.each(workingDaysTemplates, function(i) {
         $("#add-working-day-form #working_day").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
         $("#edit-working-day-form #working_day").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
-    });    
+    });
 
     $('.timepicker').timeDropper({ format: 'HH:mm' });
 
-    $("#add-working-day-form #working_day").change(function() {        
+    $("#add-working-day-form #working_day").change(function() {
         var data_id = $(this).find(':selected').attr('data-id');
 
         $("#add-working-day-form #monday").val(workingDaysTemplates[data_id].monday);
@@ -281,7 +301,7 @@
         $("#add-working-day-form #sunday").val(workingDaysTemplates[data_id].sunday);
     });
 
-    $("#edit-working-day-form #working_day").change(function() {        
+    $("#edit-working-day-form #working_day").change(function() {
         var data_id = $(this).find(':selected').attr('data-id');
 
         $("#edit-working-day-form #monday").val(workingDaysTemplates[data_id].monday);
@@ -383,12 +403,42 @@
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'monday':
+                                        $('#add-working-day-form #monday').addClass('is-invalid');
+                                        $('#add-working-day-form #monday-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'tuesday':
+                                        $('#add-working-day-form #tuesday').addClass('is-invalid');
+                                        $('#add-working-day-form #tuesday-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'wednesday':
+                                        $('#add-working-day-form #wednesday').addClass('is-invalid');
+                                        $('#add-working-day-form #wednesday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'thursday':
+                                        $('#add-working-day-form #thursday').addClass('is-invalid');
+                                        $('#add-working-day-form #thursday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'friday':
+                                        $('#add-working-day-form #friday').addClass('is-invalid');
+                                        $('#add-working-day-form #friday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'saturday':
+                                        $('#add-working-day-form #saturday').addClass('is-invalid');
+                                        $('#add-working-day-form #saturday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'sunday':
+                                        $('#add-working-day-form #sunday').addClass('is-invalid');
+                                        $('#add-working-day-form #sunday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
                             }
                         }
                     }
 
-                    showAlert("Oops! Operation failed, please try again.");
-                    $('#add-working-day-popup').modal('toggle');
+                    // showAlert("Oops! Operation failed, please try again.");
+                    // $('#add-working-day-popup').modal('toggle');
                 }
             });
         });
@@ -424,12 +474,42 @@
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'monday':
+                                        $('#edit-working-day-form #monday').addClass('is-invalid');
+                                        $('#edit-working-day-form #monday-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'tuesday':
+                                        $('#edit-working-day-form #tuesday').addClass('is-invalid');
+                                        $('#edit-working-day-form #tuesday-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'wednesday':
+                                        $('#edit-working-day-form #wednesday').addClass('is-invalid');
+                                        $('#edit-working-day-form #wednesday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'thursday':
+                                        $('#edit-working-day-form #thursday').addClass('is-invalid');
+                                        $('#edit-working-day-form #thursday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'friday':
+                                        $('#edit-working-day-form #friday').addClass('is-invalid');
+                                        $('#edit-working-day-form #friday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'saturday':
+                                        $('#edit-working-day-form #saturday').addClass('is-invalid');
+                                        $('#edit-working-day-form #saturday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'sunday':
+                                        $('#edit-working-day-form #sunday').addClass('is-invalid');
+                                        $('#edit-working-day-form #sunday-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
                             }
                         }
                     }
 
-                    showAlert("Oops! Operation failed, please try again.");
-                    $('#edit-working-day-popup').modal('toggle');
+                    // showAlert("Oops! Operation failed, please try again.");
+                    // $('#edit-working-day-popup').modal('toggle');
                 }
             });
         });
@@ -458,5 +538,6 @@
             </button>
             </div>`)
     }
+
 </script>
 @append
