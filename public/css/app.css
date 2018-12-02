@@ -17420,8 +17420,8 @@ select:-webkit-autofill:focus {
   position: fixed;
   height: 100%;
   background: #128A58;
-  -webkit-box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.75);
-  box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.247);
+  box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.247);
   color: #fff;
   letter-spacing: 0.7px;
 }
@@ -17429,6 +17429,8 @@ select:-webkit-autofill:focus {
 #sidebar .sidebar-header {
   height: 50px;
   background: #0f734a;
+  -webkit-box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.247);
+  box-shadow: inset -6px 0px 13px -6px rgba(0, 0, 0, 0.247);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
