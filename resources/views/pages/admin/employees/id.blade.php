@@ -32,10 +32,10 @@
                             <span class="field-name mr-2">Gender</span>
                             <span class="field-value">{{ ucfirst($employee->gender) }}</span>
                         </div>
-                        {{-- <div class="field pb-1">
+                        <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">{!! $employee->nationality ? App\Country::where('id', $employee->nationality)->first() :'<strong>(not set)</strong>' !!}</span>
-                        </div> --}}
+                            <span class="field-value">{!! $employee->nationality ? $employee->nationality:'<strong>(not set)</strong>' !!}</span>
+                        </div>
                     </div>
                 </div>
                 <div id="end-btn-group">
@@ -88,7 +88,7 @@
                     {{-- Profile --}}
                     <div class="tab-pane fade show active p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row" id="reload-profile2">
-                                <div class="col-md-11 text-capitalize">
+                                <div class="col-md-11">
                                     {{-- <div class="col-md-12 font-weight-bold">PERSONAL</div> --}}
                                     <div class="row p-3">
                                         <div class="col-md-6">
@@ -98,7 +98,7 @@
                                                     <span class="field-value">{{$employee->contact_no}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Marital Status</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Number of Child</span>
@@ -107,15 +107,15 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">EIS No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->eis_no}}</span>
+                                                    <span class="field-value">{!! $employee->eis_no ? $employee->eis_no:'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">SOCSO No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->socso_no}}</span>
+                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Security Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">      {{ isset($employee->main_security_groups->name) ? $employee->main_security_groups->name : '' }}
+                                                        <span class="field-value">      {!! isset($employee->main_security_groups->name) ? $employee->main_security_groups->name:'<strong>(not set)</strong>' !!}
                                                  </span>
                                                 </div>
                                             </div>
@@ -123,7 +123,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <span class="col-lg-5 p-3">Race</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->race}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Driver License No</span>
@@ -526,7 +526,7 @@
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),
                     socso_no: $('#edit-profile-form #socso-no').val(),
-                    
+
                     main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
                 },
                 success: function(data) {
@@ -717,7 +717,7 @@
                     }
                 }
             });
-            
+
         });
 
         function clearChangePasswordModal(htmlId) {
@@ -727,15 +727,15 @@
         // $('#employee-profile-details #emp-roles-btn').click(function (e) {
         //     console.log("ON: Roles Clicked!");
         // });
-        
+
         // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
         //     console.log("ON: Change Password Clicked!");
         // });
         // var asdsf = $('#save-role-changes-btn')
         // console.log("asdad", asdsf);
-        
+
         $('#save-role-changes-btn').click(function () {
-            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"), 
+            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"),
             function (data) {
                 showAlert(data.success);
                 $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');

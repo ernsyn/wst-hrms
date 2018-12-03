@@ -128,7 +128,7 @@
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="employee-dependents-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-dependents-table">
         <thead>
             <tr>
                 <th>No</th>
