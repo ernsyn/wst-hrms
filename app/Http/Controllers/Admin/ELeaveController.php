@@ -136,10 +136,10 @@ public function postAddPublicHoliday(Request $request)
         'end_date' => 'required',
         // 'total_days' => 'required',
         'repeat_annually'=>'required',
-        'state'=>'required',
+        'state'=>'',
 
        //'status' => 'required',
-       'note' => 'required',
+       'note' => '',
 
    
     ]);
