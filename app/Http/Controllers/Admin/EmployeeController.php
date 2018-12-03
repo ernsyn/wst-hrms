@@ -315,6 +315,7 @@ class EmployeeController extends Controller
 
 
         $validatedEmployeeData = $request->validate([
+            'code'=>'unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
             'company_id' => 'required',
@@ -337,6 +338,7 @@ class EmployeeController extends Controller
         DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
+
 
             $validatedEmployeeData['user_id'] = $user->id;
             $validatedEmployeeData['created_by'] = auth()->user()->id;
