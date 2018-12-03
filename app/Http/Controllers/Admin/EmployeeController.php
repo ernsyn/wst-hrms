@@ -97,6 +97,7 @@ class EmployeeController extends Controller
     {
         $profileUpdatedData = $request->validate([
             'ic_no' => 'required|numeric',
+            'code'=>'',
             'dob' => 'required|date',
             'gender' => 'required',
             'contact_no' => 'required|numeric',
