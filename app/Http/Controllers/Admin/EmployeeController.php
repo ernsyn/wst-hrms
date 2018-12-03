@@ -289,7 +289,7 @@ class EmployeeController extends Controller
 
     public function getDataTableReportTo($id)
     {
-        $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', $id)->get();
+        $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', $id)->get();
         return DataTables::of($reportTos)->make(true);
     }
 

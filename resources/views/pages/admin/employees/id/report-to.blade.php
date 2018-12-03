@@ -231,7 +231,7 @@
             },
 
             {
-                "data": "report_to.user.name"
+                "data": "employee_report_to.user.name"
             },
             {
                 "data": "type"
