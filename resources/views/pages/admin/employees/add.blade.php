@@ -84,6 +84,16 @@
                         <h3>Personal Details</h3>
                     </div>
                     <div class="col-lg-12">
+                            <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label text-lg-right">ID No*</label>
+                                    <div class="col-lg-6">
+                                        <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
+                                            required> @if ($errors->has('code'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('code') }}</strong>
+                                        </span> @endif
+                                    </div>
+                                </div>
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">IC No*</label>
                             <div class="col-lg-6">
