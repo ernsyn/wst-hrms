@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="col-4">
-                                <label class="col-md-12 col-form-label">Contact (Secondary)*</label>
+                                <label class="col-md-12 col-form-label">Contact (Secondary)</label>
                                 <div class="col-md-12">
                                     <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('contact_no_secondary') ? ' is-invalid' : '' }}"
                                         name="contact_no_secondary" value="{{ $branch->contact_no_secondary }}" >                                    @if ($errors->has('contact_no_secondary'))
@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                             <div class="col-4">
-                                <label class="col-md-12 col-form-label">Contact (Fax)*</label>
+                                <label class="col-md-12 col-form-label">Contact (Fax)</label>
                                 <div class="col-md-12">
                                     <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" name="fax_no" value="{{ $branch->fax_no }}"
                                         > @if ($errors->has('fax_no'))
@@ -103,16 +103,7 @@
                                         </span> @endif
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <label class="col-md-12 col-form-label">Country Code*</label>
-                                <div class="col-md-7">
-                                    <input id="country_code" type="text" class="form-control{{ $errors->has('country_code') ? ' is-invalid' : '' }}" name="country_code"
-                                        value="{{ $branch->country_code }}" > @if ($errors->has('country_code'))
-                                    <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('country_code') }}</strong>
-                                        </span> @endif
-                                </div>
-                            </div>
+                  
                         </div>
                     </div>
                 </div>
