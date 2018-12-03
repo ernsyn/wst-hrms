@@ -180,7 +180,7 @@ public function postEditHoliday(Request $request, $id)
         'repeat_annually' => 'required',
         'status' =>'required',
         'note'=>'',
-        'state'=>'required'
+        'state'=>''
 
 
     ]);
