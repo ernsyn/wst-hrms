@@ -8,7 +8,7 @@
                 </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100" id="report-to-table">
+    <table class="hrms-primary-data-table table w-100" id="report-to-table">
         <thead>
             <tr>
                 <th>No</th>

@@ -471,7 +471,7 @@
                 </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100" id="employee-companies-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-companies-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -494,7 +494,7 @@
                         </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100" id="employee-education-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-education-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -519,7 +519,7 @@
                     </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100 text-capitalize" id="employee-skill-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-skill-table">
         <thead>
             <tr>
                 <th>No</th>
