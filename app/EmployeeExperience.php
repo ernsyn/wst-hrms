@@ -14,7 +14,8 @@ class EmployeeExperience extends Model
         'position',
         'start_date',
         'end_date',
-        'notes'
+        'notes',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

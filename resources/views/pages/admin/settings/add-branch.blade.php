@@ -38,11 +38,11 @@
                                 </div>
                             </div>
                             <div class="col-4">
-                                <label class="col-md-12 col-form-label">Contact (Secondary)*</label>
+                                <label class="col-md-12 col-form-label">Contact (Secondary)</label>
                                 <div class="col-md-12">
                                     <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('concontact_no_secondarytact_no_primary') ? ' is-invalid' : '' }}"
                                         placeholder="Enter Secondary contact number" name="contact_no_secondary" value="{{ old('contact_no_secondary') }}"
-                                        required>
+                                        >
                                         @if ($errors->has('contact_no_secondary'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('contact_no_secondary') }}</strong>
@@ -51,10 +51,10 @@
                                 </div>
                             </div>
                             <div class="col-4">
-                                <label class="col-md-12 col-form-label">Contact (Fax)*</label>
+                                <label class="col-md-12 col-form-label">Contact (Fax)</label>
                                 <div class="col-md-12">
                                     <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" placeholder="Enter Fax number"
-                                        name="fax_no" value="{{ old('fax_no') }}" required>
+                                        name="fax_no" value="{{ old('fax_no') }}" >
                                         @if ($errors->has('fax_no'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('fax_no') }}</strong>
@@ -81,13 +81,16 @@
                             <div class="col-6">
                                 <label class="col-md-12 col-form-label">State*</label>
                                 <div class="col-md-12">
-                                    <input id="state" type="text" class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" value="{{ old('state') }}"
-                                        required>
-                                        @if ($errors->has('state'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('state') }}</strong>
-                                        </span>
-                                        @endif
+                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
+                                                @foreach(App\Constants\MalaysianStates::$all as $state)
+                                                <option value="{{ $state }}">{{ $state }}</option value="">
+                                                @endforeach
+                                            </select> @if ($errors->has('state'))
+                                            <span class="invalid-feedback" role="alert">
+                                                                      <strong>{{ $errors->first('state') }}</strong>
+                                                                  </span> @endif
+                                        </select> 
+                                        
                                 </div>
                             </div>
                             <div class="col-6">
@@ -116,18 +119,7 @@
                                         @endif
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <label class="col-md-12 col-form-label">Country Code*</label>
-                                <div class="col-md-12">
-                                    <input id="country_code" type="text" class="form-control{{ $errors->has('country_code') ? ' is-invalid' : '' }}" name="country_code"
-                                        value="{{ old('country_code') }}" required>
-                                        @if ($errors->has('country_code'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('country_code') }}</strong>
-                                        </span>
-                                        @endif
-                                </div>
-                            </div>
+               
                         </div>
                     </div>
                 </div>

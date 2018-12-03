@@ -1,12 +1,16 @@
 @extends('layouts.base') 
 @section('pageTitle', 'Leave Application') 
 @section('content')
-<div class="p-4" id="page-leave-application">
+<div id="page-leave-application" class="conatiner p-4">
     <div class="row">
         <div class="col-xl-8">      
             <div class="card-body-leave" >
                 <div class="container-fluid">
-                    <div id='calendar-leave' class="calendar-leave"></div>                        
+                    <div id='calendar-leave' class="calendar-leave">
+                        <div class="progress m-3">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                        </div>
+                    </div>                        
                 </div>               
             </div>
         </div>
@@ -112,7 +116,7 @@
                 @csrf
                 <div class="form-row">
                     <div class="col-md-12 mb-3">
-                        <p>We have received your leave request subject to approval, thank you.</p>
+                        <p>We have successfully added your leave request. Pending approval.</p>
                     </div>
                 </div>
             </div>
@@ -198,7 +202,7 @@
 
         function initCalendar() {
             $('#calendar-leave').fullCalendar({
-                themeSystem: 'jquery-ui',
+                themeSystem: 'bootstrap4',
                 header: {
                   left: 'prev,next today',
                   center: 'title',
@@ -243,6 +247,9 @@
                         $("#leave-id").text(event.id);                    
                         $("#leave-details").modal('toggle');
                     });
+                }, 
+                eventAfterAllRender: function (view) {
+                    $('#calendar-leave .progress').attr('hidden', true);
                 }
             });
         }       

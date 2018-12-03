@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-lg-8">
                         <div class="form-group row">
-                            <label class="col-lg-2 col-form-label text-lg-right text-lg-right">Name*</label>
+                            <label class="col-lg-3 col-form-label text-lg-right text-lg-right">Name*</label>
                             <div class="col-lg-6">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
                                     required> @if ($errors->has('name'))
@@ -24,7 +24,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-2 col-form-label text-lg-right">Email*</label>
+                            <label class="col-lg-3 col-form-label text-lg-right">Email*</label>
                             <div class="col-lg-6">
                                 <input id="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}"
                                     required> @if ($errors->has('email'))
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-2 col-form-label text-lg-right">Password*</label>
+                            <label class="col-lg-3 col-form-label text-lg-right">Password*</label>
                             <div class="col-lg-6">
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password"
                                     value="{{ old('password') }}" required> @if ($errors->has('password'))
@@ -44,8 +44,18 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                                <label class="col-lg-3 col-form-label text-lg-right">Confirm Password*</label>
+                                <div class="col-lg-6">
+                                    <input id="confirm-password" type="password" class="form-control{{ $errors->has('confirm_password') ? ' is-invalid' : '' }}" name="confirm_password"
+                                        required data-parsley-equalto="#password"> @if ($errors->has('confirm_password'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('confirm_password') }}</strong>
+                                    </span> @endif
+                                </div>
+                            </div>
+                        <div class="form-group row">
 
-                            <label class="col-lg-2 col-form-label text-lg-right">Contact No*</label>
+                            <label class="col-lg-3 col-form-label text-lg-right">Contact No*</label>
                             <div class="col-lg-6">
                                 <input id="contact_no" type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" name="contact_no"
                                     value="{{ old('contact_no') }}" required> @if ($errors->has('contact_no'))
@@ -56,10 +66,10 @@
                         </div>
                         <div class="form-group row">
 
-                            <label class="col-lg-2 col-form-label text-lg-right">Address*</label>
+                            <label class="col-lg-3 col-form-label text-lg-right">Address*</label>
                             <div class="col-lg-6">
                                 <textarea id="address" type="Address" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }} text-left" name="address"
-                                    value="{{ old('address') }}" required></textarea> @if ($errors->has('address'))
+                                     required>{{ old('address') }}</textarea> @if ($errors->has('address'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('address') }}</strong>
                                 </span> @endif
@@ -74,6 +84,16 @@
                         <h3>Personal Details</h3>
                     </div>
                     <div class="col-lg-12">
+                            <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label text-lg-right">ID No*</label>
+                                    <div class="col-lg-6">
+                                        <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
+                                            required> @if ($errors->has('code'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('code') }}</strong>
+                                        </span> @endif
+                                    </div>
+                                </div>
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">IC No*</label>
                             <div class="col-lg-6">
@@ -88,10 +108,10 @@
 
                             <label class="col-lg-4 col-form-label text-lg-right">Gender*</label>
                             <div class="col-lg-6">
-                                <select name="gender" id="gender" class="form-control" required>
+                                <select name="gender" id="gender" class="form-control{{ $errors->has('gender') ? ' is-invalid' : '' }}" required>
                                     <option value="">Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                    <option value="Male" {{ old('gender') == 'Male' ? 'selected' : ''}}>Male</option>
+                                    <option value="Female" {{ old('gender') == 'Female' ? 'selected' : ''}}>Female</option>
                                 </select> @if ($errors->has('gender'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('gender') }}</strong>
@@ -101,7 +121,7 @@
 
                         <div class="form-group row">
 
-                            <label class="col-md-4 col-form-label text-right">Date of Birth:</label>
+                            <label class="col-md-4 col-form-label text-right">Date of Birth*</label>
                             <div class="col-md-6">
                                 <input id="dob-date" type="text" class="form-control" placeholder="Date of Birth" aria-label="Date of Birth" aria-describedby="dob-icon"
                                     name="dob" readonly required>
@@ -117,8 +137,8 @@
                             <div class="col-lg-6">
                                 <select class="form-control" id="marital_status" name="marital_status" required>
                                     <option value="">Select Marital Status</option>
-                                    <option value="Single">Single</option>
-                                    <option value="Married">Married</option>
+                                    <option value="Single" {{ old('marital_status') == 'Single' ? 'selected' : ''}}>Single</option>
+                                    <option value="Married" {{ old('marital_status') == 'Married' ? 'selected' : ''}}>Married</option>
                                 </select> @if ($errors->has('marital_status'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('marital_status') }}</strong>
@@ -142,7 +162,7 @@
                                 <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
                                     <option value="">Select Nationality</option>
                                     @foreach($countries as $country)
-                                    <option value="{{ $country->citizenship }}">{{ $country->citizenship }}</option>
+                                    <option value="{{ $country->citizenship }}" {{ old('nationality') == $country->citizenship ? 'selected' : ''}}>{{ $country->citizenship }}</option>
                                     @endforeach
                                 </select> @if ($errors->has('nationality'))
                                 <span class="invalid-feedback" role="alert">
@@ -155,7 +175,7 @@
                             <label class="col-lg-4 col-form-label text-lg-right">Number of Children</label>
                             <div class="col-lg-6">
                                 <input id="total_children" type="text" class="form-control{{ $errors->has('total_children') ? ' is-invalid' : '' }}" name="total_children"
-                                    value="{{ old('total_children') }}" required> @if ($errors->has('total_children'))
+                                    value="{{ old('total_children') }}"> @if ($errors->has('total_children'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('total_children') }}</strong>
                                 </span> @endif
@@ -166,7 +186,7 @@
                             <label class="col-lg-4 col-form-label text-lg-right">Driver License No</label>
                             <div class="col-lg-6">
                                 <input id="driver_license_no" type="text" class="form-control{{ $errors->has('driver_license_no') ? ' is-invalid' : '' }}"
-                                    name="driver_license_no" value="{{ old('driver_license_no') }}" required>                                @if ($errors->has('driver_license_no'))
+                                    name="driver_license_no" value="{{ old('driver_license_no') }}">                                @if ($errors->has('driver_license_no'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('driver_license_no') }}</strong>
                                     </span> @endif
@@ -175,14 +195,9 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">License Expiry Date</label>
                             <div class="col-lg-6">
-                                <div class="input-group mb-3">
-                                    <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date"
-                                        aria-describedby="license-expiry-date-icon" readonly>
-                                    <input id="alt-license-expiry-date" type="text" class="form-control" name="driver_license_expiry_date" hidden>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="license-expiry-date-icon"><i class="far fa-calendar-alt"></i></span>
-                                    </div>
-                                </div>
+                                <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date"
+                                    aria-describedby="license-expiry-date-icon" readonly>
+                                <input id="alt-license-expiry-date" type="text" class="form-control" name="driver_license_expiry_date" hidden>
                                 @if ($errors->has('driver_license_expiry_date'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('driver_license_expiry_date') }}</strong>
@@ -223,7 +238,7 @@
                                 <select class="form-control{{ $errors->has('company_id') ? ' is-invalid' : '' }}" name="company_id" id="company_id" required>
                                     <option value=""></option>
                                     @foreach(App\Company::all() as $company)
-                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : ''}}>{{ $company->name }}</option>
                                     @endforeach
                                 </select> @if ($errors->has('company_id'))
                                 <span class="invalid-feedback" role="alert">
@@ -337,6 +352,8 @@
         altField: "#alt-license-expiry-date",
         altFormat: 'yy-mm-dd',
         format: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
         onClose: function () {
             $(this).parsley().validate();
         }

@@ -7,10 +7,13 @@ use App\Http\Controllers\Controller;
 use Hash;
 
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 use App\Country;
 use App\Roles;
@@ -21,6 +24,8 @@ use App\Branch;
 use App\Team;
 use App\EmployeePosition;
 use App\Company;
+use App\Holiday;
+use App\LeaveRequest;
 
 use App\User;
 use App\Employee;
@@ -38,6 +43,7 @@ use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+use App\EmployeeAttendance;
 
 use App\Http\Services\LeaveService;
 
@@ -91,6 +97,7 @@ class EmployeeController extends Controller
     {
         $profileUpdatedData = $request->validate([
             'ic_no' => 'required|numeric',
+            'code'=>'',
             'dob' => 'required|date',
             'gender' => 'required',
             'contact_no' => 'required|numeric',
@@ -102,7 +109,8 @@ class EmployeeController extends Controller
             'epf_no' => 'required',
             'tax_no' => 'required',
             'eis_no' => 'required',
-            'socso_no' => 'required'
+            'socso_no' => 'required',
+            'main_security_group_id'=>''
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
@@ -118,6 +126,48 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.add', compact('countries','roles'));
     }
 
+    public function postChangePassword(Request $request, $id) {
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+        
+        // dd(bcrypt($data['new_password']));
+
+        // if (!(Hash::check($data['current_password'], $employee->user->password))) {
+        //     response()->json(['errors'=> [
+        //         'current_password' => ['The current password is incorrect.']
+        //     ]], 422);
+        // }
+
+        User::where('id', $employee->user->id)->update([
+            'password' => bcrypt($data['new_password'])
+        ]);
+
+        return response()->json(['success'=>'Password was successfully updated.']);
+    }
+
+
+    public function postToggleRoleAdmin(Request $request, $id) {
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'assign_remove' => 'required',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+        switch($data['assign_remove']) {
+            case "assign":
+                $employee->user->assignRole('admin');
+                break;
+            case "remove":
+                $employee->user->removeRole('admin');
+                break;
+        }
+
+        return response()->json(['success'=>'Employee roles were successfully updated.']);
+    }
 
     // SECTION: Data Tables
 
@@ -181,6 +231,9 @@ class EmployeeController extends Controller
         ->editColumn('start_date', function ($job) {
             return date('d/m/Y', strtotime($job->start_date) );
         })
+        ->editColumn('alt_start_date', function ($job) {
+            return date('Y-m-d', strtotime($job->start_date) );
+        })
         ->make(true);
     }
 
@@ -236,7 +289,7 @@ class EmployeeController extends Controller
 
     public function getDataTableReportTo($id)
     {
-        $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', $id)->get();
+        $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', $id)->get();
         return DataTables::of($reportTos)->make(true);
     }
 
@@ -257,12 +310,13 @@ class EmployeeController extends Controller
         $validatedUserData = $request->validate([
             'name' => 'required|min:5',
             'email' => 'required|unique:users|email',
-            'password' => 'required',
+            'password' => 'required|required_with:confirm_password|same:confirm_password',
         ]);
         $validatedUserData['password'] = Hash::make($validatedUserData['password']);
 
 
         $validatedEmployeeData = $request->validate([
+            'code'=>'unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
             'company_id' => 'required',
@@ -281,12 +335,16 @@ class EmployeeController extends Controller
             'driver_license_expiry_date' => 'nullable|date'
         ]);
         // dd($validatedEmployeeData);
-        $user = User::create($validatedUserData);
-        $user->assignRole('employee');
 
-        $validatedEmployeeData['user_id'] = $user->id;
-        $validatedEmployeeData['created_by'] = auth()->user()->id;
-        $employee = Employee::create($validatedEmployeeData);
+        DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
+            $user = User::create($validatedUserData);
+            $user->assignRole('employee');
+
+
+            $validatedEmployeeData['user_id'] = $user->id;
+            $validatedEmployeeData['created_by'] = auth()->user()->id;
+            $employee = Employee::create($validatedEmployeeData);
+        });
 
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
     }
@@ -300,9 +358,8 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'contact_no' => 'required|numeric',
         ]);
-
+        $emergencyContactData['created_by'] = auth()->user()->id;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
-
 
         $employee = Employee::find($id);
         $employee->employee_emergency_contacts()->save($emergencyContact);
@@ -317,10 +374,8 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'dob' => 'required|date',
         ]);
-        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
-
+        $dependentData['created_by'] = auth()->user()->id;
         $dependent = new EmployeeDependent($dependentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_dependents()->save($dependent);
@@ -336,9 +391,8 @@ class EmployeeController extends Controller
             'issued_by' => 'required',
             'issued_date' => 'required|date'
         ]);
-
+        $immigrationData['created_by'] = auth()->user()->id;
         $immigration = new EmployeeImmigration($immigrationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_immigrations()->save($immigration);
@@ -351,16 +405,14 @@ class EmployeeController extends Controller
         $visaData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            'passport_no' => 'required|alpha_num',
+            // 'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
             'family_members' => 'required'
         ]);
-
+        $visaData['created_by'] = auth()->user()->id;
         $visa = new EmployeeVisa($visaData);
-
-        
 
         $employee = Employee::find($id);
         $employee->employee_visas()->save($visa);
@@ -380,11 +432,18 @@ class EmployeeController extends Controller
             'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
             'basic_salary' => 'required',
-            'specification' => 'required',
+            'remarks' => '',
             'branch_id' => 'required',
             'start_date' => 'required|date',
             'status' => 'required',
         ]);
+
+        $jobData['created_by'] = auth()->user()->id;
+        // $jobData['status'] = 'active';
+        // $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+
+        // $end_date = EmployeeJob::where('id', $id)
+        // ->whereNull('end_date');
 
         // $jobData['status'] = 'active';
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
@@ -392,12 +451,12 @@ class EmployeeController extends Controller
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
-            
+
             if(!empty($currentJob)) {
                 $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                 LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
             }
-    
+
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
@@ -415,7 +474,6 @@ class EmployeeController extends Controller
 
         $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
-            
         $currentDate = date("Y-m-d");
         if(!empty($currentJob)) {
             $currentJob->update(['end_date'=> $currentDate ]);
@@ -430,9 +488,8 @@ class EmployeeController extends Controller
             'acc_no' => 'required',
             'acc_status' => 'required'
         ]);
-
+        $bankAccountData['created_by'] = auth()->user()->id;
         $bankAccount = new EmployeeBankAccount($bankAccountData);
-
 
         $employee = Employee::find($id);
         $employee->employee_bank_accounts()->save($bankAccount);
@@ -461,9 +518,10 @@ class EmployeeController extends Controller
             'position' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'notes' => 'required'
-        ]);
+            'notes'=>''
 
+        ]);
+        $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
 
         $employee = Employee::find($id);
@@ -483,9 +541,8 @@ class EmployeeController extends Controller
             'gpa' => 'required|between:0,99.99',
             'description' => 'required'
         ]);
-
+        $educationData['created_by'] = auth()->user()->id;
         $education = new EmployeeEducation($educationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_educations()->save($education);
@@ -500,9 +557,8 @@ class EmployeeController extends Controller
             'years_of_experience' => 'required',
             'competency' => 'required'
         ]);
-
+        $skillData['created_by'] = auth()->user()->id;
         $skill = new EmployeeSkill($skillData);
-
 
         $employee = Employee::find($id);
         $employee->employee_skills()->save($skill);
@@ -516,9 +572,8 @@ class EmployeeController extends Controller
             'name' => 'required',
             'notes' => 'required'
         ]);
-
+        $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_attachments()->save($attachment);
@@ -530,20 +585,18 @@ class EmployeeController extends Controller
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'monday' => 'required',
-            'tuesday' => 'required',
-            'wednesday' => 'required',
-            'thursday' => 'required',
-            'friday' => 'required',
-            'saturday' => 'required',
-            'sunday' => 'required',
+            'monday' => 'required|in:0,0.5,1',
+            'tuesday' => 'required|in:0,0.5,1',
+            'wednesday' => 'required|in:0,0.5,1',
+            'thursday' => 'required|in:0,0.5,1',
+            'friday' => 'required|in:0,0.5,1',
+            'saturday' => 'required|in:0,0.5,1',
+            'sunday' => 'required|in:0,0.5,1',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
-
         $workingDaysData['is_template'] = false;
-
-
+        $workingDaysData['created_by'] = auth()->user()->id;
         $workingDay = new EmployeeWorkingDay($workingDayData);
 
         $employee = Employee::find($id);
@@ -556,19 +609,17 @@ class EmployeeController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayUpdateData = $request->validate([
-            'monday' => 'required',
-            'tuesday' => 'required',
-            'wednesday' => 'required',
-            'thursday' => 'required',
-            'friday' => 'required',
-            'saturday' => 'required',
-            'sunday' => 'required',
+            'monday' => 'required|in:0,0.5,1',
+            'tuesday' => 'required|in:0,0.5,1',
+            'wednesday' => 'required|in:0,0.5,1',
+            'thursday' => 'required|in:0,0.5,1',
+            'friday' => 'required|in:0,0.5,1',
+            'saturday' => 'required|in:0,0.5,1',
+            'sunday' => 'required|in:0,0.5,1',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
-
         $workingDayUpdateData['is_template'] = false;
-
         EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
@@ -593,12 +644,20 @@ class EmployeeController extends Controller
         $reportToData = $request->validate([
             'report_to_emp_id' => 'required',
             'type' => 'required',
-            'kpi_proposer' => 'required',
-            'notes' => 'required'
+
+            'notes' => '',
+            'report_to_level' =>'required',
+            'kpi_proposer' => 'sometimes|required',
+
         ]);
+        if($request->get('kpi_proposer') == null){
+            $reportToData['kpi_proposer'] = 0;
+        } else {
+            $reportToData['kpi_proposer'] = request('kpi_proposer');
+        }
 
+        $reportToData['created_by'] = auth()->user()->id;
         $reportTo = new EmployeeReportTo($reportToData);
-
 
         $employee = Employee::find($id);
         $employee->report_tos()->save($reportTo);
@@ -611,7 +670,7 @@ class EmployeeController extends Controller
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
-
+        $securityGroupData['created_by'] = auth()->user()->id;
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
 
         $employee = Employee::find($id);
@@ -624,8 +683,7 @@ class EmployeeController extends Controller
     public function postMainSecurityGroup(Request $request, $id)
     {
         $mainSecurityGroupData = $request->validate([
-            'main_security_group_id' => 'required',
-
+            'main_security_group_id' => 'required'
         ]);
 
         Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
@@ -680,7 +738,7 @@ class EmployeeController extends Controller
         $visaUpdatedData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            'passport_no' => 'required|alpha_num',
+            // 'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
@@ -704,7 +762,7 @@ class EmployeeController extends Controller
             'emp_grade_id' => 'required',
             'start_date' => 'required',
             'basic_salary' => 'required',
-            'specification' => 'required',
+            'remarks' => '',
             'status' => 'required'
         ]);
 
@@ -753,7 +811,7 @@ class EmployeeController extends Controller
             'level' => 'required',
             'major' => 'required',
             'gpa' => 'required|between:0,99.99',
-            'description' => 'required'
+            'description' => ''
         ]);
 
         EmployeeEducation::where('id', $id)->update($educationUpdatedData);
@@ -780,14 +838,15 @@ class EmployeeController extends Controller
             'report_to_emp_id' => 'required',
             'type' => 'required',
             'kpi_proposer' => 'required',
-            'notes' => 'required'
+            'notes' => 'required',
+            'report_to_level'=>'required'
         ]);
 
         EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
 
         return response()->json(['success'=>'Report To was successfully updated.']);
     }
-    
+
     public function postEditAttachment(Request $request, $emp_id, $id)
     {
         $attachmentUpdatedData = $request->validate([
@@ -805,7 +864,7 @@ class EmployeeController extends Controller
     //delete function
     public function deleteEmergencyContact(Request $request, $emp_id, $id)
     {
-        EmployeeImmigration::find($id)->delete();
+        EmployeeEmergencyContact::find($id)->delete();
         return response()->json(['success'=>'Emergency Contact was successfully deleted.']);
     }
 
@@ -832,7 +891,7 @@ class EmployeeController extends Controller
         EmployeeBankAccount::find($id)->delete();
         return response()->json(['success'=>'Bank Account was successfully deleted.']);
     }
-    
+
     public function deleteExperience(Request $request, $emp_id, $id)
     {
         EmployeeExperience::find($id)->delete();
@@ -866,5 +925,202 @@ class EmployeeController extends Controller
     {
         EmployeeSecurityGroup::find($id)->delete();
         return response()->json(['success'=>'Security Group was successfully deleted.']);
+    }
+
+
+    public function postDisapproved(Request $request)
+    {
+
+        $id = $request->input('id');
+        $emp_id = $request->input('emp_id');
+        $leave_type_id = $request->input('leave_type_id');
+        $total_days =$request->input('total_days');
+
+        $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
+        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+
+
+        $leaveAllocationData = number_format($leaveAllocationData1,1);
+        $total_days =number_format($total_days,1);
+        $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+
+
+        LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
+        $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+
+
+        $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+        ->where('leave_type_id',$leave_type_id)
+        ->update(array('spent_days'=>$leaveAllocationDataEntry));
+            return redirect()->route('leaverequest');
+
+    }
+
+    public function ajaxGetAttendances(Request $request, $id) {
+        $now = Carbon::now();
+        $startOfMonth = $now->copy()->startOfMonth();
+        $endOfMonth = $now->copy()->endOfMonth();
+
+        $workingDays = EmployeeWorkingDay::where('emp_id', $id)->first();
+        if(empty($workingDays)) {
+            return [
+                'error' => true,
+                'errorMessage' => 'No working days set.'
+            ];
+        }
+
+        $attendances = EmployeeAttendance::where('emp_id', $id)->whereMonth('clock_in_time', $now->month)->get();
+        $holidays = Holiday::where('start_date', '>=', $startOfMonth)
+        ->where(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where('start_date', '>=', $startOfMonth);
+            $q->where('start_date', '<=', $endOfMonth);
+        })
+        ->OrWhere(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where('end_date', '>=', $startOfMonth);
+            $q->where('end_date', '<=', $endOfMonth);
+        })
+        ->where('status', 'active')->get();
+
+        $leaveRequests = LeaveRequest::with('leave_type')->where('emp_id', $id)->where('start_date', '>=', $startOfMonth)
+        ->where(function($q) use ($startOfMonth, $endOfMonth) {
+            $q->where(function($q) use ($startOfMonth, $endOfMonth) {
+                $q->where('start_date', '>=', $startOfMonth);
+                $q->where('start_date', '<=', $endOfMonth);
+            })
+            ->OrWhere(function($q) use ($startOfMonth, $endOfMonth) {
+                $q->where('end_date', '>=', $startOfMonth);
+                $q->where('end_date', '<=', $endOfMonth);
+            });
+        })
+        ->where('status', 'approved')->get();
+
+        $workingDaysIntArray = $this->getWorkingDaysInIntegerArray($workingDays);
+
+        $period = CarbonPeriod::between($startOfMonth, $endOfMonth);
+        $workDaysFilter = function ($date) use ($workingDaysIntArray) {
+            return in_array($date->dayOfWeek, $workingDaysIntArray);
+        };
+        $period->addFilter($workDaysFilter);
+        $future = false;
+        foreach ($period as $date) {
+            $holiday = $this->isAHoliday($holidays, $date);
+            if(!empty($holiday)) {
+                $days[] = [
+                    'date' => $date->toFormattedDateString(),
+                    'type' => 'holiday',
+                    'name' => $holiday->name
+                ]; 
+            } else {
+                $leaveRequest = $this->isOnLeave($leaveRequests, $date);
+                if(!empty($leaveRequest)) {
+                    $days[] = [
+                        'date' => $date->toFormattedDateString(),
+                        'type' => 'leave',
+                        'name' => $leaveRequest->leave_type->name,
+                    ]; 
+                } else {
+                    if($future) {
+                        $days[] = [
+                            'date' => $date->toFormattedDateString(),
+                            'type' => 'future',
+                            'name' => 'Future Date'
+                        ]; 
+                    } else {
+                        $attendance = $this->hasAttendance($attendances, $date);
+                        if(!empty($attendance)) {
+                            $days[] = [
+                                'date' => $date->toFormattedDateString(),
+                                'type' => 'attendance',
+                                'name' => 'Clocked-In Attendance',
+                                'clock_in_status' => $attendance->clock_in_status,
+                                'clock_in_time' => $attendance->clock_in_time,
+                                'clock_in_address' => $attendance->clock_in_address,
+                                'clock_out_status' => $attendance->clock_out_status,
+                                'clock_out_time' => $attendance->clock_out_time,
+                                'clock_out_address' => $attendance->clock_out_address,
+                            ]; 
+                        } else {
+                           
+                            $days[] = [
+                                'date' => $date->toFormattedDateString(),
+                                'type' => 'missing',
+                                'name' => "Missing Attendance",
+                            ]; 
+                            
+                        }
+                    } 
+                }
+                
+            } 
+
+            if($date->isToday()) {
+                $future = true;
+            }
+        }
+
+
+        return $days;
+    }
+
+    private function getWorkingDaysInIntegerArray($workingDays) {
+        $arr = array();
+        if($workingDays->sunday > 0) {
+            array_push($arr, Carbon::SUNDAY);
+        }
+        if($workingDays->monday > 0) {
+            array_push($arr, Carbon::MONDAY);
+        }
+        if($workingDays->tuesday > 0) {
+            array_push($arr, Carbon::TUESDAY);
+        }
+        if($workingDays->wednesday > 0) {
+            array_push($arr, Carbon::WEDNESDAY);
+        }
+        if($workingDays->thursday > 0) {
+            array_push($arr, Carbon::THURSDAY);
+        }
+        if($workingDays->friday > 0) {
+            array_push($arr, Carbon::FRIDAY);
+        }
+        if($workingDays->saturday > 0) {
+            array_push($arr, Carbon::SATURDAY);
+        }
+        
+        return $arr;
+    }
+
+    private function isAHoliday($holidays, Carbon $date) {
+        foreach($holidays as $holiday) {
+            $startDate = Carbon::parse($holiday->start_date);
+            $endDate = Carbon::parse($holiday->end_date);
+            if($date->between($startDate, $endDate)) {
+                return $holiday;
+            }
+        }
+
+        return null;
+    }
+
+    private function isOnLeave($leaveRequests, Carbon $date) {
+        foreach($leaveRequests as $leaveRequest) {
+            $startDate = Carbon::parse($leaveRequest->start_date);
+            $endDate = Carbon::parse($leaveRequest->end_date);
+            if($date->between($startDate, $endDate)) {
+                return $leaveRequest;
+            }
+        }
+
+        return null;
+    }
+
+    private function hasAttendance($attendances, Carbon $date) {
+        foreach($attendances as $attendance) {
+            $clockInTime = Carbon::parse($attendance->clock_in_time);
+            if($date->isSameDay($clockInTime)) {
+                return $attendance;
+            }
+        }
+
+        return null;
     }
 }

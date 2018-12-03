@@ -129,12 +129,12 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-bank-accounts-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-bank-accounts-popup">
                 Add Bank
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="employee-bank-accounts-table">
+    <table class="thrms-primary-data-table table w-100" id="employee-bank-accounts-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -160,6 +160,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.bank-accounts', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;

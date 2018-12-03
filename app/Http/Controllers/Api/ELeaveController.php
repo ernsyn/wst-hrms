@@ -26,12 +26,12 @@ class ELeaveController extends Controller
 
     public function postGetLeaveRequests(Request $request)
     {
-        $requestData = $request->validate([
-            'start_date' => 'required',
-            'end_date' => 'required',
-        ]);
+        // $requestData = $request->validate([
+        //     'start_date' => 'required',
+        //     'end_date' => 'required',
+        // ]);
 
-        $leaveRequests = LeaveService::getLeaveRequestsForEmployee(Auth::user()->employee, $requestData['start_date'], $requestData['end_date']);
+        $leaveRequests = LeaveService::getAllLeaveRequestsForEmployee(Auth::user()->employee);
 
         return response()->json($leaveRequests);
     }

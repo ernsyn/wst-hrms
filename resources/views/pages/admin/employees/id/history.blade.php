@@ -1,5 +1,5 @@
 <div class="tab-pane fade show p-3" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
-    <table class="table table-bordered table-hover" id="employeeHistoryTable">
+    <table class="hrms-primary-data-table table w-100" id="employeeHistoryTable">
         <thead>
             <tr>
                 <th>No</th>

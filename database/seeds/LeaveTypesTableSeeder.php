@@ -91,6 +91,9 @@ class LeaveTypesTableSeeder extends Seeder
                 'rule' => LeaveTypeRule::CONSECUTIVE,
             ]),
             new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::NON_PRORATED,
+            ]),
+            new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::INC_OFF_DAYS,
             ]),
             new App\LTAppliedRule([
@@ -133,6 +136,9 @@ class LeaveTypesTableSeeder extends Seeder
             ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::CONSECUTIVE,
+            ]),
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::NON_PRORATED,
             ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::GENDER,
@@ -257,6 +263,9 @@ class LeaveTypesTableSeeder extends Seeder
             ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::CONSECUTIVE,
+            ]),
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::NON_PRORATED,
             ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::INC_OFF_DAYS,

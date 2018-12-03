@@ -29,14 +29,6 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="passport-no"><strong>Passport Number*</strong></label>
-                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="passport-no-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
                             <label for="issued-by"><strong>Issued By*</strong></label>
                             <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
                             <div id="issued-by-error" class="invalid-feedback">
@@ -63,7 +55,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <label for="family-members"><strong>Relationship*</strong></label>
                             <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
                             <div id="family-members-error" class="invalid-feedback">
                             </div>
@@ -111,14 +103,6 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="passport-no"><strong>Passport Number*</strong></label>
-                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="passport-no-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
                             <label for="issued-by"><strong>Issued By*</strong></label>
                             <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
                             <div id="issued-by-error" class="invalid-feedback">
@@ -145,7 +129,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <label for="family-members"><strong>Relationship*</strong></label>
                             <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
                             <div id="family-members-error" class="invalid-feedback">
                             </div>
@@ -188,7 +172,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-visa-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-visa-popup">
                 Add Visa
             </button>
         </div>
@@ -199,11 +183,10 @@
                 <th>No</th>
                 <th>Type</th>
                 <th>Visa Number</th>
-                <th>Passport No</th>
                 <th>Issued By</th>
                 <th>Issued Date</th>
                 <th>Expiry Date</th>
-                <th>Family Members</th>
+                <th>Relationship</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -221,6 +204,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.visas', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 7,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -231,9 +218,6 @@
             },
             {
                 "data": "visa_number"
-            },
-            {
-                "data": "passport_no"
             },
             {
                 "data": "issued_by"
@@ -309,7 +293,6 @@
                 // Form Data
                 type: $('#add-visa-form #type').val(),
                 visa_number: $('#add-visa-form #visa-number').val(),
-                passport_no: $('#add-visa-form #passport-no').val(),
                 issued_by: $('#add-visa-form #issued-by').val(),
                 issued_date: $('#add-visa-form #alt-issued-date-visa').val(),
                 expiry_date: $('#add-visa-form #alt-expiry-date-visa').val(),
@@ -337,10 +320,7 @@
                                         $('#add-visa-form #visa-number').addClass('is-invalid');
                                         $('#add-visa-form #visa-number-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'passport_no':
-                                        $('#add-visa-form #passport-no').addClass('is-invalid');
-                                        $('#add-visa-form #passport-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+
                                     case 'issued_by':
                                         $('#add-visa-form #issued-by').addClass('is-invalid');
                                         $('#add-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
@@ -378,7 +358,7 @@
 
             $('#edit-visa-form #type').val(currentData.type);
             $('#edit-visa-form #visa-number').val(currentData.visa_number);
-            $('#edit-visa-form #passport-no').val(currentData.passport_no);
+
             $('#edit-visa-form #issued-by').val(currentData.issued_by);
             $('#edit-visa-form #issued-date-visa-edit').val(currentData.issued_date);
             $('#edit-visa-form #expiry-date-visa-edit').val(currentData.expiry_date);
@@ -400,7 +380,7 @@
                     _token: '{{ csrf_token() }}',
                     type: $('#edit-visa-form #type').val(),
                     visa_number: $('#edit-visa-form #visa-number').val(),
-                    passport_no: $('#edit-visa-form #passport-no').val(),
+
                     issued_by: $('#edit-visa-form #issued-by').val(),
                     issued_date: $('#edit-visa-form #alt-issued-date-visa-edit').val(),
                     expiry_date: $('#edit-visa-form #alt-expiry-date-visa-edit').val(),
@@ -428,10 +408,7 @@
                                         $('#edit-visa-form #visa-number').addClass('is-invalid');
                                         $('#edit-visa-form #visa-number-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'passport_no':
-                                        $('#edit-visa-form #passport-no').addClass('is-invalid');
-                                        $('#edit-visa-form #passport-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+
                                     case 'issued_by':
                                         $('#edit-visa-form #issued-by').addClass('is-invalid');
                                         $('#edit-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
@@ -499,7 +476,7 @@
     function clearVisasModal(htmlId) {
         $(htmlId + ' #type').val('');
         $(htmlId + ' #visa-number').val('');
-        $(htmlId + ' #passport-no').val('');
+
         $(htmlId + ' #issued-by').val('');
         $(htmlId + ' #issued-date-visa').val('');
         $(htmlId + ' #expiry-date-visa').val('');
@@ -507,7 +484,7 @@
 
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
-        $(htmlId + ' #passport-no').removeClass('is-invalid');
+
         $(htmlId + ' #issued-by').removeClass('is-invalid');
         $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
         $(htmlId + ' #expiry-date-visa').removeClass('is-invalid');
@@ -517,7 +494,7 @@
     function clearVisasError(htmlId) {
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
-        $(htmlId + ' #passport-no').removeClass('is-invalid');
+
         $(htmlId + ' #issued-by').removeClass('is-invalid');
         $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
         $(htmlId + ' #expiry-date-visa').removeClass('is-invalid');

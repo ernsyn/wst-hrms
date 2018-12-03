@@ -139,7 +139,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-immigration-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-immigration-popup">
                 Add Immigration
             </button>
         </div>
@@ -167,7 +167,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.immigrations', ['id' => $id]) }}",
-
+        "columnDefs": [ {
+            "targets": 5,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;

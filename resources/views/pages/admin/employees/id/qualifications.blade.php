@@ -48,9 +48,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
-                            </div>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+
                         </div>
                     </div>
                 </div>
@@ -128,9 +127,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="description"><strong>Description*</strong></label>
-                            <input id="description" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="description-error" class="invalid-feedback">
-                            </div>
+                            <input id="description" type="text" class="form-control" placeholder="" value="" >
+
                         </div>
                     </div>
                 </div>
@@ -230,7 +228,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="alt-start-date-experience-edit" type="text" class="form-control">
+                            <input id="alt-start-date-experience-edit" type="text" class="form-control" hidden>
                             <input id="start-date-experience-edit" type="text" class="form-control" readonly>
                             <div id="start-date-error" class="invalid-feedback">
                             </div>
@@ -239,7 +237,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="alt-end-date-experience-edit" type="text" class="form-control">
+                            <input id="alt-end-date-experience-edit" type="text" class="form-control" hidden>
                             <input id="end-date-experience-edit" type="text" class="form-control" readonly>
                             <div id="end-date-error" class="invalid-feedback">
                             </div>
@@ -248,9 +246,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
-                            </div>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+
                         </div>
                     </div>
                 </div>
@@ -328,9 +325,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="description"><strong>Description*</strong></label>
-                            <input id="description" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="description-error" class="invalid-feedback">
-                            </div>
+                            <input id="description" type="text" class="form-control" placeholder="" value="" >
+
                         </div>
                     </div>
                 </div>
@@ -475,7 +471,7 @@
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="employee-companies-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-companies-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -498,7 +494,7 @@
                     </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="employee-education-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-education-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -523,7 +519,7 @@
                 </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100 text-capitalize" id="employee-skill-table">
+    <table class="hrms-primary-data-table table w-100 text-capitalize" id="employee-skill-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -545,6 +541,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.experiences', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 6,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -574,76 +574,84 @@
             }
         ]
     });
-var educationsTable = $('#employee-education-table').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "{{ route('admin.employees.dt.education', ['id' => $id]) }}",
-    "columns": [{
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
+    var educationsTable = $('#employee-education-table').DataTable({
+        "bInfo": true,
+        "bDeferRender": true,
+        "serverSide": true,
+        "bStateSave": true,
+        "ajax": "{{ route('admin.employees.dt.education', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 8,
+            "orderable": false
+        } ],
+        "columns": [{
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            {
+                "data": "institution"
+            },
+            {
+                "data": "start_year"
+            },
+            {
+                "data": "end_year"
+            },
+            {
+                "data": "level"
+            },
+            {
+                "data": "major"
+            },
+            {
+                "data": "gpa"
+            },
+            {
+                "data": "description"
+            },
+            {
+                "data": null,
+                render: function (data, type, row, meta) {
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>` +
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
+                }
             }
-        },
-        {
-            "data": "institution"
-        },
-        {
-            "data": "start_year"
-        },
-        {
-            "data": "end_year"
-        },
-        {
-            "data": "level"
-        },
-        {
-            "data": "major"
-        },
-        {
-            "data": "gpa"
-        },
-        {
-            "data": "description"
-        },
-        {
-            "data": null,
-            render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>` +
-                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
+        ]
+    });
+    var skillsTable = $('#employee-skill-table').DataTable({
+        "bInfo": true,
+        "bDeferRender": true,
+        "serverSide": true,
+        "bStateSave": true,
+        "ajax": "{{ route('admin.employees.dt.skills', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+        } ],
+        "columns": [{
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "years_of_experience"
+            },
+            {
+                "data": "competency"
+            },
+            {
+                "data": null,
+                render: function (data, type, row, meta) {
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
+                }
             }
-        }
-    ]
-});
-var skillsTable = $('#employee-skill-table').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "{{ route('admin.employees.dt.skills', ['id' => $id]) }}",
-    "columns": [{
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        {
-            "data": "name"
-        },
-        {
-            "data": "years_of_experience"
-        },
-        {
-            "data": "competency"
-        },
-        {
-            "data": null,
-            render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
-                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
-            }
-        }
-    ]
-});
+        ]
+    });
 
 </script>
 
@@ -733,10 +741,10 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#add-experience-form #end-date-experience').addClass('is-invalid');
                                         $('#add-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'notes':
-                                        $('#add-experience-form #notes').addClass('is-invalid');
-                                        $('#add-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+                                    // case 'notes':
+                                    //     $('#add-experience-form #notes').addClass('is-invalid');
+                                    //     $('#add-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    // break;
                                 }
                             }
                         }
@@ -812,10 +820,10 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-experience-form #end-date-experience-edit').addClass('is-invalid');
                                         $('#edit-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'notes':
-                                        $('#edit-experience-form #notes').addClass('is-invalid');
-                                        $('#edit-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+                                    // case 'notes':
+                                    //     $('#edit-experience-form #notes').addClass('is-invalid');
+                                    //     $('#edit-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    // break;
                                 }
                             }
                         }
@@ -958,10 +966,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#add-education-form #gpa').addClass('is-invalid');
                                         $('#add-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'description':
-                                        $('#add-education-form #description').addClass('is-invalid');
-                                        $('#add-education-form #description-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+
                                 }
                             }
                         }
@@ -1046,10 +1051,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-education-form #gpa').addClass('is-invalid');
                                         $('#edit-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'description':
-                                        $('#edit-education-form #description').addClass('is-invalid');
-                                        $('#edit-education-form #description-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+
                                 }
                             }
                         }

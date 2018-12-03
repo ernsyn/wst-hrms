@@ -24,6 +24,7 @@
                             <span class="field-name mr-2">IC No</span>
                             <span class="field-value">{{$employee->ic_no}}</span>
                         </div>
+
                         <div class="field pb-1">
                             <span class="field-name mr-2">DOB</span>
                             <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
@@ -82,7 +83,7 @@
                     {{-- Profile --}}
                     <div class="tab-pane fade show active p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row" id="reload-profile2">
-                                <div class="col-md-11 text-capitalize">
+                                <div class="col-md-11">
                                     {{-- <div class="col-md-12 font-weight-bold">PERSONAL</div> --}}
                                     <div class="row p-3">
                                         <div class="col-md-6">
@@ -92,7 +93,7 @@
                                                     <span class="field-value">{{$employee->contact_no}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Marital Status</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Number of Child</span>
@@ -101,18 +102,23 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">EIS No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->eis_no}}</span>
+                                                    <span class="field-value">{!! $employee->eis_no ? $employee->eis_no:'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">SOCSO No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->socso_no}}</span>
+                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Security Group</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                        <span class="field-value">      {{ isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' }}
+                                                                                                             </span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <span class="col-lg-5 p-3">Race</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->race}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Driver License No</span>
@@ -130,6 +136,11 @@
                                                 <span class="col-lg-5 p-3">Tax No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->tax_no}}</span>
+                                                </div>
+
+                                                <span class="col-lg-5 p-3">ID No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->code}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -234,6 +245,13 @@
                         </div>
                     </div>
                     <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="code"><strong>ID No</strong></label>
+                                <input id="code" type="text" class="form-control" placeholder="" value="" required>
+                                <div id="code-error" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="dob"><strong>Date of Birth*</strong></label>
                             <input id="alt-dob" type="text" class="form-control" hidden>
@@ -335,6 +353,18 @@
                             <div id="socso-no-error" class="invalid-feedback"></div>
                         </div>
                     </div>
+
+                    <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="socso-no"><strong>Security Group Id*</strong></label>
+                                <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                                        @foreach(App\SecurityGroup::all() as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                        @endforeach
+                                    </select>
+                                <div id="main-security-group-id-error" class="invalid-feedback"></div>
+                            </div>
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <button id="edit-profile-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
@@ -373,6 +403,8 @@
             editProfileId = currentData.id;
 
             $('#edit-profile-form #ic-no').val(currentData.ic_no);
+            
+            $('#edit-profile-form #code').val(currentData.code);
             $('#edit-profile-form #alt-dob').val(currentData.dob);
             $('#edit-profile-form #gender').val(currentData.gender);
             $('#edit-profile-form #contact-no').val(currentData.contact_no);
@@ -385,6 +417,7 @@
             $('#edit-profile-form #tax-no').val(currentData.tax_no);
             $('#edit-profile-form #eis-no').val(currentData.eis_no);
             $('#edit-profile-form #socso-no').val(currentData.socso_no);
+            $('#edit-profile-form #main-security-group-id').val(currentData.main_security_group_id);
 
             if(currentData.dob!=null) {
                 formatDob = $.datepicker.formatDate("d/mm/yy", new Date(currentData.dob));
@@ -410,6 +443,7 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
+                    code: $('#edit-profile-form #code').val(),
                     ic_no: $('#edit-profile-form #ic-no').val(),
                     dob: $('#edit-profile-form #alt-dob').val(),
                     gender: $('#edit-profile-form #gender').val(),
@@ -422,7 +456,9 @@
                     epf_no: $('#edit-profile-form #epf-no').val(),
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),
-                    socso_no: $('#edit-profile-form #socso-no').val()
+                    socso_no: $('#edit-profile-form #socso-no').val(),
+
+                    main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -443,6 +479,10 @@
                                         $('#edit-profile-form #ic-no').addClass('is-invalid');
                                         $('#edit-profile-form #ic-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'code':
+                                        $('#edit-profile-form #code').addClass('is-invalid');
+                                        $('#edit-profile-form #code-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;                                    
                                     case 'dob':
                                         $('#edit-profile-form #dob').addClass('is-invalid');
                                         $('#edit-profile-form #dob-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -491,6 +531,11 @@
                                         $('#edit-profile-form #socso-no').addClass('is-invalid');
                                         $('#edit-profile-form #socso-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+
+                                    case 'main_security_group_id':
+                                        $('#edit-profile-form #main-security-group-id').addClass('is-invalid');
+                                        $('#edit-profile-form #main-security-group-id-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                 }
                             }
                         }
@@ -505,6 +550,7 @@
     // GENERAL FUNCTIONS
     function clearProfilesModal(htmlId) {
         $(htmlId + ' #ic-no').val('');
+        $(htmlId + ' #code').val('');
         $(htmlId + ' #dob').val('');
         $(htmlId + ' #gender').val('');
         $(htmlId + ' #contact-no').val('');
@@ -519,6 +565,7 @@
         $(htmlId + ' #socso-no').val('');
 
         $(htmlId + ' #ic-no').removeClass('is-invalid');
+        $(htmlId + ' #code').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
         $(htmlId + ' #gender').removeClass('is-invalid');
         $(htmlId + ' #contact-no').removeClass('is-invalid');
@@ -534,6 +581,7 @@
     }
     function clearProfilesError(htmlId) {
         $(htmlId + ' #ic-no').removeClass('is-invalid');
+        $(htmlId + ' #code').removeClass('is-invalid');        
         $(htmlId + ' #dob').removeClass('is-invalid');
         $(htmlId + ' #gender').removeClass('is-invalid');
         $(htmlId + ' #contact-no').removeClass('is-invalid');
@@ -557,5 +605,104 @@
             </div>`)
     }
 
+</script>
+<script>
+    $(function () {
+        $('#change-password-submit').click(function(e){
+            e.preventDefault();
+            $(e.target).attr('disabled', true);
+
+            $.ajax({
+                url: "{{ route('admin.employees.change-password.post', ['id' => $employee->id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // current_password: $('#change-password-form input[name=current_password]').val(),
+                    new_password: $('#change-password-form input[name=new_password]').val(),
+                    confirm_new_password: $('#change-password-form input[name=confirm_new_password]').val(),
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    clearChangePasswordModal('#change-password-form');
+                    $('#change-password-popup').modal('toggle');
+                    $(e.target).removeAttr('disabled');
+                },
+                error: function(xhr) {
+                    clearChangePasswordModal('#change-password-form');
+                    $(e.target).removeAttr('disabled');
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    // case 'current_password':
+                                    //     $('#change-password-form input[name=current_password]').addClass('is-invalid');
+                                    //     $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    // break;
+                                    case 'new_password':
+                                        $('#change-password-form input[name=new_password]').addClass('is-invalid');
+                                        $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    // case 'confirm_new_password':
+                                    //     $('#change-password-form input[name=confirm_new_password]').addClass('is-invalid');
+                                    //     $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    // break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+
+        function clearChangePasswordModal(htmlId) {
+            let form = $(htmlId);
+            form.find("input[name=new_password]").removeClass('is-invalid');
+        }
+        // $('#employee-profile-details #emp-roles-btn').click(function (e) {
+        //     console.log("ON: Roles Clicked!");
+        // });
+
+        // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
+        //     console.log("ON: Change Password Clicked!");
+        // });
+        // var asdsf = $('#save-role-changes-btn')
+        // console.log("asdad", asdsf);
+
+        $('#save-role-changes-btn').click(function () {
+            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"),
+            function (data) {
+                showAlert(data.success);
+                $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');
+                $('#roles-popup').modal('toggle');
+            },
+            function () {
+                // $(e.target).button('toggle');
+                $('#roles-popup #role-admin-checkbox').addClass('is-invalid');
+                $('#roles-popup #role-admin-error').html('<strong>Failed to update roles</strong>');
+            });
+        });
+
+        function assignRemoveAdminRole(assign, onSuccess, onFail) {
+            $.ajax({
+                url: "{{ route('admin.employees.roles.admin.post', ['id' => $employee->id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // current_password: $('#change-password-form input[name=current_password]').val(),
+                    assign_remove: assign ? 'assign': 'remove',
+                },
+                success: function(data) {
+                    onSuccess(data);
+                },
+                error: function(xhr) {
+                    onFail();
+                }
+            });
+        }
+    });
 </script>
 @append

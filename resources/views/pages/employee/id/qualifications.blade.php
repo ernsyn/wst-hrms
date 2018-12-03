@@ -471,7 +471,7 @@
                 </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100" id="employee-companies-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-companies-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -494,7 +494,7 @@
                         </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100" id="employee-education-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-education-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -519,7 +519,7 @@
                     </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100 text-capitalize" id="employee-skill-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-skill-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -546,6 +546,10 @@
             "serverSide": true,
             "bStateSave": true,
             "ajax": "{{ route('employee.dt.experiences', ['id' => $id]) }}",
+            "columnDefs": [ {
+                "targets": 6,
+                "orderable": false
+            } ],
             "columns": [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
@@ -581,6 +585,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('employee.dt.education', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 8,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -622,6 +630,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('employee.dt.skills', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;

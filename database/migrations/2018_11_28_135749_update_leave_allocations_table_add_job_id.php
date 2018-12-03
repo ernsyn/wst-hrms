@@ -27,7 +27,8 @@ class UpdateLeaveAllocationsTableAddJobId extends Migration
      */
     public function down()
     {
-        Schema::table('employee_working_days', function (Blueprint $table) {
+        Schema::table('leave_allocations', function (Blueprint $table) {
+            $table->dropForeign(['emp_job_id']);
             $table->dropColumn('emp_job_id');
         });
     }

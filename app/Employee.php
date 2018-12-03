@@ -27,7 +27,8 @@ class Employee extends Model
         'driver_license_no',
         'driver_license_expiry_date',
         'created_by',
-        'main_security_group_id'
+        'main_security_group_id',
+        'code'
     ];
 
     protected $dates = [
@@ -40,15 +41,21 @@ class Employee extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function security_groups()
+    public function main_security_groups()
     {
         return $this->belongsTo('App\SecurityGroup', 'main_security_group_id');
     }
     public function report_to_emp_id()
     {
+        return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
+    }
+    
+
+
+    public function employee_report_to()
+    {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','emp_id');
     }
-
     public function report_to()
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
@@ -123,6 +130,11 @@ class Employee extends Model
     public function working_day()
     {
         return $this->hasOne('App\EmployeeWorkingDay', 'emp_id');
+    }
+
+    public function leave_request_approvals()
+    {
+        return $this->hasMany('App\LeaveRequestApproval', 'id','approved_by_emp_id');
     }
 
     public function attendances()
