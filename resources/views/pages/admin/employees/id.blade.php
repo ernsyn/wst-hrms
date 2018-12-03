@@ -110,7 +110,7 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Security Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">      {{ isset($employee->main_security_groups) ? $employee->main_security_groups->name : 'Not Set' }}
+                                                        <span class="field-value">      {{ isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' }}
                                                                                                              </span>
                                                 </div>
                                             </div>
