@@ -260,7 +260,8 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{$company_travel_allowances['code']}}</td>
                                                     
-                                                    <td>{{$company_travel_allowances->countries->full_name}}</td>
+                                                    <td>
+                                                            {{ isset($company_travel_allowances->countries->full_name) ? $company_travel_allowances->countries->full_name : 'Not Set' }}</td>
                                                     <td>{{$company_travel_allowances['rate']}}</td>
                                                     <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                                             data-travel-id="{{$company_travel_allowances['id']}}" data-travel-code="{{$company_travel_allowances['code']}}"
@@ -292,7 +293,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Company</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Company Bank</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -514,7 +515,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Company</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Company Addition</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -767,7 +768,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Company</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Company Deduction</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
