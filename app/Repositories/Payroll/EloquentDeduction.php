@@ -14,7 +14,7 @@ class EloquentDeduction implements DeductionRepository
         
         return
         Deduction::select('deductions.*')
-        ->leftjoin('deduction_applies_to as DAT', 'DAT.deductions_id', '=', 'Deductions.id')
+        ->leftjoin('deduction_applies_to as DAT', 'DAT.deductions_id', '=', 'deductions.id')
         ->where(function($query) use($companyId){
             $query->where('deductions.company_id', $companyId)
             ->orwhere('deductions.company_id', 0);
