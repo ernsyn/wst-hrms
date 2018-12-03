@@ -40,7 +40,7 @@
                             <select class="form-control" name="report-to" id="report-to">
                                 <option value="">Select Name</option>
                                 @foreach(App\Employee::with('user')->get() as $employee)
-                                <option value="{{ $employee->user->id }}">{{ $employee->user->name }}</option>
+                                <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
                                 @endforeach
                             </select>
                             <div id="report-to-error" class="invalid-feedback">

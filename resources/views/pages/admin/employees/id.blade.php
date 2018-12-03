@@ -83,7 +83,7 @@
                     {{-- Profile --}}
                     <div class="tab-pane fade show active p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row" id="reload-profile2">
-                                <div class="col-md-11 text-capitalize">
+                                <div class="col-md-11">
                                     {{-- <div class="col-md-12 font-weight-bold">PERSONAL</div> --}}
                                     <div class="row p-3">
                                         <div class="col-md-6">
@@ -93,7 +93,7 @@
                                                     <span class="field-value">{{$employee->contact_no}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Marital Status</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Number of Child</span>
@@ -102,11 +102,11 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">EIS No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->eis_no}}</span>
+                                                    <span class="field-value">{!! $employee->eis_no ? $employee->eis_no:'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">SOCSO No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->socso_no}}</span>
+                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Security Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
@@ -118,7 +118,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <span class="col-lg-5 p-3">Race</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->race}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Driver License No</span>
@@ -457,7 +457,7 @@
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),
                     socso_no: $('#edit-profile-form #socso-no').val(),
-                    
+
                     main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
                 },
                 success: function(data) {
@@ -605,5 +605,104 @@
             </div>`)
     }
 
+</script>
+<script>
+    $(function () {
+        $('#change-password-submit').click(function(e){
+            e.preventDefault();
+            $(e.target).attr('disabled', true);
+
+            $.ajax({
+                url: "{{ route('admin.employees.change-password.post', ['id' => $employee->id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // current_password: $('#change-password-form input[name=current_password]').val(),
+                    new_password: $('#change-password-form input[name=new_password]').val(),
+                    confirm_new_password: $('#change-password-form input[name=confirm_new_password]').val(),
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    clearChangePasswordModal('#change-password-form');
+                    $('#change-password-popup').modal('toggle');
+                    $(e.target).removeAttr('disabled');
+                },
+                error: function(xhr) {
+                    clearChangePasswordModal('#change-password-form');
+                    $(e.target).removeAttr('disabled');
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    // case 'current_password':
+                                    //     $('#change-password-form input[name=current_password]').addClass('is-invalid');
+                                    //     $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    // break;
+                                    case 'new_password':
+                                        $('#change-password-form input[name=new_password]').addClass('is-invalid');
+                                        $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    // case 'confirm_new_password':
+                                    //     $('#change-password-form input[name=confirm_new_password]').addClass('is-invalid');
+                                    //     $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    // break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+
+        function clearChangePasswordModal(htmlId) {
+            let form = $(htmlId);
+            form.find("input[name=new_password]").removeClass('is-invalid');
+        }
+        // $('#employee-profile-details #emp-roles-btn').click(function (e) {
+        //     console.log("ON: Roles Clicked!");
+        // });
+
+        // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
+        //     console.log("ON: Change Password Clicked!");
+        // });
+        // var asdsf = $('#save-role-changes-btn')
+        // console.log("asdad", asdsf);
+
+        $('#save-role-changes-btn').click(function () {
+            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"),
+            function (data) {
+                showAlert(data.success);
+                $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');
+                $('#roles-popup').modal('toggle');
+            },
+            function () {
+                // $(e.target).button('toggle');
+                $('#roles-popup #role-admin-checkbox').addClass('is-invalid');
+                $('#roles-popup #role-admin-error').html('<strong>Failed to update roles</strong>');
+            });
+        });
+
+        function assignRemoveAdminRole(assign, onSuccess, onFail) {
+            $.ajax({
+                url: "{{ route('admin.employees.roles.admin.post', ['id' => $employee->id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    // current_password: $('#change-password-form input[name=current_password]').val(),
+                    assign_remove: assign ? 'assign': 'remove',
+                },
+                success: function(data) {
+                    onSuccess(data);
+                },
+                error: function(xhr) {
+                    onFail();
+                }
+            });
+        }
+    });
 </script>
 @append

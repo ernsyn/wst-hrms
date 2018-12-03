@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="col-8">
-                                <label class="col-md-12 col-form-label">Note*</label>
+                                <label class="col-md-12 col-form-label">Note</label>
                                 <div class="col-md-12">
                                     <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder="Total Day here"
                                         name="note" value="{{ $holidays->note }}" required>                                @if ($errors->has('total_days'))
@@ -90,9 +90,10 @@
 
            
                             <div class="col-8">
-                                <label class="col-md-5 col-form-label">State*</label>
+                                <label class="col-md-5 col-form-label">State</label>
                                 <div class="col-md-7">
                                         <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $holidays->state }}">
+                                                <option value="">Please Select</option>
                                             @foreach(App\Constants\MalaysianStates::$all as $state)
                                             <option value="{{$state }}">{{ $state }}</option value="">
                                             @endforeach
