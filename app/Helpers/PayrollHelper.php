@@ -2,6 +2,7 @@
 namespace App\Helpers;
 
 use App\EmployeeReportTo;
+use Illuminate\Support\Facades\Auth;
 
 class PayrollHelper
 {
@@ -117,6 +118,10 @@ class PayrollHelper
         }
 //         dd($isKpiProposer);
         return $isKpiProposer;
+    }
+    
+    public static function isHrExec() {
+        return Auth::user()->hasRole('hr-exec');
     }
 }
 

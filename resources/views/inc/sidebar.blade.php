@@ -2,7 +2,7 @@
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
-    @hasanyrole('super-admin|admin|hr-exec')
+    @hasanyrole('super-admin|admin')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -27,7 +27,7 @@
                 </a>
             </div>
             @endhasrole
-            @hasrole('admin|hr-exec')
+            @hasrole('admin')
             <div class="option row col mx-0">
                 <a href="{{ route('admin.dashboard') }}">
                     Admin
@@ -126,6 +126,27 @@
 
         </li>
         @endif
+        
+        @hasrole('hr-exec')
+        <li class="menu-section {{ request()->is('payroll') ? 'active' : '' }}">
+            <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
+                <div class="row">
+                    <div class="col-1">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <div class="col-10">
+                        Payroll
+                    </div>
+                </div>
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('payroll') ? 'show' : '' }}" id="payrollSubmenu">
+                <li class="menu-option {{ request()->is('payroll') ? 'active' : '' }}">
+                    <a href="{{ route('payroll') }}">Payroll</a>
+                </li>
+            </ul>
+
+        </li>
+        @endhasrole
         
         <li class="menu-section {{ request()->is('payslip.show') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payslipSubmenu" data-toggle="collapse" aria-expanded="false">
