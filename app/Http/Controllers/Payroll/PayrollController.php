@@ -294,7 +294,7 @@ class PayrollController extends Controller
             ->join('users as u', 'u.id', '=', 'e.user_id') 
         /* ->join('countries as C', 'C.id', '=', 'EM.citizenship')  */
             ->join('employee_jobs as ej', function ($join) {
-                $join->on('ej.emp_id', '=', 'e.id');
+                $join->on('ej.emp_id', '=', 'e.id')->where('ej.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id ORDER BY id DESC LIMIT 1)'));
             })
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
             ->leftjoin('employee_report_to as ert', 'ert.emp_id', '=', 'e.id')
@@ -328,8 +328,6 @@ class PayrollController extends Controller
                 $query->whereIn('e.main_security_group_id', $securityGroupAccess);
             }
         })
-        ->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id ORDER BY id DESC LIMIT 1)'))
-        
         ->whereNull('ert.deleted_at')
         ->orderby('payroll_trx.id', 'ASC')->get();
 
