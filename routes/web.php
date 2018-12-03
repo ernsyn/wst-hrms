@@ -158,7 +158,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 });
 
 // MODE: Admin
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin|hr-exec']], function() {
     Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
 
 

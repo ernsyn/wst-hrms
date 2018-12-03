@@ -2,7 +2,7 @@
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
-    @hasanyrole('super-admin|admin')
+    @hasanyrole('super-admin|admin|hr-exec')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -27,7 +27,7 @@
                 </a>
             </div>
             @endhasrole
-            @hasrole('admin')
+            @hasrole('admin|hr-exec')
             <div class="option row col mx-0">
                 <a href="{{ route('admin.dashboard') }}">
                     Admin
