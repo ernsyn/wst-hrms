@@ -17,6 +17,7 @@
                         <form id="add-leave-request-form" data-parsley-validate>
                             @csrf
                             <div class="form-group row">
+                                <div class="col-sm-12 col-form-label" id="edit-notice"></div>
                                 <label class="col-sm-12 col-form-label">Leave Type</label>
                                 <div class="col-sm-8">
                                     <select name="leave-types" id="leave-types" class="custom-select">
@@ -79,8 +80,12 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <input type="hidden" id="mode" value="add">
+                                    <input type="hidden" id="leave-request-id">
                                     <button id="add-leave-request-submit" type="submit" class="btn btn-primary btn-block" disabled>Apply for
                                         <span id="total-days" class="total-days"><b>0.0</b> days</span>
+                                    </button>
+                                    <button id="cancel-edit-leave-request" type="button" class="btn btn-info btn-block">
+                                        Cancel Edit Leave Request
                                     </button>
                                 </div>
                             </div>
@@ -134,13 +139,42 @@
                 </div>
             </div>
             <div class="modal-footer" id="can-edit-delete">
-                <span id="leave-request-id" hidden></span>
-                <button id="edit-leave-request-button" type="button" class="btn btn-danger">
+                <span id="leave-id" hidden></span>
+                <button id="edit-leave-request-button" type="button" class="btn btn-primary">
                     Edit
                 </button>
-                {{-- <button id="delete-leave-request-button" type="button" class="btn btn-danger">
-                    Delete
-                </button> --}}
+                <ANY data-toggle="modal" id="open-cancel-leave-request" data-target="#cancel-leave-request" class="btn btn-danger" data-dismiss="modal">
+                    Cancel
+                </ANY>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="cancel-leave-request" tabindex="-1" role="dialog" aria-labelledby="cancel-leave-request-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-report-to-label">Cancel Leave</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @csrf
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        Are you sure you want to cancel this leave request?
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span id="cancel-leave-id" hidden></span>
+                <button id="cancel-leave-request-button" type="button" class="btn btn-danger">
+                    Confirm
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                </button>
             </div>
         </div>
     </div>
@@ -152,6 +186,10 @@
     $(function(){
         var attachmentRequired = false;
         var workingDays = [];
+
+        $("#required-attachment").hide();
+        $("#can-edit-delete").hide();
+        $("#cancel-edit-leave-request").hide();
 
         $.get("{{ route('employee.e-leave.ajax.working-days') }}", function(workingDaysData, status) {
             workingDays = workingDaysData;
@@ -169,17 +207,17 @@
                 weekNumbers: false,
                 eventLimit: true, // allow "more" link when too many events
                 eventSources: [{
-                    url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'new']) }}",
+                    url: "{{ route('employee.e-leave.ajax.status', ['status' => 'new']) }}",
                     color: '#CCCCCC',
                     textColor: 'black'
                 },
                 {
-                    url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'approved']) }}",
+                    url: "{{ route('employee.e-leave.ajax.status', ['status' => 'approved']) }}",
                     color: 'blue',
                     textColor: 'white'
                 },
                 {
-                    url: "{{ route('employee.e-leave.ajax.leaves', ['status' => 'rejected']) }}",
+                    url: "{{ route('employee.e-leave.ajax.status', ['status' => 'rejected']) }}",
                     color: 'red',
                     textColor: 'white'
                 }],
@@ -202,13 +240,14 @@
                         $("#leave-info").text(event.title);
                         $("#start-time").text(event_start.toDateString());
                         $("#end-time").text(event_end.toDateString());
-                        $("#leave-request-id").text(event.id);                    
+                        $("#leave-id").text(event.id);                    
                         $("#leave-details").modal('toggle');
                     });
                 }
             });
         }       
 
+        // Load Leave Type Select box
         $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
             $.each(leaveTypeData, function(key, leaveType){
                 var leaveTypeOption = $('#templates .leave-type-option').clone();
@@ -217,30 +256,99 @@
                 leaveTypeOption.text(leaveType.name);
                 leaveTypeOption.appendTo('#leave-types');
             });
+
+            console.log(leaveTypeData);
         });
 
-        $("#required-attachment").hide();
-        $("#can-edit-delete").hide();
-
-        $("button.leave-day").on('click', function(){
+        // Full day, AM, PM toggle
+        $("button.leave-day").on('click', function() {
             $("button.leave-day").removeClass("selected-day");
             $(this).addClass("selected-day");
         });
 
+        // Enable Edit Mode and Load Form Data
         $("#edit-leave-request-button").on('click', function() {
             $("#leave-details").modal('toggle');
 
-            let getEditLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.leaves.edit', ['id' => '<<id>>']) }}';
+            let getEditLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.edit', ['id' => '<<id>>']) }}';
 
-            var getEditLeaveRequest = getEditLeaveRequestTemplate.replace(encodeURI('<<id>>'), $("#leave-request-id").text());
+            var getEditLeaveRequest = getEditLeaveRequestTemplate.replace(encodeURI('<<id>>'), $("#leave-id").text());
 
-            $.get(getEditLeaveRequest, function(leaveRequestData, status) {
-                console.log(leaveRequestData);
+            $.get(getEditLeaveRequest, function(leaveRequestData, status) { 
+                var startDate = leaveRequestData.start_date.split("-");
+                var startDateNew = startDate[2] + "-" + startDate[1] + "-" + startDate[0];
+
+                var endDate = leaveRequestData.end_date.split("-");
+                var endDateNew = endDate[2] + "-" + endDate[1] + "-" + endDate[0];
+
+                $('#edit-notice').html(`<div class="alert alert-info" role="alert">
+                    <strong>Edit:</strong> Leave Request
+                </div>`);
+
+                $("#cancel-edit-leave-request").show();
+
+                $('#add-leave-request-form #leave-request-id').val(leaveRequestData.id);
+                $('#add-leave-request-form #start-date').val(startDateNew); 
+                $('#add-leave-request-form #end-date').val(endDateNew);               
+                $('#add-leave-request-form #alt-start-date').val(leaveRequestData.start_date);
+                $('#add-leave-request-form #alt-end-date').val(leaveRequestData.end_date);
+                $('#add-leave-request-form #leave-types').val(leaveRequestData.leave_type_id);
+                // $('#add-leave-request-form button.selected-day').data('value');
+                $('#add-leave-request-form #reason').val(leaveRequestData.reason);
+                $("span.total-days").replaceWith("<span class='total-days'><b>" + leaveRequestData.applied_days + "</b> days</span>");
+
+                var leave_type_data = $('#add-leave-request-form #leave-types').find('option:selected').data('leave-type');
+            
+                $("#available_days").text(leave_type_data.available_days.toFixed(1));
+                $("#leave-description").text(leave_type_data.description);
+
+                if(leave_type_data.available_days == 0) {
+                    $("#add-leave-request-submit").prop('disabled', true);
+                }
+                else {
+                    $("#add-leave-request-submit").prop('disabled', false);
+                }
+
+                if(leave_type_data.required_attachment) {
+                    attachmentRequired = true;
+                    $("#required-attachment-label").text(leave_type_data.attachment_type + " Attachment");
+                    $("#required-attachment").show();
+                }
+                else {
+                    attachmentRequired = false;
+                    $("#required-attachment-label").text("Attachment");
+                    $("#required-attachment").hide();
+                }
 
                 $('#mode').val('edit');
             });
+        });
 
-            // checkLeaveRequest($('#start-date').val(), $('#end-date').val());
+        // Cancel Edit Mode
+        $("#cancel-edit-leave-request").on('click', function() {
+            clear_leave_request_form();
+        });
+
+        // Cancel Leave Request
+        $('#cancel-leave-request-button').on('click', function() {
+            $("#cancel-leave-id").text($("#leave-id").text());
+
+            let cancelLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.delete', ['id' => '<<id>>']) }}';
+
+            var cancelLeaveRequest = cancelLeaveRequestTemplate.replace(encodeURI('<<id>>'), $("#cancel-leave-id").text());
+
+            $.ajax({
+                url: cancelLeaveRequest,
+                success: function(data) {
+                    $("#cancel-leave-request").modal('toggle');
+                    $("#calendar-leave").fullCalendar('refetchEvents');
+
+                    clear_leave_request_form();
+                },
+                error: function(xhr) {
+                    console.log("Error: ", xhr);
+                }
+            }); 
         });
 
         $("#start-date").datepicker({
@@ -318,6 +426,7 @@
             }
         });
 
+        // submit leave request ) (add/edit mode)
         $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
             e.preventDefault();
 
@@ -325,25 +434,46 @@
 
             console.log(file);
 
-            var data = {
-                _token: '{{ csrf_token() }}',
-                start_date: $('#add-leave-request-form #alt-start-date').val(),
-                end_date: $('#add-leave-request-form #alt-end-date').val(),
-                leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
-                am_pm: $('#add-leave-request-form button.selected-day').data('value'),
-                reason: $('#add-leave-request-form #reason').val(),
-            };
+            if($("#mode").val() == "add") {
+                var data = {
+                    _token: '{{ csrf_token() }}',
+                    start_date: $('#add-leave-request-form #alt-start-date').val(),
+                    end_date: $('#add-leave-request-form #alt-end-date').val(),
+                    leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
+                    am_pm: $('#add-leave-request-form button.selected-day').data('value'),
+                    reason: $('#add-leave-request-form #reason').val(),
+                };
 
-            if(attachmentRequired) {
-                getBase64(file, function(attachmentDataUrl) {
-                    data.attachment = attachmentDataUrl;
+                if(attachmentRequired) {
+                    getBase64(file, function(attachmentDataUrl) {
+                        data.attachment = attachmentDataUrl;
+                        postLeaveRequest(data);
+                    });
+                } else {
                     postLeaveRequest(data);
-                });
-            } else {
-                postLeaveRequest(data);
-            }            
+                }  
+            } else if($("#mode").val() == "edit") {
+                var data = {
+                    _token: '{{ csrf_token() }}',
+                    start_date: $('#add-leave-request-form #alt-start-date').val(),
+                    end_date: $('#add-leave-request-form #alt-end-date').val(),
+                    leave_type_id: $('#add-leave-request-form #leave-types').find('option:selected').val(),
+                    am_pm: $('#add-leave-request-form button.selected-day').data('value'),
+                    reason: $('#add-leave-request-form #reason').val(),
+                };
+
+                if(attachmentRequired) {
+                    getBase64(file, function(attachmentDataUrl) {
+                        data.attachment = attachmentDataUrl;
+                        postEditLeaveRequest(data);
+                    });
+                } else {
+                    postEditLeaveRequest(data);
+                }
+            }          
         });
 
+        // Add leave request function
         function postLeaveRequest(data) {
             $.ajax({
                 url: "{{ route('employee.e-leave.ajax.request') }}",
@@ -352,6 +482,8 @@
                 success: function(data) {
                     $("#leave-request-response").modal('toggle');
                     $("#calendar-leave").fullCalendar('refetchEvents');
+
+                    clear_leave_request_form();
                 },
                 error: function(xhr) {
                     console.log("Error: ", xhr);
@@ -359,6 +491,29 @@
             }); 
         }
 
+        // Updates leave request function
+        function postEditLeaveRequest(data) {
+            let postEditLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.edit.post', ['id' => '<<id>>']) }}';
+
+            var postEditLeaveRequest = postEditLeaveRequestTemplate.replace(encodeURI('<<id>>'), $("#leave-request-id").val());
+
+            $.ajax({
+                url: postEditLeaveRequest,
+                type: 'POST',
+                data: data,
+                success: function(data) {
+                    $("#leave-request-response").modal('toggle');
+                    $("#calendar-leave").fullCalendar('refetchEvents');
+
+                    clear_leave_request_form();
+                },
+                error: function(xhr) {
+                    console.log("Error: ", xhr);
+                }
+            }); 
+        }
+
+        // convert attachement to base64
         function getBase64(file, onLoad) {
             var reader = new FileReader();
             reader.readAsDataURL(file);
@@ -371,6 +526,7 @@
             };
         }
 
+        // Validate Leave request
         function checkLeaveRequest($start_date, $end_date) {
             if($start_date && $end_date) {
                 var start = $("#start-date").datepicker("getDate");
@@ -406,6 +562,22 @@
                     }
                 });
             }
+        }
+
+        // clear leave request form function
+        function clear_leave_request_form() {
+            $('#edit-notice').html('');
+
+            $("#cancel-edit-leave-request").hide();
+
+            $('#add-leave-request-form').trigger("reset");
+
+            $("#available_days").text('0.0');
+            $("#leave-description").text('');
+
+            $("span.total-days").replaceWith("<span class='total-days'><b>0.0</b> days</span>");
+
+            $('#mode').val('add');
         }
     });
 </script>
