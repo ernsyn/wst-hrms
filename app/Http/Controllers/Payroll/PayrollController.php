@@ -44,6 +44,7 @@ use App\LeaveRequestApproval;
 use App\EmployeeAttendance;
 use App\SecurityGroup;
 use App\EmployeeSecurityGroup;
+use App\LeaveAllocation;
 
 class PayrollController extends Controller
 {
@@ -319,7 +320,10 @@ class PayrollController extends Controller
         })
         ->where(function($query) use($isHrAdminOrHrExec, $currentUser, $securityGroupAccess, $isAdmin){
             if(!$isHrAdminOrHrExec) {
-                $query->where('ert.report_to_emp_id', $currentUser);
+                $query->where([ 
+                    ['ert.report_to_emp_id', $currentUser],
+                    ['ert.kpi_proposer', 1]
+                ]);
             } else if(!$isAdmin) {
                 $query->whereIn('e.main_security_group_id', $securityGroupAccess);
             }
@@ -403,29 +407,33 @@ class PayrollController extends Controller
             $total_days = $total_days - $different_of_dates->format('%a')+1;
         }
         
-        //TODO: UL, show last 3 month, save update payroll_trx_id
+        //UL, show last 3 month, save update payroll_trx_id
         $unpaidLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
         ->where([
-            ['payroll_trx_id', $id],
-            ['lr.leave_type_id', 5]
+//             ['payroll_trx_id', $id],
+            ['lr.leave_type_id', 5],
+            ['lr.emp_id', $employee->id]
         ])
         ->select('leave_request_approvals.*', 'lr.*')
         ->get();
-        
+//         dd($employee);
+
         // ALP
         $annualLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
-        ->where([
-            ['payroll_trx_id', $id],
-            ['lr.leave_type_id', 1]
-        ])
-        ->select('leave_request_approvals.*', 'lr.*')
-        ->get();
+            ->where([
+//                 ['payroll_trx_id', $id],
+                ['lr.leave_type_id', 1],
+                ['lr.emp_id', $employee->id]
+            ])
+            ->select('leave_request_approvals.*', 'lr.*')
+            ->get();
         
         //CFLP
         $carryForwardLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
         ->where([
-            ['payroll_trx_id', $id],
-            ['lr.leave_type_id', 6]
+//             ['payroll_trx_id', $id],
+            ['lr.leave_type_id', 6],
+            ['lr.emp_id', $employee->id]
         ])
         ->select('leave_request_approvals.*', 'lr.*')
         ->get();
