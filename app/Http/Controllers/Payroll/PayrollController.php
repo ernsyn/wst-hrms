@@ -328,6 +328,8 @@ class PayrollController extends Controller
                 $query->whereIn('e.main_security_group_id', $securityGroupAccess);
             }
         })
+        ->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id ORDER BY id DESC LIMIT 1)'))
+        
         ->whereNull('ert.deleted_at')
         ->orderby('payroll_trx.id', 'ASC')->get();
 
