@@ -24,7 +24,6 @@
                             <span class="field-name mr-2">IC No</span>
                             <span class="field-value">{{$employee->ic_no}}</span>
                         </div>
-
                         <div class="field pb-1">
                             <span class="field-name mr-2">DOB</span>
                             <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
@@ -39,12 +38,16 @@
                         </div>
                     </div>
                 </div>
-                {{-- Ignore --}} {{--
                 <div id="end-btn-group">
-                    <button type="button" class="btn btn-primary rounded">
-                        <i class="fas fa-pen"></i>
+                    <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
+                        {{-- <i class="fas fa-pen"></i> --}}
+                        Roles
                     </button>
-                </div> --}}
+                    <button id="emp-change-password-btn" data-toggle="modal" data-target="#change-password-popup" type="button" class="btn btn-sm text-white rounded">
+                        {{-- <i class="fas fa-pen"></i> --}}
+                        Change Password
+                    </button>
+                </div>
             </div>
 
         </div>
@@ -76,6 +79,8 @@
                             aria-selected="false">History</a>
                         <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"
                             aria-selected="true">Security Group</a>
+                        <a class="nav-item nav-link" id="nav-attendance-tab" data-toggle="tab" href="#nav-attendance" role="tab" aria-controls="nav-attendance"
+                            aria-selected="true">Attendance</a>
                     </div>
                 </nav>
                 {{-- Tab Content --}}
@@ -110,7 +115,7 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Security Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">      {{ isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' }}
+                                                        <span class="field-value">      {!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}
                                                                                                              </span>
                                                 </div>
                                             </div>
@@ -219,6 +224,8 @@
                     @include('pages.admin.employees.id.history', ['id' => $employee->id])
                     {{-- Security Group --}}
                     @include('pages.admin.employees.id.security-group', ['id' => $employee->id])
+                    {{-- Attendance --}}
+                    @include('pages.admin.employees.id.attendance', ['id' => $employee->id])
                 </div>
             </div>
         </div>
@@ -373,6 +380,83 @@
         </div>
     </div>
 </div>
+{{-- Change Password --}}
+<div class="modal fade" id="change-password-popup" tabindex="-1" role="dialog" aria-labelledby="change-password-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="change-password-label">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <form id="change-password-form">
+                <div class="modal-body">
+                    @csrf
+                    {{-- <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Current Password*</strong></label>
+                            <input name="current_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="current-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>New Password*</strong></label>
+                            <input name="new_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="new-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Confirm New Password*</strong></label>
+                            <input name="confirm_new_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="confirm-new-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="change-password-submit" type="submit" class="btn btn-primary">
+                        {{ __('Submit') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Change Password --}}
+<div class="modal fade" id="roles-popup" tabindex="-1" role="dialog" aria-labelledby="roles-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roles-label">Roles</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-check">
+                    @if($employee->user->hasRole('admin'))
+                    <input class="form-check-input" type="checkbox" id="role-admin-checkbox" checked>
+                    @else
+                    <input class="form-check-input" type="checkbox" id="role-admin-checkbox" >
+                    @endif
+                    <label class="form-check-label" for="role-admin-checkbox">Admin</label>
+                    <div id="role-admin-error" class="invalid-feedback">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="save-role-changes-btn" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -457,7 +541,7 @@
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),
                     socso_no: $('#edit-profile-form #socso-no').val(),
-
+                    
                     main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
                 },
                 success: function(data) {
@@ -655,7 +739,7 @@
                     }
                 }
             });
-
+            
         });
 
         function clearChangePasswordModal(htmlId) {
@@ -665,15 +749,15 @@
         // $('#employee-profile-details #emp-roles-btn').click(function (e) {
         //     console.log("ON: Roles Clicked!");
         // });
-
+        
         // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
         //     console.log("ON: Change Password Clicked!");
         // });
         // var asdsf = $('#save-role-changes-btn')
         // console.log("asdad", asdsf);
-
+        
         $('#save-role-changes-btn').click(function () {
-            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"),
+            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"), 
             function (data) {
                 showAlert(data.success);
                 $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');
