@@ -32,8 +32,7 @@ class EloquentDeduction implements DeductionRepository
                 } else {
                     $query->where('deductions.confirmed_employee', 1);
                 }
-                $query->orwhere('deductions.company_id', 0);
-            }
+				$query->orwhere('deductions.company_id', 0);            }
         })
 //         ->groupby('DeductionMaster.id')
         ->get();
