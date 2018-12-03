@@ -317,10 +317,10 @@ class PayrollController extends Controller
                 $query->where('payroll_trx.payroll_master_id', $id);
             }
         })
-        ->where(function($query) use($isHrAdminOrHrExec, $currentUser, $securityGroupAccess){
+        ->where(function($query) use($isHrAdminOrHrExec, $currentUser, $securityGroupAccess, $isAdmin){
             if(!$isHrAdminOrHrExec) {
                 $query->where('ert.report_to_emp_id', $currentUser);
-            } else {
+            } else if(!$isAdmin) {
                 $query->whereIn('e.main_security_group_id', $securityGroupAccess);
             }
         })
