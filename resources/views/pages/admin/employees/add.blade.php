@@ -47,7 +47,7 @@
                                 <label class="col-lg-3 col-form-label text-lg-right">Confirm Password*</label>
                                 <div class="col-lg-6">
                                     <input id="confirm-password" type="password" class="form-control{{ $errors->has('confirm_password') ? ' is-invalid' : '' }}" name="confirm_password"
-                                        required> @if ($errors->has('confirm_password'))
+                                        required data-parsley-equalto="#password"> @if ($errors->has('confirm_password'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('confirm_password') }}</strong>
                                     </span> @endif
