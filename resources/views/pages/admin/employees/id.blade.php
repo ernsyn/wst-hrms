@@ -32,10 +32,10 @@
                             <span class="field-name mr-2">Gender</span>
                             <span class="field-value">{{ ucfirst($employee->gender) }}</span>
                         </div>
-                        {{-- <div class="field pb-1">
+                        <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">{!! $employee->nationality ? App\Country::where('id', $employee->nationality)->first() :'<strong>(not set)</strong>' !!}</span>
-                        </div> --}}
+                            <span class="field-value">{!! $employee->nationality ? $employee->nationality:'<strong>(not set)</strong>' !!}</span>
+                        </div>
                     </div>
                 </div>
                 <div id="end-btn-group">
@@ -88,7 +88,7 @@
                     {{-- Profile --}}
                     <div class="tab-pane fade show active p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row" id="reload-profile2">
-                                <div class="col-md-11 text-capitalize">
+                                <div class="col-md-11">
                                     {{-- <div class="col-md-12 font-weight-bold">PERSONAL</div> --}}
                                     <div class="row p-3">
                                         <div class="col-md-6">
@@ -98,7 +98,7 @@
                                                     <span class="field-value">{{$employee->contact_no}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Marital Status</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Number of Child</span>
@@ -107,23 +107,23 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">EIS No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->eis_no}}</span>
+                                                    <span class="field-value">{!! $employee->eis_no ? $employee->eis_no:'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">SOCSO No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->socso_no}}</span>
+                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Security Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">      {{ isset($employee->main_security_groups->name) ? $employee->main_security_groups->name : '' }}
-                                                 </span>
+                                                        <span class="field-value">      {!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}
+                                                                                                             </span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <span class="col-lg-5 p-3">Race</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->race}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Driver License No</span>
@@ -141,6 +141,11 @@
                                                 <span class="col-lg-5 p-3">Tax No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->tax_no}}</span>
+                                                </div>
+
+                                                <span class="col-lg-5 p-3">ID No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->code}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -246,6 +251,13 @@
                             <div id="ic-no-error" class="invalid-feedback"></div>
                         </div>
                     </div>
+                    <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="code"><strong>ID No</strong></label>
+                                <input id="code" type="text" class="form-control" placeholder="" value="" required>
+                                <div id="code-error" class="invalid-feedback"></div>
+                            </div>
+                        </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="dob"><strong>Date of Birth*</strong></label>
@@ -475,6 +487,8 @@
             editProfileId = currentData.id;
 
             $('#edit-profile-form #ic-no').val(currentData.ic_no);
+            
+            $('#edit-profile-form #code').val(currentData.code);
             $('#edit-profile-form #alt-dob').val(currentData.dob);
             $('#edit-profile-form #gender').val(currentData.gender);
             $('#edit-profile-form #contact-no').val(currentData.contact_no);
@@ -513,6 +527,7 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
+                    code: $('#edit-profile-form #code').val(),
                     ic_no: $('#edit-profile-form #ic-no').val(),
                     dob: $('#edit-profile-form #alt-dob').val(),
                     gender: $('#edit-profile-form #gender').val(),
@@ -548,6 +563,10 @@
                                         $('#edit-profile-form #ic-no').addClass('is-invalid');
                                         $('#edit-profile-form #ic-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'code':
+                                        $('#edit-profile-form #code').addClass('is-invalid');
+                                        $('#edit-profile-form #code-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;                                    
                                     case 'dob':
                                         $('#edit-profile-form #dob').addClass('is-invalid');
                                         $('#edit-profile-form #dob-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -615,6 +634,7 @@
     // GENERAL FUNCTIONS
     function clearProfilesModal(htmlId) {
         $(htmlId + ' #ic-no').val('');
+        $(htmlId + ' #code').val('');
         $(htmlId + ' #dob').val('');
         $(htmlId + ' #gender').val('');
         $(htmlId + ' #contact-no').val('');
@@ -629,6 +649,7 @@
         $(htmlId + ' #socso-no').val('');
 
         $(htmlId + ' #ic-no').removeClass('is-invalid');
+        $(htmlId + ' #code').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
         $(htmlId + ' #gender').removeClass('is-invalid');
         $(htmlId + ' #contact-no').removeClass('is-invalid');
@@ -644,6 +665,7 @@
     }
     function clearProfilesError(htmlId) {
         $(htmlId + ' #ic-no').removeClass('is-invalid');
+        $(htmlId + ' #code').removeClass('is-invalid');        
         $(htmlId + ' #dob').removeClass('is-invalid');
         $(htmlId + ' #gender').removeClass('is-invalid');
         $(htmlId + ' #contact-no').removeClass('is-invalid');

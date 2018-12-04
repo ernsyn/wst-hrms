@@ -97,6 +97,7 @@ class EmployeeController extends Controller
     {
         $profileUpdatedData = $request->validate([
             'ic_no' => 'required|numeric',
+            'code'=>'',
             'dob' => 'required|date',
             'gender' => 'required',
             'contact_no' => 'required|numeric',
@@ -288,7 +289,7 @@ class EmployeeController extends Controller
 
     public function getDataTableReportTo($id)
     {
-        $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', $id)->get();
+        $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', $id)->get();
         return DataTables::of($reportTos)->make(true);
     }
 
@@ -315,6 +316,7 @@ class EmployeeController extends Controller
 
 
         $validatedEmployeeData = $request->validate([
+            'code'=>'unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
             'company_id' => 'required',
@@ -337,6 +339,7 @@ class EmployeeController extends Controller
         DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
+
 
             $validatedEmployeeData['user_id'] = $user->id;
             $validatedEmployeeData['created_by'] = auth()->user()->id;

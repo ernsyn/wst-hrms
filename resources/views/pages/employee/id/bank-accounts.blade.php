@@ -136,7 +136,7 @@
             </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100" id="employee-bank-accounts-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-bank-accounts-table">
         <thead>
             <tr>
                 <th>No</th>

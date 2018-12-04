@@ -30,4 +30,11 @@ class EmployeeReportTo extends Model
         // return $this->belongsTo('App\Employee', 'report_to_emp_id');
     }
 
+    public function employee_report_to()
+    {
+        return $this->belongsTo('App\Employee', 'report_to_emp_id'); 
+        // return $this->belongsTo('App\Employee', 'report_to_emp_id');
+        // return $this->belongsTo('App\Employee', 'report_to_emp_id');
+    }
+
 }

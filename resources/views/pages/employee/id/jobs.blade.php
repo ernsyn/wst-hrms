@@ -11,7 +11,7 @@
                     </button>
         </div>
     </div> --}}
-    <table class="hrms-primary-data-table w-100" id="employee-jobs-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-jobs-table">
         <thead>
             <tr>
                 <th>No</th>

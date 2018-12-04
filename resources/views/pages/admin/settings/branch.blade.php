@@ -26,7 +26,7 @@
                         <th>No</th>
                         <th>Name</th>
                         <th>City</th>
-                        <th>Country</th>
+                 
                         <th>Phone</th>
                         <th>State</th>
                         <th>Action</th>
@@ -38,7 +38,6 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$branch['name']}}</td>
                         <td>{{$branch['city']}}</td>
-                        <td>{{$branch['country_code']}}</td>
                         <td>{{$branch['contact_no_primary']}}</td>
                         <td>{{$branch['state']}}</td>
                         <td>

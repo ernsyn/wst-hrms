@@ -47,7 +47,7 @@
                                 <label class="col-lg-3 col-form-label text-lg-right">Confirm Password*</label>
                                 <div class="col-lg-6">
                                     <input id="confirm-password" type="password" class="form-control{{ $errors->has('confirm_password') ? ' is-invalid' : '' }}" name="confirm_password"
-                                        required> @if ($errors->has('confirm_password'))
+                                        required data-parsley-equalto="#password"> @if ($errors->has('confirm_password'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('confirm_password') }}</strong>
                                     </span> @endif
@@ -84,6 +84,16 @@
                         <h3>Personal Details</h3>
                     </div>
                     <div class="col-lg-12">
+                            <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label text-lg-right">ID No*</label>
+                                    <div class="col-lg-6">
+                                        <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
+                                            required> @if ($errors->has('code'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('code') }}</strong>
+                                        </span> @endif
+                                    </div>
+                                </div>
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">IC No*</label>
                             <div class="col-lg-6">
