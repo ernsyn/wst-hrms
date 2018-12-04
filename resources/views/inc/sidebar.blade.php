@@ -2,7 +2,7 @@
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
-    @hasanyrole('super-admin|admin')
+    @hasanyrole('super-admin|admin|hr-exec')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -27,13 +27,13 @@
                 </a>
             </div>
             @endhasrole
-            @hasrole('admin')
+            @hasanyrole('admin|hr-exec')
             <div class="option row col mx-0">
                 <a href="{{ route('admin.dashboard') }}">
                     Admin
                 </a>
             </div>
-            @endhasrole
+            @endhasanyrole
         </div>
     </div>
     @endhasanyrole
@@ -106,19 +106,19 @@
             </ul>
 
         </li> --}}
-        @if(PayrollHelper::isKpiProposer())
-        <li class="menu-section {{ request()->is('payroll') ? 'active' : '' }}">
+        @if(AccessControllHelper::isKpiProposer())
+        <li class="menu-section {{ request()->is('payroll*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1">
-                        <i class="far fa-calendar-alt"></i>
+                        <i class="fas fa-dollar-sign"></i>
                     </div>
                     <div class="col-10">
                         Payroll
                     </div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('payroll') ? 'show' : '' }}" id="payrollSubmenu">
+            <ul class="collapse list-unstyled {{ request()->is('payroll*') ? 'show' : '' }}" id="payrollSubmenu">
                 <li class="menu-option {{ request()->is('payroll') ? 'active' : '' }}">
                     <a href="{{ route('payroll') }}">Payroll</a>
                 </li>
@@ -127,32 +127,11 @@
         </li>
         @endif
         
-        @hasrole('hr-exec')
-        <li class="menu-section {{ request()->is('payroll') ? 'active' : '' }}">
-            <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
-                <div class="row">
-                    <div class="col-1">
-                        <i class="far fa-calendar-alt"></i>
-                    </div>
-                    <div class="col-10">
-                        Payroll
-                    </div>
-                </div>
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('payroll') ? 'show' : '' }}" id="payrollSubmenu">
-                <li class="menu-option {{ request()->is('payroll') ? 'active' : '' }}">
-                    <a href="{{ route('payroll') }}">Payroll</a>
-                </li>
-            </ul>
-
-        </li>
-        @endhasrole
-        
         <li class="menu-section {{ request()->is('payslip.show') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payslipSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1">
-                        <i class="far fa-calendar-alt"></i>
+                        <i class="fas fa-file-invoice-dollar"></i>
                     </div>
                     <div class="col-10">
                         Payslip

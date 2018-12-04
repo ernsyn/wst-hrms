@@ -1,4 +1,4 @@
-@extends(PayrollHelper::isKpiProposer() || PayrollHelper::isHrExec() ? 'layouts.base' : 'layouts.admin-base')
+@extends(AccessControllHelper::isKpiProposer() ? 'layouts.base' : 'layouts.admin-base')
 @section('pageTitle', 'Payroll')
 @section('content')
 

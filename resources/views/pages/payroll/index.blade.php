@@ -1,5 +1,4 @@
-@extends(PayrollHelper::isKpiProposer() || PayrollHelper::isHrExec() ? 'layouts.base' : 'layouts.admin-base')
-
+@extends((AccessControllHelper::isKpiProposer() && !AccessControllHelper::isHrAdmin()) ? 'layouts.base' : 'layouts.admin-base')
 @section('content')
 
 <!-- todo: pigination, search -->
@@ -16,8 +15,8 @@
 			@endif 
 			
 			@if(session()->get('success'))
-			<div class="alert alert-success alert-dismissible fade show" role="alert">
-				{{ session()->get('success') }}
+			<div class="alert alert-primary alert-dismissible fade show" role="alert">
+				<span id="alert-message">{{ session()->get('success') }}</span>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -37,7 +36,6 @@
 				<thead>
 					<tr>
 						<th>No</th>
-						<th>Company</th>
 						<th>Payroll Month</th>
 						<th>Period</th>
 						<th>Action</th>
@@ -47,7 +45,6 @@
 					@foreach($payroll as $row)
 					<tr>
 						<td>{{ $loop->iteration }}</td>
-						<td>{{ $row->name }}</td>
 						<td>{{ DateHelper::dateWithFormat($row->year_month, 'Y-m') }}</td>
 						<td>{{ PayrollPeriodEnum::getDescription($row->period)}}</td>
 						<td>
@@ -75,56 +72,37 @@
 @section('scripts')
 <script>
 $('#payrollTable').DataTable({
-    responsive: true,
+	columnDefs: [
+	    { "orderable": false, "targets": [3] }
+	],
+	responsive: true,
     stateSave: true,
     dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
-        <'row'<'col-md-6'><'col-md-6'>>
-        <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
+    <'row'<'col-md-6'><'col-md-6'>>
+    <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
     buttons: [{
             extend: 'copy',
-            text: '<i class="fas fa-copy"></i>',
+            text: '<i class="fas fa-copy "></i>',
             className: 'btn-segment',
-            titleAttr: 'Copy',
-            exportOptions: {
-                columns: ':visible'
-            }
+            titleAttr: 'Copy'
         },
         {
             extend: 'colvis',
-            text: '<i class="fas fa-search"></i>',
+            text: '<i class="fas fa-search "></i>',
             className: 'btn-segment',
-            titleAttr: 'Show/Hide Column',
-            exportOptions: {
-                columns: ':visible'
-            }
+            titleAttr: 'Show/Hide Column'
         },
         {
             extend: 'csv',
-            text: '<i class="fas fa-file-alt"></i>',
+            text: '<i class="fas fa-file-alt "></i>',
             className: 'btn-segment',
-            titleAttr: 'Export CSV',
-            exportOptions: {
-                columns: ':visible'
-            }
-        },
-        {
-            extend: 'pdfHtml5',
-            download: 'open',
-            exportOptions: {
-                columns: ':visible'
-            },
-            text: '<i class="fas fa-file-pdf fa-fw"></i>',
-            className: 'btn-segment',
-            titleAttr: 'Export PDF'
+            titleAttr: 'Export CSV'
         },
         {
             extend: 'print',
-            text: '<i class="fas fa-print fa-fw"></i>',
+            text: '<i class="fas fa-print "></i>',
             className: 'btn-segment',
-            titleAttr: 'Print',
-            exportOptions: {
-                columns: ':visible'
-            }
+            titleAttr: 'Print'
         },
     ]
 

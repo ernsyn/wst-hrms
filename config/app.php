@@ -1,5 +1,7 @@
 <?php
 
+use App\Helpers\AccessControllHelper;
+
 return [
 
     /*
@@ -218,6 +220,7 @@ return [
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
         'PayrollReportEnum' => App\Enums\PayrollReportEnum::class,
+        'AccessControllHelper' => AccessControllHelper::class,
 
     ],
 

@@ -105,23 +105,5 @@ class PayrollHelper
             'UL'        => 'Unpaid Leave',
         ];
     }
-    
-    public static function isKpiProposer(){
-        $isKpiProposer = false;
-        $currentUser = auth()->user()->id;
-        $employeeReportTo = EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
-        ->where([['employees.user_id', $currentUser], ['kpi_proposer',1]])->get();
-        
-//         dd($currentUser);
-        if(count($employeeReportTo) > 0){
-            $isKpiProposer = true;
-        }
-//         dd($isKpiProposer);
-        return $isKpiProposer;
-    }
-    
-    public static function isHrExec() {
-        return Auth::user()->hasRole('hr-exec');
-    }
 }
 

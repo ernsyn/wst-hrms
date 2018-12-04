@@ -70,14 +70,14 @@
             </li>
             
             {{-- SECTION: Payroll --}}
-            <li class="menu-section {{ request()->is('payroll','government_report', 'payroll-report') ? 'active' : '' }}">
+            <li class="menu-section {{ request()->is('payroll*','government_report', 'payroll-report') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
                     <div class="row">
                         <div class="col-1"><i class="fas fa-dollar-sign"></i></div>
                         <div class="col-10">Payroll</div>
                     </div>
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('payroll','government_report', 'payroll-report') ? 'show' : '' }}" id="payrollSubmenu">
+                <ul class="collapse list-unstyled {{ request()->is('payroll*','government_report', 'payroll-report') ? 'show' : '' }}" id="payrollSubmenu">
                     <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
                         <a href="{{ route('payroll') }}">Payroll</a>
                     </li>
@@ -94,7 +94,7 @@
                     @endhasanyrole
                 </ul>
             </li>
-            
+            @hasanyrole('super-admin|admin')
             {{-- SECTION: E-Leave --}}
             <li class="menu-section {{ request()->is('admin/e-leave*') ? 'active' : '' }}">
                     <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
@@ -195,6 +195,7 @@
                     </li>
                 </ul>
             </li>
+            @endhasanyrole
 
         </ul>
    

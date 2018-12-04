@@ -45,6 +45,7 @@ use App\EmployeeAttendance;
 use App\SecurityGroup;
 use App\EmployeeSecurityGroup;
 use App\LeaveAllocation;
+use App\Helpers\AccessControllHelper;
 
 class PayrollController extends Controller
 {
@@ -95,7 +96,10 @@ class PayrollController extends Controller
     // Payroll listing
     public function index()
     {
+        //get company information based on user login
+        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
         $payroll = PayrollMaster::leftJoin('companies', 'companies.id', '=', 'payroll_master.company_id')
+            ->where('companies.id', $company->id)
             ->select('payroll_master.*','companies.name')->get();
 
         $period = PayrollPeriodEnum::choices();
@@ -254,41 +258,24 @@ class PayrollController extends Controller
     // Show payroll month
     public function show($id)
     {
-        // TODO: show by security group and KPI proposer
         /*
          * HR Admin - show all
          * HR Exec by security group
          * KPI Proposer 
          */
-//         $request[];
-//         $request->request->add([
-//             'payroll_id' => $id
-//         ]);
-        
-        $forms = [
-            'employee_id',
-            'name',
-            'position',
-            'joined_date',
-            'cb',
-            'bs',
-            'is',
-            'total_addition',
-            'total_deduction',
-            'thp',
-            'remark'
-        ];
 
-        // $list = $this->payrolltrx->all(true, $request->input());
         $isAdmin = Auth::user()->hasRole('admin'); 
-        $payrollId = @$request['payroll_id'];
-        $groupArray = @$request['group_array'];
-        $viewerEmployeeId = @$request['viewer_employee_id'];
-        $companyId = @$request['company_id'];
-        $isHrAdminOrHrExec = Auth::user()->hasAnyRole('admin|hr-exec'); 
+        $isHrExec = Auth::user()->hasAnyRole('hr-exec'); 
         $currentUser = auth()->user()->id;
-        $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',$currentUser)->select('security_group_id')->get();
+        $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();//EmployeeSecurityGroup::where('emp_id',$currentUser)->select('security_group_id')->get();
 //         dd($securityGroupAccess);
+        $payroll = PayrollMaster::where([
+            [
+                'id', $id
+            ]
+        ])->first();
+        $firstDayOfMonth = date('Y-m-d', strtotime($payroll->year_month. '-01'));
+            
         $list = PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employees as e', 'e.id', '=', 'payroll_trx.employee_id')
             ->join('users as u', 'u.id', '=', 'e.user_id') 
@@ -318,15 +305,25 @@ class PayrollController extends Controller
                 $query->where('payroll_trx.payroll_master_id', $id);
             }
         })
-        ->where(function($query) use($isHrAdminOrHrExec, $currentUser, $securityGroupAccess, $isAdmin){
-            if(!$isHrAdminOrHrExec) {
+        ->where(function ($query) use ($firstDayOfMonth) {
+            // Either default or month/year greater or same
+            $query->where('ej.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = e.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
+        })
+        ->where(function($query) use($isHrExec, $currentUser, $securityGroupAccess, $isAdmin){
+            if($isAdmin){
+                $query->where([
+                    ['ert.kpi_proposer', 1]
+                ]);
+            } else if($isHrExec) {
+                $query->where([
+                    ['ert.kpi_proposer', 1]
+                ])->whereIn('e.main_security_group_id', $securityGroupAccess);
+            }else {
                 $query->where([ 
                     ['ert.report_to_emp_id', $currentUser],
                     ['ert.kpi_proposer', 1]
                 ]);
-            } else if(!$isAdmin) {
-                $query->whereIn('e.main_security_group_id', $securityGroupAccess);
-            }
+            } 
         })
         ->whereNull('ert.deleted_at')
         ->orderby('payroll_trx.id', 'ASC')->get();
@@ -334,13 +331,8 @@ class PayrollController extends Controller
         // Condition
         // if(!count($list)) return redirect('/payroll')->with('error', 'Payroll not found.');
 
-        $payroll = PayrollMaster::where([
-            [
-                'id', $id
-            ]
-        ])->first();
-        $title = 'Payroll Month (' . DateHelper::dateWithFormat(@$payroll->year_month, 'Y-m') . ')';
-        return view('pages.payroll.show', compact('id', 'title', 'payroll', 'forms', 'list'));
+        $title = PayrollPeriodEnum::getDescription($payroll->period) .' '.DateHelper::dateWithFormat(@$payroll->year_month, 'M-Y');
+        return view('pages.payroll.show', compact('id', 'title', 'payroll', 'list'));
     }
 
     public function updatePayrollStatus(Request $request, $id)

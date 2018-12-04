@@ -2,6 +2,9 @@
 
 
 // Login
+use App\Helpers\PayrollHelper;
+use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
+
 Breadcrumbs::for('login', function ($trail) {
     $trail->push('Login', route('login'));
 });
@@ -579,7 +582,7 @@ Breadcrumbs::for('payroll.create', function ($trail) {
 
 Breadcrumbs::for('payroll.show', function ($trail) {
     $trail->parent('payroll');
-    $trail->push('Payroll Month', route('payroll'));
+    $trail->push('Payroll ', route('payroll'));
 });
 
 Breadcrumbs::for('payroll/show/{id}', function ($trail) {
