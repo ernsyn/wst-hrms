@@ -56,9 +56,10 @@
                             </div>
 
                             <div class="form-group row w-100">
-                                <label class="col-md-5 col-form-label">State*</label>
+                                <label class="col-md-5 col-form-label">State</label>
                                 <div class="col-md-7">
-                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
+                                        <select  class=" form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
+                                                <option value="">Please Select</option>
                                             @foreach(App\Constants\MalaysianStates::$all as $state)
                                             <option value="{{ $state }}">{{ $state }}</option value="">
                                             @endforeach
@@ -74,7 +75,7 @@
                             </div>
     
                                     <div class="form-group row w-100">
-                                            <label class="col-md-5 col-form-label">Note*</label>
+                                            <label class="col-md-5 col-form-label">Note</label>
                                             <div class="col-md-7">
                                                 <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder=""
                                                     name="note" value="{{ old('note') }}" required>
@@ -113,5 +114,30 @@
         changeYear: true,
         yearRange: "-80:+0"
     });
+</script>
+<script type="text/javascript">
+
+
+$('.itemName').select2({
+  placeholder: 'Select an item',
+  ajax: {
+    url: '/select2-autocomplete-ajax',
+    dataType: 'json',
+    delay: 250,
+    processResults: function (data) {
+      return {
+        results:  $.map(data, function (item) {
+              return {
+                  text: item.name,
+                  id: item.id
+              }
+          })
+      };
+    },
+    cache: true
+  }
+});
+
+
 </script>
 @append

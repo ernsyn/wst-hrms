@@ -27,7 +27,8 @@ class Employee extends Model
         'driver_license_no',
         'driver_license_expiry_date',
         'created_by',
-        'main_security_group_id'
+        'main_security_group_id',
+        'code'
     ];
 
     protected $dates = [
@@ -47,9 +48,7 @@ class Employee extends Model
 
     public function report_to_emp_id()
     {
-        return $this->belongsTo('App\EmployeeReportTo', 'user_id', 'emp_id');
-    }
-
+		return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');    }
     public function report_to()
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id', 'report_to_emp_id');

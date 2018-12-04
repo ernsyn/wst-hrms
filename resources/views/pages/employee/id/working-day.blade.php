@@ -10,7 +10,7 @@
             </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100" id="warking-day-table">
+    <table class="hrms-primary-data-table table w-100" id="working-day-table">
         <thead>
             <tr>
                 <th>Monday</th>
