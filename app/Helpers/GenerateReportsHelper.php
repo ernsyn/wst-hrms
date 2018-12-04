@@ -1037,12 +1037,12 @@ class GenerateReportsHelper
                 DB::raw('min(payroll_master.start_date) as remuneration_start_date'),
                 DB::raw('max(payroll_master.end_date) as remuneration_end_date')
             )
-            ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
-            ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
-            ->join('employees', 'payroll_trx.employee_id', 'employees.id')
-            ->join('countries', 'employees.nationality', 'countries.id')
-            ->join('employee_positions', 'employee_jobs.emp_mainposition_id', 'employee_positions.id')
-            ->join('users', 'employees.user_id', 'users.id')
+            ->leftjoin('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->leftjoin('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
+            ->leftjoin('employees', 'payroll_trx.employee_id', 'employees.id')
+            ->leftjoin('countries', 'employees.nationality', 'countries.id')
+            ->leftjoin('employee_positions', 'employee_jobs.emp_mainposition_id', 'employee_positions.id')
+            ->leftjoin('users', 'employees.user_id', 'users.id')
             ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id');
 
             //filter
