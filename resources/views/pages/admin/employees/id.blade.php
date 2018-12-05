@@ -34,8 +34,11 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">{!! $employee->nationality ? $employee->nationality:'<strong>(not set)</strong>' !!}</span>
+                
+                            <span class="field-value">      {!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
+                            </span>
                         </div>
+                        
                     </div>
                 </div>
                 <div id="end-btn-group">
