@@ -85,7 +85,7 @@ class PayrollReportController extends Controller
                 return redirect($request->server('HTTP_REFERER'))->withErrors([$error]);
             }
         } else {
-            $msg = 'Report ' . $validated['year_month'] . ' does not exist.';
+            $msg = 'Report ' . $request['year_month'] . ' does not exist.';
             return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
         }
 //         dd($payroll);
@@ -181,8 +181,7 @@ class PayrollReportController extends Controller
                 $report_list = $this->report->find_by_company_id($company->id, $filter_data);
                 
                 $document_info = $this->get_document_html($filter_data['type'], $company, $report_list, $extra);
-                $file_name = 'doc1.pdf';
-                $request_data['file'] = $file_name;
+//                 $request_data['file'] = $file_name;
                 
                 switch ($filter_data['type']) {
                     case '1':
@@ -252,16 +251,11 @@ class PayrollReportController extends Controller
 //         $mpdf->Output();
 //         dd('ok');
 //         dd($pdf_format);
-        $mpdf = new \Mpdf\Mpdf($pdf_format);
+        $mpdf = new \Mpdf\Mpdf([$pdf_format, ['tempDir' => storage_path("temp")]]);
         $mpdf->SetHTMLHeader($header);
         $mpdf->writeHTML($css,1);
         $mpdf->writeHTML($body,2);
         $mpdf->Output($file_name, Destination::DOWNLOAD);
-//         if(!@$file_name) {
-//             $mpdf->output();
-//         } else {
-//             $mpdf->output($file_name);//, \Mpdf\Output\Destination::FILE);
-//         }
     }
     
     private function get_document_html($document_type, $company, $list, $extra = null)

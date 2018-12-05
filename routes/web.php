@@ -483,29 +483,22 @@ Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-ad
 /**
  * Payroll related route
  */
-/* Route::group([
-    'middleware' => [
-        'auth',
-        'role:super-admin|admin|hr-exec'
-    ]
-], function () { */
-    Route::resource('payroll', 'Payroll\PayrollController');
-    Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');
-    Route::post('payroll/store', 'Payroll\PayrollController@store')->name('payroll.store');
-    Route::get('payroll/{id}', 'Payroll\PayrollController@show')->name('payroll.show');
-    // Route::get('/payroll/show/{id}', 'Payroll\PayrollController@show')->name('payroll/show/{id}');
-    Route::post('/payroll/status/{id}', 'Payroll\PayrollController@updatePayrollStatus')->name('payroll.status.update');
-    Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
-    Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
-    Route::get('/payroll/create', 'Payroll\PayrollController@create')->name('payroll.create');
-    
-    Route::get('payroll-report', 'Payroll\PayrollController@showReport')->name('payroll.report.show');
-    Route::post('/payroll/generate-report', 'Payroll\PayrollController@generateReport')->name('payroll.generate-report');
-    Route::post('/report/generate', 'Payroll\PayrollReportController@export_report')->name('report.generate');
-    
-    Route::get('/payslip/show', 'Payroll\PayrollController@showPayslip')->name('payslip.show');
-    Route::post('/payslip/download', 'Payroll\PayrollController@downloadPayslip')->name('payslip.download');
+Route::resource('payroll', 'Payroll\PayrollController');
+Route::get('payroll', 'Payroll\PayrollController@index')->name('payroll');
+Route::post('payroll/store', 'Payroll\PayrollController@store')->name('payroll.store');
+Route::get('payroll/{id}', 'Payroll\PayrollController@show')->name('payroll.show');
+// Route::get('/payroll/show/{id}', 'Payroll\PayrollController@show')->name('payroll/show/{id}');
+Route::post('/payroll/status/{id}', 'Payroll\PayrollController@updatePayrollStatus')->name('payroll.status.update');
+Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->name('payroll.trx.show');
+Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
+Route::get('/payroll/create', 'Payroll\PayrollController@create')->name('payroll.create');
 
-    Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
-    Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');
-// });
+Route::get('payroll-report', 'Payroll\PayrollController@showReport')->name('payroll.report.show');
+Route::post('/payroll/generate-report', 'Payroll\PayrollController@generateReport')->name('payroll.generate-report');
+Route::post('/report/generate', 'Payroll\PayrollReportController@export_report')->name('report.generate');
+
+Route::get('/payslip/show', 'Payroll\PayrollController@showPayslip')->name('payslip.show');
+Route::post('/payslip/download', 'Payroll\PayrollController@downloadPayslip')->name('payslip.download');
+
+Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
+Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');

@@ -33,7 +33,6 @@ use Illuminate\Support\Facades\DB;
 use App\Eis;
 use App\Socso;
 use App\Pcb;
-use App\Enums\PayrollReportEnum;
 use App\Http\Controllers\Popo\payrollreport\PayrollReport;
 use PDF;
 use App\Repositories\Payroll\ReportRepository;
@@ -42,14 +41,10 @@ use App\Addition;
 use App\Deduction;
 use App\LeaveRequestApproval;
 use App\EmployeeAttendance;
-use App\SecurityGroup;
-use App\EmployeeSecurityGroup;
-use App\LeaveAllocation;
 use App\Helpers\AccessControllHelper;
 
 class PayrollController extends Controller
 {
-
     protected $payrollMaster;
     protected $payrollService;
     protected $epfRepository;
@@ -96,6 +91,9 @@ class PayrollController extends Controller
     // Payroll listing
     public function index()
     {
+        //check if user has admin or hr-exec role
+        AccessControllHelper::hasAnyRoles('admin|hr-exec');
+        
         //get company information based on user login
         $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
         $payroll = PayrollMaster::leftJoin('companies', 'companies.id', '=', 'payroll_master.company_id')
@@ -109,6 +107,9 @@ class PayrollController extends Controller
     // Add payroll form
     public function create()
     {
+        //check if user has admin role
+        AccessControllHelper::hasAnyRoles('admin');
+        
         $period = PayrollPeriodEnum::choices();
         return view('pages.payroll.create', ['period' => $period]);
     }
@@ -116,10 +117,10 @@ class PayrollController extends Controller
     // Add payroll
     public function store(PayrollRequest $request)
     {
-        $currentUser = auth()->user()->id;
+        AccessControllHelper::hasAnyRoles('admin');
+        $currentUser = Auth::id();
         // validate and store
         $validated = $request->validated();
-        // TODO: refactor to service
         $data = array(
             'year_month' => $validated['year_month'].'-01', 
             'period' => $validated['period'] 
@@ -127,7 +128,7 @@ class PayrollController extends Controller
 
         $payrollPeriodExists = $this->payrollService->isPayrollExists($data);
         if ($payrollPeriodExists) {
-            $msg = 'Payroll month ' . $validated['year_month'] . ' has already been created.';
+            $msg = 'Payroll '.PayrollPeriodEnum::getDescription($validated['period']).' '.DateHelper::dateWithFormat($validated['year_month'], 'M-Y'). ' has already been created.';
             return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
         }
 
@@ -160,19 +161,15 @@ class PayrollController extends Controller
             $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
         })
         ->get();
-          
+//      dd($employeeList);
         foreach ($employeeList as $employee) {
             // Step 4. Find employee's payroll's required info.
-//             dd($employee);
-//             $employeeJob = $employee->employee_jobs->sortByDesc('start_date', SORT_REGULAR)->first();
             $employeeJob = EmployeeJob::find($employee->id);
-//             dd($employeeJob);
             $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
-            // dd($basicSalary);
             $costCentre = CostCentre::where('id', $employeeJob->cost_centre_id)->get();
             $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
             // dd($seniorityPay);
-            //TODO:
+            //TODO: for resign employee
             $payback = PayrollHelper::getPayback($employee, $validated['year_month']);
 
             $epfFilter = array();
@@ -249,7 +246,7 @@ class PayrollController extends Controller
                 $this->payrollTrxDeductionRepository->storeArray($deductionArray);
             }
         }
-        
+
         DB::commit();
         return redirect('/payroll')->with('success', 'Payroll month has been added');
 

@@ -32,9 +32,9 @@ class EloquentPayroll implements PayrollRepository
             ['year_month', $prevPayrollMonth],
             ['period', $period]
         ])->get();
-        
+
         if (count($prevPayroll) > 0){
-            $startDate = date('Y-m-d', strtotime($prevPayroll->end_date.' -1 days'));
+            $startDate = date('Y-m-d', strtotime($prevPayroll->first()->end_date.' -1 days'));
         } else {
             $startDate = date('Y-m-d', strtotime('-1 months'));
         }

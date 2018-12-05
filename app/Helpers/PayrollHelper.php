@@ -28,7 +28,7 @@ class PayrollHelper
         return $basicSalary;
     }
     
-    public static function calculateSeniorityPay($employee, $payrollMonth, $jobMaster)
+    public static function calculateSeniorityPay($employee, $payrollMonth, $costCentre)
     {
         // Start date of the month
         $beginDate = date_create($payrollMonth.'-01');
@@ -42,7 +42,7 @@ class PayrollHelper
         // Else set to 0.00 and let admin to enter later
         $seniorityPay = 0.00;
 //         dd($diffYears);
-        if($jobMaster->first()->seniority_pay == 'Auto' && $diffYears > 0) {
+        if($costCentre->first()->seniority_pay == 'Auto' && $diffYears > 0) {
             $seniorityPay = ($diffYears > 0)? getenv('SENIORITY_PAY') * $diffYears : getenv('SENIORITY_PAY');
         }
 //         dd($seniorityPay);
