@@ -162,7 +162,7 @@
                                 <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
                                     <option value="">Select Nationality</option>
                                     @foreach($countries as $country)
-                                    <option value="{{ $country->citizenship }}" {{ old('nationality') == $country->citizenship ? 'selected' : ''}}>{{ $country->citizenship }}</option>
+                                    <option value="{{ $country->id }}" {{ old('nationality') == $country->citizenship ? 'selected' : ''}}>{{ $country->citizenship }}</option>
                                     @endforeach
                                 </select> @if ($errors->has('nationality'))
                                 <span class="invalid-feedback" role="alert">
