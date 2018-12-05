@@ -721,14 +721,4 @@ class LeaveService
             'extension' => $extension
         ];
     }
-
-    public static function getEmployeeLeaves($emp_id, $status) {
-        return LeaveRequest::where('emp_id', $emp_id)
-            ->where('status', $status)
-            ->get();
-    }
-
-    public static function getLeaveRequestSingle($id) {
-        return LeaveRequest::where('id', $id)->first();
-    }
 }
