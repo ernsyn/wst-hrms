@@ -16,6 +16,7 @@
                 <th>Type</th>
                 <th>Note</th>
                 <th>KPI Proposer</th>
+                <th>Report To Level</th>
                 {{-- <th>Action</th> --}}
             </tr>
         </thead>
@@ -196,7 +197,7 @@
                     }
                 },
                 {
-                    "data": "report_to.user.name"
+                    "data": "employee_report_to.user.name"
                 },
                 {
                     "data": "type"
@@ -206,7 +207,22 @@
                 },
                 {
                     "data": "kpi_proposer",
+
+                    render: function(data) {
+                        if(data ==1) {
+                        return '<i class="fas fa-check-circle" style="color:green"></i>'
+
+                        }
+                        else {
+                        return '<i class="fas fa-times-circle" style="color:red"></i>'
+                        }
+
+                    },
+                    defaultContent: ''
                 },
+                {
+                "data": "report_to_level",
+                }
                 // {
                 //     "data": null,
                 //     render: function (data, type, row, meta) {

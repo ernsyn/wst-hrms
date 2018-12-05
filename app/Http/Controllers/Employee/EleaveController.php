@@ -225,17 +225,11 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
-        public function ajaxGetLeaveRequestSingle($id)
-        {
-            dd("hellop");
-            $leaveRequest = LeaveService::getLeaveRequestSingle($id);
-
-            return response()->json($leaveRequest);
-        }
-
         public function ajaxGetEmployeeLeaves($status)
         {
-            $leaveRequest = LeaveService::getEmployeeLeaves(Auth::user()->employee->id, $status);
+            $leaveRequest = LeaveRequest::where('emp_id', Auth::user()->employee->id)
+            ->where('status', $status)
+            ->get();
             
             $result = array();
 
@@ -261,6 +255,15 @@ class ELeaveController extends Controller
             }
 
             return $result;
+        }
+
+        public function ajaxGetLeaveRequestSingle($id)
+        {
+            $leaveRequest = LeaveRequest::where('id', $id)->first();
+
+            // dd($leaveRequest);
+
+            return response()->json($leaveRequest);
         }
 
         public function ajaxGetEmployeeWorkingDays()
@@ -339,10 +342,10 @@ class ELeaveController extends Controller
 
         public function ajaxPostEditLeaveRequest(Request $request, $id)
         {
-            $leaveRequestUpdateData = $request->validate([
+            $requestData = $request->validate([
                 'start_date' => 'required',
                 'end_date' => 'required',
-                'leave_type' => 'required',
+                'leave_type_id' => 'required',
                 'am_pm' => '',
                 'reason' => 'required',
                 'attachment' => ''
@@ -358,9 +361,16 @@ class ELeaveController extends Controller
                 $attachment_data_url = $requestData['attachment'];
             }
 
-            LeaveRequest::where('id', $id)->update($leaveRequestUpdateData);
+            LeaveRequest::where('id', $id)->update($requestData);
 
-            return response()->json(['success'=>'Working Day was successfully updated.']);
+            return response()->json(['success'=>'Leave Request was successfully updated.']);
+        }
+
+        public function ajaxCancelLeaveRequest($id)
+        {
+            LeaveRequest::where('id', $id)->delete();
+
+            return response()->json(['success'=>'Leave Request was successfully cancelled.']);
         }
 
         public function ajaxPostCheckLeaveRequest(Request $request)
