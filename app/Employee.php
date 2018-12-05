@@ -94,6 +94,15 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeSecurityGroup', 'emp_id');
 
     }
+
+    public function employee_countries()
+
+    {
+ 
+        return $this->belongsTo('App\Country', 'nationality');
+
+    }
+
     public function employee_experiences()
     {
         return $this->hasMany('App\EmployeeExperience', 'emp_id');
