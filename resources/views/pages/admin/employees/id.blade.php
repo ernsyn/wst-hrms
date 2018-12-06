@@ -34,11 +34,11 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                
+
                             <span class="field-value">      {!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
                             </span>
                         </div>
-                        
+
                     </div>
                 </div>
                 <div id="end-btn-group">
@@ -363,18 +363,18 @@
                             <div id="socso-no-error" class="invalid-feedback"></div>
                         </div>
                     </div>
-
                     <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="socso-no"><strong>Security Group Id*</strong></label>
-                                <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
-                                        @foreach(App\SecurityGroup::all() as $company)
-                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                        @endforeach
-                                    </select>
-                                <div id="main-security-group-id-error" class="invalid-feedback"></div>
-                            </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="main-security-group-id"><strong>Security Group Id*</strong></label>
+                            <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                                <option value=""></option>
+                                @foreach(App\SecurityGroup::all() as $company)
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                @endforeach
+                            </select>
+                            <div id="main-security-group-id-error" class="invalid-feedback"></div>
                         </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="edit-profile-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
@@ -490,7 +490,7 @@
             editProfileId = currentData.id;
 
             $('#edit-profile-form #ic-no').val(currentData.ic_no);
-            
+
             $('#edit-profile-form #code').val(currentData.code);
             $('#edit-profile-form #alt-dob').val(currentData.dob);
             $('#edit-profile-form #gender').val(currentData.gender);
@@ -544,7 +544,7 @@
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),
                     socso_no: $('#edit-profile-form #socso-no').val(),
-                    
+
                     main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
                 },
                 success: function(data) {
@@ -569,7 +569,7 @@
                                     case 'code':
                                         $('#edit-profile-form #code').addClass('is-invalid');
                                         $('#edit-profile-form #code-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;                                    
+                                    break;
                                     case 'dob':
                                         $('#edit-profile-form #dob').addClass('is-invalid');
                                         $('#edit-profile-form #dob-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -668,7 +668,7 @@
     }
     function clearProfilesError(htmlId) {
         $(htmlId + ' #ic-no').removeClass('is-invalid');
-        $(htmlId + ' #code').removeClass('is-invalid');        
+        $(htmlId + ' #code').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
         $(htmlId + ' #gender').removeClass('is-invalid');
         $(htmlId + ' #contact-no').removeClass('is-invalid');
@@ -742,7 +742,7 @@
                     }
                 }
             });
-            
+
         });
 
         function clearChangePasswordModal(htmlId) {
@@ -752,15 +752,15 @@
         // $('#employee-profile-details #emp-roles-btn').click(function (e) {
         //     console.log("ON: Roles Clicked!");
         // });
-        
+
         // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
         //     console.log("ON: Change Password Clicked!");
         // });
         // var asdsf = $('#save-role-changes-btn')
         // console.log("asdad", asdsf);
-        
+
         $('#save-role-changes-btn').click(function () {
-            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"), 
+            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"),
             function (data) {
                 showAlert(data.success);
                 $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');

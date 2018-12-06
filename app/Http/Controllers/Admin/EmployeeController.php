@@ -328,7 +328,8 @@ class EmployeeController extends Controller
             'eis_no' => 'required|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable|date'
+            'driver_license_expiry_date' => 'nullable|date',
+            'main_security_group_id'=>'nullable'
         ]);
 
 
@@ -353,8 +354,7 @@ class EmployeeController extends Controller
         $validatedEmployeeData['socso_no'] = $validated['socso_no'];
         $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
         $validatedEmployeeData['driver_license_expiry_date'] = $validated['driver_license_expiry_date'];
-
-
+        $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
         // $validatedEmployeeData = $request->validate([
         // ]);
