@@ -125,7 +125,7 @@
                             <div class="col-md-6">
                                 <input id="dob-date" type="text" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" placeholder="Date of Birth" aria-label="Date of Birth" aria-describedby="dob-icon"
                                     name="dob" value="{{ old('dob') != null ? Carbon\Carbon::parse(old('dob'))->format('d/m/Y'): '' }}" readonly>
-                                <input id="alt-dob-date" type="text" class="form-control" name="dob" value="{{ old('dob') }}">
+                                <input id="alt-dob-date" type="text" class="form-control" name="dob" value="{{ old('dob') }}" hidden>
                                 @if ($errors->has('dob'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('dob') }}</strong>
