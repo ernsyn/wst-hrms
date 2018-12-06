@@ -26,9 +26,9 @@
                         <th>No</th>
                         <th>Name</th>
                         <th>Category</th>
-                        <th>Salary</th>
-                        <th>Employer Contribution</th>
-                        <th>Employee Contribution</th>
+                        <th>Salary (RM)</th>
+                        <th>Employer Contribution (RM)</th>
+                        <th>Employee Contribution (RM)</th>
                         {{--
                         <th>Total</th> --}}
                         <th>Action</th>
@@ -40,7 +40,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$epf['name']}}</td>
                         <td>{{$epf['category']}}</td>
-                        <td>RM {{$epf['salary']}}</td>
+                        <td>{{$epf['salary']}}</td>
                         <td>{{$epf['employer']}}</td>
                         <td>{{$epf['employee']}}</td>
                         {{--

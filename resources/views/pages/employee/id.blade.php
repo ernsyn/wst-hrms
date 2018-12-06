@@ -38,12 +38,12 @@
                         </div>
                     </div>
                 </div>
-                {{-- Ignore --}} {{--
                 <div id="end-btn-group">
-                    <button type="button" class="btn btn-primary rounded">
-                        <i class="fas fa-pen"></i>
+                    <button id="emp-change-password-btn" data-toggle="modal" data-target="#change-password-popup" type="button" class="btn btn-sm text-white rounded">
+                        {{-- <i class="fas fa-pen"></i> --}}
+                        Change Password
                     </button>
-                </div> --}}
+                </div>
             </div>
 
         </div>
@@ -323,6 +323,54 @@
         </div>
     </div>
 </div>
+
+{{-- Change Password --}}
+<div class="modal fade" id="change-password-popup" tabindex="-1" role="dialog" aria-labelledby="change-password-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="change-password-label">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <form id="change-password-form">
+                <div class="modal-body">
+                    @csrf
+                    {{-- <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Current Password*</strong></label>
+                            <input name="current_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="current-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>New Password*</strong></label>
+                            <input name="new_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="new-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Confirm New Password*</strong></label>
+                            <input name="confirm_new_password" type="password" class="form-control" placeholder="" value="" required>
+                            <div id="confirm-new-password-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="change-password-submit" type="submit" class="btn btn-primary">
+                        {{ __('Submit') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -537,5 +585,57 @@
             </div>`)
     }
 
+</script>
+<script>
+    $(function () {
+        $('#change-password-submit').click(function(e){
+            e.preventDefault();
+            $(e.target).attr('disabled', true);
+
+            $.ajax({
+                url: "{{ route('employee.change-password.post', ['id' => $employee->id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    new_password: $('#change-password-form input[name=new_password]').val(),
+                    confirm_new_password: $('#change-password-form input[name=confirm_new_password]').val(),
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    clearChangePasswordModal('#change-password-form');
+                    $('#change-password-popup').modal('toggle');
+                    $(e.target).removeAttr('disabled');
+                },
+                error: function(xhr) {
+                    clearChangePasswordModal('#change-password-form');
+                    $(e.target).removeAttr('disabled');
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'new_password':
+                                        $('#change-password-form input[name=new_password]').addClass('is-invalid');
+                                        $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+
+        function clearChangePasswordModal(htmlId) {
+            let form = $(htmlId);
+            form.find("input[name=new_password]").removeClass('is-invalid');
+        }
+
+
+
+    });
 </script>
 @append
