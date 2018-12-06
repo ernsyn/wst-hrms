@@ -86,6 +86,7 @@ class EmployeeController extends Controller
 
 
         }])
+
         ->find($id);
 
 
@@ -106,11 +107,12 @@ class EmployeeController extends Controller
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
+
             'ic_no' => 'required|numeric',
             'code'=>'',
             'dob' => 'required|date',
             'gender' => 'required',
-            'contact_no' => 'required|numeric',
+
             'marital_status' => 'required',
             'race' => 'required|alpha',
             'total_children' => 'nullable|numeric',
@@ -120,7 +122,9 @@ class EmployeeController extends Controller
             'tax_no' => 'required',
             'eis_no' => 'required',
             'socso_no' => 'required',
-            'main_security_group_id'=>''
+            'main_security_group_id'=>'',
+          'contact_no' => 'required',
+            // 'contact_no' => 'required|regex:/^[0-9]+-/',
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
