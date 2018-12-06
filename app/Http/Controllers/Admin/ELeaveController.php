@@ -143,7 +143,7 @@ public function postAddPublicHoliday(Request $request)
 
    
     ]);
-
+    $publicHolidayData['state'] = implode(",", $request->state);
 
     $datetime1 = strtotime($publicHolidayData['start_date']);
     $datetime2 = strtotime($publicHolidayData['end_date']);  
