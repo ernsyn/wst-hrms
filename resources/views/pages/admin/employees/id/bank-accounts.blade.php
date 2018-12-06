@@ -134,7 +134,7 @@
             </button>
         </div>
     </div>
-    <table class="thrms-primary-data-table table w-100" id="employee-bank-accounts-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-bank-accounts-table">
         <thead>
             <tr>
                 <th>No</th>

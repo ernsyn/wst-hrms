@@ -133,7 +133,7 @@ class EmployeeController extends Controller
         ]);
 
         $employee = Employee::where('id', $id)->first();
-        
+
         // dd(bcrypt($data['new_password']));
 
         // if (!(Hash::check($data['current_password'], $employee->user->password))) {
@@ -307,15 +307,11 @@ class EmployeeController extends Controller
 
     protected function postAdd(Request $request)
     {
-        $validatedUserData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|min:5',
             'email' => 'required|unique:users|email',
             'password' => 'required|required_with:confirm_password|same:confirm_password',
-        ]);
-        $validatedUserData['password'] = Hash::make($validatedUserData['password']);
 
-
-        $validatedEmployeeData = $request->validate([
             'code'=>'unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
@@ -323,17 +319,45 @@ class EmployeeController extends Controller
             'dob' => 'required|date',
             'gender' => 'required',
             'race' => 'required',
-            'nationality' => 'nullable',
+            'nationality' => 'required',
             'marital_status' => 'required',
             'total_children' => 'nullable|numeric',
-            'ic_no' => 'required',
-            'tax_no' => 'required',
-            'epf_no' => 'required',
-            'eis_no' => 'required',
-            'socso_no' => 'required',
+            'ic_no' => 'required|unique:employees,ic_no',
+            'tax_no' => 'required|unique:employees,tax_no|numeric',
+            'epf_no' => 'required|unique:employees,epf_no|numeric',
+            'eis_no' => 'required|unique:employees,eis_no|numeric',
+            'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable|date'
+            'driver_license_expiry_date' => 'nullable|date',
+            'main_security_group_id'=>'nullable'
         ]);
+
+
+        $validatedUserData['name'] = $validated['name'];
+        $validatedUserData['email'] = $validated['email'];
+        $validatedUserData['password'] = Hash::make($validated['password']);
+
+        $validatedEmployeeData['code'] = $validated['code'];
+        $validatedEmployeeData['contact_no'] = $validated['contact_no'];
+        $validatedEmployeeData['address'] = $validated['address'];
+        $validatedEmployeeData['company_id'] = $validated['company_id'];
+        $validatedEmployeeData['dob'] = $validated['dob'];
+        $validatedEmployeeData['gender'] = $validated['gender'];
+        $validatedEmployeeData['race'] = $validated['race'];
+        $validatedEmployeeData['nationality'] = $validated['nationality'];
+        $validatedEmployeeData['marital_status'] = $validated['marital_status'];
+        $validatedEmployeeData['total_children'] = $validated['total_children'];
+        $validatedEmployeeData['ic_no'] = $validated['tax_no'];
+        $validatedEmployeeData['tax_no'] = $validated['tax_no'];
+        $validatedEmployeeData['epf_no'] = $validated['epf_no'];
+        $validatedEmployeeData['eis_no'] = $validated['eis_no'];
+        $validatedEmployeeData['socso_no'] = $validated['socso_no'];
+        $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
+        $validatedEmployeeData['driver_license_expiry_date'] = $validated['driver_license_expiry_date'];
+        $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
+
+        // $validatedEmployeeData = $request->validate([
+        // ]);
         // dd($validatedEmployeeData);
 
         DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
@@ -1009,7 +1033,7 @@ class EmployeeController extends Controller
                     'date' => $date->toFormattedDateString(),
                     'type' => 'holiday',
                     'name' => $holiday->name
-                ]; 
+                ];
             } else {
                 $leaveRequest = $this->isOnLeave($leaveRequests, $date);
                 if(!empty($leaveRequest)) {
@@ -1017,14 +1041,14 @@ class EmployeeController extends Controller
                         'date' => $date->toFormattedDateString(),
                         'type' => 'leave',
                         'name' => $leaveRequest->leave_type->name,
-                    ]; 
+                    ];
                 } else {
                     if($future) {
                         $days[] = [
                             'date' => $date->toFormattedDateString(),
                             'type' => 'future',
                             'name' => 'Future Date'
-                        ]; 
+                        ];
                     } else {
                         $attendance = $this->hasAttendance($attendances, $date);
                         if(!empty($attendance)) {
@@ -1038,20 +1062,20 @@ class EmployeeController extends Controller
                                 'clock_out_status' => $attendance->clock_out_status,
                                 'clock_out_time' => $attendance->clock_out_time,
                                 'clock_out_address' => $attendance->clock_out_address,
-                            ]; 
+                            ];
                         } else {
-                           
+
                             $days[] = [
                                 'date' => $date->toFormattedDateString(),
                                 'type' => 'missing',
                                 'name' => "Missing Attendance",
-                            ]; 
-                            
+                            ];
+
                         }
-                    } 
+                    }
                 }
-                
-            } 
+
+            }
 
             if($date->isToday()) {
                 $future = true;
@@ -1085,7 +1109,7 @@ class EmployeeController extends Controller
         if($workingDays->saturday > 0) {
             array_push($arr, Carbon::SATURDAY);
         }
-        
+
         return $arr;
     }
 
