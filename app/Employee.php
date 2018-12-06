@@ -49,7 +49,13 @@ class Employee extends Model
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
     }
-    
+    public function employee_confirmed()
+    {
+        return $this->hasMany('App\EmployeeJob', 'emp_id');
+
+        $skips = ["[","]","\""];
+        return str_replace($skips, ' ',$this->tickets->pluck('start_date'));
+    }
 
 
     public function employee_report_to()
@@ -98,7 +104,7 @@ class Employee extends Model
     public function employee_countries()
 
     {
- 
+
         return $this->belongsTo('App\Country', 'nationality');
 
     }
