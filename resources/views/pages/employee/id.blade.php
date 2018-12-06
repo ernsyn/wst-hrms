@@ -111,6 +111,16 @@
                                                         <span class="field-value">      {!! isset($employee->main_security_groups->name) ? $employee->main_security_groups->name:'<strong>(not set)</strong>' !!}
                                                  </span>
                                                 </div>
+
+                                                <span class="col-lg-5 p-3">Confirmation Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Basic Salary</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                        <span class="field-value">      {!! isset($employee->main_security_groups->name) ? $employee->main_security_groups->name:'<strong>(not set)</strong>' !!}
+                                                 </span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -134,6 +144,15 @@
                                                 <span class="col-lg-5 p-3">Tax No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->tax_no}}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Joined Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Resignation Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                        <span class="field-value">      {!! isset($employee->main_security_groups->name) ? $employee->main_security_groups->name:'<strong>(not set)</strong>' !!}
+                                                 </span>
                                                 </div>
                                             </div>
                                         </div>

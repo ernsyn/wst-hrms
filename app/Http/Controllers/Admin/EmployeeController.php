@@ -78,7 +78,17 @@ class EmployeeController extends Controller
     }
     public function display($id)
     {
-        $employee = Employee::with('user', 'employee_jobs')->find($id);
+        $employee = Employee::with('user')
+        ->with(['employee_confirmed' => function($query) use ($id)
+        {
+            $query->where('status','=','confirmed-employment')
+            ->where ('emp_id','=',$id);
+
+
+        }])
+        ->find($id);
+
+
 
         // $bank_list = Bank::all();
         // $cost_centre = CostCentre::all();
