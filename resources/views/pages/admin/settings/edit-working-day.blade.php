@@ -23,6 +23,7 @@
                         <div class="col-md-12">
                                 <select id="monday" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
                                     placeholder="" name="monday" required>
+                                    <option value="0" {{ $working_day->monday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
                                     <option value="0" {{ $working_day->monday == 0 ? 'selected' : '' }}>0 - Off Day</option>
                                     <option value="0.5" {{ $working_day->monday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
                                     <option value="1" {{ $working_day->monday == 1 ? 'selected' : '' }}>1 - Full Day</option>
@@ -42,6 +43,7 @@
                         <div class="col-md-12">
                                 <select id="tuesday" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
                                     placeholder="" name="tuesday" required>
+                                    <option value="0" {{ $working_day->tuesday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
                                     <option value="0" {{ $working_day->tuesday == 0 ? 'selected' : '' }}>0 - Off Day</option>
                                     <option value="0.5" {{ $working_day->tuesday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
                                     <option value="1" {{ $working_day->tuesday == 1 ? 'selected' : '' }}>1 - Full Day</option>
@@ -61,6 +63,7 @@
                         <div class="col-md-12">
                                 <select id="wednesday" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
                                     placeholder="" name="wednesday" required>
+                                    <option value="0" {{ $working_day->wednesday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
                                     <option value="0" {{ $working_day->wednesday == 0 ? 'selected' : '' }}>0 - Off Day</option>
                                     <option value="0.5" {{ $working_day->wednesday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
                                     <option value="1" {{ $working_day->wednesday == 1 ? 'selected' : '' }}>1 - Full Day</option>
@@ -77,6 +80,7 @@
                         <div class="col-md-12">
                                 <select id="thursday" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}"
                                     placeholder="" name="thursday" required>
+                                    <option value="0" {{ $working_day->thursday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
                                     <option value="0" {{ $working_day->thursday == 0 ? 'selected' : '' }}>0 - Off Day</option>
                                     <option value="0.5" {{ $working_day->thursday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
                                     <option value="1" {{ $working_day->thursday == 1 ? 'selected' : '' }}>1 - Full Day</option>
@@ -93,6 +97,7 @@
                         <div class="col-md-12">
                                 <select id="friday" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
                                     placeholder="" name="friday" required>
+                                    <option value="0" {{ $working_day->friday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
                                     <option value="0" {{ $working_day->friday == 0 ? 'selected' : '' }}>0 - Off Day</option>
                                     <option value="0.5" {{ $working_day->friday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
                                     <option value="1" {{ $working_day->friday == 1 ? 'selected' : '' }}>1 - Full Day</option>
@@ -109,6 +114,7 @@
                         <div class="col-md-12">
                                 <select id="saturday" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
                                     placeholder="" name="saturday" required>
+                                    <option value="0" {{ $working_day->saturday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
                                     <option value="0" {{ $working_day->saturday == 0 ? 'selected' : '' }}>0 - Off Day</option>
                                     <option value="0.5" {{ $working_day->saturday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
                                     <option value="1" {{ $working_day->saturday == 1 ? 'selected' : '' }}>1 - Full Day</option>
@@ -125,6 +131,7 @@
                         <div class="col-md-12">
                                 <select id="sunday" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
                                     placeholder="" name="sunday" required>
+                                    <option value="0" {{ $working_day->sunday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
                                     <option value="0" {{ $working_day->sunday == 0 ? 'selected' : '' }}>0 - Off Day</option>
                                     <option value="0.5" {{ $working_day->sunday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
                                     <option value="1" {{ $working_day->sunday == 1 ? 'selected' : '' }}>1 - Full Day</option>
