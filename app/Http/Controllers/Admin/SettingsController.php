@@ -81,15 +81,17 @@ class SettingsController extends Controller
     {
         $companyData = $request->validate([
             'name' => 'required|unique:companies,name,NULL,id,deleted_at,NULL',
-            'url' => 'required',
+            'url' => 'required|url',
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'phone' => 'required|numeric',
-            'tax_no' => 'required',
-            'epf_no' => 'required',
-            'socso_no' => 'required',
-            'eis_no' => 'required',
+            'address2' => 'nullable',
+            'address3' => 'nullable',
+            'phone' => 'required',
+            'tax_no' => 'required|numeric',
+            'epf_no' => 'required|numeric',
+            'socso_no' => 'required|numeric',
+            'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies',
         ]);
 
@@ -528,15 +530,17 @@ class SettingsController extends Controller
 
         $companyData = $request->validate([
             'name' => 'required|unique:companies,name,'.$id.',id,deleted_at,NULL',
-            'url' => 'required',
+            'url' => 'required|url',
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'phone' => 'required|numeric',
-            'tax_no' => 'required',
-            'epf_no' => 'required',
+            'address2' => 'nullable',
+            'address3' => 'nullable',
+            'phone' => 'required',
+            'tax_no' => 'required|numeric',
+            'epf_no' => 'required|numeric',
             'socso_no' => 'required|numeric',
-            'eis_no' => 'required',
+            'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies,code,'.$id,
             'status' => 'required',
         ]);
