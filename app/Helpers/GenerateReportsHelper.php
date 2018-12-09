@@ -573,6 +573,7 @@ class GenerateReportsHelper
                 }else{
                     foreach ($userInfoAndPayrollList as $userPayroll) {
                         $obj = new LhdnEAFormBean([
+                            'year' => $year,
                             'serialNo' => 'A000755',
                             'incomeTaxNo' => $userPayroll->tax_no,
                             'employerNoE' => 'E9119707907',

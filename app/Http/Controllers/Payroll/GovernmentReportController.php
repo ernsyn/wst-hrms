@@ -219,7 +219,7 @@ class GovernmentReportController extends Controller
             case "LHDN_eaform":
                 $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
                 if(!empty($arr)){
-                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnEaForm',
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnEaForm1',
                         [
                             'dataArr' => $arr['data']
                         ]);
