@@ -58,7 +58,7 @@
                             <div class="form-group row w-100">
                                 <label class="col-md-5 col-form-label">State</label>
                                 <div class="col-md-7">
-                                        <select  class=" form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
+                                        {{-- <select  class=" form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
                                                 <option value="">Please Select</option>
                                             @foreach(App\Constants\MalaysianStates::$all as $state)
                                             <option value="{{ $state }}">{{ $state }}</option value="">
@@ -67,9 +67,19 @@
                                         <span class="invalid-feedback" role="alert">
                                                                   <strong>{{ $errors->first('state') }}</strong>
                                                               </span> @endif
-                                    </select> 
-                                    
-                                    <div id="type-error" class="invalid-feedback">
+                                    </select>  --}}
+                                    <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]"
+                                            required >
+                                            <option value="">Please Select</option>
+                                            @foreach(App\Constants\MalaysianStates::$all as $state)
+                                            <option value="{{ $state }}">{{ $state }}</option value="">
+                                            @endforeach
+                                        </select> @if ($errors->has('state'))
+                                        <span class="invalid-feedback" role="alert">
+                                                                          <strong>{{ $errors->first('state') }}</strong>
+                                                                      </span> @endif
+                                        </select>
+                                    <div id="state-error" class="invalid-feedback">
                                     </div>
                                 </div>
                             </div>
