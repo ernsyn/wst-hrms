@@ -2,7 +2,6 @@
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
-
     @hasanyrole('super-admin|admin|hr-exec')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
@@ -27,8 +26,7 @@
                     Super Admin
                 </a>
             </div>
-            @endhasrole 
-            @hasrole('employee')
+            @endhasrole @hasrole('employee')
             <div class="option row col mx-0">
                 <a href="{{ route('employee.dashboard') }}">
                     Employee
@@ -61,7 +59,6 @@
                     <li class="menu-option {{ request()->is('admin/employees/add') ? 'active' : '' }}">
                         <a href="{{ route('admin.employees.add') }}">Add Employee</a>
                     </li>
-    
                     {{-- OPTION: Employee List --}}
                     <li class="menu-option {{ request()->is('admin/employees') ? 'active' : '' }}">
                         <a href="{{ route('admin.employees') }}">Employee List</a>
@@ -103,8 +100,7 @@
                             <div class="col-10">E-Leave</div>
                         </div>
                     </a>
-                    <ul class="collapse list-unstyled {{ request()->is('admin/e-leave*') ? 'show' : '' }}"
-                        id="leaveSubmenu">
+            <ul class="collapse list-unstyled {{ request()->is('admin/e-leave*') ? 'show' : '' }}" id="leaveSubmenu">
                         {{-- OPTION: Leave Request --}}
                         <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
                             <a href="{{ route('admin.e-leave.configuration') }}">Configuration</a>
@@ -116,10 +112,6 @@
                         <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-requests') ? 'active' : '' }}">
                                 <a href="{{ route('admin.e-leave.configuration.leave-requests') }}">Leave Requests</a>
                             </li>
-                   {{--     <li class="menu-option {{ request()->is('admin/e-leave/configuration/leavetypes') ? 'active' : '' }}">
-                            <a href="{{ route('admin.e-leave.configuration.leavetypes') }}">Leave Type Setup</a>
-                        </li> --}}
-                       
                     </ul>
                 </li>
     
@@ -131,18 +123,14 @@
                         <div class="col-10">Settings</div>
                     </div>
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('admin/settings*') ? 'show' : '' }}"
-                    id="setupSubmenu">
+            <ul class="collapse list-unstyled {{ request()->is('admin/settings*') ? 'show' : '' }}" id="setupSubmenu">
                     {{-- OPTION: Companies --}}
-                    
                     <li class="menu-option {{ request()->is('admin/settings/companies') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.companies')}}">Companies</a>
                     </li>
-
                     {{-- OPTION: Cost Centres --}}
                     <li class="menu-option {{ request()->is('admin/settings/cost-centres') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.cost-centres')}}">Cost Centres</a>
-                 
                     </li>
                     {{-- OPTION: Departments --}}
                     <li class="menu-option {{ request()->is('admin/settings/departments') ? 'active' : '' }}">
@@ -168,35 +156,23 @@
                     <li class="menu-option {{ request()->is('admin/settings/working-days') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.working-days')}}">Working Days</a>
                     </li>
-
                 {{-- OPTION: EPF --}}
                 <li class="menu-option {{ request()->is('admin/settings/epf') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.epf')}}">EPF</a>
                     </li>
-
                                     {{-- OPTION: Eis --}}
                 <li class="menu-option {{ request()->is('admin/settings/eis') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.eis')}}">EIS</a>
                     </li>
-
                                                         {{-- OPTION: Socso --}}
                 <li class="menu-option {{ request()->is('admin/settings/socso') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.socso')}}">Socso</a>
                     </li>
-
                                                         {{-- OPTION: Eis --}}
                 <li class="menu-option {{ request()->is('admin/settings/pcb') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.pcb')}}">PCB</a>
                     </li>
-                                            
-                    {{-- OPTION: General Information --}}
-                    <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                        <a href="#">General Information</a>
-                    </li>
                 </ul>
             </li>
-            @endhasanyrole
-
-        </ul>
-   
+			@endhasanyrole        </ul>
 </nav>

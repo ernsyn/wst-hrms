@@ -81,15 +81,17 @@ class SettingsController extends Controller
     {
         $companyData = $request->validate([
             'name' => 'required|unique:companies,name,NULL,id,deleted_at,NULL',
-            'url' => 'required',
+            'url' => 'required|url',
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'phone' => 'required|numeric',
-            'tax_no' => 'required',
-            'epf_no' => 'required',
-            'socso_no' => 'required',
-            'eis_no' => 'required',
+            'address2' => 'nullable',
+            'address3' => 'nullable',
+            'phone' => 'required',
+            'tax_no' => 'required|numeric',
+            'epf_no' => 'required|numeric',
+            'socso_no' => 'required|numeric',
+            'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies',
         ]);
 
@@ -281,7 +283,7 @@ class SettingsController extends Controller
                 'seniority_pay' =>'required',
             ]);
 
-            CostCentre::where('id', $id)->update($costCentreData); 
+            CostCentre::where('id', $id)->update($costCentreData);
 
             return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been updated.');
         }
@@ -528,15 +530,17 @@ class SettingsController extends Controller
 
         $companyData = $request->validate([
             'name' => 'required|unique:companies,name,'.$id.',id,deleted_at,NULL',
-            'url' => 'required',
+            'url' => 'required|url',
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'phone' => 'required|numeric',
-            'tax_no' => 'required',
-            'epf_no' => 'required',
+            'address2' => 'nullable',
+            'address3' => 'nullable',
+            'phone' => 'required',
+            'tax_no' => 'required|numeric',
+            'epf_no' => 'required|numeric',
             'socso_no' => 'required|numeric',
-            'eis_no' => 'required',
+            'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies,code,'.$id,
             'status' => 'required',
         ]);
@@ -691,10 +695,10 @@ public function addEpf()
 public function postAddEpf(Request $request)
 {
     $epfData = $request->validate([
-        'category' => 'required|unique:epfs,category,NULL,id,deleted_at,NULL',
+        'category' => 'required',
         'salary' => 'required|numeric',
-        'employer' => 'required',
-        'employee' => 'required',
+        'employer' => 'required|numeric',
+        'employee' => 'required|numeric',
         'name'=>'required',
 
     ]);
@@ -713,11 +717,11 @@ public function postEditEpf(Request $request, $id)
 {
 
     $epfData = $request->validate([
-
-        'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
+        // 'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
+        'category' => 'required',
         'salary' => 'required|numeric',
-        'employer' => 'required',
-        'employee' => 'required',
+        'employer' => 'required|numeric',
+        'employee' => 'required|numeric',
         'name'=>'required',
 
     ]);
@@ -1108,7 +1112,7 @@ public function deleteCompanyBank(Request $request, $id)
 }
 
 public function postEditSecurityGroup(Request $request)
-{     
+{
     $id = $request->id;
     $additionData = $request->validate([
             'name' => 'required',
@@ -1117,7 +1121,7 @@ public function postEditSecurityGroup(Request $request)
         ]);
         $additionData['company_id']= $id;
         $additionData['created_by'] = auth()->user()->id;
-      
+
 
     SecurityGroup::where('id',  $request->security_group_id)->update($additionData);
 
@@ -1232,10 +1236,10 @@ public function postAddCompanyTravelAllowance(Request $request,$id)
 
 
 public function postEditTravelAllowance(Request $request)
-{   
-   
-    $id =$request->travel_allowance_id;  
-    
+{
+
+    $id =$request->travel_allowance_id;
+
      $additionData = $request->validate([
             'code' => 'required',
             'rate' => 'required',

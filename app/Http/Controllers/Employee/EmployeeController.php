@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
+use App\User;
 use App\Employee;
 use App\EmployeeDependent;
 use App\EmployeeImmigration;
@@ -66,6 +67,22 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Profile was successfully updated.']);
     }
+
+
+    public function postChangePassword(Request $request, $id) {
+        $data = $request->validate([
+            'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+
+        User::where('id', $employee->user->id)->update([
+            'password' => bcrypt($data['new_password'])
+        ]);
+
+        return response()->json(['success'=>'Password was successfully updated.']);
+    }
+
 
     // SECTION: Data Tables
     public function getDataTableDependents()

@@ -16,6 +16,8 @@ class Company extends Model
         'registration_no',
         'description',
         'address',
+        'address2',
+        'address3',
         'phone',
         'tax_no',
         'epf_no',

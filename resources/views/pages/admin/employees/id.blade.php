@@ -34,11 +34,11 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                
+
                             <span class="field-value">      {!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
                             </span>
                         </div>
-                        
+
                     </div>
                 </div>
                 <div id="end-btn-group">
@@ -121,6 +121,15 @@
                                                         <span class="field-value">      {!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}
                                                                                                              </span>
                                                 </div>
+
+                                                <span class="col-lg-5 p-3">Confirmation Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->employee_confirmed->implode('start_date') ? $employee->employee_confirmed->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Basic Salary</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                        <span class="field-value">{!! $employee->employee_jobs->implode('basic_salary') ? $employee->employee_jobs->implode('basic_salary'):'<strong>(not set)</strong>' !!}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -149,6 +158,15 @@
                                                 <span class="col-lg-5 p-3">ID No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->code}}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Joined Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->employee_jobs_joined_date->implode('start_date') ? $employee->employee_jobs_joined_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Resignation Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                        <span class="field-value">{!! $employee->employee_jobs_resigned_date->implode('start_date') ? $employee->employee_jobs_resigned_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                 </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -236,7 +254,7 @@
 </div>
 <!-- UPDATE -->
 <div class="modal fade" id="edit-profile-popup" tabindex="-1" role="dialog" aria-labelledby="edit-profile-label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="edit-profile-label">Edit Profile</h5>
@@ -247,134 +265,107 @@
             <form id="edit-profile-form">
                 <div class="modal-body">
                     @csrf
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="ic-no"><strong>IC*</strong></label>
-                            <input id="ic-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="ic-no-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="code"><strong>ID No</strong></label>
-                                <input id="code" type="text" class="form-control" placeholder="" value="" required>
-                                <div id="code-error" class="invalid-feedback"></div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="ic-no"><strong>IC*</strong></label>
+                                    <input id="ic-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="ic-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="code"><strong>ID No</strong></label>
+                                    <input id="code" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="code-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="dob"><strong>Date of Birth*</strong></label>
+                                    <input id="alt-dob" type="text" class="form-control" hidden>
+                                    <input id="dob" type="text" class="form-control" placeholder="" value="" required readonly>
+                                    <div id="dob-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="gender"><strong>Gender*</strong></label>
+                                    <select name="gender" id="gender" class="form-control" placeholder="" value="" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                    <div id="gender-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="contact-no"><strong>Contact Number*</strong></label>
+                                    <input id="contact-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="contact-no-error" class="invalid-feedback">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="marital-status-no"><strong>Marital Status*</strong></label>
+                                    <select name="marital-status" id="marital-status" class="form-control" placeholder="" value="" required>
+                                        <option value="">Select Marital Status</option>
+                                        <option value="single">Single</option>
+                                        <option value="married">Married</option>
+                                    </select>
+                                    <div id="marital-status-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="race"><strong>Race*</strong></label>
+                                    <input id="race" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="race-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="total-children"><strong>Number of Child</strong></label>
+                                    <input id="total-children" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="total-children-error" class="invalid-feedback"></div>
+                                </div>
                             </div>
                         </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="dob"><strong>Date of Birth*</strong></label>
-                            <input id="alt-dob" type="text" class="form-control" hidden>
-                            <input id="dob" type="text" class="form-control" placeholder="" value="" required readonly>
-                            <div id="dob-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="gender"><strong>Gender*</strong></label>
-                            <select name="gender" id="gender" class="form-control" placeholder="" value="" required>
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                            <div id="gender-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="contact-no"><strong>Contact Number*</strong></label>
-                            <input id="contact-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="contact-no-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="marital-status-no"><strong>Marital Status*</strong></label>
-                            <select name="marital-status" id="marital-status" class="form-control" placeholder="" value="" required>
-                                <option value="">Select Marital Status</option>
-                                <option value="single">Single</option>
-                                <option value="married">Married</option>
-                            </select>
-                            <div id="marital-status-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="race"><strong>Race*</strong></label>
-                            {{-- <select name="race" id="race" class="form-control" placeholder="" value="" required>
-                                <option value="">Select Race</option>
-                                <option value="malay">Malay</option>
-                                <option value="chinese">Chinese</option>
-                                <option value="indian">Indian</option>
-                                <option value="other">Other</option>
-                            </select> --}}
-                            <input id="race" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="race-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="total-children"><strong>Number of Child</strong></label>
-                            <input id="total-children" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="total-children-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="driver-license-no"><strong>Driver License No</strong></label>
-                            <input id="driver-license-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="driver-license-no-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="driver-license-expiry-date"><strong>License Expiry Date</strong></label>
-                            <input id="alt-driver-license-expiry-date" type="text" class="form-control" hidden>
-                            <input id="driver-license-expiry-date" type="text" class="form-control" placeholder="" value="" readonly>
-                            <div id="driver-license-expiry-date-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="epf-no"><strong>EPF No*</strong></label>
-                            <input id="epf-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="epf-no-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="tax-no"><strong>Tax No*</strong></label>
-                            <input id="tax-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="tax-no-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="eis-no"><strong>EIS No*</strong></label>
-                            <input id="eis-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="eis-no-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="socso-no"><strong>SOCSO No*</strong></label>
-                            <input id="socso-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="socso-no-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="socso-no"><strong>Security Group Id*</strong></label>
-                                <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                        <div class="col-6">
+                            <div class="form-group row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="driver-license-no"><strong>Driver License No</strong></label>
+                                    <input id="driver-license-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="driver-license-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="driver-license-expiry-date"><strong>License Expiry Date</strong></label>
+                                    <input id="alt-driver-license-expiry-date" type="text" class="form-control" hidden>
+                                    <input id="driver-license-expiry-date" type="text" class="form-control" placeholder="" value="" readonly>
+                                    <div id="driver-license-expiry-date-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="epf-no"><strong>EPF No*</strong></label>
+                                    <input id="epf-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="epf-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="tax-no"><strong>Tax No*</strong></label>
+                                    <input id="tax-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="tax-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="eis-no"><strong>EIS No*</strong></label>
+                                    <input id="eis-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="eis-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="socso-no"><strong>SOCSO No*</strong></label>
+                                    <input id="socso-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <div id="socso-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="main-security-group-id"><strong>Security Group Id*</strong></label>
+                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                                        <option value=""></option>
                                         @foreach(App\SecurityGroup::all() as $company)
                                         <option value="{{ $company->id }}">{{ $company->name }}</option>
                                         @endforeach
                                     </select>
-                                <div id="main-security-group-id-error" class="invalid-feedback"></div>
+                                    <div id="main-security-group-id-error" class="invalid-feedback"></div>
+                                </div>
                             </div>
                         </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="edit-profile-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
@@ -490,7 +481,7 @@
             editProfileId = currentData.id;
 
             $('#edit-profile-form #ic-no').val(currentData.ic_no);
-            
+
             $('#edit-profile-form #code').val(currentData.code);
             $('#edit-profile-form #alt-dob').val(currentData.dob);
             $('#edit-profile-form #gender').val(currentData.gender);
@@ -544,7 +535,7 @@
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),
                     socso_no: $('#edit-profile-form #socso-no').val(),
-                    
+
                     main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
                 },
                 success: function(data) {
@@ -569,7 +560,7 @@
                                     case 'code':
                                         $('#edit-profile-form #code').addClass('is-invalid');
                                         $('#edit-profile-form #code-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;                                    
+                                    break;
                                     case 'dob':
                                         $('#edit-profile-form #dob').addClass('is-invalid');
                                         $('#edit-profile-form #dob-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -668,7 +659,7 @@
     }
     function clearProfilesError(htmlId) {
         $(htmlId + ' #ic-no').removeClass('is-invalid');
-        $(htmlId + ' #code').removeClass('is-invalid');        
+        $(htmlId + ' #code').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
         $(htmlId + ' #gender').removeClass('is-invalid');
         $(htmlId + ' #contact-no').removeClass('is-invalid');
@@ -742,7 +733,7 @@
                     }
                 }
             });
-            
+
         });
 
         function clearChangePasswordModal(htmlId) {
@@ -752,15 +743,15 @@
         // $('#employee-profile-details #emp-roles-btn').click(function (e) {
         //     console.log("ON: Roles Clicked!");
         // });
-        
+
         // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
         //     console.log("ON: Change Password Clicked!");
         // });
         // var asdsf = $('#save-role-changes-btn')
         // console.log("asdad", asdsf);
-        
+
         $('#save-role-changes-btn').click(function () {
-            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"), 
+            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"),
             function (data) {
                 showAlert(data.success);
                 $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');
