@@ -48,6 +48,7 @@ use App\EmployeeAttendance;
 use App\Http\Services\LeaveService;
 
 use App\Http\Requests\Admin\AddEmployee;
+use App\Helpers\AccessControllHelper;
 
 class EmployeeController extends Controller
 {
@@ -100,8 +101,9 @@ class EmployeeController extends Controller
         // $branch = Branch::all();
         // $countries = Country::all();
         // $companies = Company::all();
-
-        return view('pages.admin.employees.id', ['employee' => $employee]);
+        
+        $roles = AccessControllHelper::getRoles();
+        return view('pages.admin.employees.id', ['employee' => $employee, 'roles' => $roles]);
     }
 
     public function postEditProfile(Request $request, $id)
@@ -1160,5 +1162,19 @@ class EmployeeController extends Controller
         }
 
         return null;
+    }
+    
+    public function postEditRoles(Request $request, $id) {
+        $employee = Employee::where('id', $id)->first();
+        
+        foreach($request['assignRoles'] as $r){
+            if($r['assign'] == 1){
+                $employee->user->assignRole($r['role']);
+            }else{
+                $employee->user->removeRole($r['role']);
+            }
+        }
+        
+        return response()->json(['success'=>'Employee roles were successfully updated.']);
     }
 }

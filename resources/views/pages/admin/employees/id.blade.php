@@ -42,10 +42,12 @@
                     </div>
                 </div>
                 <div id="end-btn-group">
+                	@hasanyrole('super-admin|admin')
                     <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
                         {{-- <i class="fas fa-pen"></i> --}}
                         Roles
                     </button>
+                    @endhasanyrole
                     <button id="emp-change-password-btn" data-toggle="modal" data-target="#change-password-popup" type="button" class="btn btn-sm text-white rounded">
                         {{-- <i class="fas fa-pen"></i> --}}
                         Change Password
@@ -422,7 +424,8 @@
     </div>
 </div>
 
-{{-- Change Password --}}
+@hasanyrole('super-admin|admin')
+{{-- Assign Role --}}
 <div class="modal fade" id="roles-popup" tabindex="-1" role="dialog" aria-labelledby="roles-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -434,23 +437,26 @@
             </div>
             <div class="modal-body">
                 <div class="form-check">
-                    @if($employee->user->hasRole('admin'))
-                    <input class="form-check-input" type="checkbox" id="role-admin-checkbox" checked>
-                    @else
-                    <input class="form-check-input" type="checkbox" id="role-admin-checkbox" >
-                    @endif
-                    <label class="form-check-label" for="role-admin-checkbox">Admin</label>
+                	@foreach ($roles as $role)
+                        @if($employee->user->hasRole($role->name))
+                        <input class="form-check-input" type="checkbox" name="role-admin-checkbox[]" value="{{ $role->name }}" checked>
+                        @else
+                        <input class="form-check-input" type="checkbox" name="role-admin-checkbox[]" value="{{ $role->name }}">
+                        @endif
+                        <label class="form-check-label" for="role-admin-checkbox" style="text-transform: uppercase;">{{ $role->name }}</label><br/>
+                    @endforeach
                     <div id="role-admin-error" class="invalid-feedback">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="save-role-changes-btn" class="btn btn-primary">Save changes</button>
+                <button type="button" id="save-role-changes-btn" class="btn btn-primary">Save Changes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+@endhasanyrole
 @endsection
 
 @section('scripts')
@@ -751,7 +757,7 @@
         // console.log("asdad", asdsf);
 
         $('#save-role-changes-btn').click(function () {
-            assignRemoveAdminRole($("#role-admin-checkbox").is(":checked"),
+            assignRemoveAdminRole($("input[name='role-admin-checkbox[]']"),
             function (data) {
                 showAlert(data.success);
                 $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');
@@ -765,13 +771,24 @@
         });
 
         function assignRemoveAdminRole(assign, onSuccess, onFail) {
+        	var assignRoles = new Array();
+        	$("input[name='role-admin-checkbox[]']").each(function (index, elem) {
+        		var role = $(this).val();
+        		var assign = 0;
+        		if(this.checked){
+        			assign = 1;
+                }else{
+                	assign = 0;
+                }
+        		assignRoles.push({'role': role,  'assign':  assign});
+        	});
+
             $.ajax({
-                url: "{{ route('admin.employees.roles.admin.post', ['id' => $employee->id]) }}",
+                url: "{{ route('admin.employees.update-roles.admin.post', ['id' => $employee->id]) }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    // current_password: $('#change-password-form input[name=current_password]').val(),
-                    assign_remove: assign ? 'assign': 'remove',
+                    assignRoles: assignRoles,
                 },
                 success: function(data) {
                     onSuccess(data);

@@ -6,10 +6,12 @@ use App\EmployeeSecurityGroup;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use App\SecurityGroup;
+use App\Roles;
 
 class AccessControllHelper
 {
-    public static function isKpiProposer(){
+    public static function isKpiProposer()
+    {
         $isKpiProposer = false;
         $currentUser = Auth::id();
         $employeeReportTo = EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
@@ -23,15 +25,18 @@ class AccessControllHelper
         return $isKpiProposer;
     }
     
-    public static function isHrExec() {
+    public static function isHrExec() 
+    {
         return Auth::user()->hasRole('hr-exec');
     }
     
-    public static function isHrAdmin() {
+    public static function isHrAdmin() 
+    {
         return Auth::user()->hasRole('admin');
     }
     
-    public static function getSecurityGroupAccess(){
+    public static function getSecurityGroupAccess()
+    {
         if(self::isHrAdmin()){
             $securityGroupAccess = SecurityGroup::where('company_id',GenerateReportsHelper::getUserLogonCompanyInfomation()->id)->select('id')->get();
         }else{
@@ -41,7 +46,8 @@ class AccessControllHelper
         return $securityGroupAccess;
     }
     
-    public static function hasAnyRoles($role) {
+    public static function hasAnyRoles($role) 
+    {
         $roles = is_array($role)
         ? $role
         : explode('|', $role);
@@ -49,6 +55,14 @@ class AccessControllHelper
         if (! Auth::user()->hasAnyRole($roles)) {
             throw UnauthorizedException::forRoles($roles);
         }
+    }
+    
+    public static function getRoles() 
+    {
+        $excludedRoles = array("employee", "super-admin"); 
+        $roles = Roles::whereNotIn('name',$excludedRoles)->orderBy('name')->get();
+        
+        return $roles;
     }
 }
 
