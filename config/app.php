@@ -221,6 +221,7 @@ return [
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
         'PayrollReportEnum' => App\Enums\PayrollReportEnum::class,
         'AccessControllHelper' => AccessControllHelper::class,
+        'PayrollAdditionDeductionEnum' => App\Enums\PayrollAdditionDeductionEnum::class,
 
     ],
 

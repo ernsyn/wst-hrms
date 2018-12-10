@@ -7,34 +7,37 @@ class EloquentDeduction implements DeductionRepository
 {
     public function findByFilter($filter)
     {
-        $status = @$filter['status'];
-        $cost_center_id = @$filter['idJobMasterCategory'];
-        $grade_id = @$filter['idJobMasterGrade'];
+        $isConfirmedEmployee = @$filter['isConfirmedEmployee'];
+        $costCentreId = @$filter['costCentreId'];
+        $jobGradeId = @$filter['jobGradeId'];
         $companyId = $filter['companyId'];
         
         return
         Deduction::select('deductions.*')
-        ->leftjoin('deduction_applies_to as DAT', 'DAT.deductions_id', '=', 'deductions.id')
+        ->leftjoin('deduction_cost_centre as dcc', 'dcc.deduction_id', '=', 'deductions.id')
+        ->leftjoin('deduction_employee_grade as deg', 'deg.deduction_id', '=', 'deductions.id')
         ->where(function($query) use($companyId){
-            $query->where('deductions.company_id', $companyId)
-            ->orwhere('deductions.company_id', 0);
+            $query->where('deductions.company_id', $companyId);
         })
-        ->where(function($query) use($cost_center_id, $grade_id){
-            if($cost_center_id && $grade_id) {
-                $query->whereIn('DAT.job_master_id', [$cost_center_id, $grade_id])
-                ->orwhere('deductions.company_id', 0);
+        ->where(function($query) use($costCentreId, $jobGradeId){
+            if($costCentreId) {
+                $query->where('dcc.cost_centre_id', $costCentreId);
+            }
+            
+            if($jobGradeId) {
+                $query->where('deg.employee_grade_id', $jobGradeId);
             }
         })
-        ->where(function($query) use($status){
-            if($status) {
-                if($status == 'Probationer') {
-                    $query->where('deductions.confirmed_employee', 0);
-                } else {
+        ->where(function($query) use($isConfirmedEmployee){
+            if($isConfirmedEmployee) {
+                if($isConfirmedEmployee) {
                     $query->where('deductions.confirmed_employee', 1);
+                } else {
+                    $query->where('deductions.confirmed_employee', 0);
                 }
-				$query->orwhere('deductions.company_id', 0);            }
+            }
         })
-//         ->groupby('DeductionMaster.id')
+        ->where('deductions.status', 'Active')
         ->get();
     }
 

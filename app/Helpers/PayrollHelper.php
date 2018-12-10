@@ -1,8 +1,8 @@
 <?php
 namespace App\Helpers;
 
-use App\EmployeeReportTo;
-use Illuminate\Support\Facades\Auth;
+use App\EmployeeAttendance;
+use App\LeaveAllocation;
 
 class PayrollHelper
 {
@@ -49,23 +49,24 @@ class PayrollHelper
         return $seniorityPay;
     }
     
-    public static function getPayback($employee, $payrollMonth)
+    public static function getALPayback($employee, $payrollMonth)
     {
-        //todo: retest, currently not in used
-        // If status is Resigned, check the contra key
-        // If contra is false, then need get the balance of leave * salary / days
-        // Else set 0.00
+        /*
+         * If status is Resigned_date not null, check AL balance
+         * 1. If basic salary < 1999 - use Basic salary / 26 * number of AL
+         * 2. If basic salary >= 2000 - use Basic salary / calendar days on that month * number of AL
+         */  
         $payback = 0.00;
-        if($employee->status == 'Resigned' && !@$contra) {
-            $annualLeave_type = $this->leavetype->findBy_Name('Annual Leave');
-            $leave = $this->leave->find(null, $employee->id, $annualLeave_type->id);
-            if(!@$leave) {
-                $leave = new \stdClass();
-                $leave->available_balance = 0;
+        if($employee->resigned_date != null || $employee->resigned_date <= DateHelper::getLastDayOfDate($payrollMonth)) {
+            $basicSalary = $employee->basic_salary;
+            $leaveBalance = self::getALBalance($employee, $payrollMonth);
+            
+            if($basicSalary >= 2000){
+                $days = DateHelper::getNumberDaysInMonth($payrollMonth);
+                $payback = $basicSalary / $days * $leaveBalance;
+            } else {
+                $payback = $basicSalary / 26 * $leaveBalance;
             }
-            $payrollMonth = explode('-', $payrollMonth);
-            $days = cal_days_in_month(CAL_GREGORIAN, $payrollMonth[1], $payrollMonth[0]);
-            $payback = ($employee->selected_job_salary >= 2000)? ($employee->selected_job_salary / $days) * $leave->available_balance : ($employee->selected_job_salary / 26) * $leave->available_balance;
         }
         
         return $payback;
@@ -80,7 +81,8 @@ class PayrollHelper
     
     // 20180921 Lin : This is the special case. For those addition need key in days,
     // only can calculate the amount of the addition.
-    public static function payroll_addition_with_days(){
+    public static function payroll_addition_with_days()
+    {
         return [
             // 'OT'        => 'Overtime',
             'ALP'       => 'Annual Leave Payback',
@@ -92,7 +94,8 @@ class PayrollHelper
     
     // 20180924 Lin : This is the special cas. For those addition need key in hours,
     // only can calculate the amount of the addition.
-    public static function payroll_addition_with_hours(){
+    public static function payroll_addition_with_hours()
+    {
         return [
             'OT'        => 'Overtime',
         ];
@@ -100,10 +103,66 @@ class PayrollHelper
     
     // 20180921 Lin : This is the special case. For those deduction need key in days,
     // only can calculate the amount of the deduction.
-    public static function payroll_deduction_with_days(){
+    public static function payroll_deduction_with_days()
+    {
         return [
             'UL'        => 'Unpaid Leave',
         ];
     }
+    
+    //check if is confirmed employee for that payroll month
+    public static function isConfirmedEmployee($employee, $payrollMonth) 
+    {
+        if($employee->confirmed_date == null || $employee->confirmed_date > DateHelper::getLastDayOfDate($payrollMonth)){
+            return false;
+        } else {
+            return true;
+        }
+        
+    }
+    
+    //check if resigned for that payroll month
+    public static function isResigned($employee, $payrollMonth) 
+    {
+        if($employee->resigned_date == null || $employee->resigned_date > DateHelper::getLastDayOfDate($payrollMonth)){
+            return false;
+        } else {
+            return true;
+        }
+        
+    }
+    
+    //get AL balance for a payroll month
+    public static function getALBalance($employee, $payrollMonth)
+    {
+        $leaveAllocations = LeaveAllocation::where([
+            ['leave_type_id', 1],
+            ['emp_id', $employee->id],
+            ['valid_until_date', '<=', DateHelper::getLastDayOfDate($payrollMonth)]
+        ])->get();
+        
+        $totalAllocated = 0;
+        $totalSpent = 0;
+        foreach ($leaveAllocations as $leave) {
+            $totalAllocated += $leave->allocated_days;
+            $totalSpent += $leave->spent_days;
+        }
+        
+        return $totalAllocated - $totalSpent;
+    }
+    
+    // get attendance by clock in status
+    public static function getAttendance($status, $employee, $processedStartDate, $processedEndDate)
+    {
+        $attendances = EmployeeAttendance::where([
+            ['clock_in_status', $status],
+            ['emp_id', $employee->id],
+            ['clock_in_time', '>=', $processedStartDate],
+            ['clock_in_time', '<=', $processedEndDate],
+        ])->get();
+        
+        return $attendances;
+    }
+    
 }
 

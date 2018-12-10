@@ -7,34 +7,37 @@ class EloquentAddition implements AdditionRepository
 {
     public function findByFilter($filter)
     {
-        $status = @$filter['status'];
-        $cost_center_id = @$filter['idJobMasterCategory'];
-        $grade_id = @$filter['idJobMasterGrade'];
+        $isConfirmedEmployee = @$filter['isConfirmedEmployee'];
+        $costCentreId = @$filter['costCentreId'];
+        $jobGradeId = @$filter['jobGradeId'];
         $companyId = $filter['companyId'];
-        return
+        
+        return 
         Addition::select('additions.*')
-        ->leftjoin('addition_applies_to as AAT', 'AAT.additions_id', '=', 'additions.id')
+        ->leftjoin('addition_cost_centre as acc', 'acc.addition_id', '=', 'additions.id')
+        ->leftjoin('addition_employee_grade as aeg', 'aeg.addition_id', '=', 'additions.id')
         ->where(function($query) use($companyId){
-            $query->where('additions.company_id', $companyId)
-            ->orwhere('additions.company_id', 0);
+            $query->where('additions.company_id', $companyId);
         })
-        ->where(function($query) use($cost_center_id, $grade_id){
-            if($cost_center_id && $grade_id) {
-                $query->whereIn('AAT.job_master_id', [$cost_center_id, $grade_id])
-                ->orwhere('additions.company_id', 0);
+        ->where(function($query) use($costCentreId, $jobGradeId){
+            if($costCentreId) {
+                $query->where('acc.cost_centre_id', $costCentreId);
+            }
+            
+            if($jobGradeId) {
+                $query->where('aeg.employee_grade_id', $jobGradeId);
             }
         })
-        ->where(function($query) use($status){
-            if($status) {
-                if($status == 'Probationer') {
-                    $query->where('additions.confirmed_employee', 0);
-                } else {
+        ->where(function($query) use($isConfirmedEmployee){
+            if($isConfirmedEmployee) {
+                if($isConfirmedEmployee) {
                     $query->where('additions.confirmed_employee', 1);
+                } else {
+                    $query->where('additions.confirmed_employee', 0);
                 }
-                $query->orwhere('additions.company_id', 0);
             }
         })
-//         ->groupby('AdditionMaster.id')
+        ->where('additions.status', 'Active')
         ->get();
     }
 

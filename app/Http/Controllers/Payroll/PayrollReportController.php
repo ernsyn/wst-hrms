@@ -27,14 +27,15 @@ class PayrollReportController extends Controller
         $this->payrollService = $payrollService;
     }
     
-    // *Note: Total type of reports: 7
-    // 1. group by department according company, group by department according company & cost-center (HQ Only)
-    // 2. group by department & cost-center according company
-    // 3. group by department & cost-center, cost-center according company, group by department according cost-center (Oppo HQ Only)
-    // 4. group by department according to company
-    // 5. group by bank ID according to company
-    // 6. group by company ID (Summary)
-    // 7. group by employee according to department & company
+    // *Note: Total type of reports: 8
+    // 1. Payroll Summary by Department
+    // 2. Payroll Summary by Department, Cost-Centres
+    // 3. Supplier Payment Form
+    // 4. Department Salary
+    // 5. Bank Crediting Report
+    // 6. Bank Credit Detail
+    // 7. Payroll Detail
+    // 8. Payroll Summary
     public function export_report(Request $request)
     {
 //         dd($request);
@@ -104,8 +105,6 @@ class PayrollReportController extends Controller
 //         dd($company,$filter_data,$request_data,$extra);
         switch ($type) {
             case '1':
-                // Document 1. Got two types to generate - Group by department, Group by department and cost-center (HQ)
-                
                 $filter_data['groupby'] = ['JM_department.id'];
                 // Run type 1.
                 $this->generate_report($company, $filter_data, $request_data, $extra);
@@ -116,15 +115,11 @@ class PayrollReportController extends Controller
                 
                 break;
             case '2':
-                // Document 2. Group by department and cost-center based on company
-                
                 $filter_data['groupby'] = ['JM_department.id', 'JM_category.id'];
                 $this->generate_report($company, $filter_data, $request_data, $extra);
                 
                 break;
             case '3':
-                // Document 3. Got three types to generate - Group by department & cost-center, Group by cost-center, Group by department (HQ)
-                
                 $filter_data['groupby'] = ['JM_department.id', 'JM_category.id'];
                 $extra['filter_by'] = '';
                 // Run type 1.
@@ -143,23 +138,21 @@ class PayrollReportController extends Controller
                 
                 break;
             case '4':
-                // Document 4. Group by department
-                
                 $filter_data['groupby'] = ['JM_department.id'];
                 $this->generate_report($company, $filter_data, $request_data, $extra);
                 break;
             case '5':
-                // Document 5. Group by bank
-//                 dd();
+            case '6':
                 $filter_data['groupby'] = ['EM.id', 'BM.id'];
+                $extra['payrollMonth'] = $payroll->year_month;
                 $this->generate_report($company, $filter_data, $request_data, $extra);
                 break;
-            case '6':
+            case '7':
                 // Document 6. Summary
                 $filter_data['groupby'] = ['CM.id'];
                 $this->generate_report($company, $filter_data, $request_data, $extra);
                 break;
-            case '7':
+            case '8':
                 // Document 7. Payroll Details
                 $filter_data['groupby'] = ['EM.id', 'JM_department.id'];
                 $this->generate_report($company, $filter_data, $request_data, $extra);
@@ -179,7 +172,7 @@ class PayrollReportController extends Controller
     {
         if(isset($company)) {
                 $report_list = $this->report->find_by_company_id($company->id, $filter_data);
-                
+//                 dd($company, $filter_data, $request_data, $extra,$report_list);
                 $document_info = $this->get_document_html($filter_data['type'], $company, $report_list, $extra);
 //                 $request_data['file'] = $file_name;
                 
@@ -209,10 +202,14 @@ class PayrollReportController extends Controller
                         break;
                     case '6':
                         $file_name = 'doc6.pdf';
-                        $request_data['document_name'] = 'Doc 6. Payroll Summary';
+                        $request_data['document_name'] = 'Doc 5. Group By Bank - '.$company->name;
                         break;
                     case '7':
                         $file_name = 'doc7.pdf';
+                        $request_data['document_name'] = 'Doc 6. Payroll Summary';
+                        break;
+                    case '8':
+                        $file_name = 'doc8.pdf';
                         $request_data['document_name'] = 'Doc 7. Payroll Details - '.$company->name;
                         break;
                     default:
@@ -239,19 +236,8 @@ class PayrollReportController extends Controller
     
     private function export_pdf($css, $header = null, $footer = null, $body, $pdf_format = [], $file_name = null)
     {
-//         dd('ok');
-//         dd($css);
-//         $mpdf = new \Mpdf\Mpdf($pdf_format);
-//         $mpdf->SetHTMLHeader($header);
-//         $mpdf->writeHTML($css,1);
-//         // Write some HTML code:
-//         $mpdf->WriteHTML('Hello World');
-        
-        // Output a PDF file directly to the browser
-//         $mpdf->Output();
-//         dd('ok');
-//         dd($pdf_format);
-        $mpdf = new \Mpdf\Mpdf([$pdf_format, ['tempDir' => storage_path("temp")]]);
+//         dd($css,$header,$footer,$body,$pdf_format,$file_name);
+        $mpdf = new \Mpdf\Mpdf($pdf_format);
         $mpdf->SetHTMLHeader($header);
         $mpdf->writeHTML($css,1);
         $mpdf->writeHTML($body,2);
@@ -293,6 +279,7 @@ class PayrollReportController extends Controller
             
                     .black-top-border { border-top: 1px solid black; }
                     .black-bottom-border { border-bottom: 1px solid black; }
+                    .black-border { border: 1px solid black; }
                     .bold { font-weight: bold; }
                 </style>
             
@@ -503,6 +490,7 @@ class PayrollReportController extends Controller
                 $pdf_format = [
                     'format'        => 'A4-L', // L: Landscape, Default: Portrait
                     'margin_top'    => 40,
+                    'tempDir' => storage_path("temp"),
                 ];
                 break;
             case '3':
@@ -674,6 +662,7 @@ class PayrollReportController extends Controller
                 $body = $content;
                 $pdf_format = [
                     'format'        => 'A4-L',
+                    'tempDir' => storage_path("temp"),
                 ];
                 break;
             case '5':
@@ -736,11 +725,11 @@ class PayrollReportController extends Controller
                     $content .= '
                         <tr>
                             <td align="left"> '.$info->code.' </td>
-                            <td align="left"> '.$info->full_name.' </td>
+                            <td align="left"> '.$info->name.' </td>
                             <td align="center"> </td>
                             <td align="center"> '.$info->ic_no.' </td>
                             <td align="center"> </td>
-                            <td align="center"> '.$info->account_number.' </td>
+                            <td align="center"> '.$info->acc_no.' </td>
                             <td align="right"> '.number_format($info->net_pay,2).' </td>
                         </tr>
                     ';
@@ -792,10 +781,110 @@ class PayrollReportController extends Controller
                 $pdf_format = [
                     'format'        => 'A4-L', // L: Landscape, Default: Portrait
                     'margin_top'    => 40,
+                    'tempDir' => storage_path("temp"),
                 ];
                 break;
+                
             case '6':
             case 6:
+                $period = $extra['period'];
+//                 dd($document_type, $company, $list, $extra);
+                $header = '';
+                
+                $content = '';
+                $bank = '';
+                $count = 1;
+                $net_pay = 0;
+                foreach ($list as $key => $info) {
+                    $content .= '
+                        <tr>
+                            <td align="center"> LIP </td>
+                            <td align="center"> '.number_format($info->net_pay,2).' </td>
+                            <td align="center"> PBBEMYKL </td>
+                            <td align="center"> '.$info->name.' </td>
+                            <td align="center"> '.$info->acc_no.' </td>
+                            <td align="center"> FEBRUARY SALARY </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    ';
+                    
+                    if(@$bank != @$list[$key+1]->bank && @$bank) {
+                        $content .= '
+                            <tr>
+                                <td class="bold" align="left">TOTAL</td>
+                                <td class="bold" align="center"> '.number_format($net_pay,2).' </td>
+                                <td class="bold" align="left" colspan="9">  </td>
+                            </tr>
+                        ';
+                        $count = 1;
+                        $net_pay = 0;
+                        continue;
+                    }
+                    
+                    $count++;
+                    $net_pay+=$info->net_pay;
+                }
+                
+                $content .= '
+                    <tr>
+                        <td class="bold" align="left">TOTAL</td>
+                        <td class="bold" align="center"> '.number_format($net_pay,2).' </td>
+                        <td class="bold" align="left" colspan="9">  </td>
+                    </tr>
+                ';
+                
+                $body = '
+                    <table class="w-100p" style="font-size: 9px; text-align: left;" cellspacing="0" cellpadding="1">
+                        <tr>
+                            <td>PAYMENT DATE :<br/>(DD/MM/YYYY)</td>
+                            <td align="center">'.DateHelper::dateWithFormat( DateHelper::getLastDayOfDate($extra['payrollMonth']) , "d/m/Y").'</td>
+                            <td colspan="9"></td>
+                        </tr>
+                        <thead>
+                            <tr>
+                                <th align="center" class="black-border" style="width: 85px">Payment Type/ Mode : LIP/LGP/LSP</th>
+                                <th align="center" class="black-border" style="width: 68px">Payment Amount</th>
+                                <th align="center" class="black-border" style="width: 68px">BIC</th>
+                                <th align="center" class="black-border" style="width: 245px">Bene Full Name</th>
+                                <th align="center" class="black-border" style="width: 102px">Bene Account No.</th>
+                                <th align="center" class="black-border" style="width: 102px">Payment Purpose</th>
+                                <th align="center" class="black-border" style="width: 90px">Bene Email</th>
+                                <th align="center" class="black-border" style="width: 110px">Bene Identification No / Passport</th>
+                                <th align="center" class="black-border" style="width: 80px">ID Type: NI, OI, PL, ML, PP ,BR</th>
+                                <th align="center" class="black-border" style="width: 65px">Bene Mobile No.</th>
+                                <th align="center" class="black-border" style="width: 80px">Payor Corporation\'s Reference No.</th>
+                            </tr>
+                            <tr>
+                                <th align="center" class="black-border">(M) - Char: 3 - A</th>
+                                <th align="center" class="black-border">(M) - Char: 20 N</th>
+                                <th align="center" class="black-border">(M) - Char: 11 - A</th>
+                                <th align="center" class="black-border">(M) - Char: 120 -A</th>
+                                <th align="center" class="black-border">(M) - Char: 20 -A</th>
+                                <th align="center" class="black-border">(M) -Char: 50 -A</th>
+                                <th align="center" class="black-border">(O) - Char: 30 -A</th>
+                                <th align="center" class="black-border">(O) - Char: 18 -A</th>
+                                <th align="center" class="black-border">(O) - Char: 2 -A</th>
+                                <th align="center" class="black-border">(O) - Char: 15 -A</th>
+                                <th align="center" class="black-border">(O) - Char: 16 -A</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            '.$content.'
+                        </tbody>
+                    </table>
+                ';
+                
+                $pdf_format = [
+                    'format'        => 'A4-L', // L: Landscape, Default: Portrait
+                    'tempDir' => storage_path("temp"),
+                ];
+                break;
+            case '7':
+            case 7:
                 $content = '';
                 $total_employee = 0;
                 $total_gross_pay = 0;
@@ -866,8 +955,8 @@ class PayrollReportController extends Controller
                 ';
                 
                 break;
-            case '7':
-            case 7:
+            case '8':
+            case 8:
                 $period = $extra['period'];
                 
                 $header = '
@@ -1101,6 +1190,7 @@ class PayrollReportController extends Controller
                 $pdf_format = [
                     'format'        => 'A4-L', // L: Landscape, Default: Portrait
                     'margin_top'    => 40,
+                    'tempDir' => storage_path("temp"),
                 ];
                 break;
             default:

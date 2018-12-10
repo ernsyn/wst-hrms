@@ -18,8 +18,8 @@ class PayrollReportEnum extends Enum
         self::DOC_2 => 'Payroll Summary - By Department, Cost Centre',
         self::DOC_3 => 'Supplier Payment Form',
         self::DOC_4 => 'Department Salary',
-        self::DOC_5 => 'Payroll Detail',
-        self::DOC_6 => 'Bank Credit Detail',
+        self::DOC_5 => 'Bank Crediting Report',
+        self::DOC_6 => 'Bank Crediting Report',
         self::DOC_7 => 'Payroll Summary'
     ];
 }
