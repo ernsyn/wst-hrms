@@ -13,10 +13,10 @@ class DropPayrollTrxIdFromLeaveRequestApprovals extends Migration
      */
     public function up()
     {
-        Schema::table('leave_request_approvals', function (Blueprint $table) {
+        /* Schema::table('leave_request_approvals', function (Blueprint $table) {
             $table->dropForeign('payroll_trx_id');
             $table->dropColumn('payroll_trx_id');
-        });
+        }); */
         
     }
 

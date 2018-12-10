@@ -13,10 +13,10 @@ class DropPayrollTrxIdFromEmployeeAttendances extends Migration
      */
     public function up()
     {
-        Schema::table('employee_attendances', function (Blueprint $table) {
+        /* Schema::table('employee_attendances', function (Blueprint $table) {
             $table->dropForeign('payroll_trx_id');
             $table->dropColumn('payroll_trx_id');
-        });
+        }); */
     }
 
     /**
