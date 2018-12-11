@@ -55,7 +55,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Auth;
 use App\Http\Services\LeaveService;
 
-
+use App\Mail\LeaveRequestMail;
 
 class ELeaveController extends Controller
 {
@@ -371,6 +371,8 @@ class ELeaveController extends Controller
             }
 
             $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
+
+            \Mail::send(new LeaveRequestMail(Auth::user()));
 
             return response()->json($result);
         }
