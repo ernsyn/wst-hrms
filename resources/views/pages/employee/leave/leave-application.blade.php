@@ -239,6 +239,7 @@
                     element.click(function() {
                         event_start = new Date(event.start);
                         event_end = new Date(event.end);
+                        event_end.setDate(event_end.getDate() - 1); // fix for end date showing a day later
 
                         if(event.status == "new") {
                             $("#can-edit-delete").show();

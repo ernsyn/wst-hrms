@@ -253,7 +253,7 @@ class ELeaveController extends Controller
                 $leave->id = $row->id;
                 $leave->title = $leaveType->name;
                 $leave->start = $row->start_date;
-                $leave->end = $row->end_date."T15:59:00";
+                $leave->end = $row->end_date."T23:59:59";
                 $leave->status = $row->status;
                 $leave->reason = $row->reason;
                 $result[] = $leave;
@@ -282,7 +282,7 @@ class ELeaveController extends Controller
                 $holiday->id = $row->id;
                 $holiday->title = $row->name;
                 $holiday->start = $row->start_date;
-                $holiday->end = $row->end_date."T15:59:00";
+                $holiday->end = $row->end_date."T23:59:59";
                 $holiday->status = 'holiday';
                 $holiday->reason = $row->note;
                 // $holiday->allDay = true;
