@@ -18,4 +18,7 @@ Memory: 64GB DDR3 (1600MHz)
     * run "php artisan key:generate"
 6. To perform database migration and adding seed data, run "php artisan migrate:refresh --seed"
 
-
+# Others #
+For mobile app,
+- php artisan passport:keys - to generate the keys needed for the mobile app authentication
+- php artisan passport:client --personal - to create personal access token
