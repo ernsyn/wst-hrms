@@ -53,7 +53,7 @@
                             <div class="form-group row" id="select-period">
                                 <div class="col-sm-12">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" id="leave-full-day" class="btn btn-outline-primary leave-day" >Full Day</button>
+                                        <button type="button" id="leave-full-day" class="btn btn-outline-primary leave-day" data-value="">Full Day</button>
                                         <button type="button" id="leave-half-day-am" class="btn btn-outline-primary leave-day" data-value="am">AM</button>
                                         <button type="button" id="leave-half-day-pm" class="btn btn-outline-primary leave-day" data-value="pm">PM</button>
                                     </div>
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="dropdown-divider pb-3"></div>
-                            <div class="form-group row" id="required-attachment">
+                            <div class="form-group row" id="required-attachment-box">
                                 <div class="col-sm-6 px-0">
                                     <label class="col-sm-12 col-form-label" id="required-attachment-label">Attachment</label>                                 
                                 </div>
@@ -173,11 +173,8 @@
             </div>
             <div class="modal-footer">
                 <span id="cancel-leave-id" hidden></span>
-                <button id="cancel-leave-request-button" type="button" class="btn btn-danger">
+                <button id="cancel-leave-request-button" type="button" class="btn btn-primary">
                     Confirm
-                </button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">
-                    Close
                 </button>
             </div>
         </div>
@@ -191,13 +188,14 @@
         var attachmentRequired = false;
         var workingDays = [];
 
-        $("#required-attachment").hide();
+        $("#required-attachment-box").hide();
         $("#can-edit-delete").hide();
         $("#cancel-edit-leave-request").hide();
 
         $.get("{{ route('employee.e-leave.ajax.working-days') }}", function(workingDaysData, status) {
             workingDays = workingDaysData;
             initCalendar();
+            loadLeaveTypes();
         });
 
         function initCalendar() {
@@ -261,19 +259,6 @@
             });
         }       
 
-        // Load Leave Type Select box
-        $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
-            $.each(leaveTypeData, function(key, leaveType){
-                var leaveTypeOption = $('#templates .leave-type-option').clone();
-                leaveTypeOption.data('leave-type', leaveType);
-                leaveTypeOption.val(leaveType.id);
-                leaveTypeOption.text(leaveType.name);
-                leaveTypeOption.appendTo('#leave-types');
-            });
-
-            console.log(leaveTypeData);
-        });
-
         // Full day, AM, PM toggle
         $("button.leave-day").on('click', function() {
             $("button.leave-day").removeClass("selected-day");
@@ -326,12 +311,12 @@
                 if(leave_type_data.required_attachment) {
                     attachmentRequired = true;
                     $("#required-attachment-label").text(leave_type_data.attachment_type + " Attachment");
-                    $("#required-attachment").show();
+                    $("#required-attachment-box").show();
                 }
                 else {
                     attachmentRequired = false;
                     $("#required-attachment-label").text("Attachment");
-                    $("#required-attachment").hide();
+                    $("#required-attachment-box").hide();
                 }
 
                 $('#mode').val('edit');
@@ -358,6 +343,7 @@
                     $("#calendar-leave").fullCalendar('refetchEvents');
 
                     clear_leave_request_form();
+                    loadLeaveTypes();
                 },
                 error: function(xhr) {
                     console.log("Error: ", xhr);
@@ -411,7 +397,7 @@
         });
 
         $("#leave-full-day").click(function(){  
-            $("span.total-days").replaceWith("<span class='total-days'><b>1</b> days</span>");
+            $("span.total-days").replaceWith("<span class='total-days'><b>1.0</b> days</span>");
             $("#totalLeave").val(1);
         });
         
@@ -431,13 +417,15 @@
             if(leave_type_data.required_attachment) {
                 attachmentRequired = true;
                 $("#required-attachment-label").text(leave_type_data.attachment_type + " Attachment");
-                $("#required-attachment").show();
+                $("#required-attachment-box").show();
             }
             else {
                 attachmentRequired = false;
                 $("#required-attachment-label").text("Attachment");
-                $("#required-attachment").hide();
+                $("#required-attachment-box").hide();
             }
+
+            console.log(leave_type_data);
         });
 
         // submit leave request ) (add/edit mode)
@@ -471,7 +459,7 @@
                     _token: '{{ csrf_token() }}',
                     start_date: $('#add-leave-request-form #alt-start-date').val(),
                     end_date: $('#add-leave-request-form #alt-end-date').val(),
-                    leave_type_id: $('#add-leave-request-form #leave-types').find('option:selected').val(),
+                    leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                     am_pm: $('#add-leave-request-form button.selected-day').data('value'),
                     reason: $('#add-leave-request-form #reason').val(),
                 };
@@ -498,6 +486,7 @@
                     $("#calendar-leave").fullCalendar('refetchEvents');
 
                     clear_leave_request_form();
+                    loadLeaveTypes();
                 },
                 error: function(xhr) {
                     console.log("Error: ", xhr);
@@ -505,7 +494,7 @@
             }); 
         }
 
-        // Updates leave request function
+        // Update leave request function
         function postEditLeaveRequest(data) {
             let postEditLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.edit.post', ['id' => '<<id>>']) }}';
 
@@ -520,6 +509,7 @@
                     $("#calendar-leave").fullCalendar('refetchEvents');
 
                     clear_leave_request_form();
+                    loadLeaveTypes();
                 },
                 error: function(xhr) {
                     console.log("Error: ", xhr);
@@ -538,6 +528,21 @@
             reader.onerror = function (error) {
                 console.log('Error: ', error);
             };
+        }
+
+        // Load Leave Type Select box
+        function loadLeaveTypes() {
+            $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
+                $('#leave-types').html('<option selected disabled>Select Leave</option>');
+
+                $.each(leaveTypeData, function(key, leaveType){
+                    var leaveTypeOption = $('#templates .leave-type-option').clone();
+                    leaveTypeOption.data('leave-type', leaveType);
+                    leaveTypeOption.val(leaveType.id);
+                    leaveTypeOption.text(leaveType.name);
+                    leaveTypeOption.appendTo('#leave-types');
+                });
+            });
         }
 
         // Validate Leave request

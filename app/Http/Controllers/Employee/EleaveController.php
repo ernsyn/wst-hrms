@@ -380,13 +380,31 @@ class ELeaveController extends Controller
             $requestData = $request->validate([
                 'start_date' => 'required',
                 'end_date' => 'required',
-                'leave_type_id' => 'required',
+                'leave_type' => 'required',
                 'am_pm' => '',
                 'reason' => 'required',
                 'attachment' => ''
             ]);
 
+            // update leave allocations and remove previous leave request
+            $leaveRequest = LeaveRequest::where('id', $id)->first();
+
+            $now = Carbon::now();
+            
+            $leaveAllocation = LeaveAllocation::where('emp_id', Auth::user()->employee->id)
+            ->where('leave_type_id', $request['leave_type'])
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
+
+            $leaveAllocation->update([
+                'spent_days' => $leaveAllocation->spent_days - $leaveRequest->applied_days
+            ]);
+
+            $leaveRequest->delete();
+
             $am_pm = null;
+            
             if(array_key_exists('am_pm', $requestData)) {
                 $am_pm = $requestData['am_pm'];
             }
@@ -396,14 +414,29 @@ class ELeaveController extends Controller
                 $attachment_data_url = $requestData['attachment'];
             }
 
-            LeaveRequest::where('id', $id)->update($requestData);
+            $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
 
-            return response()->json(['success'=>'Leave Request was successfully updated.']);
+            return response()->json($result);
         }
 
         public function ajaxCancelLeaveRequest($id)
         {
-            LeaveRequest::where('id', $id)->delete();
+            // update leave allocations and remove previous leave request
+            $leaveRequest = LeaveRequest::where('id', $id)->first();
+
+            $now = Carbon::now();
+            
+            $leaveAllocation = LeaveAllocation::where('emp_id', Auth::user()->employee->id)
+            ->where('leave_type_id', $leaveRequest['leave_type_id'])
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
+
+            $leaveAllocation->update([
+                'spent_days' => $leaveAllocation->spent_days - $leaveRequest->applied_days
+            ]);
+
+            $leaveRequest->delete();
 
             return response()->json(['success'=>'Leave Request was successfully cancelled.']);
         }
