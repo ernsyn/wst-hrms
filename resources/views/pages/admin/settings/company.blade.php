@@ -9,6 +9,7 @@
             </button>
     </div>
     @endif
+    @hasrole('super-admin') 
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -17,6 +18,7 @@
                     </a>
         </div>
     </div>
+    @endhasrole
     <div class="row">
         <div class="col-md-12">
             <div class="float-right tableTools-container"></div>
@@ -46,7 +48,9 @@
                         <td>
                             <button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
                             <button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment"></button>
+                            @hasrole('super-admin') 
                             <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $company->name }}' data-link='{{ route('admin.settings.companies.delete', ['id ' => $company->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button>
+                            @endhasrole
                         </td>
                     </tr>
                     @endforeach
