@@ -12,6 +12,7 @@ class EmployeeAttachment extends Model
     protected $fillable = [
         'name',
         'notes',
+        'media_id',
         'created_by'
     ];
 

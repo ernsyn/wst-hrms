@@ -44,6 +44,7 @@ use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
+use App\Media;
 
 use App\Http\Services\LeaveService;
 
@@ -608,8 +609,25 @@ class EmployeeController extends Controller
     {
         $attachmentData = $request->validate([
             'name' => 'required',
-            'notes' => 'required'
+            'notes' => 'required',
+            'media_id' => '',
+            'attachment' => ''
         ]);
+
+        $attachment_data_url = null;
+        if(array_key_exists('attachment', $attachmentData)) {
+            $attachment_data_url = $attachmentData['attachment'];
+        }
+
+        $attach = self::processBase64DataUrl($attachment_data_url);
+        $mediaData = Media::create([
+            'category' => 'employee-attachment',
+            'mimetype' => $attach['mime_type'],
+            'data' => $attach['data'],
+            'size' => $attach['size'],
+            'filename' => 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension']
+        ]);
+        $attachmentData['media_id'] = $mediaData->id;
         $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
 
@@ -617,6 +635,23 @@ class EmployeeController extends Controller
         $employee->employee_attachments()->save($attachment);
 
         return response()->json(['success'=>'Attachment is successfully added']);
+    }
+
+    private static function processBase64DataUrl($dataUrl) {
+        $parts = explode(',', $dataUrl);
+
+        preg_match('#data:(.*?);base64#', $parts[0], $matches);
+        $mimeType = $matches[1];
+        $extension = explode('/', $mimeType)[1];
+
+        $data = base64_decode($parts[1]);
+
+        return [
+            'data' => $data,
+            'mime_type' => $mimeType,
+            'size' => mb_strlen($data),
+            'extension' => $extension
+        ];
     }
 
     // SECTION: Employee Working Day Setup

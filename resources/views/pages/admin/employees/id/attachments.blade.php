@@ -27,6 +27,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="notes"><strong>Attachment</strong></label>
+                            <input type="file" name="required-attachment" class="form-control-file">
+                            <div id="notes-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="add-attachment-submit" type="submit" class="btn btn-primary">
@@ -170,15 +178,33 @@
         $('#add-attachment-form #add-attachment-submit').click(function(e){
             clearAttachmentsError('#add-attachment-form');
             e.preventDefault();
+            var file = document.querySelector('input[name=required-attachment]').files[0];
+
+
+            var data = {
+                _token: '{{ csrf_token() }}',
+                name: $('#add-attachment-form #name').val(),
+                notes: $('#add-attachment-form #notes').val()
+            };
+
+            if(file) {
+                console.log(file);
+                getBase64(file, function(attachmentDataUrl) {
+                    data.attachment = attachmentDataUrl;
+                    postAddAttachment(data);
+                });
+            } else {
+                postAddAttachment(data);
+            }
+
+        });
+
+
+        function postAddAttachment(data) {
             $.ajax({
                 url: "{{ route('admin.employees.attachments.post', ['id' => $id]) }}",
                 type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    // Form Data
-                    name: $('#add-attachment-form #name').val(),
-                    notes: $('#add-attachment-form #notes').val()
-                },
+                data: data,
                 success: function(data) {
                     showAlert(data.success);
                     attachmentsTable.ajax.reload();
@@ -207,7 +233,7 @@
                     }
                 }
             });
-        });
+        }
 
         // EDIT ATTACHMENT
         var editAttachmentId = null;
@@ -307,6 +333,19 @@
 
 
     // GENERAL FUNCTIONS
+    // convert attachement to base64
+    function getBase64(file, onLoad) {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onload = function () {
+            onLoad(reader.result);
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+    }
+
     function clearAttachmentsModal(htmlId) {
         $(htmlId + ' #name').val('');
         $(htmlId + ' #notes').val('');
