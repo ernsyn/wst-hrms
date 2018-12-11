@@ -225,10 +225,12 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
-        public function ajaxGetEmployeeLeaves($status)
+        public function ajaxGetEmployeeLeaves(Request $request, $status)
         {
             $leaveRequest = LeaveRequest::where('emp_id', Auth::user()->employee->id)
             ->where('status', $status)
+            ->where('start_date', '>=', $request->start)
+            ->where('end_date', '<=', $request->end)
             ->get();
             
             $result = array();
@@ -237,21 +239,54 @@ class ELeaveController extends Controller
             {
                 $leave = new stdClass();
 
-                if($row->am_pm) 
-                {
-                    $leave->allDay = false;
-                }
-                else
-                {
-                    $leave->allDay = true;
-                }
+                // if($row->am_pm) 
+                // {
+                //     $leave->allDay = false;
+                // }
+                // else
+                // {
+                //     $leave->allDay = true;
+                // }
+
+                $leaveType = LeaveType::where('id', $row->leave_type_id)->first();
 
                 $leave->id = $row->id;
-                $leave->title = $row->reason;
+                $leave->title = $leaveType->name;
                 $leave->start = $row->start_date;
-                $leave->end = $row->end_date;
+                $leave->end = $row->end_date."T15:59:00";
                 $leave->status = $row->status;
+                $leave->reason = $row->reason;
                 $result[] = $leave;
+            }
+
+            return $result;
+        }
+
+        public function ajaxGetHolidays(Request $request)
+        {
+            $holidays = Holiday::where('status', 'active')
+            ->where('start_date', '>=', $request->start)
+            ->where('end_date', '<=', $request->end)
+            ->get();
+
+            if(empty($holidays)) {
+                return self::error("Holidays not set yet.");
+            }
+            
+            $result = array();
+
+            foreach ($holidays as $row) 
+            {
+                $holiday = new stdClass();
+
+                $holiday->id = $row->id;
+                $holiday->title = $row->name;
+                $holiday->start = $row->start_date;
+                $holiday->end = $row->end_date."T15:59:00";
+                $holiday->status = 'holiday';
+                $holiday->reason = $row->note;
+                // $holiday->allDay = true;
+                $result[] = $holiday;
             }
 
             return $result;

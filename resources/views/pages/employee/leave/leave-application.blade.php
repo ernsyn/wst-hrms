@@ -127,7 +127,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="add-report-to-label">Leave Details</h5>
+                <h5 class="modal-title" id="add-report-to-label">Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -213,7 +213,7 @@
                 eventSources: [{
                     url: "{{ route('employee.e-leave.ajax.status', ['status' => 'new']) }}",
                     color: '#CCCCCC',
-                    textColor: 'black'
+                    textColor: 'black',
                 },
                 {
                     url: "{{ route('employee.e-leave.ajax.status', ['status' => 'approved']) }}",
@@ -224,6 +224,12 @@
                     url: "{{ route('employee.e-leave.ajax.status', ['status' => 'rejected']) }}",
                     color: 'red',
                     textColor: 'white'
+                },
+                {
+                    url: "{{ route('employee.e-leave.ajax.holidays') }}",
+                    color: 'palegreen',
+                    textColor: 'green',
+                    borderColor: 'green'
                 }],
                 businessHours: {  
                     dow: workingDays
@@ -232,7 +238,7 @@
                     element.attr('href', 'javascript:void(0);');
                     element.click(function() {
                         event_start = new Date(event.start);
-                        event_end = event.end ? new Date(event.end) : event_start;
+                        event_end = new Date(event.end);
 
                         if(event.status == "new") {
                             $("#can-edit-delete").show();
@@ -241,7 +247,7 @@
                             $("#can-edit-delete").hide();
                         }
 
-                        $("#leave-info").text(event.title);
+                        $("#leave-info").text(event.reason);
                         $("#start-time").text(event_start.toDateString());
                         $("#end-time").text(event_end.toDateString());
                         $("#leave-id").text(event.id);                    

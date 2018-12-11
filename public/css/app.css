@@ -17998,3 +17998,7 @@ button.dropdown-toggle::after {
   color: #FFFFFF;
 }
 
+#page-leave-application .fc-time {
+  display: none;
+}
+
