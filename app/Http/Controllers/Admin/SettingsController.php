@@ -1087,6 +1087,12 @@ public function postAddCompanyBank(Request $request,$id)
     $additionData['created_by'] = auth()->user()->id;
     CompanyBank::create($additionData);
 }
+else {
+    $additionData['status'] = 'Inactive';
+    $additionData['company_id']= $id;
+    $additionData['created_by'] = auth()->user()->id;
+    CompanyBank::create($additionData);
+}
     return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
 }
 
@@ -1118,6 +1124,14 @@ public function postEditCompanyBank(Request $request)
 
     CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
 
+    }
+
+    else {
+
+        $additionData['status'] = 'Inactive';
+        $additionData['company_id']= $id;
+        $additionData['created_by'] = auth()->user()->id;
+        CompanyBank::create($additionData);
     }
     return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been updated.');
 }
