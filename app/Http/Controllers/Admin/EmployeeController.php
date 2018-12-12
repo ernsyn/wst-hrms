@@ -551,11 +551,13 @@ class EmployeeController extends Controller
         $experienceData = $request->validate([
             'company' => 'required',
             'position' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'start_date' => 'required',
+            'end_date' => 'required',
             'notes'=>''
 
         ]);
+        $experienceData['start_date'] = implode("-", array_reverse(explode("/", $experienceData['start_date'])));
+        $experienceData['end_date'] = implode("-", array_reverse(explode("/", $experienceData['end_date'])));
         $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
 
@@ -574,7 +576,7 @@ class EmployeeController extends Controller
             'level' => 'required',
             'major' => 'required',
             'gpa' => 'required|between:0,99.99',
-            'description' => 'required'
+            'description' => ''
         ]);
         $educationData['created_by'] = auth()->user()->id;
         $education = new EmployeeEducation($educationData);
@@ -828,10 +830,12 @@ class EmployeeController extends Controller
         $experienceUpdatedData = $request->validate([
             'company' => 'required',
             'position' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            'notes' => 'required'
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'notes' => ''
         ]);
+        $experienceUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $experienceUpdatedData['start_date'])));
+        $experienceUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $experienceUpdatedData['end_date'])));
 
         EmployeeExperience::where('id', $id)->update($experienceUpdatedData);
 
