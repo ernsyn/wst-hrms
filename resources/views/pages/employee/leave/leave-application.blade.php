@@ -91,6 +91,9 @@
                                     <button id="cancel-edit-leave-request" type="button" class="btn btn-info btn-block">
                                         Cancel Edit Leave Request
                                     </button>
+                                    <div class="progress m-3" hidden>
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -432,6 +435,8 @@
         $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
             e.preventDefault();
 
+            $('#add-leave-request-form .progress').attr('hidden', false);
+
             var file = document.querySelector('input[name=required-attachment]').files[0];
 
             console.log(file);
@@ -487,6 +492,7 @@
 
                     clear_leave_request_form();
                     loadLeaveTypes();
+                    $('#add-leave-request-form .progress').attr('hidden', true);
                 },
                 error: function(xhr) {
                     console.log("Error: ", xhr);
@@ -510,6 +516,7 @@
 
                     clear_leave_request_form();
                     loadLeaveTypes();
+                    $('#add-leave-request-form .progress').attr('hidden', true);
                 },
                 error: function(xhr) {
                     console.log("Error: ", xhr);

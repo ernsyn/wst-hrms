@@ -372,7 +372,9 @@ class ELeaveController extends Controller
 
             $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
 
-            \Mail::send(new LeaveRequestMail(Auth::user()));
+            $leave_request = LeaveRequest::where('id', $result)->first();
+
+            \Mail::send(new LeaveRequestMail(Auth::user(), $leave_request));
 
             return response()->json($result);
         }
@@ -417,6 +419,10 @@ class ELeaveController extends Controller
             }
 
             $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
+
+            $leave_request = LeaveRequest::where('id', $result)->first();
+
+            \Mail::send(new LeaveRequestMail(Auth::user(), $leave_request));
 
             return response()->json($result);
         }
