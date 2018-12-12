@@ -920,7 +920,7 @@ public function postAddCompanyDeduction(Request $request, $id)
     $deduction->cost_centres()->sync($validatedDeductionCostCentreData['cost_centres']);
 
   //  $user->save();
-    return redirect()->route('admin.settings.companies');
+  return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been updated.');
 }
 
 
@@ -942,18 +942,15 @@ public function postEditCompanyDeduction(Request $request)
         'type' => 'required',
         'amount' => 'required',
         'statutory'=> '',
+        
+        'status'=>'required',
+        'ea_form_id' =>'required',
 
     ]);
 
-    // $validatedAdditionCostCentreData = $request->validate([
-    //     'cost_centres'=>'required|numeric',
-    // ]);
 
-    // dd($validatedData);
-    // $validateDeductionData['statutory'] = implode(",", $request->statutory);
-    // $validateDeductionData['status'] = 'active';
-   // $validatedAdditionData['company_id']=$id;
-   // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
+    $validateDeductionData['statutory'] = implode(",", $request->statutory);
+    $validateDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
 
 
 
@@ -1012,8 +1009,7 @@ public function postAddCompanyAddition(Request $request, $id)
         $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
 
 
-    return redirect()->route('admin.settings.companies');
-
+        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been updated.');
 }
 
 public function editCompanyAddition(Request $request, $id) {
