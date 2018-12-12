@@ -426,10 +426,12 @@ class EmployeeController extends Controller
     {
         $immigrationData = $request->validate([
             'passport_no' => 'required|alpha_num',
-            'expiry_date' => 'required|date',
             'issued_by' => 'required',
-            'issued_date' => 'required|date'
+            'issued_date' => 'required',
+            'expiry_date' => 'required'
         ]);
+        $immigrationData['issued_date'] = implode("-", array_reverse(explode("/", $immigrationData['issued_date'])));
+        $immigrationData['expiry_date'] = implode("-", array_reverse(explode("/", $immigrationData['expiry_date'])));
         $immigrationData['created_by'] = auth()->user()->id;
         $immigration = new EmployeeImmigration($immigrationData);
 
@@ -762,10 +764,12 @@ class EmployeeController extends Controller
     {
         $immigrationUpdatedData = $request->validate([
             'passport_no' => 'required|alpha_num',
-            'expiry_date' => 'required|date',
             'issued_by' => 'required',
-            'issued_date' => 'required|date'
+            'issued_date' => 'required',
+            'expiry_date' => 'required'
         ]);
+        $immigrationUpdatedData['issued_date'] = implode("-", array_reverse(explode("/", $immigrationUpdatedData['issued_date'])));
+        $immigrationUpdatedData['expiry_date'] = implode("-", array_reverse(explode("/", $immigrationUpdatedData['expiry_date'])));
 
         EmployeeImmigration::where('id', $id)->update($immigrationUpdatedData);
 
