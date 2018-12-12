@@ -17,4 +17,9 @@ class EmployeeAttachment extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function medias()
+    {
+        return $this->belongsTo('App\Media', 'media_id');
+    }
 }

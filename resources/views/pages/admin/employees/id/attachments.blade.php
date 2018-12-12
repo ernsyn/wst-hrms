@@ -124,6 +124,7 @@
                 <th>No</th>
                 <th>Name</th>
                 <th>Notes</th>
+                <th>Attachment</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -157,6 +158,10 @@
             },
             {
                 "data": "notes"
+            },
+            {
+                "data": "medias.filename", // can be null or undefined
+                "defaultContent": "<strong>(not set)</strong>"
             },
             {
                 "data": null,
