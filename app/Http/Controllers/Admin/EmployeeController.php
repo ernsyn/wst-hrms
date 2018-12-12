@@ -446,12 +446,13 @@ class EmployeeController extends Controller
         $visaData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            // 'passport_no' => 'required|alpha_num',
-            'expiry_date' => 'required|date',
             'issued_by' => 'required',
-            'issued_date' => 'required|date',
+            'issued_date' => 'required',
+            'expiry_date' => 'required',
             'family_members' => 'required'
         ]);
+        $visaData['issued_date'] = implode("-", array_reverse(explode("/", $visaData['issued_date'])));
+        $visaData['expiry_date'] = implode("-", array_reverse(explode("/", $visaData['expiry_date'])));
         $visaData['created_by'] = auth()->user()->id;
         $visa = new EmployeeVisa($visaData);
 
@@ -781,12 +782,13 @@ class EmployeeController extends Controller
         $visaUpdatedData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            // 'passport_no' => 'required|alpha_num',
-            'expiry_date' => 'required|date',
             'issued_by' => 'required',
-            'issued_date' => 'required|date',
+            'issued_date' => 'required',
+            'expiry_date' => 'required',
             'family_members' => 'required'
         ]);
+        $visaUpdatedData['issued_date'] = implode("-", array_reverse(explode("/", $visaUpdatedData['issued_date'])));
+        $visaUpdatedData['expiry_date'] = implode("-", array_reverse(explode("/", $visaUpdatedData['expiry_date'])));
 
         EmployeeVisa::where('id', $id)->update($visaUpdatedData);
 
