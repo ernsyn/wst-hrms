@@ -410,8 +410,9 @@ class EmployeeController extends Controller
         $dependentData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required',
         ]);
+        $dependentData['dob'] = implode("-", array_reverse(explode("/", $dependentData['dob'])));
         $dependentData['created_by'] = auth()->user()->id;
         $dependent = new EmployeeDependent($dependentData);
 
@@ -748,9 +749,9 @@ class EmployeeController extends Controller
         $dependentUpdatedData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required',
         ]);
-        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
+        $dependentUpdatedData['dob'] = implode("-", array_reverse(explode("/", $dependentUpdatedData['dob'])));
 
         EmployeeDependent::where('id', $id)->update($dependentUpdatedData);
 
