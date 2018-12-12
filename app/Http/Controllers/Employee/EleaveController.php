@@ -268,11 +268,15 @@ class ELeaveController extends Controller
             // $branch = Branch::where('id', $employee->branch_id)->first();
 
             $branch = DB::table('employee_jobs')
-            ->leftJoin('branches', 'employee_jobs.branch_id', '=', 'branches.id')
+            ->join('branches', 'employee_jobs.branch_id', '=', 'branches.id')
             ->select('branches.state')
             ->where('employee_jobs.emp_id', Auth::user()->employee->id)
             ->orderBy('employee_jobs.created_at', 'DESC')
             ->first();
+
+            if(empty($branch)) {
+                return self::error("Employee job is not set yet.");
+            }
 
             $holidays = Holiday::where('status', 'active')
             ->where('state', 'like', '%' . $branch->state . '%')
