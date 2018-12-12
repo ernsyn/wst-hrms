@@ -476,19 +476,12 @@ class EmployeeController extends Controller
             'basic_salary' => 'required',
             'remarks' => '',
             'branch_id' => 'required',
-            'start_date' => 'required|date',
+            'start_date' => 'required',
             'status' => 'required',
         ]);
+        $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
 
         $jobData['created_by'] = auth()->user()->id;
-        // $jobData['status'] = 'active';
-        // $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-
-        // $end_date = EmployeeJob::where('id', $id)
-        // ->whereNull('end_date');
-
-        // $jobData['status'] = 'active';
-        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)
@@ -810,9 +803,7 @@ class EmployeeController extends Controller
             'remarks' => '',
             'status' => 'required'
         ]);
-
-        // $jobData['status'] = 'active';
-        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+        $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
 
         EmployeeJob::where('id', $id)->update($jobData);
 
