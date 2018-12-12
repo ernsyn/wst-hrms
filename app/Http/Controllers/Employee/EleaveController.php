@@ -264,10 +264,21 @@ class ELeaveController extends Controller
 
         public function ajaxGetHolidays(Request $request)
         {
+            // $employee = EmployeeJob::where('emp_id', Auth::user()->employee->id)->latest()->first();
+            // $branch = Branch::where('id', $employee->branch_id)->first();
+
+            $branch = DB::table('employee_jobs')
+            ->leftJoin('branches', 'employee_jobs.branch_id', '=', 'branches.id')
+            ->select('branches.state')
+            ->where('employee_jobs.emp_id', Auth::user()->employee->id)
+            ->orderBy('employee_jobs.created_at', 'DESC')
+            ->first();
+
             $holidays = Holiday::where('status', 'active')
+            ->where('state', 'like', '%' . $branch->state . '%')
             ->where('start_date', '>=', $request->start)
             ->where('end_date', '<=', $request->end)
-            ->get();
+            ->get();            
 
             if(empty($holidays)) {
                 return self::error("Holidays not set yet.");
