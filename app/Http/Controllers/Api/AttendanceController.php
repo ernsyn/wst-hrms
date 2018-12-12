@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 use App\Employee;
-use App\EmployeeAttendance;
+use App\EmployeeClockInOutRecord;
 use App\Media;
 
-use App\Http\Resources\EmployeeAttendance as EmployeeAttendanceResource;
+use App\Http\Resources\EmployeeClockInOutRecord as EmployeeClockInOutRecordResource;
 
 class AttendanceController extends Controller
 {
@@ -23,9 +23,9 @@ class AttendanceController extends Controller
     }
 
     public function getAttendanceList() {
-        $attendances = EmployeeAttendance::where('emp_id', Auth::user()->employee->id)->orderBy('clock_in_time', 'desc')->take(5)->get();
+        $attendances = EmployeeClockInOutRecord::where('emp_id', Auth::user()->employee->id)->orderBy('clock_in_time', 'desc')->take(5)->get();
         // dd($attendances);
-        return response()->json(EmployeeAttendanceResource::collection($attendances), 200);  
+        return response()->json(EmployeeClockInOutRecordResource::collection($attendances), 200);  
     }
 
     public function postClockIn(Request $request)
@@ -40,7 +40,7 @@ class AttendanceController extends Controller
         
         $imageData = $this->processBase64DataUrl($clockInData['clock_in_image']);
 
-        if(Auth::user()->employee->attendances()->where('clock_out_time', null)->count() > 0) {
+        if(Auth::user()->employee->clock_in_out_records()->where('clock_out_time', null)->count() > 0) {
             return response()->json(['error' => 'Please clock-out your previous attendance first!'], 400);
         }
 
@@ -69,7 +69,7 @@ class AttendanceController extends Controller
         $attendance->clock_in_image()->associate($clockInImage);
         $attendance->save();
 
-        return response()->json(new EmployeeAttendanceResource($attendance), 200);    
+        return response()->json(new EmployeeClockInOutRecordResource($attendance), 200);    
     }
 
     public function postClockout(Request $request)
@@ -115,7 +115,7 @@ class AttendanceController extends Controller
         $currentAttendance->clock_out_image()->associate($clockOutImage);
         $currentAttendance->save();
 
-        return response()->json(new EmployeeAttendanceResource($currentAttendance), 200);    
+        return response()->json(new EmployeeClockInOutRecordResource($currentAttendance), 200);    
     }
 
     private function isWorkingDay($workingDays, $time) {

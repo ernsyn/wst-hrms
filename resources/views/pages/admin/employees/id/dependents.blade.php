@@ -30,8 +30,13 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
-                            <input id="dob-dependent" type="text" class="form-control" data-target="#dob-dependent" data-toggle="datetimepicker">
-                            <div id="dob-dependent-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="dob-dependent" class="form-control datetimepicker-input" data-target="#dob-dependent"/>
+                                <div class="input-group-append" data-target="#dob-dependent" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="dob-dependent-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,8 +83,13 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
-                            <input id="dob-dependent-edit" type="text" class="form-control" data-target="#dob-dependent-edit" data-toggle="datetimepicker">
-                            <div id="dob-dependent-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="dob-dependent-edit" class="form-control datetimepicker-input" data-target="#dob-dependent-edit"/>
+                                <div class="input-group-append" data-target="#dob-dependent-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="dob-dependent-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -345,16 +355,19 @@
         $(htmlId + ' #name').val('');
         $(htmlId + ' #relationship').val('');
         $(htmlId + ' #dob-dependent').val('');
+        $(htmlId + ' #dob-dependent-edit').val('');
 
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #relationship').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent').removeClass('is-invalid');
+        $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
     }
 
     function clearDependentsError(htmlId) {
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #relationship').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent').removeClass('is-invalid');
+        $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
     }
 
     function showAlert(message) {
