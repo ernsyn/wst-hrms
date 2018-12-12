@@ -43,7 +43,7 @@ use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
-use App\EmployeeAttendance;
+use App\EmployeeClockInOutRecord;
 
 use App\Http\Services\LeaveService;
 
@@ -1009,7 +1009,7 @@ class EmployeeController extends Controller
             ];
         }
 
-        $attendances = EmployeeAttendance::where('emp_id', $id)->whereMonth('clock_in_time', $now->month)->get();
+        $attendances = EmployeeClockInOutRecord::where('emp_id', $id)->whereMonth('clock_in_time', $now->month)->get();
         $holidays = Holiday::where('start_date', '>=', $startOfMonth)
         ->where(function($q) use ($startOfMonth, $endOfMonth) {
             $q->where('start_date', '>=', $startOfMonth);
