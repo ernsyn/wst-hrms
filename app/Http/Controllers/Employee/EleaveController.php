@@ -256,6 +256,16 @@ class ELeaveController extends Controller
                 $leave->end = $row->end_date."T23:59:59";
                 $leave->status = $row->status;
                 $leave->reason = $row->reason;
+
+                if($row->am_pm)
+                {
+                    $leave->am_pm = strtoupper($row->am_pm);
+                }
+                else 
+                {
+                    $leave->am_pm = "Full Day";
+                }
+                
                 $result[] = $leave;
             }
 

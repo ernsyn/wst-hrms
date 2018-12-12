@@ -129,8 +129,8 @@
 <div class="modal fade" id="leave-details" tabindex="-1" role="dialog" aria-labelledby="leave-details-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="add-report-to-label">Details</h5>
+            <div class="modal-header details-label">
+                <h5 class="modal-title">Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -139,8 +139,12 @@
                 @csrf
                 <div class="form-row">
                     <div class="col-md-12 mb-3">
-                        <div><strong>From:</strong> <span id="start-time"></span></div>
-                        <div><strong>To:</strong> <span id="end-time"></span><br></div>
+                        <div><strong>Type:</strong> <span id="leave-type-info"></span></div>
+                        <div>
+                            <strong>From:</strong> <span id="start-time"></span> 
+                            <strong>To:</strong> <span id="end-time"></span>
+                        </div>
+                        <div><strong>Period:</strong> <span id="am-pm"></span></div>
                         <div id="leave-info"></div>
                     </div>
                 </div>
@@ -252,6 +256,8 @@
                         $("#leave-info").text(event.reason);
                         $("#start-time").text(event_start.toDateString());
                         $("#end-time").text(event_end.toDateString());
+                        $("#am-pm").text(event.am_pm);
+                        $("#leave-type-info").text(event.title);
                         $("#leave-id").text(event.id);                    
                         $("#leave-details").modal('toggle');
                     });
