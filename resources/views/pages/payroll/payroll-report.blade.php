@@ -70,7 +70,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\PayrollReportController@export_report')}}">
+                    <form method="post" action="{{action('Payroll\PayrollReportController@exportReport')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -208,7 +208,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\PayrollReportController@export_report')}}">
+                    <form method="post" action="{{action('Payroll\PayrollReportController@exportReport')}}">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')

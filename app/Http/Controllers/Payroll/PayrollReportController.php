@@ -10,8 +10,12 @@ use App\Repositories\Payroll\ReportRepository;
 use App\Services\PayrollService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Sheet;
+use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Output\Destination;
-use App\Http\Controllers\Popo\payrollreport\PayrollReport;
+use App\Exports\BankCreditDetailExport;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class PayrollReportController extends Controller
 {
@@ -36,7 +40,7 @@ class PayrollReportController extends Controller
     // 6. Bank Credit Detail
     // 7. Payroll Detail
     // 8. Payroll Summary
-    public function export_report(Request $request)
+    public function exportReport(Request $request)
     {
 //         dd($request);
         
@@ -107,55 +111,189 @@ class PayrollReportController extends Controller
             case '1':
                 $filter_data['groupby'] = ['JM_department.id'];
                 // Run type 1.
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 
                 $filter_data['cost_center'] = 'HQ';
                 // Run type 2.
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 
                 break;
             case '2':
                 $filter_data['groupby'] = ['JM_department.id', 'JM_category.id'];
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 
                 break;
             case '3':
                 $filter_data['groupby'] = ['JM_department.id', 'JM_category.id'];
                 $extra['filter_by'] = '';
                 // Run type 1.
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 
                 $filter_data['groupby'] = ['JM_category.id'];
                 $extra['filter_by'] = 'category';
                 // Run type 2.
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 
                 $filter_data['groupby'] = ['JM_department.id'];
                 $filter_data['cost_center'] = 'HQ';
                 $extra['filter_by'] = 'department';
                 // Run type 3.
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 
                 break;
             case '4':
                 $filter_data['groupby'] = ['JM_department.id'];
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 break;
             case '5':
             case '6':
                 $filter_data['groupby'] = ['EM.id', 'BM.id'];
                 $extra['payrollMonth'] = $payroll->year_month;
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                
+                $reportList = $this->report->find_by_company_id($company->id, $filter_data);
+                $dataArray = [];
+                $netPay = 0;
+                
+                foreach($reportList as $info){
+                    $data = [
+                        '1' => 'LIP',
+                        '2' => number_format((float)$info->net_pay,2, '.', ''),
+                        '3' => 'PBBEMYKL',
+                        '4' => $info->name,
+                        '5' => $info->acc_no,
+                        '6' => DateHelper::dateWithFormat($extra['payrollMonth'], "F").' Salary',
+                        '7' => DateHelper::dateWithFormat(DateHelper::getLastDayOfDate($extra['payrollMonth']), "d/m/Y")
+                    ];
+                    $dataArray[] = $data;
+                    
+                    $netPay += $info->net_pay;
+                }
+                $dataArray[] = ['1'=>'TOTAL', '2' => number_format((float)$netPay,2, '.', '')];
+                
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                $sheet->getStyle('A:K')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('A:K')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+                $sheet->getStyle('A:K')->getAlignment()->setWrapText(true);
+//                 $spreadsheet->getDefaultStyle()->getFont()->setName('Arial')->setSize(10);
+                $sheet->getColumnDimension('A')->setWidth(17);
+                $sheet->getColumnDimension('B')->setWidth(15);
+                $sheet->getColumnDimension('C')->setWidth(15);
+                $sheet->getColumnDimension('D')->setWidth(50);
+                $sheet->getColumnDimension('E')->setWidth(20);
+                $sheet->getColumnDimension('F')->setWidth(20);
+                $sheet->getColumnDimension('G')->setWidth(22);
+                $sheet->getColumnDimension('H')->setWidth(22);
+                $sheet->getColumnDimension('I')->setWidth(15);
+                $sheet->getColumnDimension('J')->setWidth(11);
+                $sheet->getColumnDimension('K')->setWidth(16);
+                
+                $fontArray = [
+                    'font' => [
+                        'name' => 'Arial',
+                        'size' => '10'
+                    ],
+                ];
+                $sheet->getStyle('A:K')->applyFromArray($fontArray);
+                
+                //first row style
+                $styleArray = [
+                    'font' => [
+                        'bold' => true,
+                        'name' => 'Arial',
+                        'size' => '10'
+                    ],
+                    'alignment' => [
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                        
+                    ],
+                ];
+                $sheet->getStyle('A1')->applyFromArray($styleArray);
+                
+//                 $sheet->getDefaultStyle()->getFont()->setName('Arial');
+//                 $sheet->getDefaultStyle()->getFont()->setSize(10);
+//                 $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(200);
+                
+                //first row
+                $sheet->getCell('A1')->setValue("PAYMENT DATE :\n(DD/MM/YYYY)");
+                $sheet->getCell('B1')->setValue($dataArray[0]['7']);
+                
+                //header
+                $headerArray1 = ['Payment Type/ Mode : LIP/LGP/LSP', 'Payment Amount', 'BIC', 'Bene Full Name', 'Bene Account No.', 'Payment Purpose', 'Bene Email', 'Bene Identification No / Passport', 'ID Type: NI, OI, PL, ML, PP, BR', 'Bene Mobile No.', 'Payor Corporation\'s Reference No.'];
+                $headerArray2 = ['(M) - Char: 3 - A', '(M) - Char: 20 - N', '(M) - Char: 11 - A', '(M) - Char: 120 - A', '(M) - Char:20 - A', '(M) - Char: 50 - A', '(O) - Char: 30 - A', '(O) - Char: 18 - A', '(O) - Char: 2 - A', '(O) - Char: 15 - A', '(O) - Char: 16 - A'];
+                
+                $i=0;
+                foreach (range('A', 'K') as $char) {
+                    $sheet->getCell($char.'2')->setValue($headerArray1[$i]);
+                    $sheet->getCell($char.'3')->setValue($headerArray2[$i]);
+                    $i++;
+                }
+                
+                $borderStyleArray = [
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        ],
+                    ],
+                ];
+                $sheet->getStyle('A2:K3')->applyFromArray($borderStyleArray);
+                
+                $boldStyleArray = [
+                    'font' => [
+                        'bold' => true,
+                    ],
+                ];
+                $sheet->getStyle('A2:K2')->applyFromArray($boldStyleArray);
+                
+                //records
+                $alignLeftStyleArray = [
+                    'alignment' => [
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                        
+                    ],
+                ];
+                $sheet->getStyle('D')->applyFromArray($alignLeftStyleArray);
+                
+                $i=4;
+                foreach($dataArray as $data){
+                    if ($data === end($dataArray)) {
+                        $sheet->getCell("A".$i)->setValue($data['1']);
+                        $sheet->getCell("B".$i)->setValue($data['2']);
+                        $sheet->getStyle("A".$i)->applyFromArray($alignLeftStyleArray);
+                        $sheet->getStyle("A".$i.":B".$i)->applyFromArray($boldStyleArray);
+                    } else {
+                        $sheet->getCell("A".$i)->setValue($data['1']);
+                        $sheet->getCell("B".$i)->setValue($data['2']);
+                        $sheet->getCell("C".$i)->setValue($data['3']);
+                        $sheet->getCell("D".$i)->setValue($data['4']);
+                        $sheet->getCell("E".$i)->setValue($data['5']);
+                        $sheet->getCell("F".$i)->setValue($data['6']);
+                    }
+                    
+                    $i++;
+                }
+                
+                    
+                $writer = new Xlsx($spreadsheet);
+                
+                $filename = 'Bank Credit Detail';
+                
+                header('Content-Type: application/vnd.ms-excel');
+                header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');
+                header('Cache-Control: max-age=0');
+                
+                $writer->save('php://output'); // download file 
+                return;
                 break;
             case '7':
                 // Document 6. Summary
                 $filter_data['groupby'] = ['CM.id'];
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 break;
             case '8':
                 // Document 7. Payroll Details
                 $filter_data['groupby'] = ['EM.id', 'JM_department.id'];
-                $this->generate_report($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter_data, $request_data, $extra);
                 break;
             default:
                 $error = 'Unknown type of report selected. Kindly contact admin to get more details.';
@@ -168,73 +306,57 @@ class PayrollReportController extends Controller
         return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully generated report.');
     }
     
-    private function generate_report($company, $filter_data, $request_data, $extra)
+    private function generateReport($company, $filter_data, $request_data, $extra)
     {
         if(isset($company)) {
-                $report_list = $this->report->find_by_company_id($company->id, $filter_data);
-//                 dd($company, $filter_data, $request_data, $extra,$report_list);
-                $document_info = $this->get_document_html($filter_data['type'], $company, $report_list, $extra);
+            $report_list = $this->report->find_by_company_id($company->id, $filter_data);
+//             dd($company, $filter_data, $request_data, $extra,$report_list);
+            $document_info = $this->get_document_html($filter_data['type'], $company, $report_list, $extra);
 //                 $request_data['file'] = $file_name;
                 
-                switch ($filter_data['type']) {
-                    case '1':
-                        $file_name = 'doc1.pdf';
-                        $request_data['document_name'] = 'Doc 1. Payment Form Group By Department - '.$company->name;
-                        if(@$filter_data['costcentres']) $request_data['document_name'] .= ' (HQ)';
-                        break;
-                    case '2':
-                        $file_name = 'doc2.pdf';
-                        $request_data['document_name'] = 'Doc 2. Payment Form Group By Department & Cost Center - '.$company->name;
-                        break;
-                    case '3':
-                        $file_name = 'doc3.pdf';
-                        $request_data['document_name'] = 'Doc 3. Supplier Payment Form [Cost Center] - '.$company->name;
-                        if(count($filter_data['groupby']) > 1) $request_data['document_name'] = 'Doc 3. Supplier Payment Form [Department - Cost Center] - '.$company->name;
-                        if(@$filter_data['cost_center']) $request_data['document_name'] .= ' (HQ)';
-                        break;
-                    case '4':
-                        $file_name = 'doc4.pdf';
-                        $request_data['document_name'] = 'Doc 4. Cash Transfer Document [Department] - '.$company->name;
-                        break;
-                    case '5':
-                        $file_name = 'doc5.pdf';
-                        $request_data['document_name'] = 'Doc 5. Group By Bank - '.$company->name;
-                        break;
-                    case '6':
-                        $file_name = 'doc6.pdf';
-                        $request_data['document_name'] = 'Doc 5. Group By Bank - '.$company->name;
-                        break;
-                    case '7':
-                        $file_name = 'doc7.pdf';
-                        $request_data['document_name'] = 'Doc 6. Payroll Summary';
-                        break;
-                    case '8':
-                        $file_name = 'doc8.pdf';
-                        $request_data['document_name'] = 'Doc 7. Payroll Details - '.$company->name;
-                        break;
-                    default:
-                        $request_data['document_name'] = 'Not available.';
-                        break;
-                }
-                
-                $this->export_pdf($document_info['css'], $document_info['header'], $document_info['footer'], $document_info['body'], $document_info['pdf_format'], $file_name);
+            switch ($filter_data['type']) {
+                case '1':
+                    $file_name = 'doc1.pdf';
+                    $request_data['document_name'] = 'Doc 1. Payment Form Group By Department - '.$company->name;
+                    if(@$filter_data['costcentres']) $request_data['document_name'] .= ' (HQ)';
+                    break;
+                case '2':
+                    $file_name = 'doc2.pdf';
+                    $request_data['document_name'] = 'Doc 2. Payment Form Group By Department & Cost Center - '.$company->name;
+                    break;
+                case '3':
+                    $file_name = 'doc3.pdf';
+                    $request_data['document_name'] = 'Doc 3. Supplier Payment Form [Cost Center] - '.$company->name;
+                    if(count($filter_data['groupby']) > 1) $request_data['document_name'] = 'Doc 3. Supplier Payment Form [Department - Cost Center] - '.$company->name;
+                    if(@$filter_data['cost_center']) $request_data['document_name'] .= ' (HQ)';
+                    break;
+                case '4':
+                    $file_name = 'doc4.pdf';
+                    $request_data['document_name'] = 'Doc 4. Cash Transfer Document [Department] - '.$company->name;
+                    break;
+                case '5':
+                    $file_name = 'doc5.pdf';
+                    $request_data['document_name'] = 'Doc 5. Group By Bank - '.$company->name;
+                    break;
+                case '7':
+                    $file_name = 'doc7.pdf';
+                    $request_data['document_name'] = 'Doc 6. Payroll Summary';
+                    break;
+                case '8':
+                    $file_name = 'doc8.pdf';
+                    $request_data['document_name'] = 'Doc 8. Payroll Details - '.$company->name;
+                    break;
+                default:
+                    $request_data['document_name'] = 'Not available.';
+                    break;
+            }
+            
+            $this->exportPdf($document_info['css'], $document_info['header'], $document_info['footer'], $document_info['body'], $document_info['pdf_format'], $file_name);
 //                 $this->payroll_report->update('new', $request_data);
         } 
-        /* else {
-            $report_list = $this->report->find_by_company_id(0, $filter_data);
-            
-            $document_info = $this->get_document_html($filter_data['type'], null, $report_list, $extra);
-            $file_name = md5(uniqid().rand()).'.pdf';
-            $request_data['file'] = $file_name;
-            $request_data['document_name'] = 'Doc 6. Payroll Summary';
-            
-                $this->export_pdf($document_info['css'], $document_info['header'], $document_info['footer'], $document_info['body'], $document_info['pdf_format'], $file_name);
-            $this->payroll_report->update('new', $request_data);
-        } */
-        
     }
     
-    private function export_pdf($css, $header = null, $footer = null, $body, $pdf_format = [], $file_name = null)
+    private function exportPdf($css, $header = null, $footer = null, $body, $pdf_format = [], $file_name = null)
     {
 //         dd($css,$header,$footer,$body,$pdf_format,$file_name);
         $mpdf = new \Mpdf\Mpdf($pdf_format);

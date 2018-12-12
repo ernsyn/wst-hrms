@@ -165,6 +165,8 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\MacroServiceProvider::class,
 
     ],
 
@@ -222,6 +224,7 @@ return [
         'PayrollReportEnum' => App\Enums\PayrollReportEnum::class,
         'AccessControllHelper' => AccessControllHelper::class,
         'PayrollAdditionDeductionEnum' => App\Enums\PayrollAdditionDeductionEnum::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

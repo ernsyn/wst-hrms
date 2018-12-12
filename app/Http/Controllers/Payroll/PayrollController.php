@@ -5,6 +5,7 @@ use App\Company;
 use App\CostCentre;
 use App\Employee;
 use App\Epf;
+use App\LeaveAllocation;
 use App\PayrollMaster;
 use App\PayrollProcessedLeaveAttendance;
 use App\PayrollTrx;
@@ -46,6 +47,7 @@ use App\LeaveRequestApproval;
 use App\EmployeeAttendance;
 use App\Helpers\AccessControllHelper;
 use App\PayrollTrxAddition;
+use App\EmployeeWorkingDay;
 
 class PayrollController extends Controller
 {
@@ -100,9 +102,12 @@ class PayrollController extends Controller
         
         //get company information based on user login
         $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
-        $payroll = PayrollMaster::leftJoin('companies', 'companies.id', '=', 'payroll_master.company_id')
-            ->where('companies.id', $company->id)
+        $payroll = [];
+        if($company != null){
+            $payroll = PayrollMaster::leftJoin('companies', 'companies.id', '=', 'payroll_master.company_id')
+            ->where('company_id', $company->id)
             ->select('payroll_master.*','companies.name')->get();
+        }
 
         $period = PayrollPeriodEnum::choices();
         return view('pages.payroll.index', compact('payroll', 'period'));
@@ -303,8 +308,13 @@ class PayrollController extends Controller
                                         'employee_attendance_id' => $a->id
                                     ];
                                     
-                                    $diffHour = date_diff(date_create($a->clock_in_time), date_create($a->clock_out_time));
-                                    $totalHours += $diffHour->format('%h');
+                                    $minOtHour = getenv('MIN_OT_HOUR');
+                                    $endWorkTime = EmployeeWorkingDay::where('emp_id',$employee->id)->select('end_work_time')->get();
+                                    $endWorkDate = DateHelper::dateWithFormat($a->clock_in_time, "Y-m-d")." ".$endWorkTime;
+                                    $diffHour = date_diff(date_create($endWorkDate), date_create($a->clock_out_time));
+                                    if($diffHour->format('%h') >=  $minOtHour){
+                                        $totalHours += $diffHour->format('%h');
+                                    }
                                 } 
                             }
                             
@@ -353,6 +363,22 @@ class PayrollController extends Controller
                             
                         case "CFLP":
                             //TODO: get carry forward leave
+                            $leaveAllocations = LeaveAllocation::where([
+                                ['leave_type_id', 1],
+                                ['emp_id', $employee->id],
+                                ['is_carry_forward', 1],
+                                ['valid_from_date', '>=', $validated['year_month']],
+                                ['valid_until_date', '<=', DateHelper::getLastDayOfDate($validated['year_month'])]
+                            ])->get();
+                            
+                            $totalAllocated = 0;
+                            $totalSpent = 0;
+                            foreach ($leaveAllocations as $leave) {
+                                $totalAllocated += $leave->allocated_days;
+                                $totalSpent += $leave->spent_days;
+                            }
+                            
+                            $noOfLeave = $totalAllocated - $totalSpent;
                             
                             if($basicSalary >= 2000){
                                 $days = DateHelper::getNumberDaysInMonth($validated['year_month']);
@@ -415,10 +441,10 @@ class PayrollController extends Controller
          * KPI Proposer 
          */
 
-        $isAdmin = Auth::user()->hasRole('admin'); 
-        $isHrExec = Auth::user()->hasAnyRole('hr-exec'); 
-        $currentUser = auth()->user()->id;
-        $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();//EmployeeSecurityGroup::where('emp_id',$currentUser)->select('security_group_id')->get();
+        $isHrAdmin = AccessControllHelper::isHrAdmin(); 
+        $isHrExec = AccessControllHelper::isHrExec();
+        $currentUser = Auth::id();
+        $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
 //         dd($securityGroupAccess);
         $payroll = PayrollMaster::where([
             [
@@ -430,54 +456,46 @@ class PayrollController extends Controller
         $list = PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employees as e', 'e.id', '=', 'payroll_trx.employee_id')
             ->join('users as u', 'u.id', '=', 'e.user_id') 
-        /* ->join('countries as C', 'C.id', '=', 'EM.citizenship')  */
             ->join('employee_jobs as ej', function ($join) {
                 $join->on('ej.emp_id', '=', 'e.id');
             })
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
             ->leftjoin('employee_report_to as ert', 'ert.emp_id', '=', 'e.id')
-//             ->leftjoin('employee_security_groups as esg', 'emp.emp_id', '=', 'e.id')
-        /* ->join('job_master as JM2', 'JM2.id', '=', 'EJ.id_category')  */
-        // ->leftjoin('EmployeeGroup as EG', 'EG.id_EmployeeMaster', '=', 'EM.id')
-        /* ->leftjoin('employee_bank as EB', function($join){
-            $join->on('EB.emp_id', '=', 'EM.emp_id')
-            ->on('EB.acc_status', '=', DB::raw('"Active"'));
-        }) */
-        ->select('payroll_trx.*', 'pm.company_id as company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
-                (SELECT start_date FROM employee_jobs WHERE emp_id = ej.id ORDER BY id ASC LIMIT 1) as joined_date,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
-                payroll_trx.take_home_pay as thp,
-                ROUND((payroll_trx.kpi * payroll_trx.bonus),2) as total_bonus,
-                YEAR(CURDATE()) - YEAR(e.dob) as age
-            '))
-        ->where(function ($query) use ($id) {
-            if ($id) {
-                $query->where('payroll_trx.payroll_master_id', $id);
-            }
-        })
-        ->where(function ($query) use ($firstDayOfMonth) {
-            // Either default or month/year greater or same
-            $query->where('ej.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = e.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
-        })
-        ->where(function($query) use($isHrExec, $currentUser, $securityGroupAccess, $isAdmin){
-            if($isAdmin){
-                $query->where([
-                    ['ert.kpi_proposer', 1]
-                ]);
-            } else if($isHrExec) {
-                $query->where([
-                    ['ert.kpi_proposer', 1]
-                ])->whereIn('e.main_security_group_id', $securityGroupAccess);
-            }else {
-                $query->where([ 
-                    ['ert.report_to_emp_id', $currentUser],
-                    ['ert.kpi_proposer', 1]
-                ]);
-            } 
-        })
-        ->whereNull('ert.deleted_at')
-        ->orderby('payroll_trx.id', 'ASC')->get();
+            ->select('payroll_trx.*', 'pm.company_id as company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
+                    (SELECT start_date FROM employee_jobs WHERE emp_id = ej.id ORDER BY id ASC LIMIT 1) as joined_date,
+                    (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
+                    (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
+                    payroll_trx.take_home_pay as thp,
+                    ROUND((payroll_trx.kpi * payroll_trx.bonus),2) as total_bonus,
+                    YEAR(CURDATE()) - YEAR(e.dob) as age
+                '))
+            ->where(function ($query) use ($id) {
+                if ($id) {
+                    $query->where('payroll_trx.payroll_master_id', $id);
+                }
+            })
+            ->where(function ($query) use ($firstDayOfMonth) {
+                // Either default or month/year greater or same
+                $query->where('ej.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = e.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
+            })
+            ->where(function($query) use($isHrExec, $currentUser, $securityGroupAccess, $isHrAdmin){
+                if($isHrAdmin){
+                    $query->where([
+                        ['ert.kpi_proposer', 1]
+                    ]);
+                } else if($isHrExec) {
+                    $query->where([
+                        ['ert.kpi_proposer', 1]
+                    ])->whereIn('e.main_security_group_id', $securityGroupAccess);
+                }else {
+                    $query->where([ 
+                        ['ert.report_to_emp_id', $currentUser],
+                        ['ert.kpi_proposer', 1]
+                    ]);
+                } 
+            })
+            ->whereNull('ert.deleted_at')
+            ->orderby('payroll_trx.id', 'ASC')->get();
 
         // Condition
         // if(!count($list)) return redirect('/payroll')->with('error', 'Payroll not found.');

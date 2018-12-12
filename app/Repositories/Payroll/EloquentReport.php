@@ -265,13 +265,13 @@ class EloquentReport implements ReportRepository
                             ROUND(AVG(payroll_trx.take_home_pay),2) as average_net_pay
                         ')
                         );
-                } else if($type == 5) {
+                } else if($type == 5 || $type == 6) {
                     $query = $query->whereNotNull('BM.id')
                     ->groupby($groupby[0]) // Employee ID
                     ->groupby($groupby[1]) // Bank ID
                     ->orderby('EM.code', 'ASC')
                     ->select('BM.name as bank', 'u.name', 'EM.code', 'EM.ic_no', 'EB.acc_no', 'payroll_trx.take_home_pay as net_pay');
-                } else if($type == 6) {
+                } else if($type == 7) {
                     $query = $query->groupby($groupby[0]) // Company ID
                     ->select('CM.name as company_name',
                         DB::raw('
@@ -280,7 +280,7 @@ class EloquentReport implements ReportRepository
                     COUNT(EM.id) as total_employee
                 ')
                         );
-                } else if($type == 7) {
+                } else if($type == 8) {
                     $query = $query->groupby($groupby[0]) // Department ID
                     ->groupby($groupby[1]) // Employee ID
                     ->select(

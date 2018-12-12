@@ -498,7 +498,7 @@ Route::get('/payroll/create', 'Payroll\PayrollController@create')->name('payroll
 
 Route::get('payroll-report', 'Payroll\PayrollController@showReport')->name('payroll.report.show');
 Route::post('/payroll/generate-report', 'Payroll\PayrollController@generateReport')->name('payroll.generate-report');
-Route::post('/report/generate', 'Payroll\PayrollReportController@export_report')->name('report.generate');
+Route::post('/report/generate', 'Payroll\PayrollReportController@exportReport')->name('report.generate');
 
 Route::get('/payslip/show', 'Payroll\PayrollController@showPayslip')->name('payslip.show');
 Route::post('/payslip/download', 'Payroll\PayrollController@downloadPayslip')->name('payslip.download');
