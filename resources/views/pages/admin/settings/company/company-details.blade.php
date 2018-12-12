@@ -283,7 +283,7 @@
                                         </select>
                             </div>
                         </div>
-                
+                    </div>
                 </div>
 
                     <div class="row p-3">
@@ -562,6 +562,9 @@
                     
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
+
+
+                              
                                     <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centres"
                                         required disabled>
                                                 @foreach(App\CostCentre::all() as $cost_centre)
@@ -571,10 +574,8 @@
                                     <span class="invalid-feedback" role="alert">
                                                                       <strong>{{ $errors->first('cost_centres') }}</strong>
                                                                   </span> @endif
-                                    </select>
-
-                                </div>
-                    
+                              
+                            </div>
                             <label class="col-md-12 col-form-label">Job Grade</label>
                             <div class="col-md-12">
                                 <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade" name="job_grade[]"
