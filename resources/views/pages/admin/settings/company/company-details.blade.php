@@ -323,6 +323,20 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row p-3">
+                        <div class="form-group row w-100">
+                            <label class="col-md-12 col-form-label">Status*</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="status" name="status">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                            </div>
+                        </div>
+                
+                </div>
+
                     <div class="row p-3">
                         <div class="form-group row w-100">
                             <label class="col-md-12 col-form-label">Account Name*</label>
