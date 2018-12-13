@@ -505,3 +505,6 @@ Route::post('/payslip/download', 'Payroll\PayrollController@downloadPayslip')->n
 
 Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
 Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');
+
+Route::resource('payroll-setup', 'Payroll\PayrollSetupController');
+Route::get('payroll-setup/{id}/delete','Payroll\PayrollSetupController@destroy')->name('payroll-setup.destroy')->where('id', '[0-9]+');

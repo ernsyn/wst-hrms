@@ -75,7 +75,7 @@
                     </div>
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('payroll*','government_report', 'payroll-report') ? 'show' : '' }}" id="payrollSubmenu">
-                    <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
+                    <li class="menu-option {{ request()->is('payroll') ? 'active' : '' }}">
                         <a href="{{ route('payroll') }}">Payroll</a>
                     </li>
                     @hasanyrole('super-admin|admin')
@@ -85,8 +85,8 @@
                     <li class="menu-option {{ request()->is('payroll-report') ? 'active' : '' }}">
                         <a href="{{ route('payroll.report.show') }}">Reports</a>
                     </li>
-                    <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                        <a href="">Payroll Setup</a>
+                    <li class="menu-option {{ request()->is('payroll-setup') ? 'active' : '' }}">
+                        <a href="{{ route('payroll-setup.index') }}">Payroll Setup</a>
                     </li>
                     @endhasanyrole
                 </ul>

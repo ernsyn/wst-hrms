@@ -225,6 +225,7 @@ return [
         'AccessControllHelper' => AccessControllHelper::class,
         'PayrollAdditionDeductionEnum' => App\Enums\PayrollAdditionDeductionEnum::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'StatusEnum' => App\Enums\StatusEnum::class,
 
     ],
 

@@ -43,4 +43,9 @@ class Company extends Model
     {
         return $this->hasOne('App\SecurityGroup');
     }
+    
+    public function payrollSetup()
+    {
+        return $this->hasOne('App\PayrollSetup');
+    }
 }

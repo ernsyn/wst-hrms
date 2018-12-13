@@ -1,4 +1,4 @@
-@extends((AccessControllHelper::isKpiProposer() && !(AccessControllHelper::isHrAdmin() || AccessControllHelper::isHrExec())) ? 'layouts.base' : 'layouts.admin-base')
+@extends((AccessControllHelper::isKpiProposer() && !(AccessControllHelper::hasHrAdminRole() || AccessControllHelper::hasHrExecRole())) ? 'layouts.base' : 'layouts.admin-base')
 @section('content')
 
 <div class="container">

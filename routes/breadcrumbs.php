@@ -2,7 +2,6 @@
 
 
 // Login
-use App\Helpers\PayrollHelper;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 
 Breadcrumbs::for('login', function ($trail) {
@@ -608,4 +607,24 @@ Breadcrumbs::for('payroll.report.show', function ($trail) {
 Breadcrumbs::for('payslip.show', function ($trail) {
 //     $trail->parent('admin.dashboard');
     $trail->push('Payslip', route('payslip.show'));
+});
+
+Breadcrumbs::for('payroll-setup.index', function ($trail) {
+    $trail->parent('payroll');
+    $trail->push('Payroll Setup', route('payroll-setup.index'));
+});
+
+Breadcrumbs::for('payroll-setup.create', function ($trail) {
+    $trail->parent('payroll');
+    $trail->push('Add Payroll Setup', route('payroll-setup.create'));
+});
+
+Breadcrumbs::for('payroll-setup.show', function ($trail,$id) {
+    $trail->parent('payroll');
+    $trail->push('Payroll Setup Detail', route('payroll-setup.show',$id));
+});
+    
+Breadcrumbs::for('payroll-setup.edit', function ($trail,$id) {
+    $trail->parent('payroll');
+    $trail->push('Edit Payroll Setup', route('payroll-setup.edit',$id));
 });

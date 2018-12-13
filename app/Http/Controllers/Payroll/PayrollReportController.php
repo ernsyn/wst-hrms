@@ -10,10 +10,7 @@ use App\Repositories\Payroll\ReportRepository;
 use App\Services\PayrollService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Sheet;
-use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Output\Destination;
-use App\Exports\BankCreditDetailExport;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 

@@ -1,4 +1,4 @@
-@extends((AccessControllHelper::isKpiProposer() && !AccessControllHelper::isHrAdmin()) ? 'layouts.base' : 'layouts.admin-base')
+@extends((AccessControllHelper::isKpiProposer() && !AccessControllHelper::hasHrAdminRole()) ? 'layouts.base' : 'layouts.admin-base')
 @section('content')
 
 <!-- todo: pigination, search -->

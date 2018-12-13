@@ -25,19 +25,24 @@ class AccessControllHelper
         return $isKpiProposer;
     }
     
-    public static function isHrExec() 
+    public static function hasHrExecRole() 
     {
         return Auth::user()->hasRole('hr-exec');
     }
     
-    public static function isHrAdmin() 
+    public static function hasHrAdminRole() 
     {
         return Auth::user()->hasRole('admin');
     }
     
+    public static function hasSuperadminRole()
+    {
+        return Auth::user()->hasRole('super-admin');
+    }
+    
     public static function getSecurityGroupAccess()
     {
-        if(self::isHrAdmin()){
+        if(self::hasHrAdminRole()){
             $securityGroupAccess = SecurityGroup::where('company_id',GenerateReportsHelper::getUserLogonCompanyInfomation()->id)->select('id')->get();
         }else{
             $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',Auth::id())->select('security_group_id')->get();

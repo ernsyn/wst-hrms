@@ -441,8 +441,8 @@ class PayrollController extends Controller
          * KPI Proposer 
          */
 
-        $isHrAdmin = AccessControllHelper::isHrAdmin(); 
-        $isHrExec = AccessControllHelper::isHrExec();
+        $isHrAdmin = AccessControllHelper::hasHrAdminRole(); 
+        $isHrExec = AccessControllHelper::hasHrExecRole();
         $currentUser = Auth::id();
         $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
 //         dd($securityGroupAccess);
