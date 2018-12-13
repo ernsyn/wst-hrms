@@ -36,20 +36,28 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="issued-date"><strong>Issued Date*</strong></label>
-                            <input id="alt-issued-date-visa" type="text" class="form-control" hidden>
-                            <input id="issued-date-visa" type="text" class="form-control" readonly>
-                            <div id="issued-date-error" class="invalid-feedback">
+                        <div class="col-md-8 mb-3">
+                            <label for="issued-date-visa"><strong>Issued Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="issued-date-visa" class="form-control datetimepicker-input" data-target="#issued-date-visa"/>
+                                <div class="input-group-append" data-target="#issued-date-visa" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="issued-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="expiry-date"><strong>Expiry Date*</strong></label>
-                            <input id="alt-expiry-date-visa" type="text" class="form-control" hidden>
-                            <input id="expiry-date-visa" type="text" class="form-control" readonly>
-                            <div id="expiry-date-error" class="invalid-feedback">
+                        <div class="col-md-8 mb-3">
+                            <label for="expiry-date-visa"><strong>Expiry Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="expiry-date-visa" class="form-control datetimepicker-input" data-target="#expiry-date-visa"/>
+                                <div class="input-group-append" data-target="#expiry-date-visa" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="expiry-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,7 +104,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="visa-number"><strong>Visa Number*</strong></label>
-                            <input id="visa-number" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="visa-number-edit" type="text" class="form-control" placeholder="" value="" required>
                             <div id="visa-number-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -110,20 +118,28 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="issued-date"><strong>Issued Date*</strong></label>
-                            <input id="alt-issued-date-visa-edit" type="text" class="form-control" hidden>
-                            <input id="issued-date-visa-edit" type="text" class="form-control issued-date" readonly>
-                            <div id="issued-date-error" class="invalid-feedback">
+                        <div class="col-md-8 mb-3">
+                            <label for="issued-date-visa-edit"><strong>Issued Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="issued-date-visa-edit" class="form-control datetimepicker-input" data-target="#issued-date-visa-edit"/>
+                                <div class="input-group-append" data-target="#issued-date-visa-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="issued-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="expiry-date"><strong>Expiry Date*</strong></label>
-                            <input id="alt-expiry-date-visa-edit" type="text" class="form-control" hidden>
-                            <input id="expiry-date-visa-edit" type="text" class="form-control expiry-date" readonly>
-                            <div id="expiry-date-error" class="invalid-feedback">
+                        <div class="col-md-8 mb-3">
+                            <label for="expiry-date-visa-edit"><strong>Expiry Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="expiry-date-visa-edit" class="form-control datetimepicker-input" data-target="#expiry-date-visa-edit"/>
+                                <div class="input-group-append" data-target="#expiry-date-visa-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="expiry-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -245,39 +261,34 @@
 <script type="text/javascript">
     $(function(){
         //datepicker
-        $('#issued-date-visa').datepicker({
-            altField: "#alt-issued-date-visa",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-10:+20"
+        $('#issued-date-visa').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
-        $('#expiry-date-visa').datepicker({
-            altField: "#alt-expiry-date-visa",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-10:+20"
+        $('#expiry-date-visa').datetimepicker({
+            format: 'DD/MM/YYYY',
+            useCurrent: false
+        });
+        $("#issued-date-visa").on("change.datetimepicker", function (e) {
+            $('#expiry-date-visa').datetimepicker('minDate', e.date);
+        });
+        $("#expiry-date-visa").on("change.datetimepicker", function (e) {
+            $('#issued-date-visa').datetimepicker('maxDate', e.date);
         });
 
-        $('#issued-date-visa-edit').datepicker({
-            altField: "#alt-issued-date-visa-edit",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-10:+20"
+        $('#issued-date-visa-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
-        $('#expiry-date-visa-edit').datepicker({
-            altField: "#alt-expiry-date-visa-edit",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-10:+20"
+        $('#expiry-date-visa-edit').datetimepicker({
+            format: 'DD/MM/YYYY',
+            useCurrent: false
         });
+        $("#issued-date-visa-edit").on("change.datetimepicker", function (e) {
+            $('#expiry-date-visa-edit').datetimepicker('minDate', e.date);
+        });
+        $("#expiry-date-visa-edit").on("change.datetimepicker", function (e) {
+            $('#issued-date-visa-edit').datetimepicker('maxDate', e.date);
+        });
+
         // ADD VISA
         $('#add-visa-popup').on('show.bs.modal', function (event) {
             clearVisasError('#add-visa-form');
@@ -294,8 +305,8 @@
                 type: $('#add-visa-form #type').val(),
                 visa_number: $('#add-visa-form #visa-number').val(),
                 issued_by: $('#add-visa-form #issued-by').val(),
-                issued_date: $('#add-visa-form #alt-issued-date-visa').val(),
-                expiry_date: $('#add-visa-form #alt-expiry-date-visa').val(),
+                issued_date: $('#add-visa-form #issued-date-visa').val(),
+                expiry_date: $('#add-visa-form #expiry-date-visa').val(),
                 family_members: $('#add-visa-form #family-members').val()
             },
             success: function(data) {
@@ -357,14 +368,10 @@
             editVisaId = currentData.id;
 
             $('#edit-visa-form #type').val(currentData.type);
-            $('#edit-visa-form #visa-number').val(currentData.visa_number);
-
+            $('#edit-visa-form #visa-number-edit').val(currentData.visa_number);
             $('#edit-visa-form #issued-by').val(currentData.issued_by);
             $('#edit-visa-form #issued-date-visa-edit').val(currentData.issued_date);
             $('#edit-visa-form #expiry-date-visa-edit').val(currentData.expiry_date);
-
-            $('#edit-visa-form #alt-issued-date-visa-edit').val(currentData.alt_issued_date);
-            $('#edit-visa-form #alt-expiry-date-visa-edit').val(currentData.alt_expiry_date);
             $('#edit-visa-form #family-members').val(currentData.family_members);
         });
 
@@ -379,11 +386,11 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     type: $('#edit-visa-form #type').val(),
-                    visa_number: $('#edit-visa-form #visa-number').val(),
+                    visa_number: $('#edit-visa-form #visa-number-edit').val(),
 
                     issued_by: $('#edit-visa-form #issued-by').val(),
-                    issued_date: $('#edit-visa-form #alt-issued-date-visa-edit').val(),
-                    expiry_date: $('#edit-visa-form #alt-expiry-date-visa-edit').val(),
+                    issued_date: $('#edit-visa-form #issued-date-visa-edit').val(),
+                    expiry_date: $('#edit-visa-form #expiry-date-visa-edit').val(),
                     family_members: $('#edit-visa-form #family-members').val()
                 },
                 success: function(data) {
@@ -405,7 +412,7 @@
                                         $('#edit-visa-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'visa_number':
-                                        $('#edit-visa-form #visa-number').addClass('is-invalid');
+                                        $('#edit-visa-form #visa-number-edit').addClass('is-invalid');
                                         $('#edit-visa-form #visa-number-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
 
@@ -476,6 +483,7 @@
     function clearVisasModal(htmlId) {
         $(htmlId + ' #type').val('');
         $(htmlId + ' #visa-number').val('');
+        $(htmlId + ' #visa-number-edit').val('');
 
         $(htmlId + ' #issued-by').val('');
         $(htmlId + ' #issued-date-visa').val('');
@@ -484,6 +492,7 @@
 
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
+        $(htmlId + ' #visa-number-edit').removeClass('is-invalid');
 
         $(htmlId + ' #issued-by').removeClass('is-invalid');
         $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
@@ -494,6 +503,7 @@
     function clearVisasError(htmlId) {
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
+        $(htmlId + ' #visa-number-edit').removeClass('is-invalid');
 
         $(htmlId + ' #issued-by').removeClass('is-invalid');
         $(htmlId + ' #issued-date-visa').removeClass('is-invalid');

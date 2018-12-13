@@ -141,6 +141,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('e-leave/request', 'Employee\EleaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
     Route::get('e-leave/request/{status}', 'Employee\EleaveController@ajaxGetEmployeeLeaves')->name('employee.e-leave.ajax.status')->where('status', '[A-Za-z0-9\-\/]+');
     Route::get('e-leave/working-days', 'Employee\EleaveController@ajaxGetEmployeeWorkingDays')->name('employee.e-leave.ajax.working-days');
+    Route::get('e-leave/holidays', 'Employee\EleaveController@ajaxGetHolidays')->name('employee.e-leave.ajax.holidays');
     Route::get('e-leave/edit/{id}', 'Employee\EleaveController@ajaxGetLeaveRequestSingle')->name('employee.e-leave.ajax.edit')->where('id', '[0-9]+');
     Route::post('e-leave/edit/{id}/post','Employee\EleaveController@ajaxPostEditLeaveRequest')->name('employee.e-leave.ajax.edit.post')->where('id', '[0-9]+');
     Route::get('e-leave/delete/{id}','Employee\EleaveController@ajaxCancelLeaveRequest')->name('employee.e-leave.ajax.delete')->where('id', '[0-9]+');
@@ -186,16 +187,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees/{id}/dt/attachments', 'Admin\EmployeeController@getDataTableAttachments')->name('admin.employees.dt.attachments')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/emergency-contacts', 'Admin\EmployeeController@getDataTableEmergencyContacts')->name('admin.employees.dt.emergency-contacts')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/report-to', 'Admin\EmployeeController@getDataTableReportTo')->name('admin.employees.dt.report-to')->where('id', '[0-9]+');
-    Route::get('employees/{id}/dt/report-to', 'Admin\EmployeeController@getDataTableReportTo')->name('admin.employees.dt.report-to')->where('id', '[0-9]+');
     Route::get('company/{id}/dt/company-banks', 'Admin\SettingsController@getDataTableCompanyBank')->name('admin.companies.dt.company-banks')->where('id', '[0-9]+');
-
+    
     Route::get('employees/{id}/dt/main-security-groups', 'Admin\EmployeeController@getDataTableMainSecurityGroup')->name('admin.employees.dt.main-security-groups')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/security-groups', 'Admin\EmployeeController@getDataTableSecurityGroup')->name('admin.employees.dt.security-groups')->where('id', '[0-9]+');
-
+    
     Route::get('employees/{id}/details/security-groups', 'Admin\EmployeeController@displaySecurityGroup')->name('admin.employees.id.security-groups')->where('id', '[0-9]+');
-
+    
     // > Ajax
     Route::get('employees/{id}/attendances', 'Admin\EmployeeController@ajaxGetAttendances')->name('admin.employees.attendances.get')->where('id', '[0-9]+');
+    Route::get('employees/{id}/report-to/employee-list', 'Admin\EmployeeController@getReportToEmployeeList')->name('admin.employees.report-to.employee-list')->where('id', '[0-9]+');
 
     // > Add / Edit
     Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add');

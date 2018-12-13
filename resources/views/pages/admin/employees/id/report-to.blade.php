@@ -37,11 +37,11 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
-                            <select class="form-control" name="report-to" id="report-to">
-                                <option value="">Select Name</option>
+                            <select name="report-to" id="report-to" class="form-control" placeholder="Select a superior...">
+                                {{-- <option value="">Select Name</option>
                                 @foreach(App\Employee::with('user')->get() as $employee)
                                 <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                             <div id="report-to-error" class="invalid-feedback">
                             </div>
@@ -126,9 +126,9 @@
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
                             <select class="form-control" name="report-to" id="report-to">
-                                    @foreach(App\Employee::with('user')->get() as $employee)
+                                    {{-- @foreach(App\Employee::with('user')->get() as $employee)
                                     <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             <div id="report-to-error" class="invalid-feedback">
                             </div>
@@ -270,6 +270,44 @@
 </script>
 <script type="text/javascript">
     $(function(){
+        var reportToSelectizeOptions = {
+            valueField: 'id',
+            labelField: 'name',
+            searchField: 'name',
+            options: [],
+            create: false,
+            render: {
+                option: function(item, escape) {
+                    return '<div class="option">' +
+                        '<span class="badge badge-warning">' + item.code +'</span>' + 
+                        '&nbsp; ' + item.name +
+                    '</div>';
+                }
+            },
+            load: function(query, callback) {
+                if (!query.length) return callback();
+                $.ajax({
+                    url: "{{ route('admin.employees.report-to.employee-list', ['id' => $id]) }}",
+                    type: 'GET',
+                    data: {
+                        q: query,
+                        page_limit: 10
+                    },
+                    error: function() {
+                        callback();
+                    },
+                    success: function(res) {
+                        callback(res);
+                    }
+                });
+            }
+        };
+
+        $('#add-report-to-form #report-to').selectize(reportToSelectizeOptions);
+        var editReportToEmpSelectize = $('#edit-report-to-form #report-to').selectize(reportToSelectizeOptions);
+        editReportToEmpSelectize = editReportToEmpSelectize[0].selectize;
+        console.log("Selectize: ", editReportToEmpSelectize);
+
         // ADD
         $('#add-report-to-popup').on('show.bs.modal', function (event) {
             clearReportToError('#add-report-to-form');
@@ -337,8 +375,17 @@
             console.log('Data: ', currentData)
 
             editReportToId = currentData.id;
+            // $('#edit-report-to-form #report-to').html(
+            //     '<option value="' + currentData.report_to_emp_id + '" selected="selected">' + 
+            //     '(Insert Name)' + '</option>'
+            // );
+            editReportToEmpSelectize.addOption({
+                id: currentData.report_to_emp_id,
+                name: currentData.employee_report_to.user.name,
+                code: currentData.employee_report_to.code
+            });
+            editReportToEmpSelectize.setValue(currentData.report_to_emp_id, false);
 
-            $('#edit-report-to-form #report-to').val(currentData.report_to_emp_id);
             $('#edit-report-to-form #type').val(currentData.type);
             $('#edit-report-to-form #kpi-proposer').val(currentData.kpi_proposer);
             $('#edit-report-to-form #notes').val(currentData.notes);
@@ -469,5 +516,10 @@
             </div>`)
     }
 
+</script>
+<script>
+$(function () {
+
+});
 </script>
 @append
