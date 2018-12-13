@@ -326,11 +326,11 @@ class EmployeeController extends Controller
             'email' => 'required|unique:users|email',
             'password' => 'required|required_with:confirm_password|same:confirm_password',
 
-            'code'=>'unique:employees',
+            'code'=>'required|unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
             'company_id' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required',
             'gender' => 'required',
             'race' => 'required',
             'nationality' => 'required',
@@ -342,7 +342,7 @@ class EmployeeController extends Controller
             'eis_no' => 'required|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable|date',
+            'driver_license_expiry_date' => 'nullable',
             'main_security_group_id'=>'nullable'
         ]);
 
@@ -355,7 +355,7 @@ class EmployeeController extends Controller
         $validatedEmployeeData['contact_no'] = $validated['contact_no'];
         $validatedEmployeeData['address'] = $validated['address'];
         $validatedEmployeeData['company_id'] = $validated['company_id'];
-        $validatedEmployeeData['dob'] = $validated['dob'];
+        $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
         $validatedEmployeeData['gender'] = $validated['gender'];
         $validatedEmployeeData['race'] = $validated['race'];
         $validatedEmployeeData['nationality'] = $validated['nationality'];
@@ -367,7 +367,7 @@ class EmployeeController extends Controller
         $validatedEmployeeData['eis_no'] = $validated['eis_no'];
         $validatedEmployeeData['socso_no'] = $validated['socso_no'];
         $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
-        $validatedEmployeeData['driver_license_expiry_date'] = $validated['driver_license_expiry_date'];
+        $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
         $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
         // $validatedEmployeeData = $request->validate([
