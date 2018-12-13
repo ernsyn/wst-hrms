@@ -139,9 +139,14 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
-                            <input id="alt-date-job" type="text" class="form-control" hidden>
-                            <input id="date-job" type="text" class="form-control" readonly>
-                            <div id="date-job-error" class="invalid-feedback"></div>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="date-job" class="form-control datetimepicker-input" data-target="#date-job"/>
+                                <div class="input-group-append" data-target="#date-job" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="date-job-error" class="invalid-feedback">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -275,9 +280,14 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
-                            <input id="alt-date-job-edit" type="text" class="form-control" hidden>
-                            <input id="date-job-edit" type="text" class="form-control" readonly>
-                            <div id="date-job-error" class="invalid-feedback"></div>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="date-job-edit" class="form-control datetimepicker-input" data-target="#date-job-edit"/>
+                                <div class="input-group-append" data-target="#date-job-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="date-job-error" class="invalid-feedback">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -308,150 +318,6 @@
                 </div>
                 <div class="modal-footer">
                     <button id="edit-job-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- UPDATE -->
-<div class="modal fade" id="edit-job-popup" tabindex="-1" role="dialog" aria-labelledby="edit-job-label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="edit-job-label">Edit Job</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="edit-job-form">
-                <div class="modal-body">
-                    @csrf
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="basic-salary"><strong>New Basic Salary*</strong></label>
-                            <input id="basic-salary" type="number" class="form-control" placeholder="" value=""
-                                required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="cost-centre"><strong>Cost Centre*</strong></label>
-                            <select class="form-control" id="cost-centre" required>
-                                <option disabled selected>Please Select</option>
-                                @foreach(App\CostCentre::all() as $cost_centre)
-                                <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="cost-centre-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="department"><strong>Department*</strong></label>
-                            <select class="form-control" id="department" required>
-                                <option disabled selected>Please Select</option>
-                                @foreach(App\Department::all() as $department)
-                                <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="department-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="team"><strong>Team*</strong></label>
-                            <select class="form-control" id="team" required>
-                                <option disabled selected>Please Select</option>
-                                @foreach(App\Team::all() as $team)
-                                <option value="{{ $team->id }}">{{ $team->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="team-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="main-position"><strong>Main Position*</strong></label>
-                            <select class="form-control" id="main-position" required>
-                                <option disabled selected>Please Select</option>
-                                @foreach(App\EmployeePosition::all() as $position)
-                                <option value="{{ $position->id }}">{{ $position->name }}</option>
-                                @endforeach
-                            </select> {{--
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div> --}}
-                            <div id="main-position-error" class="invalid-feedback">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="grade"><strong>Grade*</strong></label>
-                            <select class="form-control" id="grade" required>
-                                <option disabled selected>Please Select</option>
-                                @foreach(App\EmployeeGrade::all() as $grade)
-                                <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="grade-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="branch"><strong>Branch*</strong></label>
-                            <select class="form-control" id="branch" required>
-                                <option disabled selected>Please Select</option>
-                                @foreach(App\Branch::all() as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="branch-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
-                        <div class="col-md-7">
-                            <input id="jobDate" autocomplete="off" type="text" class="form-control" readonly>
-                            <input name="jobDate" id="altjobDate" type="text" class="form-control" hidden>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="status"><strong>Employment Status*</strong></label>
-                            <select class="form-control" id="status" required>
-                                <option disabled selected>Please Select</option>
-                                <option value="confirmation-of-employment">Confirmation of Employment</option>
-                                <option value="confirmation-of-promotion">Confirmation of Promotion</option>
-                                <option value="transferred">Transferred</option>
-                                <option value="probationer">Probationer</option>
-                            </select> {{--
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div> --}}
-                            <div id="status-error" class="invalid-feedback">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="remarks"><strong>Remarks</strong></label>
-                            <textarea id="remarks" type="number" class="form-control" placeholder="" value=""></textarea> {{--
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div> --}}
-                            <div id="remarks-error" class="invalid-feedback">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="edit-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
                 </div>
             </form>
         </div>
@@ -526,22 +392,12 @@
 <script type="text/javascript">
     $(function () {
         console.log("Initializing Job!")
-        $('#date-job').datepicker({
-            altField: "#alt-date-job",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-80:+0"
+        $('#date-job').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
 
-        $('#date-job-edit').datepicker({
-            altField: "#alt-date-job-edit",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-80:+0"
+        $('#date-job-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
 
         // ADD
@@ -565,7 +421,7 @@
                     emp_mainposition_id: $('#add-job-form #main-position').val(),
                     emp_grade_id: $('#add-job-form #grade').val(),
                     branch_id: $('#add-job-form #branch').val(),
-                    start_date: $('#add-job-form #alt-date-job').val(),
+                    start_date: $('#add-job-form #date-job').val(),
                     status: $('#add-job-form #employment-status').val(),
                     remarks: $('#add-job-form #remarks').val()
                 },
@@ -683,8 +539,6 @@
             $('#edit-job-form #date-job-edit').val(currentData.start_date);
             $('#edit-job-form #employment-status').val(currentData.status);
             $('#edit-job-form #remarks').val(currentData.remarks);
-
-            $('#edit-job-form #alt-date-job-edit').val(currentData.alt_start_date);
         });
 
         var editRouteTemplate =
@@ -705,7 +559,7 @@
                     emp_mainposition_id: $('#edit-job-form #main-position').val(),
                     emp_grade_id: $('#edit-job-form #grade').val(),
                     branch_id: $('#edit-job-form #branch').val(),
-                    start_date: $('#edit-job-form #alt-date-job-edit').val(),
+                    start_date: $('#edit-job-form #date-job-edit').val(),
                     status: $('#edit-job-form #employment-status').val(),
                     remarks: $('#edit-job-form #remarks').val()
                 },
