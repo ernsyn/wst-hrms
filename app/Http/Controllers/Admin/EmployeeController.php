@@ -676,6 +676,29 @@ class EmployeeController extends Controller
         return response()->json($working_day);
     }
 
+    public function getReportToEmployeeList(Request $request, $id) {
+
+        $pageLimit = $request->get("page_limit");
+        $nameQuery = $request->get("q");
+        $employees = Employee::with('user:id,name')
+        ->whereHas('user', function ($q) use ($nameQuery) {
+            $q->where('name', 'like', "%{$nameQuery}%");
+        })
+        ->where('id', '!=', $id)
+        ->take($pageLimit)
+        ->get(['id', 'code', 'user_id']);
+
+        $employee_list = [];
+        foreach($employees as $employee) {
+            array_push($employee_list, [
+                'id' => $employee->id,
+                'name' => $employee->user->name,
+                'code' => $employee->code
+            ]);
+        }
+        return response()->json($employee_list);
+    }
+
     public function postReportTo(Request $request, $id)
     {
         $reportToData = $request->validate([
