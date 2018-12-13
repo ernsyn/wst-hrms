@@ -141,6 +141,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('e-leave/request', 'Employee\EleaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
     Route::get('e-leave/request/{status}', 'Employee\EleaveController@ajaxGetEmployeeLeaves')->name('employee.e-leave.ajax.status')->where('status', '[A-Za-z0-9\-\/]+');
     Route::get('e-leave/working-days', 'Employee\EleaveController@ajaxGetEmployeeWorkingDays')->name('employee.e-leave.ajax.working-days');
+    Route::get('e-leave/holidays', 'Employee\EleaveController@ajaxGetHolidays')->name('employee.e-leave.ajax.holidays');
     Route::get('e-leave/edit/{id}', 'Employee\EleaveController@ajaxGetLeaveRequestSingle')->name('employee.e-leave.ajax.edit')->where('id', '[0-9]+');
     Route::post('e-leave/edit/{id}/post','Employee\EleaveController@ajaxPostEditLeaveRequest')->name('employee.e-leave.ajax.edit.post')->where('id', '[0-9]+');
     Route::get('e-leave/delete/{id}','Employee\EleaveController@ajaxCancelLeaveRequest')->name('employee.e-leave.ajax.delete')->where('id', '[0-9]+');
