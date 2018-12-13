@@ -7,6 +7,7 @@
 import './bootstrap';
 import 'jquery-ui/ui/i18n/datepicker-en-GB.js';
 import 'fullcalendar';
+require('selectize');
 
 import 'datatables.net-bs4';
 import 'datatables.net-buttons-bs4';

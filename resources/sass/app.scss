@@ -23,6 +23,9 @@ $fa-font-path: "../webfonts" !default;
 //datetimepicker
 @import "~tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css";
 
+// Selectize
+// @import "node_modules/selectize/dist/css/selectize.bootstrap3";
+@import "~selectize-bootstrap4-theme/scss/selectize.bootstrap4";
 
 //fullcalendar
 @import "~fullcalendar/dist/fullcalendar.min.css";
