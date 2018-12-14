@@ -43,7 +43,7 @@
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('password') }}</strong>
                                 </span>
-                                								@endif
+                                @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -71,14 +71,32 @@
                         </div>
                         <div class="form-group row">
 
-                            <label class="col-lg-3 col-form-label text-lg-right">Address*</label>
-                            <div class="col-lg-6">
-                                <textarea id="address" type="Address" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }} text-left" name="address">{{ old('address') }}</textarea>
+                            <label class="col-lg-3 col-form-label text-lg-right">Address Line 1*</label>
+                            <div class="col-lg-7 mb-2">
+                                <input id="address" type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ old('address') }}">
 								@if ($errors->has('address'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('address') }}</strong>
                                 </span>
-								@endif
+                                @endif
+                            </div>
+                            <label class="col-lg-3 col-form-label text-lg-right">Address Line 2</label>
+                            <div class="col-lg-7 mb-2">
+                                <input id="address2" type="text" class="form-control{{ $errors->has('address2') ? ' is-invalid' : '' }}" name="address2" value="{{ old('address2') }}">
+                                @if ($errors->has('address2'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('address2') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                            <label class="col-lg-3 col-form-label text-lg-right">Address Line 3</label>
+                            <div class="col-lg-7 mb-2">
+                                <input id="address3" type="text" class="form-control{{ $errors->has('address3') ? ' is-invalid' : '' }}" name="address3" value="{{ old('address3') }}">
+                                @if ($errors->has('address3'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('address3') }}</strong>
+                                </span>
+                                @endif
                             </div>
                         </div>
                     </div>
