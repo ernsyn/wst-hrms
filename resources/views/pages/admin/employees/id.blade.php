@@ -19,49 +19,24 @@
                         <h3 id="emp-name">{{$employee->user->name}}</h3>
                         <h3 id="emp-email">{{$employee->user->email}}</h3>
                     </div>
-                    <div class="row">
-                        <div class="col-auto">
-                            <div class="details">
-                                <div class="field pb-1">
-                                    <span class="field-name mr-2">IC No</span>
-                                    <span class="field-value">{{$employee->ic_no}}</span>
-                                </div>
-                                <div class="field pb-1">
-                                    <span class="field-name mr-2">DOB</span>
-                                    <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
-                                </div>
-                                <div class="field pb-1">
-                                    <span class="field-name mr-2">Gender</span>
-                                    <span class="field-value">{{ ucfirst($employee->gender) }}</span>
-                                </div>
-
+                        <div class="details">
+                            <div class="field pb-1">
+                                <span class="field-name mr-2">IC No</span>
+                                <span class="field-value">{{$employee->ic_no}}</span>
                             </div>
-
-                        </div>
-                        <div class="col-auto">
-                            <div class="details">
-                                <div class="field pb-1">
-                                    <div class="field pb-1">
-                                        <span class="field-name mr-2">Nationality</span>
-                                        <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
-                                        </span>
-                                    </div>
-                                    <div class="field pb-1">
-                                        <span class="field-name mr-2">Address</span>
-                                        <span class="field-value">{{$employee->address}}</span>
-                                    </div>
-                                    <div class="field pb-1">
-                                        <span class="field-name mr-2"></span>
-                                        <span class="field-value">{{$employee->address2}}</span>
-                                    </div>
-                                    <div class="field pb-1">
-                                        <span class="field-name mr-2"></span>
-                                        <span class="field-value">{{$employee->address3}}</span>
-                                    </div>
-                                </div>
-
+                            <div class="field pb-1">
+                                <span class="field-name mr-2">DOB</span>
+                                <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
                             </div>
-
+                            <div class="field pb-1">
+                                <span class="field-name mr-2">Gender</span>
+                                <span class="field-value">{{ ucfirst($employee->gender) }}</span>
+                            </div>
+                            <div class="field pb-1">
+                                <span class="field-name mr-2">Nationality</span>
+                                <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,6 +95,18 @@
                                     <div class="row p-3">
                                         <div class="col-md-6">
                                             <div class="form-group row">
+                                                <span class="col-lg-5 p-3">Address</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <div class="field pb-1">
+                                                        <span class="field-value">{{$employee->address}}</span>
+                                                </div>
+                                                <div class="field pb-1">
+                                                        <span class="field-value">{{$employee->address2}}</span>
+                                                </div>
+                                                <div class="field pb-1">
+                                                        <span class="field-value">{{$employee->address3}}</span>
+                                                </div>
+                                            </div>
                                                 <span class="col-lg-5 p-3">Contact No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->contact_no}}</span>
@@ -142,13 +129,7 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Security Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">      {!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}
-                                                                                                             </span>
-                                                </div>
-
-                                                <span class="col-lg-5 p-3">Confirmation Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->employee_confirmed->implode('start_date') ? $employee->employee_confirmed->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                    <span class="field-value">{!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Basic Salary</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
@@ -178,7 +159,6 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->tax_no}}</span>
                                                 </div>
-
                                                 <span class="col-lg-5 p-3">ID No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->code}}</span>
@@ -186,6 +166,10 @@
                                                 <span class="col-lg-5 p-3">Joined Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!! $employee->employee_jobs_joined_date->implode('start_date') ? $employee->employee_jobs_joined_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Confirmation Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->employee_confirmed->implode('start_date') ? $employee->employee_confirmed->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Resignation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
