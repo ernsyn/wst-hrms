@@ -249,6 +249,16 @@ class LeaveService
                 return self::error("End date cannot fall on a holiday.");
             }
         }
+
+        // check if applied dates are within validity period
+        $validity = LeaveAllocation::where('leave_type_id', $leave_type_id)
+        ->where('valid_from_date', '<=', $startDate)
+        ->where('valid_until_date', '>=', $endDate)
+        ->count();
+
+        if($validity == 0) {
+            return self::error("Leave request needs to be within your leave allocation validity period.");
+        }
         
         // Process applied rules for leave type
         $leaveType = LeaveType::with('applied_rules')->where('id', $leave_type_id)->first();
