@@ -19,6 +19,7 @@ use App\Holiday;
 use App\Media;
 
 use App\Constants\LeaveTypeRule;
+use App\EmployeeReportTo;
 
 class LeaveService
 {
