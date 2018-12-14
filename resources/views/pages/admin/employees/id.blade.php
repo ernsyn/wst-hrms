@@ -19,26 +19,50 @@
                         <h3 id="emp-name">{{$employee->user->name}}</h3>
                         <h3 id="emp-email">{{$employee->user->email}}</h3>
                     </div>
-                    <div class="details">
-                        <div class="field pb-1">
-                            <span class="field-name mr-2">IC No</span>
-                            <span class="field-value">{{$employee->ic_no}}</span>
-                        </div>
-                        <div class="field pb-1">
-                            <span class="field-name mr-2">DOB</span>
-                            <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
-                        </div>
-                        <div class="field pb-1">
-                            <span class="field-name mr-2">Gender</span>
-                            <span class="field-value">{{ ucfirst($employee->gender) }}</span>
-                        </div>
-                        <div class="field pb-1">
-                            <span class="field-name mr-2">Nationality</span>
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="details">
+                                <div class="field pb-1">
+                                    <span class="field-name mr-2">IC No</span>
+                                    <span class="field-value">{{$employee->ic_no}}</span>
+                                </div>
+                                <div class="field pb-1">
+                                    <span class="field-name mr-2">DOB</span>
+                                    <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
+                                </div>
+                                <div class="field pb-1">
+                                    <span class="field-name mr-2">Gender</span>
+                                    <span class="field-value">{{ ucfirst($employee->gender) }}</span>
+                                </div>
 
-                            <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
-                            </span>
-                        </div>
+                            </div>
 
+                        </div>
+                        <div class="col-auto">
+                            <div class="details">
+                                <div class="field pb-1">
+                                    <div class="field pb-1">
+                                        <span class="field-name mr-2">Nationality</span>
+                                        <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
+                                        </span>
+                                    </div>
+                                    <div class="field pb-1">
+                                        <span class="field-name mr-2">Address</span>
+                                        <span class="field-value">{{$employee->address}}</span>
+                                    </div>
+                                    <div class="field pb-1">
+                                        <span class="field-name mr-2"></span>
+                                        <span class="field-value">{{$employee->address2}}</span>
+                                    </div>
+                                    <div class="field pb-1">
+                                        <span class="field-name mr-2"></span>
+                                        <span class="field-value">{{$employee->address3}}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 <div id="end-btn-group">

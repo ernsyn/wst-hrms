@@ -335,6 +335,8 @@ class EmployeeController extends Controller
             'code'=>'required|unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
+            'address2' => 'nullable',
+            'address3' => 'nullable',
             'company_id' => 'required',
             'dob' => 'required',
             'gender' => 'required',
@@ -360,6 +362,8 @@ class EmployeeController extends Controller
         $validatedEmployeeData['code'] = $validated['code'];
         $validatedEmployeeData['contact_no'] = $validated['contact_no'];
         $validatedEmployeeData['address'] = $validated['address'];
+        $validatedEmployeeData['address2'] = $validated['address2'];
+        $validatedEmployeeData['address3'] = $validated['address3'];
         $validatedEmployeeData['company_id'] = $validated['company_id'];
         $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
         $validatedEmployeeData['gender'] = $validated['gender'];
@@ -374,6 +378,9 @@ class EmployeeController extends Controller
         $validatedEmployeeData['socso_no'] = $validated['socso_no'];
         $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
         $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
+        if($validatedEmployeeData['driver_license_expiry_date']==='') {
+            $validatedEmployeeData['driver_license_expiry_date'] = null;
+        }
         $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
         // $validatedEmployeeData = $request->validate([
