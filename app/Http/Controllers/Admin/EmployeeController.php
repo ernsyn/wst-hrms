@@ -108,7 +108,7 @@ class EmployeeController extends Controller
     {
         $profileUpdatedData = $request->validate([
 
-            'ic_no' => 'required|unique:employees,ic_no,'.$id.',id',
+            'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
             'code'=>'required|unique:employees,code,'.$id.',id',
             'dob' => 'required',
             'gender' => 'required',
@@ -120,7 +120,7 @@ class EmployeeController extends Controller
             'address3' => 'nullable',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
-            'tax_no' => 'required|numeric|unique:employees,tax_no,'.$id.',id',
+            'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
             'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
             'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
             'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
@@ -350,8 +350,8 @@ class EmployeeController extends Controller
             'nationality' => 'required',
             'marital_status' => 'required',
             'total_children' => 'nullable|numeric',
-            'ic_no' => 'required|unique:employees,ic_no',
-            'tax_no' => 'required|unique:employees,tax_no|numeric',
+            'ic_no' => 'required|unique:employees,ic_no|numeric',
+            'tax_no' => 'required|unique:employees,tax_no',
             'epf_no' => 'required|unique:employees,epf_no|numeric',
             'eis_no' => 'required|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
@@ -380,7 +380,7 @@ class EmployeeController extends Controller
         $validatedEmployeeData['nationality'] = $validated['nationality'];
         $validatedEmployeeData['marital_status'] = $validated['marital_status'];
         $validatedEmployeeData['total_children'] = $validated['total_children'];
-        $validatedEmployeeData['ic_no'] = $validated['tax_no'];
+        $validatedEmployeeData['ic_no'] = $validated['ic_no'];
         $validatedEmployeeData['tax_no'] = $validated['tax_no'];
         $validatedEmployeeData['epf_no'] = $validated['epf_no'];
         $validatedEmployeeData['eis_no'] = $validated['eis_no'];
