@@ -196,7 +196,7 @@ class LeaveService
         ->get();
     }
 
-    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm) {
+    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $is_admin = false) {
         $startDate = Carbon::parse($start_date);
         $endDate = Carbon::parse($end_date);
         $now = Carbon::now();
@@ -330,14 +330,7 @@ class LeaveService
                     $inc_off_days_based_on_applied_days_config = json_decode($rule->configuration);
                 break;
                 case LeaveTypeRule::EMPLOYEE_CANNOT_APPLY:
-                    $is_employee = DB::table('users')
-                    ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-                    ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-                    ->where('users.id', Auth::user()->id)
-                    ->where('roles.name', 'employee')
-                    ->count();
-
-                    if($is_employee > 0) {
+                    if(!$is_admin) {
                         $invalid = true;
                         $invalidErrorMessage = "Employee cannot apply for this type of leave";
                     }
@@ -491,7 +484,7 @@ class LeaveService
         );
     }
 
-    public static function getLeaveTypesForEmployee(Employee $employee) {
+    public static function getLeaveTypesForEmployee(Employee $employee, $is_admin = false) {
         $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
         $employee->gender;
 
@@ -527,17 +520,9 @@ class LeaveService
                         }
                         break;
                     case LeaveTypeRule::EMPLOYEE_CANNOT_APPLY:
-                        $is_employee = DB::table('users')
-                        ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-                        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-                        ->where('users.id', Auth::user()->id)
-                        ->where('roles.name', 'employee')
-                        ->count();
-
-                        if($is_employee > 0) {
+                        if(!$is_admin) {
                             $includeLeaveType = false;
                         }
-
                         break;
                     case LeaveTypeRule::MAX_APPLICATIONS:
                         $configuration = json_decode($rule->configuration);

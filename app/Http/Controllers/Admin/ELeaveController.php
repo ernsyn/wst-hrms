@@ -534,7 +534,7 @@ class ELeaveController extends Controller
     {
         $employee = Employee::where('id', $emp_id)->first();
 
-        $leaveTypes = LeaveService::getLeaveTypesForEmployee($employee);
+        $leaveTypes = LeaveService::getLeaveTypesForEmployee($employee, true);
 
         return response()->json($leaveTypes);
     }
@@ -555,7 +555,7 @@ class ELeaveController extends Controller
 
         $employee = Employee::where('id', $emp_id)->first();
 
-        $result = LeaveService::checkLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm);
+        $result = LeaveService::checkLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, true);
 
         return response()->json($result);
     }
