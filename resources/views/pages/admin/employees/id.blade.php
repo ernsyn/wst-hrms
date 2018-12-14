@@ -35,7 +35,7 @@
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
 
-                            <span class="field-value">      {!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
+                            <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
                             </span>
                         </div>
 
@@ -213,9 +213,6 @@
                                     </div> --}}
                                 </div>
                                 <div class="col-md-1">
-                                    {{-- <button type="button" class="btn btn-primary rounded-circle">
-                                            <i class="fas fa-pen"></i>
-                                        </button> --}}
                                     <button type="button" class="btn btn-primary rounded-circle" data-toggle="modal" data-current="{{$employee}}" data-target="#edit-profile-popup"><i class="fas fa-pen"></i>
                                         </button>
                                 </div>
@@ -270,23 +267,28 @@
                             <div class="form-group row">
                                 <div class="col-md-12 mb-3">
                                     <label for="ic-no"><strong>IC*</strong></label>
-                                    <input id="ic-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="ic-no" type="text" class="form-control" placeholder="" value="">
                                     <div id="ic-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="code"><strong>ID No</strong></label>
-                                    <input id="code" type="text" class="form-control" placeholder="" value="" required>
+                                    <label for="code"><strong>ID No*</strong></label>
+                                    <input id="code" type="text" class="form-control" placeholder="" value="" >
                                     <div id="code-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="dob"><strong>Date of Birth*</strong></label>
-                                    <input id="alt-dob" type="text" class="form-control" hidden>
-                                    <input id="dob" type="text" class="form-control" placeholder="" value="" required readonly>
-                                    <div id="dob-error" class="invalid-feedback"></div>
+                                    <div class="input-group date" data-target-input="nearest">
+                                        <input type="text" id="dob" class="form-control datetimepicker-input" data-target="#dob"/>
+                                        <div class="input-group-append" data-target="#dob" data-toggle="datetimepicker">
+                                            <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                        </div>
+                                        <div id="dob-error" class="invalid-feedback">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="gender"><strong>Gender*</strong></label>
-                                    <select name="gender" id="gender" class="form-control" placeholder="" value="" required>
+                                    <select name="gender" id="gender" class="form-control" placeholder="" value="" >
                                         <option value="">Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
@@ -295,13 +297,13 @@
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="contact-no"><strong>Contact Number*</strong></label>
-                                    <input id="contact-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="contact-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="contact-no-error" class="invalid-feedback">
                                     </div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="marital-status-no"><strong>Marital Status*</strong></label>
-                                    <select name="marital-status" id="marital-status" class="form-control" placeholder="" value="" required>
+                                    <select name="marital-status" id="marital-status" class="form-control" placeholder="" value="" >
                                         <option value="">Select Marital Status</option>
                                         <option value="single">Single</option>
                                         <option value="married">Married</option>
@@ -310,12 +312,12 @@
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="race"><strong>Race*</strong></label>
-                                    <input id="race" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="race" type="text" class="form-control" placeholder="" value="" >
                                     <div id="race-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="total-children"><strong>Number of Child</strong></label>
-                                    <input id="total-children" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="total-children" type="text" class="form-control" placeholder="" value="" >
                                     <div id="total-children-error" class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -324,33 +326,38 @@
                             <div class="form-group row">
                                 <div class="col-md-12 mb-3">
                                     <label for="driver-license-no"><strong>Driver License No</strong></label>
-                                    <input id="driver-license-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="driver-license-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="driver-license-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="driver-license-expiry-date"><strong>License Expiry Date</strong></label>
-                                    <input id="alt-driver-license-expiry-date" type="text" class="form-control" hidden>
-                                    <input id="driver-license-expiry-date" type="text" class="form-control" placeholder="" value="" readonly>
-                                    <div id="driver-license-expiry-date-error" class="invalid-feedback"></div>
+                                    <div class="input-group date" data-target-input="nearest">
+                                        <input type="text" id="driver-license-expiry-date" class="form-control datetimepicker-input" data-target="#driver-license-expiry-date"/>
+                                        <div class="input-group-append" data-target="#driver-license-expiry-date" data-toggle="datetimepicker">
+                                            <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                        </div>
+                                        <div id="driver-license-expiry-date-error" class="invalid-feedback">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="epf-no"><strong>EPF No*</strong></label>
-                                    <input id="epf-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="epf-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="epf-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="tax-no"><strong>Tax No*</strong></label>
-                                    <input id="tax-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="tax-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="tax-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="eis-no"><strong>EIS No*</strong></label>
-                                    <input id="eis-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="eis-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="eis-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="socso-no"><strong>SOCSO No*</strong></label>
-                                    <input id="socso-no" type="text" class="form-control" placeholder="" value="" required>
+                                    <input id="socso-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="socso-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
@@ -390,7 +397,7 @@
                     {{-- <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Current Password*</strong></label>
-                            <input name="current_password" type="password" class="form-control" placeholder="" value="" required>
+                            <input name="current_password" type="password" class="form-control" placeholder="" value="" >
                             <div id="current-password-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -398,7 +405,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>New Password*</strong></label>
-                            <input name="new_password" type="password" class="form-control" placeholder="" value="" required>
+                            <input name="new_password" type="password" class="form-control" placeholder="" value="" >
                             <div id="new-password-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -406,7 +413,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Confirm New Password*</strong></label>
-                            <input name="confirm_new_password" type="password" class="form-control" placeholder="" value="" required>
+                            <input name="confirm_new_password" type="password" class="form-control" placeholder="" value="" >
                             <div id="confirm-new-password-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -455,18 +462,11 @@
 
 @section('scripts')
 <script type="text/javascript">
-    $('#dob').datepicker({
-        altField: "#alt-dob",
-        altFormat: 'yy-mm-dd',
-        format: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-80:+0"
+    $('#dob').datetimepicker({
+        format: 'DD/MM/YYYY'
     });
-    $('#driver-license-expiry-date').datepicker({
-        altField: "#alt-driver-license-expiry-date",
-        altFormat: 'yy-mm-dd',
-        format: 'dd/mm/yy'
+    $('#driver-license-expiry-date').datetimepicker({
+        format: 'DD/MM/YYYY'
     });
     $(function(){
         // EDIT Profile
@@ -483,14 +483,14 @@
             $('#edit-profile-form #ic-no').val(currentData.ic_no);
 
             $('#edit-profile-form #code').val(currentData.code);
-            $('#edit-profile-form #alt-dob').val(currentData.dob);
+            $('#edit-profile-form #dob').val(currentData.dob);
             $('#edit-profile-form #gender').val(currentData.gender);
             $('#edit-profile-form #contact-no').val(currentData.contact_no);
             $('#edit-profile-form #marital-status').val(currentData.marital_status);
             $('#edit-profile-form #race').val(currentData.race);
             $('#edit-profile-form #total-children').val(currentData.total_children);
             $('#edit-profile-form #driver-license-no').val(currentData.driver_license_no);
-            $('#edit-profile-form #alt-driver-license-expiry-date').val(currentData.driver_license_expiry_date);
+            $('#edit-profile-form #driver-license-expiry-date').val(currentData.driver_license_expiry_date);
             $('#edit-profile-form #epf-no').val(currentData.epf_no);
             $('#edit-profile-form #tax-no').val(currentData.tax_no);
             $('#edit-profile-form #eis-no').val(currentData.eis_no);
@@ -511,26 +511,26 @@
 
         });
 
-        var editRouteTemplate = "{{ route('admin.employees.profile.edit.post', ['id' => $employee->id]) }}";
+        var editProfileRouteTemplate = "{{ route('admin.employees.profile.edit.post', ['id' => $employee->id]) }}";
         $('#edit-profile-submit').click(function(e){
             clearProfilesError('#edit-profile-form');
             // var editProfileRoute = editProfileRouteTemplate.replace($id, editProfileId);
             e.preventDefault();
             $.ajax({
-                url: editRouteTemplate,
+                url: editProfileRouteTemplate,
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
                     code: $('#edit-profile-form #code').val(),
                     ic_no: $('#edit-profile-form #ic-no').val(),
-                    dob: $('#edit-profile-form #alt-dob').val(),
+                    dob: $('#edit-profile-form #dob').val(),
                     gender: $('#edit-profile-form #gender').val(),
                     contact_no: $('#edit-profile-form #contact-no').val(),
                     marital_status: $('#edit-profile-form #marital-status').val(),
                     race: $('#edit-profile-form #race').val(),
                     total_children: $('#edit-profile-form #total-children').val(),
                     driver_license_no: $('#edit-profile-form #driver-license-no').val(),
-                    driver_license_expiry_date: $('#edit-profile-form #alt-driver-license-expiry-date').val(),
+                    driver_license_expiry_date: $('#edit-profile-form #driver-license-expiry-date').val(),
                     epf_no: $('#edit-profile-form #epf-no').val(),
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),

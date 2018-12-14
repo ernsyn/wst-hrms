@@ -108,24 +108,30 @@ class EmployeeController extends Controller
     {
         $profileUpdatedData = $request->validate([
 
-            'ic_no' => 'required|numeric',
-            'code'=>'',
-            'dob' => 'required|date',
+            'ic_no' => 'required|unique:employees,ic_no,'.$id.',id',
+            'code'=>'required|unique:employees,code,'.$id.',id',
+            'dob' => 'required',
             'gender' => 'required',
-
             'marital_status' => 'required',
             'race' => 'required|alpha',
             'total_children' => 'nullable|numeric',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
-            'epf_no' => 'required',
-            'tax_no' => 'required',
-            'eis_no' => 'required',
-            'socso_no' => 'required',
+            'tax_no' => 'required|numeric|unique:employees,tax_no,'.$id.',id',
+            'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
+            'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
+            'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
             'main_security_group_id'=>'',
-          'contact_no' => 'required',
+            'contact_no' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
         ]);
+        $profileUpdatedData['dob'] = implode("-", array_reverse(explode("/", $profileUpdatedData['dob'])));
+
+        $profileUpdatedData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $profileUpdatedData['driver_license_expiry_date'])));
+
+        if($profileUpdatedData['driver_license_expiry_date']==='') {
+            $profileUpdatedData['driver_license_expiry_date'] = null;
+        }
 
         Employee::where('id', $id)->update($profileUpdatedData);
 
@@ -326,13 +332,13 @@ class EmployeeController extends Controller
             'email' => 'required|unique:users|email',
             'password' => 'required|required_with:confirm_password|same:confirm_password',
 
-            'code'=>'unique:employees',
+            'code'=>'required|unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
             'company_id' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required',
             'gender' => 'required',
-            'race' => 'required',
+            'race' => 'required|alpha',
             'nationality' => 'required',
             'marital_status' => 'required',
             'total_children' => 'nullable|numeric',
@@ -342,7 +348,7 @@ class EmployeeController extends Controller
             'eis_no' => 'required|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable|date',
+            'driver_license_expiry_date' => 'nullable',
             'main_security_group_id'=>'nullable'
         ]);
 
@@ -355,7 +361,7 @@ class EmployeeController extends Controller
         $validatedEmployeeData['contact_no'] = $validated['contact_no'];
         $validatedEmployeeData['address'] = $validated['address'];
         $validatedEmployeeData['company_id'] = $validated['company_id'];
-        $validatedEmployeeData['dob'] = $validated['dob'];
+        $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
         $validatedEmployeeData['gender'] = $validated['gender'];
         $validatedEmployeeData['race'] = $validated['race'];
         $validatedEmployeeData['nationality'] = $validated['nationality'];
@@ -367,7 +373,7 @@ class EmployeeController extends Controller
         $validatedEmployeeData['eis_no'] = $validated['eis_no'];
         $validatedEmployeeData['socso_no'] = $validated['socso_no'];
         $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
-        $validatedEmployeeData['driver_license_expiry_date'] = $validated['driver_license_expiry_date'];
+        $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
         $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
         // $validatedEmployeeData = $request->validate([
