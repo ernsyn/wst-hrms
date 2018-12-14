@@ -447,7 +447,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-10">
-                                <textarea name="description" class="form-control"></textarea>
+                                <textarea name="description" class="form-control" required></textarea>
                             </div>@if ($errors->has('description'))
                             <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('description') }}</strong>
@@ -493,8 +493,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-10">
-                                <input id="description" type="text" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" name="description"
-                                    value="{{ old('description') }}" required>
+                                <textarea name="description" id="description" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" required>{{ old('description') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -904,7 +903,7 @@
             <div class="modal-body">
                 <form method="POST" action="{{route('admin.settings.company-deduction.edit.post')}}" id="deduction">
                     @csrf
-                
+
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <input id="company_deduction_id" name="company_deduction_id" type="hidden">
@@ -1033,7 +1032,7 @@
                 @foreach($company as $company_travel)
                 <form method="POST" action="{{ route('admin.settings.company-travel-allowance.add.post', ['id' => $company_travel->id])}} "
                     id="add_company_bank">
-                    @endforeach @csrf 
+                    @endforeach @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <label class="col-md-12 col-form-label">Travel Allowance Name*</label>
@@ -1045,7 +1044,7 @@
                             <div class="col-md-12">
                                 <input id="rate" type="text" class="form-control{{ $errors->has('rate') ? ' is-invalid' : '' }}" name="rate" value="{{ old('rate') }}"
                                     required>
-                            </div>                                         
+                            </div>
                             <label class="col-md-12 col-form-label">Country*</label>
                             <div class="col-md-10">
                                         <select class="form-control{{ $errors->has('countries_id') ? ' is-invalid' : '' }}" name="countries_id" id="countries_id" required>
@@ -1057,7 +1056,7 @@
                                         <span class="invalid-feedback" role="alert">
                                                                   <strong>{{ $errors->first('countries_id') }}</strong>
                                                               </span> @endif
-                                  
+
                                 </div>
                         </div>
                     </div>
@@ -1086,12 +1085,12 @@
                     </button>
             </div>
             <div class="modal-body">
-           
+
                     @foreach($company_travel_allowance as $travel_allowance)
                     <form method="POST" action="{{ route('admin.settings.travel-allowance.edit.post', ['travel_allowance_id' => $travel_allowance->company_id])}} "
                         id="company_travel_allowance">
-                        @endforeach @csrf 
-                    
+                        @endforeach @csrf
+
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <input id="travel_id" name="travel_id" type="hidden">
