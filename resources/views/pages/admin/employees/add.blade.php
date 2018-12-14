@@ -133,15 +133,18 @@
 
                             <label class="col-md-4 col-form-label text-right">Date of Birth*</label>
                             <div class="col-md-6">
-                                <input id="dob-date" type="text" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" placeholder="Date of Birth"
-                                    aria-label="Date of Birth" aria-describedby="dob-icon" name="dob" value="{{ old('dob') != null ? Carbon\Carbon::parse(old('dob'))->format('d/m/Y'): '' }}"
-                                    readonly>
-                                <input id="alt-dob-date" type="text" class="form-control" name="dob" value="{{ old('dob') }}" hidden>
-								@if ($errors->has('dob'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('dob') }}</strong>
-                                </span>
-								@endif
+                                <div class="input-group date" data-target-input="nearest">
+                                    <input type="text" id="dob-date" name="dob" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" data-target="#dob-date"
+                                    value="{{ old('dob') }}">
+                                    <div class="input-group-append" data-target="#dob-date" data-toggle="datetimepicker">
+                                        <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                    </div>
+                                    @if ($errors->has('dob'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('dob') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -216,14 +219,18 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">License Expiry Date</label>
                             <div class="col-lg-6">
-                                <input id="license-expiry-date" type="text" class="form-control" placeholder="License Expiry Date" aria-label="License Expiry Date"
-                                    aria-describedby="license-expiry-date-icon" readonly>
-                                <input id="alt-license-expiry-date" type="text" class="form-control" name="driver_license_expiry_date" hidden>
-								@if ($errors->has('driver_license_expiry_date'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('driver_license_expiry_date') }}</strong>
-                                </span>
-								@endif
+                                <div class="input-group date" data-target-input="nearest">
+                                    <input type="text" id="license-expiry-date" name="driver_license_expiry_date" class="form-control{{ $errors->has('driver_license_expiry_date') ? ' is-invalid' : '' }}" data-target="#license-expiry-date"
+                                    value="{{ old('driver_license_expiry_date') }}">
+                                    <div class="input-group-append" data-target="#license-expiry-date" data-toggle="datetimepicker">
+                                        <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                    </div>
+                                    @if ($errors->has('driver_license_expiry_date'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('driver_license_expiry_date') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -235,27 +242,6 @@
                         <h3>Company Details</h3>
                     </div>
                     <div class="col-lg-12">
-                        {{--
-                        <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Employee ID</label>
-                            <div class="col-lg-6">
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                        </div> --}} {{--
-                        <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Department</label>
-                            <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('departments') ? ' is-invalid' : '' }}" name="departments" id="departments">
-                                    @foreach(App\Department::all() as $department)
-                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                    @endforeach
-                                </select>@if ($errors->has('departments'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('departments') }}</strong>
-                                </span>
-								@endif
-                            </div>
-                        </div> --}}
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Company*</label>
                             <div class="col-lg-6">
@@ -284,37 +270,6 @@
 
                             </div>
                         </div>
-                        {{--
-                        <div class="form-group row">
-
-                            <label class="col-lg-4 col-form-label text-lg-right">Confirmation Date</label>
-                            <div class="col-lg-6">
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                        </div> --}} {{--
-                        <div class="form-group row">
-
-                            <label class="col-lg-4 col-form-label text-lg-right">Basic Salary</label>
-                            <div class="col-lg-6">
-                                <input type="text" class="form-control" readonly>
-
-                            </div>
-
-                        </div> --}} {{--
-                        <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Position</label>
-                            <div class="col-lg-6">
-                                <select id="position" class="form-control{{ $errors->has('position') ? ' is-invalid' : '' }}" name="dropdown">
-                                    @foreach(App\EmployeePosition::all() as $position)
-                                    <option value="{{ $position->id }}">{{ $position->name }}</option>
-                                    @endforeach
-                                </select>@if ($errors->has('position'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('position') }}</strong>
-                                </span>
-								@endif
-                            </div>
-                        </div> --}}
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Tax No*</label>
                             <div class="col-lg-6">
@@ -365,21 +320,6 @@
                                 @endif
                             </div>
                         </div>
-                        {{--
-                        <div class="form-group row">
-
-                            <label class="col-lg-4 col-form-label text-lg-right">Joined Date</label>
-                            <div class="col-lg-6">
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-
-                            <label class="col-lg-4 col-form-label text-lg-right">Resignation Date</label>
-                            <div class="col-lg-6">
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
 
@@ -396,28 +336,11 @@
 
 @section('scripts')
 <script>
-    $('#license-expiry-date').datepicker({
-        altField: "#alt-license-expiry-date",
-        altFormat: 'yy-mm-dd',
-        format: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        onClose: function () {
-            $(this).parsley().validate();
-        }
+    $('#dob-date').datetimepicker({
+        format: 'DD/MM/YYYY'
     });
-
-    $('#dob-date').datepicker({
-        altField: "#alt-dob-date",
-        altFormat: 'yy-mm-dd',
-        format: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-80:+0",
-        onClose: function () {
-            $(this).parsley().validate();
-        }
+    $('#license-expiry-date').datetimepicker({
+        format: 'DD/MM/YYYY'
     });
-
 </script>
 @append
