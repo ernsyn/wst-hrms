@@ -246,6 +246,11 @@ class LeaveService
                 return self::error("End date cannot fall on a holiday.");
             }
         }
+
+        // check if employee has report_to person(s) setup
+        if(EmployeeReportTo::where('emp_id', $employee->id)->where('report_to_level', '1')->count() == 0) {
+            return self::error("Report to person(s) have not been set up.");
+        }
         
         // Process applied rules for leave type
         $leaveType = LeaveType::with('applied_rules')->where('id', $leave_type_id)->first();
