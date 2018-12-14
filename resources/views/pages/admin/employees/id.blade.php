@@ -344,10 +344,35 @@
                                     <input id="total-children" type="text" class="form-control" placeholder="" value="" >
                                     <div id="total-children-error" class="invalid-feedback"></div>
                                 </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="main-security-group-id"><strong>Security Group Id*</strong></label>
+                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                                        <option value=""></option>
+                                        @foreach(App\SecurityGroup::all() as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="main-security-group-id-error" class="invalid-feedback"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="address"><strong>Address Line 1*</strong></label>
+                                    <input id="address" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="address-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="address2"><strong>Address Line 2</strong></label>
+                                    <input id="address2" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="address2-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="address3"><strong>Address Line 3</strong></label>
+                                    <input id="address3" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="address3-error" class="invalid-feedback"></div>
+                                </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="driver-license-no"><strong>Driver License No</strong></label>
                                     <input id="driver-license-no" type="text" class="form-control" placeholder="" value="" >
@@ -383,16 +408,6 @@
                                     <label for="socso-no"><strong>SOCSO No*</strong></label>
                                     <input id="socso-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="socso-no-error" class="invalid-feedback"></div>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <label for="main-security-group-id"><strong>Security Group Id*</strong></label>
-                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
-                                        <option value=""></option>
-                                        @foreach(App\SecurityGroup::all() as $company)
-                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div id="main-security-group-id-error" class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
@@ -513,6 +528,9 @@
             $('#edit-profile-form #marital-status').val(currentData.marital_status);
             $('#edit-profile-form #race').val(currentData.race);
             $('#edit-profile-form #total-children').val(currentData.total_children);
+            $('#edit-profile-form #address').val(currentData.address);
+            $('#edit-profile-form #address2').val(currentData.address2);
+            $('#edit-profile-form #address3').val(currentData.address3);
             $('#edit-profile-form #driver-license-no').val(currentData.driver_license_no);
             $('#edit-profile-form #driver-license-expiry-date').val(currentData.driver_license_expiry_date);
             $('#edit-profile-form #epf-no').val(currentData.epf_no);
@@ -553,6 +571,9 @@
                     marital_status: $('#edit-profile-form #marital-status').val(),
                     race: $('#edit-profile-form #race').val(),
                     total_children: $('#edit-profile-form #total-children').val(),
+                    address: $('#edit-profile-form #address').val(),
+                    address2: $('#edit-profile-form #address2').val(),
+                    address3: $('#edit-profile-form #address3').val(),
                     driver_license_no: $('#edit-profile-form #driver-license-no').val(),
                     driver_license_expiry_date: $('#edit-profile-form #driver-license-expiry-date').val(),
                     epf_no: $('#edit-profile-form #epf-no').val(),
@@ -609,6 +630,18 @@
                                         $('#edit-profile-form #total-children').addClass('is-invalid');
                                         $('#edit-profile-form #total-children-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'address':
+                                        $('#edit-profile-form #address').addClass('is-invalid');
+                                        $('#edit-profile-form #address-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'address2':
+                                        $('#edit-profile-form #address2').addClass('is-invalid');
+                                        $('#edit-profile-form #address2-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'address3':
+                                        $('#edit-profile-form #address3').addClass('is-invalid');
+                                        $('#edit-profile-form #address3-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                     case 'driver_license_no':
                                         $('#edit-profile-form #driver-license-no').addClass('is-invalid');
                                         $('#edit-profile-form #driver-license-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -659,6 +692,9 @@
         $(htmlId + ' #marital-status').val('');
         $(htmlId + ' #race').val('');
         $(htmlId + ' #total-children').val('');
+        $(htmlId + ' #address').val('');
+        $(htmlId + ' #address2').val('');
+        $(htmlId + ' #address3').val('');
         $(htmlId + ' #driver-license-no').val('');
         $(htmlId + ' #driver-license-expiry-date').val('');
         $(htmlId + ' #epf-no').val('');
@@ -674,6 +710,9 @@
         $(htmlId + ' #marital-status').removeClass('is-invalid');
         $(htmlId + ' #race').removeClass('is-invalid');
         $(htmlId + ' #total-children').removeClass('is-invalid');
+        $(htmlId + ' #address').removeClass('is-invalid');
+        $(htmlId + ' #address2').removeClass('is-invalid');
+        $(htmlId + ' #address3').removeClass('is-invalid');
         $(htmlId + ' #driver-license-no').removeClass('is-invalid');
         $(htmlId + ' #driver-license-expiry-date').removeClass('is-invalid');
         $(htmlId + ' #epf-no').removeClass('is-invalid');
@@ -690,6 +729,9 @@
         $(htmlId + ' #marital-status').removeClass('is-invalid');
         $(htmlId + ' #race').removeClass('is-invalid');
         $(htmlId + ' #total-children').removeClass('is-invalid');
+        $(htmlId + ' #address').removeClass('is-invalid');
+        $(htmlId + ' #address2').removeClass('is-invalid');
+        $(htmlId + ' #address3').removeClass('is-invalid');
         $(htmlId + ' #driver-license-no').removeClass('is-invalid');
         $(htmlId + ' #driver-license-expiry-date').removeClass('is-invalid');
         $(htmlId + ' #epf-no').removeClass('is-invalid');

@@ -115,6 +115,9 @@ class EmployeeController extends Controller
             'marital_status' => 'required',
             'race' => 'required|alpha',
             'total_children' => 'nullable|numeric',
+            'address' => 'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
             'tax_no' => 'required|numeric|unique:employees,tax_no,'.$id.',id',
@@ -124,6 +127,9 @@ class EmployeeController extends Controller
             'main_security_group_id'=>'',
             'contact_no' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
         $profileUpdatedData['dob'] = implode("-", array_reverse(explode("/", $profileUpdatedData['dob'])));
 
@@ -335,7 +341,7 @@ class EmployeeController extends Controller
             'code'=>'required|unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
-            'address2' => 'nullable',
+            'address2' => 'required_with:address3',
             'address3' => 'nullable',
             'company_id' => 'required',
             'dob' => 'required',
@@ -352,6 +358,9 @@ class EmployeeController extends Controller
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
             'main_security_group_id'=>'nullable'
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
 
