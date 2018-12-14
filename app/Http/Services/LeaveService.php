@@ -20,6 +20,8 @@ use App\Media;
 
 use App\Constants\LeaveTypeRule;
 use App\EmployeeReportTo;
+use Auth;
+use App\User;
 
 class LeaveService
 {
@@ -323,8 +325,17 @@ class LeaveService
                     $inc_off_days_based_on_applied_days_config = json_decode($rule->configuration);
                 break;
                 case LeaveTypeRule::EMPLOYEE_CANNOT_APPLY:
-                    $invalid = true;
-                    $invalidErrorMessage = "Employee cannot apply for this type of leave";
+                    $is_employee = DB::table('users')
+                    ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+                    ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->where('roles.name', 'employee')
+                    ->count();
+
+                    if($is_employee > 0) {
+                        $invalid = true;
+                        $invalidErrorMessage = "Employee cannot apply for this type of leave";
+                    }
                 break;
                 case LeaveTypeRule::INC_OFF_DAYS:
                     $inc_off_days = true;
@@ -497,7 +508,17 @@ class LeaveService
                         }
                         break;
                     case LeaveTypeRule::EMPLOYEE_CANNOT_APPLY:
-                        $includeLeaveType = false;
+                        $is_employee = DB::table('users')
+                        ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+                        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                        ->where('users.id', Auth::user()->id)
+                        ->where('roles.name', 'employee')
+                        ->count();
+
+                        if($is_employee > 0) {
+                            $includeLeaveType = false;
+                        }
+
                         break;
                     case LeaveTypeRule::MAX_APPLICATIONS:
                         $configuration = json_decode($rule->configuration);
@@ -525,7 +546,7 @@ class LeaveService
                     case LeaveTypeRule::MAX_DAYS_PER_APPLICATION:
                         $configuration = json_decode($rule->configuration);
                         $additionalLeaveTypeDetails['max_days_per_application'] = $configuration->max_days_per_application;
-                        break;   
+                        break; 
                 }
 
                 if(!$includeLeaveType) {
