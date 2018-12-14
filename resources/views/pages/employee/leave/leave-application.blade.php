@@ -581,6 +581,9 @@
                     success: function(data) {
                         if(data.error) {
                             $('#error-message').text(data.message);
+                            $("#add-leave-request-submit").prop('disabled', true);
+                        } else {
+                            $("#add-leave-request-submit").prop('disabled', false);
                         }
 
                         if(data.total_days) {

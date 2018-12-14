@@ -249,11 +249,6 @@ class LeaveService
                 return self::error("End date cannot fall on a holiday.");
             }
         }
-
-        // check if employee has report_to person(s) setup
-        if(EmployeeReportTo::where('emp_id', $employee->id)->where('report_to_level', '1')->count() == 0) {
-            return self::error("Report to person(s) have not been set up.");
-        }
         
         // Process applied rules for leave type
         $leaveType = LeaveType::with('applied_rules')->where('id', $leave_type_id)->first();
@@ -368,6 +363,20 @@ class LeaveService
                 case LeaveTypeRule::MAX_DAYS_PER_APPLICATION:
                     $configuration = json_decode($rule->configuration);
                     $max_days_per_application = $configuration->max_days_per_application;
+                    break;
+                case LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED:
+                    $configuration = json_decode($rule->configuration);
+
+                    $report_to_levels = EmployeeReportTo::where('emp_id', $employee->id)
+                    ->select('report_to_level')
+                    ->groupBy('report_to_level')
+                    ->get();
+
+                    // check if employee has multiple approcal levels
+                    if(count($report_to_levels) < 2) {
+                        $invalid = true;
+                        $invalidErrorMessage = "Multiple approval levels needed.";
+                    }
                     break;
             }
 
