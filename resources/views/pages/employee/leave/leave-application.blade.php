@@ -63,14 +63,13 @@
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Reason</label>
                                 <div class="col-sm-12">
-                                    <textarea class="form-control" name="reason" id="reason" rows="5" required oninvalid="this.setCustomValidity('Please Enter valid reason')"
-                                        oninput="setCustomValidity('')"></textarea>
+                                    <textarea class="form-control" name="reason" id="reason" rows="5" placeholder="Please input your reason here..." required></textarea>
                                 </div>
                             </div>
                             <div class="dropdown-divider pb-3"></div>
                             <div class="form-group row" id="required-attachment-box">
                                 <div class="col-sm-6 px-0">
-                                    <label class="col-sm-12 col-form-label" id="required-attachment-label">Attachment</label>                                 
+                                    <label class="col-sm-12 col-form-label" id="required-attachment-label">Attachment</label>
                                 </div>
                                 <div class="col-sm-6 px-0">
                                     <input type="file" name="required-attachment" class="form-control-file">
@@ -453,7 +452,7 @@
                     end_date: $('#add-leave-request-form #alt-end-date').val(),
                     leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                     am_pm: $('#add-leave-request-form button.selected-day').data('value'),
-                    reason: $('#add-leave-request-form #reason').val(),
+                    reason: $('#add-leave-request-form #reason').val() ? $('#add-leave-request-form #reason').val() : 'none',
                 };
 
                 if(attachmentRequired) {
@@ -471,7 +470,7 @@
                     end_date: $('#add-leave-request-form #alt-end-date').val(),
                     leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                     am_pm: $('#add-leave-request-form button.selected-day').data('value'),
-                    reason: $('#add-leave-request-form #reason').val(),
+                    reason: $('#add-leave-request-form #reason').val() ? $('#add-leave-request-form #reason').val() : 'none',
                 };
 
                 if(attachmentRequired) {

@@ -23,6 +23,7 @@ use App\Http\Services\LeaveService;
 use App\Mail\LeaveRequestMail;
 use App\Employee;
 use Carbon\Carbon;
+use App\User;
 
 class ELeaveController extends Controller
 {
@@ -586,11 +587,8 @@ class ELeaveController extends Controller
 
         $leave_request = LeaveRequest::where('id', $result)->first();
 
-        // \Mail::send(new LeaveRequestMail(Auth::user(), $leave_request));
-
-        // User::whereHas("roles", function($q){ 
-        //     $q->where("name", "admin"); 
-        // })->get();
+        // send leave request email notification
+        self::sendLeaveRequestNotification($leave_request, $emp_id);
 
         return response()->json($result);
     }
@@ -646,7 +644,8 @@ class ELeaveController extends Controller
 
         $leave_request = LeaveRequest::where('id', $result)->first();
 
-        // \Mail::send(new LeaveRequestMail(Auth::user(), $leave_request));
+        // send leave request email notification
+        self::sendLeaveRequestNotification($leave_request, $employee->id);
 
         return response()->json($result);
     }
@@ -672,5 +671,39 @@ class ELeaveController extends Controller
         $leaveRequest->delete();
 
         return response()->json(['success'=>'Leave Request was successfully cancelled.']);
+    }
+
+    public function sendLeaveRequestNotification(LeaveRequest $leave_request, $emp_id) {
+        $cc_recepients = array();
+        $bcc_recepients = array();
+        
+        // get report to users
+        $report_to = EmployeeReportTo::where('emp_id', $emp_id)
+        ->where('report_to_level', '1')
+        ->get();
+
+        foreach ($report_to as $row) {
+            $employee = DB::table('employees')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->select('users.name','users.email')
+            ->where('employees.id', $row->report_to_emp_id)
+            ->first();
+
+            array_push($cc_recepients, $employee->email);
+        }
+
+        // get admin users
+        $admin_users = User::whereHas("roles", function($q){ 
+            $q->where("name", "admin");
+        })->get();
+
+        foreach ($admin_users as $row) {
+            array_push($bcc_recepients, $row->email);
+        }
+
+        \Mail::to(Auth::user()->email)
+        ->cc($cc_recepients)
+        ->bcc($bcc_recepients)
+        ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
 }
