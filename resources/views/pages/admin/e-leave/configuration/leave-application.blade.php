@@ -1,7 +1,7 @@
-@extends('layouts.base') 
+@extends('layouts.admin-base')
 @section('pageTitle', 'Leave Application') 
 @section('content')
-<div id="page-leave-application" class="conatiner p-4">
+<div id="page-leave-application" class="container p-4">
     <div class="row">
         <div class="col-xl-8">      
             <div class="card-body-leave" >
@@ -9,8 +9,11 @@
                     <div id='calendar-leave' class="calendar-leave">
                         <div class="progress m-3">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                        </div>
-                    </div>                        
+                        </div>                        
+                    </div> 
+                    <div class="alert alert-warning" id="must-select-employee" role="alert">
+                        Please select an Employee to proceed!
+                    </div>                       
                 </div>               
             </div>
         </div>
@@ -22,6 +25,13 @@
                             @csrf
                             <div class="form-group row">
                                 <div class="col-sm-12 col-form-label" id="edit-notice"></div>
+                                <label class="col-sm-12 col-form-label">Employee</label>
+                                <div class="col-sm-12">
+                                    <select name="select-employee" id="select-employee" class="form-control" placeholder="Select an employee...">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">                                
                                 <label class="col-sm-12 col-form-label">Leave Type</label>
                                 <div class="col-sm-8">
                                     <select name="leave-types" id="leave-types" class="custom-select">
@@ -69,7 +79,7 @@
                             <div class="dropdown-divider pb-3"></div>
                             <div class="form-group row" id="required-attachment-box">
                                 <div class="col-sm-6 px-0">
-                                    <label class="col-sm-12 col-form-label" id="required-attachment-label">Attachment</label>
+                                    <label class="col-sm-12 col-form-label" id="required-attachment-label">Attachment</label>                                 
                                 </div>
                                 <div class="col-sm-6 px-0">
                                     <input type="file" name="required-attachment" class="form-control-file">
@@ -104,6 +114,7 @@
 </div>
 <div id="templates" hidden>
     <option class="leave-type-option"></option>
+    <option class="employee-option"></option>
 </div>
 <div class="modal fade" id="leave-request-response" tabindex="-1" role="dialog" aria-labelledby="leave-request-response-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -191,20 +202,78 @@
 @section('scripts')
 <script type="text/javascript">
     $(function(){
+        var reportToSelectizeOptions = {
+            valueField: 'id',
+            labelField: 'name',
+            searchField: 'name',
+            options: [],
+            create: false,
+            render: {
+                option: function(item, escape) {
+                    return '<div class="option">' +
+                        '<span class="badge badge-warning">' + item.code +'</span>' + 
+                        '&nbsp; ' + item.name +
+                    '</div>';
+                }
+            },
+            load: function(query, callback) {
+                if (!query.length) return callback();
+                $.ajax({
+                    url: "{{ route('admin.e-leave.ajax.employees') }}",
+                    type: 'GET',
+                    data: {
+                        q: query,
+                        page_limit: 10
+                    },
+                    error: function() {
+                        callback();
+                    },
+                    success: function(res) {
+                        callback(res);
+                    }
+                });
+            },
+            onChange: function(value) { 
+                getWorkingDays();
+            } 
+        };
+
+        $('#add-leave-request-form #select-employee').selectize(reportToSelectizeOptions);
+
         var attachmentRequired = false;
         var workingDays = [];
 
+        $('#select-employee-box').modal('show');
         $("#required-attachment-box").hide();
         $("#can-edit-delete").hide();
         $("#cancel-edit-leave-request").hide();
 
-        $.get("{{ route('employee.e-leave.ajax.working-days') }}", function(workingDaysData, status) {
-            workingDays = workingDaysData;
-            initCalendar();
-            loadLeaveTypes();
-        });
+        function getWorkingDays() {
+            $('#calendar-leave .progress').attr('hidden', false);
+            $('#calendar-leave').fullCalendar('destroy'); 
+
+            let getEmployeeWorkingDaysTemplate = '{{ route('admin.e-leave.ajax.working-days', ['emp_id' => '<<emp_id>>']) }}';
+
+            var employee_id = $('#select-employee').find('option:selected').val();
+
+            var getEmployeeWorkingDays = getEmployeeWorkingDaysTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
+
+            $.get(getEmployeeWorkingDays, function(workingDaysData, status) {
+                workingDays = workingDaysData;
+                initCalendar();
+                loadLeaveTypes();
+            });
+        }        
 
         function initCalendar() {
+            var employee_id = $('#select-employee').find('option:selected').val();
+
+            let getLeaveRequestsTemplate = '{{ route('admin.e-leave.ajax.employees.leave-requests', ['emp_id' => '<<emp_id>>']) }}';
+            let getHolidaysTemplate = '{{ route('admin.e-leave.ajax.employee.holidays', ['emp_id' => '<<emp_id>>']) }}';
+
+            var getLeaveRequests = getLeaveRequestsTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
+            var getHolidays = getHolidaysTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
+
             $('#calendar-leave').fullCalendar({
                 themeSystem: 'bootstrap4',
                 header: {
@@ -215,22 +284,22 @@
                 weekNumbers: false,
                 eventLimit: true, // allow "more" link when too many events
                 eventSources: [{
-                    url: "{{ route('employee.e-leave.ajax.status', ['status' => 'new']) }}",
+                    url: getLeaveRequests + '?status=new',
                     color: '#CCCCCC',
                     textColor: 'black'
                 },
                 {
-                    url: "{{ route('employee.e-leave.ajax.status', ['status' => 'approved']) }}",
+                    url: getLeaveRequests + '?status=approved',
                     textColor: 'white',
                     color: '#18b775'
                 },
                 {
-                    url: "{{ route('employee.e-leave.ajax.status', ['status' => 'rejected']) }}",
+                    url: getLeaveRequests + '?status=rejected',
                     color: '#e23f3f',
                     textColor: 'white'
                 },
                 {
-                    url: "{{ route('employee.e-leave.ajax.holidays') }}",
+                    url: getHolidays,
                     color: '#4286f4',
                     textColor: 'white'
                 }],
@@ -262,6 +331,7 @@
                 }, 
                 eventAfterAllRender: function (view) {
                     $('#calendar-leave .progress').attr('hidden', true);
+                    $('#must-select-employee').attr('hidden', true);
                 }
             });
         }       
@@ -276,7 +346,7 @@
         $("#edit-leave-request-button").on('click', function() {
             $("#leave-details").modal('toggle');
 
-            let getEditLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.edit', ['id' => '<<id>>']) }}';
+            let getEditLeaveRequestTemplate = '{{ route('admin.e-leave.ajax.leave-request.edit', ['id' => '<<id>>']) }}';
 
             var getEditLeaveRequest = getEditLeaveRequestTemplate.replace(encodeURI('<<id>>'), $("#leave-id").text());
 
@@ -339,7 +409,7 @@
         $('#cancel-leave-request-button').on('click', function() {
             $("#cancel-leave-id").text($("#leave-id").text());
 
-            let cancelLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.delete', ['id' => '<<id>>']) }}';
+            let cancelLeaveRequestTemplate = '{{ route('admin.e-leave.ajax.leave-request.delete', ['id' => '<<id>>']) }}';
 
             var cancelLeaveRequest = cancelLeaveRequestTemplate.replace(encodeURI('<<id>>'), $("#cancel-leave-id").text());
 
@@ -486,8 +556,14 @@
 
         // Add leave request function
         function postLeaveRequest(data) {
+            var employee_id = $('#select-employee').find('option:selected').val();
+
+            let postLeaveRequestsTemplate = '{{ route('admin.e-leave.ajax.employee.leave-request.post', ['emp_id' => '<<emp_id>>']) }}';
+
+            var postLeaveRequests = postLeaveRequestsTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
+
             $.ajax({
-                url: "{{ route('employee.e-leave.ajax.request') }}",
+                url: postLeaveRequests,
                 type: 'POST',
                 data: data,
                 success: function(data) {
@@ -506,7 +582,7 @@
 
         // Update leave request function
         function postEditLeaveRequest(data) {
-            let postEditLeaveRequestTemplate = '{{ route('employee.e-leave.ajax.edit.post', ['id' => '<<id>>']) }}';
+            let postEditLeaveRequestTemplate = '{{ route('admin.e-leave.ajax.leave-request.edit.post', ['id' => '<<id>>']) }}';
 
             var postEditLeaveRequest = postEditLeaveRequestTemplate.replace(encodeURI('<<id>>'), $("#leave-request-id").val());
 
@@ -541,12 +617,18 @@
             };
         }
 
-        // Load Leave Type Select box
+        // Load Leave Type Select Box
         function loadLeaveTypes() {
-            $.get("{{ route('employee.e-leave.ajax.types') }}", function(leaveTypeData, status) {
+            let getLeaveTypesTemplate = '{{ route('admin.e-leave.ajax.employee.leave-types', ['emp_id' => '<<emp_id>>']) }}';
+
+            var employee_id = $('#select-employee').find('option:selected').val();
+
+            var getLeaveTypes = getLeaveTypesTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
+
+            $.get(getLeaveTypes, function(leaveTypeData, status) {
                 $('#leave-types').html('<option selected disabled>Select Leave</option>');
 
-                $.each(leaveTypeData, function(key, leaveType){
+                $.each(leaveTypeData, function(key, leaveType) {
                     var leaveTypeOption = $('#templates .leave-type-option').clone();
                     leaveTypeOption.data('leave-type', leaveType);
                     leaveTypeOption.val(leaveType.id);
@@ -567,10 +649,16 @@
                     $("#select-period").hide();
                 } else {
                     $("#select-period").show();
-                }                
+                }
+
+                var employee_id = $('#select-employee').find('option:selected').val();
+
+                let postCheckLeaveRequestTemplate = '{{ route('admin.e-leave.ajax.employee.leave-request.check', ['emp_id' => '<<emp_id>>']) }}';
+
+                var postCheckLeaveRequest = postCheckLeaveRequestTemplate.replace(encodeURI('<<emp_id>>'), employee_id);                
 
                 $.ajax({
-                    url: "{{ route('employee.e-leave.ajax.request.check') }}",
+                    url: postCheckLeaveRequest,
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',

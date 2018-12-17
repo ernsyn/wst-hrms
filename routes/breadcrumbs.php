@@ -57,6 +57,11 @@ Breadcrumbs::for('admin.e-leave.configuration.leave-requests', function ($trail)
     $trail->push('Leave History', route('admin.e-leave.configuration.leave-requests'));
 });
 
+Breadcrumbs::for('admin.e-leave.leave-application', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Leave Application', route('admin.e-leave.leave-application'));
+});
+
 Breadcrumbs::for('admin.e-leave.add-leave-request-disapprove', function ($trail,$id) {
     $trail->parent('admin.dashboard');
     $trail->push('Leave Disapprove', route('admin.e-leave.add-leave-request-disapprove',$id));

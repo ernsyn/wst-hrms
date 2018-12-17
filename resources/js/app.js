@@ -7,6 +7,7 @@
 import './bootstrap';
 import 'jquery-ui/ui/i18n/datepicker-en-GB.js';
 import 'fullcalendar';
+require('selectize');
 
 import 'datatables.net-bs4';
 import 'datatables.net-buttons-bs4';
@@ -21,15 +22,12 @@ import 'datatables.net-buttons/js/buttons.html5.js';
 
 import 'parsleyjs';
 import 'jquery-mousewheel';
-var moment = require('moment');
-moment().format();
 import Chart from 'chart.js';
 
 import './modal';
 
-//dropzone
-window.Dropzone = require('dropzone');
- Dropzone.autoDiscover = false;
+global.moment = require('moment');
+require('tempusdominus-bootstrap-4');
 
 // window.Vue = require('vue');
 

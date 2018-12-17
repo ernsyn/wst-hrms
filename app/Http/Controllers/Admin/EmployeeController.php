@@ -108,24 +108,36 @@ class EmployeeController extends Controller
     {
         $profileUpdatedData = $request->validate([
 
-            'ic_no' => 'required|numeric',
-            'code'=>'',
-            'dob' => 'required|date',
+            'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
+            'code'=>'required|unique:employees,code,'.$id.',id',
+            'dob' => 'required',
             'gender' => 'required',
-
             'marital_status' => 'required',
             'race' => 'required|alpha',
             'total_children' => 'nullable|numeric',
+            'address' => 'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
-            'epf_no' => 'required',
-            'tax_no' => 'required',
-            'eis_no' => 'required',
-            'socso_no' => 'required',
+            'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
+            'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
+            'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
+            'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
             'main_security_group_id'=>'',
-          'contact_no' => 'required',
+            'contact_no' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
+        $profileUpdatedData['dob'] = implode("-", array_reverse(explode("/", $profileUpdatedData['dob'])));
+
+        $profileUpdatedData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $profileUpdatedData['driver_license_expiry_date'])));
+
+        if($profileUpdatedData['driver_license_expiry_date']==='') {
+            $profileUpdatedData['driver_license_expiry_date'] = null;
+        }
 
         Employee::where('id', $id)->update($profileUpdatedData);
 
@@ -326,24 +338,29 @@ class EmployeeController extends Controller
             'email' => 'required|unique:users|email',
             'password' => 'required|required_with:confirm_password|same:confirm_password',
 
-            'code'=>'unique:employees',
+            'code'=>'required|unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'company_id' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required',
             'gender' => 'required',
-            'race' => 'required',
+            'race' => 'required|alpha',
             'nationality' => 'required',
             'marital_status' => 'required',
             'total_children' => 'nullable|numeric',
-            'ic_no' => 'required|unique:employees,ic_no',
-            'tax_no' => 'required|unique:employees,tax_no|numeric',
+            'ic_no' => 'required|unique:employees,ic_no|numeric',
+            'tax_no' => 'required|unique:employees,tax_no',
             'epf_no' => 'required|unique:employees,epf_no|numeric',
             'eis_no' => 'required|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable|date',
+            'driver_license_expiry_date' => 'nullable',
             'main_security_group_id'=>'nullable'
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
 
@@ -354,20 +371,25 @@ class EmployeeController extends Controller
         $validatedEmployeeData['code'] = $validated['code'];
         $validatedEmployeeData['contact_no'] = $validated['contact_no'];
         $validatedEmployeeData['address'] = $validated['address'];
+        $validatedEmployeeData['address2'] = $validated['address2'];
+        $validatedEmployeeData['address3'] = $validated['address3'];
         $validatedEmployeeData['company_id'] = $validated['company_id'];
-        $validatedEmployeeData['dob'] = $validated['dob'];
+        $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
         $validatedEmployeeData['gender'] = $validated['gender'];
         $validatedEmployeeData['race'] = $validated['race'];
         $validatedEmployeeData['nationality'] = $validated['nationality'];
         $validatedEmployeeData['marital_status'] = $validated['marital_status'];
         $validatedEmployeeData['total_children'] = $validated['total_children'];
-        $validatedEmployeeData['ic_no'] = $validated['tax_no'];
+        $validatedEmployeeData['ic_no'] = $validated['ic_no'];
         $validatedEmployeeData['tax_no'] = $validated['tax_no'];
         $validatedEmployeeData['epf_no'] = $validated['epf_no'];
         $validatedEmployeeData['eis_no'] = $validated['eis_no'];
         $validatedEmployeeData['socso_no'] = $validated['socso_no'];
         $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
-        $validatedEmployeeData['driver_license_expiry_date'] = $validated['driver_license_expiry_date'];
+        $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
+        if($validatedEmployeeData['driver_license_expiry_date']==='') {
+            $validatedEmployeeData['driver_license_expiry_date'] = null;
+        }
         $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
         // $validatedEmployeeData = $request->validate([
@@ -410,8 +432,9 @@ class EmployeeController extends Controller
         $dependentData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required',
         ]);
+        $dependentData['dob'] = implode("-", array_reverse(explode("/", $dependentData['dob'])));
         $dependentData['created_by'] = auth()->user()->id;
         $dependent = new EmployeeDependent($dependentData);
 
@@ -425,10 +448,12 @@ class EmployeeController extends Controller
     {
         $immigrationData = $request->validate([
             'passport_no' => 'required|alpha_num',
-            'expiry_date' => 'required|date',
             'issued_by' => 'required',
-            'issued_date' => 'required|date'
+            'issued_date' => 'required',
+            'expiry_date' => 'required'
         ]);
+        $immigrationData['issued_date'] = implode("-", array_reverse(explode("/", $immigrationData['issued_date'])));
+        $immigrationData['expiry_date'] = implode("-", array_reverse(explode("/", $immigrationData['expiry_date'])));
         $immigrationData['created_by'] = auth()->user()->id;
         $immigration = new EmployeeImmigration($immigrationData);
 
@@ -443,12 +468,13 @@ class EmployeeController extends Controller
         $visaData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            // 'passport_no' => 'required|alpha_num',
-            'expiry_date' => 'required|date',
             'issued_by' => 'required',
-            'issued_date' => 'required|date',
+            'issued_date' => 'required',
+            'expiry_date' => 'required',
             'family_members' => 'required'
         ]);
+        $visaData['issued_date'] = implode("-", array_reverse(explode("/", $visaData['issued_date'])));
+        $visaData['expiry_date'] = implode("-", array_reverse(explode("/", $visaData['expiry_date'])));
         $visaData['created_by'] = auth()->user()->id;
         $visa = new EmployeeVisa($visaData);
 
@@ -472,19 +498,12 @@ class EmployeeController extends Controller
             'basic_salary' => 'required',
             'remarks' => '',
             'branch_id' => 'required',
-            'start_date' => 'required|date',
+            'start_date' => 'required',
             'status' => 'required',
         ]);
+        $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
 
         $jobData['created_by'] = auth()->user()->id;
-        // $jobData['status'] = 'active';
-        // $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-
-        // $end_date = EmployeeJob::where('id', $id)
-        // ->whereNull('end_date');
-
-        // $jobData['status'] = 'active';
-        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)
@@ -554,11 +573,13 @@ class EmployeeController extends Controller
         $experienceData = $request->validate([
             'company' => 'required',
             'position' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'start_date' => 'required',
+            'end_date' => 'required',
             'notes'=>''
 
         ]);
+        $experienceData['start_date'] = implode("-", array_reverse(explode("/", $experienceData['start_date'])));
+        $experienceData['end_date'] = implode("-", array_reverse(explode("/", $experienceData['end_date'])));
         $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
 
@@ -577,7 +598,7 @@ class EmployeeController extends Controller
             'level' => 'required',
             'major' => 'required',
             'gpa' => 'required|between:0,99.99',
-            'description' => 'required'
+            'description' => ''
         ]);
         $educationData['created_by'] = auth()->user()->id;
         $education = new EmployeeEducation($educationData);
@@ -675,6 +696,29 @@ class EmployeeController extends Controller
         $working_day = EmployeeWorkingDay::where('emp_id', $emp_id)->get();
 
         return response()->json($working_day);
+    }
+
+    public function getReportToEmployeeList(Request $request, $id) {
+
+        $pageLimit = $request->get("page_limit");
+        $nameQuery = $request->get("q");
+        $employees = Employee::with('user:id,name')
+        ->whereHas('user', function ($q) use ($nameQuery) {
+            $q->where('name', 'like', "%{$nameQuery}%");
+        })
+        ->where('id', '!=', $id)
+        ->take($pageLimit)
+        ->get(['id', 'code', 'user_id']);
+
+        $employee_list = [];
+        foreach($employees as $employee) {
+            array_push($employee_list, [
+                'id' => $employee->id,
+                'name' => $employee->user->name,
+                'code' => $employee->code
+            ]);
+        }
+        return response()->json($employee_list);
     }
 
     public function postReportTo(Request $request, $id)
@@ -878,9 +922,9 @@ class EmployeeController extends Controller
         $dependentUpdatedData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required',
         ]);
-        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
+        $dependentUpdatedData['dob'] = implode("-", array_reverse(explode("/", $dependentUpdatedData['dob'])));
 
         EmployeeDependent::where('id', $id)->update($dependentUpdatedData);
 
@@ -891,10 +935,12 @@ class EmployeeController extends Controller
     {
         $immigrationUpdatedData = $request->validate([
             'passport_no' => 'required|alpha_num',
-            'expiry_date' => 'required|date',
             'issued_by' => 'required',
-            'issued_date' => 'required|date'
+            'issued_date' => 'required',
+            'expiry_date' => 'required'
         ]);
+        $immigrationUpdatedData['issued_date'] = implode("-", array_reverse(explode("/", $immigrationUpdatedData['issued_date'])));
+        $immigrationUpdatedData['expiry_date'] = implode("-", array_reverse(explode("/", $immigrationUpdatedData['expiry_date'])));
 
         EmployeeImmigration::where('id', $id)->update($immigrationUpdatedData);
 
@@ -906,12 +952,13 @@ class EmployeeController extends Controller
         $visaUpdatedData = $request->validate([
             'type' => 'required',
             'visa_number' => 'required|alpha_num',
-            // 'passport_no' => 'required|alpha_num',
-            'expiry_date' => 'required|date',
             'issued_by' => 'required',
-            'issued_date' => 'required|date',
+            'issued_date' => 'required',
+            'expiry_date' => 'required',
             'family_members' => 'required'
         ]);
+        $visaUpdatedData['issued_date'] = implode("-", array_reverse(explode("/", $visaUpdatedData['issued_date'])));
+        $visaUpdatedData['expiry_date'] = implode("-", array_reverse(explode("/", $visaUpdatedData['expiry_date'])));
 
         EmployeeVisa::where('id', $id)->update($visaUpdatedData);
 
@@ -933,9 +980,7 @@ class EmployeeController extends Controller
             'remarks' => '',
             'status' => 'required'
         ]);
-
-        // $jobData['status'] = 'active';
-        $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
+        $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
 
         EmployeeJob::where('id', $id)->update($jobData);
 
@@ -960,10 +1005,12 @@ class EmployeeController extends Controller
         $experienceUpdatedData = $request->validate([
             'company' => 'required',
             'position' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            'notes' => 'required'
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'notes' => ''
         ]);
+        $experienceUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $experienceUpdatedData['start_date'])));
+        $experienceUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $experienceUpdatedData['end_date'])));
 
         EmployeeExperience::where('id', $id)->update($experienceUpdatedData);
 

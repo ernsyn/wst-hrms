@@ -1187,7 +1187,7 @@ public function postAddCompanySecurityGroup(Request $request,$id)
     $validateSecurityGroup['created_by'] = auth()->user()->id;
     SecurityGroup::create($validateSecurityGroup);
 
-  return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
+  return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been added.');
 }
 
 public function editCompanySecurities(Request $request, $id) {
@@ -1329,5 +1329,3 @@ public function destroyCompanyBank($id)
 
 
 }
-
-

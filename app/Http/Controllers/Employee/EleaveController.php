@@ -55,7 +55,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Auth;
 use App\Http\Services\LeaveService;
 
-
+use App\Mail\LeaveRequestMail;
 
 class ELeaveController extends Controller
 {
@@ -225,10 +225,12 @@ class ELeaveController extends Controller
             return response()->json($leaveTypes);
         }
 
-        public function ajaxGetEmployeeLeaves($status)
+        public function ajaxGetEmployeeLeaves(Request $request, $status)
         {
             $leaveRequest = LeaveRequest::where('emp_id', Auth::user()->employee->id)
             ->where('status', $status)
+            ->where('start_date', '>=', $request->start)
+            ->where('end_date', '<=', $request->end)
             ->get();
             
             $result = array();
@@ -237,21 +239,76 @@ class ELeaveController extends Controller
             {
                 $leave = new stdClass();
 
-                if($row->am_pm) 
-                {
-                    $leave->allDay = false;
-                }
-                else
-                {
-                    $leave->allDay = true;
-                }
+                // if($row->am_pm) 
+                // {
+                //     $leave->allDay = false;
+                // }
+                // else
+                // {
+                //     $leave->allDay = true;
+                // }
+
+                $leaveType = LeaveType::where('id', $row->leave_type_id)->first();
 
                 $leave->id = $row->id;
-                $leave->title = $row->reason;
+                $leave->title = $leaveType->name;
                 $leave->start = $row->start_date;
-                $leave->end = $row->end_date;
+                $leave->end = $row->end_date."T23:59:59";
                 $leave->status = $row->status;
+                $leave->reason = $row->reason;
+
+                if($row->am_pm)
+                {
+                    $leave->am_pm = strtoupper($row->am_pm);
+                }
+                else 
+                {
+                    $leave->am_pm = "Full Day";
+                }
+                
                 $result[] = $leave;
+            }
+
+            return $result;
+        }
+
+        public function ajaxGetHolidays(Request $request)
+        {
+            $branch = DB::table('employee_jobs')
+            ->join('branches', 'employee_jobs.branch_id', '=', 'branches.id')
+            ->select('branches.state')
+            ->where('employee_jobs.emp_id', Auth::user()->employee->id)
+            ->orderBy('employee_jobs.created_at', 'DESC')
+            ->first();
+
+            if(empty($branch)) {
+                return self::error("Employee job is not set yet.");
+            }
+
+            $holidays = Holiday::where('status', 'active')
+            ->where('state', 'like', '%' . $branch->state . '%')
+            ->where('start_date', '>=', $request->start)
+            ->where('end_date', '<=', $request->end)
+            ->get();            
+
+            if(empty($holidays)) {
+                return self::error("Holidays not set yet.");
+            }
+            
+            $result = array();
+
+            foreach ($holidays as $row) 
+            {
+                $holiday = new stdClass();
+
+                $holiday->id = $row->id;
+                $holiday->title = $row->name;
+                $holiday->start = $row->start_date;
+                $holiday->end = $row->end_date."T23:59:59";
+                $holiday->status = 'holiday';
+                $holiday->reason = $row->note;
+                // $holiday->allDay = true;
+                $result[] = $holiday;
             }
 
             return $result;
@@ -337,6 +394,11 @@ class ELeaveController extends Controller
 
             $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
 
+            $leave_request = LeaveRequest::where('id', $result)->first();
+
+            // send leave request email notification
+            self::sendLeaveRequestNotification($leave_request);
+
             return response()->json($result);
         }
 
@@ -345,13 +407,31 @@ class ELeaveController extends Controller
             $requestData = $request->validate([
                 'start_date' => 'required',
                 'end_date' => 'required',
-                'leave_type_id' => 'required',
+                'leave_type' => 'required',
                 'am_pm' => '',
                 'reason' => 'required',
                 'attachment' => ''
             ]);
 
+            // update leave allocations and remove previous leave request
+            $leaveRequest = LeaveRequest::where('id', $id)->first();
+
+            $now = Carbon::now();
+            
+            $leaveAllocation = LeaveAllocation::where('emp_id', Auth::user()->employee->id)
+            ->where('leave_type_id', $request['leave_type'])
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
+
+            $leaveAllocation->update([
+                'spent_days' => $leaveAllocation->spent_days - $leaveRequest->applied_days
+            ]);
+
+            $leaveRequest->delete();
+
             $am_pm = null;
+            
             if(array_key_exists('am_pm', $requestData)) {
                 $am_pm = $requestData['am_pm'];
             }
@@ -361,14 +441,68 @@ class ELeaveController extends Controller
                 $attachment_data_url = $requestData['attachment'];
             }
 
-            LeaveRequest::where('id', $id)->update($requestData);
+            $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
 
-            return response()->json(['success'=>'Leave Request was successfully updated.']);
+            $leave_request = LeaveRequest::where('id', $result)->first();
+
+            // send leave request email notification
+            self::sendLeaveRequestNotification($leave_request);
+
+            return response()->json($result);
+        }
+
+        public function sendLeaveRequestNotification(LeaveRequest $leave_request) {
+            $cc_recepients = array();
+            $bcc_recepients = array();
+            
+            // get report to users
+            $report_to = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
+            ->where('report_to_level', '1')
+            ->get();
+
+            foreach ($report_to as $row) {
+                $employee = DB::table('employees')
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->report_to_emp_id)
+                ->first();
+
+                array_push($cc_recepients, $employee->email);
+            }
+
+            // get admin users
+            $admin_users = User::whereHas("roles", function($q){ 
+                $q->where("name", "admin");
+            })->get();
+
+            foreach ($admin_users as $row) {
+                array_push($bcc_recepients, $row->email);
+            }
+
+            \Mail::to(Auth::user()->email)
+            ->cc($cc_recepients)
+            ->bcc($bcc_recepients)
+            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
         }
 
         public function ajaxCancelLeaveRequest($id)
         {
-            LeaveRequest::where('id', $id)->delete();
+            // update leave allocations and remove previous leave request
+            $leaveRequest = LeaveRequest::where('id', $id)->first();
+
+            $now = Carbon::now();
+            
+            $leaveAllocation = LeaveAllocation::where('emp_id', Auth::user()->employee->id)
+            ->where('leave_type_id', $leaveRequest['leave_type_id'])
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
+
+            $leaveAllocation->update([
+                'spent_days' => $leaveAllocation->spent_days - $leaveRequest->applied_days
+            ]);
+
+            $leaveRequest->delete();
 
             return response()->json(['success'=>'Leave Request was successfully cancelled.']);
         }

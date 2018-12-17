@@ -410,7 +410,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-10">
-                                <textarea name="description" class="form-control"></textarea>
+                                <textarea name="description" class="form-control" required></textarea>
                             </div>@if ($errors->has('description'))
                             <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('description') }}</strong>
@@ -456,8 +456,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-10">
-                                <input id="description" type="text" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" name="description"
-                                    value="{{ old('description') }}" required>
+                                <textarea name="description" id="description" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" required>{{ old('description') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -894,7 +893,7 @@
             <div class="modal-body">
                 <form method="POST" action="{{route('admin.settings.company-deduction.edit.post')}}" id="deduction">
                     @csrf
-                
+
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <input id="company_deduction_id" name="company_deduction_id" type="hidden">
@@ -1012,7 +1011,6 @@
     </div>
 </div>
 </div>
-
 
 @endsection
 
