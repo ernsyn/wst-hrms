@@ -9,8 +9,21 @@
                     <div class="col-lg-12 p-3">
                         <h3>Basic Details</h3>
                     </div>
-                    <div class="col-lg-4 d-flex justify-content-center">
-                        <i class="default-user-logo-dark fas fa-user-circle fa-10x"></i>
+                    <div class="col-sm-4 d-flex justify-content-center">
+                        <div class="form-group row d-flex justify-content-center">
+                            <i class="default-user-logo-dark fas fa-user-circle fa-10x"></i>
+                            <img src="" id="profile-img-tag" class="img-thumbnail rounded-circle" style="position: absolute; object-fit:cover; display:none; width:150px; height:150px">
+                            <div class="col-lg-12 text-center">
+                                {{-- <input type="file" class="form-control-file btn-block" name="file" id="profile-img"
+                                    required> --}}
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="profile-img" required>
+                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-8">
                         <div class="form-group row">
@@ -42,8 +55,7 @@
                                 @if ($errors->has('password'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -77,8 +89,7 @@
 								@if ($errors->has('address'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('address') }}</strong>
-                                </span>
-                                @endif
+                                </span> @endif
                             </div>
                             <label class="col-lg-3 col-form-label text-lg-right">Address Line 2</label>
                             <div class="col-lg-7 mb-2">
@@ -200,8 +211,7 @@
                                     @foreach($countries as $country)
                                     <option value="{{ $country->id }}" {{ old('nationality') == $country->id ? 'selected' : ''}}>{{ $country->citizenship }}</option>
                                     @endforeach
-                                </select>
-                                @if ($errors->has('nationality'))
+                                </select> @if ($errors->has('nationality'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('nationality') }}</strong>
                                 </span>
@@ -360,5 +370,24 @@
     $('#license-expiry-date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
+
+    function readURL(input) {
+
+    if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+        $('#profile-img-tag').attr('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+    }
+    }
+
+    $("#profile-img").change(function() {
+    readURL(this);
+    $('#profile-img-tag').show();
+    });
+
 </script>
 @append
