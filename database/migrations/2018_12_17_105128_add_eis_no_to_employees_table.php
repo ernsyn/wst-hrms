@@ -14,7 +14,7 @@ class AddEisNoToEmployeesTable extends Migration
     public function up()
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->string('eis_no')->nullable()->after('eis_no');
+            $table->string('eis_no')->nullable()->after('insurance_no');
             //
         });
     }
