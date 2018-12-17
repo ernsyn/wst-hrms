@@ -1047,7 +1047,7 @@ public function postEditCompanyAddition(Request $request)
      $addition =Addition::where('id', $request->company_addition_id)->update($validatedAdditionData);
   //  $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
 
-  return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been updated.');
+  return redirect()->route('admin.settings.companies');
 }
 
 
