@@ -39,15 +39,53 @@
                                     </div>                       
                                 </div>
                             </div>
-                                <div class="form-group row w-100">
-                                        <label class="col-md-5 col-form-label">Repeated annually*</label>
-                                        <div class="col-md-7">
-                                            <input id="repeat_annually" type="text" class="form-control{{ $errors->has('repeat_annually') ? ' is-invalid' : '' }}" placeholder=""
-                                                name="repeat_annually" value="{{ old('repeat_annually') }}" required>
-                                        </div>                            
+
+                            <div class="form-group row w-100">
+                                <label class="col-md-5 col-form-label">Repeated annually*</label>
+                                <div class="col-md-7">
+                                    <select class="form-control" id="repeat_annually" name="repeat_annually">
+                                        <option value="">Please Select</option>
+                                        <option value="1">Yes</option>
+                                        <option value="2">No</option>
+                                    </select>
+                          
+
+                                    <div id="repeat-annually-error" class="invalid-feedback">
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row w-100">
+                                <label class="col-md-5 col-form-label">State</label>
+                                <div class="col-md-7">
+                                        {{-- <select  class=" form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
+                                                <option value="">Please Select</option>
+                                            @foreach(App\Constants\MalaysianStates::$all as $state)
+                                            <option value="{{ $state }}">{{ $state }}</option value="">
+                                            @endforeach
+                                        </select> @if ($errors->has('state'))
+                                        <span class="invalid-feedback" role="alert">
+                                                                  <strong>{{ $errors->first('state') }}</strong>
+                                                              </span> @endif
+                                    </select>  --}}
+                                    <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]"
+                                            required >
+                                            <option value="">Please Select</option>
+                                            @foreach(App\Constants\MalaysianStates::$all as $state)
+                                            <option value="{{ $state }}">{{ $state }}</option value="">
+                                            @endforeach
+                                        </select> @if ($errors->has('state'))
+                                        <span class="invalid-feedback" role="alert">
+                                                                          <strong>{{ $errors->first('state') }}</strong>
+                                                                      </span> @endif
+                                        </select>
+                                    <div id="state-error" class="invalid-feedback">
+                                    </div>
+                                </div>
+                            </div>
+    
                                     <div class="form-group row w-100">
-                                            <label class="col-md-5 col-form-label">Note*</label>
+                                            <label class="col-md-5 col-form-label">Note</label>
                                             <div class="col-md-7">
                                                 <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder=""
                                                     name="note" value="{{ old('note') }}" required>
@@ -86,5 +124,30 @@
         changeYear: true,
         yearRange: "-80:+0"
     });
+</script>
+<script type="text/javascript">
+
+
+$('.itemName').select2({
+  placeholder: 'Select an item',
+  ajax: {
+    url: '/select2-autocomplete-ajax',
+    dataType: 'json',
+    delay: 250,
+    processResults: function (data) {
+      return {
+        results:  $.map(data, function (item) {
+              return {
+                  text: item.name,
+                  id: item.id
+              }
+          })
+      };
+    },
+    cache: true
+  }
+});
+
+
 </script>
 @append

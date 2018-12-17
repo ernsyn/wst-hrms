@@ -8,7 +8,7 @@
                 </button>
         </div>
     </div> --}}
-    <table class="table table-bordered table-hover w-100" id="report-to-table">
+    <table class="hrms-primary-data-table table w-100" id="report-to-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -16,6 +16,7 @@
                 <th>Type</th>
                 <th>Note</th>
                 <th>KPI Proposer</th>
+                <th>Report To Level</th>
                 {{-- <th>Action</th> --}}
             </tr>
         </thead>
@@ -31,7 +32,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="add-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="add-report-to-form">
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
@@ -102,10 +103,10 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
             </div>
-            <form id="edit-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="edit-report-to-form">
                 <div class="modal-body">
                     @csrf
-                    <div class="form-row" class="form_validate" data-parsley-errors-messages-disabled>
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
                             {{-- <select class="form-control" name="report-to" id="report-to">
@@ -196,7 +197,7 @@
                     }
                 },
                 {
-                    "data": "report_to.user.name"
+                    "data": "employee_report_to.user.name"
                 },
                 {
                     "data": "type"
@@ -206,7 +207,22 @@
                 },
                 {
                     "data": "kpi_proposer",
+
+                    render: function(data) {
+                        if(data ==1) {
+                        return '<i class="fas fa-check-circle" style="color:green"></i>'
+
+                        }
+                        else {
+                        return '<i class="fas fa-times-circle" style="color:red"></i>'
+                        }
+
+                    },
+                    defaultContent: ''
                 },
+                {
+                "data": "report_to_level",
+                }
                 // {
                 //     "data": null,
                 //     render: function (data, type, row, meta) {

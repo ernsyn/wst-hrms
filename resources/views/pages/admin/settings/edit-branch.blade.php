@@ -33,20 +33,20 @@
                                 </div>
                             </div>
                             <div class="col-4">
-                                <label class="col-md-12 col-form-label">Contact (Secondary)*</label>
+                                <label class="col-md-12 col-form-label">Contact (Secondary)</label>
                                 <div class="col-md-12">
                                     <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('contact_no_secondary') ? ' is-invalid' : '' }}"
-                                        name="contact_no_secondary" value="{{ $branch->contact_no_secondary }}" required>                                    @if ($errors->has('contact_no_secondary'))
+                                        name="contact_no_secondary" value="{{ $branch->contact_no_secondary }}" >                                    @if ($errors->has('contact_no_secondary'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('contact_no_secondary') }}</strong>
                                     </span> @endif
                                 </div>
                             </div>
                             <div class="col-4">
-                                <label class="col-md-12 col-form-label">Contact (Fax)*</label>
+                                <label class="col-md-12 col-form-label">Contact (Fax)</label>
                                 <div class="col-md-12">
                                     <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" name="fax_no" value="{{ $branch->fax_no }}"
-                                        required> @if ($errors->has('fax_no'))
+                                        > @if ($errors->has('fax_no'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('fax_no') }}</strong>
                                     </span> @endif
@@ -69,11 +69,16 @@
                             <div class="col-6">
                                 <label class="col-md-12 col-form-label">State*</label>
                                 <div class="col-md-12">
-                                    <input id="state" type="text" class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" value="{{ $branch->state }}"
-                                        required> @if ($errors->has('state'))
-                                    <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('state') }}</strong>
-                                        </span> @endif
+                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
+                                                @foreach(App\Constants\MalaysianStates::$all as $state)
+                                                <option value="{{ $state }}">{{ $state }}</option value="">
+                                                @endforeach
+                                            </select> @if ($errors->has('state'))
+                                            <span class="invalid-feedback" role="alert">
+                                                                      <strong>{{ $errors->first('state') }}</strong>
+                                                                  </span> @endif
+                                        </select> 
+                                        
                                 </div>
                             </div>
                             <div class="col-6">
@@ -92,22 +97,13 @@
                                 <label class="col-md-12 col-form-label">Zip Code*</label>
                                 <div class="col-md-7">
                                     <input id="zip_code" type="text" class="form-control{{ $errors->has('zip_code') ? ' is-invalid' : '' }}" name="zip_code"
-                                        value="{{ $branch->city }}" required> @if ($errors->has('zip_code'))
+                                        value="{{ $branch->zip_code }}" required> @if ($errors->has('zip_code'))
                                     <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('zip_code') }}</strong>
                                         </span> @endif
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <label class="col-md-12 col-form-label">Country Code*</label>
-                                <div class="col-md-7">
-                                    <input id="country_code" type="text" class="form-control{{ $errors->has('country_code') ? ' is-invalid' : '' }}" name="country_code"
-                                        value="{{ $branch->country_code }}" required> @if ($errors->has('country_code'))
-                                    <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('country_code') }}</strong>
-                                        </span> @endif
-                                </div>
-                            </div>
+                  
                         </div>
                     </div>
                 </div>

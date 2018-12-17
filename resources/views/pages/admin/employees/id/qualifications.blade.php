@@ -30,25 +30,34 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="start-date" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="start-date-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="start-date-experience" class="form-control datetimepicker-input" data-target="#start-date-experience"/>
+                                <div class="input-group-append" data-target="#start-date-experience" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="start-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="end-date" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="end-date-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="end-date-experience" class="form-control datetimepicker-input" data-target="#end-date-experience"/>
+                                <div class="input-group-append" data-target="#end-date-experience" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="end-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
-                            </div>
+                            <label for="notes"><strong>Notes</strong></label>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+
                         </div>
                     </div>
                 </div>
@@ -86,16 +95,26 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-year"><strong>Start Year*</strong></label>
-                            <input id="start-year" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="start-year-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="start-year" class="form-control datetimepicker-input" data-target="#start-year"/>
+                                <div class="input-group-append" data-target="#start-year" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="start-year-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-year"><strong>End Year*</strong></label>
-                            <input id="end-year" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="end-year-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="end-year" class="form-control datetimepicker-input" data-target="#end-year"/>
+                                <div class="input-group-append" data-target="#end-year" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="end-year-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -125,10 +144,9 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="description"><strong>Description*</strong></label>
-                            <input id="description" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="description-error" class="invalid-feedback">
-                            </div>
+                            <label for="description"><strong>Description</strong></label>
+                            <input id="description" type="text" class="form-control" placeholder="" value="" >
+
                         </div>
                     </div>
                 </div>
@@ -228,25 +246,34 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="start-date" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="start-date-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="start-date-experience-edit" class="form-control datetimepicker-input" data-target="#start-date-experience-edit"/>
+                                <div class="input-group-append" data-target="#start-date-experience-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="start-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="end-date" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="end-date-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="end-date-experience-edit" class="form-control datetimepicker-input" data-target="#end-date-experience-edit"/>
+                                <div class="input-group-append" data-target="#end-date-experience-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="end-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
-                            </div>
+                            <label for="notes"><strong>Notes</strong></label>
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+
                         </div>
                     </div>
                 </div>
@@ -284,16 +311,26 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-year"><strong>Start Year*</strong></label>
-                            <input id="start-year" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="start-year-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="start-year-edit" class="form-control datetimepicker-input" data-target="#start-year-edit"/>
+                                <div class="input-group-append" data-target="#start-year-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="start-year-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-year"><strong>End Year*</strong></label>
-                            <input id="end-year" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="end-year-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="end-year-edit" class="form-control datetimepicker-input" data-target="#end-year-edit"/>
+                                <div class="input-group-append" data-target="#end-year-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="end-year-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -323,10 +360,9 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="description"><strong>Description*</strong></label>
-                            <input id="description" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="description-error" class="invalid-feedback">
-                            </div>
+                            <label for="description"><strong>Description</strong></label>
+                            <input id="description" type="text" class="form-control" placeholder="" value="" >
+
                         </div>
                     </div>
                 </div>
@@ -471,7 +507,7 @@
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="employee-companies-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-companies-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -494,7 +530,7 @@
                     </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="employee-education-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-education-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -519,7 +555,7 @@
                 </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100 text-capitalize" id="employee-skill-table">
+    <table class="hrms-primary-data-table table w-100 text-capitalize" id="employee-skill-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -533,10 +569,6 @@
 </div>
 
 
-
-
-
-
 @section('scripts')
 <script>
     var experiencesTable = $('#employee-companies-table').DataTable({
@@ -545,6 +577,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.experiences', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 6,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -574,82 +610,119 @@
             }
         ]
     });
-var educationsTable = $('#employee-education-table').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "{{ route('admin.employees.dt.education', ['id' => $id]) }}",
-    "columns": [{
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
+    var educationsTable = $('#employee-education-table').DataTable({
+        "bInfo": true,
+        "bDeferRender": true,
+        "serverSide": true,
+        "bStateSave": true,
+        "ajax": "{{ route('admin.employees.dt.education', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 8,
+            "orderable": false
+        } ],
+        "columns": [{
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            {
+                "data": "institution"
+            },
+            {
+                "data": "start_year"
+            },
+            {
+                "data": "end_year"
+            },
+            {
+                "data": "level"
+            },
+            {
+                "data": "major"
+            },
+            {
+                "data": "gpa"
+            },
+            {
+                "data": "description"
+            },
+            {
+                "data": null,
+                render: function (data, type, row, meta) {
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>` +
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
+                }
             }
-        },
-        {
-            "data": "institution"
-        },
-        {
-            "data": "start_year"
-        },
-        {
-            "data": "end_year"
-        },
-        {
-            "data": "level"
-        },
-        {
-            "data": "major"
-        },
-        {
-            "data": "gpa"
-        },
-        {
-            "data": "description"
-        },
-        {
-            "data": null,
-            render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>` +
-                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
+        ]
+    });
+    var skillsTable = $('#employee-skill-table').DataTable({
+        "bInfo": true,
+        "bDeferRender": true,
+        "serverSide": true,
+        "bStateSave": true,
+        "ajax": "{{ route('admin.employees.dt.skills', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+        } ],
+        "columns": [{
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "years_of_experience"
+            },
+            {
+                "data": "competency"
+            },
+            {
+                "data": null,
+                render: function (data, type, row, meta) {
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
+                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
+                }
             }
-        }
-    ]
-});
-var skillsTable = $('#employee-skill-table').DataTable({
-    "bInfo": true,
-    "bDeferRender": true,
-    "serverSide": true,
-    "bStateSave": true,
-    "ajax": "{{ route('admin.employees.dt.skills', ['id' => $id]) }}",
-    "columns": [{
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        {
-            "data": "name"
-        },
-        {
-            "data": "years_of_experience"
-        },
-        {
-            "data": "competency"
-        },
-        {
-            "data": null,
-            render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
-                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
-            }
-        }
-    ]
-});
+        ]
+    });
 
 </script>
 
 {{-- EXPERIENCES --}}
 <script type="text/javascript">
     $(function(){
+        //datepicker
+        $('#start-date-experience').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#end-date-experience').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+
+        $('#start-date-experience-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#end-date-experience-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+
+        $('#start-year').datetimepicker({
+            format: 'YYYY'
+        });
+        $('#end-year').datetimepicker({
+            format: 'YYYY'
+        });
+
+        $('#start-year-edit').datetimepicker({
+            format: 'YYYY'
+        });
+        $('#end-year-edit').datetimepicker({
+            format: 'YYYY'
+        });
+
         // ADD EXPERIENCES
         $('#add-experience-popup').on('show.bs.modal', function (event) {
             clearExperiencesError('#add-experience-form');
@@ -665,8 +738,8 @@ var skillsTable = $('#employee-skill-table').DataTable({
                     // Form Data
                     company: $('#add-experience-form #company').val(),
                     position: $('#add-experience-form #position').val(),
-                    start_date: $('#add-experience-form #start-date').val(),
-                    end_date: $('#add-experience-form #end-date').val(),
+                    start_date: $('#add-experience-form #start-date-experience').val(),
+                    end_date: $('#add-experience-form #end-date-experience').val(),
                     notes: $('#add-experience-form #notes').val()
                 },
                 success: function(data) {
@@ -692,17 +765,17 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#add-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
-                                        $('#add-experience-form #start-date').addClass('is-invalid');
+                                        $('#add-experience-form #start-date-experience').addClass('is-invalid');
                                         $('#add-experience-form #start-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'end_date':
-                                        $('#add-experience-form #end-date').addClass('is-invalid');
+                                        $('#add-experience-form #end-date-experience').addClass('is-invalid');
                                         $('#add-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'notes':
-                                        $('#add-experience-form #notes').addClass('is-invalid');
-                                        $('#add-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+                                    // case 'notes':
+                                    //     $('#add-experience-form #notes').addClass('is-invalid');
+                                    //     $('#add-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    // break;
                                 }
                             }
                         }
@@ -724,8 +797,8 @@ var skillsTable = $('#employee-skill-table').DataTable({
 
             $('#edit-experience-form #company').val(currentData.company);
             $('#edit-experience-form #position').val(currentData.position);
-            $('#edit-experience-form #start-date').val(currentData.start_date);
-            $('#edit-experience-form #end-date').val(currentData.end_date);
+            $('#edit-experience-form #start-date-experience-edit').val(currentData.start_date);
+            $('#edit-experience-form #end-date-experience-edit').val(currentData.end_date);
             $('#edit-experience-form #notes').val(currentData.notes);
         });
 
@@ -741,8 +814,8 @@ var skillsTable = $('#employee-skill-table').DataTable({
                     _token: '{{ csrf_token() }}',
                     company: $('#edit-experience-form #company').val(),
                     position: $('#edit-experience-form #position').val(),
-                    start_date: $('#edit-experience-form #start-date').val(),
-                    end_date: $('#edit-experience-form #end-date').val(),
+                    start_date: $('#edit-experience-form #start-date-experience-edit').val(),
+                    end_date: $('#edit-experience-form #end-date-experience-edit').val(),
                     notes: $('#edit-experience-form #notes').val()
                 },
                 success: function(data) {
@@ -768,17 +841,17 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
-                                        $('#edit-experience-form #start-date').addClass('is-invalid');
+                                        $('#edit-experience-form #start-date-experience-edit').addClass('is-invalid');
                                         $('#edit-experience-form #start-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'end_date':
-                                        $('#edit-experience-form #end-date').addClass('is-invalid');
+                                        $('#edit-experience-form #end-date-experience-edit').addClass('is-invalid');
                                         $('#edit-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'notes':
-                                        $('#edit-experience-form #notes').addClass('is-invalid');
-                                        $('#edit-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+                                    // case 'notes':
+                                    //     $('#edit-experience-form #notes').addClass('is-invalid');
+                                    //     $('#edit-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    // break;
                                 }
                             }
                         }
@@ -830,21 +903,21 @@ var skillsTable = $('#employee-skill-table').DataTable({
     function clearExperiencesModal(htmlId) {
         $(htmlId + ' #company').val('');
         $(htmlId + ' #position').val('');
-        $(htmlId + ' #start-date').val('');
-        $(htmlId + ' #end-date').val('');
+        $(htmlId + ' #start-date-experience').val('');
+        $(htmlId + ' #end-date-experience').val('');
         $(htmlId + ' #notes').val('');
 
         $(htmlId + ' #company').removeClass('is-invalid');
         $(htmlId + ' #position').removeClass('is-invalid');
-        $(htmlId + ' #start-date').removeClass('is-invalid');
-        $(htmlId + ' #end-date').removeClass('is-invalid');
+        $(htmlId + ' #start-date-experience').removeClass('is-invalid');
+        $(htmlId + ' #end-date-experience').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
     }
     function clearExperiencesError(htmlId) {
         $(htmlId + ' #company').removeClass('is-invalid');
         $(htmlId + ' #position').removeClass('is-invalid');
-        $(htmlId + ' #start-date').removeClass('is-invalid');
-        $(htmlId + ' #end-date').removeClass('is-invalid');
+        $(htmlId + ' #start-date-experience').removeClass('is-invalid');
+        $(htmlId + ' #end-date-experience').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
     }
 
@@ -921,10 +994,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#add-education-form #gpa').addClass('is-invalid');
                                         $('#add-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'description':
-                                        $('#add-education-form #description').addClass('is-invalid');
-                                        $('#add-education-form #description-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+
                                 }
                             }
                         }
@@ -945,8 +1015,8 @@ var skillsTable = $('#employee-skill-table').DataTable({
             editEducationId = currentData.id;
 
             $('#edit-education-form #institution').val(currentData.institution);
-            $('#edit-education-form #start-year').val(currentData.start_year);
-            $('#edit-education-form #end-year').val(currentData.end_year);
+            $('#edit-education-form #start-year-edit').val(currentData.start_year);
+            $('#edit-education-form #end-year-edit').val(currentData.end_year);
             $('#edit-education-form #level').val(currentData.level);
             $('#edit-education-form #major').val(currentData.major);
             $('#edit-education-form #gpa').val(currentData.gpa);
@@ -964,8 +1034,8 @@ var skillsTable = $('#employee-skill-table').DataTable({
                 data: {
                     _token: '{{ csrf_token() }}',
                     institution: $('#edit-education-form #institution').val(),
-                    start_year: $('#edit-education-form #start-year').val(),
-                    end_year: $('#edit-education-form #end-year').val(),
+                    start_year: $('#edit-education-form #start-year-edit').val(),
+                    end_year: $('#edit-education-form #end-year-edit').val(),
                     level: $('#edit-education-form #level').val(),
                     major: $('#edit-education-form #major').val(),
                     gpa: $('#edit-education-form #gpa').val(),
@@ -990,11 +1060,11 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-education-form #institution-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_year':
-                                        $('#edit-education-form #start-year').addClass('is-invalid');
+                                        $('#edit-education-form #start-year-edit').addClass('is-invalid');
                                         $('#edit-education-form #start-year-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'end_year':
-                                        $('#edit-education-form #end-year').addClass('is-invalid');
+                                        $('#edit-education-form #end-year-edit').addClass('is-invalid');
                                         $('#edit-education-form #end-year-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'level':
@@ -1009,10 +1079,7 @@ var skillsTable = $('#employee-skill-table').DataTable({
                                         $('#edit-education-form #gpa').addClass('is-invalid');
                                         $('#edit-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'description':
-                                        $('#edit-education-form #description').addClass('is-invalid');
-                                        $('#edit-education-form #description-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+
                                 }
                             }
                         }

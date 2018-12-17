@@ -14,8 +14,13 @@ Breadcrumbs::for('employee.dashboard', function ($trail) {
 
 Breadcrumbs::for('leaverequest', function ($trail) {
     // $trail->parent('profile');
-    $trail->push('List Of Leave', route('leaverequest'));
+    $trail->push('Leave Approvals', route('leaverequest'));
 });
+Breadcrumbs::for('leavehistory', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('Leave Requests', route('leavehistory'));
+});
+
 Breadcrumbs::for('employee.profile', function ($trail) {
     // $trail->parent('profile');
     $trail->push('My Profile', route('employee.profile'));
@@ -45,6 +50,42 @@ Breadcrumbs::for('register_employee4', function ($trail) {
     $trail->push('Employee List', route('register_employee'));
 });
 
+
+
+Breadcrumbs::for('admin.e-leave.configuration.leave-requests', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Leave History', route('admin.e-leave.configuration.leave-requests'));
+});
+
+Breadcrumbs::for('admin.e-leave.leave-application', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Leave Application', route('admin.e-leave.leave-application'));
+});
+
+Breadcrumbs::for('admin.e-leave.add-leave-request-disapprove', function ($trail,$id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Leave Disapprove', route('admin.e-leave.add-leave-request-disapprove',$id));
+});
+
+Breadcrumbs::for('employee.e-leave.add-leave-request', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Approve Leave', route('employee.e-leave.add-leave-request', $id));
+});
+
+
+Breadcrumbs::for('admin.e-leave.add-leave-request', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Approve Leave', route('admin.e-leave.add-leave-request', $id));
+});
+
+Breadcrumbs::for('admin.e-leave.configuration.leave-holidays.edit', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Edit Holiday', route('admin.e-leave.configuration.leave-holidays.edit', $id));
+});
+Breadcrumbs::for('employee.e-leave.add-leave-request-disapprove', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Approve Leave', route('employee.e-leave.add-leave-request-disapprove', $id));
+});
 Breadcrumbs::for('admin.employees.add', function ($trail) {
     $trail->parent('admin.employees');
     $trail->push('Add Employee', route('admin.employees.add'));

@@ -138,6 +138,10 @@
     "serverSide": true,
     "bStateSave": true,
     "ajax": "{{ route('admin.employees.dt.emergency-contacts', ['id' => $id]) }}",
+    "columnDefs": [ {
+        "targets": 4,
+        "orderable": false
+    } ],
     "columns": [{
             render: function (data, type, row, meta) {
                 return meta.row + meta.settings._iDisplayStart + 1;

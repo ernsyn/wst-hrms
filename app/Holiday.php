@@ -10,9 +10,14 @@ class Holiday extends Model
 
     protected $fillable = [
 
-    'name','start_date','end_date','note',
+    'name',
+    'start_date',
+    'end_date',
+    'note',
     'status',
-    'repeated_manually','total_days'
+   'repeat_annually',
+    'total_days',
+    'state'
 
 
     ];

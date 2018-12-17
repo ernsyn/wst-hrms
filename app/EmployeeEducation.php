@@ -16,7 +16,8 @@ class EmployeeEducation extends Model
         'level',
         'major',
         'gpa',
-        'description'
+        'description',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

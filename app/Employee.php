@@ -11,6 +11,8 @@ class Employee extends Model
     protected $fillable = [
         'user_id',
         'address',
+        'address2',
+        'address3',
         'company_id',
         'contact_no',
         'dob',
@@ -22,10 +24,13 @@ class Employee extends Model
         'ic_no',
         'tax_no',
         'epf_no',
+        'eis_no',
+        'socso_no',
         'driver_license_no',
         'driver_license_expiry_date',
         'created_by',
-        'main_security_group_id'
+        'main_security_group_id',
+        'code'
     ];
 
     protected $dates = [
@@ -38,24 +43,43 @@ class Employee extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function security_groups()
+    public function main_security_groups()
     {
         return $this->belongsTo('App\SecurityGroup', 'main_security_group_id');
     }
     public function report_to_emp_id()
     {
-        return $this->belongsTo('App\EmployeeReportTo', 'user_id','emp_id');
+        return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
+    }
+    public function employee_confirmed()
+    {
+        return $this->hasMany('App\EmployeeJob', 'emp_id');
+
     }
 
+
+    public function employee_report_to()
+    {
+        return $this->belongsTo('App\EmployeeReportTo', 'user_id','emp_id');
+    }
     public function report_to()
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
     }
 
+    public function employee_jobs_joined_date()
+    {
+        return $this->hasMany('App\EmployeeJob', 'emp_id')->where('employee_jobs.status','=','probationer');
+    }
+
+    public function employee_jobs_resigned_date()
+    {
+        return $this->hasMany('App\EmployeeJob', 'emp_id')->where('employee_jobs.status','=','resigned');
+    }
 
     public function employee_jobs()
     {
-        return $this->hasMany('App\EmployeeJob', 'emp_id');
+        return $this->hasMany('App\EmployeeJob', 'emp_id')->WhereNull('employee_jobs.end_date');
     }
 
     public function employee_emergency_contacts()
@@ -85,6 +109,15 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeSecurityGroup', 'emp_id');
 
     }
+
+    public function employee_countries()
+
+    {
+
+        return $this->belongsTo('App\Country', 'nationality');
+
+    }
+
     public function employee_experiences()
     {
         return $this->hasMany('App\EmployeeExperience', 'emp_id');
@@ -121,5 +154,15 @@ class Employee extends Model
     public function working_day()
     {
         return $this->hasOne('App\EmployeeWorkingDay', 'emp_id');
+    }
+
+    public function leave_request_approvals()
+    {
+        return $this->hasMany('App\LeaveRequestApproval', 'id','approved_by_emp_id');
+    }
+
+    public function clock_in_out_records()
+    {
+        return $this->hasMany('App\EmployeeClockInOutRecord', 'emp_id');
     }
 }

@@ -30,9 +30,13 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
-                            <input id="altdobDate" name="altdobDate" type="text" class="form-control" hidden>
-                            <input name="dobDate" id="dobDate" type="text" class="form-control">
-                            <div id="dobDate-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="dob-dependent" class="form-control datetimepicker-input" data-target="#dob-dependent"/>
+                                <div class="input-group-append" data-target="#dob-dependent" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="dob-dependent-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -52,7 +56,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-dependent-label">Add Dependent</h5>
+                <h5 class="modal-title" id="edit-dependent-label">Edit Dependent</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -79,9 +83,13 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
-                            {{-- <input id="altdobDate" name="altdobDate" type="text" class="form-control" hidden> --}}
-                            <input name="dobDate" id="dobDate" type="text" class="form-control">
-                            <div id="dobDate-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="dob-dependent-edit" class="form-control datetimepicker-input" data-target="#dob-dependent-edit"/>
+                                <div class="input-group-append" data-target="#dob-dependent-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="dob-dependent-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -128,7 +136,7 @@
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="employee-dependents-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-dependents-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -149,6 +157,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('employee.dt.dependents', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -175,6 +187,14 @@
 </script>
 <script type="text/javascript">
     $(function(){
+        //datepicker
+        $('#dob-dependent').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+
+        $('#dob-dependent-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
         // ADD
         $('#add-dependent-popup').on('show.bs.modal', function (event) {
             clearDependentsError('#add-dependent-form');
@@ -189,7 +209,7 @@
                     _token: '{{ csrf_token() }}',
                     name: $('#add-dependent-form #name').val(),
                     relationship: $('#add-dependent-form #relationship').val(),
-                    dob: $('#add-dependent-form #dobDate').val()
+                    dob: $('#add-dependent-form #dob-dependent').val()
                 },
             success: function(data) {
                 showAlert(data.success);
@@ -214,8 +234,8 @@
                                         $('#add-dependent-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'dob':
-                                        $('#add-dependent-form #dobDate').addClass('is-invalid');
-                                        $('#add-dependent-form #dobDate-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                        $('#add-dependent-form #dob-dependent').addClass('is-invalid');
+                                        $('#add-dependent-form #dob-dependent-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
                             }
@@ -238,7 +258,7 @@
 
             $('#edit-dependent-form #name').val(currentData.name);
             $('#edit-dependent-form #relationship').val(currentData.relationship);
-            $('#edit-dependent-form #dobDate').val(currentData.dob);
+            $('#edit-dependent-form #dob-dependent-edit').val(currentData.dob);
         });
 
         var editDependentRouteTemplate = "{{ route('employee.dependents.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -253,7 +273,7 @@
                     _token: '{{ csrf_token() }}',
                     name: $('#edit-dependent-form #name').val(),
                     relationship: $('#edit-dependent-form #relationship').val(),
-                    dob: $('#edit-dependent-form #dobDate').val()
+                    dob: $('#edit-dependent-form #dob-dependent-edit').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -278,8 +298,8 @@
                                         $('#edit-dependent-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'dob':
-                                        $('#edit-dependent-form #dobDate').addClass('is-invalid');
-                                        $('#edit-dependent-form #dobDate-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                        $('#edit-dependent-form #dob-dependent').addClass('is-invalid');
+                                        $('#edit-dependent-form #dob-dependent-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
                             }
@@ -330,17 +350,20 @@
     function clearDependentsModal(htmlId) {
         $(htmlId + ' #name').val('');
         $(htmlId + ' #relationship').val('');
-        $(htmlId + ' #dobDate').val('');
+        $(htmlId + ' #dob-dependent').val('');
+        $(htmlId + ' #dob-dependent-edit').val('');
 
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #relationship').removeClass('is-invalid');
-        $(htmlId + ' #dobDate').removeClass('is-invalid');
+        $(htmlId + ' #dob-dependent').removeClass('is-invalid');
+        $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
     }
 
     function clearDependentsError(htmlId) {
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #relationship').removeClass('is-invalid');
-        $(htmlId + ' #dobDate').removeClass('is-invalid');
+        $(htmlId + ' #dob-dependent').removeClass('is-invalid');
+        $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
     }
 
     function showAlert(message) {

@@ -13,7 +13,8 @@ class EmployeeEmergencyContact extends Model
     protected $fillable = [
         'name',
         'relationship',
-        'contact_no'
+        'contact_no',
+        'created_by'
 ];
     protected $dates = ['deleted_at'];
 }

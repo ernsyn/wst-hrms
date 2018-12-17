@@ -13,6 +13,7 @@ class EmployeeSecurityGroup extends Model
     protected $fillable = [
 
         'security_group_id',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

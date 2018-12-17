@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
+use App\User;
 use App\Employee;
 use App\EmployeeDependent;
 use App\EmployeeImmigration;
@@ -53,17 +54,35 @@ class EmployeeController extends Controller
             'contact_no' => 'required|numeric',
             'marital_status' => 'required',
             'race' => 'required|alpha',
-            'total_children' => 'required|numeric',
-            'driver_license_no' => 'required',
-            'driver_license_expiry_date' => 'required|date',
+            'total_children' => 'nullable|numeric',
+            'driver_license_no' => 'nullable',
+            'driver_license_expiry_date' => 'nullable',
             'epf_no' => 'required',
-            'tax_no' => 'required'
+            'tax_no' => 'required',
+            'eis_no' => 'required',
+            'socso_no' => 'required'
         ]);
 
         Employee::where('id', $id)->update($profileUpdatedData);
 
         return response()->json(['success'=>'Profile was successfully updated.']);
     }
+
+
+    public function postChangePassword(Request $request, $id) {
+        $data = $request->validate([
+            'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+
+        User::where('id', $employee->user->id)->update([
+            'password' => bcrypt($data['new_password'])
+        ]);
+
+        return response()->json(['success'=>'Password was successfully updated.']);
+    }
+
 
     // SECTION: Data Tables
     public function getDataTableDependents()
@@ -73,6 +92,9 @@ class EmployeeController extends Controller
         return DataTables::of($dependents)
         ->editColumn('dob', function ($dependent) {
             return date('d/m/Y', strtotime($dependent->dob) );
+        })
+        ->editColumn('alt_dob', function ($dependent) {
+            return date('Y-m-d', strtotime($dependent->dob) );
         })
         ->make(true);
     }
@@ -160,7 +182,7 @@ class EmployeeController extends Controller
 
     public function getDataTableReportTo()
     {
-        $reportTos = EmployeeReportTo::with('report_to.user')->where('emp_id', Auth::user()->employee->id)->get();
+        $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($reportTos)->make(true);
     }
 
@@ -184,9 +206,8 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'contact_no' => 'required|numeric',
         ]);
-
+        $emergencyContactData['created_by'] = auth()->user()->id;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
-
 
         $employee = Employee::find($id);
         $employee->employee_emergency_contacts()->save($emergencyContact);
@@ -199,12 +220,11 @@ class EmployeeController extends Controller
         $dependentData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required'
         ]);
-        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
-
+        $dependentData['dob'] = implode("-", array_reverse(explode("/", $dependentData['dob'])));
+        $dependentData['created_by'] = auth()->user()->id;
         $dependent = new EmployeeDependent($dependentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_dependents()->save($dependent);
@@ -215,14 +235,13 @@ class EmployeeController extends Controller
     public function postImmigration(Request $request, $id)
     {
         $immigrationData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
         ]);
-
+        $immigrationData['created_by'] = auth()->user()->id;
         $immigration = new EmployeeImmigration($immigrationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_immigrations()->save($immigration);
@@ -234,16 +253,15 @@ class EmployeeController extends Controller
     {
         $visaData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
-            'expiry_date' => 'required|date',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'issued_by' => 'required',
             'issued_date' => 'required|date',
+            'expiry_date' => 'required|date',
             'family_members' => 'required'
         ]);
-
+        $visaData['created_by'] = auth()->user()->id;
         $visa = new EmployeeVisa($visaData);
-
 
         $employee = Employee::find($id);
         $employee->employee_visas()->save($visa);
@@ -262,15 +280,14 @@ class EmployeeController extends Controller
             'emp_grade_id' => 'required',
             'start_date' => 'required',
             'basic_salary' => 'required',
-            'specification' => 'required'
+            'remarks' => ''
         ]);
+        $jobData['created_by'] = auth()->user()->id;
 
         $jobData['status'] = 'active';
         $jobData['start_date'] = date("Y-m-d", strtotime($jobData['start_date']));
-   //     $jobData['end_date'] = date("Y-m-d", strtotime($jobData['start_date']));
 
-
-         $end_date=   EmployeeJob::where('id', $id)
+        $end_date=   EmployeeJob::where('id', $id)
         ->whereNull('end_date');
 
         EmployeeJob::where('emp_id', $id)
@@ -290,9 +307,8 @@ class EmployeeController extends Controller
             'acc_no' => 'required|numeric',
             'acc_status' => 'required'
         ]);
-
+        $bankAccountData['created_by'] = auth()->user()->id;
         $bankAccount = new EmployeeBankAccount($bankAccountData);
-
 
         $employee = Employee::find($id);
         $employee->employee_bank_accounts()->save($bankAccount);
@@ -309,7 +325,7 @@ class EmployeeController extends Controller
             'end_date' => 'required|date',
             'notes' => 'required'
         ]);
-
+        $experienceData['created_by'] = auth()->user()->id;
         $experience = new EmployeeExperience($experienceData);
 
         $employee = Employee::find($id);
@@ -329,9 +345,8 @@ class EmployeeController extends Controller
             'gpa' => 'required|numeric|between:0.00,4.00',
             'description' => 'required'
         ]);
-
+        $educationData['created_by'] = auth()->user()->id;
         $education = new EmployeeEducation($educationData);
-
 
         $employee = Employee::find($id);
         $employee->employee_educations()->save($education);
@@ -346,9 +361,8 @@ class EmployeeController extends Controller
             'years_of_experience' => 'required|numeric',
             'competency' => 'required'
         ]);
-
+        $skillData['created_by'] = auth()->user()->id;
         $skill = new EmployeeSkill($skillData);
-
 
         $employee = Employee::find($id);
         $employee->employee_skills()->save($skill);
@@ -362,9 +376,8 @@ class EmployeeController extends Controller
             'name' => 'required',
             'notes' => 'required'
         ]);
-
+        $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
-
 
         $employee = Employee::find($id);
         $employee->employee_attachments()->save($attachment);
@@ -386,10 +399,8 @@ class EmployeeController extends Controller
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
-
         $workingDaysData['is_template'] = false;
-
-
+        $workingDaysData['created_by'] = auth()->user()->id;
         $workingDay = new EmployeeWorkingDay($workingDayData);
 
         $employee = Employee::find($id);
@@ -412,9 +423,7 @@ class EmployeeController extends Controller
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
-
         $workingDayUpdateData['is_template'] = false;
-
         EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
@@ -442,9 +451,8 @@ class EmployeeController extends Controller
             'kpi_proposer' => 'required',
             'notes' => 'required'
         ]);
-
+        $reportToData['created_by'] = auth()->user()->id;
         $reportTo = new EmployeeReportTo($reportToData);
-
 
         $employee = Employee::find($id);
         $employee->report_tos()->save($reportTo);
@@ -457,7 +465,7 @@ class EmployeeController extends Controller
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
-
+        $securityGroupData['created_by'] = auth()->user()->id;
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
 
         $employee = Employee::find($id);
@@ -470,8 +478,7 @@ class EmployeeController extends Controller
     public function postMainSecurityGroup(Request $request, $id)
     {
         $mainSecurityGroupData = $request->validate([
-            'main_security_group_id' => 'required',
-
+            'main_security_group_id' => 'required'
         ]);
 
         Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
@@ -498,10 +505,9 @@ class EmployeeController extends Controller
         $dependentUpdatedData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required'
         ]);
-        // $dependentData['dob'] = date("Y-m-d", strtotime($dependentData['dob']));
-
+        $dependentUpdatedData['dob'] = implode("-", array_reverse(explode("/", $dependentUpdatedData['dob'])));
         EmployeeDependent::where('id', $id)->update($dependentUpdatedData);
 
         return response()->json(['success'=>'Dependent was successfully updated.']);
@@ -510,7 +516,7 @@ class EmployeeController extends Controller
     public function postEditImmigration(Request $request, $emp_id, $id)
     {
         $immigrationUpdatedData = $request->validate([
-            'passport_no' => 'required',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date'
@@ -525,8 +531,8 @@ class EmployeeController extends Controller
     {
         $visaUpdatedData = $request->validate([
             'type' => 'required',
-            'visa_number' => 'required|numeric',
-            'passport_no' => 'required|numeric',
+            'visa_number' => 'required|alpha_num',
+            'passport_no' => 'required|alpha_num',
             'expiry_date' => 'required|date',
             'issued_by' => 'required',
             'issued_date' => 'required|date',

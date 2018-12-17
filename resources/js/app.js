@@ -7,13 +7,14 @@
 import './bootstrap';
 import 'jquery-ui/ui/i18n/datepicker-en-GB.js';
 import 'fullcalendar';
+require('selectize');
 
 import 'datatables.net-bs4';
 import 'datatables.net-buttons-bs4';
 import 'datatables.net-responsive-bs4';
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// import pdfMake from "pdfmake/build/pdfmake";
+// import pdfFonts from "pdfmake/build/vfs_fonts";
+// pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import 'datatables.net-buttons/js/buttons.colVis.js';
 import 'datatables.net-buttons/js/buttons.print.js';
 import 'datatables.net-buttons/js/buttons.flash.js';
@@ -21,15 +22,12 @@ import 'datatables.net-buttons/js/buttons.html5.js';
 
 import 'parsleyjs';
 import 'jquery-mousewheel';
-var moment = require('moment');
-moment().format();
 import Chart from 'chart.js';
 
 import './modal';
 
-//dropzone
-window.Dropzone = require('dropzone');
- Dropzone.autoDiscover = false;
+global.moment = require('moment');
+require('tempusdominus-bootstrap-4');
 
 // window.Vue = require('vue');
 
@@ -78,18 +76,19 @@ $("#form_validate").parsley({
     trigger: 'change'
 });
 
-$(".form_validate").parsley({
-    errorClass: 'is-invalid',
-    successClass: 'is-valid', // Comment this option if you don't want the field to become green when valid. Recommended in Google material design to prevent too many hints for user experience. Only report when a field is wrong.
-    errorsWrapper: '<span class="form-text text-danger"></span>',
-    errorTemplate: '<small class="font-italic"></small>',
-    trigger: 'change'
-});
+// $(".form_validate").parsley({
+//     errorClass: 'is-invalid',
+//     successClass: 'is-valid', // Comment this option if you don't want the field to become green when valid. Recommended in Google material design to prevent too many hints for user experience. Only report when a field is wrong.
+//     errorsWrapper: '<span class="form-text text-danger"></span>',
+//     errorTemplate: '<small class="font-italic"></small>',
+//     trigger: 'change'
+// }); //use  class="form_validate" data-parsley-errors-messages-disabled
 
 
 // datepicker
 var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
+//leave
 $("#startDate").datepicker({
     altField: "#altStart",
     altFormat: "yy-mm-dd",
@@ -131,173 +130,6 @@ $('#endDate').datepicker({
     }
 });
 
-$("#skillStartDate").datepicker({
-    altField: "#altskillStartDate",
-    altFormat: "yy-mm-dd",
-    format: "dd/mm/yy",
-    onSelect: function (selectedDate) {
-        $("#endDate").datepicker("option", "minDate", selectedDate);
-    },
-    onClose: function () {
-        $(this).parsley().validate();
-    }
-});
-$('#skillEndDate').datepicker({
-    altField: "#altskillEndDate",
-    altFormat: 'yy-mm-dd',
-    format: 'dd/mm/yy',
-    onSelect: function (selectedDate) {
-        $("#startDate").datepicker("option", "maxDate", selectedDate);
-    },
-    onClose: function () {
-        $(this).parsley().validate();
-    }
-});
-
-
-
-
-function hrmsDatepicker(settings) {
-    let elementRef = settings.elementRef;
-    let altElementRef = settings.altElementRef;
-    let format = 'dd/mm/yy';
-    let altFormat = 'yy-mm-dd';
-    let changeMonth = true;
-    let changeYear = true;
-
-    if(settings.format) {
-        format = settings.format;
-    }
-
-    if(settings.altFormat) {
-        format = settings.altFormat;
-    }
-
-    if(settings.changeMonth) {
-        changeMonth = settings.changeMonth;
-    }
-
-    if(settings.changeYear) {
-        changeYear = settings.changeYear;
-    }
-
-    $(elementRef).datepicker({
-        altField: altElementRef,
-        altFormat: altFormat,
-        format: format,
-        changeMonth: changeMonth,
-        changeYear: changeYear,
-        yearRange: "-10:+20"
-    });
-}
-
-
-
-// $('#expiryDate').datepicker({
-//     altField: "#altexpiryDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy',
-//     changeMonth: true,
-//     changeYear: true,
-//     yearRange: "-10:+20"
-// });
-// $('#expiryDate2').datepicker({
-//     altField: "#altexpiryDate2",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy',
-//     changeMonth: true,
-//     changeYear: true,
-//     yearRange: "-10:+20"
-// });
-// $('#dobDateEdit').datepicker({
-//     altField: "#altdobDateEdit",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#dobDate').datepicker({
-//     altField: "#altdobDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-
-
-// $('#updatedobDate').datepicker({
-//     altField: "#altupdobDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy',
-//     changeMonth: true,
-//     changeYear: true,
-//     yearRange: "-80:+0"
-// });
-// $('#editDobDate').datepicker({
-//     format: 'dd/mm/yyyy',
-//     uiLibrary: 'bootstrap4',
-//     iconsLibrary: 'fontawesome'
-// });
-
-// $('#licenseExpiryDateAddition').datepicker({
-//     altField: "#altlicenseExpiryDateAddition",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#licenseExpiryDate').datepicker({
-//     altField: "#altlicenseExpiryDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#licenseExpiryDate2').datepicker({
-//     altField: "#altlicenseExpiryDate2",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#expDate').datepicker({
-//     altField: "#altexpDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#issueDate').datepicker({
-//     altField: "#altissueDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#visaexpDate').datepicker({
-//     altField: "#altvisaexpDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#visaissueDate').datepicker({
-//     altField: "#altvisaissueDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#visaUpexpDate').datepicker({
-//     altField: "#altvisaUpexpDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#visaUpissueDate').datepicker({
-//     altField: "#altvisaUpissueDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#jobDate').datepicker({
-//     altField: "#altjobDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#editjobDate').datepicker({
-//     altField: "#alteditjobDate",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy'
-// });
-// $('#job-date').datepicker({
-//     altField: "#alt-job-date",
-//     altFormat: 'yy-mm-dd',
-//     format: 'dd/mm/yy',
-//     changeMonth: true,
-//     changeYear: true,
-//     yearRange: "-80:+0"
-// });
 // $('#startYear').datepicker({
 //     changeMonth: true,
 //     changeYear: true,
@@ -314,102 +146,30 @@ function hrmsDatepicker(settings) {
 // $("#startYear").on('focus blur click', function () {
 //     $(".ui-datepicker-calendar").hide();
 // });
-$('#endYear').datepicker({
-    changeMonth: true,
-    changeYear: true,
-    showButtonPanel: true,
-    dateFormat: 'MM yy',
-    altField: "#altEndYear",
-    altFormat: 'yy',
-    onClose: function (dateText, inst) {
-        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-        $(this).datepicker('setDate', new Date(year, month, 1));
-    }
-});
-$("#endYear").on('focus blur click', function () {
-    $(".ui-datepicker-calendar").hide();
-});
+// $('#endYear').datepicker({
+//     changeMonth: true,
+//     changeYear: true,
+//     showButtonPanel: true,
+//     dateFormat: 'MM yy',
+//     altField: "#altEndYear",
+//     altFormat: 'yy',
+//     onClose: function (dateText, inst) {
+//         var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+//         var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+//         $(this).datepicker('setDate', new Date(year, month, 1));
+//     }
+// });
+// $("#endYear").on('focus blur click', function () {
+//     $(".ui-datepicker-calendar").hide();
+// });
 
 // fullcalendar.io
-$('#calendar').fullCalendar({
-    // put your options and callbacks here
-})
+// $('#calendar').fullCalendar({
+//     // put your options and callbacks here
+// })
 
 
-new Chart($("#myChart"), {
-    type: 'bar',
-    data: {
-        labels: ["AL", "SL", "UL", "HL", "ML", "MTL"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: 'Monthly Leave Statistics'
-        },
-        legend: {
-            display: false
-        }
 
-    }
-});
-
-//update employee dependent
-$('#updateDependentPopup').on('show.bs.modal', function (event) {
-
-    var button = $(event.relatedTarget)
-    var id = button.data('dependent-id')
-    var name = button.data('dependent-name')
-    var relationship = button.data('dependent-relationship')
-    var dob = button.data('dependent-date-of-birth')
-
-    var modal = $(this)
-
-    modal.find('.modal-body #emp_dep_id').val(id)
-    modal.find('.modal-body #name').val(name)
-    modal.find('.modal-body #relationship').val(relationship)
-    modal.find('.modal-body #updatedobDate').val(dob)
-
-})
-
-$(".phone-format").keypress(function (e) {
-    if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-      return false;
-    }
-    var curchr = this.value.length;
-    var curval = $(this).val();
-    if (curchr == 3 && curval.indexOf("(") <= -1) {
-      $(this).val("(" + curval + ")" + "-");
-    } else if (curchr == 4 && curval.indexOf("(") > -1) {
-      $(this).val(curval + ")-");
-    } else if (curchr == 5 && curval.indexOf(")") > -1) {
-      $(this).val(curval + "-");
-    } else if (curchr == 9) {
-      $(this).val(curval + " ");
-      $(this).attr('maxlength', '14');
-    }
-  });
 
 //update Team
 $('#updateTeamPopup').on('show.bs.modal', function (event) {
@@ -794,14 +554,3 @@ $('#check_job_grade_de').change(function() {
         $('#job_grade_de').prop('disabled', true);
     }
 });
-$('#calendarleave').fullCalendar({
-    themeSystem: 'jquery-ui',
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'month,agendaWeek,agendaDay,listMonth'
-    },
-    weekNumbers: true,
-    eventLimit: true, // allow "more" link when too many events
-    // events: 'https://fullcalendar.io/demo-events.json'
-  });

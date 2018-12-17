@@ -1,6 +1,6 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
+<div class="container pb-5">
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.working-days.edit.post', ['id' => $working_day->id]) }}" id="form_validate" data-parsley-validate>
             <div class="card-body">
@@ -21,8 +21,16 @@
                     <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Monday*</label>
                         <div class="col-md-12">
-                            <input id="monday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder=""
-                                name="monday" value="{{ $working_day->monday }}" required>
+                                <select id="monday" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
+                                    placeholder="" name="monday" required>
+                                    <option value="0" {{ $working_day->monday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
+                                    <option value="0" {{ $working_day->monday == 0 ? 'selected' : '' }}>0 - Off Day</option>
+                                    <option value="0.5" {{ $working_day->monday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
+                                    <option value="1" {{ $working_day->monday == 1 ? 'selected' : '' }}>1 - Full Day</option>
+                                </select>
+
+
+
                                 @if ($errors->has('monday'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('monday') }}</strong>
@@ -33,8 +41,16 @@
                     <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Tuesday*</label>
                         <div class="col-md-12">
-                            <input id="tuesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder=""
-                                name="tuesday" value="{{ $working_day->tuesday }}" required>
+                                <select id="tuesday" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
+                                    placeholder="" name="tuesday" required>
+                                    <option value="0" {{ $working_day->tuesday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
+                                    <option value="0" {{ $working_day->tuesday == 0 ? 'selected' : '' }}>0 - Off Day</option>
+                                    <option value="0.5" {{ $working_day->tuesday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
+                                    <option value="1" {{ $working_day->tuesday == 1 ? 'selected' : '' }}>1 - Full Day</option>
+                                </select>
+
+
+
                                 @if ($errors->has('tuesday'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('tuesday') }}</strong>
@@ -45,8 +61,13 @@
                     <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Wednesday*</label>
                         <div class="col-md-12">
-                            <input id="wednesday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder=""
-                                name="wednesday" value="{{ $working_day->wednesday }}" required>
+                                <select id="wednesday" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
+                                    placeholder="" name="wednesday" required>
+                                    <option value="0" {{ $working_day->wednesday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
+                                    <option value="0" {{ $working_day->wednesday == 0 ? 'selected' : '' }}>0 - Off Day</option>
+                                    <option value="0.5" {{ $working_day->wednesday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
+                                    <option value="1" {{ $working_day->wednesday == 1 ? 'selected' : '' }}>1 - Full Day</option>
+                                </select>
                                 @if ($errors->has('wednesday'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('wednesday') }}</strong>
@@ -57,8 +78,13 @@
                     <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Thursday*</label>
                         <div class="col-md-12">
-                            <input id="thursday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder=""
-                                name="thursday" value="{{ $working_day->thursday }}" required>
+                                <select id="thursday" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}"
+                                    placeholder="" name="thursday" required>
+                                    <option value="0" {{ $working_day->thursday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
+                                    <option value="0" {{ $working_day->thursday == 0 ? 'selected' : '' }}>0 - Off Day</option>
+                                    <option value="0.5" {{ $working_day->thursday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
+                                    <option value="1" {{ $working_day->thursday == 1 ? 'selected' : '' }}>1 - Full Day</option>
+                                </select>
                                 @if ($errors->has('thursday'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('thursday') }}</strong>
@@ -69,8 +95,13 @@
                     <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Friday*</label>
                         <div class="col-md-12">
-                            <input id="friday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder=""
-                                name="friday" value="{{ $working_day->friday }}" required>
+                                <select id="friday" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
+                                    placeholder="" name="friday" required>
+                                    <option value="0" {{ $working_day->friday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
+                                    <option value="0" {{ $working_day->friday == 0 ? 'selected' : '' }}>0 - Off Day</option>
+                                    <option value="0.5" {{ $working_day->friday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
+                                    <option value="1" {{ $working_day->friday == 1 ? 'selected' : '' }}>1 - Full Day</option>
+                                </select>
                                 @if ($errors->has('friday'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('friday') }}</strong>
@@ -81,8 +112,13 @@
                     <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Saturday*</label>
                         <div class="col-md-12">
-                            <input id="saturday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder=""
-                                name="saturday" value="{{ $working_day->saturday }}" required>
+                                <select id="saturday" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
+                                    placeholder="" name="saturday" required>
+                                    <option value="0" {{ $working_day->saturday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
+                                    <option value="0" {{ $working_day->saturday == 0 ? 'selected' : '' }}>0 - Off Day</option>
+                                    <option value="0.5" {{ $working_day->saturday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
+                                    <option value="1" {{ $working_day->saturday == 1 ? 'selected' : '' }}>1 - Full Day</option>
+                                </select>
                                 @if ($errors->has('saturday'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('saturday') }}</strong>
@@ -93,8 +129,13 @@
                     <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Sunday*</label>
                         <div class="col-md-12">
-                            <input id="sunday" type="number" min="0" max="1" step="0.5" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder=""
-                                name="sunday" value="{{ $working_day->sunday }}" required>
+                                <select id="sunday" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
+                                    placeholder="" name="sunday" required>
+                                    <option value="0" {{ $working_day->sunday == 0 ? 'selected' : '' }}>0 - Rest Day</option>
+                                    <option value="0" {{ $working_day->sunday == 0 ? 'selected' : '' }}>0 - Off Day</option>
+                                    <option value="0.5" {{ $working_day->sunday == 0.5 ? 'selected' : '' }}>0.5 - Half Day</option>
+                                    <option value="1" {{ $working_day->sunday == 1 ? 'selected' : '' }}>1 - Full Day</option>
+                                </select>
                                 @if ($errors->has('sunday'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('sunday') }}</strong>

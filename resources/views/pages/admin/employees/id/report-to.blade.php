@@ -2,12 +2,12 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-report-to-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-report-to-popup">
                 Add Report To
             </button>
         </div>
     </div>
-    <table class="table table-bordered table-hover w-100" id="report-to-table">
+    <table class="hrms-primary-data-table table w-100" id="report-to-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -15,6 +15,7 @@
                 <th>Type</th>
                 <th>Note</th>
                 <th>KPI Proposer</th>
+                <th>Report To Level</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -30,17 +31,17 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="add-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="add-report-to-form">
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
-                            <select class="form-control" name="report-to" id="report-to">
-                                <option value="">Select Name</option>
+                            <select name="report-to" id="report-to" class="form-control" placeholder="Select a superior...">
+                                {{-- <option value="">Select Name</option>
                                 @foreach(App\Employee::with('user')->get() as $employee)
                                 <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                             <div id="report-to-error" class="invalid-feedback">
                             </div>
@@ -62,25 +63,42 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
+                            <label for="report_to_level"><strong>Report To Level*</strong></label>
+                            <select class="form-control" id="report-to-level" name="report_to_level">
+                                <option value="">Select Level</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                            <div id="report-to-level-error" class="invalid-feedback">
 
-                            <input type="hidden" value="0" checked>
-                            <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
+                            <select class="form-control" id="kpi-proposer" name="kpi_proposer">
+                            <option value="">Select Level</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
                             <div id="kpi-proposer-error" class="invalid-feedback">
 
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
+                            <div class="col-md-12 mb-3">
+                                <label for="notes"><strong>Notes*</strong></label>
+                                <input id="notes" type="text" class="form-control" placeholder="" value="" >
 
                             </div>
                         </div>
+
+
                     </div>
-                </div>
+
                 <div class="modal-footer">
                     <button id="add-report-to-submit" type="submit" class="btn btn-primary">
                     {{ __('Submit') }}
@@ -101,16 +119,16 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="edit-report-to-form" class="form_validate" data-parsley-errors-messages-disabled>
+            <form id="edit-report-to-form">
                 <div class="modal-body">
                     @csrf
-                    <div class="form-row" class="form_validate" data-parsley-errors-messages-disabled>
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
                             <select class="form-control" name="report-to" id="report-to">
-                                    @foreach(App\Employee::with('user')->get() as $employee)
+                                    {{-- @foreach(App\Employee::with('user')->get() as $employee)
                                     <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             <div id="report-to-error" class="invalid-feedback">
                             </div>
@@ -129,21 +147,37 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                            <input type="hidden" value="0" checked>
-                            <input id="kpi-proposer" type="checkbox" value="1" checked id="kpi_proposer" name="kpi_proposer">
-                            <div id="kpi-proposer-error" class="invalid-feedback">
+                            <div class="col-md-12 mb-3">
+                                <label for="report_to_level"><strong>Report To Level*</strong></label>
+                                <select class="form-control" id="report-to-level" name="report_to_level">
+                                    <option value="">Select Level</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                                <div id="report-to-level-error" class="invalid-feedback">
+
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
+                                <select class="form-control" id="kpi-proposer" name="kpi_proposer">
+                                <option value="">Select Level</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                                <div id="kpi-proposer-error" class="invalid-feedback">
+
+                                </div>
+                            </div>
+                        </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="notes-error" class="invalid-feedback">
+                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
 
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -186,13 +220,18 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.report-to', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 5,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
+
             {
-                "data": "report_to.user.name"
+                "data": "employee_report_to.user.name"
             },
             {
                 "data": "type"
@@ -202,6 +241,21 @@
             },
             {
                 "data": "kpi_proposer",
+
+                render: function(data) {
+                    if(data ==1) {
+                      return '<i class="fas fa-check-circle" style="color:green"></i>'
+
+                    }
+                    else {
+                      return '<i class="fas fa-times-circle" style="color:red"></i>'
+                    }
+
+                  },
+                  defaultContent: ''
+                },
+            {
+                "data": "report_to_level",
             },
             {
                 "data": null,
@@ -216,6 +270,44 @@
 </script>
 <script type="text/javascript">
     $(function(){
+        var reportToSelectizeOptions = {
+            valueField: 'id',
+            labelField: 'name',
+            searchField: 'name',
+            options: [],
+            create: false,
+            render: {
+                option: function(item, escape) {
+                    return '<div class="option">' +
+                        '<span class="badge badge-warning">' + item.code +'</span>' + 
+                        '&nbsp; ' + item.name +
+                    '</div>';
+                }
+            },
+            load: function(query, callback) {
+                if (!query.length) return callback();
+                $.ajax({
+                    url: "{{ route('admin.employees.report-to.employee-list', ['id' => $id]) }}",
+                    type: 'GET',
+                    data: {
+                        q: query,
+                        page_limit: 10
+                    },
+                    error: function() {
+                        callback();
+                    },
+                    success: function(res) {
+                        callback(res);
+                    }
+                });
+            }
+        };
+
+        $('#add-report-to-form #report-to').selectize(reportToSelectizeOptions);
+        var editReportToEmpSelectize = $('#edit-report-to-form #report-to').selectize(reportToSelectizeOptions);
+        editReportToEmpSelectize = editReportToEmpSelectize[0].selectize;
+        console.log("Selectize: ", editReportToEmpSelectize);
+
         // ADD
         $('#add-report-to-popup').on('show.bs.modal', function (event) {
             clearReportToError('#add-report-to-form');
@@ -231,7 +323,8 @@
                     report_to_emp_id: $('#add-report-to-form #report-to').val(),
                     type: $('#add-report-to-form #type').val(),
                     kpi_proposer: $('#add-report-to-form #kpi-proposer').val(),
-                    notes: $('#add-report-to-form #notes').val()
+                    notes: $('#add-report-to-form #notes').val(),
+                    report_to_level: $('#add-report-to-form #report-to-level').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -259,9 +352,10 @@
                                         $('#add-report-to-form #kpi-proposer').addClass('is-invalid');
                                         $('#add-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'notes':
-                                        $('#add-report-to-form #notes').addClass('is-invalid');
-                                        $('#add-report-to-form #notes-error').html('<strong>' + errors[errorField][0] + "</strong>");
+
+                                    case 'report_to_level':
+                                        $('#add-report-to-form #report_to_level').addClass('is-invalid');
+                                        $('#add-report-to-form #report-to-level-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
                             }
@@ -281,11 +375,21 @@
             console.log('Data: ', currentData)
 
             editReportToId = currentData.id;
+            // $('#edit-report-to-form #report-to').html(
+            //     '<option value="' + currentData.report_to_emp_id + '" selected="selected">' + 
+            //     '(Insert Name)' + '</option>'
+            // );
+            editReportToEmpSelectize.addOption({
+                id: currentData.report_to_emp_id,
+                name: currentData.employee_report_to.user.name,
+                code: currentData.employee_report_to.code
+            });
+            editReportToEmpSelectize.setValue(currentData.report_to_emp_id, false);
 
-            $('#edit-report-to-form #report-to').val(currentData.report_to_emp_id);
             $('#edit-report-to-form #type').val(currentData.type);
             $('#edit-report-to-form #kpi-proposer').val(currentData.kpi_proposer);
             $('#edit-report-to-form #notes').val(currentData.notes);
+            $('#edit-report-to-form #report-to-level').val(currentData.report_to_level);
         });
 
         var editReportToRouteTemplate = "{{ route('admin.employees.report-to.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -301,7 +405,8 @@
                     report_to_emp_id: $('#edit-report-to-form #report-to').val(),
                     type: $('#edit-report-to-form #type').val(),
                     kpi_proposer: $('#edit-report-to-form #kpi-proposer').val(),
-                    notes: $('#edit-report-to-form #notes').val()
+                    notes: $('#edit-report-to-form #notes').val(),
+                    report_to_level: $('#edit-report-to-form #report-to-level').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -329,9 +434,10 @@
                                         $('#edit-report-to-form #kpi-proposer').addClass('is-invalid');
                                         $('#edit-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'notes':
-                                        $('#edit-report-to-form #notes').addClass('is-invalid');
-                                        $('#edit-report-to-form #notes-error').html('<strong>' + errors[errorField][0] + "</strong>");
+
+                                    case 'report_to_level':
+                                        $('#edit-report-to-form #report_to_level').addClass('is-invalid');
+                                        $('#edit-report-to-form #report-to-level-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
                             }
@@ -382,13 +488,15 @@
     function clearReportToModal(htmlId) {
         $(htmlId + ' #report-to').val('');
         $(htmlId + ' #type').val('');
-        $(htmlId + ' #kpi-proposer').val('');
+        $(htmlId + ' #kpi-proposer').val();
         $(htmlId + ' #notes').val('');
+        $(htmlId + ' #report-to-level').val('');
 
         $(htmlId + ' #report-to').removeClass('is-invalid');
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #kpi-proposer').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' #report-to-level').removeClass('is-invalid');
     }
 
     function clearReportToError(htmlId) {
@@ -396,6 +504,7 @@
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #kpi-proposer').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' #report-to-level').removeClass('is-invalid');
     }
 
     function showAlert(message) {
@@ -407,5 +516,10 @@
             </div>`)
     }
 
+</script>
+<script>
+$(function () {
+
+});
 </script>
 @append

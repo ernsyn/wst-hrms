@@ -20,6 +20,13 @@ $fa-font-path: "../webfonts" !default;
 //datepicker
 @import "~jquery-ui/themes/base/all.css";
 
+//datetimepicker
+@import "~tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css";
+
+// Selectize
+// @import "node_modules/selectize/dist/css/selectize.bootstrap3";
+@import "~selectize-bootstrap4-theme/scss/selectize.bootstrap4";
+
 //fullcalendar
 @import "~fullcalendar/dist/fullcalendar.min.css";
 
@@ -49,6 +56,8 @@ $fa-font-path: "../webfonts" !default;
 @import 'component';
 
 @import 'super-admin/dashboard';
+@import 'admin/dashboard';
 @import 'admin/e-leave';
-
+@import 'admin/employee';
+@import 'employee/e-leave';
   

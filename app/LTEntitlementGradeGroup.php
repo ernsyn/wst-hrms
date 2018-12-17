@@ -22,6 +22,6 @@ class LTEntitlementGradeGroup extends Model
     }
 
     public function lt_conditional_entitlements() {
-        return $this->hasMany('App\LTConditionalEntitlement', 'lt_entitlement_gg_id'); 
+        return $this->hasMany('App\LTConditionalEntitlement', 'lt_entitlement_gg_id')->orderBy('min_years'); 
     }
 }

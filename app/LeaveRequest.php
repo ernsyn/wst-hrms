@@ -14,9 +14,17 @@ class LeaveRequest extends Model
         'emp_id',
         'leave_type_id',
         'leave_allocation_id',
+        'start_date',
+        'end_date', 
+        'am_pm', 
         'applied_days',
         'reason',
-        'is_approved',
+        'status' 
+    ];
+
+    protected $casts = [
+
+        'applied_days' => 'float',
     ];
 
     protected $dates = ['deleted_at'];
@@ -26,15 +34,29 @@ class LeaveRequest extends Model
     }
 
     public function attachment() {
-        return $this->belongsTo('App\Media'); 
+        return $this->belongsTo('App\Media', 'attachment_media_id'); 
     }
 
     public function report_to()
     {
-        return $this->hasMany('App\EmployeeReportTo');
+        return $this->hasMany('App\EmployeeReportTo','emp_id');
     }
 
-    public function leave_types() {
+    public function leave_type() {
         return $this->belongsTo('App\LeaveType','leave_type_id'); 
     }
+
+    public function employee() {
+        return $this->belongsTo('App\Employee','emp_id'); 
+    }
+
+    public function leave_allocation() {
+        return $this->belongsTo('App\LeaveAllocation','leave_allocation_id'); 
+    }
+
+public function leave_request_approval()
+{
+ return $this->hasMany('App\LeaveRequestApproval'); 
+
+}
 }

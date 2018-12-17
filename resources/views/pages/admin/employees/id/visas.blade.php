@@ -29,22 +29,6 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="passport-no"><strong>Passport Number*</strong></label>
-                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="passport-no-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="expiry-date"><strong>Expiry Date*</strong></label>
-                            <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="expiry-date-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
                             <label for="issued-by"><strong>Issued By*</strong></label>
                             <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
                             <div id="issued-by-error" class="invalid-feedback">
@@ -52,16 +36,34 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="issued-date"><strong>Issued Date*</strong></label>
-                            <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="issued-date-error" class="invalid-feedback">
+                        <div class="col-md-8 mb-3">
+                            <label for="issued-date-visa"><strong>Issued Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="issued-date-visa" class="form-control datetimepicker-input" data-target="#issued-date-visa"/>
+                                <div class="input-group-append" data-target="#issued-date-visa" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="issued-date-error" class="invalid-feedback">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-8 mb-3">
+                            <label for="expiry-date-visa"><strong>Expiry Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="expiry-date-visa" class="form-control datetimepicker-input" data-target="#expiry-date-visa"/>
+                                <div class="input-group-append" data-target="#expiry-date-visa" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="expiry-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <label for="family-members"><strong>Relationship*</strong></label>
                             <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
                             <div id="family-members-error" class="invalid-feedback">
                             </div>
@@ -102,24 +104,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="visa-number"><strong>Visa Number*</strong></label>
-                            <input id="visa-number" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="visa-number-edit" type="text" class="form-control" placeholder="" value="" required>
                             <div id="visa-number-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="passport-no"><strong>Passport Number*</strong></label>
-                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="passport-no-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="expiry-date"><strong>Expiry Date*</strong></label>
-                            <input id="expiry-date" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="expiry-date-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -132,16 +118,34 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="issued-date"><strong>Issued Date*</strong></label>
-                            <input id="issued-date" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="issued-date-error" class="invalid-feedback">
+                        <div class="col-md-8 mb-3">
+                            <label for="issued-date-visa-edit"><strong>Issued Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="issued-date-visa-edit" class="form-control datetimepicker-input" data-target="#issued-date-visa-edit"/>
+                                <div class="input-group-append" data-target="#issued-date-visa-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="issued-date-error" class="invalid-feedback">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-8 mb-3">
+                            <label for="expiry-date-visa-edit"><strong>Expiry Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="expiry-date-visa-edit" class="form-control datetimepicker-input" data-target="#expiry-date-visa-edit"/>
+                                <div class="input-group-append" data-target="#expiry-date-visa-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="expiry-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="family-members"><strong>Family Members*</strong></label>
+                            <label for="family-members"><strong>Relationship*</strong></label>
                             <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
                             <div id="family-members-error" class="invalid-feedback">
                             </div>
@@ -184,7 +188,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-visa-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-visa-popup">
                 Add Visa
             </button>
         </div>
@@ -195,11 +199,10 @@
                 <th>No</th>
                 <th>Type</th>
                 <th>Visa Number</th>
-                <th>Passport No</th>
-                <th>Expiry Date</th>
                 <th>Issued By</th>
                 <th>Issued Date</th>
-                <th>Family Members</th>
+                <th>Expiry Date</th>
+                <th>Relationship</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -217,6 +220,10 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.visas', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 7,
+            "orderable": false
+        } ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
@@ -229,16 +236,13 @@
                 "data": "visa_number"
             },
             {
-                "data": "passport_no"
-            },
-            {
-                "data": "expiry_date"
-            },
-            {
                 "data": "issued_by"
             },
             {
                 "data": "issued_date"
+            },
+            {
+                "data": "expiry_date"
             },
             {
                 "data": "family_members"
@@ -256,6 +260,35 @@
 </script>
 <script type="text/javascript">
     $(function(){
+        //datepicker
+        $('#issued-date-visa').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#expiry-date-visa').datetimepicker({
+            format: 'DD/MM/YYYY',
+            useCurrent: false
+        });
+        $("#issued-date-visa").on("change.datetimepicker", function (e) {
+            $('#expiry-date-visa').datetimepicker('minDate', e.date);
+        });
+        $("#expiry-date-visa").on("change.datetimepicker", function (e) {
+            $('#issued-date-visa').datetimepicker('maxDate', e.date);
+        });
+
+        $('#issued-date-visa-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#expiry-date-visa-edit').datetimepicker({
+            format: 'DD/MM/YYYY',
+            useCurrent: false
+        });
+        $("#issued-date-visa-edit").on("change.datetimepicker", function (e) {
+            $('#expiry-date-visa-edit').datetimepicker('minDate', e.date);
+        });
+        $("#expiry-date-visa-edit").on("change.datetimepicker", function (e) {
+            $('#issued-date-visa-edit').datetimepicker('maxDate', e.date);
+        });
+
         // ADD VISA
         $('#add-visa-popup').on('show.bs.modal', function (event) {
             clearVisasError('#add-visa-form');
@@ -271,10 +304,9 @@
                 // Form Data
                 type: $('#add-visa-form #type').val(),
                 visa_number: $('#add-visa-form #visa-number').val(),
-                passport_no: $('#add-visa-form #passport-no').val(),
-                expiry_date: $('#add-visa-form #expiry-date').val(),
                 issued_by: $('#add-visa-form #issued-by').val(),
-                issued_date: $('#add-visa-form #issued-date').val(),
+                issued_date: $('#add-visa-form #issued-date-visa').val(),
+                expiry_date: $('#add-visa-form #expiry-date-visa').val(),
                 family_members: $('#add-visa-form #family-members').val()
             },
             success: function(data) {
@@ -299,21 +331,18 @@
                                         $('#add-visa-form #visa-number').addClass('is-invalid');
                                         $('#add-visa-form #visa-number-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'passport_no':
-                                        $('#add-visa-form #passport-no').addClass('is-invalid');
-                                        $('#add-visa-form #passport-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
-                                    case 'expiry_date':
-                                        $('#add-visa-form #expiry-date').addClass('is-invalid');
-                                        $('#add-visa-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+
                                     case 'issued_by':
                                         $('#add-visa-form #issued-by').addClass('is-invalid');
                                         $('#add-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'issued_date':
-                                        $('#add-visa-form #issued-date').addClass('is-invalid');
+                                        $('#add-visa-form #issued-date-visa').addClass('is-invalid');
                                         $('#add-visa-form #issued-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'expiry_date':
+                                        $('#add-visa-form #expiry-date-visa').addClass('is-invalid');
+                                        $('#add-visa-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'family_members':
                                         $('#add-visa-form #family-members').addClass('is-invalid');
@@ -339,11 +368,10 @@
             editVisaId = currentData.id;
 
             $('#edit-visa-form #type').val(currentData.type);
-            $('#edit-visa-form #visa-number').val(currentData.visa_number);
-            $('#edit-visa-form #passport-no').val(currentData.passport_no);
-            $('#edit-visa-form #expiry-date').val(currentData.expiry_date);
+            $('#edit-visa-form #visa-number-edit').val(currentData.visa_number);
             $('#edit-visa-form #issued-by').val(currentData.issued_by);
-            $('#edit-visa-form #issued-date').val(currentData.issued_date);
+            $('#edit-visa-form #issued-date-visa-edit').val(currentData.issued_date);
+            $('#edit-visa-form #expiry-date-visa-edit').val(currentData.expiry_date);
             $('#edit-visa-form #family-members').val(currentData.family_members);
         });
 
@@ -358,11 +386,11 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     type: $('#edit-visa-form #type').val(),
-                    visa_number: $('#edit-visa-form #visa-number').val(),
-                    passport_no: $('#edit-visa-form #passport-no').val(),
-                    expiry_date: $('#edit-visa-form #expiry-date').val(),
+                    visa_number: $('#edit-visa-form #visa-number-edit').val(),
+
                     issued_by: $('#edit-visa-form #issued-by').val(),
-                    issued_date: $('#edit-visa-form #issued-date').val(),
+                    issued_date: $('#edit-visa-form #issued-date-visa-edit').val(),
+                    expiry_date: $('#edit-visa-form #expiry-date-visa-edit').val(),
                     family_members: $('#edit-visa-form #family-members').val()
                 },
                 success: function(data) {
@@ -384,24 +412,21 @@
                                         $('#edit-visa-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'visa_number':
-                                        $('#edit-visa-form #visa-number').addClass('is-invalid');
+                                        $('#edit-visa-form #visa-number-edit').addClass('is-invalid');
                                         $('#edit-visa-form #visa-number-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'passport_no':
-                                        $('#edit-visa-form #passport-no').addClass('is-invalid');
-                                        $('#edit-visa-form #passport-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
-                                    case 'expiry_date':
-                                        $('#edit-visa-form #expiry-date').addClass('is-invalid');
-                                        $('#edit-visa-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
+
                                     case 'issued_by':
                                         $('#edit-visa-form #issued-by').addClass('is-invalid');
                                         $('#edit-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'issued_date':
-                                        $('#edit-visa-form #issued-by').addClass('is-invalid');
-                                        $('#edit-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                        $('#edit-visa-form #issued-date-visa-edit').addClass('is-invalid');
+                                        $('#edit-visa-form #issued-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'expiry_date':
+                                        $('#edit-visa-form #expiry-date-visa-edit').addClass('is-invalid');
+                                        $('#edit-visa-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'family_members':
                                         $('#edit-visa-form #family-members').addClass('is-invalid');
@@ -458,28 +483,31 @@
     function clearVisasModal(htmlId) {
         $(htmlId + ' #type').val('');
         $(htmlId + ' #visa-number').val('');
-        $(htmlId + ' #passport-no').val('');
-        $(htmlId + ' #expiry-date').val('');
+        $(htmlId + ' #visa-number-edit').val('');
+
         $(htmlId + ' #issued-by').val('');
-        $(htmlId + ' #issued-date').val('');
+        $(htmlId + ' #issued-date-visa').val('');
+        $(htmlId + ' #expiry-date-visa').val('');
         $(htmlId + ' #family-members').val('');
 
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
-        $(htmlId + ' #passport-no').removeClass('is-invalid');
-        $(htmlId + ' #expiry-date').removeClass('is-invalid');
+        $(htmlId + ' #visa-number-edit').removeClass('is-invalid');
+
         $(htmlId + ' #issued-by').removeClass('is-invalid');
-        $(htmlId + ' #issued-date').removeClass('is-invalid');
+        $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
+        $(htmlId + ' #expiry-date-visa').removeClass('is-invalid');
         $(htmlId + ' #family-members').removeClass('is-invalid');
     }
 
     function clearVisasError(htmlId) {
         $(htmlId + ' #type').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
-        $(htmlId + ' #passport-no').removeClass('is-invalid');
-        $(htmlId + ' #expiry-date').removeClass('is-invalid');
+        $(htmlId + ' #visa-number-edit').removeClass('is-invalid');
+
         $(htmlId + ' #issued-by').removeClass('is-invalid');
-        $(htmlId + ' #issued-date').removeClass('is-invalid');
+        $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
+        $(htmlId + ' #expiry-date-visa').removeClass('is-invalid');
         $(htmlId + ' #family-members').removeClass('is-invalid');
     }
 

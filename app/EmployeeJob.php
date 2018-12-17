@@ -16,11 +16,11 @@ class EmployeeJob extends Model
         'cost_centre_id',
         'emp_grade_id',
         'start_date',
+        'end_date',
         'basic_salary',
-        'specification',
-        'end_date',
+        'remarks',
         'status',
-        'end_date',
+        'created_by'
     ];
 
     public function main_position()
