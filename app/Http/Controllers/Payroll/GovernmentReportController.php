@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\payroll;
 
 use App\Enums\PayrollPeriodEnum;
+use App\Exports\EISLampiranExport;
 use App\Helpers\GenerateReportsHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Popo\governmentreport\GovernmentReport;
@@ -10,6 +11,7 @@ use PDF;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use Excel;
 
 
 class GovernmentReportController extends Controller
@@ -23,7 +25,7 @@ class GovernmentReportController extends Controller
     public function viewGovernmentReport(){
 
         //get company information based on user login
-        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
         $officers = GenerateReportsHelper::getListOfficerInformation($company->id);
 
         //get slider data
@@ -35,6 +37,8 @@ class GovernmentReportController extends Controller
         $positions = GenerateReportsHelper::getPosition();
         $period = GenerateReportsHelper::getPeriod($company->id);
         $year = GenerateReportsHelper::getYear($company->id);
+
+
 
         return view('pages.payroll.government-report')->with([
             'sliders' => $arr['slider'] ,
@@ -313,18 +317,62 @@ class GovernmentReportController extends Controller
                 break;
 
             case "PTPTN_monthly":
+                //TODO :PTPTN currently not in used.
+/*
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/ptptn',
+                        [
+                            'data' => $arr['data'],
+                            'empData' => $arr['empData'],
+                            'totalCheckAmount' => $arr['totalCheckAmount']
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('ptptn.pdf');
+                }else{
+                    return;
+                }
+*/
                 return;
                 break;
 
             case "ZAKAT_montly":
+                //TODO :ZAKAT currently not in used.
+/*
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    $pdf = PDF::loadView('pages/payroll/governmentreport/zakat',
+                        [
+                            'data' => $arr['data'],
+                            'empData' => $arr['empData']
+                        ]);
+                    $pdf->setTemporaryFolder(storage_path("temp"));
+                    // download pdf
+                    return $pdf->download('zakat.pdf');
+                }else{
+                    return;
+                }
+*/
                 return;
                 break;
 
             case "ASBN_monthly":
+                //TODO :ASBN currently not in used.
                 return;
                 break;
 
             case "EIS_lampiran1":
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                if(!empty($arr)) {
+                    return Excel::download(new EISLampiranExport(
+                        $arr['data'],
+                        $arr['dataArr'],
+                        $arr['totalContributionAmount']
+                    ), 'EIS_lampiran1.xlsx');
+                }else{
+                    return;
+                }
                 return;
                 break;
 

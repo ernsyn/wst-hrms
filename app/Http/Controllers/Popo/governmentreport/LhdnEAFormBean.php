@@ -32,6 +32,7 @@ class LhdnEAFormBean
     private $employerIncomeTax;
     private $esos;
     private $reward;
+    private $outstandingPayment;
     private $benefitsOfMerchandise;
     private $residenceValue;
     private $failedRefund;
@@ -85,6 +86,7 @@ class LhdnEAFormBean
         $this->employerIncomeTax = isset($array['employerIncomeTax']) ? $array['employerIncomeTax'] : null;
         $this->esos = isset($array['esos']) ? $array['esos'] : null;
         $this->reward = isset($array['reward']) ? $array['reward'] : null;
+        $this->outstandingPayment = isset($array['outstandingPayment']) ? $array['outstandingPayment'] : null;
         $this->benefitsOfMerchandise = isset($array['benefitsOfMerchandise']) ? $array['benefitsOfMerchandise'] : null;
         $this->residenceValue = isset($array['residenceValue']) ? $array['residenceValue'] : null;
         $this->failedRefund = isset($array['failedRefund']) ? $array['failedRefund'] : null;
@@ -452,6 +454,23 @@ class LhdnEAFormBean
     {
         $this->reward = $reward;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getOutstandingPayment()
+    {
+        return $this->outstandingPayment;
+    }
+
+    /**
+     * @param mixed|null $outstandingPayment
+     */
+    public function setOutstandingPayment( $outstandingPayment)
+    {
+        $this->outstandingPayment = $outstandingPayment;
+    }
+
 
     /**
      * @return mixed|null
@@ -892,6 +911,7 @@ class LhdnEAFormBean
             'employerIncomeTax' => $this->employerIncomeTax,
             'esos' => $this->esos,
             'reward' => $this->reward,
+            'outstandingPayment' => $this->outstandingPayment,
             'benefitsOfMerchandise' => $this->benefitsOfMerchandise,
             'residenceValue' => $this->residenceValue,
             'failedRefund' => $this->failedRefund,

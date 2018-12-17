@@ -5,8 +5,6 @@
     <meta charset="utf-8"/>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <link rel="stylesheet" href="{{asset('css/report/soscoBorang8A/base.min.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/report/soscoBorang8A/main.css')}}"/>
     <title></title>
     <style>
         /*        table, td, th {
@@ -16,9 +14,9 @@
             border: 1px solid grey;
         }
 
-/*        .table-border-all table, td, th{
-            border: 1px solid grey;
-        }*/
+        /*        .table-border-all table, td, th{
+                    border: 1px solid grey;
+                }*/
 
         .padded td.pleft { padding-left:3pt; }
         .padded td.pright { padding-right:3pt; }
@@ -280,26 +278,26 @@
 
     <!-- page 2 -->
     @php
-        $total_items = count($empData);
-        $num_per_page = 15;
-        $num_pages = ceil($total_items / $num_per_page);
-        $count=0;
-        $start=0;
-        $end=$num_per_page;
-        $cur_page=1;
+    $total_items = count($empData);
+    $num_per_page = 15;
+    $num_pages = ceil($total_items / $num_per_page);
+    $count=0;
+    $start=0;
+    $end=$num_per_page;
+    $cur_page=1;
 
-        //total amount
-        $totalAmount=0;
+    //total amount
+    $totalAmount=0;
     @endphp
 
     @for($i=0; $i<$num_pages; $i++)
     @php
-        if($i != 0){
-            $start += $num_per_page;
-        }
+    if($i != 0){
+    $start += $num_per_page;
+    }
 
-        //amount
-        $amount=0;
+    //amount
+    $amount=0;
     @endphp
 
     @if($cur_page > 1)
@@ -315,17 +313,17 @@
             <th class="table-border pleft">NO. PEKERJA</th>
         </tr>
         @foreach(array_slice($empData,$start,$end) as $emp )
-            <tr>
-                <td class="table-border pleft">{{$count+1}}</td>
-                <td class="table-border pleft">{{$emp->getStaffIcNo()}}</td>
-                <td class="table-border pleft">{{$emp->getStaffName()}}</td>
-                <td class="table-border text_right pright">{{number_format($emp->getAmount(),2)}}</td>
-                <td class="table-border pleft">{{$emp->getStaffNo()}}</td>
-            </tr>
+        <tr>
+            <td class="table-border pleft">{{$count+1}}</td>
+            <td class="table-border pleft">{{$emp->getStaffIcNo()}}</td>
+            <td class="table-border pleft">{{$emp->getStaffName()}}</td>
+            <td class="table-border text_right pright">{{number_format($emp->getAmount(),2)}}</td>
+            <td class="table-border pleft">{{$emp->getStaffNo()}}</td>
+        </tr>
         @php
-            //calculate amount
-            $amount += $emp->getAmount();
-            $count++
+        //calculate amount
+        $amount += $emp->getAmount();
+        $count++
         @endphp
         @endforeach
         <tr>

@@ -5,8 +5,6 @@
     <meta charset="utf-8"/>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <link rel="stylesheet" href="{{asset('css/report/soscoBorang8A/base.min.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/report/soscoBorang8A/main.css')}}"/>
     <title></title>
     <style>
         /*        table, td, th {
@@ -16,9 +14,9 @@
             border: 1px solid grey;
         }
 
-/*        .table-border-all table, td, th{
-            border: 1px solid grey;
-        }*/
+        /*        .table-border-all table, td, th{
+                    border: 1px solid grey;
+                }*/
 
         .padded td.pleft { padding-left:3pt; }
         .padded td.pright { padding-right:3pt; }
@@ -36,7 +34,8 @@
         }
 
         body {
-            font-size: 11pt;
+            font-size: 12pt;
+            font-family: Arial;
         }
         table {
             border-collapse: collapse;
@@ -45,6 +44,12 @@
 
         .border_bottom{
             border-bottom-style: solid;
+            border-bottom-color: grey;
+            border-bottom-width: 1px;
+        }
+
+        .border_bottom_dot{
+            border-bottom-style: dotted;
             border-bottom-color: grey;
             border-bottom-width: 1px;
         }
@@ -65,6 +70,11 @@
             border-top-style: solid;
             border-top-color: grey;
             border-top-width: 1px;
+        }
+
+        .table-header-grey{
+            background-color: #E5E5E5;
+            color: #000000;
         }
 
         th {
@@ -98,14 +108,6 @@
             padding-left: 3pt;
         }
 
-        .table-header-grey{
-            background-color: #E5E5E5;
-            color: #000000;
-            padding-left: 3pt;
-            text-align: center;
-            font-weight: bold;
-        }
-
         .d-table {
             display: table;
             width:100%;
@@ -133,121 +135,172 @@
     </style>
 </head>
 <body>
-<div id="page-container">
+<div id="page-container" style="width: 80%;margin: 0 auto;">
 
+    <table class="padded" style="margin-top: 20pt;">
+        <tr>
+            <td class="tg-s268" width="64%"></td>
+            <td class="" width="15%">Rujukan Tuan</td>
+            <td class="" width="1%">:</td>
+            <td class="tg-s268" width="20%"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268"></td>
+            <td class="">Rujukan Kami</td>
+            <td class="">:</td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268"></td>
+            <td class="">Tarikh</td>
+            <td class="">:</td>
+            <td class="tg-s268 pleft">05/10/2018</td>
+        </tr>
+    </table>
+
+    <table class="padded" style="margin-top: 20pt;">
+        <tr>
+            <td class="tg-s268" colspan="5">Tuan,</td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <th class="tg-s268" colspan="5">SISTEM KREDIT SIMPANAN POTONGAN GAJI BULANAN MELALUI PITA KOMPUTER</th>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268" colspan="5">1. Berhubung perkara di atas bersama-sama ini disertakan pita komputer untuk tindakan tuan.
+                Maklumat-maklumat yang terkandung di dalam pita ini adalah seperti berikut :-</td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268" width="10%"></td>
+            <td class="tg-s268" width="20%">LABEL</td>
+            <td class="tg-s268" width="5%"></td>
+            <td class="tg-s268 border_bottom" width="30%"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268"></td>
+            <td class="tg-s268">JUMLAH REKOD </td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268 border_bottom"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268"></td>
+            <td class="tg-s268">JUMLAH WANG</td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268 border_bottom"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268" colspan="5">2. Bersama-sama ini juga disertakan :</td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268" width="10%"></td>
+            <td class="tg-s268" width="10%">Cek Nombor :</td>
+            <td class="tg-s268" width="5%"></td>
+            <td class="tg-s268 border_bottom" width="25%"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268" width="10%"></td>
+            <td class="tg-s268" width="10%">Bernilai :</td>
+            <td class="tg-s268" width="5%"></td>
+            <td class="tg-s268 border_bottom" width="25%">RM</td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268" width="10%"></td>
+            <td class="tg-s268" width="10%"></td>
+            <td class="tg-s268" width="5%"></td>
+            <td class="tg-s268" width="25%">Ringgit Malaysia</td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268" colspan="5">dan senarai potongan gaji bulan OGOS.</td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268" colspan="5">3. Sila tandatangan pendua surat ini sebagai pengesahan penerimaan.</td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268" colspan="5">Sekian, terima kasih.</td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <th class="tg-s268" colspan="5">"BERKHIDMAT UNTUK NEGARA"</th>
+        </tr>
+    </table>
+    <table class="padded" style="margin-top: 70pt;">
+        <tr>
+            <td class="tg-s268 border_bottom_dot" width="30%"></td>
+            <td class="tg-s268" width="10%"></td>
+            <td class="tg-s268" width="5%"></td>
+            <td class="tg-s268" width="25%"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268">(Tandatangan pengesahan)</td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268">Cap Rasmi Pejabat</td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268 border_bottom" colspan="5"></td>
+        </tr>
+        <tr>
+            <td class="tg-s268 text_center" colspan="5">(Untuk Kegunaan Bahagian Simpanan dan Pengeluaran)</td>
+        </tr>
+    </table>
     <table class="padded">
+        <tr class="empty_row"></tr>
         <tr>
-            <th class="tg-s268" width="20%"></th>
-            <th class="text_center" width="60%">LEMBAGA TABUNG HAJI</th>
-            <th class="tg-s268" width="20%"></th>
-        </tr>
-        <tr>
-            <td class="tg-s268"></td>
-            <th class="text_center">SENARAI CARUMAN TABUNG HAJI BAGI</th>
+            <td class="tg-s268" width="25%">Diterima oleh </td>
+            <td class="tg-s268" width="1%">:</td>
+            <td class="tg-s268" width="30%"></td>
+            <td class="tg-s268" width="25%"></td>
             <td class="tg-s268"></td>
         </tr>
+        <tr class="empty_row"></tr>
         <tr>
+            <td class="tg-s268">Tandatangan</td>
+            <td class="tg-s268">:</td>
             <td class="tg-s268"></td>
-            <th class="text_center">AUGUST 2018</th>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268">Cap Rasmi Pejabat</td>
+            <td class="tg-s268">:</td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
+        </tr>
+        <tr class="empty_row"></tr>
+        <tr>
+            <td class="tg-s268">Tarikh/Waktu</td>
+            <td class="tg-s268">:</td>
+            <td class="tg-s268"></td>
+            <td class="tg-s268"></td>
             <td class="tg-s268"></td>
         </tr>
     </table>
 
-    <table class="padded">
-        <tr>
-            <td class="tg-s268" width="10%">Majikan : </td>
-            <td class="tg-s268" width="40%">OPPO ELECTRONICS SDN BHD</td>
-            <td class="tg-0lax" width="30%"></td>
-            <td class="tg-0lax">Lembaran:</td>
-            <td class="tg-0lax">1</td>
-            <td class="tg-0lax" width="2%"></td>
-        </tr>
-        <tr>
-            <td class="tg-s268"></td>
-            <td class="tg-s268">LEVEL 15, TOWER 1, PJ 33,</td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax">Tarikh :</td>
-            <td class="tg-0lax">05/10/2018</td>
-            <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-            <td class="tg-s268"></td>
-            <td class="tg-s268">JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,</td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax">SELANGOR.</td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax">Poskod : 46200</td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-            <td class="tg-0lax">Kod Majikan :</td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-            <td class="tg-0lax"></td>
-        </tr>
-    </table>
 
-    <table class="padded" style="margin-top: 30pt;">
-        <tr>
-            <th class="table-border pleft">BIL. </th>
-            <th class="table-border pleft">NOMBOR AKAUN</th>
-            <th class="table-border pleft">NO. PEKERJA </th>
-            <th class="table-border pleft">NO. KAD PENGENALAN </th>
-            <th class="table-border pleft">NAMA PEKERJA</th>
-            <th class="table-border text_right pright">CARUMAN (RM)</th>
-            <th class="tg-0lax"></th>
-        </tr>
-        <tr>
-            <th class="border_bottom border_left" colspan="4"></th>
-            <th class="border_bottom border_right pleft">JUMLAH LEMBARAN INI</th>
-            <th class="table-border text_right pright">0.00</th>
-            <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-            <th class="border_bottom border_left" colspan="4"></th>
-            <th class="border_bottom border_right pleft">JUMLAH BESAR</th>
-            <th class="table-border text_right pright">0.00</th>
-            <td class="tg-0lax"></td>
-        </tr>
-    </table>
-
-    <table class="padded" style="margin-top: 30pt;">
-        <tr>
-            <td class="pleft10">
-                Cek/Kiriman POS bernombor _____________________ sebanyak RM <u>0.00</u> di lampirkan bersama.
-            </td>
-        </tr>
-    </table>
-
-    <table class="padded" style="margin-top: 50pt;">
-        <tr>
-            <td class="pleft" width="20%">Tandatangan Majikan/Wakil : </td>
-            <td class="border_bottom pleft" width="30%"></td>
-            <td class="pleft" width="50%"></td>
-        </tr>
-        <tr>
-            <td class="pleft" width="20%">Tarikh : </td>
-            <td class="border_bottom pleft" width="30%">05/10/2018</td>
-            <td class="pleft" width="50%"></td>
-        </tr>
-    </table>
 </div>
 </body>
 </html>
