@@ -30,24 +30,32 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="alt-start-date-experience" type="text" class="form-control" hidden>
-                            <input id="start-date-experience" type="text" class="form-control" readonly>
-                            <div id="start-date-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="start-date-experience" class="form-control datetimepicker-input" data-target="#start-date-experience"/>
+                                <div class="input-group-append" data-target="#start-date-experience" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="start-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="alt-end-date-experience" type="text" class="form-control" hidden>
-                            <input id="end-date-experience" type="text" class="form-control" readonly>
-                            <div id="end-date-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="end-date-experience" class="form-control datetimepicker-input" data-target="#end-date-experience"/>
+                                <div class="input-group-append" data-target="#end-date-experience" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="end-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="notes"><strong>Notes*</strong></label>
+                            <label for="notes"><strong>Notes</strong></label>
                             <input id="notes" type="text" class="form-control" placeholder="" value="" >
 
                         </div>
@@ -87,16 +95,26 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-year"><strong>Start Year*</strong></label>
-                            <input id="start-year" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="start-year-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="start-year" class="form-control datetimepicker-input" data-target="#start-year"/>
+                                <div class="input-group-append" data-target="#start-year" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="start-year-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-year"><strong>End Year*</strong></label>
-                            <input id="end-year" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="end-year-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="end-year" class="form-control datetimepicker-input" data-target="#end-year"/>
+                                <div class="input-group-append" data-target="#end-year" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="end-year-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -126,7 +144,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="description"><strong>Description*</strong></label>
+                            <label for="description"><strong>Description</strong></label>
                             <input id="description" type="text" class="form-control" placeholder="" value="" >
 
                         </div>
@@ -228,24 +246,32 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
-                            <input id="alt-start-date-experience-edit" type="text" class="form-control" hidden>
-                            <input id="start-date-experience-edit" type="text" class="form-control" readonly>
-                            <div id="start-date-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="start-date-experience-edit" class="form-control datetimepicker-input" data-target="#start-date-experience-edit"/>
+                                <div class="input-group-append" data-target="#start-date-experience-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="start-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
-                            <input id="alt-end-date-experience-edit" type="text" class="form-control" hidden>
-                            <input id="end-date-experience-edit" type="text" class="form-control" readonly>
-                            <div id="end-date-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="end-date-experience-edit" class="form-control datetimepicker-input" data-target="#end-date-experience-edit"/>
+                                <div class="input-group-append" data-target="#end-date-experience-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="end-date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="notes"><strong>Notes*</strong></label>
+                            <label for="notes"><strong>Notes</strong></label>
                             <input id="notes" type="text" class="form-control" placeholder="" value="" >
 
                         </div>
@@ -285,16 +311,26 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start-year"><strong>Start Year*</strong></label>
-                            <input id="start-year" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="start-year-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="start-year-edit" class="form-control datetimepicker-input" data-target="#start-year-edit"/>
+                                <div class="input-group-append" data-target="#start-year-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="start-year-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end-year"><strong>End Year*</strong></label>
-                            <input id="end-year" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="end-year-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="end-year-edit" class="form-control datetimepicker-input" data-target="#end-year-edit"/>
+                                <div class="input-group-append" data-target="#end-year-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="end-year-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -324,7 +360,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="description"><strong>Description*</strong></label>
+                            <label for="description"><strong>Description</strong></label>
                             <input id="description" type="text" class="form-control" placeholder="" value="" >
 
                         </div>
@@ -659,39 +695,34 @@
 <script type="text/javascript">
     $(function(){
         //datepicker
-        $('#start-date-experience').datepicker({
-            altField: "#alt-start-date-experience",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-10:+20"
+        $('#start-date-experience').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
-        $('#end-date-experience').datepicker({
-            altField: "#alt-end-date-experience",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-10:+20"
+        $('#end-date-experience').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
 
-        $('#start-date-experience-edit').datepicker({
-            altField: "#alt-start-date-experience-edit",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-10:+20"
+        $('#start-date-experience-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
-        $('#end-date-experience-edit').datepicker({
-            altField: "#alt-end-date-experience-edit",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-10:+20"
+        $('#end-date-experience-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
+
+        $('#start-year').datetimepicker({
+            format: 'YYYY'
+        });
+        $('#end-year').datetimepicker({
+            format: 'YYYY'
+        });
+
+        $('#start-year-edit').datetimepicker({
+            format: 'YYYY'
+        });
+        $('#end-year-edit').datetimepicker({
+            format: 'YYYY'
+        });
+
         // ADD EXPERIENCES
         $('#add-experience-popup').on('show.bs.modal', function (event) {
             clearExperiencesError('#add-experience-form');
@@ -707,8 +738,8 @@
                     // Form Data
                     company: $('#add-experience-form #company').val(),
                     position: $('#add-experience-form #position').val(),
-                    start_date: $('#add-experience-form #alt-start-date-experience').val(),
-                    end_date: $('#add-experience-form #alt-end-date-experience').val(),
+                    start_date: $('#add-experience-form #start-date-experience').val(),
+                    end_date: $('#add-experience-form #end-date-experience').val(),
                     notes: $('#add-experience-form #notes').val()
                 },
                 success: function(data) {
@@ -768,9 +799,6 @@
             $('#edit-experience-form #position').val(currentData.position);
             $('#edit-experience-form #start-date-experience-edit').val(currentData.start_date);
             $('#edit-experience-form #end-date-experience-edit').val(currentData.end_date);
-
-            $('#edit-experience-form #alt-start-date-experience-edit').val(currentData.alt_start_date);
-            $('#edit-experience-form #alt-end-date-experience-edit').val(currentData.alt_end_date);
             $('#edit-experience-form #notes').val(currentData.notes);
         });
 
@@ -786,8 +814,8 @@
                     _token: '{{ csrf_token() }}',
                     company: $('#edit-experience-form #company').val(),
                     position: $('#edit-experience-form #position').val(),
-                    start_date: $('#edit-experience-form #alt-start-date-experience-edit').val(),
-                    end_date: $('#edit-experience-form #alt-end-date-experience-edit').val(),
+                    start_date: $('#edit-experience-form #start-date-experience-edit').val(),
+                    end_date: $('#edit-experience-form #end-date-experience-edit').val(),
                     notes: $('#edit-experience-form #notes').val()
                 },
                 success: function(data) {
@@ -987,8 +1015,8 @@
             editEducationId = currentData.id;
 
             $('#edit-education-form #institution').val(currentData.institution);
-            $('#edit-education-form #start-year').val(currentData.start_year);
-            $('#edit-education-form #end-year').val(currentData.end_year);
+            $('#edit-education-form #start-year-edit').val(currentData.start_year);
+            $('#edit-education-form #end-year-edit').val(currentData.end_year);
             $('#edit-education-form #level').val(currentData.level);
             $('#edit-education-form #major').val(currentData.major);
             $('#edit-education-form #gpa').val(currentData.gpa);
@@ -1006,8 +1034,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     institution: $('#edit-education-form #institution').val(),
-                    start_year: $('#edit-education-form #start-year').val(),
-                    end_year: $('#edit-education-form #end-year').val(),
+                    start_year: $('#edit-education-form #start-year-edit').val(),
+                    end_year: $('#edit-education-form #end-year-edit').val(),
                     level: $('#edit-education-form #level').val(),
                     major: $('#edit-education-form #major').val(),
                     gpa: $('#edit-education-form #gpa').val(),
@@ -1032,11 +1060,11 @@
                                         $('#edit-education-form #institution-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_year':
-                                        $('#edit-education-form #start-year').addClass('is-invalid');
+                                        $('#edit-education-form #start-year-edit').addClass('is-invalid');
                                         $('#edit-education-form #start-year-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'end_year':
-                                        $('#edit-education-form #end-year').addClass('is-invalid');
+                                        $('#edit-education-form #end-year-edit').addClass('is-invalid');
                                         $('#edit-education-form #end-year-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'level':

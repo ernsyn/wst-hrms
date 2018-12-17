@@ -11,6 +11,8 @@ class Employee extends Model
     protected $fillable = [
         'user_id',
         'address',
+        'address2',
+        'address3',
         'company_id',
         'contact_no',
         'dob',
@@ -159,8 +161,8 @@ class Employee extends Model
         return $this->hasMany('App\LeaveRequestApproval', 'id','approved_by_emp_id');
     }
 
-    public function attendances()
+    public function clock_in_out_records()
     {
-        return $this->hasMany('App\EmployeeAttendance', 'emp_id');
+        return $this->hasMany('App\EmployeeClockInOutRecord', 'emp_id');
     }
 }
