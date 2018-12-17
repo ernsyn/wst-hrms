@@ -108,22 +108,28 @@ class EmployeeController extends Controller
     {
         $profileUpdatedData = $request->validate([
 
-            'ic_no' => 'required|unique:employees,ic_no,'.$id.',id',
+            'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
             'code'=>'required|unique:employees,code,'.$id.',id',
             'dob' => 'required',
             'gender' => 'required',
             'marital_status' => 'required',
             'race' => 'required|alpha',
             'total_children' => 'nullable|numeric',
+            'address' => 'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
-            'tax_no' => 'required|numeric|unique:employees,tax_no,'.$id.',id',
+            'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
             'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
             'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
             'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
             'main_security_group_id'=>'',
             'contact_no' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
         $profileUpdatedData['dob'] = implode("-", array_reverse(explode("/", $profileUpdatedData['dob'])));
 
@@ -335,6 +341,8 @@ class EmployeeController extends Controller
             'code'=>'required|unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'company_id' => 'required',
             'dob' => 'required',
             'gender' => 'required',
@@ -342,14 +350,17 @@ class EmployeeController extends Controller
             'nationality' => 'required',
             'marital_status' => 'required',
             'total_children' => 'nullable|numeric',
-            'ic_no' => 'required|unique:employees,ic_no',
-            'tax_no' => 'required|unique:employees,tax_no|numeric',
+            'ic_no' => 'required|unique:employees,ic_no|numeric',
+            'tax_no' => 'required|unique:employees,tax_no',
             'epf_no' => 'required|unique:employees,epf_no|numeric',
             'eis_no' => 'required|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
             'main_security_group_id'=>'nullable'
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
 
@@ -360,6 +371,8 @@ class EmployeeController extends Controller
         $validatedEmployeeData['code'] = $validated['code'];
         $validatedEmployeeData['contact_no'] = $validated['contact_no'];
         $validatedEmployeeData['address'] = $validated['address'];
+        $validatedEmployeeData['address2'] = $validated['address2'];
+        $validatedEmployeeData['address3'] = $validated['address3'];
         $validatedEmployeeData['company_id'] = $validated['company_id'];
         $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
         $validatedEmployeeData['gender'] = $validated['gender'];
@@ -367,13 +380,16 @@ class EmployeeController extends Controller
         $validatedEmployeeData['nationality'] = $validated['nationality'];
         $validatedEmployeeData['marital_status'] = $validated['marital_status'];
         $validatedEmployeeData['total_children'] = $validated['total_children'];
-        $validatedEmployeeData['ic_no'] = $validated['tax_no'];
+        $validatedEmployeeData['ic_no'] = $validated['ic_no'];
         $validatedEmployeeData['tax_no'] = $validated['tax_no'];
         $validatedEmployeeData['epf_no'] = $validated['epf_no'];
         $validatedEmployeeData['eis_no'] = $validated['eis_no'];
         $validatedEmployeeData['socso_no'] = $validated['socso_no'];
         $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
         $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
+        if($validatedEmployeeData['driver_license_expiry_date']==='') {
+            $validatedEmployeeData['driver_license_expiry_date'] = null;
+        }
         $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
         // $validatedEmployeeData = $request->validate([
