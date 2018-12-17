@@ -12,8 +12,14 @@ class EmployeeAttachment extends Model
     protected $fillable = [
         'name',
         'notes',
+        'media_id',
         'created_by'
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function medias()
+    {
+        return $this->belongsTo('App\Media', 'media_id');
+    }
 }
