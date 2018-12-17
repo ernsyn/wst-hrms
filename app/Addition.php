@@ -18,7 +18,9 @@ class Addition extends Model
         'amount' ,
         'statutory',
         'status',
-        'company_id'
+        'company_id',
+        'ea_form_id',
+        'confirmed_employee'
 
     ];
     
