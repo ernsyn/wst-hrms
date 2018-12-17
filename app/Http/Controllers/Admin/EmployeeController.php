@@ -43,6 +43,8 @@ use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+use App\EmployeeAttendance;
+use App\Media;
 use App\EmployeeClockInOutRecord;
 
 use App\Http\Services\LeaveService;
@@ -303,7 +305,7 @@ class EmployeeController extends Controller
 
     public function getDataTableAttachments($id)
     {
-        $attachments = EmployeeAttachment::where('emp_id', $id)->get();
+        $attachments = EmployeeAttachment::with('medias')->where('emp_id', $id)->get();
         return DataTables::of($attachments)->make(true);
     }
 
@@ -629,8 +631,25 @@ class EmployeeController extends Controller
     {
         $attachmentData = $request->validate([
             'name' => 'required',
-            'notes' => 'required'
+            'notes' => 'required',
+            'media_id' => '',
+            'attachment' => ''
         ]);
+
+        $attachment_data_url = null;
+        if(array_key_exists('attachment', $attachmentData)) {
+            $attachment_data_url = $attachmentData['attachment'];
+        }
+
+        $attach = self::processBase64DataUrl($attachment_data_url);
+        $mediaData = Media::create([
+            'category' => 'employee-attachment',
+            'mimetype' => $attach['mime_type'],
+            'data' => $attach['data'],
+            'size' => $attach['size'],
+            'filename' => 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension']
+        ]);
+        $attachmentData['media_id'] = $mediaData->id;
         $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
 
@@ -638,6 +657,23 @@ class EmployeeController extends Controller
         $employee->employee_attachments()->save($attachment);
 
         return response()->json(['success'=>'Attachment is successfully added']);
+    }
+
+    private static function processBase64DataUrl($dataUrl) {
+        $parts = explode(',', $dataUrl);
+
+        preg_match('#data:(.*?);base64#', $parts[0], $matches);
+        $mimeType = $matches[1];
+        $extension = explode('/', $mimeType)[1];
+
+        $data = base64_decode($parts[1]);
+
+        return [
+            'data' => $data,
+            'mime_type' => $mimeType,
+            'size' => mb_strlen($data),
+            'extension' => $extension
+        ];
     }
 
     // SECTION: Employee Working Day Setup
@@ -739,13 +775,143 @@ class EmployeeController extends Controller
         }
 
         $reportToData['created_by'] = auth()->user()->id;
-        $reportTo = new EmployeeReportTo($reportToData);
 
-        $employee = Employee::find($id);
-        $employee->report_tos()->save($reportTo);
+        // $employee_report_to_level = EmployeeReportTo::where('emp_id','=',$id)
+        // ->where(function($q) {
+        //     $q->where('report_to_level', 2)
+        //       ->orWhere('kpi_proposer', 1)
+        //       ->orWhere('report_to_level',1);
+        // })
+        // ->where ('report_to_level',1)
+        // ->count();  // "5"
 
-        return response()->json(['success'=>'Record is successfully added']);
+        $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('report_to_level', 2)->count();
+
+        $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('report_to_level', 1)->count();
+
+        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('kpi_proposer', 1)->count();
+
+
+   if($request->report_to_level ==1 )
+    {
+        $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('report_to_level', 1)->count();
+        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('kpi_proposer', 1)->count();
+
+
+        if ($employee_report_to_level_one == 0 ){
+            if($request->kpi_proposer = 0){
+            $reportTo = new EmployeeReportTo($reportToData);
+            $employee = Employee::find($id);
+            $employee->report_tos()->save($reportTo);
+
+            return response()->json(['success'=>'Record is successfully added']);
+            }
+            else
+            {
+                if ($employee_kpi_proposer>0)
+                {
+
+                    return "error kpi_proposer 1";
+                }
+                else
+{
+
+    $reportTo = new EmployeeReportTo($reportToData);
+    $employee = Employee::find($id);
+    $employee->report_tos()->save($reportTo);
+
+    return response()->json(['success'=>'Record is successfully added']);
+}
+
+
+
+            }
+        }
+        elseif($employee_report_to_level_one == 1) {
+
+            return "you already have level one";
+        }
+
+        else
+        {
+    return "error";
+
+        }
+
     }
+    elseif($request->report_to_level ==2)
+
+    {
+        $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('report_to_level', 2)->count();
+        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('kpi_proposer', 1)->count();
+
+
+        if ($employee_report_to_level_two == 0 ){
+            if($request->kpi_proposer == 0){
+            $reportTo = new EmployeeReportTo($reportToData);
+            $employee = Employee::find($id);
+            $employee->report_tos()->save($reportTo);
+
+            return response()->json(['success'=>'Record is successfully added']);
+            }
+            else
+            {
+                if ($employee_kpi_proposer>0)
+                {
+
+                    return "error kpi_proposer2";
+                }
+                else
+                {
+
+                  $reportTo = new EmployeeReportTo($reportToData);
+                  $employee = Employee::find($id);
+                  $employee->report_tos()->save($reportTo);
+
+                  return response()->json(['success'=>'Record is successfully added']);
+                }
+
+
+
+            }
+        }
+        elseif($employee_report_to_level_two == 1) {
+
+            return "you already have level two ";
+        }
+
+        else
+        {
+    return "error";
+
+        }
+
+    }
+
+   }
+
+
+// if($employee_report_to_level_two > 0 |$employee_report_to_level_one >0 | $employee_kpi_proposer>0){
+// return "error";
+// }else{
+
+//         $reportTo = new EmployeeReportTo($reportToData);
+
+//         $employee = Employee::find($id);
+//         $employee->report_tos()->save($reportTo);
+
+//         return response()->json(['success'=>'Record is successfully added']);
+
+//      }
+
+
 
     public function postSecurityGroup(Request $request, $id)
     {

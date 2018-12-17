@@ -2,9 +2,9 @@
 @section('pageTitle', 'Job Configure')
 @section('content')
 <div class="container">
-    {{-- @foreach ($errors->all() as $error)
+    @foreach ($errors->all() as $error)
     <li>{{ $error }}</li>
-    @endforeach --}}
+    @endforeach
     <div class="p-4">
         @if (session('status'))
         <div class="alert alert-primary fade show" role="alert">
@@ -22,9 +22,6 @@
                                     aria-selected="false">Company Bank</a>
                                 <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"
                                     aria-selected="true">Security Group</a>
-                                <a class="nav-item nav-link" id="nav-travel-tab" data-toggle="tab" href="#nav-travel" role="tab" aria-controls="nav-travel"
-                                    aria-selected="true">
-                                    Travel Allowance</a>
                                 <a class="nav-item nav-link" id="nav-addition-tab" data-toggle="tab" href="#nav-addition" role="tab" aria-controls="nav-addition"
                                     aria-selected="true">Addition</a>
                                 <a class="nav-item nav-link" id="nav-deduction-tab" data-toggle="tab" href="#nav-deduction" role="tab" aria-controls="nav-deduction"
@@ -229,54 +226,6 @@
                                 </div>
                             </div>
 
-
-                            {{-- TRAVEL ALLOWANCE --}}
-                            <div class="tab-pane fade" id="nav-travel" role="tabpanel" aria-labelledby="nav-travel-tab">
-                                <div class="row pb-3">
-                                    <div class="col-auto mr-auto"></div>
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addTravelPopup">
-                                                Add Company Travel Allowance
-                                            </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="float-right tableTools-container"></div>
-                                        <table class="hrms-data-table compact w-100 t-2" id="travel-allowance-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Name</th>
-                                                    <th>Country</th>
-                                                    <th>Rate</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                @foreach($company_travel_allowance as $company_travel_allowances)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{$company_travel_allowances['code']}}</td>
-                                                    
-                                                    <td>
-                                                            {{ isset($company_travel_allowances->countries->full_name) ? $company_travel_allowances->countries->full_name : 'Not Set' }}</td>
-                                                    <td>{{$company_travel_allowances['rate']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                            data-travel-id="{{$company_travel_allowances['id']}}" data-travel-code="{{$company_travel_allowances['code']}}"
-                                                            data-travel-rate="{{$company_travel_allowances['rate']}}" data-travel-status="{{$company_travel_allowances['status']}}"
-                                                            data-target="#editTravelPopup"><i class="fas fa-pencil-alt"></i></button></td>
-
-
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
-                            </div>
                             {{-- ADDITION --}} {{--
                             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                                 This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
@@ -323,6 +272,20 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row p-3">
+                        <div class="form-group row w-100">
+                            <label class="col-md-12 col-form-label">Status*</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="status" name="status">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                     <div class="row p-3">
                         <div class="form-group row w-100">
                             <label class="col-md-12 col-form-label">Account Name*</label>
@@ -556,6 +519,13 @@
                                             <option value="Inactive">Inactive</option>
                                         </select>
                             </div>
+                            <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="confirmed_employee" name="confirmed_employee">
+                                            <option value="1">Confirmed Employee</option>
+                                            <option value="0">Not Related</option>
+                                        </select>
+                            </div>                            
                             <label class="col-md-12 col-form-label">Statutory</label>
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
@@ -571,6 +541,14 @@
                                                 <input type="checkbox" id="inlineCheckbox4" name="statutory[]" value="EIS"> EIS
                                             </label>
                             </div>
+                            <label class="col-md-12 col-form-label">EA Form*</label>
+                            <div class="col-md-12">
+                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id">
+                                @foreach($ea_form as $item)
+                                <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                            </div>
                             <label class="col-md-12 col-form-label">Applies To</label>
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
@@ -579,15 +557,13 @@
                                 <label class="checkbox-inline">
                                             <input type="checkbox" id="check_job_grade" name="applies[]" value="EPF"> Job Grade
                                         </label>
-                                <label class="checkbox-inline">
-                                            <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
-                                        </label>
                             </div>
+                    
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
 
 
-                                <div class="col-md-12">
+                              
                                     <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centres"
                                         required disabled>
                                                 @foreach(App\CostCentre::all() as $cost_centre)
@@ -597,9 +573,7 @@
                                     <span class="invalid-feedback" role="alert">
                                                                       <strong>{{ $errors->first('cost_centres') }}</strong>
                                                                   </span> @endif
-                                    </select>
-
-                                </div>
+                              
                             </div>
                             <label class="col-md-12 col-form-label">Job Grade</label>
                             <div class="col-md-12">
@@ -677,29 +651,37 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="status" name="status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
+                                        <select class="form-control" id="status" name="status" value="{{ old('status') }}">        
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                            </select>
                                 </div>
-                                <label class="col-md-12 col-form-label">Statutory</label>
-                                <div class="checkbox col-md-12">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox1" name="statutory[]" value="PCB"> PCB
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox2" name="statutory[]" value="EPF"> EPF
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox3" name="statutory[]" value="SOCSO"> SOCSO
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox4" name="statutory[]" value="EIS"> EIS
-                                    </label>
-                                </div>
+                          <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="confirmed_employee" name="confirmed_employee">
+                                            <option value="1">Confirmed Employee</option>
+                                            <option value="0">Not Related</option>
+                                        </select>
+                            </div> 
+                            <label class="col-md-12 col-form-label">Statutory</label>
+                           
+                            <div class="checkbox col-md-12">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions->statutory,'PCB') !== false ? 'checked':'' !!}> PCB
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions->statutory,'EPF') !== false ? 'checked':'' !!}> EPF
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions->statutory,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions->statutory,'EIS') !== false ? 'checked':'' !!}> EIS
+                                </label>
+                            </div>
                                 <label class="col-md-12 col-form-label">EA Form*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('ea_form') ? ' is-invalid' : '' }}" name="ea_form" id="ea_form">
+                                    <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id" value="{{ old('ea_form_id') }}">  
                                     @foreach($ea_form as $item)
                                     <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
                                     @endforeach
@@ -713,9 +695,7 @@
                                     <label class="checkbox-inline">
                                     <input type="checkbox" id="check_job_grade_a" name="applies[]" value="EPF"> Job Grade
                                 </label>
-                                    <label class="checkbox-inline">
-                                    <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
-                                </label>
+                       
                                 </div>
                                 <label class="col-md-12 col-form-label">Cost Centre</label>
                                 <div class="col-md-12">
@@ -728,10 +708,10 @@
                                     <span class="invalid-feedback" role="alert">
                                                               <strong>{{ $errors->first('cost_centres') }}</strong>
                                                           </span> @endif
-                                    </select>
+                                 
 
                                 </div>
-                            </div>
+                        
                             <label class="col-md-12 col-form-label">Job Grade</label>
                             <div class="col-md-12">
                                 <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]"
@@ -745,8 +725,8 @@
                                                                                 </span> @endif
 
 
-
-                                </select>
+                            </div>
+                              
                             </div>
 
                         </div>
@@ -809,9 +789,17 @@
                                             <option value="Inactive">Inactive</option>
                                         </select>
                             </div>
+                            <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="confirmed_employee" name="confirmed_employee">
+                                            <option value="1">Confirmed Employee</option>
+                                            <option value="0">Not Related</option>
+                                        </select>
+                            </div>                             
                             <label class="col-md-12 col-form-label">Statutory</label>
-                            <div class="checkbox col-md-12">
-                                <label class="checkbox-inline">
+                            <div class="checkbox col-md-12" required>
+                                
+                                <label class="checkbox-inline" >
                                                 <input type="checkbox" id="inlineCheckbox1" name="statutory[]" value="PCB"> PCB
                                             </label>
                                 <label class="checkbox-inline">
@@ -824,6 +812,14 @@
                                                 <input type="checkbox" id="inlineCheckbox4" name="statutory[]" value="EIS"> EIS
                                             </label>
                             </div>
+                            <label class="col-md-12 col-form-label">EA Form*</label>
+                            <div class="col-md-12">
+                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id">
+                                @foreach($ea_form as $item)
+                                <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                            </div>
                             <label class="col-md-12 col-form-label">Applies To</label>
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
@@ -832,15 +828,10 @@
                                 <label class="checkbox-inline">
                                             <input type="checkbox" id="check_job_grade_d" name="applies[]" value="EPF"> Job Grade
                                         </label>
-                                <label class="checkbox-inline">
-                                            <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
-                                        </label>
+                            
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
-
-
-                                <div class="col-md-12">
                                     <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre_d"
                                         name="cost_centres" required disabled>
                                                 @foreach(App\CostCentre::all() as $cost_centre)
@@ -852,7 +843,6 @@
                                                                   </span> @endif
                                     </select>
 
-                                </div>
                             </div>
                             <label class="col-md-12 col-form-label">Job Grade</label>
                             <div class="col-md-12">
@@ -936,24 +926,31 @@
                                 <option value="Inactive">Inactive</option>
                             </select>
                             </div>
+                            <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="confirmed_employee" name="confirmed_employee">
+                                            <option value="1">Confirmed Employee</option>
+                                            <option value="0">Not Related</option>
+                                        </select>
+                            </div>                             
                             <label class="col-md-12 col-form-label">Statutory</label>
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox1" name="statutory[]" value="PCB"> PCB
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions->statutory,'PCB') !== false ? 'checked':'' !!}> PCB
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox2" name="statutory[]" value="EPF"> EPF
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions->statutory,'EPF') !== false ? 'checked':'' !!}> EPF
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox3" name="statutory[]" value="SOCSO"> SOCSO
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions->statutory,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox4" name="statutory[]" value="EIS"> EIS
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions->statutory,'EIS') !== false ? 'checked':'' !!}> EIS
                                 </label>
                             </div>
                             <label class="col-md-12 col-form-label">EA Form*</label>
                             <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('ea_form') ? ' is-invalid' : '' }}" name="ea_form" id="ea_form">
+                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id">
                                 @foreach($ea_form as $item)
                                 <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
                                 @endforeach
@@ -967,9 +964,7 @@
                                 <label class="checkbox-inline">
                                 <input type="checkbox" id="check_job_grade_de" name="applies[]" value="EPF"> Job Grade
                             </label>
-                                <label class="checkbox-inline">
-                                <input type="checkbox" id="check_comfirmed_employee" name="applies[]" value="SOCSO"> Confirmed Employee
-                            </label>
+                             
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
@@ -982,9 +977,9 @@
                                 <span class="invalid-feedback" role="alert">
                                                           <strong>{{ $errors->first('cost_centres') }}</strong>
                                                       </span> @endif
-                                </select>
+                              
 
-                            </div>
+                            
                         </div>
                         <label class="col-md-12 col-form-label">Job Grade</label>
                         <div class="col-md-12">
@@ -1017,118 +1012,6 @@
 </div>
 </div>
 
-<!-- ADD TRAVEL ALLOWANCE -->
-<div class="modal fade" id="addTravelPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Travel Allowance</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-            <div class="modal-body">
-
-                @foreach($company as $company_travel)
-                <form method="POST" action="{{ route('admin.settings.company-travel-allowance.add.post', ['id' => $company_travel->id])}} "
-                    id="add_company_bank">
-                    @endforeach @csrf
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <label class="col-md-12 col-form-label">Travel Allowance Name*</label>
-                            <div class="col-md-12">
-                                <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
-                                    required>
-                            </div>
-                            <label class="col-md-12 col-form-label">Rate*</label>
-                            <div class="col-md-12">
-                                <input id="rate" type="text" class="form-control{{ $errors->has('rate') ? ' is-invalid' : '' }}" name="rate" value="{{ old('rate') }}"
-                                    required>
-                            </div>
-                            <label class="col-md-12 col-form-label">Country*</label>
-                            <div class="col-md-10">
-                                        <select class="form-control{{ $errors->has('countries_id') ? ' is-invalid' : '' }}" name="countries_id" id="countries_id" required>
-                                            <option value=""></option>
-                                            @foreach(App\Country::all() as $company)
-                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                            @endforeach
-                                        </select> @if ($errors->has('countries_id'))
-                                        <span class="invalid-feedback" role="alert">
-                                                                  <strong>{{ $errors->first('countries_id') }}</strong>
-                                                              </span> @endif
-
-                                </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                            </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- UPDATE TRAVEL ALLOWANCE  -->
-<div class="modal fade" id="editTravelPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit Travel Allowance</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-            <div class="modal-body">
-
-                    @foreach($company_travel_allowance as $travel_allowance)
-                    <form method="POST" action="{{ route('admin.settings.travel-allowance.edit.post', ['travel_allowance_id' => $travel_allowance->company_id])}} "
-                        id="company_travel_allowance">
-                        @endforeach @csrf
-
-                    <div class="row pb-5">
-                        <div class="col-xl-8">
-                            <input id="travel_id" name="travel_id" type="hidden">
-                            <label class="col-md-12 col-form-label">Name*</label>
-                            <div class="col-md-12">
-                                <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
-                                    required>
-                            </div>
-                            <label class="col-md-12 col-form-label">Rate*</label>
-                            <div class="col-md-12">
-                                <input id="rate" type="text" class="form-control{{ $errors->has('rate') ? ' is-invalid' : '' }}" name="rate" value="{{ old('rate') }}"
-                                    required>
-                            </div>
-                            <label class="col-md-12 col-form-label">Country*</label>
-                            <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('countries_id') ? ' is-invalid' : '' }}" name="countries_id" id="countries_id" required>
-                                            <option value=""></option>
-                                            @foreach(App\Country::all() as $company)
-                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                            @endforeach
-                                        </select> @if ($errors->has('countries_id'))
-                                        <span class="invalid-feedback" role="alert">
-                                                                  <strong>{{ $errors->first('countries_id') }}</strong>
-                                                              </span> @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                            </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('scripts')
