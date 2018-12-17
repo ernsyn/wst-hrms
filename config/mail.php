@@ -71,10 +71,10 @@ return [
     |
     */
 
-    'to' => [
-        'address' => env('MAIL_TO_ADDRESS', 'sivahari.online@gmail.com'),
-        'name' => env('MAIL_TO_NAME', 'Example'),
-    ],
+    // 'to' => [
+    //     'address' => env('MAIL_TO_ADDRESS', 'sivahari.online@gmail.com'),
+    //     'name' => env('MAIL_TO_NAME', 'Example'),
+    // ],
 
     /*
     |--------------------------------------------------------------------------
