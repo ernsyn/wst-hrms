@@ -1318,25 +1318,30 @@ $jobData['status']  = 'probationer';
 
     private function getWorkingDaysInIntegerArray($workingDays) {
         $arr = array();
-        if($workingDays->sunday > 0) {
+
+        $work_day = array('full', 'half');
+
+        if(in_array($workingDays->sunday, $work_day)) {
             array_push($arr, Carbon::SUNDAY);
         }
-        if($workingDays->monday > 0) {
+
+        if(in_array($workingDays->monday, $work_day)) {
             array_push($arr, Carbon::MONDAY);
         }
-        if($workingDays->tuesday > 0) {
+
+        if(in_array($workingDays->tuesday, $work_day)) {
             array_push($arr, Carbon::TUESDAY);
         }
-        if($workingDays->wednesday > 0) {
+        if(in_array($workingDays->wednesday, $work_day)) {
             array_push($arr, Carbon::WEDNESDAY);
         }
-        if($workingDays->thursday > 0) {
+        if(in_array($workingDays->thursday, $work_day)) {
             array_push($arr, Carbon::THURSDAY);
         }
-        if($workingDays->friday > 0) {
+        if(in_array($workingDays->friday, $work_day)) {
             array_push($arr, Carbon::FRIDAY);
         }
-        if($workingDays->saturday > 0) {
+        if(in_array($workingDays->saturday, $work_day)) {
             array_push($arr, Carbon::SATURDAY);
         }
 
