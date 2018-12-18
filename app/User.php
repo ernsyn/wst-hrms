@@ -15,14 +15,14 @@ class User extends Authenticatable
      * The attributes that are mass assignable.
      *
      * @var array
-     * 
-     * 
+     *
+     *
      */
-    
+
     protected $table = 'users';
-    
+
      protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','profile_media_id'
     ];
 
     /**
@@ -42,5 +42,10 @@ class User extends Authenticatable
     public function employee()
     {
         return $this->hasOne('App\Employee');
+    }
+
+    public function medias()
+    {
+        return $this->belongsTo('App\Media', 'profile_media_id');
     }
 }

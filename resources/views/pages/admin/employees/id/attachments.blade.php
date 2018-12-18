@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="name" name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="notes" name="notes" type="text" class="form-control" placeholder="" value="" required>
                             <div id="notes-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -160,8 +160,13 @@
                 "data": "notes"
             },
             {
-                "data": "medias.filename", // can be null or undefined
-                "defaultContent": "<strong>(not set)</strong>"
+                "data": "medias.data", // can be null or undefined
+                "defaultContent": "<strong>(not set)</strong>",
+
+                render: function (data, type, row, meta) {
+                    return `<img src="data:image/png;base64,` +data+ `" height="100px"/>`;
+                    // return `<a href="data:aplication/pdf;base64,` +data+ `" height="100px">Download +${encodeURI(row)}+</a>`;
+                }
             },
             {
                 "data": null,
@@ -188,12 +193,12 @@
 
             var data = {
                 _token: '{{ csrf_token() }}',
-                name: $('#add-attachment-form #name').val(),
-                notes: $('#add-attachment-form #notes').val()
+                name: $('#add-attachment-form input[name=name]').val(),
+                notes: $('#add-attachment-form input[name=notes]').val()
             };
 
             if(file) {
-                console.log(file);
+                console.log("File>>>",file);
                 getBase64(file, function(attachmentDataUrl) {
                     data.attachment = attachmentDataUrl;
                     postAddAttachment(data);
@@ -225,11 +230,11 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#add-attachment-form #name').addClass('is-invalid');
+                                        $('#add-attachment-form input[name=name]').addClass('is-invalid');
                                         $('#add-attachment-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'notes':
-                                        $('#add-attachment-form #notes').addClass('is-invalid');
+                                        $('#add-attachment-form input[name=notes]').addClass('is-invalid');
                                         $('#add-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
