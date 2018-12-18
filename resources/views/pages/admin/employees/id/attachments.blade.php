@@ -29,9 +29,9 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="notes"><strong>Attachment</strong></label>
-                            <input type="file" name="required-attachment" class="form-control-file">
-                            <div id="notes-error" class="invalid-feedback">
+                            <label for="attachment"><strong>Attachment*</strong></label>
+                            <input type="file" name="required-attachment" id="attachment" class="form-control-file">
+                            <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -72,6 +72,14 @@
                             <label for="notes"><strong>Notes*</strong></label>
                             <input id="notes" type="text" class="form-control" placeholder="" value="" required>
                             <div id="notes-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="attachment"><strong>Attachment*</strong></label>
+                            <input type="file" name="required-attachment" id="attachment" class="form-control-file">
+                            <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -160,19 +168,21 @@
                 "data": "notes"
             },
             {
-                "data": "medias.data", // can be null or undefined
+                "data": "medias",// can be null or undefined
                 "defaultContent": "<strong>(not set)</strong>",
 
                 render: function (data, type, row, meta) {
-                    return `<img src="data:image/png;base64,` +data+ `" height="100px"/>`;
-                    // return `<a href="data:aplication/pdf;base64,` +data+ `" height="100px">Download +${encodeURI(row)}+</a>`;
+                    if(data.mimetype.indexOf('image') >= 0)
+                        return `<img src="data:`+ data.mimetype +`;base64,` + data.data + `" height="100px"/>`;
+                    else
+                        return `<a href="data:` + data.mimetype + `;base64,` + data.data + `" height="100px" download="` + data.filename + `">Download</a>`;
                 }
             },
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attachment-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>`;
+                    // return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attachment-popup"><i class="far fa-edit"></i></button>` +
+                    return `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>`;
                 }
             }
         ]
@@ -237,6 +247,10 @@
                                         $('#add-attachment-form input[name=notes]').addClass('is-invalid');
                                         $('#add-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
+                                    case 'attachment':
+                                        $('#add-attachment-form #attachment').addClass('is-invalid');
+                                        $('#add-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
                                 }
                             }
                         }
@@ -294,6 +308,10 @@
                                     case 'notes':
                                         $('#edit-attachment-form #notes').addClass('is-invalid');
                                         $('#edit-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'attachment':
+                                        $('#edit-attachment-form #attachment').addClass('is-invalid');
+                                        $('#edit-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
                             }
@@ -359,13 +377,16 @@
     function clearAttachmentsModal(htmlId) {
         $(htmlId + ' #name').val('');
         $(htmlId + ' #notes').val('');
+        $(htmlId + ' #attachment').val('');
 
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' #attachment').removeClass('is-invalid');
     }
     function clearAttachmentsError(htmlId) {
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' #attachment').removeClass('is-invalid');
     }
 
     function showAlert(message) {

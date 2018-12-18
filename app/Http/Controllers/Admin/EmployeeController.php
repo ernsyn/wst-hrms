@@ -661,7 +661,7 @@ $jobData['status']  = 'probationer';
             'name' => 'required',
             'notes' => 'required',
             'media_id' => '',
-            'attachment' => ''
+            'attachment' => 'required'
         ]);
 
         $attachment_data_url = null;
