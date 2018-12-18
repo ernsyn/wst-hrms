@@ -683,13 +683,13 @@ $jobData['status']  = 'probationer';
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'monday' => 'required|in:0,0.5,1',
-            'tuesday' => 'required|in:0,0.5,1',
-            'wednesday' => 'required|in:0,0.5,1',
-            'thursday' => 'required|in:0,0.5,1',
-            'friday' => 'required|in:0,0.5,1',
-            'saturday' => 'required|in:0,0.5,1',
-            'sunday' => 'required|in:0,0.5,1',
+            'monday' => 'required|in:full,half,off,rest',
+            'tuesday' => 'required|in:full,half,off,rest',
+            'wednesday' => 'required|in:full,half,off,rest',
+            'thursday' => 'required|in:full,half,off,rest',
+            'friday' => 'required|in:full,half,off,rest',
+            'saturday' => 'required|in:full,half,off,rest',
+            'sunday' => 'required|in:full,half,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -707,13 +707,13 @@ $jobData['status']  = 'probationer';
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayUpdateData = $request->validate([
-            'monday' => 'required|in:0,0.5,1',
-            'tuesday' => 'required|in:0,0.5,1',
-            'wednesday' => 'required|in:0,0.5,1',
-            'thursday' => 'required|in:0,0.5,1',
-            'friday' => 'required|in:0,0.5,1',
-            'saturday' => 'required|in:0,0.5,1',
-            'sunday' => 'required|in:0,0.5,1',
+            'monday' => 'required|in:full,half,off,rest',
+            'tuesday' => 'required|in:full,half,off,rest',
+            'wednesday' => 'required|in:full,half,off,rest',
+            'thursday' => 'required|in:full,half,off,rest',
+            'friday' => 'required|in:full,half,off,rest',
+            'saturday' => 'required|in:full,half,off,rest',
+            'sunday' => 'required|in:full,half,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -1318,25 +1318,30 @@ $jobData['status']  = 'probationer';
 
     private function getWorkingDaysInIntegerArray($workingDays) {
         $arr = array();
-        if($workingDays->sunday > 0) {
+
+        $work_day = array('full', 'half');
+
+        if(in_array($workingDays->sunday, $work_day)) {
             array_push($arr, Carbon::SUNDAY);
         }
-        if($workingDays->monday > 0) {
+
+        if(in_array($workingDays->monday, $work_day)) {
             array_push($arr, Carbon::MONDAY);
         }
-        if($workingDays->tuesday > 0) {
+
+        if(in_array($workingDays->tuesday, $work_day)) {
             array_push($arr, Carbon::TUESDAY);
         }
-        if($workingDays->wednesday > 0) {
+        if(in_array($workingDays->wednesday, $work_day)) {
             array_push($arr, Carbon::WEDNESDAY);
         }
-        if($workingDays->thursday > 0) {
+        if(in_array($workingDays->thursday, $work_day)) {
             array_push($arr, Carbon::THURSDAY);
         }
-        if($workingDays->friday > 0) {
+        if(in_array($workingDays->friday, $work_day)) {
             array_push($arr, Carbon::FRIDAY);
         }
-        if($workingDays->saturday > 0) {
+        if(in_array($workingDays->saturday, $work_day)) {
             array_push($arr, Carbon::SATURDAY);
         }
 
