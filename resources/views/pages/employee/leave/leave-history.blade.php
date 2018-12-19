@@ -20,24 +20,24 @@
                     <tr>
                             <th>No</th>
                             <th>Employee</th>
-                            <th>Leave Type</th>                                            
+                            <th>Leave Type</th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th>Total Days</th>      
-                            <th>Status</th>                              
+                            <th>Total Days</th>
+                            <th>Status</th>
 
                     </tr>
                 </thead>
                 <tbody>
                         @foreach($leaveRequests as $leaveRequest)
                         <tr>
-                            
+
                             <td>{{$loop->iteration}}</td>
                             <td>    {{$leaveRequest->employee->user->name}}</td>
                             <td>
                                     {{$leaveRequest->leave_type->name}}
-                            
-                               </td>                                     
+
+                               </td>
                             <td>{{$leaveRequest['start_date']}}</td>
                             <td>{{$leaveRequest['end_date']}}</td>
                             <td>{{$leaveRequest['applied_days']}}</td>
@@ -46,17 +46,17 @@
 
                             <td>
                                 @if ($leaveRequest['status']== 'new')
-                                
+
                                 <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                 disabled><span class="fas fa-check-circle"></span></button>
                                 <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                disabled><span class="fas fa-times-circle"></span></button>        
+                                disabled><span class="fas fa-times-circle"></span></button>
                                 @else
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     disabled><span class="fas fa-check-circle"></span></button>
                                     <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                    disabled><span class="fas fa-times-circle"></span></button>                                            
-                                @endif                                                                                        
+                                    disabled><span class="fas fa-times-circle"></span></button>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -76,7 +76,7 @@
                     </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

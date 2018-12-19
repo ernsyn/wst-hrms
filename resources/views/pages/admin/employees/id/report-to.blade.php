@@ -202,7 +202,7 @@
                         </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -279,7 +279,7 @@
             render: {
                 option: function(item, escape) {
                     return '<div class="option">' +
-                        '<span class="badge badge-warning">' + item.code +'</span>' + 
+                        '<span class="badge badge-warning">' + item.code +'</span>' +
                         '&nbsp; ' + item.name +
                     '</div>';
                 }
@@ -376,7 +376,7 @@
 
             editReportToId = currentData.id;
             // $('#edit-report-to-form #report-to').html(
-            //     '<option value="' + currentData.report_to_emp_id + '" selected="selected">' + 
+            //     '<option value="' + currentData.report_to_emp_id + '" selected="selected">' +
             //     '(Insert Name)' + '</option>'
             // );
             editReportToEmpSelectize.addOption({
