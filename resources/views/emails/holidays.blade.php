@@ -4,27 +4,42 @@
 
 <head>
 	
-	<title>New Leave Request Submission!</title>
+	<title>Holidays Generated for the New Year!</title>
 
 </head>
 
 <body>
 
-	<h3>New Leave Request Submission!</h3>
+	<h3>Holidays Generated for the New Year!</h3>
 
-	<p>Hi,</p>
+	<p>Hi Admin,</p>
 
-	<p><strong>{{ $user->name }}</strong> has applied for <strong>{{ $leaveRequest->applied_days }} {{ $leaveRequest->am_pm }}</strong> day(s) of leave, from <strong>{{ \Carbon\Carbon::parse($leaveRequest->start_date)->format('d/m/Y') }}</strong> to <strong>{{ \Carbon\Carbon::parse($leaveRequest->end_date)->format('d/m/Y') }}</strong>.</p>
+	<p>The following annually repeated holidays have been generated for the following year:</p>
 
-	<p>The reason for the leave request is:</p>
+	<table cellpadding="3" cellspacing="0" border="1">
+		<tr>
+			<th align="left">Name</th>
+			<th align="left">Star Date</th>
+			<th align="left">End Date</th>
+			<th align="left">Note</th>
+			<th align="left">Total Days</th>
+			<th align="left">State(s)</th>
+		</tr>
+		@foreach($emailContent as $row)
+			<tr>
+				<td>{{ $row['name'] }}</td>
+				<td>{{ \Carbon\Carbon::parse($row['start_date'])->format('d/m/Y') }}</td>
+				<td>{{ \Carbon\Carbon::parse($row['end_date'])->format('d/m/Y') }}</td>
+				<td>{{ $row['note'] }}</td>
+				<td>{{ $row['total_days'] }}</td>
+				<td>{{ $row['state'] }}</td>
+			</tr>
+		@endforeach
+	</table>
 
-	<p><strong>{{ $leaveRequest->reason }}</strong></p>
+	<p>-------------------------------------------</p>
 
-	<p>Please login into the Admin Portal to check and/or approve the leave request.</p>
-
-	<p>--------------------------------------------------------------</p>
-
-	<p>This is an auto-generated leave request notification</p>
+	<p>This is an auto-generated notification</p>
 
 </body>
 

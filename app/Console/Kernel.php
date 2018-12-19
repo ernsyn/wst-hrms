@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('duplicate:holidays')->cron('0 0 23 31 12 ? *')->timezone('Asia/Kuala_Lumpur');
     }
 
     /**

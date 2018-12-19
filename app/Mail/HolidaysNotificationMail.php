@@ -7,9 +7,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-use App\User;
-use App\LeaveRequest;
-
 class HolidaysNotificationMail extends Mailable
 {
     use Queueable, SerializesModels;

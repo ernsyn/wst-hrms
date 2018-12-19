@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Holiday;
 use Carbon\Carbon;
+use App\User;
+use App\Mail\HolidaysNotificationMail;
 
 class DuplicateHolidays extends Command
 {
@@ -46,7 +48,10 @@ class DuplicateHolidays extends Command
         $holidays = Holiday::where('repeat_annually', 1)
         ->whereYear('start_date', '=', $now->year)
         ->whereYear('end_date', '=', $now->year)
+        ->orderBy('start_date', 'ASC')
         ->get();
+
+        $emailData = array();
 
         foreach ($holidays as $row) {
             $start = new Carbon($row->start_date);
@@ -59,8 +64,6 @@ class DuplicateHolidays extends Command
             ->where('start_date', $start_next)
             ->where('end_date', $end_next)
             ->count() > 0;
-
-            $emailData = array();
 
             // duplicate holidays for next year
             if(!$check_exist) {
@@ -78,10 +81,25 @@ class DuplicateHolidays extends Command
                 $holiday = new Holiday($holidayData);
                 $holiday->save();
 
-                $emailData[] = $holidayData;
+                array_push($emailData, $holidayData);
+            }
+        }
+
+        if(!empty($emailData)) {
+            $recepients = array();
+        
+            // get admin users
+            $admin_users = User::whereHas("roles", function($q){ 
+                $q->where("name", "admin");
+            })->get();
+
+            foreach ($admin_users as $row) {
+                array_push($recepients, $row->email);
             }
 
-            $this->line(print_r($emailData));
-        }
+            \Mail::to($recepients)->send(new HolidaysNotificationMail($emailData));
+
+            $this->line('Holidays generated and notified Admins.');
+        }        
     }
 }
