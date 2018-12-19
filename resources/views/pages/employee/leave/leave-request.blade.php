@@ -24,10 +24,10 @@
                         <div class="col-xl-8">
                                 {{-- <input id="id" type="text" class="form-control{{ $errors->has('id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
                                 name="id" value="{{ $leaveRequest->id }}" readonly> --}}
-                            <label class="col-md-8 col-form-label">Approve this leave?</label>                     
+                            <label class="col-md-8 col-form-label">Approve this leave?</label>
                         </div>
-                    </div>     
-                    
+                    </div>
+
                     <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">
                                 Approve
@@ -48,62 +48,62 @@
                     <tr>
                             <th>No</th>
                             <th>Employee</th>
-                            <th>Leave Type</th>                                            
+                            <th>Leave Type</th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th>Total Days</th>      
-                            <th>Status</th>                              
+                            <th>Total Days</th>
+                            <th>Status</th>
                             <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                         @foreach($leaveRequests as $leaveRequest)
                         <tr>
-                            
+
                             <td>{{$loop->iteration}}</td>
                             <td>    {{$leaveRequest->employee->user->name}}</td>
                             <td>
                                     {{$leaveRequest->leave_type->name}}
-                            
-                               </td>                                     
+
+                               </td>
                             <td>{{$leaveRequest['start_date']}}</td>
                             <td>{{$leaveRequest['end_date']}}</td>
                             <td>{{$leaveRequest['applied_days']}}</td>
 
                             <td>{{$leaveRequest['status']}}</td>
                             <td>             @if ($leaveRequest['status'] == 'new')
-                                
+
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                    data-leaverequest-id="{{$leaveRequest['id']}}"onclick="window.location='{{ route('employee.e-leave.add-leave-request', ['id' => $leaveRequest->id]) }}';" 
+                                    data-leaverequest-id="{{$leaveRequest['id']}}"onclick="window.location='{{ route('employee.e-leave.add-leave-request', ['id' => $leaveRequest->id]) }}';"
                                     {{-- data-target="#approveLeaverequest" --}}
                                     >
                                     <span class="fas fa-check-circle"></span></button>
                                     <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
                                     data-leaverequest-id="{{$leaveRequest['id']}}
                                     {{-- data-target="#disapproveLeaverequest" --}}
-                                    "onclick="window.location='{{ route('employee.e-leave.add-leave-request-disapprove', ['id' => $leaveRequest->id]) }}';" 
-                                    ><span class="fas fa-times-circle"></span></button>                                            
+                                    "onclick="window.location='{{ route('employee.e-leave.add-leave-request-disapprove', ['id' => $leaveRequest->id]) }}';"
+                                    ><span class="fas fa-times-circle"></span></button>
                                 @else
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     disabled><span class="fas fa-check-circle"></span></button>
                                     <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                    disabled><span class="fas fa-times-circle"></span></button>                                            
-                                @endif   
+                                    disabled><span class="fas fa-times-circle"></span></button>
+                                @endif
                             </td>
                             {{-- <td> --}}
                                 {{-- @if ($leaveRequest['is_approved'] == '0')
-                                
+
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     data-leaverequest-id="{{['id' => $leaveRequest->id]}}"
                                     data-target="#approveLeaverequest"><span class="fas fa-check-circle"></span></button>
                                     <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
                                     data-leaverequest-id="{{['id' => $leaveRequest->id]}}"
-                                    data-target="#disapproveLeaverequest"><span class="fas fa-times-circle"></span></button>                                            
+                                    data-target="#disapproveLeaverequest"><span class="fas fa-times-circle"></span></button>
                                 @else
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                     disabled><span class="fas fa-check-circle"></span></button>
                                     <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                    disabled><span class="fas fa-times-circle"></span></button>                                            
+                                    disabled><span class="fas fa-times-circle"></span></button>
                                 @endif                                                                                         --}}
                             {{-- </td> --}}
                         </tr>
@@ -124,7 +124,7 @@
                     </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

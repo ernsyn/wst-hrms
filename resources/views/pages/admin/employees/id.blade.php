@@ -8,7 +8,12 @@
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
                     <div class="p-2">
+                        @if (!empty($userMedia))
+                            <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:120px; height:120px">
+                        @else
                         <i class="fas fa-user-circle fa-8x"></i>
+                        @endif
+
                     </div>
                     <div class="pt-2 mt-auto">
                         <h6><strong>Profile Image</strong></h6>
