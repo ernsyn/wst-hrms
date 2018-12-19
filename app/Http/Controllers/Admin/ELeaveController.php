@@ -373,15 +373,6 @@ class ELeaveController extends Controller
 
     public function ajaxGetEmployees(Request $request)
     {
-        // $employees = DB::table('employees')
-        // ->join('users', 'employees.user_id', '=', 'users.id')
-        // ->join('employee_working_days', 'employees.id', '=', 'employee_working_days.emp_id')
-        // ->select('employees.id','employees.code','users.name')
-        // ->orderBy('users.name','ASC')
-        // ->get();
-
-        // return response()->json($employees);
-
         $pageLimit = $request->get("page_limit");
         $nameQuery = $request->get("q");
         $employees = Employee::with('user:id,name')
@@ -413,37 +404,39 @@ class ELeaveController extends Controller
         
         $result = array();
 
-        if($working_day->sunday > 0)
+        $work_day = array('full', 'half');
+
+        if(in_array($working_day->sunday, $work_day))
         {
             array_push($result, 0);
         }
 
-        if($working_day->monday > 0)
+        if(in_array($working_day->monday, $work_day))
         {
             array_push($result, 1);
         }
 
-        if($working_day->tuesday > 0)
+        if(in_array($working_day->tuesday, $work_day))
         {
             array_push($result, 2);
         }
 
-        if($working_day->wednesday > 0)
+        if(in_array($working_day->wednesday, $work_day))
         {
             array_push($result, 3);
         }
 
-        if($working_day->thursday > 0)
+        if(in_array($working_day->thursday, $work_day))
         {
             array_push($result, 4);
         }
 
-        if($working_day->friday > 0)
+        if(in_array($working_day->friday, $work_day))
         {
             array_push($result, 5);
         }
 
-        if($working_day->saturday > 0)
+        if(in_array($working_day->saturday, $work_day))
         {
             array_push($result, 6);
         }

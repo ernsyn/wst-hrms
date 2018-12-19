@@ -667,16 +667,16 @@
                            
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions->statutory,'PCB') !== false ? 'checked':'' !!}> PCB
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions,'PCB') !== false ? 'checked':'' !!}> PCB
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions->statutory,'EPF') !== false ? 'checked':'' !!}> EPF
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions,'EPF') !== false ? 'checked':'' !!}> EPF
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions->statutory,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions->statutory,'EIS') !== false ? 'checked':'' !!}> EIS
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions,'EIS') !== false ? 'checked':'' !!}> EIS
                                 </label>
                             </div>
                                 <label class="col-md-12 col-form-label">EA Form*</label>
@@ -936,16 +936,16 @@
                             <label class="col-md-12 col-form-label">Statutory</label>
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions->statutory,'PCB') !== false ? 'checked':'' !!}> PCB
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions,'PCB') !== false ? 'checked':'' !!}> PCB
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions->statutory,'EPF') !== false ? 'checked':'' !!}> EPF
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions,'EPF') !== false ? 'checked':'' !!}> EPF
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions->statutory,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions->statutory,'EIS') !== false ? 'checked':'' !!}> EIS
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions,'EIS') !== false ? 'checked':'' !!}> EIS
                                 </label>
                             </div>
                             <label class="col-md-12 col-form-label">EA Form*</label>

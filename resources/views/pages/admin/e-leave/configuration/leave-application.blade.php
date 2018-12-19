@@ -488,7 +488,7 @@
                 $("#add-leave-request-submit").prop('disabled', true);
             }
             else {
-                $("#add-leave-request-submit").prop('disabled', false);
+                checkLeaveRequest($('#start-date').val(), $('#end-date').val())
             }
 
             if(leave_type_data.required_attachment) {
@@ -640,6 +640,8 @@
 
         // Validate Leave request
         function checkLeaveRequest($start_date, $end_date) {
+            $('#error-message').text('');
+            
             if($start_date && $end_date) {
                 var start = $("#start-date").datepicker("getDate");
                 var end = $("#end-date").datepicker("getDate");
