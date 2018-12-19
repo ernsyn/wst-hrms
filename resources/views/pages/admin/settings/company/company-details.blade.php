@@ -61,17 +61,17 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{$companybanks->company->name}}</td>
-                                                    <td>{{$companybanks['account_name']}}</td>
+                                                    <td>{{$companybanks['acc_name']}}</td>
                                                     <td>{{$companybanks->bank->name}}</td>
                                                     <td>{{$companybanks['created_at']}}</td>
                                                     <td>{{$companybanks['status']}}</td>
 
                                                     <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
                                                             data-bank-id="{{$companybanks['id']}}" data-bank-code="{{$companybanks['bank_code']}}"
-                                                            data-bank-accout-name="{{$companybanks['account_name']}}" data-bank-status="{{$companybanks['status']}}"
+                                                            data-bank-accout-name="{{$companybanks['acc_name']}}" data-bank-status="{{$companybanks['status']}}"
                                                             data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button>
 {{--
-                                                        <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->account_name }}'
+                                                        <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->acc_name }}'
                                                             data-link='{{ route('admin.settings.company-banks.delete', ['id' => $companybanks->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button> --}}
 
                                                     </td>
@@ -265,12 +265,14 @@
                                 @foreach(App\BankCode::all() as $banks)
                                 <option value="{{ $banks->id }}">{{ $banks->name }}</option>
                                 @endforeach
-                            </select> @if ($errors->has('bank_code'))
+                            </select> 
+                            @if ($errors->has('bank_code'))
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('bank_code') }}</strong>
                             </span> @endif
                             </div>
                         </div>
+                        
                     </div>
 
                     <div class="row p-3">
@@ -284,32 +286,36 @@
                             </div>
                         </div>
                     </div>
-                </div>
+            
+                {{-- dont --}}
 
                     <div class="row p-3">
                         <div class="form-group row w-100">
                             <label class="col-md-12 col-form-label">Account Name*</label>
                             <div class="col-md-12">
-                                <input id="account_name" type="text" class="form-control{{ $errors->has('account_name') ? ' is-invalid' : '' }}" name="account_name"
-                                    value="{{ old('account_name') }}" required> @if ($errors->has('account_name'))
+                                <input id="acc_name" type="text" class="form-control{{ $errors->has('acc_name') ? ' is-invalid' : '' }}" name="acc_name"
+                                    value="{{ old('acc_name') }}" required> @if ($errors->has('acc_name'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('account_name') }}</strong>
+                                    <strong>{{ $errors->first('acc_name') }}</strong>
                                 </span> @endif
                             </div>
                         </div>
                     </div>
-                </div>
+       
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">
                         {{ __('Submit') }}
                         </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
+                </div>
+            
             </form>
-        </div>
+        
+
+</div>
     </div>
 </div>
-
 <!-- UPDATE COMPANY BANK -->
 <div class="modal fade" id="editCompanyBankPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -330,8 +336,8 @@
                             </div>
                             <label class="col-md-12 col-form-label">Account Name*</label>
                             <div class="col-md-12">
-                                <input id="account_name" type="text" class="form-control{{ $errors->has('account_name') ? ' is-invalid' : '' }}" name="account_name"
-                                    value="" required>
+                                <input id="acc_name" type="text" class="form-control{{ $errors->has('acc_name') ? ' is-invalid' : '' }}" name="acc_name"
+                                    value="{{ old('acc_name') }}" required>
                             </div>
                             <label class="col-md-12 col-form-label">Bank*</label>
                             <div class="col-md-12">

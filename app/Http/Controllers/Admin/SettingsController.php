@@ -1074,7 +1074,7 @@ public function postAddCompanyBank(Request $request,$id)
 {
     $additionData = $request->validate([
         'bank_code' => 'required',
-        'account_name' => 'required'
+        'acc_name' => 'required'
     ]);
 
     if ($request->status =='Active'){
@@ -1106,7 +1106,7 @@ public function postEditCompanyBank(Request $request)
     $id = $request->id;
     $additionData = $request->validate([
         'bank_code' => 'required',
-        'account_name' => 'required',
+        'acc_name' => 'required',
         'status'  => 'required'
     ]);
 
