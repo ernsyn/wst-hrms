@@ -274,9 +274,6 @@ class ELeaveController extends Controller
 
         public function ajaxGetHolidays(Request $request)
         {
-            // $employee = EmployeeJob::where('emp_id', Auth::user()->employee->id)->latest()->first();
-            // $branch = Branch::where('id', $employee->branch_id)->first();
-
             $branch = DB::table('employee_jobs')
             ->join('branches', 'employee_jobs.branch_id', '=', 'branches.id')
             ->select('branches.state')
@@ -336,37 +333,39 @@ class ELeaveController extends Controller
             
             $result = array();
 
-            if($working_day->sunday > 0)
+            $work_day = array('full', 'half');
+
+            if(in_array($working_day->sunday, $work_day))
             {
                 array_push($result, 0);
             }
 
-            if($working_day->monday > 0)
+            if(in_array($working_day->monday, $work_day))
             {
                 array_push($result, 1);
             }
 
-            if($working_day->tuesday > 0)
+            if(in_array($working_day->tuesday, $work_day))
             {
                 array_push($result, 2);
             }
 
-            if($working_day->wednesday > 0)
+            if(in_array($working_day->wednesday, $work_day))
             {
                 array_push($result, 3);
             }
 
-            if($working_day->thursday > 0)
+            if(in_array($working_day->thursday, $work_day))
             {
                 array_push($result, 4);
             }
 
-            if($working_day->friday > 0)
+            if(in_array($working_day->friday, $work_day))
             {
                 array_push($result, 5);
             }
 
-            if($working_day->saturday > 0)
+            if(in_array($working_day->saturday, $work_day))
             {
                 array_push($result, 6);
             }
@@ -399,7 +398,8 @@ class ELeaveController extends Controller
 
             $leave_request = LeaveRequest::where('id', $result)->first();
 
-            \Mail::send(new LeaveRequestMail(Auth::user(), $leave_request));
+            // send leave request email notification
+            self::sendLeaveRequestNotification($leave_request);
 
             return response()->json($result);
         }
@@ -447,9 +447,44 @@ class ELeaveController extends Controller
 
             $leave_request = LeaveRequest::where('id', $result)->first();
 
-            \Mail::send(new LeaveRequestMail(Auth::user(), $leave_request));
+            // send leave request email notification
+            self::sendLeaveRequestNotification($leave_request);
 
             return response()->json($result);
+        }
+
+        public function sendLeaveRequestNotification(LeaveRequest $leave_request) {
+            $cc_recepients = array();
+            $bcc_recepients = array();
+            
+            // get report to users
+            $report_to = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
+            ->where('report_to_level', '1')
+            ->get();
+
+            foreach ($report_to as $row) {
+                $employee = DB::table('employees')
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->report_to_emp_id)
+                ->first();
+
+                array_push($cc_recepients, $employee->email);
+            }
+
+            // get admin users
+            $admin_users = User::whereHas("roles", function($q){ 
+                $q->where("name", "admin");
+            })->get();
+
+            foreach ($admin_users as $row) {
+                array_push($bcc_recepients, $row->email);
+            }
+
+            \Mail::to(Auth::user()->email)
+            ->cc($cc_recepients)
+            ->bcc($bcc_recepients)
+            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
         }
 
         public function ajaxCancelLeaveRequest($id)

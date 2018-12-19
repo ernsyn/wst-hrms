@@ -43,6 +43,8 @@ use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+use App\EmployeeAttendance;
+use App\Media;
 use App\EmployeeClockInOutRecord;
 
 use App\Http\Services\LeaveService;
@@ -84,13 +86,17 @@ class EmployeeController extends Controller
         {
             $query->where('status','=','confirmed-employment')
             ->where ('emp_id','=',$id);
-
-
         }])
-
         ->find($id);
 
+        $userMedia = DB::table('users')
+        ->join('medias', 'users.profile_media_id', '=', 'medias.id')
+        ->join('employees', 'employees.user_id', '=', 'users.id')
+        ->select('medias.*')
+        ->where('employees.id', $id)
+        ->first();
 
+        // dd($userMedia);
 
         // $bank_list = Bank::all();
         // $cost_centre = CostCentre::all();
@@ -102,32 +108,43 @@ class EmployeeController extends Controller
         // $countries = Country::all();
         // $companies = Company::all();
         
-        $roles = AccessControllHelper::getRoles();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'roles' => $roles]);
-    }
+		$roles = AccessControllHelper::getRoles();
+		return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia, 'roles' => $roles]);    }
 
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
 
-            'ic_no' => 'required|numeric',
-            'code'=>'',
-            'dob' => 'required|date',
+            'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
+            'code'=>'required|unique:employees,code,'.$id.',id',
+            'dob' => 'required',
             'gender' => 'required',
-
             'marital_status' => 'required',
             'race' => 'required|alpha',
             'total_children' => 'nullable|numeric',
+            'address' => 'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
-            'epf_no' => 'required',
-            'tax_no' => 'required',
-            'eis_no' => 'required',
-            'socso_no' => 'required',
+            'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
+            'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
+            'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
+            'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
             'main_security_group_id'=>'',
-          'contact_no' => 'required',
+            'contact_no' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
+        $profileUpdatedData['dob'] = implode("-", array_reverse(explode("/", $profileUpdatedData['dob'])));
+
+        $profileUpdatedData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $profileUpdatedData['driver_license_expiry_date'])));
+
+        if($profileUpdatedData['driver_license_expiry_date']==='') {
+            $profileUpdatedData['driver_license_expiry_date'] = null;
+        }
 
         Employee::where('id', $id)->update($profileUpdatedData);
 
@@ -293,7 +310,7 @@ class EmployeeController extends Controller
 
     public function getDataTableAttachments($id)
     {
-        $attachments = EmployeeAttachment::where('emp_id', $id)->get();
+        $attachments = EmployeeAttachment::with('medias')->where('emp_id', $id)->get();
         return DataTables::of($attachments)->make(true);
     }
 
@@ -327,27 +344,53 @@ class EmployeeController extends Controller
             'name' => 'required|min:5',
             'email' => 'required|unique:users|email',
             'password' => 'required|required_with:confirm_password|same:confirm_password',
+            'media_id' => '',
+            'attachment' => '',
+            'attach' => '',
 
-            'code'=>'unique:employees',
+            'code'=>'required|unique:employees',
             'contact_no' => 'required',
             'address' => 'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'company_id' => 'required',
-            'dob' => 'required|date',
+            'dob' => 'required',
             'gender' => 'required',
-            'race' => 'required',
+            'race' => 'required|alpha',
             'nationality' => 'required',
             'marital_status' => 'required',
             'total_children' => 'nullable|numeric',
-            'ic_no' => 'required|unique:employees,ic_no',
-            'tax_no' => 'required|unique:employees,tax_no|numeric',
+            'ic_no' => 'required|unique:employees,ic_no|numeric',
+            'tax_no' => 'required|unique:employees,tax_no',
             'epf_no' => 'required|unique:employees,epf_no|numeric',
             'eis_no' => 'required|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable|date',
+            'driver_license_expiry_date' => 'nullable',
             'main_security_group_id'=>'nullable'
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
+        $attachment_data_url = $validated['attach'];
+
+        $attach = self::processBase64DataUrl($attachment_data_url);
+        $mediaData = Media::create([
+            'category' => 'employee-profile',
+            'mimetype' => $attach['mime_type'],
+            'data' => $attach['data'],
+            'size' => $attach['size'],
+            'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
+        ]);
+
+        $media_id = DB::getPdo()->lastInsertId();
+
+        // dd($media_id);
+
+        $validatedUserData['profile_media_id'] = $media_id;
+
+        // $validatedUserData['profile_media_id'] = $mediaData->id;
 
         $validatedUserData['name'] = $validated['name'];
         $validatedUserData['email'] = $validated['email'];
@@ -356,20 +399,25 @@ class EmployeeController extends Controller
         $validatedEmployeeData['code'] = $validated['code'];
         $validatedEmployeeData['contact_no'] = $validated['contact_no'];
         $validatedEmployeeData['address'] = $validated['address'];
+        $validatedEmployeeData['address2'] = $validated['address2'];
+        $validatedEmployeeData['address3'] = $validated['address3'];
         $validatedEmployeeData['company_id'] = $validated['company_id'];
-        $validatedEmployeeData['dob'] = $validated['dob'];
+        $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
         $validatedEmployeeData['gender'] = $validated['gender'];
         $validatedEmployeeData['race'] = $validated['race'];
         $validatedEmployeeData['nationality'] = $validated['nationality'];
         $validatedEmployeeData['marital_status'] = $validated['marital_status'];
         $validatedEmployeeData['total_children'] = $validated['total_children'];
-        $validatedEmployeeData['ic_no'] = $validated['tax_no'];
+        $validatedEmployeeData['ic_no'] = $validated['ic_no'];
         $validatedEmployeeData['tax_no'] = $validated['tax_no'];
         $validatedEmployeeData['epf_no'] = $validated['epf_no'];
         $validatedEmployeeData['eis_no'] = $validated['eis_no'];
         $validatedEmployeeData['socso_no'] = $validated['socso_no'];
         $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
-        $validatedEmployeeData['driver_license_expiry_date'] = $validated['driver_license_expiry_date'];
+        $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
+        if($validatedEmployeeData['driver_license_expiry_date']==='') {
+            $validatedEmployeeData['driver_license_expiry_date'] = null;
+        }
         $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
         // $validatedEmployeeData = $request->validate([
@@ -493,7 +541,10 @@ class EmployeeController extends Controller
                 $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                 LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
             }
+elseif(empty($currentjob)){
 
+$jobData['status']  = 'probationer';
+}
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
@@ -609,8 +660,26 @@ class EmployeeController extends Controller
     {
         $attachmentData = $request->validate([
             'name' => 'required',
-            'notes' => 'required'
+            'notes' => 'required',
+            'media_id' => '',
+            'attachment' => 'required'
         ]);
+
+        $attachment_data_url = null;
+        if(array_key_exists('attachment', $attachmentData)) {
+            $attachment_data_url = $attachmentData['attachment'];
+        $attach = self::processBase64DataUrl($attachment_data_url);
+        $mediaData = Media::create([
+            'category' => 'employee-attachment',
+            'mimetype' => $attach['mime_type'],
+            'data' => $attach['data'],
+            'size' => $attach['size'],
+            'filename' => 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension']
+        ]);
+        $attachmentData['media_id'] = $mediaData->id;
+        }
+
+
         $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
 
@@ -620,17 +689,34 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Attachment is successfully added']);
     }
 
+    private static function processBase64DataUrl($dataUrl) {
+        $parts = explode(',', $dataUrl);
+
+        preg_match('#data:(.*?);base64#', $parts[0], $matches);
+        $mimeType = $matches[1];
+        $extension = explode('/', $mimeType)[1];
+
+        $data = $parts[1];
+
+        return [
+            'data' => $data,
+            'mime_type' => $mimeType,
+            'size' => mb_strlen($data),
+            'extension' => $extension
+        ];
+    }
+
     // SECTION: Employee Working Day Setup
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'monday' => 'required|in:0,0.5,1',
-            'tuesday' => 'required|in:0,0.5,1',
-            'wednesday' => 'required|in:0,0.5,1',
-            'thursday' => 'required|in:0,0.5,1',
-            'friday' => 'required|in:0,0.5,1',
-            'saturday' => 'required|in:0,0.5,1',
-            'sunday' => 'required|in:0,0.5,1',
+            'monday' => 'required|in:full,half,off,rest',
+            'tuesday' => 'required|in:full,half,off,rest',
+            'wednesday' => 'required|in:full,half,off,rest',
+            'thursday' => 'required|in:full,half,off,rest',
+            'friday' => 'required|in:full,half,off,rest',
+            'saturday' => 'required|in:full,half,off,rest',
+            'sunday' => 'required|in:full,half,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -648,13 +734,13 @@ class EmployeeController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayUpdateData = $request->validate([
-            'monday' => 'required|in:0,0.5,1',
-            'tuesday' => 'required|in:0,0.5,1',
-            'wednesday' => 'required|in:0,0.5,1',
-            'thursday' => 'required|in:0,0.5,1',
-            'friday' => 'required|in:0,0.5,1',
-            'saturday' => 'required|in:0,0.5,1',
-            'sunday' => 'required|in:0,0.5,1',
+            'monday' => 'required|in:full,half,off,rest',
+            'tuesday' => 'required|in:full,half,off,rest',
+            'wednesday' => 'required|in:full,half,off,rest',
+            'thursday' => 'required|in:full,half,off,rest',
+            'friday' => 'required|in:full,half,off,rest',
+            'saturday' => 'required|in:full,half,off,rest',
+            'sunday' => 'required|in:full,half,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -719,13 +805,143 @@ class EmployeeController extends Controller
         }
 
         $reportToData['created_by'] = auth()->user()->id;
-        $reportTo = new EmployeeReportTo($reportToData);
 
-        $employee = Employee::find($id);
-        $employee->report_tos()->save($reportTo);
+        // $employee_report_to_level = EmployeeReportTo::where('emp_id','=',$id)
+        // ->where(function($q) {
+        //     $q->where('report_to_level', 2)
+        //       ->orWhere('kpi_proposer', 1)
+        //       ->orWhere('report_to_level',1);
+        // })
+        // ->where ('report_to_level',1)
+        // ->count();  // "5"
 
-        return response()->json(['success'=>'Record is successfully added']);
+        $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('report_to_level', 2)->count();
+
+        $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('report_to_level', 1)->count();
+
+        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('kpi_proposer', 1)->count();
+
+
+   if($request->report_to_level ==1 )
+    {
+        $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('report_to_level', 1)->count();
+        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('kpi_proposer', 1)->count();
+
+
+        if ($employee_report_to_level_one == 0 ){
+            if($request->kpi_proposer = 0){
+            $reportTo = new EmployeeReportTo($reportToData);
+            $employee = Employee::find($id);
+            $employee->report_tos()->save($reportTo);
+
+            return response()->json(['success'=>'Record is successfully added']);
+            }
+            else
+            {
+                if ($employee_kpi_proposer>0)
+                {
+
+                    return "error kpi_proposer 1";
+                }
+                else
+{
+
+    $reportTo = new EmployeeReportTo($reportToData);
+    $employee = Employee::find($id);
+    $employee->report_tos()->save($reportTo);
+
+    return response()->json(['success'=>'Record is successfully added']);
+}
+
+
+
+            }
+        }
+        elseif($employee_report_to_level_one == 1) {
+
+            return "you already have level one";
+        }
+
+        else
+        {
+    return "error";
+
+        }
+
     }
+    elseif($request->report_to_level ==2)
+
+    {
+        $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('report_to_level', 2)->count();
+        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
+        ->where('kpi_proposer', 1)->count();
+
+
+        if ($employee_report_to_level_two == 0 ){
+            if($request->kpi_proposer == 0){
+            $reportTo = new EmployeeReportTo($reportToData);
+            $employee = Employee::find($id);
+            $employee->report_tos()->save($reportTo);
+
+            return response()->json(['success'=>'Record is successfully added']);
+            }
+            else
+            {
+                if ($employee_kpi_proposer>0)
+                {
+
+                    return "error kpi_proposer2";
+                }
+                else
+                {
+
+                  $reportTo = new EmployeeReportTo($reportToData);
+                  $employee = Employee::find($id);
+                  $employee->report_tos()->save($reportTo);
+
+                  return response()->json(['success'=>'Record is successfully added']);
+                }
+
+
+
+            }
+        }
+        elseif($employee_report_to_level_two == 1) {
+
+            return "you already have level two ";
+        }
+
+        else
+        {
+    return "error";
+
+        }
+
+    }
+
+   }
+
+
+// if($employee_report_to_level_two > 0 |$employee_report_to_level_one >0 | $employee_kpi_proposer>0){
+// return "error";
+// }else{
+
+//         $reportTo = new EmployeeReportTo($reportToData);
+
+//         $employee = Employee::find($id);
+//         $employee->report_tos()->save($reportTo);
+
+//         return response()->json(['success'=>'Record is successfully added']);
+
+//      }
+
+
 
     public function postSecurityGroup(Request $request, $id)
     {
@@ -1129,25 +1345,30 @@ class EmployeeController extends Controller
 
     private function getWorkingDaysInIntegerArray($workingDays) {
         $arr = array();
-        if($workingDays->sunday > 0) {
+
+        $work_day = array('full', 'half');
+
+        if(in_array($workingDays->sunday, $work_day)) {
             array_push($arr, Carbon::SUNDAY);
         }
-        if($workingDays->monday > 0) {
+
+        if(in_array($workingDays->monday, $work_day)) {
             array_push($arr, Carbon::MONDAY);
         }
-        if($workingDays->tuesday > 0) {
+
+        if(in_array($workingDays->tuesday, $work_day)) {
             array_push($arr, Carbon::TUESDAY);
         }
-        if($workingDays->wednesday > 0) {
+        if(in_array($workingDays->wednesday, $work_day)) {
             array_push($arr, Carbon::WEDNESDAY);
         }
-        if($workingDays->thursday > 0) {
+        if(in_array($workingDays->thursday, $work_day)) {
             array_push($arr, Carbon::THURSDAY);
         }
-        if($workingDays->friday > 0) {
+        if(in_array($workingDays->friday, $work_day)) {
             array_push($arr, Carbon::FRIDAY);
         }
-        if($workingDays->saturday > 0) {
+        if(in_array($workingDays->saturday, $work_day)) {
             array_push($arr, Carbon::SATURDAY);
         }
 

@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="name" name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -22,8 +22,16 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
+                            <input id="notes" name="notes" type="text" class="form-control" placeholder="" value="" required>
                             <div id="notes-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="attachment"><strong>Attachment*</strong></label>
+                            <input type="file" name="required-attachment" id="attachment" class="form-control-file">
+                            <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -67,6 +75,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="attachment"><strong>Attachment*</strong></label>
+                            <input type="file" name="required-attachment" id="attachment" class="form-control-file">
+                            <div id="attachment-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="edit-attachment-submit" type="submit" class="btn btn-primary">
@@ -90,7 +106,7 @@
                             </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -116,6 +132,7 @@
                 <th>No</th>
                 <th>Name</th>
                 <th>Notes</th>
+                <th>Attachment</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -151,10 +168,21 @@
                 "data": "notes"
             },
             {
+                "data": "medias",// can be null or undefined
+                "defaultContent": "<strong>(not set)</strong>",
+
+                render: function (data, type, row, meta) {
+                    if(data.mimetype.indexOf('image') >= 0)
+                        return `<img src="data:`+ data.mimetype +`;base64,` + data.data + `" height="100px"/>`;
+                    else
+                        return `<a href="data:` + data.mimetype + `;base64,` + data.data + `" height="100px" download="` + data.filename + `">Download</a>`;
+                }
+            },
+            {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attachment-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>`;
+                    // return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attachment-popup"><i class="far fa-edit"></i></button>` +
+                    return `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>`;
                 }
             }
         ]
@@ -170,15 +198,33 @@
         $('#add-attachment-form #add-attachment-submit').click(function(e){
             clearAttachmentsError('#add-attachment-form');
             e.preventDefault();
+            var file = document.querySelector('input[name=required-attachment]').files[0];
+
+
+            var data = {
+                _token: '{{ csrf_token() }}',
+                name: $('#add-attachment-form input[name=name]').val(),
+                notes: $('#add-attachment-form input[name=notes]').val()
+            };
+
+            if(file) {
+                console.log("File>>>",file);
+                getBase64(file, function(attachmentDataUrl) {
+                    data.attachment = attachmentDataUrl;
+                    postAddAttachment(data);
+                });
+            } else {
+                postAddAttachment(data);
+            }
+
+        });
+
+
+        function postAddAttachment(data) {
             $.ajax({
                 url: "{{ route('admin.employees.attachments.post', ['id' => $id]) }}",
                 type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    // Form Data
-                    name: $('#add-attachment-form #name').val(),
-                    notes: $('#add-attachment-form #notes').val()
-                },
+                data: data,
                 success: function(data) {
                     showAlert(data.success);
                     attachmentsTable.ajax.reload();
@@ -194,12 +240,16 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#add-attachment-form #name').addClass('is-invalid');
+                                        $('#add-attachment-form input[name=name]').addClass('is-invalid');
                                         $('#add-attachment-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'notes':
-                                        $('#add-attachment-form #notes').addClass('is-invalid');
+                                        $('#add-attachment-form input[name=notes]').addClass('is-invalid');
                                         $('#add-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'attachment':
+                                        $('#add-attachment-form #attachment').addClass('is-invalid');
+                                        $('#add-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
                             }
@@ -207,7 +257,7 @@
                     }
                 }
             });
-        });
+        }
 
         // EDIT ATTACHMENT
         var editAttachmentId = null;
@@ -259,6 +309,10 @@
                                         $('#edit-attachment-form #notes').addClass('is-invalid');
                                         $('#edit-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
+                                    case 'attachment':
+                                        $('#edit-attachment-form #attachment').addClass('is-invalid');
+                                        $('#edit-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
                                 }
                             }
                         }
@@ -307,16 +361,32 @@
 
 
     // GENERAL FUNCTIONS
+    // convert attachement to base64
+    function getBase64(file, onLoad) {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onload = function () {
+            onLoad(reader.result);
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+    }
+
     function clearAttachmentsModal(htmlId) {
         $(htmlId + ' #name').val('');
         $(htmlId + ' #notes').val('');
+        $(htmlId + ' #attachment').val('');
 
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' #attachment').removeClass('is-invalid');
     }
     function clearAttachmentsError(htmlId) {
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' #attachment').removeClass('is-invalid');
     }
 
     function showAlert(message) {

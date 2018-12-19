@@ -6,7 +6,7 @@
  * Time: 11:04 AM
  */
 
-namespace App\Popo\report;
+namespace App\Http\Controllers\Popo\governmentreport;
 
 
 class PtptnP04Bean

@@ -8,11 +8,6 @@
 
 namespace App\Helpers;
 
-use App\Branch;
-use App\CostCentre;
-use App\Department;
-use App\EmployeePosition;
-use App\Http\Controllers\Popo\governmentreport\GovernmentReport;
 use App\Http\Controllers\Popo\governmentreport\LhdnBorangEBean;
 use App\Http\Controllers\Popo\governmentreport\LhdnCP8EmployeeDetail;
 use App\Http\Controllers\Popo\governmentreport\LhdnCP21Bean;
@@ -27,18 +22,34 @@ use App\Http\Controllers\Popo\governmentreport\EpfBBCDBean;
 use App\Http\Controllers\Popo\governmentreport\EpfBorangABean;
 use App\Http\Controllers\Popo\governmentreport\SoscoLampiranABean;
 use App\Http\Controllers\Popo\governmentreport\SocsoBorang8ABean;
+use App\Http\Controllers\Popo\governmentreport\PtptnP04Bean;
+use App\Http\Controllers\Popo\governmentreport\ZakatBean;
+use App\Http\Controllers\Popo\governmentreport\EISLampiranBean;
 
-use App\PayrollMaster;
+use App\Enums\PayrollPeriodEnum;
+use App\Services\GovernmentReportService;
+use App\Repositories\Payroll\GovernmentReportRepositoryImpl;
+
+use Illuminate\Support\Facades\Auth;
+use App\Branch;
+use App\CostCentre;
+use App\Department;
+use App\EmployeePosition;
 use App\User;
 use App\Company;
-use App\Employee;
-use App\Enums\PayrollPeriodEnum;
-use Illuminate\Support\Facades\Auth;
+
+
 use \DB;
-use \Carbon;
 
 class GenerateReportsHelper
 {
+
+    protected static $governmentReportService;
+
+    public function __construct(){
+        self::$governmentReportService = new GovernmentReportRepositoryImpl();
+    }
+
 
     public static function generateBean($reportName,$periods,$year,$officerId,$filter){
         switch ($reportName) {
@@ -46,7 +57,7 @@ class GenerateReportsHelper
 
                 //set pojo
                 $data = array();
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
                 $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,null,$year);
                 $totalEmployeeActiveAndResign = self::getEmployeeTotalActiveAndResigned($companyInformation->id,$filter,null,$year);
@@ -118,7 +129,7 @@ class GenerateReportsHelper
             case "LHDN_cp21":
                     //set pojo
                     $data = array();
-                    $companyInformation = self::getUserLogonCompanyInfomation();
+                    $companyInformation = self::getUserLogonCompanyInformation();
                     $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
                     $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,null,$year);
 
@@ -175,7 +186,7 @@ class GenerateReportsHelper
             case "LHDN_cp22":
                 //set pojo
                 $data = array();
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
 
                 //Generate for new staff
@@ -232,7 +243,7 @@ class GenerateReportsHelper
             case "LHDN_cp22a":
                 //set pojo
                 $data = array();
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
 
                 //generate for resigned staff
@@ -333,7 +344,7 @@ class GenerateReportsHelper
             case "LHDN_cp22b":
                 //set pojo
                 $data = array();
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
 
                 //generate for resigned staff
@@ -448,7 +459,7 @@ class GenerateReportsHelper
 
             case "LHDN_cp39":
                 //set popo
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
                 $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
 
@@ -520,7 +531,7 @@ class GenerateReportsHelper
             case "LHDN_cp39lieu":
                 //set pojo
                 $data = array();
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
@@ -564,9 +575,9 @@ class GenerateReportsHelper
             case "LHDN_eaform":
                 //set pojo
                 $data = array();
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,null,$filter,null,$year);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,null,$year);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -588,21 +599,34 @@ class GenerateReportsHelper
                             //'childNoforTax' => 3,
                             //'startDateLessOneYear' => '20/01/1997',
                             //'endDateLessOneYear' => '20/01/1997',
-                            'netSalary' => $userPayroll->total_gross_salary,
-                            //'commission' => 20000,
-                            //'tip' => 1200,
-                            //'employerIncomeTax' => 1200,
-                            //'esos' => 34,
-                            //'reward' => 1000,
-                            //'benefitsOfMerchandise' => 1200,
-                            //'residenceValue' => 1200000,
-                            //'failedRefund' => 340,
-                            //'lostJobReparation' => 340,
 
-                            //'pension' => 12000,
-                            //'annuity' => 1000,
-                            //TODO ,need add up
-                            'total' => $userPayroll->total_gross_salary,
+                            'netSalary' => $userPayroll->total_gross_salary,
+                            'commission' => $userPayroll->B1b,
+                            'tip' => $userPayroll->B1c,
+                            'employerIncomeTax' => $userPayroll->B1d,
+                            'esos' => $userPayroll->B1e,
+                            'reward' => $userPayroll->B1f,
+                            'outstandingPayment' => $userPayroll->B2,
+                            'benefitsOfMerchandise' => $userPayroll->B3,
+                            'residenceValue' => $userPayroll->B4,
+                            'failedRefund' => $userPayroll->B5,
+                            'lostJobReparation' => $userPayroll->B6,
+                            'pension' => $userPayroll->C1,
+                            'annuity' => $userPayroll->C2,
+
+                            'total' => $userPayroll->total_gross_salary +
+                                       $userPayroll->B1b +
+                                       $userPayroll->B1c +
+                                       $userPayroll->B1d +
+                                       $userPayroll->B1e +
+                                       $userPayroll->B1f +
+                                       $userPayroll->B2 +
+                                       $userPayroll->B3 +
+                                       $userPayroll->B4 +
+                                       $userPayroll->B5 +
+                                       $userPayroll->B6 +
+                                       $userPayroll->C1 +
+                                       $userPayroll->C2 ,
 
                             'pcb' => $userPayroll->total_pcb,
                             //'deductionsInstructionsCP38' => 340,
@@ -635,7 +659,7 @@ class GenerateReportsHelper
 
             case "Tabung_Haji_caruman":
                 //set popo
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
                 $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
 
@@ -673,7 +697,7 @@ class GenerateReportsHelper
 
             case "EPF_bbcd":
                 //set popo
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
 
                 $data = new EpfBBCDBean([
@@ -700,7 +724,7 @@ class GenerateReportsHelper
 
             case "EPF_borangA":
                 //set popo
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
                 $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
 
@@ -760,7 +784,7 @@ class GenerateReportsHelper
 
             case "SOSCO_lampiranA":
                 //set popo
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
                 $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
                 $month = self::getPayrollMonth($periods,$companyInformation->id);
@@ -797,7 +821,7 @@ class GenerateReportsHelper
 
             case "SOSCO_borang8A":
                 //set popo
-                $companyInformation = self::getUserLogonCompanyInfomation();
+                $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
                 $active = self::getSocsoEmployeeActiveList($companyInformation->id,$periods);
                 $nonActive = self::getSocsoEmployeeResignList($companyInformation->id,$periods);
@@ -854,10 +878,139 @@ class GenerateReportsHelper
                     $arr = array("data" => $data, "empData" => $empData, "totalContribution" => $totalContribution);
                     return $arr;
                 }
-                break;
+            break;
 
-            case "LHDN_eaform":
-                break;
+            case "PTPTN_monthly":
+                //TODO :PTPTN currently not in used.
+                //set popo
+                $data = new PtptnP04Bean([
+                    'employerReferenceNo' => '',
+                    'companyName' => 'OPPO ELECTRONICS SDN BHD',
+                    'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                    'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                    'companyAddress3' => 'SELANGOR.',
+                    'companyPostcode' => 46200,
+                    'companyBusinessRegistrationNo' => '1075187-D',
+
+                    'officerName' => 'CHONG HWEE MIN',
+                    'officerPosition' => 'HUMAN RESOURCES OFFICER',
+                    'officerNoTel' => '03-7931 3550',
+                    'officerEmail' => 'oppo.amandachong@gmail.com',
+
+                    'transferDate' => '',
+                    'transferReferenceNo' => '',
+                    'transferAmount' => '',
+                    'checkNo' => '',
+                    'bankProduceCheck' => '',
+                    'checkAmount' => '124.60',
+                    'checkPostDateToPTPTN' => '',
+                    'checkDepositDate' => ''
+                ]);
+
+                $empData = array();
+                $totalCheckAmount = 0;
+                //example
+                for($count=0;$count < 55; $count++){
+                    $emp = new PtptnP04Bean([
+                        'staffIcNo' => '881876876767',
+                        'staffName' => 'MUHAMMAD SHAHRIL B. ABU BAKAR',
+                        'amount' => 124.60,
+                        'staffNo' => 12345
+                    ]);
+                    //sum of total check
+                    $totalCheckAmount += $emp->getAmount();
+
+                    $empData[] = $emp;
+                }
+
+                $arr = array("data" => $data, "empData" => $empData, "totalCheckAmount" => $totalCheckAmount);
+                return $arr;
+            break;
+
+            case "ZAKAT_monthly":
+                //TODO :ZAKAT currently not in used.
+                //set popo
+                $empData = array();
+                $totalAmount = 0;
+                //example
+                for($count=0;$count < 55; $count++){
+                    $emp = new ZakatBean([
+                        'employeeOldIcNo' => '',
+                        'employeeNewIcNo' => '881012345657',
+                        'employeeName' => 'MUHAMMAD SHAHRIL B. ABU BAKAR',
+                        'employeeAmount' => 23.40,
+                        'zakatType' => '',
+                    ]);
+                    //sum of total amount
+                    $totalAmount += $emp->getEmployeeAmount();
+                    $empData[] = $emp;
+                }
+
+                $data = new ZakatBean([
+                    'companyName' => 'OPPO ELECTRONICS SDN BHD',
+                    'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
+                    'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                    'companyAddress3' => 'SELANGOR.',
+                    'companyPostcode' => 46200,
+                    'companyBusinessRegistrationNo' => '1075187-D',
+
+                    'employerCodeNo' => '',
+                    'month' => 'OGOS 2018',
+                    'bankName' => '',
+                    'checkNo' => '',
+                    'totalAmount' => $totalAmount,
+
+                    'officerName' => 'CHONG HWEE MIN',
+                    'officerIcNo' => '8171817181711',
+                    'officerPosition' => 'HUMAN RESOURCES OFFICER',
+                    'officerNoTel' => '03-7931 3550',
+                    'officerEmail' => 'oppo.amandachong@gmail.com',
+                ]);
+
+                $arr = array("data" => $data, "empData" => $empData);
+                return $arr;
+            break;
+
+            case "ASBN_monthly":
+                //TODO :ASBN currently not in used.
+            break;
+
+            case "EIS_lampiran1":
+                //TODO :EIS currently not in used.
+                //set popo
+                $companyInformation = self::getUserLogonCompanyInformation();
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
+                $date = self::getPayrollYearMonth($periods,$companyInformation->id);
+
+                if(count($userInfoAndPayrollList) == 0) {
+                    return;
+                }else {
+                    $totalContributionAmount = 0;
+                    $dataArr = array();
+
+                    $data = new EISLampiranBean([
+                        'companyName' => $companyInformation->name,
+                        'companyNoCode' => 'B3200090304M',
+                    ]);
+
+                    foreach ($userInfoAndPayrollList as $userPayroll) {
+                        $obj = new EISLampiranBean([
+                            'companyName' => $companyInformation->name,
+                            'companyNoCode' => 'B3200090304M',
+                            'employeeIcNo' => $userPayroll->ic_no,
+                            'employeeName' => $userPayroll->name,
+                            'contributionMonth' => $date->month . $date->year,
+                            'contributionAmount' => $userPayroll->total_eis,
+                        ]);
+                        //sum of total amount
+                        $totalContributionAmount += $userPayroll->total_eis;
+                        $dataArr[] = $obj;
+                    }
+
+                    $arr = array("data" => $data, "dataArr" => $dataArr, "totalContributionAmount" => $totalContributionAmount);
+                    return $arr;
+                }
+            break;
 
             case "test":
                  //$companyInformation = self::getUserLogonCompanyInfomation();
@@ -872,54 +1025,6 @@ class GenerateReportsHelper
         }
     }
 
-
-    public static function getUserLogonCompanyInfomation(){
-        $id = Auth::id();
-        return User::find($id)->employee->company->where('status', 'Active')->first();
-    }
-
-    private static function getCompanyInfomation($companyId){
-        if(empty($companyId)){
-            $id = Auth::id();
-            //echo $id;
-            return User::find($id)->employee->company->where('status', 'Active')->first();
-        }else{
-            return Company::find($companyId)->where('status', 'Active')->first();
-        }
-    }
-
-    private static function getLHDNYearlyReport($companyId,$filter){
-        if(!empty($filter)) {
-           return  DB::table('payroll_master')
-                ->select(DB::raw('users.name,employees.tax_no,employees.ic_no,max(employees.total_children) as total_children'),
-                    DB::raw('sum(payroll_trx.gross_pay) as total_gross_salary ,sum(payroll_trx.basic_salary) as total_basic_salary'),
-                    DB::raw('sum(payroll_trx.employee_epf) as total_epf,sum(payroll_trx.employee_eis) as total_eis'),
-                    DB::raw('sum(payroll_trx.employee_socso) as total_socso,sum(payroll_trx.employee_pcb) as total_pcb'))
-                ->whereYear('payroll_master.year_month', date('Y'))
-                ->where('payroll_master.company_id', $companyId)
-                ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
-                ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
-                ->join('employees','payroll_trx.employee_id','employees.id')
-                ->join('users','employees.user_id','users.id')
-                ->where(array_keys($filter)[0],array_values($filter)[0])
-                ->groupBy(DB::raw("payroll_trx.employee_id,users.name,employees.tax_no,employees.ic_no"))
-                ->get();
-        }else{
-            return DB::table('payroll_master')
-                ->select(DB::raw('users.name,employees.tax_no,employees.ic_no,max(employees.total_children) as total_children'),
-                    DB::raw('sum(payroll_trx.gross_pay) as total_gross_salary ,sum(payroll_trx.basic_salary) as total_basic_salary'),
-                    DB::raw('sum(payroll_trx.employee_epf) as total_epf,sum(payroll_trx.employee_eis) as total_eis'),
-                    DB::raw('sum(payroll_trx.employee_socso) as total_socso,sum(payroll_trx.employee_pcb) as total_pcb'))
-                ->whereYear('payroll_master.year_month', date('Y'))
-                ->where('payroll_master.company_id', $companyId)
-                ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
-                ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
-                ->join('employees','payroll_trx.employee_id','employees.id')
-                ->join('users','employees.user_id','users.id')
-                ->groupBy(DB::raw("payroll_trx.employee_id,users.name,employees.tax_no,employees.ic_no"))
-                ->get();
-        }
-    }
 
     public static function getFilterKey($filter,$value){
         if(!empty($filter)){
@@ -1018,7 +1123,7 @@ class GenerateReportsHelper
 
         $query = DB::table('payroll_master')
             ->select(
-                DB::raw('employees.id,users.name, employees.contact_no, employees.address, employees.dob, employees.gender, employees.race'),
+                DB::raw('employees.id,payroll_trx.id as trx_id,users.name, employees.contact_no, employees.address, employees.dob, employees.gender, employees.race'),
                 DB::raw('countries.citizenship, employees.marital_status, employees.total_children, employees.ic_no, employees.tax_no'),
                 DB::raw('employees.epf_no, employees.socso_no, employees.insurance_no, employees.pcb_group, employees.driver_license_no'),
                 DB::raw('employees.driver_license_expiry_date, employees.confirmed_date, users.email, employee_positions.name as position'),
@@ -1036,7 +1141,21 @@ class GenerateReportsHelper
                 DB::raw('sum(payroll_trx.employer_eis) as employer_eis_contribution'),
                 DB::raw('sum(payroll_trx.employer_socso) as employer_socso_contribution'),
                 DB::raw('min(payroll_master.start_date) as remuneration_start_date'),
-                DB::raw('max(payroll_master.end_date) as remuneration_end_date')
+                DB::raw('max(payroll_master.end_date) as remuneration_end_date'),
+
+                DB::raw('sum( if( additions.ea_form_id = 1, payroll_trx_addition.amount, 0 ) ) AS B1a'),
+                DB::raw('sum( if( additions.ea_form_id = 2, payroll_trx_addition.amount, 0 ) ) AS B1b'),
+                DB::raw('sum( if( additions.ea_form_id = 3, payroll_trx_addition.amount, 0 ) ) AS B1c'),
+                DB::raw('sum( if( additions.ea_form_id = 4, payroll_trx_addition.amount, 0 ) ) AS B1d'),
+                DB::raw('sum( if( additions.ea_form_id = 5, payroll_trx_addition.amount, 0 ) ) AS B1e'),
+                DB::raw('sum( if( additions.ea_form_id = 6, payroll_trx_addition.amount, 0 ) ) AS B1f'),
+                DB::raw('sum( if( additions.ea_form_id = 7, payroll_trx_addition.amount, 0 ) ) AS B2'),
+                DB::raw('sum( if( additions.ea_form_id = 8, payroll_trx_addition.amount, 0 ) ) AS B3'),
+                DB::raw('sum( if( additions.ea_form_id = 9, payroll_trx_addition.amount, 0 ) ) AS B4'),
+                DB::raw('sum( if( additions.ea_form_id = 10, payroll_trx_addition.amount, 0 ) ) AS B5'),
+                DB::raw('sum( if( additions.ea_form_id = 11, payroll_trx_addition.amount, 0 ) ) AS B6'),
+                DB::raw('sum( if( additions.ea_form_id = 12, payroll_trx_addition.amount, 0 ) ) AS C1'),
+                DB::raw('sum( if( additions.ea_form_id = 13, payroll_trx_addition.amount, 0 ) ) AS C2')
             )
             ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
@@ -1044,7 +1163,9 @@ class GenerateReportsHelper
             ->join('countries', 'employees.nationality', 'countries.id')
             ->join('employee_positions', 'employee_jobs.emp_mainposition_id', 'employee_positions.id')
             ->join('users', 'employees.user_id', 'users.id')
-            ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id');
+            ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id')
+            ->leftjoin('payroll_trx_addition', 'payroll_trx.id', 'payroll_trx_addition.payroll_trx_id')
+            ->leftjoin('additions', 'payroll_trx_addition.additions_id', 'additions.id');
 
             //filter
             if(!empty($filter)){
@@ -1065,7 +1186,7 @@ class GenerateReportsHelper
             }
 
         $query->where('payroll_master.company_id', $companyId)
-            ->groupBy(DB::raw("payroll_trx.employee_id"));
+            ->groupBy(DB::raw("payroll_trx.employee_id,payroll_trx_addition.payroll_trx_id,additions.ea_form_id"));
 
         $result= $query->get();
 
@@ -1230,6 +1351,31 @@ class GenerateReportsHelper
             break;
             default:
                 return "";
+        }
+    }
+
+
+    /**
+     * @return Company Information Object
+     * Get company information based on current user logon
+     */
+    public static function getUserLogonCompanyInformation(){
+        $id = Auth::id();
+        return User::find($id)->employee->company->where('status', 'Active')->first();
+    }
+
+    /**
+     * @param $companyId
+     * @return Company Information Object
+     * Get company information based on given company id or current user logon
+     */
+    public static function getCompanyInformation($companyId){
+        if(empty($companyId)){
+            $id = Auth::id();
+            //echo $id;
+            return User::find($id)->employee->company->where('status', 'Active')->first();
+        }else{
+            return Company::find($companyId)->where('status', 'Active')->first();
         }
     }
 }

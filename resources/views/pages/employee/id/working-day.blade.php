@@ -294,16 +294,30 @@
     });
 
     function getEmployeeWorkingDaysData() {
+        let getWorkingDayLabel = function (value) {
+            switch(value) {
+                case 'full':
+                    return 'Full Day';
+                case 'half':
+                    return 'Half Day';
+                case 'off':
+                    return 'Off Day';
+                case 'rest':
+                    return 'Rest Day';
+            }
+        }
+
+
         $.get("{{ route('employee.id.working-day.get', ['id' => $id]) }}", function(data, status){
             if(data.length > 0)
             {
-                $("#working-day-values").html(`<td id="monday-value">`+data[0].monday+`</td>
-                <td id="tuedsay-value">`+data[0].tuesday+`</td>
-                <td id="wednesday-value">`+data[0].wednesday+`</td>
-                <td id="thursday-value">`+data[0].thursday+`</td>
-                <td id="friday-value">`+data[0].friday+`</td>
-                <td id="saturday-value">`+data[0].saturday+`</td>
-                <td id="sunday-value">`+data[0].sunday+`</td>`);
+                $("#working-day-values").html(`<td id="monday-value">`+getWorkingDayLabel(data[0].monday)+`</td>
+                <td id="tuedsay-value">`+getWorkingDayLabel(data[0].tuesday)+`</td>
+                <td id="wednesday-value">`+getWorkingDayLabel(data[0].wednesday)+`</td>
+                <td id="thursday-value">`+getWorkingDayLabel(data[0].thursday)+`</td>
+                <td id="friday-value">`+getWorkingDayLabel(data[0].friday)+`</td>
+                <td id="saturday-value">`+getWorkingDayLabel(data[0].saturday)+`</td>
+                <td id="sunday-value">`+getWorkingDayLabel(data[0].sunday)+`</td>`);
 
                 $("#working_time_container #start_work_time").html(convertTime(data[0].start_work_time));
                 $("#working_time_container #end_work_time").html(convertTime(data[0].end_work_time));

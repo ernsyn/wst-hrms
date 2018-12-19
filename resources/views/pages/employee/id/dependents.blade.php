@@ -30,9 +30,13 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
-                            <input id="alt-dob-dependent" type="text" class="form-control" hidden>
-                            <input id="dob-dependent" type="text" class="form-control" readonly>
-                            <div id="dob-dependent-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="dob-dependent" class="form-control datetimepicker-input" data-target="#dob-dependent"/>
+                                <div class="input-group-append" data-target="#dob-dependent" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="dob-dependent-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -79,9 +83,13 @@
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
-                            <input id="alt-dob-dependent-edit" type="text" class="form-control" hidden>
-                            <input id="dob-dependent-edit" type="text" class="form-control" readonly>
-                            <div id="dob-dependent-error" class="invalid-feedback">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="dob-dependent-edit" class="form-control datetimepicker-input" data-target="#dob-dependent-edit"/>
+                                <div class="input-group-append" data-target="#dob-dependent-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="dob-dependent-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -108,7 +116,7 @@
                             </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -180,22 +188,12 @@
 <script type="text/javascript">
     $(function(){
         //datepicker
-        $('#dob-dependent').datepicker({
-            altField: "#alt-dob-dependent",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-80:+0"
+        $('#dob-dependent').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
 
-        $('#dob-dependent-edit').datepicker({
-            altField: "#alt-dob-dependent-edit",
-            altFormat: 'yy-mm-dd',
-            format: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-80:+0"
+        $('#dob-dependent-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
         });
         // ADD
         $('#add-dependent-popup').on('show.bs.modal', function (event) {
@@ -211,7 +209,7 @@
                     _token: '{{ csrf_token() }}',
                     name: $('#add-dependent-form #name').val(),
                     relationship: $('#add-dependent-form #relationship').val(),
-                    dob: $('#add-dependent-form #alt-dob-dependent').val()
+                    dob: $('#add-dependent-form #dob-dependent').val()
                 },
             success: function(data) {
                 showAlert(data.success);
@@ -261,8 +259,6 @@
             $('#edit-dependent-form #name').val(currentData.name);
             $('#edit-dependent-form #relationship').val(currentData.relationship);
             $('#edit-dependent-form #dob-dependent-edit').val(currentData.dob);
-
-            $('#edit-dependent-form #alt-dob-dependent-edit').val(currentData.alt_dob);
         });
 
         var editDependentRouteTemplate = "{{ route('employee.dependents.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -277,7 +273,7 @@
                     _token: '{{ csrf_token() }}',
                     name: $('#edit-dependent-form #name').val(),
                     relationship: $('#edit-dependent-form #relationship').val(),
-                    dob: $('#edit-dependent-form #alt-dob-dependent-edit').val()
+                    dob: $('#edit-dependent-form #dob-dependent-edit').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -355,17 +351,19 @@
         $(htmlId + ' #name').val('');
         $(htmlId + ' #relationship').val('');
         $(htmlId + ' #dob-dependent').val('');
-        $(htmlId + ' #alt-dob-dependent').val('');
+        $(htmlId + ' #dob-dependent-edit').val('');
 
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #relationship').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent').removeClass('is-invalid');
+        $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
     }
 
     function clearDependentsError(htmlId) {
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #relationship').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent').removeClass('is-invalid');
+        $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
     }
 
     function showAlert(message) {

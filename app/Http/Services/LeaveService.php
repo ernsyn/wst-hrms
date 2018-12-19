@@ -19,6 +19,9 @@ use App\Holiday;
 use App\Media;
 
 use App\Constants\LeaveTypeRule;
+use App\EmployeeReportTo;
+use Auth;
+use App\User;
 
 class LeaveService
 {
@@ -193,7 +196,7 @@ class LeaveService
         ->get();
     }
 
-    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm) {
+    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $is_admin = false) {
         $startDate = Carbon::parse($start_date);
         $endDate = Carbon::parse($end_date);
         $now = Carbon::now();
@@ -245,6 +248,16 @@ class LeaveService
             if($count > 0) {
                 return self::error("End date cannot fall on a holiday.");
             }
+        }
+
+        // check if applied dates are within validity period
+        $validity = LeaveAllocation::where('leave_type_id', $leave_type_id)
+        ->where('valid_from_date', '<=', $startDate)
+        ->where('valid_until_date', '>=', $endDate)
+        ->count();
+
+        if($validity == 0) {
+            return self::error("Leave request needs to be within your leave allocation validity period.");
         }
         
         // Process applied rules for leave type
@@ -317,8 +330,10 @@ class LeaveService
                     $inc_off_days_based_on_applied_days_config = json_decode($rule->configuration);
                 break;
                 case LeaveTypeRule::EMPLOYEE_CANNOT_APPLY:
-                    $invalid = true;
-                    $invalidErrorMessage = "Employee cannot apply for this type of leave";
+                    if(!$is_admin) {
+                        $invalid = true;
+                        $invalidErrorMessage = "Employee cannot apply for this type of leave";
+                    }
                 break;
                 case LeaveTypeRule::INC_OFF_DAYS:
                     $inc_off_days = true;
@@ -351,6 +366,20 @@ class LeaveService
                 case LeaveTypeRule::MAX_DAYS_PER_APPLICATION:
                     $configuration = json_decode($rule->configuration);
                     $max_days_per_application = $configuration->max_days_per_application;
+                    break;
+                case LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED:
+                    $configuration = json_decode($rule->configuration);
+
+                    $report_to_levels = EmployeeReportTo::where('emp_id', $employee->id)
+                    ->select('report_to_level')
+                    ->groupBy('report_to_level')
+                    ->get();
+
+                    // check if employee has multiple approcal levels
+                    if(count($report_to_levels) < 2) {
+                        $invalid = true;
+                        $invalidErrorMessage = "Multiple approval levels needed.";
+                    }
                     break;
             }
 
@@ -455,7 +484,7 @@ class LeaveService
         );
     }
 
-    public static function getLeaveTypesForEmployee(Employee $employee) {
+    public static function getLeaveTypesForEmployee(Employee $employee, $is_admin = false) {
         $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
         $employee->gender;
 
@@ -491,7 +520,9 @@ class LeaveService
                         }
                         break;
                     case LeaveTypeRule::EMPLOYEE_CANNOT_APPLY:
-                        $includeLeaveType = false;
+                        if(!$is_admin) {
+                            $includeLeaveType = false;
+                        }
                         break;
                     case LeaveTypeRule::MAX_APPLICATIONS:
                         $configuration = json_decode($rule->configuration);
@@ -519,7 +550,7 @@ class LeaveService
                     case LeaveTypeRule::MAX_DAYS_PER_APPLICATION:
                         $configuration = json_decode($rule->configuration);
                         $additionalLeaveTypeDetails['max_days_per_application'] = $configuration->max_days_per_application;
-                        break;   
+                        break; 
                 }
 
                 if(!$includeLeaveType) {
@@ -650,27 +681,29 @@ class LeaveService
     }
 
     private static function isWorkingDay($workingDays, $time) {
+        $work_day = array('full', 'half');
+
         switch($time->dayOfWeek) {
             case Carbon::MONDAY;
-                return $workingDays->monday > 0;
+                return in_array($workingDays->monday, $work_day);
                 break;
             case Carbon::TUESDAY;
-                return $workingDays->tuesday > 0;
+                return in_array($workingDays->tuesday, $work_day);
                 break;
             case Carbon::WEDNESDAY;
-                return $workingDays->wednesday > 0;
+                return in_array($workingDays->wednesday, $work_day);
                 break;
             case Carbon::THURSDAY;
-                return $workingDays->thursday > 0;
+                return in_array($workingDays->thursday, $work_day);
                 break;
             case Carbon::FRIDAY;
-                return $workingDays->friday > 0;
+                return in_array($workingDays->friday, $work_day);
                 break;
             case Carbon::SATURDAY;
-                return $workingDays->saturday > 0;
+                return in_array($workingDays->saturday, $work_day);
                 break;
             case Carbon::SUNDAY;
-                return $workingDays->sunday > 0;
+                return in_array($workingDays->sunday, $work_day);
                 break;
         }
     }

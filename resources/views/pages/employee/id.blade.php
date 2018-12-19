@@ -82,10 +82,22 @@
                     {{-- Profile --}}
                     <div class="tab-pane fade show active p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row" id="reload-profile2">
-                                <div class="col-md-11 text-capitalize">
+                                <div class="col-md-11">
                                     <div class="row p-3">
                                         <div class="col-md-6">
                                             <div class="form-group row">
+                                                <span class="col-lg-5 p-3">Address</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <div class="field pb-1">
+                                                        <span class="field-value">{{$employee->address}}</span>
+                                                    </div>
+                                                    <div class="field pb-1">
+                                                        <span class="field-value">{{$employee->address2}}</span>
+                                                    </div>
+                                                    <div class="field pb-1">
+                                                        <span class="field-value">{{$employee->address3}}</span>
+                                                    </div>
+                                                </div>
                                                 <span class="col-lg-5 p-3">Contact No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->contact_no}}</span>
@@ -108,18 +120,11 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Security Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">      {!! isset($employee->main_security_groups->name) ? $employee->main_security_groups->name:'<strong>(not set)</strong>' !!}
-                                                 </span>
-                                                </div>
-
-                                                <span class="col-lg-5 p-3">Confirmation Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
+                                                    <span class="field-value">{!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Basic Salary</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">      {!! isset($employee->main_security_groups->name) ? $employee->main_security_groups->name:'<strong>(not set)</strong>' !!}
-                                                 </span>
+                                                    <span class="field-value">{!! $employee->employee_jobs->implode('basic_salary') ? $employee->employee_jobs->implode('basic_salary'):'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -145,22 +150,29 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->tax_no}}</span>
                                                 </div>
+
+                                                <span class="col-lg-5 p-3">ID No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->code}}</span>
+                                                </div>
                                                 <span class="col-lg-5 p-3">Joined Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
+                                                    <span class="field-value">{!! $employee->employee_jobs_joined_date->implode('start_date') ? $employee->employee_jobs_joined_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Confirmation Date</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->employee_confirmed->implode('start_date') ? $employee->employee_confirmed->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Resignation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">      {!! isset($employee->main_security_groups->name) ? $employee->main_security_groups->name:'<strong>(not set)</strong>' !!}
-                                                 </span>
+                                                    <span class="field-value">{!! $employee->employee_jobs_resigned_date->implode('start_date') ? $employee->employee_jobs_resigned_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary rounded-circle" data-toggle="modal" data-current="{{$employee}}" data-target="#edit-profile-popup"><i class="fas fa-pen"></i>
-                                        </button>
                                 </div>
                             </div>
                     </div>

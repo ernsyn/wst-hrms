@@ -255,37 +255,49 @@
             <td class="tg-s268"></td>
             <td class="tg-s268" width="1%">1.</td>
             <td class="tg-s268 pleft5">(a) Gaji kasar, upah atau gaji cuti (termasuk gaji lebih masa)</td>
-            <td class="tg-0lax text_right border_bottom">{{number_format($data->getNetSalary(),2)}}</td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getNetSalary() != 0 ? number_format($data->getNetSalary(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-s268"></td>
             <td class="tg-s268"></td>
             <td class="tg-s268 pleft5">(b) Fi (termasuk fi pengarah), komisen atau bonus</td>
-            <td class="tg-0lax text_right border_bottom">{{number_format($data->getCommission(),2)}}</td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getCommission() != 0 ? number_format($data->getCommission(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-s268"></td>
             <td class="tg-s268"></td>
             <td class="tg-s268 pleft5">(c) Tip kasar, perkuisit, penerimaan sagu hati atau elaun-elaun lain (Perihal pembayaran: ...........................)</td>
-            <td class="tg-0lax text_right border_bottom">{{number_format($data->getTip(),2)}}</td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getTip() != 0 ? number_format($data->getTip(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-s268"></td>
             <td class="tg-s268"></td>
             <td class="tg-s268 pleft5">(d) Cukai Pendapatan yang dibayar oleh Majikan bagi pihak Pekerja</td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getEmployerIncomeTax() != 0 ? number_format($data->getEmployerIncomeTax(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax pleft5">(e) Manfaat Skim Opsyen Saham Pekerja (ESOS)</td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getEsos() != 0 ? number_format($data->getEsos(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
             <td class="tg-0lax"></td>
             <td class="tg-0lax pleft5">(f) Ganjaran bagi tempoh dari ....................................... hingga .......................................</td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getReward() != 0 ? number_format($data->getReward(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
@@ -310,31 +322,41 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 (b) .....................................................................
             </td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getOutstandingPayment() != 0 ? number_format($data->getOutstandingPayment(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
             <td class="tg-0lax">3.</td>
             <td class="tg-0lax pleft5">Manfaat berupa barangan (Nyatakan: .......................................................................................................)</td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getBenefitsOfMerchandise() != 0 ? number_format($data->getBenefitsOfMerchandise(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
             <td class="tg-0lax">4.</td>
             <td class="tg-0lax pleft5">Nilai tempat kediaman (Alamat: ................................................................................................................)</td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getResidenceValue() != 0 ? number_format($data->getResidenceValue(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
             <td class="tg-0lax">5.</td>
             <td class="tg-0lax pleft5">Bayaran balik daripada Kumpulan Wang Simpanan/Pencen yang tidak diluluskan</td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getFailedRefund() != 0 ? number_format($data->getFailedRefund(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
             <td class="tg-0lax">6.</td>
             <td class="tg-0lax pleft5">Pampasan kerana kehilangan pekerjaan</td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getLostJobReparation() != 0 ? number_format($data->getLostJobReparation(),2) : ""; ?>
+            </td>
         </tr>
     </table>
 
@@ -347,13 +369,17 @@
             <td class="tg-s268"></td>
             <td class="tg-s268" width="1%">1.</td>
             <td class="tg-s268 pleft5">Pencen</td>
-            <td class="tg-0lax text_right border_bottom" width="10%"></td>
+            <td class="tg-0lax text_right border_bottom" width="10%">
+                <?php echo $data->getPension() != 0 ? number_format($data->getPension(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
             <td class="tg-0lax">2.</td>
             <td class="tg-0lax pleft5">Anuiti atau Bayaran Berkala yang lain</td>
-            <td class="tg-0lax text_right border_bottom"></td>
+            <td class="tg-0lax text_right border_bottom">
+                <?php echo $data->getAnnuity() != 0 ? number_format($data->getAnnuity(),2) : ""; ?>
+            </td>
         </tr>
         <tr>
             <td class="tg-0lax"></td>
