@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DropPayrollTrxIdFromEmployeeAttendances extends Migration
+class UpdatePayrollTrxTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class DropPayrollTrxIdFromEmployeeAttendances extends Migration
      */
     public function up()
     {
-        Schema::table('employee_attendances', function (Blueprint $table) {
-            $table->dropForeign('payroll_trx_id');
-            $table->dropColumn('payroll_trx_id');
+        Schema::table('payroll_trx', function ($table) {
+            $table->dropColumn('commission');
         });
     }
 
@@ -26,6 +25,6 @@ class DropPayrollTrxIdFromEmployeeAttendances extends Migration
      */
     public function down()
     {
-
+        //
     }
 }

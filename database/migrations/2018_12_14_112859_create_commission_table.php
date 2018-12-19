@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DropPayrollTrxIdFromEmployeeAttendances extends Migration
+class CreateCommissionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class DropPayrollTrxIdFromEmployeeAttendances extends Migration
      */
     public function up()
     {
-        Schema::table('employee_attendances', function (Blueprint $table) {
-            $table->dropForeign('payroll_trx_id');
-            $table->dropColumn('payroll_trx_id');
+        Schema::create('commission', function (Blueprint $table) {
+            $table->bigIncrements('id', true);
+            $table->bigInteger('payroll_trx_id')->nullable()->unsigned();
+            $table->decimal('amount', 9)->default(0);
         });
     }
 
@@ -26,6 +27,6 @@ class DropPayrollTrxIdFromEmployeeAttendances extends Migration
      */
     public function down()
     {
-
+        Schema::dropIfExists('commission');
     }
 }

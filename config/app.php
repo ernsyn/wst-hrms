@@ -226,6 +226,7 @@ return [
         'PayrollAdditionDeductionEnum' => App\Enums\PayrollAdditionDeductionEnum::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'StatusEnum' => App\Enums\StatusEnum::class,
+        'AttendanceEnum' => App\Enums\AttendanceEnum::class,
 
     ],
 

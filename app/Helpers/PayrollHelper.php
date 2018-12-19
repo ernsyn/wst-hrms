@@ -3,6 +3,8 @@ namespace App\Helpers;
 
 use App\EmployeeAttendance;
 use App\LeaveAllocation;
+use App\PayrollSetup;
+use App\EmployeeJob;
 
 class PayrollHelper
 {
@@ -43,13 +45,18 @@ class PayrollHelper
         $seniorityPay = 0.00;
 //         dd($diffYears);
         if($costCentre->first()->seniority_pay == 'Auto' && $diffYears > 0) {
-            $seniorityPay = ($diffYears > 0)? getenv('SENIORITY_PAY') * $diffYears : getenv('SENIORITY_PAY');
+            $defaultSeniorityPay = PayrollSetup::where([
+                ['key', 'SENIORITY_PAY'],
+                ['company_id', $employee->company_id],
+                ['status', 1]
+            ])->first();
+            $seniorityPay = ($diffYears > 0)? $defaultSeniorityPay->value * $diffYears : $defaultSeniorityPay->value;
         }
 //         dd($seniorityPay);
         return $seniorityPay;
     }
     
-    public static function getALPayback($employee, $payrollMonth)
+    public static function getALPayback($employee, $payrollMonth, $leaveBalance)
     {
         /*
          * If status is Resigned_date not null, check AL balance
@@ -57,9 +64,9 @@ class PayrollHelper
          * 2. If basic salary >= 2000 - use Basic salary / calendar days on that month * number of AL
          */  
         $payback = 0.00;
-        if($employee->resigned_date != null || $employee->resigned_date <= DateHelper::getLastDayOfDate($payrollMonth)) {
+//         if($employee->resigned_date != null || $employee->resigned_date <= DateHelper::getLastDayOfDate($payrollMonth)) {
             $basicSalary = $employee->basic_salary;
-            $leaveBalance = self::getALBalance($employee, $payrollMonth);
+//             $leaveBalance = self::getALBalance($employee, $payrollMonth);
             
             if($basicSalary >= 2000){
                 $days = DateHelper::getNumberDaysInMonth($payrollMonth);
@@ -67,7 +74,7 @@ class PayrollHelper
             } else {
                 $payback = $basicSalary / 26 * $leaveBalance;
             }
-        }
+//         }
         
         return $payback;
     }
@@ -124,6 +131,7 @@ class PayrollHelper
     //check if resigned for that payroll month
     public static function isResigned($employee, $payrollMonth) 
     {
+//         dd($employee->resigned_date);
         if($employee->resigned_date == null || $employee->resigned_date > DateHelper::getLastDayOfDate($payrollMonth)){
             return false;
         } else {
@@ -135,9 +143,15 @@ class PayrollHelper
     //get AL balance for a payroll month
     public static function getALBalance($employee, $payrollMonth)
     {
+        $payrollBackDatePeriod = PayrollHelper::getPayrollBackDatePeriod($employee);
+        $processedStartDate = DateHelper::getPastNMonthDate($payroll->end_date, $payrollBackDatePeriod) ." 00:00:00";
+        $payrollBackDatePeriod = PayrollHelper::getPayrollBackDatePeriod($employee);
+        $processedStartDate = DateHelper::getPastNMonthDate($payroll->end_date, $payrollBackDatePeriod) ." 00:00:00";
+        
         $leaveAllocations = LeaveAllocation::where([
             ['leave_type_id', 1],
             ['emp_id', $employee->id],
+            ['valid_until_date', '>=', $processedStartDate],
             ['valid_until_date', '<=', DateHelper::getLastDayOfDate($payrollMonth)]
         ])->get();
         
@@ -152,17 +166,48 @@ class PayrollHelper
     }
     
     // get attendance by clock in status
-    public static function getAttendance($status, $employee, $processedStartDate, $processedEndDate)
+    public static function getAttendance($attendance, $employee, $processedStartDate, $processedEndDate)
     {
         $attendances = EmployeeAttendance::where([
-            ['clock_in_status', $status],
+            ['attendance', $attendance],
             ['emp_id', $employee->id],
-            ['clock_in_time', '>=', $processedStartDate],
-            ['clock_in_time', '<=', $processedEndDate],
+            ['date', '>=', $processedStartDate],
+            ['date', '<=', $processedEndDate],
         ])->get();
         
         return $attendances;
     }
     
+    public static function getMinOtHour($employee)
+    {
+        $minOtHour = PayrollSetup::where([
+            ['key', 'MIN_OT_HOUR'],
+            ['company_id', $employee->company_id],
+            ['status', 1]
+        ])->first();
+        
+        return $minOtHour;
+    }
+    
+    public static function getBasicSalaryByMonth($employee, $date)
+    {
+        $employeeJob = EmployeeJob::where([
+            ['emp_id', $employee->id],
+            ['start_date', '<=', $date]
+        ])->orderby('start_date', 'DESC')
+        ->first();
+        
+        return @$employeeJob->basic_salary ? $employeeJob->basic_salary : 0 ;
+    }
+    
+    public static function getPayrollBackDatePeriod($employee)
+    {
+        return PayrollSetup::where([
+            ['key', 'PAYROLL_BACK_DATE_PERIOD'],
+            ['company_id', $employee->company_id],
+            ['status', 1]
+        ])->first();
+        
+    }
 }
 

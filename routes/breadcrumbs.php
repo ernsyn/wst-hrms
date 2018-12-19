@@ -596,7 +596,7 @@ Breadcrumbs::for('payroll/government_report', function ($trail) {
 
 Breadcrumbs::for('payroll.trx.show', function ($trail) {
     $trail->parent('payroll');
-    $trail->push('Payroll Month', route('payroll'));
+    $trail->push('Payroll ', route('payroll'));
 });
 
 Breadcrumbs::for('payroll.report.show', function ($trail) {

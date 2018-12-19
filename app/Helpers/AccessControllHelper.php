@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+use App\Employee;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use Illuminate\Support\Facades\Auth;
@@ -43,9 +44,10 @@ class AccessControllHelper
     public static function getSecurityGroupAccess()
     {
         if(self::hasHrAdminRole()){
+            
             $securityGroupAccess = SecurityGroup::where('company_id',GenerateReportsHelper::getUserLogonCompanyInfomation()->id)->select('id')->get();
         }else{
-            $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',Auth::id())->select('security_group_id')->get();
+            $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',Employee::where('user_id',Auth::id())->first()->id)->select('security_group_id')->get();
         }
 //         dd($securityGroupAccess,Auth::id());
         return $securityGroupAccess;
@@ -68,6 +70,14 @@ class AccessControllHelper
         $roles = Roles::whereNotIn('name',$excludedRoles)->orderBy('name')->get();
         
         return $roles;
+    }
+    
+    public static function hasPayrollAccess()
+    {
+        if(! (self::hasHrExecRole() || self::hasHrExecRole() || self::isKpiProposer())) {
+            $roles = array('admin', 'hr-exec', 'kip-proposer');
+            throw UnauthorizedException::forRoles($roles);
+        }
     }
 }
 

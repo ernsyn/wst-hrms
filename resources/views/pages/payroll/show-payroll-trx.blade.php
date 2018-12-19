@@ -2,7 +2,7 @@
 @section('pageTitle', 'Payroll')
 @section('content')
 
-<form action="{{ route('payroll.trx.update', ['id'=>$id]) }}" method="POST">
+<form id="payrolltrxform" action="{{ route('payroll.trx.update', ['id'=>$id]) }}" method="POST">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
 	<input name="payroll_trx_id" type="hidden" value="{{ $id }}">
 	<input name="basic_salary" id="basic_salary" type="hidden" value="{{ $info->bs }}">
@@ -64,6 +64,7 @@
 				</div>
 			</div></span>
 	</div>
+	@if($payrollMaster['period'] == PayrollPeriodEnum::END_MONTH)
 	<div class="p-2 clearfix" style="height: 300px;">
 		<span class="float-left col-md-6 h-100">
 			<div class="card h-100">
@@ -97,7 +98,7 @@
 					@php
     					$disable = '';
     					
-    					if(!$info->isKpiProposer)
+    					if(!$info->isKpiProposer || $info->status != 0)
     						$disable = 'disabled'
 					@endphp
 					<div class="row p-2">
@@ -119,7 +120,7 @@
 						</div>
 					</div>
 					
-					@if($info->isKpiProposer)
+					@if($info->isKpiProposer && $info->status == 0)
 					<div class="row p-2">
 						<div class="col-sm-4 mb15"></div>
 						<div class="col-sm-8 mb15 text-right">
@@ -131,6 +132,7 @@
 			</div>
 		</span>
 	</div>
+	
 	<div class="p-2 clearfix">
 		<span class="float-left col-md-6">
 			<div class="card">
@@ -140,47 +142,29 @@
     					@if(in_array($row->name, PayrollHelper::payroll_addition_with_days()))
     					@php
     						$tooltip = '';
-    						$days = 0;
-    						$amount = 0;
-    					
+    						$days = $row->days;
+        					$amount = $row->amount;
+        					
         					if($row->code == 'ALP' && count($annualLeaves) > 0) {
         						foreach($annualLeaves as $al){
-        							$tooltip .= 'from '.$al->start_date.' to '.$al->end_date.' ('.$al->applied_days.' day(s))<br>';
-        							$days += $al->applied_days;
+        							$tooltip .= 'from '.$al->start_date.' to '.$al->end_date.' ('.$days.' day(s))<br>';
         						}
-        						
-        						$amount = ($info->bs >= 2000)? $info->bs / $total_days * $days : $info->bs / 26 * $days;
-        						
         					} else if ($row->code == 'CFLP' && count($carryForwardLeaves) > 0) {
         						foreach($carryForwardLeaves as $cfl){
-        							$tooltip .= 'from '.$cfl->start_date.' to '.$cfl->end_date.' ('.$cfl->applied_days.' day(s))<br>';
+        							$tooltip .= 'from '.$cfl->start_date.' to '.$cfl->end_date.' ('.$days.' day(s))<br>';
         							$days += $cfl->applied_days;
         						}
-        						
-        						$amount = ($info->bs >= 2000)? $info->bs / $total_days * $days : $info->bs / 26 * $days;
-        					
         					} else if ($row->code == 'PH' && count($ph) > 0) {
         						foreach($ph as $p){
         							$diff = date_diff(date_create($o->clock_in_time), date_create($o->clock_out_time));
         							$tooltip .= 'from '.$p->clock_in_time.' to '.$p->clock_out_time.' ('.$diff->format('%d').' day(s))<br>';
-        							$days += $diff->format('%d');
         						}
-        						
-        						$amount = $info->bs / 26 * 2 * $days;
-        					
         					} else if ($row->code == 'RD' && count($rd) > 0) {
         						foreach($rd as $r){
         							$diff = date_diff(date_create($r->clock_in_time), date_create($r->clock_out_time));
         							$tooltip .= 'from '.$r->clock_in_time.' to '.$r->clock_out_time.' ('.$diff->format('%d').' day(s))<br>';
-        							$days += $diff->format('%d');
         						}
-        						
-        						$amount = $info->bs / 26 * $days;
-        					
-        					} else {
-        						$days = $row->days;
-        						$amount = $row->amount;
-        					}
+        					} 
     					@endphp
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
     						<div class="col-sm-6 mb15">{{ $row->name }}</div>
@@ -232,27 +216,25 @@
     					@endif
 					@endforeach
 				</div>
-			</div></span> <span class="float-right col-md-6"><div class="card">
+			</div>
+		</span> 
+		
+		<span class="float-right col-md-6">
+			<div class="card">
 				<div class="card-header">Deductions<br/>*Enter number of days or hours to calculate amount.</div>
 				<div class="card-body">
 					@foreach($payrollTrxDeductionList as $row)
     					@if(in_array($row->name, PayrollHelper::payroll_deduction_with_days()))
     					@php
     						$tooltip = '';
-    						$days = 0;
-    						$amount = 0;
+    						$days = $row->days;
+        					$amount = $row->amount;
     					
         					if($row->code == 'UL' && count($unpaidLeaves) > 0) {
         						foreach($unpaidLeaves as $ul){
         							$tooltip .= 'from '.$ul->start_date.' to '.$ul->end_date.' ('.$ul->applied_days.' day(s))<br>';
-        							$days += $ul->applied_days;
         						}
-        						
-        						$amount = $info->bs / $total_days * $days;
-        					} else {
-        						$days = $row->days;
-        						$amount = $row->amount;
-        					}
+        					} 
     					@endphp
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
     						<div class="col-sm-6 mb15">{{ $row->name }}</div>
@@ -266,19 +248,59 @@
     					
     					@else
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">
-                        <div class="col-sm-6 mb15">{{ $row->name}}</div>
+                        	<div class="col-sm-6 mb15">{{ $row->name}}</div>
                                                  
                             <div class="col-sm-6 mb15">
                                 <input class="form-control deductions" placeholder="0.00" name="payrolltrxdeduction_id_{{$loop->iteration}}" type="number" value="{{ $row->amount }}">
                             </div>
-                                            </div>
+                        </div>
     					@endif
 					@endforeach
 				</div>
-			</div></span>
+			</div>
+		</span>
 	</div>
+	@endif
+	
+	@if($payrollMaster['period'] == PayrollPeriodEnum::ADD_MONTH)
 	<div class="p-2 clearfix">
-		<span class="float-left col-md-6"><div class="card">
+		<span class="float-left col-md-6 h-100">
+			<div class="card h-100">
+				<div class="card-header">Bonus</div>
+				<div class="card-body">
+					<div class="row p-2">
+						<div class="col-sm-4 mb15">Bonus</div>
+						<div class="col-sm-8 mb15">
+							<input class="form-control" step="any" placeholder="0.00" id="add-month-bonus" name="add-month-bonus" type="number" value="{{ $addMonthBonus }}" >
+						</div>
+					</div>
+				</div>
+			</div>
+		</span> 
+	</div>
+	@endif
+	
+	@if($payrollMaster['period'] == PayrollPeriodEnum::MID_MONTH)
+	<div class="p-2 clearfix">
+		<span class="float-left col-md-6 h-100">
+			<div class="card h-100">
+				<div class="card-header">Commission</div>
+				<div class="card-body">
+					<div class="row p-2">
+						<div class="col-sm-4 mb15">Commission</div>
+						<div class="col-sm-8 mb15">
+							<input class="form-control" step="any" placeholder="0.00" id="commission" name="commission" type="number" value="{{ $commission }}" >
+						</div>
+					</div>
+				</div>
+			</div>
+		</span> 
+	</div>
+	@endif
+	
+	<div class="p-2 clearfix">
+		<span class="float-left col-md-6">
+			<div class="card">
 				<div class="card-header">Employee Contributions</div>
 				<div class="card-body">
 					<div class="row p-2">
@@ -553,10 +575,18 @@
                 });
                 return input;
             }
-            
-
         });
         
+        $( document ).ready(function() {
+        	$("#page-title").append("{{ $title }}");
+        	$("#breadcrumbs .active").append("{{ $title }}");
+
+        	@if($info->status != 0){
+            	$("#payrolltrxform input").prop("disabled", true);
+            	$("#payrolltrxform textarea").prop("disabled", true);
+            }
+            @endif
+        });     
 </script>
 @append 
 @endsection

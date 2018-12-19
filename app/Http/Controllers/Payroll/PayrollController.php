@@ -48,6 +48,9 @@ use App\EmployeeAttendance;
 use App\Helpers\AccessControllHelper;
 use App\PayrollTrxAddition;
 use App\EmployeeWorkingDay;
+use App\EmployeeClockInOutRecord;
+use App\Enums\AttendanceEnum;
+use App\LeaveRequest;
 
 class PayrollController extends Controller
 {
@@ -97,8 +100,8 @@ class PayrollController extends Controller
     // Payroll listing
     public function index()
     {
-        //check if user has admin or hr-exec role
-        AccessControllHelper::hasAnyRoles('admin|hr-exec');
+        //check if user has admin or hr-exec role or kpi proposer
+        AccessControllHelper::hasPayrollAccess();
         
         //get company information based on user login
         $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
@@ -167,263 +170,87 @@ class PayrollController extends Controller
         ])
         ->where(function ($query) use ($firstDayOfMonth) {
             // Either default or month/year greater or same
+            $query->whereNull('employees.resigned_date')->orWhere('employees.resigned_date', '>=', $firstDayOfMonth);
+        })
+        ->where(function ($query) use ($firstDayOfMonth) {
+            // Either default or month/year greater or same
             $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
         })
+        ->select('employees.*', 'employee_jobs.id as ejId')
         ->get();
 //      dd($employeeList);
         foreach ($employeeList as $employee) {
             // Step 4. Find employee's payroll's required info.
-            $employeeJob = EmployeeJob::find($employee->id);
-            $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
+            $employeeJob = EmployeeJob::find($employee->ejId);
             $costCentre = CostCentre::where('id', $employeeJob->cost_centre_id)->get();
-            $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
+            $basicSalary = 0;
+            $seniorityPay = 0;
+            if($payroll->period == PayrollPeriodEnum::END_MONTH) {
+                $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
+                $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
+            }
 
-            $epfFilter = array();
-            $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
-            $epfFilter['nationality'] = $employee->nationality;
-            $epfFilter['salary'] = $basicSalary;
-            $epf = new Epf();
-            $epf = $this->epfRepository->findByFilter($epfFilter);
-            $eis = new Eis();
-            $eis = $this->eisRepository->findBySalary($basicSalary);
-            $socso = new Socso();
-            $socso = $this->socsoRepository->findBySalary($basicSalary);
-            $pcbFilter = array();
-            $pcbFilter['salary'] = $basicSalary;
-            $pcbFilter['pcbGroup'] = $employee->pcb_group;
-            $pcbFilter['noOfChildren'] = $employee->total_child;
-            $pcb = new Pcb();
-            $pcb = $this->pcbRepository->findByFilter($pcbFilter);
-            
             // Step 5. Create payroll trx.
             $payrollTrxData = array();
             $payrollTrxData['payroll_master_id'] = $payrollId;
-            $payrollTrxData['employee_id'] = $employee->emp_id;
-            $payrollTrxData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
-            $payrollTrxData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
-            $payrollTrxData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
-            $payrollTrxData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
-            $payrollTrxData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
-            $payrollTrxData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
-            $payrollTrxData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
+            $payrollTrxData['employee_id'] = $employee->id;
+            $payrollTrxData['employee_epf'] = 0;
+            $payrollTrxData['employee_eis'] = 0;
+            $payrollTrxData['employee_socso'] = 0;
+            $payrollTrxData['employee_pcb'] = 0;
+            $payrollTrxData['employer_epf'] = 0;
+            $payrollTrxData['employer_eis'] =  0;
+            $payrollTrxData['employer_socso'] = 0;
             $payrollTrxData['seniority_pay'] = $seniorityPay;
             $payrollTrxData['basic_salary'] = $basicSalary;
             $payrollTrxData['take_home_pay'] = 0;
+            $payrollTrxData['gross_pay'] = 0;
             $payrollTrxData['created_by'] = $currentUser;
             $payrollTrxData['updated_by'] = $currentUser;
 //                 dd($payrollTrxData);
             $payrollTrxId = $this->payrollTrxRepository->create($payrollTrxData)->id;
 // dd($employee);
+            
+            //Addition and deduction are for end month
             // Step 6. Insert addition & deduction.
-            $additionDeductionFilter = array();
-            $additionDeductionFilter['companyId'] = $company->id;
-            $additionDeductionFilter['isConfirmedEmployee'] = PayrollHelper::isConfirmedEmployee($employee, $validated['year_month']);
-            $additionDeductionFilter['costCentreId'] = $employee->cost_centre_id;
-            $additionDeductionFilter['jobGradeId'] = $employee->emp_grade_id;
-            $additionList = $this->additionRepository->findByFilter($additionDeductionFilter)->toArray();
-            $deductionList = $this->deductionRepository->findByFilter($additionDeductionFilter)->toArray();
-            $additionArray = [];
-            if (count($additionList)) {
-                foreach ($additionList as $addition) {
-                    $data = [
-                        'payroll_trx_id' => $payrollTrxId,
-                        'additions_id' => $addition['id'],
-                        'amount' => $addition['amount']
-                    ];
-                    $additionArray[] = $data;
-                }
-                $this->payrollTrxAdditionRepository->storeArray($additionArray);
+            if($payroll->period == PayrollPeriodEnum::END_MONTH) {
+                self::storeAdditionDeduction($company, $employee, $validated['year_month'], $payrollTrxId);
                 
+                $minOtHour = PayrollHelper::getMinOtHour($employee);
+                $payrollBackDatePeriod = PayrollHelper::getPayrollBackDatePeriod($employee);
+                $processedStartDate = DateHelper::getPastNMonthDate($payroll->end_date, $payrollBackDatePeriod) ." 00:00:00";
+                $processedEndDate = $payroll->end_date." 23:59:59";
+                $contributionData = self::calculateUpdateAddition($employee, $payroll, $payrollTrxId, $validated['year_month'], $minOtHour, $processedStartDate, $processedEndDate);
+                $dedcution = self::calculateUpdateDeduction($payrollTrxId, $employee, $processedStartDate, $processedEndDate, $validated['year_month']);
+                
+                // update epf, eis, socso, pcb
+                $epfFilter = array();
+                $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
+                $epfFilter['nationality'] = $employee->nationality;
+                $epfFilter['salary'] = $basicSalary + $contributionData['epf'];
+                $epf = $this->epfRepository->findByFilter($epfFilter);
+                $eis = $this->eisRepository->findBySalary($basicSalary + $contributionData['eis']);
+                $socso = $this->socsoRepository->findBySalary($basicSalary + $contributionData['socso']);
+                $pcbFilter = array();
+                $pcbFilter['salary'] = $basicSalary + $contributionData['pcb'];
+                $pcbFilter['pcbGroup'] = $employee->pcb_group;
+                $pcbFilter['noOfChildren'] = $employee->total_child;
+                $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+                
+                $storeData = [];
+                $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
+                $storeData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
+                $storeData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
+                $storeData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
+                $storeData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
+                $storeData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
+                $storeData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
+                $storeData['total_addition'] = $contributionData['addition'];
+                $storeData['total_deduction'] = $dedcution;
+                $storeData['gross_pay'] = $basicSalary + $seniorityPay;
+                $storeData['take_home_pay'] = $basicSalary + $seniorityPay + $contributionData['addition'] - $dedcution - $storeData['employee_epf'] - $storeData['employee_eis'] - $storeData['employee_socso'] - $storeData['employee_pcb'];
+                PayrollTrx::where('id', $payrollTrxId)->update($storeData);
             }
-            $deductionArray = [];
-            if (count($deductionList)) {
-                foreach ($deductionList as $deduction) {
-                    $data = [
-                        'payroll_trx_id' => $payrollTrxId,
-                        'deductions_id' => $deduction['id'],
-                        'amount' => $deduction['amount']
-                    ];
-                    $deductionArray[] = $data;
-                }
-                $this->payrollTrxDeductionRepository->storeArray($deductionArray);
-            }
-        }
-        
-        /*
-         * Update payroll_trx_addition and payroll_trx_deduction
-         */
-        $processedStartDate = DateHelper::getPastNMonthDate($payroll->end_date, getenv('PAYROLL_BACK_DATED_PERIOD')) ." 00:00:00";
-        $processedEndDate = $payroll->end_date." 23:59:59";
-        
-        $payrollTrxAdditionList = PayrollTrxAddition::join('additions', 'payroll_trx_addition.additions_id','=', 'additions.id')
-            ->select('additions.*', 'payroll_trx_addition.*')
-            ->where('payroll_trx_id',$payrollTrxId)
-            ->get();
-        
-        foreach($payrollTrxAdditionList as $payrollTrxAddition) {
-            /*
-             * ALP, OT, PH,  CFLP, RD
-             */
-            $updateData = [];
-            $updateData['payroll_trx_id'] = $payrollTrxAddition['payroll_trx_id'];
-            $updateData['additions_id'] = $payrollTrxAddition['additions_id'];
-            $updateData['amount'] = $payrollTrxAddition['amount'];
-            $updateData['days'] = $payrollTrxAddition['days'];
-            $updateData['hours'] = $payrollTrxAddition['hours'];
-            
-            if($payrollTrxAddition['type'] == 'Custom'){
-                if(in_array($payrollTrxAddition['code'], PayrollAdditionDeductionEnum::values())) {
-                    switch ($payrollTrxAddition['code']) {
-                        case "ALP":
-                            /* For resigned employee
-                             * 1. get payback
-                             * 2. number of balance AL
-                             */
-                            if(PayrollHelper::isResigned($employee, $validated['year_month'])){
-                                $updateData['days'] = PayrollHelper::getALBalance($employee, $validated['year_month']);
-                                $updateData['amount'] = PayrollHelper::getALPayback($employee, $validated['year_month']);
-                            }
-                            break;
-                            
-                        case "OT":
-                            /* formula: Basic / 26 / 8 * 1.5 * (how many hours they did their OT)
-                             * 1. get OT date from employee attendance (check 3 months back)
-                             * 2. get employee work day and hour
-                             * 3. calculate OT
-                             */
-                            $attendances = PayrollHelper::getAttendance('ot', $employee, $processedStartDate, $processedEndDate);
-                            
-                            $processedAttendances = PayrollProcessedLeaveAttendance::where([
-                                ['payroll_trx_addition_id', $payrollTrxAddition['id']]
-                            ])
-                            ->select('employee_attendance_id')
-                            ->get();
-
-                            $processedData = array();
-                            $totalHours = 0;
-                            foreach($attendances as $a){
-                                if(count($processedAttendances) == 0 || !in_array($a->id, $processedAttendances)){
-                                    $processedData[] = [
-                                        'payroll_trx_addition_id' => $payrollTrxAddition['id'],
-                                        'employee_attendance_id' => $a->id
-                                    ];
-                                    
-                                    $minOtHour = getenv('MIN_OT_HOUR');
-                                    $endWorkTime = EmployeeWorkingDay::where('emp_id',$employee->id)->select('end_work_time')->get();
-                                    $endWorkDate = DateHelper::dateWithFormat($a->clock_in_time, "Y-m-d")." ".$endWorkTime;
-                                    $diffHour = date_diff(date_create($endWorkDate), date_create($a->clock_out_time));
-                                    if($diffHour->format('%h') >=  $minOtHour){
-                                        $totalHours += $diffHour->format('%h');
-                                    }
-                                } 
-                            }
-                            
-                            if(count($processedData) > 0) {
-                                PayrollProcessedLeaveAttendance::insert($processedData);
-                            }
-                            
-                            $updateData['hours'] = $totalHours;
-                            $updateData['amount'] = $employee->basic_salary / 26 / 8 * 1.5 * $totalHours; 
-                            break;
-                            
-                        case "PH":
-                        case "RD":
-                            $clockInStatus = 'ph';
-                            if($payrollTrxAddition['code'] == 'RD'){
-                                $clockInStatus = 'rest';
-                            } 
-                            
-                            $attendances = PayrollHelper::getAttendance($clockInStatus, $employee, $processedStartDate, $processedEndDate);
-                            $processedAttendances = PayrollProcessedLeaveAttendance::where([
-                                ['payroll_trx_addition_id', $payrollTrxAddition['id']]
-                            ])
-                            ->select('employee_attendance_id')
-                            ->get();
-                            
-                            $totalDays = 0;
-                            foreach($attendances as $a){
-                                if(count($processedAttendances) == 0 || !in_array($a->id, $processedAttendances)){
-                                    $processedData[] = [
-                                        'payroll_trx_addition_id' => $payrollTrxAddition['id'],
-                                        'employee_attendance_id' => $a->id
-                                    ];
-                                    
-                                    $diff = date_diff(date_create($a->clock_in_time), date_create($a->clock_out_time));
-                                    $totalDays += $diff->format('%d');
-                                }
-                            }
-                            
-                            if(count($processedData) > 0) {
-                                PayrollProcessedLeaveAttendance::insert($processedData);
-                            }
-                            
-                            $updateData['days'] = $totalDays;
-                            $updateData['amount'] = $employee->basic_salary / 26 * 2 * $totalDays;
-                            break;
-                            
-                        case "CFLP":
-                            //TODO: get carry forward leave
-                            $leaveAllocations = LeaveAllocation::where([
-                                ['leave_type_id', 1],
-                                ['emp_id', $employee->id],
-                                ['is_carry_forward', 1],
-                                ['valid_from_date', '>=', $validated['year_month']],
-                                ['valid_until_date', '<=', DateHelper::getLastDayOfDate($validated['year_month'])]
-                            ])->get();
-                            
-                            $totalAllocated = 0;
-                            $totalSpent = 0;
-                            foreach ($leaveAllocations as $leave) {
-                                $totalAllocated += $leave->allocated_days;
-                                $totalSpent += $leave->spent_days;
-                            }
-                            
-                            $noOfLeave = $totalAllocated - $totalSpent;
-                            
-                            if($basicSalary >= 2000){
-                                $days = DateHelper::getNumberDaysInMonth($validated['year_month']);
-                                $amount = $employee->basic_salary / $days * $noOfLeave;
-                            } else {
-                                $amount = $employee->basic_salary / 26 * $noOfLeave;
-                            }
-                            
-                            $updateData['days'] = $totalDays;
-                            $updateData['amount'] = $amount;
-                            break;
-                    }
-                }
-            }
-            
-            PayrollTrxAddition::where('id', $payrollTrxAddition['id'])->update($updateData);
-        }
-        
-        $payrollTrxDeductionList = PayrollTrxDeduction::join('deductions', 'payroll_trx_deduction.deductions_id','=', 'deductions.id')
-        ->select('deductions.*', 'payroll_trx_deduction.*')
-        ->where('payroll_trx_id',$payrollTrxId)
-        ->get();
-        
-        foreach($payrollTrxDeductionList as $payrollTrxDeduction) {
-            /*
-             * UL
-             */
-            $updateData = [];
-            $updateData['payroll_trx_id'] = $payrollTrxDeduction['payroll_trx_id'];
-            $updateData['additions_id'] = $payrollTrxDeduction['deductions_id'];
-            $updateData['amount'] = $payrollTrxDeduction['amount'];
-            $updateData['days'] = $payrollTrxDeduction['days'];
-            $updateData['hours'] = $payrollTrxDeduction['hours'];
-            
-            if($payrollTrxDeduction['type'] == 'Custom'){
-                if($payrollTrxDeduction['code'] == 'UL') {
-                    //TODO: get UL
-                    $days = DateHelper::getNumberDaysInMonth($validated['year_month']);
-                    $updateData['days'] = $totalDays;
-                    $updateData['amount'] = $employee->basic_salary / $days * $noOfUL;
-                            
-                }
-            }
-            
-            PayrollTrxDeduction::where('id', $payrollTrxDeduction['id'])->update($updateData);
         }
         
         DB::commit();
@@ -440,12 +267,10 @@ class PayrollController extends Controller
          * HR Exec by security group
          * KPI Proposer 
          */
-
+        AccessControllHelper::hasPayrollAccess();
         $isHrAdmin = AccessControllHelper::hasHrAdminRole(); 
-        $isHrExec = AccessControllHelper::hasHrExecRole();
-        $currentUser = Auth::id();
+        $currentUser = Employee::where('user_id',Auth::id())->first();
         $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
-//         dd($securityGroupAccess);
         $payroll = PayrollMaster::where([
             [
                 'id', $id
@@ -478,24 +303,18 @@ class PayrollController extends Controller
                 // Either default or month/year greater or same
                 $query->where('ej.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = e.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
             })
-            ->where(function($query) use($isHrExec, $currentUser, $securityGroupAccess, $isHrAdmin){
-                if($isHrAdmin){
-                    $query->where([
+            ->where(function($query) use($currentUser, $securityGroupAccess, $isHrAdmin){
+                if(!$isHrAdmin) {
+                    $query->whereIn('e.main_security_group_id', $securityGroupAccess)
+                    ->orWhere([
+                        ['ert.report_to_emp_id', $currentUser->id],
                         ['ert.kpi_proposer', 1]
                     ]);
-                } else if($isHrExec) {
-                    $query->where([
-                        ['ert.kpi_proposer', 1]
-                    ])->whereIn('e.main_security_group_id', $securityGroupAccess);
-                }else {
-                    $query->where([ 
-                        ['ert.report_to_emp_id', $currentUser],
-                        ['ert.kpi_proposer', 1]
-                    ]);
-                } 
+                }
             })
             ->whereNull('ert.deleted_at')
-            ->orderby('payroll_trx.id', 'ASC')->get();
+            ->distinct()
+            ->orderby('e.code', 'ASC')->get();
 
         // Condition
         // if(!count($list)) return redirect('/payroll')->with('error', 'Payroll not found.');
@@ -533,18 +352,24 @@ class PayrollController extends Controller
         /*
          * 1. Basic info
          * 2. Remarks
-         * 3. Basic Earnings
-         * 4. Bonus
-         * 5. Additions
-         * 6. Deductions
+         * 3. Basic Earnings - hide if not end month
+         * 4. KPI - hide if not end month
+         * 5. Additions - hide if not end month
+         * 6. Deductions - hide if not end month
          * 7. Employee Contribution
          * 8. Employer Contribution
          * 9. Summary
+         * 10. Commision - show if mid month
+         * 11. Bonus - show if add month
          */
+        
+        AccessControllHelper::hasPayrollAccess();
         $info = $this->payrollTrx->find($id)->first();
-        $currentUser = auth()->user()->id;
+        $payrollMaster = PayrollMaster::where('id', $info->payroll_master_id)->first();
+        $currentUser = Employee::where('user_id', Auth::id())->first();
         $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
-        $info->isKpiProposer = $this->employeeReportToRepository->isKpiProposer($info->employee_id, $currentUser);
+        $info->isKpiProposer = $this->employeeReportToRepository->isKpiProposer($info->employee_id, $currentUser->id);
+//         dd($info,$info->employee_id,$info->isKpiProposer,$currentUser);
         $employee = $this->employeeRepository->find($info->employee_id)->first();
         $payrollTrxAdditionList = $this->payrollTrxAdditionRepository->findByPayrollTrxId($id);
         $payrollTrxDeductionList = $this->payrollTrxDeductionRepository->findByPayrollTrxId($id);
@@ -556,8 +381,10 @@ class PayrollController extends Controller
             ['company_id', $company->id],
             ['status', 'Active']
         ])->get();
-        $title = 'Payroll';
+        $title = PayrollPeriodEnum::getDescription($payrollMaster->period) .' '.DateHelper::dateWithFormat(@$payrollMaster->year_month, 'M-Y');
         $payrollId = $info->payroll_master_id;
+        $addMonthBonus = $payrollMaster->period == PayrollPeriodEnum::ADD_MONTH ? $info->gross_pay : 0;
+        $commission = $payrollMaster->period == PayrollPeriodEnum::MID_MONTH ? $info->gross_pay : 0;
         $addition_days_array = PayrollHelper::payroll_addition_with_days();
         $addition_hours_array = PayrollHelper::payroll_addition_with_hours();
         $deduction_days_array = PayrollHelper::payroll_deduction_with_days();
@@ -604,30 +431,29 @@ class PayrollController extends Controller
         
         //PH
         $ph = EmployeeAttendance::where([
-            ['clock_in_status', 'ph'],
+//             ['clock_in_status', 'ph'],
             ['emp_id', $info->employee_id]
         ])
         ->get();
         
         //RD
         $rd = EmployeeAttendance::where([
-            ['clock_in_status', 'rest'],
+//             ['clock_in_status', 'rest'],
             ['emp_id', $info->employee_id]
         ])
         ->get();
         
         //OT
         $ot = EmployeeAttendance::where([
-            ['clock_in_status', 'ot'],
+//             ['clock_in_status', 'ot'],
             ['emp_id', $info->employee_id]
         ])
         ->get();
         
-        
 //         dd($payrollTrxAdditionList);
         return view('pages.payroll.show-payroll-trx', compact('id', 'payrollId', 'title', 'additions', 'deductions', 'payrollTrxAdditionList', 
             'payrollTrxDeductionList', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 
-            'year_month', 'total_days', 'unpaidLeaves', 'annualLeaves', 'carryForwardLeaves', 'ot', 'ph', 'rd'));
+            'year_month', 'total_days', 'unpaidLeaves', 'annualLeaves', 'carryForwardLeaves', 'ot', 'ph', 'rd', 'payrollMaster', 'addMonthBonus', 'commission'));
     }
     
     public function updatePayrollTrx(Request $request, $id)
@@ -1731,6 +1557,494 @@ class PayrollController extends Controller
             // download pdf
             return $pdf->download('payslip.pdf');
             
+    }
+    
+    private function storeAdditionDeduction($company, $employee, $payrollMonth, $payrollTrxId)
+    {
+        $additionDeductionFilter = array();
+        $additionDeductionFilter['companyId'] = $company->id;
+        $additionDeductionFilter['isConfirmedEmployee'] = PayrollHelper::isConfirmedEmployee($employee, $payrollMonth);
+        $additionDeductionFilter['costCentreId'] = $employee->cost_centre_id;
+        $additionDeductionFilter['jobGradeId'] = $employee->emp_grade_id;
+        $additionList = $this->additionRepository->findByFilter($additionDeductionFilter)->toArray();
+        $deductionList = $this->deductionRepository->findByFilter($additionDeductionFilter)->toArray();
+        $additionArray = [];
+        if (count($additionList)) {
+            foreach ($additionList as $addition) {
+                $data = [
+                    'payroll_trx_id' => $payrollTrxId,
+                    'additions_id' => $addition['id'],
+                    'amount' => $addition['amount']
+                ];
+                $additionArray[] = $data;
+            }
+            $this->payrollTrxAdditionRepository->storeArray($additionArray);
+            
+        }
+        $deductionArray = [];
+        if (count($deductionList)) {
+            foreach ($deductionList as $deduction) {
+                $data = [
+                    'payroll_trx_id' => $payrollTrxId,
+                    'deductions_id' => $deduction['id'],
+                    'amount' => $deduction['amount']
+                ];
+                $deductionArray[] = $data;
+            }
+            $this->payrollTrxDeductionRepository->storeArray($deductionArray);
+        }
+    }
+    
+    private function calculateUpdateAddition($employee, $payroll, $payrollTrxId, $payrollMonth, $minOtHour, $processedStartDate, $processedEndDate)
+    {
+        /*
+         * Update payroll_trx_addition and payroll_trx_deduction
+         */
+        $totalEpf = 0;
+        $totalEis = 0;
+        $totalSocso = 0;
+        $totalPcb = 0;
+        $totalAddition = 0;
+        $data = array();
+        
+        $payrollTrxAdditionList = PayrollTrxAddition::join('additions', 'payroll_trx_addition.additions_id','=', 'additions.id')
+        ->select('additions.*', 'payroll_trx_addition.*')
+        ->where('payroll_trx_id',$payrollTrxId)
+        ->get();
+//         dd($payrollTrxAdditionList);
+        foreach($payrollTrxAdditionList as $payrollTrxAddition) {
+            /*
+             * ALP, OT, PH,  CFLP, RD
+             */
+            $updateData = [];
+            $updateData['payroll_trx_id'] = $payrollTrxAddition['payroll_trx_id'];
+            $updateData['additions_id'] = $payrollTrxAddition['additions_id'];
+            $updateData['amount'] = $payrollTrxAddition['amount'];
+            $updateData['days'] = $payrollTrxAddition['days'];
+            $updateData['hours'] = $payrollTrxAddition['hours'];
+            
+            if($payrollTrxAddition['type'] == 'Custom'){
+                if(in_array($payrollTrxAddition['code'], PayrollAdditionDeductionEnum::consts())) {
+                    $processedAttendances = PayrollProcessedLeaveAttendance::all();
+                    
+                    switch ($payrollTrxAddition['code']) {
+                        case "ALP":
+                            /* For resigned employee
+                             * 1. get payback
+                             * 2. number of balance AL
+                             */
+                            if(PayrollHelper::isResigned($employee, $payrollMonth)){
+                                $leaveAllocations = LeaveAllocation::where([
+                                    ['leave_type_id', 1],
+                                    ['emp_id', $employee->id],
+                                    ['valid_until_date', '>=', $processedStartDate],
+                                    ['valid_until_date', '<=', DateHelper::getLastDayOfDate($payrollMonth)]
+                                ])->get();
+                                
+                                $processedId = array();
+                                foreach($processedAttendances as $p) {
+                                    array_push($processedId, $p->leave_request_id);
+                                }
+                                
+                                $totalDays = 0;
+                                $totalAmount = 0;
+                                $processedData = array();
+                                foreach($leaveAllocations as $leave){
+                                    if(count($processedAttendances) == 0 || !in_array($leave->id, $processedId)){
+                                        $processedData[] = [
+                                            'payroll_trx_addition_id' => $payrollTrxAddition['id'],
+                                            'leave_request_id' => $leave->id
+                                        ];
+                                        
+                                        $totalDays += $leave->allocated_days - $leave->spent_days;
+                                    } else {
+                                        foreach($processedAttendances as $p) {
+                                            if($p->payroll_trx_addition_id == $payrollTrxAddition->id) {
+                                                $totalDays += $leave->allocated_days - $leave->spent_days;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                if(count($processedData) > 0) {
+                                    $updateData['days'] = $totalDays; //PayrollHelper::getALBalance($employee, $payrollMonth);
+                                    $updateData['amount'] = PayrollHelper::getALPayback($employee, $payrollMonth, $totalDays);
+                                }
+                            }
+                            break;
+                            
+                        case "OT":
+                            /* formula: Basic / 26 / 8 * 1.5 * (how many hours they did their OT)
+                             * 1. get OT date from employee attendance (check 3 months back)
+                             * 2. get employee work day and hour
+                             * 3. calculate OT
+                             */
+                            
+                            $attendances = PayrollHelper::getAttendance(AttendanceEnum::PRESENT, $employee, $processedStartDate, $processedEndDate);
+                            $endWorkTime = EmployeeWorkingDay::where('emp_id',$employee->id)->select('end_work_time')->get();
+                            
+//                             $processedAttendances = PayrollProcessedLeaveAttendance::where([
+//                                 ['payroll_trx_addition_id', $payrollTrxAddition['id']]
+//                             ])
+//                             ->select('employee_attendance_id')
+//                             ->get();
+
+                            $processedId = array();
+                            foreach($processedAttendances as $p) {
+                                array_push($processedId, $p->employee_attendance_id);
+                            }
+                            
+                            $processedData = array();
+                            $totalHours = 0;
+                            $totalAmount = 0;
+                            foreach($attendances as $a){
+                                $employeeClockInOut = EmployeeClockInOutRecord::where('emp_id',$employee->id)
+                                ->whereDate('clock_in_time', $a->date)->first();
+                                $endWorkDate = DateHelper::dateWithFormat($a->date, "Y-m-d")." ".$endWorkTime;
+                                $diffHour = date_diff(date_create($endWorkDate), date_create($employeeClockInOut->clock_out_time));
+                                
+                                if(count($processedAttendances) == 0 || !in_array($a->id, $processedId)){
+                                    $processedData[] = [
+                                        'payroll_trx_addition_id' => $payrollTrxAddition['id'],
+                                        'employee_attendance_id' => $a->id
+                                    ];
+                                    
+                                    if($diffHour->format('%h') >=  $minOtHour){
+                                        $totalHours += $diffHour->format('%h');
+                                        $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $endWorkDate);
+                                        $totalAmount += $basicSalary / 26 / 8 * 1.5 * $diffHour->format('%h');
+                                    }
+                                } else {
+                                    foreach($processedAttendances as $p) {
+                                        if($p->payroll_trx_addition_id == $payrollTrxAddition->id) {
+                                            if($diffHour->format('%h') >=  $minOtHour){
+                                                $totalHours += $diffHour->format('%h');
+                                                $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $endWorkDate);
+                                                $totalAmount += $basicSalary / 26 / 8 * 1.5 * $diffHour->format('%h');
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if(count($processedData) > 0) {
+                                PayrollProcessedLeaveAttendance::insert($processedData);
+                                $updateData['hours'] = $totalHours;
+                                $updateData['amount'] = $totalAmount;
+                            }
+                            
+                            break;
+                            
+                        case "PH":
+                        case "RD":
+                            $attendance = AttendanceEnum::OT_PUBLIC_HOLIDAY;
+                            if($payrollTrxAddition['code'] == 'RD'){
+                                $attendance = AttendanceEnum::OT_REST_DAY;
+                            }
+                            
+                            $attendances = PayrollHelper::getAttendance($attendance, $employee, $processedStartDate, $processedEndDate);
+//                             $processedAttendances = PayrollProcessedLeaveAttendance::where([
+//                                 ['payroll_trx_addition_id', $payrollTrxAddition['id']]
+//                             ])
+//                             ->select('employee_attendance_id')
+//                             ->get();
+                            $processedId = array();
+                            foreach($processedAttendances as $p) {
+                                array_push($processedId, $p->employee_attendance_id);
+                            }
+                            
+                            $processedData = array();
+                            $totalDays = 0;
+                            $totalAmount = 0;
+                            foreach($attendances as $a){
+                                if(count($processedAttendances) == 0 || !in_array($a->id, $processedId)){
+                                    $processedData[] = [
+                                        'payroll_trx_addition_id' => $payrollTrxAddition['id'],
+                                        'employee_attendance_id' => $a->id
+                                    ];
+                                    
+                                    $totalDays++;
+                                    $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $a->date);
+                                    $totalAmount += $basicSalary / 26 * 2;
+                                } else {
+                                    foreach($processedAttendances as $p) {
+                                        if($p->payroll_trx_addition_id == $payrollTrxAddition->id) {
+                                            $totalDays++;
+                                            $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $a->date);
+                                            $totalAmount += $basicSalary / 26 * 2;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if(count($processedData) > 0) {
+                                PayrollProcessedLeaveAttendance::insert($processedData);
+                                $updateData['days'] = $totalDays;
+                                $updateData['amount'] = $totalAmount;
+                            }
+                            
+                            break;
+                            
+                        case "OD":
+                            $attendances = PayrollHelper::getAttendance(AttendanceEnum::OT, $employee, $processedStartDate, $processedEndDate);
+//                             $processedAttendances = PayrollProcessedLeaveAttendance::where([
+//                                 ['payroll_trx_addition_id', $payrollTrxAddition['id']]
+//                             ])
+//                             ->select('employee_attendance_id')
+//                             ->get();
+                            $processedId = array();
+                            foreach($processedAttendances as $p) {
+                                array_push($processedId, $p->employee_attendance_id);
+                            }
+                            
+                            $processedData = array();
+                            $totalDays = 0;
+                            $totalAmount = 0;
+                            foreach($attendances as $a){
+                                if(count($processedAttendances) == 0 || !in_array($a->id, $processedId)){
+                                    $processedData[] = [
+                                        'payroll_trx_addition_id' => $payrollTrxAddition['id'],
+                                        'employee_attendance_id' => $a->id
+                                    ];
+                                    
+                                    $totalDays++;
+                                    $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $a->date);
+                                    $totalAmount += $basicSalary / 26;
+                                } else {
+                                    foreach($processedAttendances as $p) {
+                                        if($p->payroll_trx_addition_id == $payrollTrxAddition->id) {
+                                            $totalDays++;
+                                            $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $a->date);
+                                            $totalAmount += $basicSalary / 26 * 2;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if(count($processedData) > 0) {
+                                PayrollProcessedLeaveAttendance::insert($processedData);
+                                $updateData['days'] = $totalDays;
+                                $updateData['amount'] = $totalAmount;
+                            }
+                            
+                            break;
+                            
+                        case "CFLP":
+                            $leaveAllocations = LeaveAllocation::where([
+                            ['leave_type_id', 1],
+                            ['emp_id', $employee->id],
+                            ['is_carry_forward', 1],
+                            ['valid_until_date', '>=', $processedStartDate],
+                            ['valid_until_date', '<=', DateHelper::getLastDayOfDate($payrollMonth)]
+                            ])->get();
+                            
+//                             $processedAttendances = PayrollProcessedLeaveAttendance::where([
+//                                 ['payroll_trx_addition_id', $payrollTrxAddition['id']]
+//                             ])
+//                             ->select('leave_request_id')
+//                             ->get();
+
+                            $totalDays = 0;
+                            $totalAmount = 0;
+                            $processedId = array();
+                            foreach($processedAttendances as $p) {
+                                array_push($processedId, $p->leave_request_id);
+                            }
+                            
+                            $processedData = array();
+                            foreach($leaveAllocations as $leave){
+                                if(count($processedAttendances) == 0 || !in_array($leave->id, $processedId)){
+                                    $processedData[] = [
+                                        'payroll_trx_addition_id' => $payrollTrxAddition['id'],
+                                        'leave_request_id' => $leave->id
+                                    ];
+                                    $totalDays += $leave->allocated_days - $leave->spent_days;
+                                } else {
+                                    foreach($processedAttendances as $p) {
+                                        if($p->payroll_trx_addition_id == $payrollTrxAddition->id) {
+                                            $totalDays += $leave->allocated_days - $leave->spent_days;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if(count($processedData) > 0) {
+//                                 $totalAllocated = 0;
+//                                 $totalSpent = 0;
+//                                 foreach ($leaveAllocations as $leave) {
+//                                     $totalAllocated += $leave->allocated_days;
+//                                     $totalSpent += $leave->spent_days;
+//                                 }
+                                
+//                                 $noOfLeave = $totalAllocated - $totalSpent;
+                                
+                                if($employee->basic_salary >= 2000){
+                                    $days = DateHelper::getNumberDaysInMonth($payrollMonth);
+                                    $totalAmount = $employee->basic_salary / $days * $totalDays;
+                                } else {
+                                    $totalAmount = $employee->basic_salary / 26 * $totalDays;
+                                }
+
+                                $updateData['days'] = $totalDays;
+                                $updateData['amount'] = $totalAmount;
+                            }
+                            
+                            break;
+                    }
+                }
+            }
+            
+            PayrollTrxAddition::where('id', $payrollTrxAddition['id'])->update($updateData);
+            
+            if (strpos($payrollTrxAddition['statutory'], 'EPF') !== false) {
+                $totalEpf += $updateData['amount'];
+            }
+            
+            if (strpos($payrollTrxAddition['statutory'], 'EIS') !== false) {
+                $totalEis += $updateData['amount'];
+            }
+            
+            if (strpos($payrollTrxAddition['statutory'], 'SOCSO') !== false) {
+                $totalSocso += $updateData['amount'];
+            }
+            
+            if (strpos($payrollTrxAddition['statutory'], 'PCB') !== false) {
+                $totalPcb += $updateData['amount'];
+            }
+            
+            $totalAddition += $updateData['amount'];
+        }
+        
+        $data['epf'] = $totalEpf;
+        $data['eis'] = $totalEis;
+        $data['socso'] = $totalSocso;
+        $data['pcb'] = $totalPcb;
+        $data['addition'] = $totalAddition;
+        
+        return $data;
+    }
+    
+    private function calculateUpdateDeduction($payrollTrxId, $employee, $processedStartDate, $processedEndDate, $payrollMonth)
+    {
+        $totalDeduction = 0;
+        $payrollTrxDeductionList = PayrollTrxDeduction::join('deductions', 'payroll_trx_deduction.deductions_id','=', 'deductions.id')
+        ->select('deductions.*', 'payroll_trx_deduction.*')
+        ->where('payroll_trx_id',$payrollTrxId)
+        ->get();
+        
+        foreach($payrollTrxDeductionList as $payrollTrxDeduction) {
+            /*
+             * UL
+             */
+            $updateData = [];
+            $updateData['payroll_trx_id'] = $payrollTrxDeduction['payroll_trx_id'];
+            $updateData['deductions_id'] = $payrollTrxDeduction['deductions_id'];
+            $updateData['amount'] = $payrollTrxDeduction['amount'];
+            $updateData['days'] = $payrollTrxDeduction['days'];
+            $updateData['hours'] = $payrollTrxDeduction['hours'];
+            
+            if($payrollTrxDeduction['type'] == 'Custom'){
+                $processedAttendances = PayrollProcessedLeaveAttendance::all();
+                
+                if($payrollTrxDeduction['code'] == 'UL') {
+                    $attendances = PayrollHelper::getAttendance(AttendanceEnum::ABSENT, $employee, $processedStartDate, $processedEndDate);
+                    
+                    $unpaidLeaves = LeaveRequest::where([
+                        ['leave_type_id', 5],
+                        ['emp_id', $employee->id],
+                        ['status', 'approved'],
+                        ['start_date', '>=', $processedStartDate],
+                        ['start_date', '<=', DateHelper::getLastDayOfDate($payrollMonth)]
+                    ])->get();
+                    
+//                     $processedAttendances = PayrollProcessedLeaveAttendance::where([
+//                         ['payroll_trx_deduction_id', $payrollTrxDeduction['id']]
+//                     ])
+//                     ->select('employee_attendance_id')
+//                     ->get();
+                    
+//                     $processedLeaves = PayrollProcessedLeaveAttendance::where([
+//                         ['payroll_trx_deduction_id', $payrollTrxDeduction['id']]
+//                     ])
+//                     ->select('leave_request_id')
+//                     ->get();
+                    
+                    $processedAttendanceId = array();
+                    foreach($processedAttendances as $p) {
+                        array_push($processedAttendanceId, $p->employee_attendance_id);
+                    }
+                    
+                    $processedLeavesId = array();
+                    foreach($processedAttendances as $p) {
+                        array_push($processedLeavesId, $p->leave_request_id);
+                    }
+                    
+                    $processedData = array();
+                    $totalDays = 0;
+                    $totalAmount = 0;
+                    foreach($attendances as $a) {
+                        if(count($processedAttendances) == 0 || !in_array($a->id, $processedAttendanceId)){
+                            $processedData[] = [
+                                'payroll_trx_deduction_id' => $payrollTrxDeduction['id'],
+                                'employee_attendance_id' => $a->id
+                            ];
+                            
+                            $totalDays++;
+                            $days = DateHelper::getNumberDaysInMonth($a->date);
+                            $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $a->date);
+                            //Basic salary / calendar days on that month * number of unpaid leave
+                            $totalAmount += $basicSalary / $days;
+                        } else {
+                            foreach($processedAttendances as $p) {
+                                if($p->payroll_trx_deduction_id == $payrollTrxDeduction->id) {
+                                    $totalDays++;
+                                    $days = DateHelper::getNumberDaysInMonth($a->date);
+                                    $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $a->date);
+                                    //Basic salary / calendar days on that month * number of unpaid leave
+                                    $totalAmount += $basicSalary / $days;
+                                }
+                            }
+                        }
+                    }
+                    
+                    foreach($unpaidLeaves as $leave){
+                        if(count($processedLeavesId) == 0 || !in_array($leave->id, $processedLeavesId)){
+                            $processedData[] = [
+                                'payroll_trx_deduction_id' => $payrollTrxDeduction['id'],
+                                'leave_request_id' => $leave->id
+                            ];
+                            
+                            $totalDays += $leave->applied_days;
+                            $days = DateHelper::getNumberDaysInMonth($leave->start_date);
+                            $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $leave->start_date);
+                            //Basic salary / calendar days on that month * number of unpaid leave
+                            $totalAmount += $basicSalary / $days * $leave->applied_days;
+                        } else {
+                            foreach($processedAttendances as $p) {
+                                if($p->payroll_trx_deduction_id == $payrollTrxDeduction->id) {
+                                    $totalDays += $leave->applied_days;
+                                    $days = DateHelper::getNumberDaysInMonth($leave->start_date);
+                                    $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $leave->start_date);
+                                    //Basic salary / calendar days on that month * number of unpaid leave
+                                    $totalAmount += $basicSalary / $days * $leave->applied_days;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if(count($processedData) > 0) {
+                        PayrollProcessedLeaveAttendance::insert($processedData);
+                        $updateData['days'] = $totalDays;
+                        $updateData['amount'] = $totalAmount;
+                    }
+                }
+            }
+            
+            PayrollTrxDeduction::where('id', $payrollTrxDeduction['id'])->update($updateData);
+            $totalDeduction += $updateData['amount'];
+        }
+        
+        return $totalDeduction;
     }
     
 }

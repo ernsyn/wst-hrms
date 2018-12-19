@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DropPayrollTrxIdFromEmployeeAttendances extends Migration
+class AddPostcodeCompanyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class DropPayrollTrxIdFromEmployeeAttendances extends Migration
      */
     public function up()
     {
-        Schema::table('employee_attendances', function (Blueprint $table) {
-            $table->dropForeign('payroll_trx_id');
-            $table->dropColumn('payroll_trx_id');
+        Schema::table('companies', function (Blueprint $table) {
+            $table->integer('postcode')->after('address3');
         });
     }
 
@@ -26,6 +25,8 @@ class DropPayrollTrxIdFromEmployeeAttendances extends Migration
      */
     public function down()
     {
-
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('postcode');
+        });
     }
 }

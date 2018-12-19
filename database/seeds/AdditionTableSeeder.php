@@ -78,5 +78,16 @@ class AdditionTableSeeder extends Seeder
             'ea_form_id' => 1
         ]);
         
+        Addition::create([
+            'company_id' => '1',
+            'code' => 'OD',
+            'name' => 'Off Day',
+            'type' => 'Custom',
+            'amount' => 0,
+            'status' => 'Active',
+            'confirmed_employee' => 1,
+            'ea_form_id' => 1
+        ]);
+        
     }
 }
