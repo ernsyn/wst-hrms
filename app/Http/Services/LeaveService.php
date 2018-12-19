@@ -681,27 +681,29 @@ class LeaveService
     }
 
     private static function isWorkingDay($workingDays, $time) {
+        $work_day = array('full', 'half');
+
         switch($time->dayOfWeek) {
             case Carbon::MONDAY;
-                return $workingDays->monday > 0;
+                return in_array($workingDays->monday, $work_day);
                 break;
             case Carbon::TUESDAY;
-                return $workingDays->tuesday > 0;
+                return in_array($workingDays->tuesday, $work_day);
                 break;
             case Carbon::WEDNESDAY;
-                return $workingDays->wednesday > 0;
+                return in_array($workingDays->wednesday, $work_day);
                 break;
             case Carbon::THURSDAY;
-                return $workingDays->thursday > 0;
+                return in_array($workingDays->thursday, $work_day);
                 break;
             case Carbon::FRIDAY;
-                return $workingDays->friday > 0;
+                return in_array($workingDays->friday, $work_day);
                 break;
             case Carbon::SATURDAY;
-                return $workingDays->saturday > 0;
+                return in_array($workingDays->saturday, $work_day);
                 break;
             case Carbon::SUNDAY;
-                return $workingDays->sunday > 0;
+                return in_array($workingDays->sunday, $work_day);
                 break;
         }
     }
