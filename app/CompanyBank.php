@@ -12,7 +12,7 @@ class CompanyBank extends Model
     protected $fillable =[
         'company_id' ,
         'bank_code',
-        'account_name',
+        'acc_name',
         'status',
         'created_by'
     ];
