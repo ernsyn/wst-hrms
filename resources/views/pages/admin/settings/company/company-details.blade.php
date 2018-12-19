@@ -161,8 +161,8 @@
                                                     <td>{{$additions['name']}}</td>
                                                     <td>{{$additions['amount']}}</td>
                                                     <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                        
-                                            
+
+
                                                             data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
                                                             data-addition-name="{{$additions['name']}}" data-addition-type="{{$additions['type']}}"
                                                             data-addition-amount="{{$additions['amount']}}" data-addition-confirmed_employee="{{$additions['confirmed_employee']}}"
@@ -248,7 +248,7 @@
             </button>
             </div>
             @foreach($company as $banks)
-        
+
 
                 <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->id])}} "
 
@@ -372,7 +372,7 @@
                     </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -525,7 +525,7 @@
                                             <option value="1">Confirmed Employee</option>
                                             <option value="0">Not Related</option>
                                         </select>
-                            </div>                            
+                            </div>
                             <label class="col-md-12 col-form-label">Statutory</label>
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
@@ -558,12 +558,12 @@
                                             <input type="checkbox" id="check_job_grade" name="applies[]" value="EPF"> Job Grade
                                         </label>
                             </div>
-                    
+
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
 
 
-                              
+
                                     <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centres"
                                         required disabled>
                                                 @foreach(App\CostCentre::all() as $cost_centre)
@@ -573,7 +573,7 @@
                                     <span class="invalid-feedback" role="alert">
                                                                       <strong>{{ $errors->first('cost_centres') }}</strong>
                                                                   </span> @endif
-                              
+
                             </div>
                             <label class="col-md-12 col-form-label">Job Grade</label>
                             <div class="col-md-12">
@@ -651,7 +651,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
-                                        <select class="form-control" id="status" name="status" value="{{ old('status') }}">        
+                                        <select class="form-control" id="status" name="status" value="{{ old('status') }}">
                                                 <option value="active">Active</option>
                                                 <option value="inactive">Inactive</option>
                                             </select>
@@ -662,26 +662,26 @@
                                             <option value="1">Confirmed Employee</option>
                                             <option value="0">Not Related</option>
                                         </select>
-                            </div> 
+                            </div>
                             <label class="col-md-12 col-form-label">Statutory</label>
-                           
+
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions->statutory,'PCB') !== false ? 'checked':'' !!}> PCB
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions,'PCB') !== false ? 'checked':'' !!}> PCB
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions->statutory,'EPF') !== false ? 'checked':'' !!}> EPF
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions,'EPF') !== false ? 'checked':'' !!}> EPF
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions->statutory,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions->statutory,'EIS') !== false ? 'checked':'' !!}> EIS
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions,'EIS') !== false ? 'checked':'' !!}> EIS
                                 </label>
                             </div>
                                 <label class="col-md-12 col-form-label">EA Form*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id" value="{{ old('ea_form_id') }}">  
+                                    <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id" value="{{ old('ea_form_id') }}">
                                     @foreach($ea_form as $item)
                                     <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
                                     @endforeach
@@ -695,7 +695,7 @@
                                     <label class="checkbox-inline">
                                     <input type="checkbox" id="check_job_grade_a" name="applies[]" value="EPF"> Job Grade
                                 </label>
-                       
+
                                 </div>
                                 <label class="col-md-12 col-form-label">Cost Centre</label>
                                 <div class="col-md-12">
@@ -708,10 +708,10 @@
                                     <span class="invalid-feedback" role="alert">
                                                               <strong>{{ $errors->first('cost_centres') }}</strong>
                                                           </span> @endif
-                                 
+
 
                                 </div>
-                        
+
                             <label class="col-md-12 col-form-label">Job Grade</label>
                             <div class="col-md-12">
                                 <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]"
@@ -726,7 +726,7 @@
 
 
                             </div>
-                              
+
                             </div>
 
                         </div>
@@ -795,10 +795,10 @@
                                             <option value="1">Confirmed Employee</option>
                                             <option value="0">Not Related</option>
                                         </select>
-                            </div>                             
+                            </div>
                             <label class="col-md-12 col-form-label">Statutory</label>
                             <div class="checkbox col-md-12" required>
-                                
+
                                 <label class="checkbox-inline" >
                                                 <input type="checkbox" id="inlineCheckbox1" name="statutory[]" value="PCB"> PCB
                                             </label>
@@ -828,7 +828,7 @@
                                 <label class="checkbox-inline">
                                             <input type="checkbox" id="check_job_grade_d" name="applies[]" value="EPF"> Job Grade
                                         </label>
-                            
+
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
@@ -932,20 +932,20 @@
                                             <option value="1">Confirmed Employee</option>
                                             <option value="0">Not Related</option>
                                         </select>
-                            </div>                             
+                            </div>
                             <label class="col-md-12 col-form-label">Statutory</label>
                             <div class="checkbox col-md-12">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions->statutory,'PCB') !== false ? 'checked':'' !!}> PCB
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions,'PCB') !== false ? 'checked':'' !!}> PCB
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions->statutory,'EPF') !== false ? 'checked':'' !!}> EPF
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions,'EPF') !== false ? 'checked':'' !!}> EPF
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions->statutory,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions->statutory,'EIS') !== false ? 'checked':'' !!}> EIS
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions,'EIS') !== false ? 'checked':'' !!}> EIS
                                 </label>
                             </div>
                             <label class="col-md-12 col-form-label">EA Form*</label>
@@ -964,7 +964,7 @@
                                 <label class="checkbox-inline">
                                 <input type="checkbox" id="check_job_grade_de" name="applies[]" value="EPF"> Job Grade
                             </label>
-                             
+
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
@@ -977,9 +977,9 @@
                                 <span class="invalid-feedback" role="alert">
                                                           <strong>{{ $errors->first('cost_centres') }}</strong>
                                                       </span> @endif
-                              
 
-                            
+
+
                         </div>
                         <label class="col-md-12 col-form-label">Job Grade</label>
                         <div class="col-md-12">

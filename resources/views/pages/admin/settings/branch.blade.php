@@ -26,7 +26,7 @@
                         <th>No</th>
                         <th>Name</th>
                         <th>City</th>
-                 
+
                         <th>Phone</th>
                         <th>State</th>
                         <th>Action</th>
@@ -63,7 +63,7 @@
                     </button>
             </div>
             <div class="modal-body">
-                <p></p>
+                <p>Are you sure want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

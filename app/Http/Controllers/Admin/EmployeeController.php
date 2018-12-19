@@ -85,13 +85,17 @@ class EmployeeController extends Controller
         {
             $query->where('status','=','confirmed-employment')
             ->where ('emp_id','=',$id);
-
-
         }])
-
         ->find($id);
 
+        $userMedia = DB::table('users')
+        ->join('medias', 'users.profile_media_id', '=', 'medias.id')
+        ->join('employees', 'employees.user_id', '=', 'users.id')
+        ->select('medias.*')
+        ->where('employees.id', $id)
+        ->first();
 
+        // dd($userMedia);
 
         // $bank_list = Bank::all();
         // $cost_centre = CostCentre::all();
@@ -103,7 +107,7 @@ class EmployeeController extends Controller
         // $countries = Country::all();
         // $companies = Company::all();
 
-        return view('pages.admin.employees.id', ['employee' => $employee]);
+        return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia]);
     }
 
     public function postEditProfile(Request $request, $id)
@@ -339,6 +343,9 @@ class EmployeeController extends Controller
             'name' => 'required|min:5',
             'email' => 'required|unique:users|email',
             'password' => 'required|required_with:confirm_password|same:confirm_password',
+            'media_id' => '',
+            'attachment' => '',
+            'attach' => '',
 
             'code'=>'required|unique:employees',
             'contact_no' => 'required',
@@ -365,6 +372,24 @@ class EmployeeController extends Controller
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
+        $attachment_data_url = $validated['attach'];
+
+        $attach = self::processBase64DataUrl($attachment_data_url);
+        $mediaData = Media::create([
+            'category' => 'employee-profile',
+            'mimetype' => $attach['mime_type'],
+            'data' => $attach['data'],
+            'size' => $attach['size'],
+            'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
+        ]);
+
+        $media_id = DB::getPdo()->lastInsertId();
+
+        // dd($media_id);
+
+        $validatedUserData['profile_media_id'] = $media_id;
+
+        // $validatedUserData['profile_media_id'] = $mediaData->id;
 
         $validatedUserData['name'] = $validated['name'];
         $validatedUserData['email'] = $validated['email'];
@@ -636,23 +661,24 @@ $jobData['status']  = 'probationer';
             'name' => 'required',
             'notes' => 'required',
             'media_id' => '',
-            'attachment' => ''
+            'attachment' => 'required'
         ]);
 
         $attachment_data_url = null;
         if(array_key_exists('attachment', $attachmentData)) {
             $attachment_data_url = $attachmentData['attachment'];
+            $attach = self::processBase64DataUrl($attachment_data_url);
+            $mediaData = Media::create([
+                'category' => 'employee-attachment',
+                'mimetype' => $attach['mime_type'],
+                'data' => $attach['data'],
+                'size' => $attach['size'],
+                'filename' => 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension']
+            ]);
+            $attachmentData['media_id'] = $mediaData->id;
         }
 
-        $attach = self::processBase64DataUrl($attachment_data_url);
-        $mediaData = Media::create([
-            'category' => 'employee-attachment',
-            'mimetype' => $attach['mime_type'],
-            'data' => $attach['data'],
-            'size' => $attach['size'],
-            'filename' => 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension']
-        ]);
-        $attachmentData['media_id'] = $mediaData->id;
+
         $attachmentData['created_by'] = auth()->user()->id;
         $attachment = new EmployeeAttachment($attachmentData);
 
@@ -669,7 +695,7 @@ $jobData['status']  = 'probationer';
         $mimeType = $matches[1];
         $extension = explode('/', $mimeType)[1];
 
-        $data = base64_decode($parts[1]);
+        $data = $parts[1];
 
         return [
             'data' => $data,
@@ -683,13 +709,13 @@ $jobData['status']  = 'probationer';
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'monday' => 'required|in:0,0.5,1',
-            'tuesday' => 'required|in:0,0.5,1',
-            'wednesday' => 'required|in:0,0.5,1',
-            'thursday' => 'required|in:0,0.5,1',
-            'friday' => 'required|in:0,0.5,1',
-            'saturday' => 'required|in:0,0.5,1',
-            'sunday' => 'required|in:0,0.5,1',
+            'monday' => 'required|in:full,half,off,rest',
+            'tuesday' => 'required|in:full,half,off,rest',
+            'wednesday' => 'required|in:full,half,off,rest',
+            'thursday' => 'required|in:full,half,off,rest',
+            'friday' => 'required|in:full,half,off,rest',
+            'saturday' => 'required|in:full,half,off,rest',
+            'sunday' => 'required|in:full,half,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -707,13 +733,13 @@ $jobData['status']  = 'probationer';
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayUpdateData = $request->validate([
-            'monday' => 'required|in:0,0.5,1',
-            'tuesday' => 'required|in:0,0.5,1',
-            'wednesday' => 'required|in:0,0.5,1',
-            'thursday' => 'required|in:0,0.5,1',
-            'friday' => 'required|in:0,0.5,1',
-            'saturday' => 'required|in:0,0.5,1',
-            'sunday' => 'required|in:0,0.5,1',
+            'monday' => 'required|in:full,half,off,rest',
+            'tuesday' => 'required|in:full,half,off,rest',
+            'wednesday' => 'required|in:full,half,off,rest',
+            'thursday' => 'required|in:full,half,off,rest',
+            'friday' => 'required|in:full,half,off,rest',
+            'saturday' => 'required|in:full,half,off,rest',
+            'sunday' => 'required|in:full,half,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -1318,25 +1344,30 @@ $jobData['status']  = 'probationer';
 
     private function getWorkingDaysInIntegerArray($workingDays) {
         $arr = array();
-        if($workingDays->sunday > 0) {
+
+        $work_day = array('full', 'half');
+
+        if(in_array($workingDays->sunday, $work_day)) {
             array_push($arr, Carbon::SUNDAY);
         }
-        if($workingDays->monday > 0) {
+
+        if(in_array($workingDays->monday, $work_day)) {
             array_push($arr, Carbon::MONDAY);
         }
-        if($workingDays->tuesday > 0) {
+
+        if(in_array($workingDays->tuesday, $work_day)) {
             array_push($arr, Carbon::TUESDAY);
         }
-        if($workingDays->wednesday > 0) {
+        if(in_array($workingDays->wednesday, $work_day)) {
             array_push($arr, Carbon::WEDNESDAY);
         }
-        if($workingDays->thursday > 0) {
+        if(in_array($workingDays->thursday, $work_day)) {
             array_push($arr, Carbon::THURSDAY);
         }
-        if($workingDays->friday > 0) {
+        if(in_array($workingDays->friday, $work_day)) {
             array_push($arr, Carbon::FRIDAY);
         }
-        if($workingDays->saturday > 0) {
+        if(in_array($workingDays->saturday, $work_day)) {
             array_push($arr, Carbon::SATURDAY);
         }
 

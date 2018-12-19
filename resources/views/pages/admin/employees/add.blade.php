@@ -18,9 +18,14 @@
                                     required> --}}
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="profile-img" required>
+                                        <input type="file" name="attachment" class="custom-file-input{{ $errors->has('attachment') ? ' is-invalid' : '' }}" id="profile-img" required>
                                         <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                     </div>
+                                    @if ($errors->has('attachment'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('attachment') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -29,7 +34,8 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-lg-right text-lg-right">Name*</label>
                             <div class="col-lg-6">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}">
+                                <input type="hidden" id="attach" name="attach">
+                                <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}">
 								@if ($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('name') }}</strong>
@@ -40,7 +46,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-lg-right">Email*</label>
                             <div class="col-lg-6">
-                                <input id="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}">
+                                <input type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}">
 								@if ($errors->has('email'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('email') }}</strong>
@@ -51,7 +57,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-lg-right">Password*</label>
                             <div class="col-lg-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" value="{{ old('password') }}">
+                                <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" value="{{ old('password') }}">
                                 @if ($errors->has('password'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('password') }}</strong>
@@ -61,7 +67,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-lg-right">Confirm Password*</label>
                             <div class="col-lg-6">
-                                <input id="confirm-password" type="password" class="form-control{{ $errors->has('confirm_password') ? ' is-invalid' : '' }}" name="confirm_password" data-parsley-equalto="#password">
+                                <input type="password" class="form-control{{ $errors->has('confirm_password') ? ' is-invalid' : '' }}" name="confirm_password" data-parsley-equalto="#password">
 								@if ($errors->has('confirm_password'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('confirm_password') }}</strong>
@@ -73,7 +79,7 @@
 
                             <label class="col-lg-3 col-form-label text-lg-right">Contact No*</label>
                             <div class="col-lg-6">
-                                <input id="contact_no" type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" name="contact_no" value="{{ old('contact_no') }}">
+                                <input type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" name="contact_no" value="{{ old('contact_no') }}">
                                 @if ($errors->has('contact_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('contact_no') }}</strong>
@@ -85,7 +91,7 @@
 
                             <label class="col-lg-3 col-form-label text-lg-right">Address Line 1*</label>
                             <div class="col-lg-7 mb-2">
-                                <input id="address" type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ old('address') }}">
+                                <input type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ old('address') }}">
 								@if ($errors->has('address'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('address') }}</strong>
@@ -93,7 +99,7 @@
                             </div>
                             <label class="col-lg-3 col-form-label text-lg-right">Address Line 2</label>
                             <div class="col-lg-7 mb-2">
-                                <input id="address2" type="text" class="form-control{{ $errors->has('address2') ? ' is-invalid' : '' }}" name="address2" value="{{ old('address2') }}">
+                                <input type="text" class="form-control{{ $errors->has('address2') ? ' is-invalid' : '' }}" name="address2" value="{{ old('address2') }}">
                                 @if ($errors->has('address2'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('address2') }}</strong>
@@ -102,7 +108,7 @@
                             </div>
                             <label class="col-lg-3 col-form-label text-lg-right">Address Line 3</label>
                             <div class="col-lg-7 mb-2">
-                                <input id="address3" type="text" class="form-control{{ $errors->has('address3') ? ' is-invalid' : '' }}" name="address3" value="{{ old('address3') }}">
+                                <input type="text" class="form-control{{ $errors->has('address3') ? ' is-invalid' : '' }}" name="address3" value="{{ old('address3') }}">
                                 @if ($errors->has('address3'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('address3') }}</strong>
@@ -122,7 +128,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">ID No*</label>
                             <div class="col-lg-6">
-                                <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}">
+                                <input type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}">
 								@if ($errors->has('code'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('code') }}</strong>
@@ -133,7 +139,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">IC No*</label>
                             <div class="col-lg-6">
-                                <input id="ic_no" type="text" class="form-control{{ $errors->has('ic_no') ? ' is-invalid' : '' }}" name="ic_no" value="{{ old('ic_no') }}">
+                                <input type="text" class="form-control{{ $errors->has('ic_no') ? ' is-invalid' : '' }}" name="ic_no" value="{{ old('ic_no') }}">
 								@if ($errors->has('ic_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('ic_no') }}</strong>
@@ -145,7 +151,7 @@
 
                             <label class="col-lg-4 col-form-label text-lg-right">Gender*</label>
                             <div class="col-lg-6">
-                                <select name="gender" id="gender" class="form-control{{ $errors->has('gender') ? ' is-invalid' : '' }}">
+                                <select name="gender" class="form-control{{ $errors->has('gender') ? ' is-invalid' : '' }}">
                                     <option value="">Select Gender</option>
                                     <option value="Male" {{ old('gender') == 'Male' ? 'selected' : ''}}>Male</option>
                                     <option value="Female" {{ old('gender') == 'Female' ? 'selected' : ''}}>Female</option>
@@ -179,7 +185,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Marital Status*</label>
                             <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('marital_status') ? ' is-invalid' : '' }}" id="marital_status" name="marital_status">
+                                <select class="form-control{{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status">
                                     <option value="">Select Marital Status</option>
                                     <option value="Single" {{ old('marital_status') == 'Single' ? 'selected' : ''}}>Single</option>
                                     <option value="Married" {{ old('marital_status') == 'Married' ? 'selected' : ''}}>Married</option>
@@ -195,7 +201,7 @@
 
                             <label class="col-lg-4 col-form-label text-lg-right">Race*</label>
                             <div class="col-lg-6">
-                                <input id="race" type="text" class="form-control{{ $errors->has('race') ? ' is-invalid' : '' }}" name="race" value="{{ old('race') }}">
+                                <input type="text" class="form-control{{ $errors->has('race') ? ' is-invalid' : '' }}" name="race" value="{{ old('race') }}">
 								@if ($errors->has('race'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('race') }}</strong>
@@ -206,7 +212,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Nationality*</label>
                             <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
+                                <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality">
                                     <option value="">Select Nationality</option>
                                     @foreach($countries as $country)
                                     <option value="{{ $country->id }}" {{ old('nationality') == $country->id ? 'selected' : ''}}>{{ $country->citizenship }}</option>
@@ -222,7 +228,7 @@
 
                             <label class="col-lg-4 col-form-label text-lg-right">Number of Children</label>
                             <div class="col-lg-6">
-                                <input id="total_children" type="text" class="form-control{{ $errors->has('total_children') ? ' is-invalid' : '' }}" name="total_children"
+                                <input type="text" class="form-control{{ $errors->has('total_children') ? ' is-invalid' : '' }}" name="total_children"
                                     value="{{ old('total_children') }}">
                                 @if ($errors->has('total_children'))
                                 <span class="invalid-feedback" role="alert">
@@ -235,7 +241,7 @@
 
                             <label class="col-lg-4 col-form-label text-lg-right">Driver License No</label>
                             <div class="col-lg-6">
-                                <input id="driver_license_no" type="text" class="form-control{{ $errors->has('driver_license_no') ? ' is-invalid' : '' }}"
+                                <input type="text" class="form-control{{ $errors->has('driver_license_no') ? ' is-invalid' : '' }}"
                                     name="driver_license_no" value="{{ old('driver_license_no') }}">
 								@if ($errors->has('driver_license_no'))
                                 <span class="invalid-feedback" role="alert">
@@ -289,7 +295,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">EPF No*</label>
                             <div class="col-lg-6">
-                                <input id="epf_no" type="text" class="form-control{{ $errors->has('epf_no') ? ' is-invalid' : '' }}" name="epf_no" value="{{ old('epf_no') }}">
+                                <input type="text" class="form-control{{ $errors->has('epf_no') ? ' is-invalid' : '' }}" name="epf_no" value="{{ old('epf_no') }}">
 								@if ($errors->has('epf_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('epf_no') }}</strong>
@@ -301,7 +307,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Tax No*</label>
                             <div class="col-lg-6">
-                                <input id="tax_no" type="text" class="form-control{{ $errors->has('tax_no') ? ' is-invalid' : '' }}" name="tax_no" value="{{ old('tax_no') }}">
+                                <input type="text" class="form-control{{ $errors->has('tax_no') ? ' is-invalid' : '' }}" name="tax_no" value="{{ old('tax_no') }}">
 								@if ($errors->has('tax_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('tax_no') }}</strong>
@@ -312,7 +318,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">EIS No*</label>
                             <div class="col-lg-6">
-                                <input id="eis_no" type="text" class="form-control{{ $errors->has('eis_no') ? ' is-invalid' : '' }}" name="eis_no" value="{{ old('eis_no') }}">
+                                <input type="text" class="form-control{{ $errors->has('eis_no') ? ' is-invalid' : '' }}" name="eis_no" value="{{ old('eis_no') }}">
 								@if ($errors->has('eis_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('eis_no') }}</strong>
@@ -323,7 +329,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">SOCSO No*</label>
                             <div class="col-lg-6">
-                                <input id="socso_no" type="text" class="form-control{{ $errors->has('socso_no') ? ' is-invalid' : '' }}" name="socso_no" value="{{ old('socso_no') }}">
+                                <input type="text" class="form-control{{ $errors->has('socso_no') ? ' is-invalid' : '' }}" name="socso_no" value="{{ old('socso_no') }}">
                                 @if ($errors->has('socso_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('socso_no') }}</strong>
@@ -371,22 +377,22 @@
         format: 'DD/MM/YYYY'
     });
 
-    function readURL(input) {
-
-    if (input.files && input.files[0]) {
-    var reader = new FileReader();
-
-    reader.onload = function(e) {
-        $('#profile-img-tag').attr('src', e.target.result);
-    }
-
-    reader.readAsDataURL(input.files[0]);
-    }
+    function readURL(input, onLoad) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#profile-img-tag').attr('src', e.target.result);
+                reader.result;
+                console.log(reader.result);
+                $('#attach').val(reader.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
     $("#profile-img").change(function() {
-    readURL(this);
-    $('#profile-img-tag').show();
+        readURL(this);
+        $('#profile-img-tag').show();
     });
 
 </script>
