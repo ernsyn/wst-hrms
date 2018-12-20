@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 use App\Http\Resources\Employee as EmployeeResource;
 
+use App\Http\Resources\Media as MediaResource;
+
 class User extends JsonResource
 {
     /**
@@ -20,6 +22,7 @@ class User extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'employee' => new EmployeeResource($this->employee),
+            'media' => new MediaResource($this->medias),
         ];
     }
 }
