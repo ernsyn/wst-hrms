@@ -334,6 +334,15 @@
                                     <div id="total-children-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
+                                        <label for="nationality"><strong>Nationality*</strong></label>
+                                        <select name="nationality" id="nationality" class="form-control" placeholder="" value="" >
+                                                @foreach(App\Country::all() as $countries)
+                                                <option value="{{ $countries->id }}">{{ $countries->full_name }}</option>
+                                                @endforeach
+                                        </select>
+                                        <div id="nationality-error" class="invalid-feedback"></div>
+                                    </div>
+                                <div class="col-md-12 mb-3">
                                     <label for="main-security-group-id"><strong>Security Group Id*</strong></label>
                                     <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
                                         <option value=""></option>
@@ -513,6 +522,7 @@
             $('#edit-profile-form #code').val(currentData.code);
             $('#edit-profile-form #dob').val(currentData.dob);
             $('#edit-profile-form #gender').val(currentData.gender);
+            $('#edit-profile-form #nationality').val(currentData.gender);
             $('#edit-profile-form #contact-no').val(currentData.contact_no);
             $('#edit-profile-form #marital-status').val(currentData.marital_status);
             $('#edit-profile-form #race').val(currentData.race);
@@ -556,6 +566,7 @@
                     ic_no: $('#edit-profile-form #ic-no').val(),
                     dob: $('#edit-profile-form #dob').val(),
                     gender: $('#edit-profile-form #gender').val(),
+                    nationality :$('#edit-profile-form #nationality').val(),
                     contact_no: $('#edit-profile-form #contact-no').val(),
                     marital_status: $('#edit-profile-form #marital-status').val(),
                     race: $('#edit-profile-form #race').val(),
@@ -603,6 +614,11 @@
                                         $('#edit-profile-form #gender').addClass('is-invalid');
                                         $('#edit-profile-form #gender-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'nationality':
+                                        $('#edit-profile-form #nationality').addClass('is-invalid');
+                                        $('#edit-profile-form #nationality-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;                                    
+                                    nationality-error
                                     case 'contact_no':
                                         $('#edit-profile-form #contact-no').addClass('is-invalid');
                                         $('#edit-profile-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
@@ -676,6 +692,7 @@
         $(htmlId + ' #ic-no').val('');
         $(htmlId + ' #code').val('');
         $(htmlId + ' #dob').val('');
+        $(htmlId + ' #nationality').val('');
         $(htmlId + ' #gender').val('');
         $(htmlId + ' #contact-no').val('');
         $(htmlId + ' #marital-status').val('');
@@ -694,6 +711,7 @@
         $(htmlId + ' #ic-no').removeClass('is-invalid');
         $(htmlId + ' #code').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
+        $(htmlId + ' #nationality').removeClass('is-invalid');
         $(htmlId + ' #gender').removeClass('is-invalid');
         $(htmlId + ' #contact-no').removeClass('is-invalid');
         $(htmlId + ' #marital-status').removeClass('is-invalid');
@@ -714,6 +732,7 @@
         $(htmlId + ' #code').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
         $(htmlId + ' #gender').removeClass('is-invalid');
+        $(htmlId + ' #nationality').removeClass('is-invalid');
         $(htmlId + ' #contact-no').removeClass('is-invalid');
         $(htmlId + ' #marital-status').removeClass('is-invalid');
         $(htmlId + ' #race').removeClass('is-invalid');
