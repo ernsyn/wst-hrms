@@ -23,7 +23,7 @@ class PayrollSetupController extends Controller
         if(AccessControllHelper::hasSuperadminRole()){
             $payrollSetup = PayrollSetup::all();
         } else {
-            $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+            $company = GenerateReportsHelper::getUserLogonCompanyInformation();
             $payrollSetup = PayrollSetup::where('company_id',$company->id)->get();
         }
         
