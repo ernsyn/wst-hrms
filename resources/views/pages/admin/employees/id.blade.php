@@ -337,7 +337,7 @@
                                         <label for="nationality"><strong>Nationality*</strong></label>
                                         <select name="nationality" id="nationality" class="form-control" placeholder="" value="" >
                                                 @foreach(App\Country::all() as $countries)
-                                                <option value="{{ $countries->id }}">{{ $countries->full_name }}</option>
+                                                <option value="{{ $countries->id }}">{{ $countries->citizenship }}</option>
                                                 @endforeach
                                         </select>
                                         <div id="nationality-error" class="invalid-feedback"></div>
