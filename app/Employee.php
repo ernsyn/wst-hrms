@@ -79,7 +79,7 @@ class Employee extends Model
 
     public function employee_jobs()
     {
-        return $this->hasMany('App\EmployeeJob', 'emp_id')->WhereNull('employee_jobs.end_date');
+        return $this->hasMany('App\EmployeeJob', 'emp_id');
     }
 
     public function employee_emergency_contacts()
