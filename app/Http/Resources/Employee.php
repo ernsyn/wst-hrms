@@ -15,8 +15,11 @@ class Employee extends JsonResource
     public function toArray($request)
     {
         return [
+            'code' => $this->code,
             'contact_no' => $this->contact_no,
             'address' => $this->address,
+            'address2' => $this->address2,
+            'address3' => $this->address3,
             'dob' => $this->dob,
             'gender' => $this->gender,
             'race' => $this->race,
