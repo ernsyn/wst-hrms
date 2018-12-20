@@ -29,6 +29,7 @@
                         <th>EPF No</th>
                         <th>Socso No</th>
                         <th>EIS No</th>
+                        <th>Status</th>                        
                         <th>Last Updated</th>
                         <th>Action</th>
                     </tr>
@@ -42,6 +43,7 @@
                         <td>{{$company['epf_no']}}</td>
                         <td>{{$company['socso_no']}}</td>
                         <td>{{$company['eis_no']}}</td>
+                        <td>{{$company['status']}}</td>                        
                         <td>{{$company['updated_at']}}</td>
                         <td>
                             <button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
