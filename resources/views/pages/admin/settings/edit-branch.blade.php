@@ -69,7 +69,7 @@
                             <div class="col-6">
                                 <label class="col-md-12 col-form-label">State*</label>
                                 <div class="col-md-12">
-                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
+                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $branch->state }}">
                                                 @foreach(App\Constants\MalaysianStates::$all as $state)
                                                 <option value="{{ $state }}">{{ $state }}</option value="">
                                                 @endforeach
