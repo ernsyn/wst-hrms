@@ -335,8 +335,9 @@
                                 </div>
                                 <div class="col-md-12 mb-3">
                                         <label for="nationality"><strong>Nationality*</strong></label>
-                                        <select name="nationality" id="nationality" class="form-control" placeholder="" value="" >
-                                                @foreach(App\Country::all() as $countries)
+                                        <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
+                                                <option value=""></option>  
+                                            @foreach(App\Country::all() as $countries)
                                                 <option value="{{ $countries->id }}">{{ $countries->citizenship }}</option>
                                                 @endforeach
                                         </select>
@@ -522,7 +523,7 @@
             $('#edit-profile-form #code').val(currentData.code);
             $('#edit-profile-form #dob').val(currentData.dob);
             $('#edit-profile-form #gender').val(currentData.gender);
-            $('#edit-profile-form #nationality').val(currentData.gender);
+            $('#edit-profile-form #nationality').val(currentData.nationality);
             $('#edit-profile-form #contact-no').val(currentData.contact_no);
             $('#edit-profile-form #marital-status').val(currentData.marital_status);
             $('#edit-profile-form #race').val(currentData.race);
