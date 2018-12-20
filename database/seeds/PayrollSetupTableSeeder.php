@@ -13,11 +13,12 @@ class PayrollSetupTableSeeder extends Seeder
     public function run()
     {
         PayrollSetup::create([
-           'key' => 'SENIORITY_PAY',
-           'value' => '50',
-           'remark' => 'Payroll seniority pay',
-           'company_id' => 1,
-           'status' => 1
+            'key' => 'SENIORITY_PAY',
+            'value' => '50',
+            'remark' => 'Payroll seniority pay',
+            'company_id' => 1,
+            'status' => 1,
+            'created_by' => 1
         ]);
         
         PayrollSetup::create([
@@ -25,7 +26,8 @@ class PayrollSetupTableSeeder extends Seeder
             'value' => '1',
             'remark' => 'Minimum extra hours allowed before OT claim Is allowed.',
             'company_id' => 1,
-            'status' => 1
+            'status' => 1,
+            'created_by' => 1
         ]);
         
         PayrollSetup::create([
@@ -33,7 +35,8 @@ class PayrollSetupTableSeeder extends Seeder
             'value' => '3',
             'remark' => 'Payroll back date period in month',
             'company_id' => 1,
-            'status' => 1
+            'status' => 1,
+            'created_by' => 1
         ]);
         
         PayrollSetup::create([
@@ -41,7 +44,8 @@ class PayrollSetupTableSeeder extends Seeder
             'value' => '2000',
             'remark' => 'Pelepasan anak',
             'company_id' => 1,
-            'status' => 1
+            'status' => 1,
+            'created_by' => 1
         ]);
         
     }
