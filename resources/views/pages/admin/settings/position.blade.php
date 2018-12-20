@@ -35,9 +35,9 @@
                         <td>{{$position['name']}}</td>
 
                         <td>
-                            <button onclick="window.location='{{ route('admin.settings.positions.edit.post', ['id' => $position->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
+                            <button onclick="window.location='{{ route('admin.settings.positions.edit.post', ['id' => $position->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $position->name }}' data-link='{{ route('admin.settings.positions.delete', ['id ' => $position->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $position->name }}' data-link='{{ route('admin.settings.positions.delete', ['id ' => $position->id]) }}' class="btn btn-danger btn-smt fas fa-trash-alt">
                                 </button>
                         </td>
                     </tr>

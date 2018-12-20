@@ -36,7 +36,7 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyBankPopup">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCompanyBankPopup">
                                             Add Company Bank
                                         </button>
                                     </div>
@@ -66,12 +66,12 @@
                                                     <td>{{$companybanks['created_at']}}</td>
                                                     <td>{{$companybanks['status']}}</td>
 
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                    <td><button type="button" class="btn btn-success btn-smt " data-toggle="modal"
                                                             data-bank-id="{{$companybanks['id']}}" 
                                                             data-bank-code="{{$companybanks['bank_code']}}"
                                                             data-bank-acc="{{$companybanks['acc_name']}}" 
                                                             data-bank-status="{{$companybanks['status']}}"
-                                                            data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button>
+                                                            data-target="#editCompanyBankPopup"><i class="fas fa-edit"></i></button>
 {{--
                                                         <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->acc_name }}'
                                                             data-link='{{ route('admin.settings.company-banks.delete', ['id' => $companybanks->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button> --}}
@@ -92,7 +92,7 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addSecurityGroupPopup">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSecurityGroupPopup">
                                                         Add Security Group
                                                     </button>
                                     </div>
@@ -117,10 +117,10 @@
                                                     <td>{{$securities->company->name}}</td>
                                                     <td>{{$securities['name']}}</td>
                                                     <td>{{$securities['description']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                    <td><button type="button" class="btn btn-success btn-smt " data-toggle="modal"
                                                             data-security-id="{{$securities['id']}}" data-security-name="{{$securities['name']}}"
                                                             data-security-description="{{$securities['description']}}" data-security-status="{{$securities['status']}}"
-                                                            data-target="#editSecurityGroupPopup"><i class="fas fa-pencil-alt"></i></button></td>
+                                                            data-target="#editSecurityGroupPopup"><i class="fas fa-edit"></i></button></td>
 
 
                                                 </tr>
@@ -137,7 +137,7 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyAdditionPopup">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCompanyAdditionPopup">
                                                         Add Company Addition
                                                     </button>
                                     </div>
@@ -162,13 +162,13 @@
                                                     <td>{{$additions['code']}}</td>
                                                     <td>{{$additions['name']}}</td>
                                                     <td>{{$additions['amount']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                    <td><button type="button" class="btn btn-success btn-smt" data-toggle="modal"
 
 
                                                             data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
                                                             data-addition-name="{{$additions['name']}}" data-addition-type="{{$additions['type']}}"
                                                             data-addition-amount="{{$additions['amount']}}" data-addition-confirmed_employee="{{$additions['confirmed_employee']}}"
-                                                            data-addition-status="{{$additions['status']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-pencil-alt"></i></button></td>
+                                                            data-addition-status="{{$additions['status']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button></td>
 
 
                                                 </tr>
@@ -186,7 +186,7 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addDeductionPopup">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDeductionPopup">
                                         Add Company Deduction
                                     </button>
                                     </div>
@@ -211,11 +211,11 @@
                                                     <td>{{$deductions['code']}}</td>
                                                     <td>{{$deductions['name']}}</td>
                                                     <td>{{$deductions['amount']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                    <td><button type="button" class="btn btn-success btn-smt" data-toggle="modal"
                                                             data-deduction-id="{{$deductions['id']}}" data-deduction-code="{{$deductions['code']}}"
                                                             data-deduction-name="{{$deductions['name']}}" data-deduction-type="{{$deductions['type']}}"
                                                             data-deduction-amount="{{$deductions['amount']}}" data-deduction-confirmed_employee="{{$deductions['confirmed_employee']}}"
-                                                            data-deduction-status="{{$deductions['status']}}" data-target="#editCompanyDeductionPopup"><i class="fas fa-pencil-alt"></i></button></td>
+                                                            data-deduction-status="{{$deductions['status']}}" data-target="#editCompanyDeductionPopup"><i class="fas fa-edit"></i></button></td>
 
 
                                                 </tr>

@@ -35,9 +35,9 @@
                         <td>{{$grade['name']}}</td>
 
                         <td>
-                            <button onclick="window.location='{{ route('admin.settings.grades.edit.post', ['id' => $grade->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
+                            <button onclick="window.location='{{ route('admin.settings.grades.edit.post', ['id' => $grade->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $grade->name }}' data-link='{{ route('admin.settings.grades.delete', ['id ' => $grade->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $grade->name }}' data-link='{{ route('admin.settings.grades.delete', ['id ' => $grade->id]) }}' class="btn btn-danger btn-smt fas fa-trash">
                             </button>
                         </td>
                     </tr>

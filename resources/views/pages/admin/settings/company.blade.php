@@ -46,9 +46,10 @@
                         <td>{{$company['status']}}</td>                        
                         <td>{{$company['updated_at']}}</td>
                         <td>
-                            <button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
-                            <button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment"></button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $company->name }}' data-link='{{ route('admin.settings.companies.delete', ['id ' => $company->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button>
+                            <button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="btn btn-default fas fa-eye"></button>
+                            <button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $company->name }}' data-link='{{ route('admin.settings.companies.delete', ['id ' => $company->id]) }}' class="btn btn-danger btn-smt far fa-trash-alt"></button>
+                            
                         </td>
                     </tr>
                     @endforeach
