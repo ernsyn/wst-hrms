@@ -1150,8 +1150,11 @@ public function postEditCompanyBank(Request $request)
     return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been updated.');
 }
 
+
 public function deleteCompanyBank(Request $request, $id)
 {
+
+    
     CompanyBank::find($id)->delete();
 
     return redirect()->route('admin.settings.company.company-details', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');

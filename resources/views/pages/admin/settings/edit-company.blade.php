@@ -155,8 +155,8 @@
                             <div class="col-md-12">
                                     <select class="form-control" id="status" name="status" value="{{ $company->status}}">
                                         <option value="">Please Select</option>
-                                            <option value="Active">Active</option>
-                                            <option value="Inactive">Inactive</option>
+                                            <option value="Active"  {{ $company->status == 'Active' ? 'selected' : ''}}>Active</option>
+                                            <option value="Inactive"{{ $company->status == 'Inactive' ? 'selected' : ''}}>Inactive</option>
                                         </select>
                             </div>
                         </div>
