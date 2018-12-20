@@ -57,7 +57,7 @@ class AttendanceController extends Controller
             }
         }
         
-        $attendance = Auth::user()->employee->attendances()->create($clockInData);
+        $attendance = Auth::user()->employee->clock_in_out_records()->create($clockInData);
 
         $clockInImage = Media::create([
             'category' => 'attendance-image',
@@ -82,7 +82,7 @@ class AttendanceController extends Controller
             'clock_out_reason' => '',
         ]);
         
-        $currentAttendance = Auth::user()->employee->attendances()->where('clock_out_time', null)->first();
+        $currentAttendance = Auth::user()->employee->clock_in_out_records()->where('clock_out_time', null)->first();
 
         if(empty($currentAttendance)) {
             return response()->json(['error' => 'You are not currently clocked in.'], 400);
