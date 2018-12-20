@@ -138,7 +138,7 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Basic Salary</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">{!! $employee->employee_jobs->implode('basic_salary') ? $employee->employee_jobs->implode('basic_salary'):'<strong>(not set)</strong>' !!}</span>
+                                                        <span class="field-value">{!! $employee->basic_salary ? $employee->basic_salary :'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                             </div>
                                         </div>
