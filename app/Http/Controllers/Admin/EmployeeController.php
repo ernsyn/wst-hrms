@@ -542,7 +542,7 @@ class EmployeeController extends Controller
             }
 elseif(empty($currentjob)){
 
-$jobData['status']  = 'probationer';
+$jobData['status']  = 'Probationer';
 }
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
@@ -553,19 +553,25 @@ $jobData['status']  = 'probationer';
     }
 
     public function actionResign(Request $request, $id) {
-        // EmployeeJob::where('emp_id', $id)
-        // ->whereNull('end_date')
-        // ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
-        $job = new EmployeeJob($jobData);
-
 
         $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
+        
         $currentDate = date("Y-m-d");
+
         if(!empty($currentJob)) {
-            $currentJob->update(['end_date'=> $currentDate ]);
-            LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
+
+        $jobs = EmployeeJob::where('emp_id', $id)
+        ->whereNull('end_date')->first();
+        $newJobs = $jobs->replicate();
+        $newJobs['status']  = 'Resigned';
+        $newJobs-> save();
+
+        $currentJob->update(['end_date'=> $currentDate ]);
+        LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
+        return response()->json(['success'=>'Employee Resignation Date updated']);
         }
+
     }
 
     public function postBankAccount(Request $request, $id)
@@ -582,20 +588,6 @@ $jobData['status']  = 'probationer';
         $employee->employee_bank_accounts()->save($bankAccount);
 
         return response()->json(['success'=>'Record is successfully added']);
-
-        // $type = $request->input('type');
-        // $bank_code = Input::get('bank_list');
-        // $acc_no = $request->input('acc_no');
-        // $status = Input::get('status');
-        // $created_by = auth()->user()->id;
-
-        // DB::insert('insert into employee_bank_accounts
-        // (emp_id, type, bank_code, acc_no, acc_status, created_by)
-        // values
-        // (?,?,?,?,?,?)',
-        // [$id, $type, $bank_code, $acc_no, $status, $created_by]);
-
-        // return redirect()->route('admin.employees.id', ['id' => $id]);
     }
 
     public function postCompany(Request $request, $id)
