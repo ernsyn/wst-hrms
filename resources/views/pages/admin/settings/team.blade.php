@@ -35,9 +35,9 @@
                         <td>{{$team['name']}}</td>
                         <td>
                             {{-- <a class="btn btn-primary" href="{{ route('admin.settings.teams.edit', ['id' => $team->id]) }}" role="button">Edit</a> --}}
-                            <button onclick="window.location='{{ route('admin.settings.teams.edit', ['id' => $team->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
+                            <button onclick="window.location='{{ route('admin.settings.teams.edit', ['id' => $team->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $team->name }}' data-link='{{ route('admin.settings.teams.delete', ['id ' => $team->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $team->name }}' data-link='{{ route('admin.settings.teams.delete', ['id ' => $team->id]) }}' class="btn btn-danger btn-smt fas fa-edit fas fa-trash-alt ">
                                 </button>
                         </td>
                     </tr>
