@@ -213,14 +213,24 @@ else {
 
     }
 
+//     {
+//         $departmentData = $request->validate([
+//             'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
 
+//         ]);
+//         Department::create($departmentData);
+//         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
+//     }
+
+// }
     public function postChangePasswordEmployee(Request $request) {
+
         $data = $request->validate([
             // 'current_password' => 'required',
             'current_password' => 'required',
             'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
         ]);
-
+        return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         $id = auth()->user()->id;
       //  dd($id);
         $current_password = Auth::user()->password;     
