@@ -36,10 +36,10 @@
                         <td>{{$working_day['template_name']}}</td>
                         <td>
                             <button onclick="window.location='{{ route('admin.settings.working-days.edit', ['id' => $working_day->id]) }}';"
-                                    class="round-btn btn btn-default fas fa-edit btn-segment">
+                                    class="btn btn-success btn-smt fas fa-edit">
                                 </button>
                             <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $working_day->template_name }}' data-link='{{ route('admin.settings.working-days.delete', ['id' => $working_day->id]) }}'
-                                    class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                                    class="btn btn-danger btn-smt fas fa-trash-alt">
                                 </button>
                         </td>
                     </tr>
