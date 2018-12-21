@@ -47,9 +47,11 @@
                         <td>{{$epf['total']}}</td> --}}
 
                         <td>
-                            <button onclick="window.location='{{ route('admin.settings.epf.edit.post', ['id' => $epf->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
+                            <button onclick="window.location='{{ route('admin.settings.epf.edit.post', ['id' => $epf->id]) }}';" 
+                                class="btn btn-success btn-smt fas fa-edit">
                                 </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $epf->category }}' data-link='{{ route('admin.settings.epf.delete', ['id ' => $epf->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $epf->category }}' data-link='{{ route('admin.settings.epf.delete', ['id ' => $epf->id]) }}' 
+                                class="btn btn-danger btn-smt fas fa-trash-alt">
                                 </button>
                         </td>
                     </tr>

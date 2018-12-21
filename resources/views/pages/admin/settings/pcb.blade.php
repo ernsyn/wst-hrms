@@ -41,9 +41,9 @@
                         <td>{{$pcb['amount']}}</td>
 
                         <td>
-                            <button onclick="window.location='{{ route('admin.settings.pcb.edit', ['id' => $pcb->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
+                            <button onclick="window.location='{{ route('admin.settings.pcb.edit', ['id' => $pcb->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $pcb->category }}' data-link='{{ route('admin.settings.pcb.delete', ['id ' => $pcb->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $pcb->category }}' data-link='{{ route('admin.settings.pcb.delete', ['id ' => $pcb->id]) }}' class="btn btn-danger btn-smt fas fa-trash-alt">
                                 </button>
                         </td>
                     </tr>

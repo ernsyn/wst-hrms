@@ -110,6 +110,27 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia]);
     }
 
+    public function postEditPicture(Request $request, $id) {
+        $pictureData = $request->validate([
+            'attachment' => 'required'
+        ]);
+
+        $picture_data_url = null;
+        if(array_key_exists('attachment', $pictureData)) {
+            $attachment_data_url = $pictureData['attachment'];
+            $attach = self::processBase64DataUrl($attachment_data_url);
+            $updatepictureData['category']= 'employee-picture';
+            $updatepictureData['mimetype']= $attach['mime_type'];
+            $updatepictureData['data']= $attach['data'];
+            $updatepictureData['size']= $attach['size'];
+            $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
+        }
+
+
+        Media::where('id', $id)->update($updatepictureData);
+
+        return response()->json(['success'=>'Profile Picture was successfully updated.']);
+    }
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
@@ -132,6 +153,7 @@ class EmployeeController extends Controller
             'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
             'main_security_group_id'=>'',
             'contact_no' => 'required',
+            'nationality' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
         ],
         [
@@ -522,7 +544,6 @@ class EmployeeController extends Controller
             'team_id' => 'required',
             'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
-            'basic_salary' => 'required',
             'remarks' => '',
             'branch_id' => 'required',
             'start_date' => 'required',
@@ -532,18 +553,36 @@ class EmployeeController extends Controller
 
         $jobData['created_by'] = auth()->user()->id;
 
+     
+
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
 
             if(!empty($currentJob)) {
+
+                if ($jobData['status']  = 'Confirmed Employment'){
+                    Employee::where('id', $id)
+                    ->update(array('confirmed_date'=> ($jobData['start_date'])));
+                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                    LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
+                }
+else{
                 $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                 LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
+}
+
             }
 elseif(empty($currentjob)){
 
-$jobData['status']  = 'probationer';
+$jobData['status']  = 'Probationer';
+
 }
+
+Employee::where('id', $id)
+->update(array('basic_salary'=> ($jobData['basic_salary'])));
+
+
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
@@ -553,19 +592,25 @@ $jobData['status']  = 'probationer';
     }
 
     public function actionResign(Request $request, $id) {
-        // EmployeeJob::where('emp_id', $id)
-        // ->whereNull('end_date')
-        // ->update(array('end_date'=> date("Y-m-d", strtotime($jobData['start_date']))));
-        $job = new EmployeeJob($jobData);
-
 
         $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
+        
         $currentDate = date("Y-m-d");
+
         if(!empty($currentJob)) {
-            $currentJob->update(['end_date'=> $currentDate ]);
-            LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
+
+        $jobs = EmployeeJob::where('emp_id', $id)
+        ->whereNull('end_date')->first();
+        $newJobs = $jobs->replicate();
+        $newJobs['status']  = 'Resigned';
+        $newJobs-> save();
+
+        $currentJob->update(['end_date'=> $currentDate ]);
+        LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
+        return response()->json(['success'=>'Employee Resignation Date updated']);
         }
+
     }
 
     public function postBankAccount(Request $request, $id)
@@ -582,20 +627,6 @@ $jobData['status']  = 'probationer';
         $employee->employee_bank_accounts()->save($bankAccount);
 
         return response()->json(['success'=>'Record is successfully added']);
-
-        // $type = $request->input('type');
-        // $bank_code = Input::get('bank_list');
-        // $acc_no = $request->input('acc_no');
-        // $status = Input::get('status');
-        // $created_by = auth()->user()->id;
-
-        // DB::insert('insert into employee_bank_accounts
-        // (emp_id, type, bank_code, acc_no, acc_status, created_by)
-        // values
-        // (?,?,?,?,?,?)',
-        // [$id, $type, $bank_code, $acc_no, $status, $created_by]);
-
-        // return redirect()->route('admin.employees.id', ['id' => $id]);
     }
 
     public function postCompany(Request $request, $id)
@@ -654,6 +685,7 @@ $jobData['status']  = 'probationer';
 
         return response()->json(['success'=>'Skill is successfully added']);
     }
+
 
     public function postAttachment(Request $request, $id)
     {

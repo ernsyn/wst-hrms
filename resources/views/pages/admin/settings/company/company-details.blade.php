@@ -36,7 +36,7 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyBankPopup">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCompanyBankPopup">
                                             Add Company Bank
                                         </button>
                                     </div>
@@ -66,10 +66,12 @@
                                                     <td>{{$companybanks['created_at']}}</td>
                                                     <td>{{$companybanks['status']}}</td>
 
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                                            data-bank-id="{{$companybanks['id']}}" data-bank-code="{{$companybanks['bank_code']}}"
-                                                            data-bank-accout-name="{{$companybanks['acc_name']}}" data-bank-status="{{$companybanks['status']}}"
-                                                            data-target="#editCompanyBankPopup"><i class="fas fa-pencil-alt"></i></button>
+                                                    <td><button type="button" class="btn btn-success btn-smt " data-toggle="modal"
+                                                            data-bank-id="{{$companybanks['id']}}" 
+                                                            data-bank-code="{{$companybanks['bank_code']}}"
+                                                            data-bank-acc="{{$companybanks['acc_name']}}" 
+                                                            data-bank-status="{{$companybanks['status']}}"
+                                                            data-target="#editCompanyBankPopup"><i class="fas fa-edit"></i></button>
 {{--
                                                         <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->acc_name }}'
                                                             data-link='{{ route('admin.settings.company-banks.delete', ['id' => $companybanks->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment"></button> --}}
@@ -90,7 +92,7 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addSecurityGroupPopup">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSecurityGroupPopup">
                                                         Add Security Group
                                                     </button>
                                     </div>
@@ -115,10 +117,10 @@
                                                     <td>{{$securities->company->name}}</td>
                                                     <td>{{$securities['name']}}</td>
                                                     <td>{{$securities['description']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                    <td><button type="button" class="btn btn-success btn-smt " data-toggle="modal"
                                                             data-security-id="{{$securities['id']}}" data-security-name="{{$securities['name']}}"
                                                             data-security-description="{{$securities['description']}}" data-security-status="{{$securities['status']}}"
-                                                            data-target="#editSecurityGroupPopup"><i class="fas fa-pencil-alt"></i></button></td>
+                                                            data-target="#editSecurityGroupPopup"><i class="fas fa-edit"></i></button></td>
 
 
                                                 </tr>
@@ -135,7 +137,7 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addCompanyAdditionPopup">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCompanyAdditionPopup">
                                                         Add Company Addition
                                                     </button>
                                     </div>
@@ -160,13 +162,13 @@
                                                     <td>{{$additions['code']}}</td>
                                                     <td>{{$additions['name']}}</td>
                                                     <td>{{$additions['amount']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                    <td><button type="button" class="btn btn-success btn-smt" data-toggle="modal"
 
 
                                                             data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
                                                             data-addition-name="{{$additions['name']}}" data-addition-type="{{$additions['type']}}"
                                                             data-addition-amount="{{$additions['amount']}}" data-addition-confirmed_employee="{{$additions['confirmed_employee']}}"
-                                                            data-addition-status="{{$additions['status']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-pencil-alt"></i></button></td>
+                                                            data-addition-status="{{$additions['status']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button></td>
 
 
                                                 </tr>
@@ -184,7 +186,7 @@
                                 <div class="row pb-3">
                                     <div class="col-auto mr-auto"></div>
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#addDeductionPopup">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDeductionPopup">
                                         Add Company Deduction
                                     </button>
                                     </div>
@@ -209,11 +211,11 @@
                                                     <td>{{$deductions['code']}}</td>
                                                     <td>{{$deductions['name']}}</td>
                                                     <td>{{$deductions['amount']}}</td>
-                                                    <td><button type="button" class="btn btn-outline-primary waves-effect" data-toggle="modal"
+                                                    <td><button type="button" class="btn btn-success btn-smt" data-toggle="modal"
                                                             data-deduction-id="{{$deductions['id']}}" data-deduction-code="{{$deductions['code']}}"
                                                             data-deduction-name="{{$deductions['name']}}" data-deduction-type="{{$deductions['type']}}"
                                                             data-deduction-amount="{{$deductions['amount']}}" data-deduction-confirmed_employee="{{$deductions['confirmed_employee']}}"
-                                                            data-deduction-status="{{$deductions['status']}}" data-target="#editCompanyDeductionPopup"><i class="fas fa-pencil-alt"></i></button></td>
+                                                            data-deduction-status="{{$deductions['status']}}" data-target="#editCompanyDeductionPopup"><i class="fas fa-edit"></i></button></td>
 
 
                                                 </tr>
@@ -257,12 +259,12 @@
                 <div class="modal-body">
                     @csrf
                     <div class="row p-3">
-                        <div class="form-group row w-100">
-                            <label class="col-md-12 col-form-label">Account Bank Name*</label>
+                     
+                            <label class="col-md-12 col-form-label">Bank Name*</label>
                             <div class="col-md-12">
                                 <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" required>
                                 <option value="">Please Select</option>
-                                @foreach(App\BankCode::all() as $banks)
+                                @foreach(App\BankCode::all()->sortBy('name') as $banks)
                                 <option value="{{ $banks->id }}">{{ $banks->name }}</option>
                                 @endforeach
                             </select> 
@@ -270,27 +272,16 @@
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('bank_code') }}</strong>
                             </span> @endif
-                            </div>
+                         
                         </div>
                         
                     </div>
 
-                    <div class="row p-3">
-                        <div class="form-group row w-100">
-                            <label class="col-md-12 col-form-label">Status*</label>
-                            <div class="col-md-12">
-                                <select class="form-control" id="status" name="status">
-                                            <option value="Active">Active</option>
-                                            <option value="Inactive">Inactive</option>
-                                        </select>
-                            </div>
-                        </div>
-                    </div>
+ 
             
                 {{-- dont --}}
 
-                    <div class="row p-3">
-                        <div class="form-group row w-100">
+        
                             <label class="col-md-12 col-form-label">Account Name*</label>
                             <div class="col-md-12">
                                 <input id="acc_name" type="text" class="form-control{{ $errors->has('acc_name') ? ' is-invalid' : '' }}" name="acc_name"
@@ -298,9 +289,21 @@
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('acc_name') }}</strong>
                                 </span> @endif
-                            </div>
-                        </div>
+                         
+                     
                     </div>
+
+                
+                        
+                                <label class="col-md-12 col-form-label">Status*</label>
+                                <div class="col-md-12">
+                                    <select class="form-control" id="status" name="status">
+                                                <option value="Active">Active</option>
+                                                <option value="Inactive">Inactive</option>
+                                            </select>
+                            
+                        
+                        </div>
        
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">
@@ -311,8 +314,6 @@
                 </div>
             
             </form>
-        
-
 </div>
     </div>
 </div>
@@ -334,11 +335,7 @@
                                 <input id="company_bank_id" type="text" class="form-control{{ $errors->has('company_bank_id') ? ' is-invalid' : '' }}" name="company_bank_id"
                                     value="{{ old('company_bank_id') }}" hidden>
                             </div>
-                            <label class="col-md-12 col-form-label">Account Name*</label>
-                            <div class="col-md-12">
-                                <input id="acc_name" type="text" class="form-control{{ $errors->has('acc_name') ? ' is-invalid' : '' }}" name="acc_name"
-                                    value="{{ old('acc_name') }}" required>
-                            </div>
+
                             <label class="col-md-12 col-form-label">Bank*</label>
                             <div class="col-md-12">
                                 <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" value="{{ old('bank_code') }}">
@@ -347,13 +344,22 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <label class="col-md-12 col-form-label">Status*</label>
+                            <label class="col-md-12 col-form-label">Account Name*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="status" name="status" value="{{ old('status') }}">
-                                        <option value="Active">Active</option>
-                                        <option value="Inactive">Inactive</option>
-                                    </select>
-                            </div>
+                                    <input id="acc_name" type="text" class="form-control{{ $errors->has('acc_name') ? ' is-invalid' : '' }}" name="acc_name" value="{{ old('acc_name') }}"
+                                        required>
+                                </div>   
+                                
+                                <label class="col-md-12 col-form-label">Status* </label>
+                                <div class="col-md-12">
+                                    <select class="form-control" id="status" name="status" value="{{ old('status') }}">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                </div>
+                   
+
+                         
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -490,8 +496,8 @@
             </div>
             <div class="modal-body">
 
-                @foreach($company as $company_deduction)
-                <form method="POST" action="{{ route('admin.settings.additions.add.post', ['id' => $company_deduction->id])}} " id="add_company_addition">
+                @foreach($company as $company_addition)
+                <form method="POST" action="{{ route('admin.settings.additions.add.post', ['id' => $company_addition->id])}} " id="add_company_addition">
                     @endforeach @csrf
 
                     <div class="row pb-5">
@@ -628,8 +634,10 @@
             </div>
             <div class="modal-body">
                 <div class="modal-body">
-                    <form method="POST" action="{{route('admin.settings.company-addition.edit.post')}}" id="addition">
-                        @csrf
+
+                      @foreach($company as $company_addition)
+                      <form method="POST" action="{{ route('admin.settings.company-addition.edit.post', ['id' => $company_addition->id])}} " id="add_company_addition">
+                          @endforeach @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
                                 <input id="company_addition_id" name="company_addition_id" type="hidden">
@@ -791,8 +799,8 @@
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
                                 <select class="form-control" id="status" name="status">
-                                            <option value="Active">Active</option>
-                                            <option value="Inactive">Inactive</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
                                         </select>
                             </div>
                             <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
@@ -897,8 +905,11 @@
                     </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{route('admin.settings.company-deduction.edit.post')}}" id="deduction">
-                    @csrf
+
+
+                    @foreach($company as $company_deduction)
+                    <form method="POST" action="{{ route('admin.settings.company-deduction.edit.post', ['id' => $company_deduction->id])}} " id="add_company_deduction">
+                        @endforeach @csrf
 
                     <div class="row pb-5">
                         <div class="col-xl-8">

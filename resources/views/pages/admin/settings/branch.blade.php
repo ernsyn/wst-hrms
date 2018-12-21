@@ -41,9 +41,9 @@
                         <td>{{$branch['contact_no_primary']}}</td>
                         <td>{{$branch['state']}}</td>
                         <td>
-                            <button onclick="window.location='{{ route('admin.settings.branches.edit', ['id' => $branch->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
+                            <button onclick="window.location='{{ route('admin.settings.branches.edit', ['id' => $branch->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $branch->name }}' data-link='{{ route('admin.settings.branches.delete', ['id ' => $branch->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $branch->name }}' data-link='{{ route('admin.settings.branches.delete', ['id ' => $branch->id]) }}' class="btn btn-danger btn-smt fas fa-trash-alt">
                                 </button>
                         </td>
                     </tr>

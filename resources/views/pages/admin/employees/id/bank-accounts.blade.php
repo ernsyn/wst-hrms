@@ -15,9 +15,12 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Bank Name*</strong></label>
-                            <input id="bank-code" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="bank-code-error" class="invalid-feedback">
-                            </div>
+                            <select class="form-control{{ $errors->has('bank-code') ? ' is-invalid' : '' }}" name="bank-code" id="bank-code">
+                                    <option value=""></option>  
+                                @foreach(App\CompanyBank::where('company_id',$employee->company_id)->get() as $bank)
+                                    <option value="{{ $bank->id }}">{{ $bank->acc_name }}</option>
+                                    @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="form-row">
@@ -69,9 +72,12 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Bank Name*</strong></label>
-                            <input id="bank-code" type="text" class="form-control" placeholder="" value="" required>
-                            <div id="bank-code-error" class="invalid-feedback">
-                            </div>
+                            <select class="form-control{{ $errors->has('bank-code') ? ' is-invalid' : '' }}" name="bank-code" id="bank-code">
+                                    <option value=""></option>  
+                                @foreach(App\CompanyBank::where('company_id',$employee->company_id) as $bank)
+                                    <option value="{{ $bank->id }}">{{ $bank->citizenship }}</option>
+                                    @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="form-row">

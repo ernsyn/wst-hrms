@@ -21,10 +21,10 @@
                         <div class="col-6">
                             <label class="col-md-12 col-form-label">Seniority Pay*</label>
                             <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('seniority_pay') ? ' is-invalid' : '' }}" id="seniority_pay" name="seniority_pay" name="seniority_pay" value="{{ $costs->seniority_pay }}"
-                                    required>
-                                        <option value="Auto">Auto</option>
-                                        <option value="Manual">Manual</option>
+                                    <select class="form-control" id="seniority_pay" name="seniority_pay" value="{{ $costs->seniority_pay }}">
+                                            <option value="">Please Select</option>
+                                        <option value="Auto" {{ $costs->seniority_pay == 'auto' ? 'selected' : ''}}>Auto</option>
+                                        <option value="Manual" {{ $costs->seniority_pay == 'manual' ? 'selected' : ''}}>Manual</option>
                                     </select>
                                     @if ($errors->has('seniority_pay'))
                                     <span class="invalid-feedback" role="alert">
