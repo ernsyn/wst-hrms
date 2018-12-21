@@ -368,7 +368,29 @@ class ELeaveController extends Controller
     {      
         $leavebalance = LeaveType::all();
 
-        return view('pages.admin.e-leave.configuration.leave-application', ['leavebalance'=>$leavebalance]);
+        return view('pages.admin.e-leave.configuration.leave-application');
+    }
+
+    // Leave Report
+    public function displayLeaveReports()
+    {      
+        $employees = DB::table('users')
+        ->join('employees', 'users.id', '=', 'employees.user_id')
+        ->select('users.name','users.email','employees.*')
+        ->get();
+        
+        return view('pages.admin.e-leave.configuration.leave-report', ['employees' => $employees]);
+    }
+
+    public function getLeaveReport(Request $request, $id) 
+    {
+        $employee = DB::table('users')
+        ->join('employees', 'users.id', '=', 'employees.user_id')
+        ->select('users.name','users.email','employees.*')
+        ->where('employees.id', $id)
+        ->first();
+
+        return view('pages.admin.e-leave.configuration.leave-report-employee', ['employee' => $employee]);
     }
 
     public function ajaxGetEmployees(Request $request)
