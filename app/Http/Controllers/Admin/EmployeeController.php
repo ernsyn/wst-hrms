@@ -110,6 +110,27 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia]);
     }
 
+    public function postEditPicture(Request $request, $id) {
+        $pictureData = $request->validate([
+            'attachment' => 'required'
+        ]);
+
+        $picture_data_url = null;
+        if(array_key_exists('attachment', $pictureData)) {
+            $attachment_data_url = $pictureData['attachment'];
+            $attach = self::processBase64DataUrl($attachment_data_url);
+            $updatepictureData['category']= 'employee-picture';
+            $updatepictureData['mimetype']= $attach['mime_type'];
+            $updatepictureData['data']= $attach['data'];
+            $updatepictureData['size']= $attach['size'];
+            $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
+        }
+
+
+        Media::where('id', $id)->update($updatepictureData);
+
+        return response()->json(['success'=>'Profile Picture was successfully updated.']);
+    }
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
@@ -655,6 +676,7 @@ $jobData['status']  = 'probationer';
 
         return response()->json(['success'=>'Skill is successfully added']);
     }
+
 
     public function postAttachment(Request $request, $id)
     {
