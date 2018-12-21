@@ -170,7 +170,7 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Joined Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->employee_jobs()->first()->start_date}}</span>
+                                                    <span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? $employee->employee_jobs()->first()->start_date  : '<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Confirmation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
