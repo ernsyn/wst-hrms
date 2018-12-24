@@ -33,7 +33,7 @@
                         <td class="email">{{$employee->user->email}}</td>
                         <td class="contact_no">{{$employee->contact_no}}</td>
                         <td>
-                            <button onclick="window.location='{{ route('admin.employees.id', ['id' => $employee->id]) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
+                            <button onclick="window.location='{{ route('admin.employees.id', ['id' => $employee->id]) }}';" class="btn btn-default btn-smt fas fa-eye"></button>
                         </td>
                     </tr>
                     @endforeach

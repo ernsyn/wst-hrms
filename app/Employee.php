@@ -67,19 +67,10 @@ class Employee extends Model
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
     }
 
-    public function employee_jobs_joined_date()
-    {
-        return $this->hasMany('App\EmployeeJob', 'emp_id')->where('employee_jobs.status','=','probationer');
-    }
-
-    public function employee_jobs_resigned_date()
-    {
-        return $this->hasMany('App\EmployeeJob', 'emp_id')->where('employee_jobs.status','=','resigned');
-    }
 
     public function employee_jobs()
     {
-        return $this->hasMany('App\EmployeeJob', 'emp_id')->WhereNull('employee_jobs.end_date');
+        return $this->hasMany('App\EmployeeJob', 'emp_id');
     }
 
     public function employee_emergency_contacts()

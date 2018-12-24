@@ -40,9 +40,9 @@
                         <td>{{$cost['amount']}}</td>
                         {{-- <td>{{$cost['payroll_type']}}</td> --}}
                         <td>
-                            <button onclick="window.location='{{ route('admin.settings.cost-centres.edit', ['id' => $cost->id]) }}';" class="round-btn btn btn-default fas fa-edit btn-segment">
+                            <button onclick="window.location='{{ route('admin.settings.cost-centres.edit', ['id' => $cost->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $cost->name }}' data-link='{{ route('admin.settings.cost-centres.delete', ['id ' => $cost->id]) }}' class="round-btn btn btn-default fas fa-trash-alt btn-segment">
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $cost->name }}' data-link='{{ route('admin.settings.cost-centres.delete', ['id ' => $cost->id]) }}' class="btn btn-danger btn-smt far fa-trash-alt">
                                 </button>
                         </td>
                     </tr>
