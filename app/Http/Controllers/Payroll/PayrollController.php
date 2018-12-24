@@ -185,9 +185,11 @@ class PayrollController extends Controller
             $costCentre = CostCentre::where('id', $employeeJob->cost_centre_id)->get();
             $basicSalary = 0;
             $seniorityPay = 0;
+            $remuneration = 0;
             if($payroll->period == PayrollPeriodEnum::END_MONTH) {
                 $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
                 $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
+                $remuneration = $basicSalary + $seniorityPay;
             }
 
             // Step 5. Create payroll trx.
@@ -227,12 +229,12 @@ class PayrollController extends Controller
                 $epfFilter = array();
                 $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
                 $epfFilter['nationality'] = $employee->nationality;
-                $epfFilter['salary'] = $basicSalary + $contributionData['epf'];
+                $epfFilter['salary'] = $remuneration + $contributionData['epf'];
                 $epf = $this->epfRepository->findByFilter($epfFilter);
-                $eis = $this->eisRepository->findBySalary($basicSalary + $contributionData['eis']);
-                $socso = $this->socsoRepository->findBySalary($basicSalary + $contributionData['socso']);
+                $eis = $this->eisRepository->findBySalary($remuneration + $contributionData['eis']);
+                $socso = $this->socsoRepository->findBySalary($remuneration + $contributionData['socso']);
                 $pcbFilter = array();
-                $pcbFilter['salary'] = $basicSalary + $contributionData['pcb'];
+                $pcbFilter['salary'] = $remuneration + $contributionData['pcb'];
                 $pcbFilter['pcbGroup'] = $employee->pcb_group;
                 $pcbFilter['noOfChildren'] = $employee->total_child;
                 $pcb = $this->pcbRepository->findByFilter($pcbFilter);
@@ -271,11 +273,7 @@ class PayrollController extends Controller
         $isHrAdmin = AccessControllHelper::hasHrAdminRole(); 
         $currentUser = Employee::where('user_id',Auth::id())->first();
         $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
-        $payroll = PayrollMaster::where([
-            [
-                'id', $id
-            ]
-        ])->first();
+        $payroll = PayrollMaster::where('id', $id)->first();
         $firstDayOfMonth = date('Y-m-d', strtotime($payroll->year_month. '-01'));
             
         $list = PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')

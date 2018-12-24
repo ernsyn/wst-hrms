@@ -42,6 +42,7 @@ use App\Eis;
 use App\Socso;
 use App\Pcb;
 use App\CompanyTravelAllowance;
+use App\Imports\PcbImport;
 
 use DB;
 use App\User;
@@ -49,6 +50,7 @@ use App\EmployeeInfo;
 use \Crypt;
 use Session;
 use Illuminate\Support\Facades\Input;
+use Maatwebsite\Excel\Facades\Excel;
 use \DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -1326,6 +1328,14 @@ public function destroyCompanyBank($id)
 // }
 
 
-
+    public function importPcb()
+    {
+        $data = Excel::load('pcb.xlsx', function($reader) {
+        })->get();
+        dd($data);
+        Excel::import(new PcbImport, 'pcb.xlsx');
+        
+        return back();
+    }
 
 }

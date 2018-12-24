@@ -18,17 +18,4 @@ class Pcb extends Model
 
     protected $dates = ['deleted_at'];
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::addGlobalScope('non-template', function (Builder $builder) {
-    //         $builder->where('is_template', '!=', true);
-    //     });
-    // }
-
-    // public function scopeTemplates($query)
-    // {
-    //     return $query->withoutGlobalScope('non-template')->where('is_template', true);
-    // }
 }
