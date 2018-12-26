@@ -384,13 +384,87 @@ class ELeaveController extends Controller
 
     public function getLeaveReport(Request $request, $id) 
     {
+        if (strpos($id, '-') !== false) {
+            $params = explode('-', $id);
+            $emp_id = $params[0];
+            $year = $params[1];
+        }
+        else {
+            $emp_id = $id;
+            $now = Carbon::now();
+            $year = $now->year;
+        }
+        
+        $report_array = array();
+
+        // get employee data
         $employee = DB::table('users')
         ->join('employees', 'users.id', '=', 'employees.user_id')
         ->select('users.name','users.email','employees.*')
-        ->where('employees.id', $id)
+        ->where('employees.id', $emp_id)
         ->first();
 
-        return view('pages.admin.e-leave.configuration.leave-report-employee', ['employee' => $employee]);
+        // get employee leave allocations
+        $leaves = DB::table('leave_types')
+        ->join('leave_allocations', 'leave_types.id', '=', 'leave_allocations.leave_type_id')
+        ->select(
+            'leave_types.id',
+            'leave_types.code',
+            'leave_types.name',
+            'leave_allocations.allocated_days',
+            'leave_allocations.spent_days',
+            'leave_allocations.carried_forward_days'
+        )
+        ->where('leave_types.active', 1)
+        ->where('leave_allocations.emp_id', $emp_id)
+        ->whereYear('leave_allocations.valid_from_date', '=', $year)
+        ->whereYear('leave_allocations.valid_until_date', '=', $year)
+        ->get();
+
+        foreach ($leaves as $row) {
+            $report_array[$row->id]['code'] = $row->code;
+            $report_array[$row->id]['name'] = $row->name;
+            $report_array[$row->id]['carried_forward_days'] = round($row->carried_forward_days, 0);
+            $report_array[$row->id]['allocated_days'] = round($row->allocated_days, 0);
+            $report_array[$row->id]['pending'] = 0;
+            $report_array[$row->id]['approved'] = 0;
+            $report_array[$row->id]['rejected'] = 0;
+            $report_array[$row->id]['allowed_to_take'] = 0;
+            $report_array[$row->id]['year_of_balance'] = 0;
+        }
+
+        // get employee leave request data
+        $requests = LeaveRequest::groupBy('leave_type_id')
+        ->selectRaw('leave_type_id, 
+        SUM(CASE WHEN status = "new" THEN applied_days ELSE 0 END) AS pending,
+        SUM(CASE WHEN status = "approved" THEN applied_days ELSE 0 END) AS approved,
+        SUM(CASE WHEN status = "rejected" THEN applied_days ELSE 0 END) AS rejected')
+        ->where('emp_id', $emp_id)
+        ->whereYear('start_date', '=', $year)
+        ->whereYear('end_date', '=', $year)
+        ->get();
+
+        foreach ($requests as $row) {
+            $pending = round($row->pending, 0);
+            $approved = round($row->approved, 0);
+            $rejected = round($row->rejected, 0);
+
+            $report_array[$row->leave_type_id]['pending'] = round($row->pending, 0);
+            $report_array[$row->leave_type_id]['approved'] = round($row->approved, 0);
+            $report_array[$row->leave_type_id]['rejected'] = round($row->rejected, 0);
+        }
+
+        // total columns
+        foreach ($report_array as $key => $value) {
+            $report_array[$key]['allowed_to_take'] = $report_array[$key]['allocated_days'] - ($report_array[$key]['pending'] + $report_array[$key]['approved']);
+            $report_array[$key]['year_of_balance'] = $report_array[$key]['allocated_days'] - ($report_array[$key]['approved']);
+        }
+
+        $years = LeaveRequest::selectRaw('distinct(year(start_date)) as year_data')
+        ->where('emp_id', $emp_id)
+        ->get();
+
+        return view('pages.admin.e-leave.configuration.leave-report-employee', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
     }
 
     public function ajaxGetEmployees(Request $request)
