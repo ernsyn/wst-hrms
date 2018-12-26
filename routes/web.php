@@ -22,10 +22,13 @@ Auth::routes();
 
 Route::get('', 'HomeController@index')->name('employee.dashboard');
 
+
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
     // Route::get('/employee','EmployeeController@displayProfile')->name('employee');
     // Route::get('profile','EmployeeController@displayProfile')->name('profile');
+    Route::get('changepassword', 'EmployeeController@changePassword')->name('employee.password');
+
     Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
     Route::get('employeeimmigrationdata','EmployeeController@displayImmigration')->name('immigration');
     Route::get('qualificationcompaniesdata','EmployeeController@displayQualificationCompanies')->name('companies');
@@ -460,7 +463,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     //   Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
     //   Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
     Route::get('e-leave/configuration/leave-requests', 'Admin\ELeaveController@displayLeaveRequests')->name('admin.e-leave.configuration.leave-requests');
-    
     Route::get('e-leave/leave-application', 'Admin\ELeaveController@displayLeaveApplication')->name('admin.e-leave.leave-application');
     Route::get('e-leave/leave-report', 'Admin\ELeaveController@displayLeaveReports')->name('admin.e-leave.leave-report');
     Route::get('e-leave/leave-report/{emp_id}','Admin\ELeaveController@getLeaveReport')->name('admin.e-leave.leave-report-employee')->where('emp_id', '[0-9]+');
@@ -493,6 +495,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     // Route::post('disapprove_leave', 'Admin\ELeaveController@disapprovedLeaveRequest')->name('disapprove_leave');
     // Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance');
     Route::post('add_job','AdminController@addJob')->name('add_job');
+    Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
+    Route::post('changepassword','Admin\EmployeeController@postChangePasswordEmployee')->name('admin.changepassword.post');
+
 
 });
 

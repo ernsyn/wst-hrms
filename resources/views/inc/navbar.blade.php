@@ -15,7 +15,7 @@
                         <a class="dropdown-item" href="{{ route('employee.profile') }}">
                             {{ __('Profile') }}
                         </a>
-                        <a class="dropdown-item" href="">
+                        <a class="dropdown-item" href="{{ route('admin.changepassword') }}">
                             {{ __('Change Password') }}
                         </a>
                         <div class="dropdown-divider"></div>
