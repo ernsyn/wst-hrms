@@ -95,7 +95,8 @@ class EmployeeController extends Controller
         ->where('employees.id', $id)
         ->first();
 
-        // dd($userMedia);
+        $userMediaSize=$userMedia->size;
+        // dd($userMediaSize);
 
         // $bank_list = Bank::all();
         // $cost_centre = CostCentre::all();
@@ -107,26 +108,26 @@ class EmployeeController extends Controller
         // $countries = Country::all();
         // $companies = Company::all();
 
-        return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia]);
+        return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia,'userMediaSize' => $userMediaSize]);
     }
 
     public function postEditPicture(Request $request, $id) {
         $pictureData = $request->validate([
-            'attachment' => 'required|max:2000',
-            'required-picture' => 'max:700'
+            'attachment' => 'required|max:2000000|regex:/^data:image/'
+        ],
+        [
+            'attachment.max' => 'The file size may not be greater than 2MB.'
         ]);
 
-        $picture_data_url = null;
-        if(array_key_exists('attachment', $pictureData)) {
-            $picture_data_url = $pictureData['attachment'];
-            $attach = self::processBase64DataUrl($picture_data_url);
-            $updatepictureData['category']= 'employee-picture';
-            $updatepictureData['mimetype']= $attach['mime_type'];
-            $updatepictureData['data']= $attach['data'];
-            $updatepictureData['size']= $attach['size'];
-            $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
-            Media::where('id', $id)->update($updatepictureData);
-        }
+        $picture_data_url = $pictureData['attachment'];
+        $attach = self::processBase64DataUrl($picture_data_url);
+        $updatepictureData['category']= 'employee-picture';
+        $updatepictureData['mimetype']= $attach['mime_type'];
+        $updatepictureData['data']= $attach['data'];
+        $updatepictureData['size']= $attach['size'];
+        $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
+        Media::where('id', $id)->update($updatepictureData);
+
 
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
     }
@@ -365,8 +366,8 @@ class EmployeeController extends Controller
             'email' => 'required|unique:users|email',
             'password' => 'required|required_with:confirm_password|same:confirm_password',
             'media_id' => '',
-            'attachment' => 'file|size:5000',
-            'attach' => '',
+            'attachment' => '',
+            'attach' => 'nullable|max:2000000|regex:/^data:image/',
 
             'code'=>'required|unique:employees',
             'contact_no' => 'required',
@@ -390,7 +391,8 @@ class EmployeeController extends Controller
             'main_security_group_id'=>'nullable'
         ],
         [
-            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
+            'attach.max' => 'The file size may not be greater than 2MB.'
         ]);
 
         $attachment_data_url = $validated['attach'];

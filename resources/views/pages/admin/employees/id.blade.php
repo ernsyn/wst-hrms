@@ -8,7 +8,7 @@
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->user}}" data-target="#edit-picture-popup">
-                        @if (!empty($userMedia))
+                        @if ($userMediaSize!=0)
                             <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:150px; height:150px">
                         @else
                             <i class="fas fa-user-circle fa-8x"></i>
@@ -511,7 +511,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>New Profile Picture*</strong></label>
-                            <input name="required-picture" type="file" id="picture" class="form-control-file{{ $errors->has('picture') ? ' is-invalid' : '' }}">
+                            <input name="required_picture" type="file" id="picture" class="form-control-file{{ $errors->has('picture') ? ' is-invalid' : '' }}">
                             <div id="picture-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -907,19 +907,25 @@
         $('#edit-picture-submit').click(function(e){
             clearPicturesError('#edit-picture-form');
             e.preventDefault();
-            var file = document.querySelector('input[name=required-picture]').files[0];
+            var file = document.querySelector('input[name=required_picture]').files[0];
 
             var data = {
                 _token: '{{ csrf_token() }}'
+
             };
 
             if(file) {
-                console.log("File>>>",file);
-                getBase64(file, function(attachmentDataUrl) {
-                    data.attachment = attachmentDataUrl;
-                    postEditPicture(data);
-                });
-            } else {
+                if(file.size<=2000000) {
+                    console.log("File>>>",file);
+                    getBase64(file, function(attachmentDataUrl) {
+                        data.attachment = attachmentDataUrl;
+                        postEditPicture(data);
+                    });
+                } else {
+                    $('#edit-picture-form input[name=required_picture]').addClass('is-invalid');
+                    $('#edit-picture-form #picture-error').html('<strong>The file size may not be greater than 2MB.</strong>');
+                }
+            }else {
                 postEditPicture(data);
             }
         });
@@ -945,11 +951,11 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'attachment':
-                                        $('#edit-picture-form input[name=required-picture]').addClass('is-invalid');
+                                        $('#edit-picture-form input[name=required_picture]').addClass('is-invalid');
                                         $('#edit-picture-form #picture-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'required-picture':
-                                        $('#edit-picture-form input[name=required-picture]').addClass('is-invalid');
+                                    case 'required_picture':
+                                        $('#edit-picture-form input[name=required_picture]').addClass('is-invalid');
                                         $('#edit-picture-form #picture-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -958,18 +964,11 @@
                     }
                     if(xhr.status == 413) {
                         var errors = xhr.responseJSON.errors;
-                        console.log("Error: ", xhr);
-                        for (var errorField in errors) {
-                            if (errors.hasOwnProperty(errorField)) {
-                                console.log("Error: ", errorField);
-                                switch(errorField) {
-                                    case 'required-picture':
-                                        $('#edit-picture-form input[name=required-picture]').addClass('is-invalid');
-                                        $('#edit-picture-form #picture-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    break;
-                                }
-                            }
-                        }
+                        console.log("Error 413: ", xhr);
+                        console.log("Error 413 status: ", xhr.statusText);
+                        $('#edit-picture-form input[name=required_picture]').addClass('is-invalid');
+                        $('#edit-picture-form #picture-error').html('<strong>File is too large</strong>');
+
                     }
                 }
             });

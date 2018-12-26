@@ -2,7 +2,7 @@
 @section('content')
 <div class="container pb-5">
     <div class="card">
-        <form method="POST" action="{{ route('admin.employees.add') }}">
+        <form method="POST" action="{{ route('admin.employees.add') }}" id="add-profile-form">
             <div class="card-body">
                 @csrf {{-- Basic --}}
                 <div class="row">
@@ -16,15 +16,17 @@
                             <div class="col-lg-12 text-center">
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" name="attachment" class="custom-file-input{{ $errors->has('attachment') ? ' is-invalid' : '' }}" id="profile-img">
+                                        <input type="file" name="attachment" class="custom-file-input{{ $errors->has('attach') ? ' is-invalid' : '' }}" id="profile-img">
                                         <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                     </div>
-                                    @if ($errors->has('attachment'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('attachment') }}</strong>
-                                        </span>
-                                    @endif
                                 </div>
+                                <input type="text" class="form-control{{ $errors->has('attach') ? ' is-invalid' : '' }}" id="attach" name="attach" value="{{ old('attach') }}">
+
+                                @if ($errors->has('attach'))
+                                <span id="picture-error" class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('attach') }}</strong>
+                                </span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -32,7 +34,6 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-lg-right text-lg-right">Name*</label>
                             <div class="col-lg-6">
-                                <input type="hidden" id="attach" name="attach">
                                 <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}">
 								@if ($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
@@ -378,13 +379,18 @@
     function readURL(input, onLoad) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#profile-img-tag').attr('src', e.target.result);
-                reader.result;
-                console.log(reader.result);
-                $('#attach').val(reader.result);
+            console.log("input files size",input.files[0].size);
+            if(input.files[0].size<=2000000) {
+                reader.onload = function(e) {
+                    $('#profile-img-tag').attr('src', e.target.result);
+                    reader.result;
+                    $('#attach').val(reader.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $('#add-profile-form input[name=attach]').addClass('is-invalid');
+                $('#add-profile-form #picture-error').html('<strong>The file size may not be greater than 2MB.</strong>');
             }
-            reader.readAsDataURL(input.files[0]);
         }
     }
 
