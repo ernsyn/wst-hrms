@@ -64,6 +64,16 @@ Breadcrumbs::for('admin.e-leave.leave-application', function ($trail) {
     $trail->push('Leave Application', route('admin.e-leave.leave-application'));
 });
 
+Breadcrumbs::for('admin.e-leave.leave-report', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Leave Report', route('admin.e-leave.leave-report'));
+});
+
+Breadcrumbs::for('admin.e-leave.leave-report-employee', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Leave Report Employee', route('admin.e-leave.leave-report-employee', $id));
+});
+
 Breadcrumbs::for('admin.e-leave.add-leave-request-disapprove', function ($trail,$id) {
     $trail->parent('admin.dashboard');
     $trail->push('Leave Disapprove', route('admin.e-leave.add-leave-request-disapprove',$id));
