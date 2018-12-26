@@ -89,6 +89,9 @@
                 <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-application') ? 'active' : '' }}">
                     <a href="{{ route('admin.e-leave.leave-application') }}">Leave Application</a>
                 </li>
+                <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
+                    <a href="{{ route('admin.e-leave.leave-report') }}">Leave Report</a>
+                </li>
                 {{-- <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
                     <a href="{{ route('leaveapplication') }}">Leave Application</a>
                 </li> --}}

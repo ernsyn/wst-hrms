@@ -464,6 +464,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     //   Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
     Route::get('e-leave/configuration/leave-requests', 'Admin\ELeaveController@displayLeaveRequests')->name('admin.e-leave.configuration.leave-requests');
     Route::get('e-leave/leave-application', 'Admin\ELeaveController@displayLeaveApplication')->name('admin.e-leave.leave-application');
+    Route::get('e-leave/leave-report', 'Admin\ELeaveController@displayLeaveReports')->name('admin.e-leave.leave-report');
+    Route::get('e-leave/leave-report/{emp_id}','Admin\ELeaveController@getLeaveReport')->name('admin.e-leave.leave-report-employee')->where('emp_id', '[A-Za-z0-9\-\/]+');
     Route::get('e-leave/employees', 'Admin\ELeaveController@ajaxGetEmployees')->name('admin.e-leave.ajax.employees');
     Route::get('e-leave/employees/{emp_id}/working-days', 'Admin\EleaveController@ajaxGetEmployeeWorkingDays')->name('admin.e-leave.ajax.working-days')->where('emp_id', '[0-9]+');
     Route::get('e-leave/employee/{emp_id}/leave-requests', 'Admin\EleaveController@ajaxGetEmployeeLeaves')->name('admin.e-leave.ajax.employees.leave-requests')->where('status', '[A-Za-z0-9\-\/]+')->where('emp_id', '[0-9]+');
