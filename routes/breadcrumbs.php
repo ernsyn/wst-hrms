@@ -93,6 +93,13 @@ Breadcrumbs::for('admin.employees.add', function ($trail) {
     $trail->push('Add Employee', route('admin.employees.add'));
 });
 
+Breadcrumbs::for('admin.changepassword', function ($trail) {
+    $trail->parent('admin.employees');
+    $trail->push('Change Password', route('admin.changepassword'));
+});
+
+
+
 // Home > Settings > Leave Holiday
 Breadcrumbs::for('admin.e-leave.configuration.leave-holidays', function ($trail) {
     $trail->parent('admin.dashboard');

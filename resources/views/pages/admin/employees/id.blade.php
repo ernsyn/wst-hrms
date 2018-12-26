@@ -433,14 +433,14 @@
             <form id="change-password-form">
                 <div class="modal-body">
                     @csrf
-                    {{-- <div class="form-row">
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Current Password*</strong></label>
                             <input name="current_password" type="password" class="form-control" placeholder="" value="" >
                             <div id="current-password-error" class="invalid-feedback">
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>New Password*</strong></label>
@@ -802,7 +802,7 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    // current_password: $('#change-password-form input[name=current_password]').val(),
+                    current_password: $('#change-password-form input[name=current_password]').val(),
                     new_password: $('#change-password-form input[name=new_password]').val(),
                     confirm_new_password: $('#change-password-form input[name=confirm_new_password]').val(),
                 },
@@ -822,10 +822,10 @@
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
-                                    // case 'current_password':
-                                    //     $('#change-password-form input[name=current_password]').addClass('is-invalid');
-                                    //     $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    // break;
+                                    case 'current_password':
+                                        $('#change-password-form input[name=current_password]').addClass('is-invalid');
+                                        $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                     case 'new_password':
                                         $('#change-password-form input[name=new_password]').addClass('is-invalid');
                                         $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
