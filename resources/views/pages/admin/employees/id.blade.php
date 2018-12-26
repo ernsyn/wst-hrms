@@ -511,7 +511,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>New Profile Picture*</strong></label>
-                            <input name="required-picture" type="file" class="form-control-file">
+                            <input name="required-picture" type="file" id="picture" class="form-control-file{{ $errors->has('picture') ? ' is-invalid' : '' }}">
                             <div id="picture-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -895,7 +895,7 @@
         var editMediaId = null;
         // Function: On Modal Clicked Handler
         $('#edit-picture-popup').on('show.bs.modal', function (event) {
-            // clearPicturesError('#edit-picture-form');
+            clearPicturesError('#edit-picture-form');
             var button = $(event.relatedTarget) // Button that triggered the modal
             var currentData = button.data('current'); // Extract info from data-* attributes
             console.log('Data pic: ', currentData)
@@ -905,7 +905,7 @@
 
         var editPictureRouteTemplate = "{{ route('admin.employees.picture.edit.post', ['id' => $employee->user->profile_media_id]) }}";
         $('#edit-picture-submit').click(function(e){
-            // clearPicturesError('#edit-picture-form');
+            clearPicturesError('#edit-picture-form');
             e.preventDefault();
             var file = document.querySelector('input[name=required-picture]').files[0];
 
@@ -917,12 +917,14 @@
                 console.log("File>>>",file);
                 getBase64(file, function(attachmentDataUrl) {
                     data.attachment = attachmentDataUrl;
-                    postAddAttachment(data);
+                    postEditPicture(data);
                 });
+            } else {
+                postEditPicture(data);
             }
         });
 
-        function postAddAttachment(data) {
+        function postEditPicture(data) {
             $.ajax({
                 url: editPictureRouteTemplate,
                 type: 'POST',
@@ -943,8 +945,27 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'attachment':
-                                        $('#add-attachment-form #attachment').addClass('is-invalid');
-                                        $('#add-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                        $('#edit-picture-form input[name=required-picture]').addClass('is-invalid');
+                                        $('#edit-picture-form #picture-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'required-picture':
+                                        $('#edit-picture-form input[name=required-picture]').addClass('is-invalid');
+                                        $('#edit-picture-form #picture-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(xhr.status == 413) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'required-picture':
+                                        $('#edit-picture-form input[name=required-picture]').addClass('is-invalid');
+                                        $('#edit-picture-form #picture-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
                             }
@@ -972,18 +993,16 @@
     }
 
     function clearPicturesModal(htmlId) {
-        $(htmlId + ' #name').val('');
-        $(htmlId + ' #notes').val('');
         $(htmlId + ' #attachment').val('');
+        $(htmlId + ' #picture').val('');
 
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
         $(htmlId + ' #attachment').removeClass('is-invalid');
+        $(htmlId + ' #picture').removeClass('is-invalid');
     }
     function clearPicturesError(htmlId) {
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
         $(htmlId + ' #attachment').removeClass('is-invalid');
+        $(htmlId + ' #picture').removeClass('is-invalid');
+
     }
 
     function showAlert(message) {

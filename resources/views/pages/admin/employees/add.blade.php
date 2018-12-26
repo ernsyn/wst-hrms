@@ -14,11 +14,9 @@
                             <i class="default-user-logo-dark fas fa-user-circle fa-10x"></i>
                             <img src="" id="profile-img-tag" class="img-thumbnail rounded-circle" style="position: absolute; object-fit:cover; display:none; width:150px; height:150px">
                             <div class="col-lg-12 text-center">
-                                {{-- <input type="file" class="form-control-file btn-block" name="file" id="profile-img"
-                                    required> --}}
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" name="attachment" class="custom-file-input{{ $errors->has('attachment') ? ' is-invalid' : '' }}" id="profile-img" required>
+                                        <input type="file" name="attachment" class="custom-file-input{{ $errors->has('attachment') ? ' is-invalid' : '' }}" id="profile-img">
                                         <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                     </div>
                                     @if ($errors->has('attachment'))
