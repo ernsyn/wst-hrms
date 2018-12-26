@@ -21,6 +21,7 @@ use App\EmployeeWorkingDay;
 use \stdClass;
 use App\Http\Services\LeaveService;
 use App\Mail\LeaveRequestMail;
+use App\Mail\LeaveApprovalMail;
 use App\Employee;
 use Carbon\Carbon;
 use App\User;
@@ -311,9 +312,10 @@ class ELeaveController extends Controller
   
         $leaveRequestData->save();
 
-        // $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-        // ->where('leave_type_id',$leave_type_id)
-        // ->update(array('spent_days'=>$leaveAllocationDataEntry));
+        $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
+
+        // send leave request email notification
+        self::sendLeaveRequestApprovalNotification($leave_request_approval, $emp_id);
         return redirect()->route('admin.e-leave.configuration.leave-requests');
     }
 
@@ -699,7 +701,7 @@ class ELeaveController extends Controller
         ->bcc($bcc_recepients)
         ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
-    public function sendLeaveRequestApprovalNotification(LeaveRequest $leave_request, $emp_id) {
+    public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval, $emp_id) {
         $cc_recepients = array();
         $bcc_recepients = array();
         
@@ -730,6 +732,6 @@ class ELeaveController extends Controller
         \Mail::to(Auth::user()->email)
         ->cc($cc_recepients)
         ->bcc($bcc_recepients)
-        ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+        ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
     }
 }
