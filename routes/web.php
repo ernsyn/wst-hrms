@@ -46,13 +46,13 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
 
     Route::post('employee/approve_leave', 'Employee\ELeaveController@approvedLeaveRequest')->name('approve_leave'); // also for manager
-   
+
     Route::get('employee/approve_leave/{id}/add','Employee\ELeaveController@addLeaveApproval')->name('employee.e-leave.add-leave-request')->where('id', '[0-9]+');
     Route::get('employee/disapprove_leave/{id}/add','Employee\ELeaveController@rejectLeaveApproval')->name('employee.e-leave.add-leave-request-disapprove')->where('id', '[0-9]+');
-    
+
     Route::post('employee/approve_leaves/{id}/add','Employee\ELeaveController@postAddApproval')->name('employee.e-leave.add-leave-request.post')->where('id', '[0-9]+');
     Route::post('employee/approve_leaves/{id}/reject','Employee\ELeaveController@postDisapproved')->name('employee.e-leave.add-leave-request-disapprove.post')->where('id', '[0-9]+');
-   
+
     // Route::get('employee/approve_leave/add','Employee\ELeaveController@addLeaveApproval')->name('employee.e-leave.add-leave-request');
     // Route::post('employee/approve_leaves/add','Employee\ELeaveController@postAddApproval')->name('employee.e-leave.add-leave-request.post');
 
@@ -94,7 +94,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 
 //to be edit
     Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
-    
+
    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
     Route::get('e-leave/approvals','Employee\ELeaveController@displayLeaveRequestReportTo')->name('leaverequest');
     Route::get('e-leave/requests','Employee\ELeaveController@displayLeaveRequests')->name('leavehistory');
@@ -102,7 +102,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('e-leave/days/{start_date}/{end_date}', 'Employee\EleaveController@ajaxCalculateActualLeaveDays')
     ->name('employee.e-leave.days.ajax.get')->where(['start_date' => '[A-Za-z0-9\-\/]+', 'end_date' => '[A-Za-z0-9\-\/]+']);
     Route::post('e-leave/working-day','Employee\EleaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
-    
+
     Route::get('e-leave/types', 'Employee\EleaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
     Route::post('e-leave/request/check', 'Employee\EleaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
     Route::post('e-leave/request', 'Employee\EleaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
@@ -122,6 +122,9 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/{id}/edit','Employee\EmployeeController@postEditProfile')->name('employee.profile.edit.post');
     Route::post('employee/{id}/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
 
+    //employee edit profile pic
+    Route::post('employees/{id}/editpicture','Employee\EmployeeController@postEditPicture')->name('employees.picture.edit.post')->where('profile_media_id', '[0-9]+');
+
     Route::post('employee/{emp_id}/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
     Route::post('employee/{emp_id}/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
     Route::post('employee/{emp_id}/immigrations/{id}/edit','Employee\EmployeeController@postEditImmigration')->name('employee.immigrations.edit.post');
@@ -138,7 +141,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('e-leave','Employee\ELeaveController@displayLeaveApplication')->name('leaveapplication');
    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
     Route::post('e-leave/working-day','Employee\EleaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
-    
+
     Route::get('e-leave/types', 'Employee\EleaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
     Route::post('e-leave/request/check', 'Employee\EleaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
     Route::post('e-leave/request', 'Employee\EleaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
@@ -172,8 +175,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     // > View
     Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
     Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
-    
-    
+
+
     Route::post('employees/{id}/change-password','Admin\EmployeeController@postChangePassword')->name('admin.employees.change-password.post')->where('id', '[0-9]+');
     Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
 
@@ -224,7 +227,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('add_report_to','AdminController@addReportTo')->name('add_report_to'); // TODO
     Route::post('employees/{id}/edit','Admin\EmployeeController@postEditProfile')->name('admin.employees.profile.edit.post')->where('id', '[0-9]+');
 
-    //edit profile pic
+    //admin edit profile pic
     Route::post('employees/{id}/editpicture','Admin\EmployeeController@postEditPicture')->name('admin.employees.picture.edit.post')->where('profile_media_id', '[0-9]+');
 
     Route::post('employees/{emp_id}/dependents/{id}/edit','Admin\EmployeeController@postEditDependent')->name('admin.employees.dependents.edit.post')->where('id', '[0-9]+');
@@ -296,10 +299,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
     Route::get('admin/approve_leave/{id}/add','Admin\ELeaveController@addLeaveApproval')->name('admin.e-leave.add-leave-request')->where('id', '[0-9]+');
     Route::get('admin/disapprove_leave/{id}/add','Admin\ELeaveController@rejectLeaveApproval')->name('admin.e-leave.add-leave-request-disapprove')->where('id', '[0-9]+');
-    
+
     Route::post('admin/approve_leaves/{id}/add','Admin\ELeaveController@postAddApproval')->name('admin.e-leave.add-leave-request.post')->where('id', '[0-9]+');
     Route::post('admin/approve_leaves/{id}/reject','Admin\ELeaveController@postDisapproved')->name('admin.e-leave.add-leave-request-disapprove.post')->where('id', '[0-9]+');
-   
+
 
     //leave public holidays setup
     // Route::get('e-leave/configuration/leaveholidays/add','Admin\ELeaveController@addPublicHoliday')->name('admin.e-leave.configuration.leaveholidays.add');
@@ -474,7 +477,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('e-leave/leave-request/{id}', 'Admin\EleaveController@ajaxGetLeaveRequestSingle')->name('admin.e-leave.ajax.leave-request.edit')->where('id', '[0-9]+');
     Route::post('e-leave/leave-request/{id}/post','Admin\EleaveController@ajaxPostEditLeaveRequest')->name('admin.e-leave.ajax.leave-request.edit.post')->where('id', '[0-9]+');
     Route::get('e-leave/leave-request/{id}/delete','Admin\EleaveController@ajaxCancelLeaveRequest')->name('admin.e-leave.ajax.leave-request.delete')->where('id', '[0-9]+');
-    
+
     // Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
     // Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
 

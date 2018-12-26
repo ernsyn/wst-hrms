@@ -131,6 +131,7 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
     }
+
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
@@ -194,7 +195,7 @@ class EmployeeController extends Controller
         ]);
 
         $employee = Employee::where('id', $id)->first();
-        $current_password = $employee->user->password;     
+        $current_password = $employee->user->password;
         $current_password = bcrypt($data['current_password']);
 
 
@@ -233,7 +234,7 @@ else {
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         $id = auth()->user()->id;
       //  dd($id);
-        $current_password = Auth::user()->password;     
+        $current_password = Auth::user()->password;
         $current_password = bcrypt($data['current_password']);
 
        if (!(Hash::check($data['current_password'], Auth::user()->password))) {

@@ -7,12 +7,16 @@
         <div id="employee-profile-details" class="card-body bg-primary text-white">
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
-                    <div class="p-2">
-                        <i class="fas fa-user-circle fa-8x"></i>
-                    </div>
-                    <div class="pt-2 mt-auto">
-                        <h6><strong>Profile Image</strong></h6>
-                    </div>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->user}}" data-target="#edit-picture-popup">
+                        @if ($userMediaSize!=0)
+                            <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:150px; height:150px">
+                        @else
+                            <i class="fas fa-user-circle fa-8x"></i>
+                            <div class="pt-2 mt-auto">
+                                <h6><strong>Profile Image</strong></h6>
+                            </div>
+                        @endif
+                    </button>
                 </div>
                 <div id="basic-profile" class="px-2 ml-3 w-100">
                     <div class="header d-flex pb-3">
@@ -159,7 +163,7 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Joined Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->employee_jobs_joined_date->implode('start_date') ? $employee->employee_jobs_joined_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                    {{-- <span class="field-value">{!! $employee->employee_jobs_joined_date->implode('start_date') ? $employee->employee_jobs_joined_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
                                                 </div>
                                                 <span class="col-lg-5 p-3">Confirmation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
@@ -167,7 +171,7 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Resignation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->employee_jobs_resigned_date->implode('start_date') ? $employee->employee_jobs_resigned_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                    {{-- <span class="field-value">{!! $employee->employee_jobs_resigned_date->implode('start_date') ? $employee->employee_jobs_resigned_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
                                                     </span>
                                                 </div>
                                             </div>
@@ -380,6 +384,37 @@
                 </div>
                 <div class="modal-footer">
                     <button id="change-password-submit" type="submit" class="btn btn-primary">
+                        {{ __('Submit') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- Update picture --}}
+<div class="modal fade" id="edit-picture-popup" tabindex="-1" role="dialog" aria-labelledby="edit-picture-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-picture-label">Upload new profile picture</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="edit-picture-form">
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>New Profile Picture*</strong></label>
+                            <input name="required_picture" type="file" id="picture" class="form-control-file{{ $errors->has('picture') ? ' is-invalid' : '' }}">
+                            <div id="picture-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="edit-picture-submit" type="submit" class="btn btn-primary">
                         {{ __('Submit') }}
                     </button>
                 </div>
@@ -653,5 +688,131 @@
 
 
     });
+</script>
+<script type="text/javascript">
+    $(function(){
+
+        // EDIT picture
+        var editMediaId = null;
+        // Function: On Modal Clicked Handler
+        $('#edit-picture-popup').on('show.bs.modal', function (event) {
+            clearPicturesError('#edit-picture-form');
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var currentData = button.data('current'); // Extract info from data-* attributes
+            console.log('Data pic: ', currentData)
+
+            editMediaId = currentData.profile_media_id;
+        });
+
+        var editPictureRouteTemplate = "{{ route('employees.picture.edit.post', ['id' => $employee->user->profile_media_id]) }}";
+        $('#edit-picture-submit').click(function(e){
+            clearPicturesError('#edit-picture-form');
+            e.preventDefault();
+            var file = document.querySelector('input[name=required_picture]').files[0];
+
+            var data = {
+                _token: '{{ csrf_token() }}'
+
+            };
+
+            if(file) {
+                if(file.size<=2000000) {
+                    console.log("File>>>",file);
+                    getBase64(file, function(attachmentDataUrl) {
+                        data.attachment = attachmentDataUrl;
+                        postEditPicture(data);
+                    });
+                } else {
+                    $('#edit-picture-form input[name=required_picture]').addClass('is-invalid');
+                    $('#edit-picture-form #picture-error').html('<strong>The file size may not be greater than 2MB.</strong>');
+                }
+            }else {
+                postEditPicture(data);
+            }
+        });
+
+        function postEditPicture(data) {
+            $.ajax({
+                url: editPictureRouteTemplate,
+                type: 'POST',
+                data: data,
+                success: function(data) {
+                    showAlert(data.success);
+                    $('#edit-picture-popup').modal('toggle');
+                    $('#employee-profile-details').load(' #reload-profile1');
+                    $('#nav-profile').load(' #reload-profile2');
+                    clearPicturesModal('#edit-picture-form');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'attachment':
+                                        $('#edit-picture-form input[name=required_picture]').addClass('is-invalid');
+                                        $('#edit-picture-form #picture-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'required_picture':
+                                        $('#edit-picture-form input[name=required_picture]').addClass('is-invalid');
+                                        $('#edit-picture-form #picture-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(xhr.status == 413) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error 413: ", xhr);
+                        console.log("Error 413 status: ", xhr.statusText);
+                        $('#edit-picture-form input[name=required_picture]').addClass('is-invalid');
+                        $('#edit-picture-form #picture-error').html('<strong>File is too large</strong>');
+
+                    }
+                }
+            });
+        }
+    });
+
+
+
+    // GENERAL FUNCTIONS
+    // convert attachement to base64
+    function getBase64(file, onLoad) {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onload = function () {
+            onLoad(reader.result);
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+    }
+
+    function clearPicturesModal(htmlId) {
+        $(htmlId + ' #attachment').val('');
+        $(htmlId + ' #picture').val('');
+
+        $(htmlId + ' #attachment').removeClass('is-invalid');
+        $(htmlId + ' #picture').removeClass('is-invalid');
+    }
+    function clearPicturesError(htmlId) {
+        $(htmlId + ' #attachment').removeClass('is-invalid');
+        $(htmlId + ' #picture').removeClass('is-invalid');
+
+    }
+
+    function showAlert(message) {
+        $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <span id="alert-message">${message}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`)
+    }
+
 </script>
 @append

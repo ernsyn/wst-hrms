@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 use App\User;
@@ -23,6 +24,7 @@ use App\EmployeeEmergencyContact;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+use App\Media;
 
 class EmployeeController extends Controller
 {
@@ -30,8 +32,18 @@ class EmployeeController extends Controller
 
     public function displayProfile()
     {
-        $employee = Employee::with('user', 'employee_jobs')->find(Auth::user()->employee->id);
+        $id = Auth::user()->employee->id;
+        $employee = Employee::with('user', 'employee_jobs')->find($id);
 
+
+        $userMedia = DB::table('users')
+        ->join('medias', 'users.profile_media_id', '=', 'medias.id')
+        ->join('employees', 'employees.user_id', '=', 'users.id')
+        ->select('medias.*')
+        ->where('employees.id', $id)
+        ->first();
+
+        $userMediaSize=$userMedia->size;
         // $bank_list = Bank::all();
         // $cost_centre = CostCentre::all();
         // $department = Department::all();
@@ -42,7 +54,28 @@ class EmployeeController extends Controller
         // $countries = Country::all();
         // $companies = Company::all();
 
-        return view('pages.employee.id', ['employee' => $employee]);
+        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia,'userMediaSize' => $userMediaSize]);
+    }
+
+    public function postEditPicture(Request $request, $id) {
+        $pictureData = $request->validate([
+            'attachment' => 'required|max:2000000|regex:/^data:image/'
+        ],
+        [
+            'attachment.max' => 'The file size may not be greater than 2MB.'
+        ]);
+
+        $picture_data_url = $pictureData['attachment'];
+        $attach = self::processBase64DataUrl($picture_data_url);
+        $updatepictureData['category']= 'employee-picture';
+        $updatepictureData['mimetype']= $attach['mime_type'];
+        $updatepictureData['data']= $attach['data'];
+        $updatepictureData['size']= $attach['size'];
+        $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
+        Media::where('id', $id)->update($updatepictureData);
+
+
+        return response()->json(['success'=>'Profile Picture was successfully updated.']);
     }
 
     public function postEditProfile(Request $request, $id)
@@ -383,6 +416,23 @@ class EmployeeController extends Controller
         $employee->employee_attachments()->save($attachment);
 
         return response()->json(['success'=>'Attachment is successfully added']);
+    }
+
+    private static function processBase64DataUrl($dataUrl) {
+        $parts = explode(',', $dataUrl);
+
+        preg_match('#data:(.*?);base64#', $parts[0], $matches);
+        $mimeType = $matches[1];
+        $extension = explode('/', $mimeType)[1];
+
+        $data = $parts[1];
+
+        return [
+            'data' => $data,
+            'mime_type' => $mimeType,
+            'size' => mb_strlen($data),
+            'extension' => $extension
+        ];
     }
 
     // SECTION: Employee Working Day Setup
