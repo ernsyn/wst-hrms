@@ -180,29 +180,76 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.add', compact('countries','roles'));
     }
 
+    public function changepassword()
+    {
+        return view('pages.admin.changepassword');
+    }
+
+
     public function postChangePassword(Request $request, $id) {
         $data = $request->validate([
             // 'current_password' => 'required',
+            'current_password' => 'required',
             'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
         ]);
 
         $employee = Employee::where('id', $id)->first();
+        $current_password = $employee->user->password;     
+        $current_password = bcrypt($data['current_password']);
 
-        // dd(bcrypt($data['new_password']));
 
-        // if (!(Hash::check($data['current_password'], $employee->user->password))) {
-        //     response()->json(['errors'=> [
-        //         'current_password' => ['The current password is incorrect.']
-        //     ]], 422);
-        // }
-
+       if (!(Hash::check($data['current_password'],  $employee->user->password))) {
+            response()->json(['errors'=> [
+                'current_password' => ['The current password is incorrect.']
+            ]], 422);
+            return response()->json(['success'=>'Password was not successfully updated.']);
+        }
+else {
         User::where('id', $employee->user->id)->update([
             'password' => bcrypt($data['new_password'])
         ]);
-
         return response()->json(['success'=>'Password was successfully updated.']);
+        }
+
     }
 
+//     {
+//         $departmentData = $request->validate([
+//             'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
+
+//         ]);
+//         Department::create($departmentData);
+//         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
+//     }
+
+// }
+    public function postChangePasswordEmployee(Request $request) {
+
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'current_password' => 'required',
+            'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
+        ]);
+        return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
+        $id = auth()->user()->id;
+      //  dd($id);
+        $current_password = Auth::user()->password;     
+        $current_password = bcrypt($data['current_password']);
+
+       if (!(Hash::check($data['current_password'], Auth::user()->password))) {
+            response()->json(['errors'=> [
+                'current_password' => ['The current password is incorrect.']
+            ]], 422);
+            return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
+        }
+    else {
+        User::where('id',$id)->update([
+            'password' => bcrypt($data['new_password'])
+        ]);
+        return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
+        }
+
+    }
 
     public function postToggleRoleAdmin(Request $request, $id) {
         $data = $request->validate([
