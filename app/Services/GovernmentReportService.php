@@ -19,7 +19,7 @@ class GovernmentReportService
     }
 
     public function getUserLogonCompanyInformation(){
-        return $this->governmentReportRepository->getUserLogonCompanyInfomation();
+        return $this->governmentReportRepository->getUserLogonCompanyInformation();
     }
 
     public function getCompanyInformation($companyId){

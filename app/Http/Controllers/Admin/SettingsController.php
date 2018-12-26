@@ -1343,14 +1343,86 @@ public function destroyCompanyBank($id)
 // }
 
 
-    public function importPcb()
+    public function importPcb($fileName, $noOfCategory)
     {
-        $data = Excel::load('pcb.xlsx', function($reader) {
-        })->get();
-        dd($data);
-        Excel::import(new PcbImport, 'pcb.xlsx');
+        $collection = (new PcbImport)->toCollection($fileName);//,'pcb\p02.xlsx');
+//         dd(($collection));
+        $pcbs = array();
+        $rowCount = 0;
         
-        return back();
+        if($noOfCategory == 2){
+            $maxCell = 22;
+        } else {
+            $maxCell = 25;
+        }
+        
+        foreach($collection[0] as $row){
+            if($rowCount < 11){
+                $rowCount++;
+                continue;
+            }
+            
+            if($row[2] != null && is_numeric($row[2])) {
+                $cellCount = 3;
+                $salary = $row[2];
+                if($noOfCategory == 2){
+                    $totalChildren = 11;
+                } else {
+                    $totalChildren = 0;
+                }
+                
+                for($i=$cellCount; $i<=$maxCell; $i++){
+                    $amount = $row[$cellCount];
+                    
+                    if($amount != null && $amount != '-' && is_numeric($amount)){
+                        if($noOfCategory == 2){
+                            if($cellCount >= 3 && $cellCount <= 12){
+                                $category = 2;
+                            } else if($cellCount > 12 && $cellCount <= 22){
+                                $category = 3;
+                            }
+                        }else {
+                            if($cellCount == 3){
+                                $category = 1;
+                            } else if($cellCount > 3 && $cellCount <= 14){
+                                $category = 2;
+                            } else if($cellCount > 14 && $cellCount <= 25){
+                                $category = 3;
+                            }
+                        }
+                        
+                        $pcbs[] = [
+                            'category' => $category,
+                            'total_children' => $totalChildren,
+                            'salary' => $salary,
+                            'amount' => $amount
+                        ];
+                        
+                        if( ($noOfCategory == 3 && $cellCount > 3) || $noOfCategory == 2){
+                            $totalChildren++;
+                        }
+                    }
+                    
+                    if($noOfCategory == 3 && $totalChildren > 10){
+                        $totalChildren = 0;
+                    } else if($noOfCategory == 2 && $totalChildren > 20){
+                        $totalChildren = 11;
+                    }
+                    
+                    $cellCount++;
+                }
+            }
+            
+            $rowCount++;
+        }
+//         dd($pcbs);
+        if(count($pcbs) > 0){
+            foreach (array_chunk($pcbs,500) as $p) {
+                Pcb::insert($p);
+            }
+        }
+        
+        return "Total ".count($pcbs)." records";
     }
 
 }

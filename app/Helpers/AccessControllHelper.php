@@ -45,7 +45,7 @@ class AccessControllHelper
     {
         if(self::hasHrAdminRole()){
             
-            $securityGroupAccess = SecurityGroup::where('company_id',GenerateReportsHelper::getUserLogonCompanyInfomation()->id)->select('id')->get();
+            $securityGroupAccess = SecurityGroup::where('company_id',GenerateReportsHelper::getUserLogonCompanyInformation()->id)->select('id')->get();
         }else{
             $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',Employee::where('user_id',Auth::id())->first()->id)->select('security_group_id')->get();
         }

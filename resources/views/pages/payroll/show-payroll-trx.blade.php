@@ -172,7 +172,7 @@
     							<input class="form-control additions_days" readonly="" placeholder="0" name="payrolltrxaddition_id_days_{{$loop->iteration}}" type="number" value="{{ $days }}" data-toggle="tooltip" rel="tooltip" title="{{ $tooltip }}">
     						</div>
     						<div class="col-sm-4 mb15">
-    							<input class="form-control additions" readonly="" placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="{{ $amount }}">
+    							<input class="form-control additions" readonly="" placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="{{ $amount }}" step="any">
     						</div>
     					</div>
     					@elseif(in_array($row->name, PayrollHelper::payroll_addition_with_hours()))
@@ -210,7 +210,7 @@
                         <div class="col-sm-6 mb15">{{ $row->name}}</div>
                                                  
                             <div class="col-sm-6 mb15">
-                                <input class="form-control additions" placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="{{ $row->amount }}">
+                                <input class="form-control additions" placeholder="0.00" name="payrolltrxaddition_id_{{$loop->iteration}}" type="number" value="{{ $row->amount }}" step="any">
                             </div>
                         </div>
     					@endif

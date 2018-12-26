@@ -104,7 +104,7 @@ class PayrollController extends Controller
         AccessControllHelper::hasPayrollAccess();
         
         //get company information based on user login
-        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
         $payroll = [];
         if($company != null){
             $payroll = PayrollMaster::leftJoin('companies', 'companies.id', '=', 'payroll_master.company_id')
@@ -148,7 +148,7 @@ class PayrollController extends Controller
         DB::beginTransaction();
         
         // Step 1. get company
-        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
         
         // Step 2. Create payroll.
         $payroll = new PayrollMaster();
@@ -365,7 +365,7 @@ class PayrollController extends Controller
         $info = $this->payrollTrx->find($id)->first();
         $payrollMaster = PayrollMaster::where('id', $info->payroll_master_id)->first();
         $currentUser = Employee::where('user_id', Auth::id())->first();
-        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
         $info->isKpiProposer = $this->employeeReportToRepository->isKpiProposer($info->employee_id, $currentUser->id);
 //         dd($info,$info->employee_id,$info->isKpiProposer,$currentUser);
         $employee = $this->employeeRepository->find($info->employee_id)->first();
@@ -537,7 +537,7 @@ class PayrollController extends Controller
         $period = PayrollPeriodEnum::list();
         
         //get company information based on user login
-        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
         $officers = GenerateReportsHelper::getListOfficerInformation($company->id);
         
         return view('pages.payroll.payroll-report', ['period' => $period, 'sliders' => $arr['slider'],
@@ -599,7 +599,7 @@ class PayrollController extends Controller
     }
     
     private function generate($reportName,$periods,$date,$filter){
-        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
         $filter = [
             'year_month'      => $date,
             'type'      => $reportName,

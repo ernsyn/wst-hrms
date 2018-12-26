@@ -71,7 +71,7 @@ class PayrollReportController extends Controller
             
         }
         
-        $company = GenerateReportsHelper::getUserLogonCompanyInfomation();
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
         $data = array(
             'year_month' => $request->input('year_month').'-01',
             'period' => $request->input('selectPeriod'),
