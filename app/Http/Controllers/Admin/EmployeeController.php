@@ -202,7 +202,7 @@ class EmployeeController extends Controller
             response()->json(['errors'=> [
                 'current_password' => ['The current password is incorrect.']
             ]], 422);
-            return response()->json(['success'=>'Password was not successfully updated.']);
+            return response()->json(['fail'=>'The current password is incorrect. Password was not successfully updated.']);
         }
 else {
         User::where('id', $employee->user->id)->update([

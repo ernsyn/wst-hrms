@@ -787,6 +787,15 @@
             </div>`)
     }
 
+    function showAlertDanger(message) {
+        $('#alert-container').html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span id="alert-message">${message}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`)
+    }
+
 </script>
 <script>
     $(function () {
@@ -805,6 +814,7 @@
                 },
                 success: function(data) {
                     showAlert(data.success);
+                    showAlertDanger(data.fail);
                     clearChangePasswordModal('#change-password-form');
                     $('#change-password-popup').modal('toggle');
                     $(e.target).removeAttr('disabled');
@@ -827,10 +837,10 @@
                                         $('#change-password-form input[name=new_password]').addClass('is-invalid');
                                         $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    // case 'confirm_new_password':
-                                    //     $('#change-password-form input[name=confirm_new_password]').addClass('is-invalid');
-                                    //     $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    // break;
+                                    case 'confirm_new_password':
+                                        $('#change-password-form input[name=confirm_new_password]').addClass('is-invalid');
+                                        $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                 }
                             }
                         }
@@ -844,6 +854,22 @@
             let form = $(htmlId);
             form.find("input[name=new_password]").removeClass('is-invalid');
         }
+
+        function clearChangePasswordModal(htmlId) {
+            $(htmlId + ' input[name=current_password]').val('');
+            $(htmlId + ' input[name=new_password]').val('');
+            $(htmlId + ' input[name=confirm_new_password]').val('');
+
+            $(htmlId + ' input[name=current_password]').removeClass('is-invalid');
+            $(htmlId + ' input[name=new_password]').removeClass('is-invalid');
+            $(htmlId + ' input[name=confirm_new_password]').removeClass('is-invalid');
+        }
+        function clearChangePasswordError(htmlId) {
+            $(htmlId + ' input[name=current_password]').removeClass('is-invalid');
+            $(htmlId + ' input[name=new_password]').removeClass('is-invalid');
+            $(htmlId + ' input[name=confirm_new_password]').removeClass('is-invalid');
+        }
+
         // $('#employee-profile-details #emp-roles-btn').click(function (e) {
         //     console.log("ON: Roles Clicked!");
         // });
