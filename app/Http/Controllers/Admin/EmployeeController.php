@@ -113,25 +113,25 @@ class EmployeeController extends Controller
 
     public function postEditPicture(Request $request, $id) {
         $pictureData = $request->validate([
-            'attachment' => 'required'
+            'attachment' => 'required|max:2000000|regex:/^data:image/'
+        ],
+        [
+            'attachment.max' => 'The file size may not be greater than 2MB.'
         ]);
 
-        $picture_data_url = null;
-        if(array_key_exists('attachment', $pictureData)) {
-            $attachment_data_url = $pictureData['attachment'];
-            $attach = self::processBase64DataUrl($attachment_data_url);
-            $updatepictureData['category']= 'employee-picture';
-            $updatepictureData['mimetype']= $attach['mime_type'];
-            $updatepictureData['data']= $attach['data'];
-            $updatepictureData['size']= $attach['size'];
-            $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
-        }
-
-
+        $picture_data_url = $pictureData['attachment'];
+        $attach = self::processBase64DataUrl($picture_data_url);
+        $updatepictureData['category']= 'employee-picture';
+        $updatepictureData['mimetype']= $attach['mime_type'];
+        $updatepictureData['data']= $attach['data'];
+        $updatepictureData['size']= $attach['size'];
+        $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
         Media::where('id', $id)->update($updatepictureData);
+
 
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
     }
+
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
@@ -195,7 +195,7 @@ class EmployeeController extends Controller
         ]);
 
         $employee = Employee::where('id', $id)->first();
-        $current_password = $employee->user->password;     
+        $current_password = $employee->user->password;
         $current_password = bcrypt($data['current_password']);
 
 
@@ -234,7 +234,7 @@ else {
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         $id = auth()->user()->id;
       //  dd($id);
-        $current_password = Auth::user()->password;     
+        $current_password = Auth::user()->password;
         $current_password = bcrypt($data['current_password']);
 
        if (!(Hash::check($data['current_password'], Auth::user()->password))) {
@@ -415,7 +415,7 @@ else {
             'password' => 'required|required_with:confirm_password|same:confirm_password',
             'media_id' => '',
             'attachment' => '',
-            'attach' => '',
+            'attach' => 'nullable|max:2000000|regex:/^data:image/',
 
             'code'=>'required|unique:employees',
             'contact_no' => 'required',
@@ -439,19 +439,30 @@ else {
             'main_security_group_id'=>'nullable'
         ],
         [
-            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
+            'attach.max' => 'The file size may not be greater than 2MB.'
         ]);
 
         $attachment_data_url = $validated['attach'];
 
-        $attach = self::processBase64DataUrl($attachment_data_url);
-        $mediaData = Media::create([
-            'category' => 'employee-profile',
-            'mimetype' => $attach['mime_type'],
-            'data' => $attach['data'],
-            'size' => $attach['size'],
-            'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
-        ]);
+        if(!empty($attachment_data_url)){
+            $attach = self::processBase64DataUrl($attachment_data_url);
+            $mediaData = Media::create([
+                'category' => 'employee-profile',
+                'mimetype' => $attach['mime_type'],
+                'data' => $attach['data'],
+                'size' => $attach['size'],
+                'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
+            ]);
+        } else {
+            $mediaData = Media::create([
+                'category' => null,
+                'mimetype' => null,
+                'data' => null,
+                'size' => 0,
+                'filename' => null
+            ]);
+        }
 
         $media_id = DB::getPdo()->lastInsertId();
 
@@ -601,7 +612,7 @@ else {
 
         $jobData['created_by'] = auth()->user()->id;
 
-     
+
 
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)
@@ -643,7 +654,7 @@ Employee::where('id', $id)
 
         $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
-        
+
         $currentDate = date("Y-m-d");
 
         if(!empty($currentJob)) {

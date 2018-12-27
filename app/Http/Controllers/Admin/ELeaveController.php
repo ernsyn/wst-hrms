@@ -21,6 +21,7 @@ use App\EmployeeWorkingDay;
 use \stdClass;
 use App\Http\Services\LeaveService;
 use App\Mail\LeaveRequestMail;
+use App\Mail\LeaveApprovalMail;
 use App\Employee;
 use Carbon\Carbon;
 use App\User;
@@ -311,9 +312,10 @@ class ELeaveController extends Controller
   
         $leaveRequestData->save();
 
-        // $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-        // ->where('leave_type_id',$leave_type_id)
-        // ->update(array('spent_days'=>$leaveAllocationDataEntry));
+        $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
+
+        // send leave request email notification
+        self::sendLeaveRequestApprovalNotification($leave_request_approval, $emp_id);
         return redirect()->route('admin.e-leave.configuration.leave-requests');
     }
 
@@ -794,5 +796,38 @@ class ELeaveController extends Controller
         ->cc($cc_recepients)
         ->bcc($bcc_recepients)
         ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+    }
+    public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval, $emp_id) {
+        $cc_recepients = array();
+        $bcc_recepients = array();
+        
+        // get report to users
+        $report_to = EmployeeReportTo::where('emp_id', $emp_id)
+        ->where('report_to_level', '1')
+        ->get();
+
+        foreach ($report_to as $row) {
+            $employee = DB::table('employees')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->select('users.name','users.email')
+            ->where('employees.id', $row->report_to_emp_id)
+            ->first();
+
+            array_push($cc_recepients, $employee->email);
+        }
+
+        // get admin users
+        $admin_users = User::whereHas("roles", function($q){ 
+            $q->where("name", "admin");
+        })->get();
+
+        foreach ($admin_users as $row) {
+            array_push($bcc_recepients, $row->email);
+        }
+
+        \Mail::to(Auth::user()->email)
+        ->cc($cc_recepients)
+        ->bcc($bcc_recepients)
+        ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
     }
 }
