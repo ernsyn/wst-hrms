@@ -813,8 +813,8 @@
                     confirm_new_password: $('#change-password-form input[name=confirm_new_password]').val(),
                 },
                 success: function(data) {
-                    showAlert(data.success);
-                    showAlertDanger(data.fail);
+                    if(data.success) showAlert(data.success);
+                    if(data.fail) showAlertDanger(data.fail);
                     clearChangePasswordModal('#change-password-form');
                     $('#change-password-popup').modal('toggle');
                     $(e.target).removeAttr('disabled');
@@ -849,11 +849,6 @@
             });
 
         });
-
-        function clearChangePasswordModal(htmlId) {
-            let form = $(htmlId);
-            form.find("input[name=new_password]").removeClass('is-invalid');
-        }
 
         function clearChangePasswordModal(htmlId) {
             $(htmlId + ' input[name=current_password]').val('');

@@ -188,9 +188,8 @@ class EmployeeController extends Controller
 
     public function postChangePassword(Request $request, $id) {
         $data = $request->validate([
-            // 'current_password' => 'required',
             'current_password' => 'required',
-            'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
+            'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
         ]);
 
         $employee = Employee::where('id', $id)->first();
@@ -203,14 +202,12 @@ class EmployeeController extends Controller
                 'current_password' => ['The current password is incorrect.']
             ]], 422);
             return response()->json(['fail'=>'The current password is incorrect. Password was not successfully updated.']);
-        }
-else {
+        } else {
         User::where('id', $employee->user->id)->update([
             'password' => bcrypt($data['new_password'])
         ]);
         return response()->json(['success'=>'Password was successfully updated.']);
         }
-
     }
 
 //     {
