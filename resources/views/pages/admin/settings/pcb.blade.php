@@ -31,24 +31,6 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($pcbs as $pcb)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{$pcb['category']}}</td>
-                        <td>{{$pcb['salary']}}</td>
-                        <td>{{$pcb['total_children']}}</td>
-                        <td>{{$pcb['amount']}}</td>
-
-                        <td>
-                            <button onclick="window.location='{{ route('admin.settings.pcb.edit', ['id' => $pcb->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
-                            </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $pcb->category }}' data-link='{{ route('admin.settings.pcb.delete', ['id ' => $pcb->id]) }}' class="btn btn-danger btn-smt fas fa-trash-alt">
-                                </button>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
             </table>
         </div>
     </div>
@@ -77,8 +59,24 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function() {
+        $('#pcb-table').DataTable( {
+        	processing: true,
+            serverSide: true,
+            ajax: '{!! route('get.pcb.data') !!}',
+            columns: [
+                { data: 'id', name: 'id', searchable: false },
+                { data: 'category', name: 'category' },
+                { data: 'salary', name: 'salary' },
+                { data: 'total_children', name: 'total_children' },
+                { data: 'amount', name: 'amount' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ]
+        } );
+    } );
+    
     $(function(){
-        $('#pcb-table').DataTable({
+        /* $('#pcb-table').DataTable({
             responsive: true,
             stateSave: true,
             dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
@@ -111,7 +109,8 @@
                 },
             ]
 
-        });
+        }); */
+        
         $('#confirm-delete-modal').on('show.bs.modal', function (e) {
             var entryTitle = $(e.relatedTarget).data('entry-title');
             var link = $(e.relatedTarget).data('link');

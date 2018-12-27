@@ -536,3 +536,5 @@ Route::resource('payroll-setup', 'Payroll\PayrollSetupController');
 Route::get('payroll-setup/{id}/delete','Payroll\PayrollSetupController@destroy')->name('payroll-setup.destroy')->where('id', '[0-9]+');
 
 Route::get('settings/pcb/import', 'Admin\SettingsController@importPcb')->name('admin.settings.pcb.import');
+
+Route::get('get-pcb-data-datatables', ['as'=>'get.pcb.data','uses'=>'Admin\SettingsController@getPcbData']);

@@ -839,8 +839,23 @@ public function postEditSocso(Request $request, $id)
 // Contribution List
 public function displayPcb()
 {
-    $pcbs = Pcb::all();
-    return view('pages.admin.settings.pcb', ['pcbs' => $pcbs]);
+//     $pcbs = Pcb::all();//limit(1000)->get();
+//     dd($pcbs);
+    return view('pages.admin.settings.pcb');//, ['pcbs' => $pcbs]);
+}
+
+public function getPcbData()
+{
+    $pcbs = Pcb::query();//Pcb::select(['id', 'category', 'salary', 'total_children', 'amount'])->get();
+    
+    return Datatables::of($pcbs)
+    ->addColumn('action', function ($pcbs) {
+        return '<button onclick="window.location=\''.url('/admin/settings/pcb/'.$pcbs->id.'/edit').'\'" class="btn btn-success btn-smt fas fa-edit">
+    </button>
+    <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="'.$pcbs->category .'" data-link="'.url('/admin/settings/pcb/'.$pcbs->id.'/delete').'" class="btn btn-danger btn-smt fas fa-trash-alt">
+    </button>';
+    })
+    ->make(true);
 }
 
 public function addPcb()
