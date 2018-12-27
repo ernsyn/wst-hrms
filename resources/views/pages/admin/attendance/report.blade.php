@@ -21,6 +21,7 @@
                         <th>Employee Code</th>
                         <th>Employee Name</th>
                         <th>Attendance</th>
+                        {{-- <th>View</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,11 @@
                             <td>{{ $row->code }}</td>
                             <td>{{ $row->name }}</td>
                             <td>{{ $row->attendance }}</td>
+                            {{-- <td>
+                                <button class="btn btn-outline-primary waves-effect" data-toggle="modal">
+                                    <span class="fas fa-eye"></span>
+                                </button>
+                            </td> --}}
                         </tr>
                     @endforeach
                 </tbody>
