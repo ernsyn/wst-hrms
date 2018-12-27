@@ -20,7 +20,7 @@
                                         <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                     </div>
                                 </div>
-                                <input type="text" class="form-control{{ $errors->has('attach') ? ' is-invalid' : '' }}" id="attach" name="attach" value="{{ old('attach') }}">
+                                <input type="hidden" class="form-control{{ $errors->has('attach') ? ' is-invalid' : '' }}" id="attach" name="attach" value="{{ old('attach') }}">
 
                                 @if ($errors->has('attach'))
                                 <span id="picture-error" class="invalid-feedback" role="alert">
