@@ -14,7 +14,6 @@ class UpdatePayrollTrxTable extends Migration
     {
         Schema::table('payroll_trx', function ($table) {
             $table->decimal('gross_pay', 9)->default(0);
-            $table->decimal('commission', 9)->default(0);
         });
     }
 
