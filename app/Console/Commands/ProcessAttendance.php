@@ -79,7 +79,7 @@ class ProcessAttendance extends Command
 
             $currentDateProcessed = $latestDateProcessed->copy()->addDay();
         } else {
-            $currentDateProcessed = $yesterday;
+            $currentDateProcessed = $yesterday->copy();
         }
 
         
