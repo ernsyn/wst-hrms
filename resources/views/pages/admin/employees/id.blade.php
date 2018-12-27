@@ -8,7 +8,7 @@
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->user}}" data-target="#edit-picture-popup">
-                        @if ($userMediaSize!=0)
+                        @if ($employee->user->profile_media_id != null)
                             <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:150px; height:150px">
                         @else
                             <i class="fas fa-user-circle fa-8x"></i>

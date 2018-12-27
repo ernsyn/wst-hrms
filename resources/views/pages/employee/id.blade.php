@@ -8,7 +8,7 @@
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->user}}" data-target="#edit-picture-popup">
-                        @if ($userMediaSize!=0)
+                        @if (Auth::user()->profile_media_id != null)
                             <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:150px; height:150px">
                         @else
                             <i class="fas fa-user-circle fa-8x"></i>
@@ -163,14 +163,17 @@
                                                 </div>
                                                 <span class="col-lg-5 p-3">Joined Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? $employee->employee_jobs()->first()->start_date  : '<strong>(not set)</strong>' !!}</span>
                                                     {{-- <span class="field-value">{!! $employee->employee_jobs_joined_date->implode('start_date') ? $employee->employee_jobs_joined_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
                                                 </div>
                                                 <span class="col-lg-5 p-3">Confirmation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->employee_confirmed->implode('start_date') ? $employee->employee_confirmed->implode('start_date'):'<strong>(not set)</strong>' !!}</span>
+                                                    <span class="field-value">{!! $employee->confirmed_date ? $employee->confirmed_date :'<strong>(not set)</strong>' !!}</span>
+                                                    {{-- <span class="field-value">{!! $employee->employee_confirmed->implode('start_date') ? $employee->employee_confirmed->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
                                                 </div>
                                                 <span class="col-lg-5 p-3">Resignation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! isset($employee->employee_jobs()->where('status','=','Resigned')->first()->start_date ) ? $employee->employee_jobs()->where('status','Resigned')->first()->start_date  : '<strong>(not set)</strong>' !!}</span>
                                                     {{-- <span class="field-value">{!! $employee->employee_jobs_resigned_date->implode('start_date') ? $employee->employee_jobs_resigned_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
                                                     </span>
                                                 </div>

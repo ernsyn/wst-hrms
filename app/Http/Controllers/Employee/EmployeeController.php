@@ -43,7 +43,6 @@ class EmployeeController extends Controller
         ->where('employees.id', $id)
         ->first();
 
-        $userMediaSize=$userMedia->size;
         // $bank_list = Bank::all();
         // $cost_centre = CostCentre::all();
         // $department = Department::all();
@@ -54,7 +53,7 @@ class EmployeeController extends Controller
         // $countries = Country::all();
         // $companies = Company::all();
 
-        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia,'userMediaSize' => $userMediaSize]);
+        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia]);
     }
 
     public function postEditPicture(Request $request, $id) {
