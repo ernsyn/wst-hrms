@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Hash;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -103,16 +104,25 @@ class EmployeeController extends Controller
 
     public function postChangePassword(Request $request, $id) {
         $data = $request->validate([
-            'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
+            'current_password' => 'required',
+            'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
         ]);
 
         $employee = Employee::where('id', $id)->first();
+        $current_password = $employee->user->password;
+        $current_password = bcrypt($data['current_password']);
 
-        User::where('id', $employee->user->id)->update([
-            'password' => bcrypt($data['new_password'])
-        ]);
-
-        return response()->json(['success'=>'Password was successfully updated.']);
+        if (!(Hash::check($data['current_password'],  $employee->user->password))) {
+            response()->json(['errors'=> [
+                'current_password' => ['The current password is incorrect.']
+            ]], 422);
+            return response()->json(['fail'=>'The current password is incorrect. Password was not successfully updated.']);
+        } else {
+            User::where('id', $employee->user->id)->update([
+                'password' => bcrypt($data['new_password'])
+            ]);
+            return response()->json(['success'=>'Password was successfully updated.']);
+        }
     }
 
 
