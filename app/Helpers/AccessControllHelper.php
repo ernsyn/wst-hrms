@@ -74,7 +74,7 @@ class AccessControllHelper
     
     public static function hasPayrollAccess()
     {
-        if(! (self::hasHrExecRole() || self::hasHrExecRole() || self::isKpiProposer())) {
+        if(! (self::hasHrAdminRole() || self::hasHrExecRole() || self::isKpiProposer())) {
             $roles = array('admin', 'hr-exec', 'kip-proposer');
             throw UnauthorizedException::forRoles($roles);
         }
