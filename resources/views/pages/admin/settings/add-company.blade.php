@@ -48,8 +48,9 @@
                         <div class="col-8">
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-12">
-                                <input id="description" type="text" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" placeholder="Description"
-                                    name="description" value="{{ old('description') }}" required>
+                            	<textarea name="description" id="description" row="5" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" required>{{ old('description') }}</textarea>
+                                <!-- <input id="description" type="text" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" placeholder="Description"
+                                    name="description" value="{{ old('description') }}" required> -->
                                     @if ($errors->has('description'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('description') }}</strong>
@@ -103,6 +104,18 @@
                                     @if ($errors->has('address3'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('address3') }}</strong>
+                                    </span>
+                                    @endif
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="col-md-12 col-form-label">Postcode *</label>
+                            <div class="col-md-12">
+                                <input id="postcode" type="text" class="form-control{{ $errors->has('postcode') ? ' is-invalid' : '' }}"
+                                    name="postcode" value="{{ old('postcode') }}" required>
+                                    @if ($errors->has('postcode'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('postcode') }}</strong>
                                     </span>
                                     @endif
                             </div>

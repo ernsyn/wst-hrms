@@ -106,6 +106,12 @@
                                                         <span class="field-value">{{$employee->address3}}</span>
                                                     </div>
                                                 </div>
+                                                <span class="col-lg-5 p-3">Postcode</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <div class="field pb-1">
+                                                        <span class="field-value">{{$employee->postcode}}</span>
+                                                    </div>
+                                                </div>
                                                 <span class="col-lg-5 p-3">Contact No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->contact_no}}</span>
@@ -114,7 +120,11 @@
                                                 <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Number of Child</span>
+                                                <span class="col-lg-5 p-3">PCB Group</span>
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                    <span class="field-value">{{ PCBGroupEnum::getDescription($employee->pcb_group)}}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Number of Children</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!! $employee->total_children ? $employee->total_children:'<strong>(not set)</strong>' !!}</span>
                                                 </div>

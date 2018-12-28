@@ -142,10 +142,12 @@ class EmployeeController extends Controller
             'gender' => 'required',
             'marital_status' => 'required',
             'race' => 'required|alpha',
-            'total_children' => 'nullable|numeric',
+            'pcb_group' => 'required',
+            'total_children' => 'required|numeric',
             'address' => 'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
+            'postcode' => 'required|numeric',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
             'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
@@ -419,13 +421,15 @@ class EmployeeController extends Controller
             'address' => 'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
+            'postcode' => 'required|numeric',
             'company_id' => 'required',
             'dob' => 'required',
             'gender' => 'required',
             'race' => 'required|alpha',
             'nationality' => 'required',
+            'pcb_group' => 'required',
             'marital_status' => 'required',
-            'total_children' => 'nullable|numeric',
+            'total_children' => 'required|numeric',
             'ic_no' => 'required|unique:employees,ic_no|numeric',
             'tax_no' => 'required|unique:employees,tax_no',
             'epf_no' => 'required|unique:employees,epf_no|numeric',
@@ -433,7 +437,7 @@ class EmployeeController extends Controller
             'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable',
-            'main_security_group_id'=>'nullable'
+            'main_security_group_id'=>'required',
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
@@ -478,12 +482,14 @@ class EmployeeController extends Controller
         $validatedEmployeeData['address'] = $validated['address'];
         $validatedEmployeeData['address2'] = $validated['address2'];
         $validatedEmployeeData['address3'] = $validated['address3'];
+        $validatedEmployeeData['postcode'] = $validated['postcode'];
         $validatedEmployeeData['company_id'] = $validated['company_id'];
         $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
         $validatedEmployeeData['gender'] = $validated['gender'];
         $validatedEmployeeData['race'] = $validated['race'];
         $validatedEmployeeData['nationality'] = $validated['nationality'];
         $validatedEmployeeData['marital_status'] = $validated['marital_status'];
+        $validatedEmployeeData['pcb_group'] = $validated['pcb_group'];
         $validatedEmployeeData['total_children'] = $validated['total_children'];
         $validatedEmployeeData['ic_no'] = $validated['ic_no'];
         $validatedEmployeeData['tax_no'] = $validated['tax_no'];

@@ -227,6 +227,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'StatusEnum' => App\Enums\StatusEnum::class,
         'AttendanceEnum' => App\Enums\AttendanceEnum::class,
+        'PCBGroupEnum' => App\Enums\PCBGroupEnum::class,
 
     ],
 

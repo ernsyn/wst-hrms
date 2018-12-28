@@ -95,6 +95,7 @@ class SettingsController extends Controller
             'socso_no' => 'required|numeric',
             'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies',
+            'postcode' => 'required|numeric'
         ]);
 
         $companyData['status'] = 'Active';
@@ -545,6 +546,7 @@ class SettingsController extends Controller
             'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies,code,'.$id,
             'status' => 'required',
+            'postcode' => 'required|numeric'
         ]);
 
         Company::where('id', $id)->update($companyData);

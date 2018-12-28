@@ -105,14 +105,20 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <div class="field pb-1">
                                                         <span class="field-value">{{$employee->address}}</span>
+                                                    </div>
+                                                    <div class="field pb-1">
+                                                            <span class="field-value">{{$employee->address2}}</span>
+                                                    </div>
+                                                    <div class="field pb-1">
+                                                            <span class="field-value">{{$employee->address3}}</span>
+                                                    </div>
                                                 </div>
-                                                <div class="field pb-1">
-                                                        <span class="field-value">{{$employee->address2}}</span>
+                                                <span class="col-lg-5 p-3">Postcode</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <div class="field pb-1">
+                                                        <span class="field-value">{{$employee->postcode}}</span>
+                                                    </div>
                                                 </div>
-                                                <div class="field pb-1">
-                                                        <span class="field-value">{{$employee->address3}}</span>
-                                                </div>
-                                            </div>
                                                 <span class="col-lg-5 p-3">Contact No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->contact_no}}</span>
@@ -121,7 +127,11 @@
                                                 <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Number of Child</span>
+                                                <span class="col-lg-5 p-3">PCB Group</span>
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                    <span class="field-value">{{ PCBGroupEnum::getDescription($employee->pcb_group)}}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Number of Children</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!! $employee->total_children ? $employee->total_children:'<strong>(not set)</strong>' !!}</span>
                                                 </div>
@@ -330,7 +340,17 @@
                                     <div id="race-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="total-children"><strong>Number of Child</strong></label>
+                                	<label for="pcb_group"><strong>PCB Group*</strong></label>
+                                    <select class="form-control{{ $errors->has('pcb_group') ? ' is-invalid' : '' }}" name="pcb_group" id="pcb_group">
+                                        <option value="">Select PCB Group</option>
+                                        <option value="1" {{ old('pcb_group') == 1 ? 'selected' : ''}}>Single Person</option>
+                                        <option value="2" {{ old('pcb_group') == 2 ? 'selected' : ''}}>Spouse not working</option>
+                                        <option value="3" {{ old('pcb_group') == 3 ? 'selected' : ''}}>Spouse working</option>
+                                    </select>
+                                    <div id="pcb_group-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="total-children"><strong>Number of Children*</strong></label>
                                     <input id="total-children" type="text" class="form-control" placeholder="" value="" >
                                     <div id="total-children-error" class="invalid-feedback"></div>
                                 </div>
@@ -372,6 +392,11 @@
                                     <label for="address3"><strong>Address Line 3</strong></label>
                                     <input id="address3" type="text" class="form-control" placeholder="" value="" >
                                     <div id="address3-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="postcode"><strong>Postcode*</strong></label>
+                                    <input id="postcode" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="postcode-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="driver-license-no"><strong>Driver License No</strong></label>
@@ -560,10 +585,12 @@
             $('#edit-profile-form #contact-no').val(currentData.contact_no);
             $('#edit-profile-form #marital-status').val(currentData.marital_status);
             $('#edit-profile-form #race').val(currentData.race);
+            $('#edit-profile-form #pcb_group').val(currentData.pcb_group);
             $('#edit-profile-form #total-children').val(currentData.total_children);
             $('#edit-profile-form #address').val(currentData.address);
             $('#edit-profile-form #address2').val(currentData.address2);
             $('#edit-profile-form #address3').val(currentData.address3);
+            $('#edit-profile-form #postcode').val(currentData.postcode);
             $('#edit-profile-form #driver-license-no').val(currentData.driver_license_no);
             $('#edit-profile-form #driver-license-expiry-date').val(currentData.driver_license_expiry_date);
             $('#edit-profile-form #epf-no').val(currentData.epf_no);
@@ -604,10 +631,12 @@
                     contact_no: $('#edit-profile-form #contact-no').val(),
                     marital_status: $('#edit-profile-form #marital-status').val(),
                     race: $('#edit-profile-form #race').val(),
+                    pcb_group: $('#edit-profile-form #pcb_group').val(),
                     total_children: $('#edit-profile-form #total-children').val(),
                     address: $('#edit-profile-form #address').val(),
                     address2: $('#edit-profile-form #address2').val(),
                     address3: $('#edit-profile-form #address3').val(),
+                    postcode: $('#edit-profile-form #postcode').val(),
                     driver_license_no: $('#edit-profile-form #driver-license-no').val(),
                     driver_license_expiry_date: $('#edit-profile-form #driver-license-expiry-date').val(),
                     epf_no: $('#edit-profile-form #epf-no').val(),
@@ -664,6 +693,10 @@
                                         $('#edit-profile-form #race').addClass('is-invalid');
                                         $('#edit-profile-form #race-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'pcb_group':
+                                        $('#edit-profile-form #pcb_group').addClass('is-invalid');
+                                        $('#edit-profile-form #pcb_group-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                     case 'total_children':
                                         $('#edit-profile-form #total-children').addClass('is-invalid');
                                         $('#edit-profile-form #total-children-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -679,6 +712,10 @@
                                     case 'address3':
                                         $('#edit-profile-form #address3').addClass('is-invalid');
                                         $('#edit-profile-form #address3-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'postcode':
+                                        $('#edit-profile-form #postcode').addClass('is-invalid');
+                                        $('#edit-profile-form #postcode-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'driver_license_no':
                                         $('#edit-profile-form #driver-license-no').addClass('is-invalid');
@@ -734,12 +771,14 @@
         $(htmlId + ' #address').val('');
         $(htmlId + ' #address2').val('');
         $(htmlId + ' #address3').val('');
+        $(htmlId + ' #postcode').val('');
         $(htmlId + ' #driver-license-no').val('');
         $(htmlId + ' #driver-license-expiry-date').val('');
         $(htmlId + ' #epf-no').val('');
         $(htmlId + ' #tax-no').val('');
         $(htmlId + ' #eis-no').val('');
         $(htmlId + ' #socso-no').val('');
+        $(htmlId + ' #pcb_group').val('');
 
         $(htmlId + ' #ic-no').removeClass('is-invalid');
         $(htmlId + ' #code').removeClass('is-invalid');
@@ -749,10 +788,12 @@
         $(htmlId + ' #contact-no').removeClass('is-invalid');
         $(htmlId + ' #marital-status').removeClass('is-invalid');
         $(htmlId + ' #race').removeClass('is-invalid');
+        $(htmlId + ' #pcb_group').removeClass('is-invalid');
         $(htmlId + ' #total-children').removeClass('is-invalid');
         $(htmlId + ' #address').removeClass('is-invalid');
         $(htmlId + ' #address2').removeClass('is-invalid');
         $(htmlId + ' #address3').removeClass('is-invalid');
+        $(htmlId + ' #postcode').removeClass('is-invalid');
         $(htmlId + ' #driver-license-no').removeClass('is-invalid');
         $(htmlId + ' #driver-license-expiry-date').removeClass('is-invalid');
         $(htmlId + ' #epf-no').removeClass('is-invalid');
@@ -769,10 +810,12 @@
         $(htmlId + ' #contact-no').removeClass('is-invalid');
         $(htmlId + ' #marital-status').removeClass('is-invalid');
         $(htmlId + ' #race').removeClass('is-invalid');
+        $(htmlId + ' #pcb_group').removeClass('is-invalid');
         $(htmlId + ' #total-children').removeClass('is-invalid');
         $(htmlId + ' #address').removeClass('is-invalid');
         $(htmlId + ' #address2').removeClass('is-invalid');
         $(htmlId + ' #address3').removeClass('is-invalid');
+        $(htmlId + ' #postcode').removeClass('is-invalid');
         $(htmlId + ' #driver-license-no').removeClass('is-invalid');
         $(htmlId + ' #driver-license-expiry-date').removeClass('is-invalid');
         $(htmlId + ' #epf-no').removeClass('is-invalid');

@@ -13,6 +13,7 @@ class Employee extends Model
         'address',
         'address2',
         'address3',
+        'postcode',
         'company_id',
         'contact_no',
         'dob',
@@ -20,6 +21,7 @@ class Employee extends Model
         'race',
         'nationality',
         'marital_status',
+        'pcb_group',
         'total_children',
         'ic_no',
         'tax_no',
@@ -30,7 +32,7 @@ class Employee extends Model
         'driver_license_expiry_date',
         'created_by',
         'main_security_group_id',
-        'code'
+        'code',
     ];
 
     protected $dates = [

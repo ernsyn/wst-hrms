@@ -25,6 +25,7 @@ class Company extends Model
         'eis_no',
         'code',
         'status',
+        'postcode'
     ];
 
 	protected $dates = ['deleted_at'];    

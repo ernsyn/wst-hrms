@@ -114,6 +114,15 @@
                                 </span>
                                 @endif
                             </div>
+                            <label class="col-lg-3 col-form-label text-lg-right">Postcode*</label>
+                            <div class="col-lg-7 mb-2">
+                                <input type="text" class="form-control{{ $errors->has('postcode') ? ' is-invalid' : '' }}" name="postcode" value="{{ old('postcode') }}">
+                                @if ($errors->has('postcode'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('postcode') }}</strong>
+                                </span>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -224,8 +233,24 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">PCB Group*</label>
+                            <div class="col-lg-6">
+                                <select class="form-control{{ $errors->has('pcb_group') ? ' is-invalid' : '' }}" name="pcb_group">
+                                    <option value="">Select PCB Group</option>
+                                    <option value="1" {{ old('pcb_group') == 1 ? 'selected' : ''}}>Single Person</option>
+                                    <option value="2" {{ old('pcb_group') == 2 ? 'selected' : ''}}>Spouse not working</option>
+                                    <option value="3" {{ old('pcb_group') == 3 ? 'selected' : ''}}>Spouse working</option>
+                                </select>
+                                @if ($errors->has('pcb_group'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('pcb_group') }}</strong>
+                                </span>
+								@endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
 
-                            <label class="col-lg-4 col-form-label text-lg-right">Number of Children</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">Number of Children*</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control{{ $errors->has('total_children') ? ' is-invalid' : '' }}" name="total_children"
                                     value="{{ old('total_children') }}">
@@ -338,7 +363,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Main Security Group</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">Main Security Group*</label>
                             <div class="col-lg-6">
                                 <select class="form-control{{ $errors->has('main_security_group_id') ? ' is-invalid' : '' }}" name="main_security_group_id" id="main_security_group_id">
                                     <option value=""></option>
