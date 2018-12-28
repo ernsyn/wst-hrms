@@ -118,12 +118,25 @@
                 <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
                     <a href="{{ route('admin.e-leave.leave-report') }}">Leave Report</a>
                 </li>
-                {{-- <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
-                    <a href="{{ route('leaveapplication') }}">Leave Application</a>
-                </li> --}}
                     </ul>
                 </li>
     
+        {{-- SECTION: Attendance --}}
+        <li class="menu-section {{ request()->is('admin/attendance*') ? 'active' : '' }}">
+            <a class="info dropdown-toggle" href="#attendanceSubmenu" data-toggle="collapse" aria-expanded="false">
+                <div class="row">
+                    <div class="col-1"><i class="far fa-clock"></i></div>
+                    <div class="col-10">Attendance</div>
+                </div>
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('admin/attendance*') ? 'show' : '' }}" id="attendanceSubmenu">
+                {{-- OPTION: Attendance Report --}}
+                <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
+                    <a href="{{ route('admin.attendance.report') }}">Attendance Report</a>
+                </li>
+            </ul>
+        </li>
+
             {{-- SECTION: Settings --}}
             <li class="menu-section {{ request()->is('admin/settings*') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#setupSubmenu" data-toggle="collapse" aria-expanded="false">

@@ -38,7 +38,9 @@
                         </div>
                         <div class="field pb-1">
                             <span class="field-name mr-2">Nationality</span>
-                            <span class="field-value">{!! $employee->nationality ? $employee->nationality:'<strong>(not set)</strong>' !!}</span>
+                            <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
+                            </span>
+                            {{-- <span class="field-value">{!! $employee->nationality ? $employee->nationality:'<strong>(not set)</strong>' !!}</span> --}}
                         </div>
                     </div>
                 </div>
@@ -360,14 +362,14 @@
             <form id="change-password-form">
                 <div class="modal-body">
                     @csrf
-                    {{-- <div class="form-row">
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Current Password*</strong></label>
                             <input name="current_password" type="password" class="form-control" placeholder="" value="" required>
                             <div id="current-password-error" class="invalid-feedback">
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>New Password*</strong></label>
@@ -639,6 +641,15 @@
             </div>`)
     }
 
+    function showAlertDanger(message) {
+        $('#alert-container').html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span id="alert-message">${message}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`)
+    }
+
 </script>
 <script>
     $(function () {
@@ -651,11 +662,13 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
+                    current_password: $('#change-password-form input[name=current_password]').val(),
                     new_password: $('#change-password-form input[name=new_password]').val(),
                     confirm_new_password: $('#change-password-form input[name=confirm_new_password]').val(),
                 },
                 success: function(data) {
-                    showAlert(data.success);
+                    if(data.success) showAlert(data.success);
+                    if(data.fail) showAlertDanger(data.fail);
                     clearChangePasswordModal('#change-password-form');
                     $('#change-password-popup').modal('toggle');
                     $(e.target).removeAttr('disabled');
@@ -670,9 +683,17 @@
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
+                                    case 'current_password':
+                                        $('#change-password-form input[name=current_password]').addClass('is-invalid');
+                                        $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                     case 'new_password':
                                         $('#change-password-form input[name=new_password]').addClass('is-invalid');
                                         $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'confirm_new_password':
+                                        $('#change-password-form input[name=confirm_new_password]').addClass('is-invalid');
+                                        $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
                             }
@@ -684,12 +705,19 @@
         });
 
         function clearChangePasswordModal(htmlId) {
-            let form = $(htmlId);
-            form.find("input[name=new_password]").removeClass('is-invalid');
+            $(htmlId + ' input[name=current_password]').val('');
+            $(htmlId + ' input[name=new_password]').val('');
+            $(htmlId + ' input[name=confirm_new_password]').val('');
+
+            $(htmlId + ' input[name=current_password]').removeClass('is-invalid');
+            $(htmlId + ' input[name=new_password]').removeClass('is-invalid');
+            $(htmlId + ' input[name=confirm_new_password]').removeClass('is-invalid');
         }
-
-
-
+        function clearChangePasswordError(htmlId) {
+            $(htmlId + ' input[name=current_password]').removeClass('is-invalid');
+            $(htmlId + ' input[name=new_password]').removeClass('is-invalid');
+            $(htmlId + ' input[name=confirm_new_password]').removeClass('is-invalid');
+        }
     });
 </script>
 <script type="text/javascript">
