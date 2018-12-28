@@ -481,6 +481,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('e-leave/leave-request/{id}/delete','Admin\EleaveController@ajaxCancelLeaveRequest')->name('admin.e-leave.ajax.leave-request.delete')->where('id', '[0-9]+');
 
     Route::get('attendance/report/{date?}','Admin\AttendanceController@getAttendanceReport')->name('admin.attendance.report')->where('date', '[A-Za-z0-9\-\/]+');
+    Route::get('attendance/current-day','Admin\AttendanceController@getCurrentDayAttendance')->name('admin.attendance.current-day');
 
     // Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
     // Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
