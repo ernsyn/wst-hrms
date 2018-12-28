@@ -46,6 +46,30 @@
                 </div>
             </a>
         </div>
+        <div class="p-2 col-xl-3 col-lg-6">
+            <a href="{{ route('admin.attendance.current-day') }}" style="text-decoration: none">
+                <div class="card border-0 bg-info">
+                    <div class="card-body">
+                        <i class="fas fa-clock fa-4x float-right text-white"></i>
+                        <h6 class="text-white">Attendance for {{ \Carbon\Carbon::today()->format('l, d/m/Y') }}</h6>
+                        <h1 class="text-white">
+                            {{ 
+                                App\EmployeeClockInOutRecord::selectRaw('DISTINCT(emp_id)')
+                                ->whereDate('clock_in_time', \Carbon\Carbon::today())
+                                ->count() 
+                            }}
+                            /
+                            {{ 
+                                DB::table('employees')
+                                ->join('employee_working_days', 'employees.id', '=', 'employee_working_days.emp_id')
+                                ->whereIn(strtolower(\Carbon\Carbon::today()->format('l')), array('full','half'))
+                                ->count() 
+                            }}
+                        </h1>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
     {{-- <div class="row">
         <div class="p-2 col-lg-8">

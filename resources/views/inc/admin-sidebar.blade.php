@@ -130,6 +130,10 @@
                 </div>
             </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/attendance*') ? 'show' : '' }}" id="attendanceSubmenu">
+                {{-- OPTION: Current Day Attendance --}}
+                <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
+                    <a href="{{ route('admin.attendance.current-day') }}">Current Day</a>
+                </li>
                 {{-- OPTION: Attendance Report --}}
                 <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
                     <a href="{{ route('admin.attendance.report') }}">Attendance Report</a>

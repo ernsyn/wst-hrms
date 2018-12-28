@@ -85,6 +85,11 @@ Breadcrumbs::for('employee.e-leave.add-leave-request', function ($trail, $id) {
 });
 
 
+Breadcrumbs::for('admin.attendance.current-day', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Current Day Attendance', route('admin.attendance.current-day'));
+});
+
 Breadcrumbs::for('admin.attendance.report', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Attendance Report', route('admin.attendance.report'));
