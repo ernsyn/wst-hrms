@@ -236,7 +236,7 @@ class PayrollController extends Controller
                 $pcbFilter = array();
                 $pcbFilter['salary'] = $remuneration + $contributionData['pcb'];
                 $pcbFilter['pcbGroup'] = $employee->pcb_group;
-                $pcbFilter['noOfChildren'] = $employee->total_child;
+                $pcbFilter['noOfChildren'] = $employee->total_children;
                 $pcb = $this->pcbRepository->findByFilter($pcbFilter);
                 
                 $storeData = [];
