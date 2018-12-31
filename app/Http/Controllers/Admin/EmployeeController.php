@@ -1516,8 +1516,7 @@ Employee::where('id', $id)
 
     //     return null;
     // }
-    }
-	
+    
 	public function postEditRoles(Request $request, $id) {
         $employee = Employee::where('id', $id)->first();
         
