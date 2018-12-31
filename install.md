@@ -22,3 +22,28 @@ Memory: 64GB DDR3 (1600MHz)
 For mobile app,
 - php artisan passport:keys - to generate the keys needed for the mobile app authentication
 - php artisan passport:client --personal - to create personal access token
+
+# Seeder #
+php artisan db:seed --class=DatabaseSeeder
+
+# Import EPF schedule from csv #
+load data local infile '/data/www/wst-hrms/database/seeds/epf.csv' into table epfs fields terminated by ',';
+
+# Import PCB Schedule #
+php artisan tinker
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-2-50.xlsx',3]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-51-100.xlsx',3]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-101-150.xlsx',3]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-151-200.xlsx',3]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-201-250.xlsx',3]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-251-300.xlsx',3]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-301-350.xlsx',3]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-351-355.xlsx',3]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-357-400.xlsx',2]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-401-450.xlsx',2]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-451-500.xlsx',2]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-501-550.xlsx',2]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-551-600.xlsx',2]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-601-650.xlsx',2]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-651-700.xlsx',2]);
+app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-701-733.xlsx',2]);
