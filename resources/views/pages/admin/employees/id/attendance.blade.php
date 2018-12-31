@@ -10,33 +10,33 @@
 
 
     <div class="templates" hidden>
-        <li class="list-group-item attendance">
+        <li class="list-group-item present">
             <div class="row">
                 <div class="date col-md-2">
                     
                 </div>
                 <div class="type col-md-2 text-success">
-                    Attendance
+                    Present
                 </div>
                 <div class="details col-md-8">
                     
                 </div>
             </div>
         </li>
-        <li class="list-group-item missing">
+        <li class="list-group-item absent">
             <div class="row">
                 <div class="date col-md-2">
                     
                 </div>
                 <div class="type col-md-2 text-danger">
-                    Missing Attendance
+                    Absent
                 </div>
                 <div class="details col-md-8">
                     
                 </div>
             </div>
         </li>
-        <li class="list-group-item holiday ">
+        <li class="list-group-item holiday">
             <div class="row">
                 <div class="date col-md-2">
                     
@@ -49,23 +49,75 @@
                 </div>
             </div>
         </li>
-        <li class="list-group-item future">
+        <li class="list-group-item off">
             <div class="row">
                 <div class="date col-md-2">
                     
                 </div>
-                <div class="type col-md-2">
-                        Future
+                <div class="type col-md-2 text-info">
+                    Off Day
                 </div>
                 <div class="details col-md-8">
-                    (Date has not occurred yet.)
+                    
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item rest">
+            <div class="row">
+                <div class="date col-md-2">
+                    
+                </div>
+                <div class="type col-md-2 text-info">
+                    Rest Day
+                </div>
+                <div class="details col-md-8">
+                    
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item ot-holiday">
+            <div class="row">
+                <div class="date col-md-2">
+                    
+                </div>
+                <div class="type col-md-2 text-success">
+                    OT (Holiday)
+                </div>
+                <div class="details col-md-8">
+                    
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item ot-rest">
+            <div class="row">
+                <div class="date col-md-2">
+                    
+                </div>
+                <div class="type col-md-2 text-success">
+                    OT (Rest Day)
+                </div>
+                <div class="details col-md-8">
+                    
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item ot-off">
+            <div class="row">
+                <div class="date col-md-2">
+                    
+                </div>
+                <div class="type col-md-2 text-success">
+                    OT (Off Day)
+                </div>
+                <div class="details col-md-8">
+                    
                 </div>
             </div>
         </li>
         <li class="list-group-item leave">
             <div class="row">
                 <div class="date col-md-2">
-                    Date
+                    
                 </div>
                 <div class="type col-md-2 text-warning">
                         Leave
@@ -85,36 +137,61 @@
             console.log("attendanceLogList: ", attendanceLogList);
             if(attendanceLogList) {
                 for(var log of attendanceLogList) {
-                    switch(log.type) {
-                        case 'attendance':
-                        var el = $('.templates .attendance').clone();
+                    switch(log.attendance) {
+                        case 'present':
+                            var el = $('.templates .present').clone();
 
-                        el.find('.date').text(log.date);
-                        el.find('.details').html("<strong>Clock-In</strong> (Time: " + log.clock_in_time + ", Address: " + log.clock_in_address + ") <br><strong>Clock-Out</strong> (Time: " + log.clock_out_time + ", Address: " + log.clock_out_address + ")");
-                        
-                        el.appendTo('.attendance-log');
+                            el.find('.date').text(log.date);
+                            // el.find('.details').html("<strong>Clock-In</strong> (Time: " + log.clock_in_time + ", Address: " + log.clock_in_address + ") <br><strong>Clock-Out</strong> (Time: " + log.clock_out_time + ", Address: " + log.clock_out_address + ")");
+                            
+                            el.appendTo('.attendance-log');
                         break;
-                        case 'future':
-                        var el = $('.templates .future').clone();
-                        el.find('.date').text(log.date);
-                        el.appendTo('.attendance-log');
-                        break;
-                        case 'missing':
-                        var el = $('.templates .missing').clone();
-                        el.find('.date').text(log.date);
-                        el.appendTo('.attendance-log');
+                        case 'absent':
+                            var el = $('.templates .absent').clone();
+                            el.find('.date').text(log.date);
+                            el.appendTo('.attendance-log');
                         break;
                         case 'leave':
-                        var el = $('.templates .leave').clone();
-                        el.find('.date').text(log.date);
-                        el.find('.details').text(log.name);
-                        el.appendTo('.attendance-log');
+                            var el = $('.templates .leave').clone();
+                            el.find('.date').text(log.date);
+                            // el.find('.details').text(log.name);
+                            el.appendTo('.attendance-log');
                         break;
                         case 'holiday':
-                        var el = $('.templates .holiday').clone();
-                        el.find('.date').text(log.date);
-                        el.find('.details').text(log.name);
-                        el.appendTo('.attendance-log');
+                            var el = $('.templates .holiday').clone();
+                            el.find('.date').text(log.date);
+                            // el.find('.details').text(log.name);
+                            el.appendTo('.attendance-log');
+                        break;
+                        case 'off':
+                            var el = $('.templates .off').clone();
+                            el.find('.date').text(log.date);
+                            // el.find('.details').text(log.name);
+                            el.appendTo('.attendance-log');
+                        break;
+                        case 'rest':
+                            var el = $('.templates .rest').clone();
+                            el.find('.date').text(log.date);
+                            // el.find('.details').text(log.name);
+                            el.appendTo('.attendance-log');
+                        break;
+                        case 'ot-holiday':
+                            var el = $('.templates .ot-holiday').clone();
+                            el.find('.date').text(log.date);
+                            // el.find('.details').text(log.name);
+                            el.appendTo('.attendance-log');
+                        break;
+                        case 'ot-rest':
+                            var el = $('.templates .ot-rest').clone();
+                            el.find('.date').text(log.date);
+                            // el.find('.details').text(log.name);
+                            el.appendTo('.attendance-log');
+                        break;
+                        case 'ot-off':
+                            var el = $('.templates .ot-off').clone();
+                            el.find('.date').text(log.date);
+                            // el.find('.details').text(log.name);
+                            el.appendTo('.attendance-log');
                         break;
                     }
                 }
