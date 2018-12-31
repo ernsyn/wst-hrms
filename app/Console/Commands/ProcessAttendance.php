@@ -14,7 +14,9 @@ use App\Holiday;
 use App\EmployeeClockInOutRecord;
 use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
+use App\LeaveRequest;
 
+use App\Http\Services\LeaveService;
 use App\Constants\AttendanceType;
 
 class ProcessAttendance extends Command
@@ -139,9 +141,15 @@ class ProcessAttendance extends Command
                             // $this->info("OT Holiday!");
                             EmployeeAttendance::create([
                                'emp_id' => $id,
-                               'date' => $currentDateProcessed ,
+                               'date' => $currentDateProcessed,
                                'attendance' => AttendanceType::OT_HOLIDAY
                             ]);
+                        } else {
+                            EmployeeAttendance::create([
+                                'emp_id' => $id,
+                                'date' => $currentDateProcessed,
+                                'attendance' => AttendanceType::HOLIDAY
+                             ]);
                         }
                     } else {
                         switch($workingDayType) {
@@ -150,8 +158,14 @@ class ProcessAttendance extends Command
                                 // $this->info("OT Off!");
                                 EmployeeAttendance::create([
                                     'emp_id' => $id,
-                                    'date' => $currentDateProcessed ,
+                                    'date' => $currentDateProcessed,
                                     'attendance' => AttendanceType::OT_OFF
+                                ]);
+                            } else {
+                                EmployeeAttendance::create([
+                                    'emp_id' => $id,
+                                    'date' => $currentDateProcessed,
+                                    'attendance' => AttendanceType::OFF
                                 ]);
                             }
                             break;
@@ -160,33 +174,54 @@ class ProcessAttendance extends Command
                                 // $this->info("OT Rest!");
                                 EmployeeAttendance::create([
                                     'emp_id' => $id,
-                                    'date' => $currentDateProcessed ,
+                                    'date' => $currentDateProcessed,
                                     'attendance' => AttendanceType::OT_REST
+                                ]);
+                            } else {
+                                EmployeeAttendance::create([
+                                    'emp_id' => $id,
+                                    'date' => $currentDateProcessed ,
+                                    'attendance' => AttendanceType::REST
                                 ]);
                             }
                             break;
                             case "half":
                             case "full":
-                            if(!empty($clockInOutRecord)) {
-                                // $this->info("Work!");
-                                $attendance = AttendanceType::PRESENT;
-                                if($clockInOutRecord->clock_in_status == 'late') {
-                                    $attendance = AttendanceType::LATE;
-                                }
-
+                            if(
+                                // On Leave
+                                LeaveRequest::where('emp_id', $id)
+                                ->whereDate('start_date', '<=', $currentDateProcessed)
+                                ->whereDate('end_date', '>=', $currentDateProcessed)
+                                ->count() > 0
+                            ) {
                                 EmployeeAttendance::create([
                                     'emp_id' => $id,
                                     'date' => $currentDateProcessed ,
-                                    'attendance' => $attendance
+                                    'attendance' => AttendanceType::LEAVE
                                 ]);
                             } else {
-                                // $this->info("Absent!");
-                                EmployeeAttendance::create([
-                                    'emp_id' => $id,
-                                    'date' => $currentDateProcessed ,
-                                    'attendance' => AttendanceType::ABSENT
-                                ]);
+                                if(!empty($clockInOutRecord)) {
+                                    // $this->info("Work!");
+                                    $attendance = AttendanceType::PRESENT;
+                                    if($clockInOutRecord->clock_in_status == 'late') {
+                                        $attendance = AttendanceType::LATE;
+                                    }
+    
+                                    EmployeeAttendance::create([
+                                        'emp_id' => $id,
+                                        'date' => $currentDateProcessed,
+                                        'attendance' => $attendance
+                                    ]);
+                                } else {
+                                    // $this->info("Absent!");
+                                    EmployeeAttendance::create([
+                                        'emp_id' => $id,
+                                        'date' => $currentDateProcessed,
+                                        'attendance' => AttendanceType::ABSENT
+                                    ]);
+                                }
                             }
+
                             break;
                         }
                     }
