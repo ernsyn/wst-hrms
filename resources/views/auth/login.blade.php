@@ -42,9 +42,7 @@
                             </div>
                         </div>
                         <div class="form-group row mb-0">
-                            <div class="col-md-8">
-                                <a class="btn btn-link px-0" href="{{ route('password.request') }}">{{ __('Forgot Password') }}</a>
-                            </div>
+                      
                             <div class="col-md-4 text-md-right">
                                 <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
                             </div>
