@@ -17998,6 +17998,14 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+.tool-tip {
+  display: inline-block;
+}
+
+.tool-tip[disabled] {
+  pointer-events: none;
+}
+
 .default-user-logo-light {
   color: white;
 }
