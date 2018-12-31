@@ -606,7 +606,7 @@ class LeaveService
         return false;
     }
 
-    private static function calculateEntitledDays($leaveType, $yearsOfService, $grade_id) {
+    public static function calculateEntitledDays($leaveType, $yearsOfService, $grade_id) {
         $entitledDays = 0;
         if(empty($leaveType->entitled_days)) {
             // Entitlement By Grade
