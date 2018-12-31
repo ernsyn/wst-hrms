@@ -18551,8 +18551,6 @@ button.dropdown-toggle::after {
   position: relative;
   overflow: hidden;
   /* Comment this line to understand the trick */
-  /* width: 360px; 
-		height: 180px; Half circle (overflow) */
   margin-bottom: -14px;
   /* bring the numbers up */
 }
@@ -18561,16 +18559,14 @@ button.dropdown-toggle::after {
   position: absolute;
   top: 0;
   left: 0;
-  /* width: 360px; 
-		height: 360px; full circle! */
   border-radius: 50%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border: 30px solid #eee;
   /* half gray, */
-  border-bottom-color: #0bf;
+  border-bottom-color: #128A58;
   /* half azure */
-  border-right-color: #0bf;
+  border-right-color: #128A58;
 }
 
 #page-admin-dashboard .fraction {
