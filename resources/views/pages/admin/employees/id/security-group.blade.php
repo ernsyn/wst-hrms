@@ -62,6 +62,7 @@
 
 {{-- TABLE --}}
 <div class="tab-pane fade show p-3" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
+	@hasrole('admin')
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -71,6 +72,7 @@
 
         </div>
     </div>
+    @endhasrole
     <table class="hrms-primary-data-table table w-100" id="security-groups-table">
         <thead>
             <tr>
@@ -109,10 +111,11 @@
             "data": null, // can be null or undefined
             render: function (data, type, row, meta) {
                 // return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-security-group-popup"><i class="far fa-edit"></i></button>` +
+                @hasrole('admin')
                 return `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-security-group-modal"><i class="far fa-trash-alt"></i></button>`;
+                @endhasrole
+                return '';
             }
-
-            // }
         }
     ]
 });

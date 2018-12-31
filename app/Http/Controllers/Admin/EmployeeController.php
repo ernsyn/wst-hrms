@@ -1038,6 +1038,7 @@ Employee::where('id', $id)
 
     public function postSecurityGroup(Request $request, $id)
     {
+        AccessControllHelper::hasAnyRoles('admin');
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
@@ -1297,6 +1298,7 @@ Employee::where('id', $id)
 
     public function deleteSecurityGroup(Request $request, $emp_id, $id)
     {
+        AccessControllHelper::hasAnyRoles('admin');
         EmployeeSecurityGroup::find($id)->delete();
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
