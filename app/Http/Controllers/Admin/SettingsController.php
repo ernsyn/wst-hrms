@@ -698,7 +698,7 @@ public function addEpf()
 public function postAddEpf(Request $request)
 {
     $epfData = $request->validate([
-        'category' => 'required',
+        'category' => 'required|unique:epfs',
         'salary' => 'required|numeric',
         'employer' => 'required|numeric',
         'employee' => 'required|numeric',
