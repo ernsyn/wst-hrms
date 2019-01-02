@@ -105,7 +105,7 @@
             $(e.target).attr('disabled', true);
 
             $.ajax({
-                url: "{{ route('employee.change-password.post', ['id' => Auth::user()->id]) }}",
+                url: "{{ route('auth.change-password.post', ['id' => Auth::user()->id]) }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',

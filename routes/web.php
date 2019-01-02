@@ -25,14 +25,14 @@ Route::get('', 'HomeController@index')->name('employee.dashboard');
 
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
-    Route::post('employee/{id}/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
+    Route::post('auth/{id}/change-password','AuthController@postChangePassword')->name('auth.change-password.post')->where('id', '[0-9]+');
 });
 
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
     // Route::get('/employee','EmployeeController@displayProfile')->name('employee');
     // Route::get('profile','EmployeeController@displayProfile')->name('profile');
-    Route::get('changepassword', 'EmployeeController@changePassword')->name('employee.password');
+    // Route::get('changepassword', 'EmployeeController@changePassword')->name('employee.password');
 
     Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
     Route::get('employeeimmigrationdata','EmployeeController@displayImmigration')->name('immigration');
@@ -47,7 +47,9 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
 
     Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
-    // Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile'); //make it universal
+    // Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
+    Route::post('employee/{id}/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
+
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
 
     Route::post('employee/approve_leave', 'Employee\ELeaveController@approvedLeaveRequest')->name('approve_leave'); // also for manager
