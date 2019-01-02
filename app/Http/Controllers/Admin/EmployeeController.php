@@ -181,7 +181,7 @@ class EmployeeController extends Controller
 
     public function add()
     {
-        $countries = Country::all();
+        $countries = Country::orderBy('citizenship')->get();
         $roles = Roles::all();
 
         return view('pages.admin.employees.add', compact('countries','roles'));
