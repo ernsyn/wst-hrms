@@ -72,6 +72,16 @@ Breadcrumbs::for('admin.e-leave.total-balanced-report', function ($trail, $id) {
     $trail->push('Total Balanced Report', route('admin.e-leave.total-balanced-report', $id));
 });
 
+Breadcrumbs::for('admin.e-leave.total-transaction-report', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Total Transaction Report', route('admin.e-leave.total-transaction-report', $id));
+});
+
+Breadcrumbs::for('admin.e-leave.unpaid-leave-report', function ($trail, $id) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Unpaid Leave Report', route('admin.e-leave.unpaid-leave-report', $id));
+});
+
 Breadcrumbs::for('admin.e-leave.add-leave-request-disapprove', function ($trail,$id) {
     $trail->parent('admin.dashboard');
     $trail->push('Leave Disapprove', route('admin.e-leave.add-leave-request-disapprove',$id));

@@ -30,29 +30,25 @@
             <table class="hrms-data-table compact w-100 t-2" id="positions-table">
                 <thead>
                     <tr>
-                        <th>Leave Code</th>
                         <th>Leave Type</th>
-                        <th>Bring Forward</th>
-                        <th>Entitled</th>
-                        <th>Forfeited</th>
-                        <th>Pending</th>
-                        <th>Approved</th>
-                        <th>Allow to Take</th>
-                        <th>Year of Balance</th>
+                        <th>Submission Date</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Number of Days</th>
+                        <th>Reason</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($leaves as $key => $value)
                         <tr>
-                            <td>{{ $value['code'] }}</td>
-                            <td>{{ $value['name'] }}</td>
-                            <td>{{ $value['carried_forward_days'] }}</td>
-                            <td>{{ $value['allocated_days'] }}</td>
-                            <td>{{ $value['rejected'] }}</td>
-                            <td>{{ $value['pending'] }}</td>
-                            <td>{{ $value['approved'] }}</td>
-                            <td>{{ $value['allowed_to_take'] }}</td>
-                            <td>{{ $value['year_of_balance'] }}</td>
+                            <td>{{ $value['leave_type'] }}</td>
+                            <td>{{ $value['submission_date'] }}</td>
+                            <td>{{ $value['from'] }}</td>
+                            <td>{{ $value['to'] }}</td>
+                            <td>{{ $value['number_of_days'] }}</td>
+                            <td>{{ $value['reason'] }}</td>
+                            <td>{{ $value['status'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -98,7 +94,7 @@ $(function(){
     });
 
     $('.site_quick_jump').change(function(){
-        window.location.href = '{{ route('admin.e-leave.leave-report') }}/total-balanced-report/' + $(this).val();
+        window.location.href = '{{ route('admin.e-leave.leave-report') }}/total-transaction-report/' + $(this).val();
     });
 })
 </script>

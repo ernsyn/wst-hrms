@@ -32,27 +32,21 @@
                     <tr>
                         <th>Leave Code</th>
                         <th>Leave Type</th>
-                        <th>Bring Forward</th>
-                        <th>Entitled</th>
-                        <th>Forfeited</th>
-                        <th>Pending</th>
-                        <th>Approved</th>
-                        <th>Allow to Take</th>
-                        <th>Year of Balance</th>
+                        <th>Taken</th>
+                        <th>Date</th>
+                        <th>Until</th>                        
+                        <th>Reason</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($leaves as $key => $value)
                         <tr>
-                            <td>{{ $value['code'] }}</td>
-                            <td>{{ $value['name'] }}</td>
-                            <td>{{ $value['carried_forward_days'] }}</td>
-                            <td>{{ $value['allocated_days'] }}</td>
-                            <td>{{ $value['rejected'] }}</td>
-                            <td>{{ $value['pending'] }}</td>
-                            <td>{{ $value['approved'] }}</td>
-                            <td>{{ $value['allowed_to_take'] }}</td>
-                            <td>{{ $value['year_of_balance'] }}</td>
+                            <td>{{ $value['leave_code'] }}</td>
+                            <td>{{ $value['leave_type'] }}</td>
+                            <td>{{ $value['taken'] }}</td>
+                            <td>{{ $value['date'] }}</td>
+                            <td>{{ $value['until'] }}</td>                            
+                            <td>{{ $value['reason'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -98,7 +92,7 @@ $(function(){
     });
 
     $('.site_quick_jump').change(function(){
-        window.location.href = '{{ route('admin.e-leave.leave-report') }}/total-balanced-report/' + $(this).val();
+        window.location.href = '{{ route('admin.e-leave.leave-report') }}/unpaid-leave-report/' + $(this).val();
     });
 })
 </script>

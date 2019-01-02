@@ -33,9 +33,17 @@
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->contact_no }}</td>
                             <td>
-                                <button class="btn btn-outline-primary waves-effect" data-toggle="modal" 
-                                onclick="window.location='{{ route('admin.e-leave.total-balanced-report', ['emp_id' => $employee->id]) }}';">
-                                    <span class="fas fa-eye"></span>
+                                <button class="btn btn-outline-primary waves-effect" data-placement="top"  
+                                onclick="window.location='{{ route('admin.e-leave.total-balanced-report', ['emp_id' => $employee->id]) }}';" data-toggle="tooltip" title="Total Balanced Report">
+                                    <span class="fas fa-balance-scale"></span>
+                                </button>
+                                <button class="btn btn-outline-primary waves-effect" data-placement="top" 
+                                onclick="window.location='{{ route('admin.e-leave.total-transaction-report', ['emp_id' => $employee->id]) }}';" data-toggle="tooltip" title="Total Transaction Report">
+                                    <span class="fas fa-calendar-alt"></span>
+                                </button>
+                                <button class="btn btn-outline-primary waves-effect" data-placement="top" 
+                                onclick="window.location='{{ route('admin.e-leave.unpaid-leave-report', ['emp_id' => $employee->id]) }}';" data-toggle="tooltip" title="Unpaid Leave Report">
+                                    <span class="fas fa-money-bill-alt"></span>
                                 </button>
                             </td>
                         </tr>
@@ -79,6 +87,8 @@ $(function(){
             },
         ]
     });
+
+    $('[data-toggle="tooltip"]').tooltip(); 
 })
 </script>
 @append
