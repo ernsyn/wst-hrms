@@ -46,6 +46,33 @@
                 </div>
             </a>
         </div>
+        <div class="p-2 col-xl-3 col-lg-6">
+            <a href="{{ route('admin.attendance.current-day') }}" style="text-decoration: none">
+                <div class="card border-1">
+                    <div class="card-body adjust-height">
+                        <h6 class="text-black">Attendance for {{ \Carbon\Carbon::today()->format('l, d/m/Y') }}</h6>
+                        <div class="progress-attendance">
+                            <div class="barOverflow">
+                                <div class="bar"></div>
+                            </div>
+                            <span class="fraction">
+                                <span class="today_attendance">{{ 
+                                    App\EmployeeClockInOutRecord::selectRaw('DISTINCT(emp_id)')
+                                    ->whereDate('clock_in_time', \Carbon\Carbon::today())
+                                    ->count() 
+                                }}</span>/<span class="total_working_today">{{ 
+                                    DB::table('employees')
+                                    ->join('employee_working_days', 'employees.id', '=', 'employee_working_days.emp_id')
+                                    ->whereIn(strtolower(\Carbon\Carbon::today()->format('l')), array('full','half'))
+                                    ->count() 
+                                }}</span>
+                                <span class="pct" hidden>56.5</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
     {{-- <div class="row">
         <div class="p-2 col-lg-8">
@@ -91,43 +118,46 @@
 @endsection
 
 @section('scripts')
-{{-- <script>
-new Chart($("#myChart"), {
-    type: 'bar',
-    data: {
-        labels: ["AL", "SL", "UL", "HL", "ML", "MTL"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: 'Monthly Leave Statistics'
-        },
-        legend: {
-            display: false
-        }
+<script>
+$(function(){
+    adjust_dimensions();
 
+    $(window).resize(function(){
+        adjust_dimensions();
+    });
+
+    $(".progress-attendance").each(function(){  
+        var $bar = $(this).find(".bar");
+        var total = ($(".today_attendance").text() / $(".total_working_today").text()) * 100;
+
+        $("span.pct").text(total);
+
+        var $val = $(this).find("span.pct");
+        var perc = parseInt( $val.text(), 10);
+
+        $({p:0}).animate({p:perc}, {
+            duration: 1000,
+            easing: "swing",
+            step: function(p) {
+                $bar.css({
+                    transform: "rotate("+ (45+(p*1.8)) +"deg)", // 100%=180° so: ° = % * 1.8
+                    // 45 is to add the needed rotation to have the green borders at the bottom
+                });
+                $val.text(p|0);
+            }
+        });
+    });
+
+    function adjust_dimensions() {
+        var container_width = $(".adjust-height").width();
+        var semi_height = container_width / 2;
+        var adjust_height = container_width - 110;
+
+        $('.bar').width(container_width - 60);
+        $('.bar').height(container_width - 60);
+        $('.barOverflow').width(container_width);
+        $('.barOverflow').height(semi_height);
     }
-});
-</script> --}}
+})
+</script>
 @append

@@ -127,8 +127,40 @@ class ELeaveController extends Controller
     public function displayPublicHolidays()
     {       
         $holiday = Holiday::all();
+
+        $now = Carbon::now();
+
+        $show_button = false;
+        $add_year = $now->year;
+        $check_next_year = false;
+
+        if(count($holiday) > 0)
+        {
+            // get current year holidays
+            $holidays_year = Holiday::selectRaw('YEAR(start_date) as holiday_year')
+            ->where('repeat_annually', 1)
+            ->whereYear('start_date', '=', $now->year)
+            ->whereYear('end_date', '=', $now->year)
+            ->orderBy('start_date', 'DESC')
+            ->first();
+
+            if($holidays_year)
+            {
+                $show_button = true;
+
+                $add_year = $holidays_year->holiday_year + 1;
+
+                $check_next_year = Holiday::whereYear('start_date', '=', $add_year)
+                ->whereYear('end_date', '=', $add_year)
+                ->count() > 0;
+            }
+            else
+            {
+                $show_button = true;
+            }
+        }        
         
-        return view('pages.admin.e-leave.configuration.leave-holidays', ['holiday' => $holiday]);
+        return view('pages.admin.e-leave.configuration.leave-holidays', ['holiday' => $holiday, 'next_year' => $add_year, 'disable_button' => $check_next_year, 'show_button' => $show_button]);
     }
 
     public function addPublicHoliday()
@@ -193,6 +225,59 @@ class ELeaveController extends Controller
         Holiday::where('id', $id)->update($holidayData);
 
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
+    }
+
+    public function generatePublicHolidays()
+    {
+        $now = Carbon::now();
+
+        // get holidays for current year
+        $holidays = Holiday::where('repeat_annually', 1)
+        ->whereYear('start_date', '=', $now->year)
+        ->whereYear('end_date', '=', $now->year)
+        ->orderBy('start_date', 'ASC')
+        ->get();
+
+        if(count($holidays) == 0)
+        {
+            $previous_year = $now->year - 1;
+
+            $holidays = Holiday::where('repeat_annually', 1)
+            ->whereYear('start_date', '=', $previous_year)
+            ->whereYear('end_date', '=', $previous_year)
+            ->orderBy('start_date', 'ASC')
+            ->get();
+        }
+
+        foreach ($holidays as $row) {
+            $start = new Carbon($row->start_date);
+            $end = new Carbon($row->end_date);
+            $start_next = $start->addYear();
+            $end_next = $end->addYear();
+
+            // check if holiday has already been duplicated
+            $check_exist = Holiday::where('name', $row->name)
+            ->where('start_date', $start_next)
+            ->where('end_date', $end_next)
+            ->count() > 0;
+
+            // duplicate holidays for next year
+            if(!$check_exist) {
+                $holidayData = array();
+
+                $holidayData['name'] = $row->name;
+                $holidayData['start_date'] = $start_next;
+                $holidayData['end_date'] = $end_next;
+                $holidayData['note'] = $row->note;
+                $holidayData['status'] = $row->status;
+                $holidayData['repeat_annually'] = $row->repeat_annually;
+                $holidayData['total_days'] = $row->total_days;
+                $holidayData['state'] = $row->state;
+
+                $holiday = new Holiday($holidayData);
+                $holiday->save();
+            }
+        }
     }
 
     public function postEditLeaveType(Request $request, $id) 
