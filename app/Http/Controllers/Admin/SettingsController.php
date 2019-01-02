@@ -698,7 +698,7 @@ public function addEpf()
 public function postAddEpf(Request $request)
 {
     $epfData = $request->validate([
-        'category' => 'required|unique:epfs',
+        'category' => 'required|unique:epfs,category',
         'salary' => 'required|numeric',
         'employer' => 'required|numeric',
         'employee' => 'required|numeric',
@@ -721,7 +721,7 @@ public function postEditEpf(Request $request, $id)
 
     $epfData = $request->validate([
         // 'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
-        'category' => 'required',
+        'category' =>  'unique:epfs,category,'.$id.',id,deleted_at,NULL',
         'salary' => 'required|numeric',
         'employer' => 'required|numeric',
         'employee' => 'required|numeric',
