@@ -23,6 +23,9 @@ Auth::routes();
 Route::get('', 'HomeController@index')->name('employee.dashboard');
 
 
+Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
+Route::post('employee/{id}/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
+
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
     // Route::get('/employee','EmployeeController@displayProfile')->name('employee');
@@ -42,7 +45,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
 
     Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
-    Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
+    // Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile'); //make it universal
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
 
     Route::post('employee/approve_leave', 'Employee\ELeaveController@approvedLeaveRequest')->name('approve_leave'); // also for manager
@@ -120,7 +123,6 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/{id}/report-tp','Employee\EmployeeController@postReportTo')->name('employee.report-to.post');
 
     Route::post('employee/{id}/edit','Employee\EmployeeController@postEditProfile')->name('employee.profile.edit.post');
-    Route::post('employee/{id}/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
 
     //employee edit profile pic
     Route::post('employees/{id}/editpicture','Employee\EmployeeController@postEditPicture')->name('employees.picture.edit.post')->where('profile_media_id', '[0-9]+');
@@ -503,7 +505,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     // Route::post('add_leave_balance','Admin\ELeaveController@addLeaveBalance')->name('add_leave_balance');
     Route::post('add_job','AdminController@addJob')->name('add_job');
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
-    Route::post('changepassword','Admin\EmployeeController@postChangePasswordEmployee')->name('admin.changepassword.post');
+    // Route::post('changepassword','Admin\EmployeeController@postChangePasswordEmployee')->name('admin.changepassword.post');
 
 
 });
