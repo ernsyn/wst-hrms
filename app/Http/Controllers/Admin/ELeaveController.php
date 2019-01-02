@@ -130,26 +130,35 @@ class ELeaveController extends Controller
 
         $now = Carbon::now();
 
-        // get current holidays year
-        $holidays_year = Holiday::selectRaw('YEAR(start_date) as holiday_year')
-        ->where('repeat_annually', 1)
-        ->whereYear('start_date', '=', $now->year)
-        ->whereYear('end_date', '=', $now->year)
-        ->orderBy('start_date', 'DESC')
-        ->first();
-
         $show_button = false;
+        $add_year = $now->year;
+        $check_next_year = false;
 
-        if($holidays_year)
+        if(count($holiday) > 0)
         {
-            $show_button = true;
-        }
+            // get current year holidays
+            $holidays_year = Holiday::selectRaw('YEAR(start_date) as holiday_year')
+            ->where('repeat_annually', 1)
+            ->whereYear('start_date', '=', $now->year)
+            ->whereYear('end_date', '=', $now->year)
+            ->orderBy('start_date', 'DESC')
+            ->first();
 
-        $add_year = $holidays_year->holiday_year + 1;
+            if($holidays_year)
+            {
+                $show_button = true;
 
-        $check_next_year = Holiday::whereYear('start_date', '=', $add_year)
-        ->whereYear('end_date', '=', $add_year)
-        ->count() > 0;
+                $add_year = $holidays_year->holiday_year + 1;
+
+                $check_next_year = Holiday::whereYear('start_date', '=', $add_year)
+                ->whereYear('end_date', '=', $add_year)
+                ->count() > 0;
+            }
+            else
+            {
+                $show_button = true;
+            }
+        }        
         
         return view('pages.admin.e-leave.configuration.leave-holidays', ['holiday' => $holiday, 'next_year' => $add_year, 'disable_button' => $check_next_year, 'show_button' => $show_button]);
     }
@@ -229,7 +238,16 @@ class ELeaveController extends Controller
         ->orderBy('start_date', 'ASC')
         ->get();
 
-        $emailData = array();
+        if(count($holidays) == 0)
+        {
+            $previous_year = $now->year - 1;
+
+            $holidays = Holiday::where('repeat_annually', 1)
+            ->whereYear('start_date', '=', $previous_year)
+            ->whereYear('end_date', '=', $previous_year)
+            ->orderBy('start_date', 'ASC')
+            ->get();
+        }
 
         foreach ($holidays as $row) {
             $start = new Carbon($row->start_date);
