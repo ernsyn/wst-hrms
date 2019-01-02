@@ -9,7 +9,7 @@
                 Mode
             </div>
             <div id="value" class="col-8 text-center" data-toggle="collapse" href="#mode-options">
-                    <div class="row py-0" >
+                    <div class="row py-0">
                         <div class="col-9 pl-2 pr-0 py-0 text-center">
                             Admin
                         </div>
@@ -65,7 +65,7 @@
                     </li>
                 </ul>
             </li>
-            
+    
             {{-- SECTION: Payroll --}}
             <li class="menu-section {{ request()->is('payroll*','government_report', 'payroll-report') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
@@ -94,32 +94,32 @@
             @hasanyrole('super-admin|admin')
             {{-- SECTION: E-Leave --}}
             <li class="menu-section {{ request()->is('admin/e-leave*') ? 'active' : '' }}">
-                    <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
-                        <div class="row">
-                            <div class="col-1"><i class="far fa-calendar-alt"></i></div>
-                            <div class="col-10">E-Leave</div>
-                        </div>
-                    </a>
+                <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
+                    <div class="row">
+                        <div class="col-1"><i class="far fa-calendar-alt"></i></div>
+                        <div class="col-10">E-Leave</div>
+                    </div>
+                </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/e-leave*') ? 'show' : '' }}" id="leaveSubmenu">
-                        {{-- OPTION: Leave Request --}}
-                        <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
-                            <a href="{{ route('admin.e-leave.configuration') }}">Configuration</a>
-                        </li>
-                        {{-- OPTION: PH Setup --}}
-                      <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
-                            <a href="{{ route('admin.e-leave.configuration.leave-holidays') }}">Holidays Setup</a>
-                        </li>
-                        <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-requests') ? 'active' : '' }}">
-                                <a href="{{ route('admin.e-leave.configuration.leave-requests') }}">Leave Requests</a>
-                            </li>
+                    {{-- OPTION: Leave Request --}}
+                    <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.configuration') }}">Configuration</a>
+                    </li>
+                    {{-- OPTION: PH Setup --}}
+                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.configuration.leave-holidays') }}">Holidays Setup</a>
+                    </li>
+                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-requests') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.configuration.leave-requests') }}">Leave Requests</a>
+                    </li>
                 <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-application') ? 'active' : '' }}">
                     <a href="{{ route('admin.e-leave.leave-application') }}">Leave Application</a>
                 </li>
-                <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
+                    {{-- <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
                     <a href="{{ route('admin.e-leave.leave-report') }}">Leave Report</a>
-                </li>
-                    </ul>
-                </li>
+                    </li> --}}
+                </ul>
+            </li>
     
         {{-- SECTION: Attendance --}}
         <li class="menu-section {{ request()->is('admin/attendance*') ? 'active' : '' }}">
@@ -131,13 +131,13 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/attendance*') ? 'show' : '' }}" id="attendanceSubmenu">
                 {{-- OPTION: Current Day Attendance --}}
-                <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
+                    {{-- <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
                     <a href="{{ route('admin.attendance.current-day') }}">Current Day</a>
-                </li>
+                    </li> --}}
                 {{-- OPTION: Attendance Report --}}
-                <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
+                    {{-- <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
                     <a href="{{ route('admin.attendance.report') }}">Attendance Report</a>
-                </li>
+                    </li> --}}
             </ul>
         </li>
 
@@ -186,15 +186,15 @@
                 <li class="menu-option {{ request()->is('admin/settings/epf') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.epf')}}">EPF</a>
                     </li>
-                                    {{-- OPTION: Eis --}}
+                    {{-- OPTION: Eis --}}
                 <li class="menu-option {{ request()->is('admin/settings/eis') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.eis')}}">EIS</a>
                     </li>
-                                                        {{-- OPTION: Socso --}}
+                    {{-- OPTION: Socso --}}
                 <li class="menu-option {{ request()->is('admin/settings/socso') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.socso')}}">Socso</a>
                     </li>
-                                                        {{-- OPTION: Eis --}}
+                    {{-- OPTION: Eis --}}
                 <li class="menu-option {{ request()->is('admin/settings/pcb') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.pcb')}}">PCB</a>
                     </li>
@@ -202,3 +202,4 @@
             </li>
 			@endhasanyrole        </ul>
 </nav>
+    
