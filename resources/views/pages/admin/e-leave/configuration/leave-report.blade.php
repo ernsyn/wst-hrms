@@ -34,7 +34,7 @@
                             <td>{{ $employee->contact_no }}</td>
                             <td>
                                 <button class="btn btn-outline-primary waves-effect" data-toggle="modal" 
-                                onclick="window.location='{{ route('admin.e-leave.leave-report-employee', ['emp_id' => $employee->id]) }}';">
+                                onclick="window.location='{{ route('admin.e-leave.total-balanced-report', ['emp_id' => $employee->id]) }}';">
                                     <span class="fas fa-eye"></span>
                                 </button>
                             </td>

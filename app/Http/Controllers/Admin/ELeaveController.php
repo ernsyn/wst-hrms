@@ -551,7 +551,7 @@ class ELeaveController extends Controller
         ->where('emp_id', $emp_id)
         ->get();
 
-        return view('pages.admin.e-leave.configuration.leave-report-employee', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
+        return view('pages.admin.e-leave.configuration.total-balanced-report', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
     }
 
     public function ajaxGetEmployees(Request $request)
