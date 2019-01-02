@@ -33,28 +33,23 @@ class EmployeeController extends Controller
 
     public function displayProfile()
     {
-        $id = Auth::user()->employee->id;
-        $employee = Employee::with('user', 'employee_jobs')->find($id);
+        try {
+            $id = Auth::user()->employee->id;
+            $employee = Employee::with('user', 'employee_jobs')->find($id);
 
 
-        $userMedia = DB::table('users')
-        ->join('medias', 'users.profile_media_id', '=', 'medias.id')
-        ->join('employees', 'employees.user_id', '=', 'users.id')
-        ->select('medias.*')
-        ->where('employees.id', $id)
-        ->first();
+            $userMedia = DB::table('users')
+            ->join('medias', 'users.profile_media_id', '=', 'medias.id')
+            ->join('employees', 'employees.user_id', '=', 'users.id')
+            ->select('medias.*')
+            ->where('employees.id', $id)
+            ->first();
 
-        // $bank_list = Bank::all();
-        // $cost_centre = CostCentre::all();
-        // $department = Department::all();
-        // $team = Team::all();
-        // $position = EmployeePosition::all();
-        // $grade = EmployeeGrade::all();
-        // $branch = Branch::all();
-        // $countries = Country::all();
-        // $companies = Company::all();
+            return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia]);
 
-        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia]);
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('alert', 'You have no profile!');
+        }
     }
 
     public function postEditPicture(Request $request, $id) {
@@ -108,17 +103,13 @@ class EmployeeController extends Controller
             'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
         ]);
 
-        $employee = Employee::where('id', $id)->first();
-        $current_password = $employee->user->password;
-        $current_password = bcrypt($data['current_password']);
-
-        if (!(Hash::check($data['current_password'],  $employee->user->password))) {
+        if (!(Hash::check($data['current_password'],  Auth::user()->password))) {
             response()->json(['errors'=> [
                 'current_password' => ['The current password is incorrect.']
             ]], 422);
             return response()->json(['fail'=>'The current password is incorrect. Password was not successfully updated.']);
         } else {
-            User::where('id', $employee->user->id)->update([
+            User::where('id', Auth::user()->id)->update([
                 'password' => bcrypt($data['new_password'])
             ]);
             return response()->json(['success'=>'Password was successfully updated.']);
