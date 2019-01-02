@@ -14,21 +14,17 @@
 	.barOverflow { /* Wraps the rotating .bar */
 		position: relative;
 		overflow: hidden; /* Comment this line to understand the trick */
-		/* width: 360px; 
-		height: 180px; Half circle (overflow) */
 		margin-bottom: -14px; /* bring the numbers up */
 	}
 
 	.bar {
 		position: absolute;
 		top: 0; left: 0;
-		/* width: 360px; 
-		height: 360px; full circle! */
 		border-radius: 50%;
 		box-sizing: border-box;
 		border: 30px solid #eee;     /* half gray, */
-		border-bottom-color: #0bf;  /* half azure */
-		border-right-color: #0bf;
+		border-bottom-color: $app-primary;  /* half azure */
+		border-right-color: $app-primary;
 	}
 
 	.fraction {
