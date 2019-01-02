@@ -23,8 +23,10 @@ Auth::routes();
 Route::get('', 'HomeController@index')->name('employee.dashboard');
 
 
-Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
-Route::post('employee/{id}/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
+Route::group(['middleware' => ['auth']], function() {
+    Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
+    Route::post('employee/{id}/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
+});
 
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
