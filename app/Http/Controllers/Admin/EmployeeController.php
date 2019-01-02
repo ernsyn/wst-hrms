@@ -10,6 +10,7 @@ use Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
@@ -51,6 +52,9 @@ use App\Http\Services\LeaveService;
 
 use App\Http\Requests\Admin\AddEmployee;
 use App\Helpers\AccessControllHelper;
+use App\Imports\UserImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Mail\NewUserMail;
 
 class EmployeeController extends Controller
 {
@@ -1529,5 +1533,72 @@ Employee::where('id', $id)
         }
         
         return response()->json(['success'=>'Employee roles were successfully updated.']);
+    }
+    
+    public function importUser($fileName, $companyId)
+    {
+        $collection = (new UserImport)->toCollection($fileName);
+//         dd($collection);
+
+        $passwordString = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        
+        foreach ($collection[0] as $row)
+        {
+            $password = substr(str_shuffle($passwordString), 0, 12);
+            
+            $user = User::create([
+                'name' => $row['name'],
+                'password' => bcrypt($password),
+                'email' => $row['email'],
+            ]);
+            
+            $user->assignRole('employee');
+            
+            if($row['role'] != null){
+                $user->assignRole($row['role']);
+            }
+            
+            $nationality = Country::where('citizenship',$row['nationality'])->first();
+            $pcbGroup = 1;
+            
+            if($row['marital_status'] == 'MARRIED'){
+                $pcbGroup = 2;
+            }
+            
+            $dob = substr($row['date_of_birth'],6,4).'-'.substr($row['date_of_birth'],3,2).'-'.substr($row['date_of_birth'],0,2);
+            
+            Employee::create([
+                'user_id' => $user->id,
+                'code' => $row['employee_id'],
+                'contact_no' => $row['contact_no'],
+                'address' => $row['address'],
+                'postcode' => $row['postcode'],
+                'company_id' => $companyId,
+                'dob' => $dob,
+                'gender' => $row['gender'],
+                'race' => $row['race'],
+                'nationality' => $nationality->id,
+                'marital_status' => $row['marital_status'],
+                'total_children' => 0,
+                'ic_no' => $row['ic'],
+                'tax_no' => $row['tax_no'],
+                'epf_no' => $row['epf_no'],
+                'socso_no' => $row['socso_no'],
+                'eis_no' => $row['eis_no'],
+                'pcb_group' => $pcbGroup,
+                'main_security_group_id' => 1,
+                
+            ]);
+            $emailData = array();
+            $emailData['name'] = $row['name'];
+            $emailData['email'] = $row['email'];
+            $emailData['password'] = $password;
+            
+            //send email
+            Mail::to($row['email'])
+            ->bcc('chennee.lim@wisetech.com.my')
+            ->send(new NewUserMail($emailData));
+        }
+        return "Total ".count($collection[0])." records";
     }
 }
