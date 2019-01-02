@@ -55,13 +55,36 @@
                         </div>
                         <div class="form-group row w-100">
                             <div class="col-12">
-                                <label class="col-md-12 col-form-label">Address*</label>
+                                <label class="col-md-12 col-form-label">Address Line 1*</label>
                                 <div class="col-md-12">
-                                    <input id="address" type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ $branch->address }}"
-                                        required> @if ($errors->has('address'))
+                                    <input id="address" type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ $branch->address }}" required>
+                                    @if ($errors->has('address'))
                                     <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('address') }}</strong>
-                                        </span> @endif
+                                        <strong>{{ $errors->first('address') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="col-md-12 col-form-label">Address Line 2</label>
+                                <div class="col-md-12">
+                                    <input id="address2" type="text" class="form-control{{ $errors->has('address2') ? ' is-invalid' : '' }}" name="address2" value="{{ $branch->address2 }}">
+                                    @if ($errors->has('address2'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('address2') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="col-md-12 col-form-label">Address Line 3</label>
+                                <div class="col-md-12">
+                                    <input id="address3" type="text" class="form-control{{ $errors->has('address3') ? ' is-invalid' : '' }}" name="address3" value="{{ $branch->address3 }}">
+                                    @if ($errors->has('address3'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('address3') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -77,8 +100,8 @@
                                             <span class="invalid-feedback" role="alert">
                                                                       <strong>{{ $errors->first('state') }}</strong>
                                                                   </span> @endif
-                                        </select> 
-                                        
+                                        </select>
+
                                 </div>
                             </div>
                             <div class="col-6">
@@ -103,7 +126,7 @@
                                         </span> @endif
                                 </div>
                             </div>
-                  
+
                         </div>
                     </div>
                 </div>
