@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('attendance:process')->daily();
 
-        $schedule->command('duplicate:holidays')->cron('0 0 23 31 12 ? *')->timezone('Asia/Kuala_Lumpur');
+        $schedule->command('duplicate:holidays')->cron('45 23 31 12 *')->timezone('Asia/Kuala_Lumpur');
     }
 
     /**
