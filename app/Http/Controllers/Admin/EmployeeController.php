@@ -151,7 +151,7 @@ class EmployeeController extends Controller
             'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
             'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
             'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
-            'main_security_group_id'=>'',
+            'main_security_group_id'=>'required',
             'contact_no' => 'required',
             'nationality' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
