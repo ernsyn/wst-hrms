@@ -1195,7 +1195,7 @@ public function postAddCompanySecurityGroup(Request $request,$id)
 
     $validateSecurityGroup = $request->validate([
         'description' => 'required',
-        'security_name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
+        'name' => 'required'
     ]);
 
     $validateSecurityGroup['company_id']=$id;
