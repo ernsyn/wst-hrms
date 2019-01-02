@@ -41,9 +41,8 @@
                                     </span> @endif
                             </div>
                         </div>
-                        <div class="form-group row mb-0">
-                      
-                            <div class="col-md-4 text-md-right">
+                        <div class="form-group row mb-0 float-right">
+                            <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
                             </div>
                         </div>
