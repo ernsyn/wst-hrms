@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     @foreach($employees as $employee)
-                    <tr onclick="window.location='{{ route('admin.employees.id',['id' => $employee->id ]) }}'">
+                    <tr>
                         <td class="id">{{$loop->iteration}}</td>
                         <td class="name">{{$employee->user->name}}</td>
                         <td class="email">{{$employee->user->email}}</td>
