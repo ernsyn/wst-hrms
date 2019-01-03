@@ -64,12 +64,22 @@ Breadcrumbs::for('admin.e-leave.leave-application', function ($trail) {
 
 Breadcrumbs::for('admin.e-leave.leave-report', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Leave Report', route('admin.e-leave.leave-report'));
+    $trail->push('Leave Reports', route('admin.e-leave.leave-report'));
 });
 
-Breadcrumbs::for('admin.e-leave.leave-report-employee', function ($trail, $id) {
-    $trail->parent('admin.dashboard');
-    $trail->push('Leave Report Employee', route('admin.e-leave.leave-report-employee', $id));
+Breadcrumbs::for('admin.e-leave.total-balanced-report', function ($trail, $id) {
+    $trail->parent('admin.e-leave.leave-report');
+    $trail->push('Total Balanced Report', route('admin.e-leave.total-balanced-report', $id));
+});
+
+Breadcrumbs::for('admin.e-leave.total-transaction-report', function ($trail, $id) {
+    $trail->parent('admin.e-leave.leave-report');
+    $trail->push('Total Transaction Report', route('admin.e-leave.total-transaction-report', $id));
+});
+
+Breadcrumbs::for('admin.e-leave.unpaid-leave-report', function ($trail, $id) {
+    $trail->parent('admin.e-leave.leave-report');
+    $trail->push('Unpaid Leave Report', route('admin.e-leave.unpaid-leave-report', $id));
 });
 
 Breadcrumbs::for('admin.e-leave.add-leave-request-disapprove', function ($trail,$id) {

@@ -67,8 +67,8 @@
                             <div class="col-8">
                                 <label class="col-md-12 col-form-label">Note</label>
                                 <div class="col-md-12">
-                                    <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder="Total Day here"
-                                        name="note" value="{{ $holidays->note }}" required>                                @if ($errors->has('total_days'))
+                                    <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder="Note here"
+                                        name="note" value="{{ $holidays->note }}" >                                @if ($errors->has('total_days'))
                                     <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('note') }}</strong>
                                         </span> @endif
