@@ -29,7 +29,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Contact Number*</strong></label>
-                            <input id="contact-no" type="tel" class="form-control" placeholder="" value="" required>
+                            <input id="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" required>
                             <div id="contact-no-error" class="invalid-feedback"></div>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Contact Number*</strong></label>
-                            <input id="contact-no" type="tel" class="form-control" placeholder="" value="" required>
+                            <input id="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" required>
                             <div id="contact-no-error" class="invalid-feedback">
                             </div>
                         </div>

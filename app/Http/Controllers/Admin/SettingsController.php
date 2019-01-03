@@ -85,14 +85,17 @@ class SettingsController extends Controller
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'address2' => 'nullable',
+            'address2' => 'required_with:address3',
             'address3' => 'nullable',
-            'phone' => 'required',
+            'phone' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'tax_no' => 'required|numeric',
             'epf_no' => 'required|numeric',
             'socso_no' => 'required|numeric',
             'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies',
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
         $companyData['status'] = 'Active';
@@ -455,16 +458,16 @@ class SettingsController extends Controller
 
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,NULL,id,deleted_at,NULL',
-            'contact_no_primary' =>'required|numeric',
-            'contact_no_secondary' => '',
-            'fax_no' =>'',
+            'contact_no_primary' =>'required|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'contact_no_secondary' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'fax_no' =>'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
             'address'=>'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
             'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
-            'zip_code'=> 'required|numeric'
+            'zip_code'=> 'required|numeric|digits:5'
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
@@ -511,16 +514,16 @@ class SettingsController extends Controller
     {
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,'.$id.',id,deleted_at,NULL',
-            'contact_no_primary' =>'required|numeric',
-            'contact_no_secondary' => '',
-            'fax_no' =>'',
+            'contact_no_primary' =>'required|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'contact_no_secondary' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'fax_no' =>'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
             'address'=>'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
             'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
-            'zip_code'=> 'required|numeric'
+            'zip_code'=> 'required|numeric|digits:5'
 
 
             ],
@@ -544,15 +547,18 @@ class SettingsController extends Controller
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'address2' => 'nullable',
+            'address2' => 'required_with:address3',
             'address3' => 'nullable',
-            'phone' => 'required',
+            'phone' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'tax_no' => 'required|numeric',
             'epf_no' => 'required|numeric',
             'socso_no' => 'required|numeric',
             'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies,code,'.$id,
             'status' => 'required',
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
         Company::where('id', $id)->update($companyData);
@@ -708,7 +714,7 @@ public function addEpf()
 public function postAddEpf(Request $request)
 {
     $epfData = $request->validate([
-        'category' => 'required',
+        'category' => 'required|unique:epfs,category',
         'salary' => 'required|numeric',
         'employer' => 'required|numeric',
         'employee' => 'required|numeric',
@@ -731,7 +737,7 @@ public function postEditEpf(Request $request, $id)
 
     $epfData = $request->validate([
         // 'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
-        'category' => 'required',
+        'category' =>  'unique:epfs,category,'.$id.',id,deleted_at,NULL',
         'salary' => 'required|numeric',
         'employer' => 'required|numeric',
         'employee' => 'required|numeric',

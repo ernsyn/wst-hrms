@@ -237,7 +237,7 @@ class EmployeeController extends Controller
         $emergencyContactData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'contact_no' => 'required|numeric',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
         $emergencyContactData['created_by'] = auth()->user()->id;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
@@ -542,7 +542,7 @@ class EmployeeController extends Controller
         $emergencyContactUpdatedData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'contact_no' => 'required|numeric',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
 
         EmployeeEmergencyContact::where('id', $id)->update($emergencyContactUpdatedData);
