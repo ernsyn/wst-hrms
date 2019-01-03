@@ -101,7 +101,7 @@
                 <button type="submit" class="btn btn-primary">
                             {{ __('Submit') }}
                             </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
             </div>
         </form>
     </div>
