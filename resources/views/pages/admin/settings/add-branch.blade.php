@@ -4,7 +4,7 @@
 <li>{{ $error }}</li>
 @endforeach --}}
 <div class="container">
-    <form method="POST" action="{{ route('admin.settings.branches.add.post') }}" id="form_validate">
+    <form method="POST" action="{{ route('admin.settings.branches.add.post') }}">
         <div class="card">
             <div class="card-body">
                 @csrf
@@ -14,7 +14,7 @@
                             <label class="col-md-12 col-form-label">Name*</label>
                             <div class="col-md-12">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder=""
-                                    name="name" value="{{ old('name') }}" required>
+                                    name="name" value="{{ old('name') }}" >
                                     @if ($errors->has('name'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('name') }}</strong>
@@ -28,8 +28,8 @@
                             <label class="col-md-12 col-form-label">Contact (Primary)*</label>
                             <div class="col-md-12">
                                 <input id="contact_no_primary" type="text" class="form-control{{ $errors->has('contact_no_primary') ? ' is-invalid' : '' }}"
-                                    placeholder="" name="contact_no_primary" value="{{ old('contact_no_primary') }}"
-                                    required>
+                                    placeholder="0x-xxxxxxxx" name="contact_no_primary" value="{{ old('contact_no_primary') }}"
+                                    >
                                     @if ($errors->has('contact_no_primary'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('contact_no_primary') }}</strong>
@@ -40,8 +40,8 @@
                         <div class="col-md-4">
                             <label class="col-md-12 col-form-label">Contact (Secondary)</label>
                             <div class="col-md-12">
-                                <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('concontact_no_secondarytact_no_primary') ? ' is-invalid' : '' }}"
-                                    placeholder="" name="contact_no_secondary" value="{{ old('contact_no_secondary') }}"
+                                <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('contact_no_secondary') ? ' is-invalid' : '' }}"
+                                    placeholder="0x-xxxxxxxx" name="contact_no_secondary" value="{{ old('contact_no_secondary') }}"
                                     >
                                     @if ($errors->has('contact_no_secondary'))
                                     <span class="invalid-feedback" role="alert">
@@ -53,7 +53,7 @@
                         <div class="col-md-4">
                             <label class="col-md-12 col-form-label">Contact (Fax)</label>
                             <div class="col-md-12">
-                                <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" placeholder=""
+                                <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" placeholder="0x-xxxxxxxx"
                                     name="fax_no" value="{{ old('fax_no') }}" >
                                     @if ($errors->has('fax_no'))
                                     <span class="invalid-feedback" role="alert">
@@ -68,7 +68,7 @@
                             <label class="col-md-12 col-form-label">Address Line 1*</label>
                             <div class="col-md-12">
                                 <input id="address" type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ old('address') }}"
-                                    required>
+                                    >
                                     @if ($errors->has('address'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('address') }}</strong>
@@ -108,7 +108,7 @@
                             <label class="col-md-12 col-form-label">Zip Code*</label>
                             <div class="col-md-12">
                                 <input id="zip_code" type="text" class="form-control{{ $errors->has('zip_code') ? ' is-invalid' : '' }}" name="zip_code"
-                                    value="{{ old('zip_code') }}" required>
+                                    value="{{ old('zip_code') }}" >
                                     @if ($errors->has('zip_code'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('zip_code') }}</strong>
@@ -120,7 +120,7 @@
                             <label class="col-md-12 col-form-label">City*</label>
                             <div class="col-md-12">
                                 <input id="city" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ old('city') }}"
-                                    required>
+                                    >
                                     @if ($errors->has('city'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('city') }}</strong>
@@ -131,8 +131,8 @@
                         <div class="col-md-4">
                             <label class="col-md-12 col-form-label">State*</label>
                             <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" required>
-                                        <option value=""></option>
+                                    <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" >
+                                        <option value="{{ old('state') }}">{{ old('state') }}</option>
                                         @foreach(App\Constants\MalaysianStates::$all as $state)
                                         <option value="{{ $state }}">{{ $state }}</option>
                                         @endforeach
