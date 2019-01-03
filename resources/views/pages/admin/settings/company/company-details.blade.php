@@ -414,10 +414,10 @@
                         <div class="col-xl-8">
                             <label class="col-md-12 col-form-label">Security Group Name*</label>
                             <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
-                                    required>@if ($errors->has('name'))
+                                <input id="security_name" type="text" class="form-control{{ $errors->has('security_name') ? ' is-invalid' : '' }}" name="security_name" value="{{ old('security_name') }}"
+                                    required>@if ($errors->has('security_name'))
                                     <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
+                                    <strong>{{ $errors->first('security_name') }}</strong>
                                 </span> @endif
                             </div>
                             <label class="col-md-12 col-form-label">Description*</label>
