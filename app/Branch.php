@@ -11,7 +11,13 @@ class Branch extends Model
     protected $table = 'branches';
 
     protected $fillable = [
-        'name','contact_no_primary' ,'contact_no_secondary' ,'fax_no' ,'address',
+        'name',
+        'contact_no_primary',
+        'contact_no_secondary' ,
+        'fax_no' ,
+        'address',
+        'address2',
+        'address3',
         'country_code',
         'state',
         'city',
