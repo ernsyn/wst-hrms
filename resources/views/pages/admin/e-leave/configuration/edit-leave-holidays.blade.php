@@ -22,9 +22,9 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <label class="col-md-12 col-form-label">Start_date*</label>
+                            <label class="col-md-12 col-form-label">Start Date*</label>
                             <div class="col-md-12">
-                                <input id="start_date" type="text" class="form-control{{ $errors->has('start_date') ? ' is-invalid' : '' }}" placeholder="Code here"
+                                <input id="start_date" type="text" class="form-control{{ $errors->has('start_date') ? ' is-invalid' : '' }}" placeholder="Start Date"
                                     name="start_date" value="{{ $holidays->start_date }}" required> @if ($errors->has('start_date'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('start_date') }}</strong>
@@ -34,7 +34,7 @@
                         <div class="col-4">
                             <label class="col-md-12 col-form-label">End Date*</label>
                             <div class="col-md-12">
-                                <input id="end_date" type="text" class="form-control{{ $errors->has('end_date') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
+                                <input id="end_date" type="text" class="form-control{{ $errors->has('end_date') ? ' is-invalid' : '' }}" placeholder="End Date"
                                     name="end_date" value="{{ $holidays->end_date }}" required>                                @if ($errors->has('end_date'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('end_date') }}</strong>
