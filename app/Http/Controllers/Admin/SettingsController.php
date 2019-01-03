@@ -459,10 +459,15 @@ class SettingsController extends Controller
             'contact_no_secondary' => '',
             'fax_no' =>'',
             'address'=>'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric'
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
         Branch::create($branchData);
@@ -510,12 +515,17 @@ class SettingsController extends Controller
             'contact_no_secondary' => '',
             'fax_no' =>'',
             'address'=>'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric'
 
 
+            ],
+            [
+                'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
             ]);
 
             Branch::where('id', $id)->update($branchData);
@@ -668,8 +678,8 @@ class SettingsController extends Controller
         $grade = EmployeeGrade::all();
 
 
-     
- 
+
+
 
         return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
         'security'=>$security, 'additions'=>$additions,'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company,
@@ -933,16 +943,16 @@ public function editCompanyDeduction(Request $request, $id) {
 }
 
 public function postEditCompanyDeduction(Request $request)
-{   
+{
     $id = $request->id;
-    
+
     $validateDeductionData = $request->validate([
         'code' => 'required',
         'name' => 'required',
         'type' => 'required',
         'amount' => 'required',
         'statutory'=> '',
-        
+
         'status'=>'required',
         'ea_form_id' =>'required',
 
@@ -1029,7 +1039,7 @@ public function postEditCompanyAddition(Request $request)
         'type' => 'required',
         'amount' => 'required',
         'statutory'=> '',
-        
+
         'status'=>'required',
         'ea_form_id' =>'required',
 
@@ -1128,12 +1138,12 @@ public function postEditCompanyBank(Request $request)
         CompanyBank::where('company_id',$id)
         ->where('status','Active')
         ->update(['status'=>'Inactive']);
-    
-    
+
+
         $additionData['status'] = 'Active';
         $additionData['company_id']= $id;
         $additionData['created_by'] = auth()->user()->id;
-   
+
 
 
     CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
@@ -1154,7 +1164,7 @@ public function postEditCompanyBank(Request $request)
 public function deleteCompanyBank(Request $request, $id)
 {
 
-    
+
     CompanyBank::find($id)->delete();
 
     return redirect()->route('admin.settings.company.company-details', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');
@@ -1195,7 +1205,7 @@ public function postAddCompanySecurityGroup(Request $request,$id)
 
     $validateSecurityGroup = $request->validate([
         'description' => 'required',
-        'name' => 'required'
+        'security_name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
     ]);
 
     $validateSecurityGroup['company_id']=$id;
