@@ -2,8 +2,7 @@
 @section('content')
 <div class="container pb-5">
     <div class="card">
-        <form method="POST" action="{{ route('admin.settings.companies.edit.post', ['id' => $company->id]) }}" id="form_validate"
-            data-parsley-validate>
+        <form method="POST" action="{{ route('admin.settings.companies.edit.post', ['id' => $company->id]) }}" >
             <div class="card-body">
                 @csrf
                 <div class="row p-3">
@@ -100,7 +99,7 @@
                         <div class="col-6">
                             <label class="col-md-12 col-form-label">Phone*</label>
                             <div class="col-md-12">
-                                <input id="phone" type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" placeholder="Phone"
+                                <input id="phone" type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" placeholder="0x-xxxxxxxx"
                                     name="phone" value="{{ $company->phone }}" required> @if($errors->has('phone'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('phone') }}</strong>

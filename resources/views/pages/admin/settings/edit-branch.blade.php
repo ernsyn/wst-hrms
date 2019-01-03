@@ -25,7 +25,7 @@
                                 <label class="col-md-12 col-form-label">Contact (Primary)*</label>
                                 <div class="col-md-12">
                                     <input id="contact_no_primary" type="text" class="form-control{{ $errors->has('contact_no_primary') ? ' is-invalid' : '' }}"
-                                        placeholder="Contact No here" name="contact_no_primary" value="{{ $branch->contact_no_primary }}"
+                                    placeholder="0x-xxxxxxxx" name="contact_no_primary" value="{{ $branch->contact_no_primary }}"
                                         required> @if ($errors->has('contact_no_primary'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('contact_no_primary') }}</strong>
@@ -36,7 +36,8 @@
                                 <label class="col-md-12 col-form-label">Contact (Secondary)</label>
                                 <div class="col-md-12">
                                     <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('contact_no_secondary') ? ' is-invalid' : '' }}"
-                                        name="contact_no_secondary" value="{{ $branch->contact_no_secondary }}" >                                    @if ($errors->has('contact_no_secondary'))
+                                    placeholder="0x-xxxxxxxx" name="contact_no_secondary" value="{{ $branch->contact_no_secondary }}" >
+                                        @if ($errors->has('contact_no_secondary'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('contact_no_secondary') }}</strong>
                                     </span> @endif
@@ -46,7 +47,7 @@
                                 <label class="col-md-12 col-form-label">Contact (Fax)</label>
                                 <div class="col-md-12">
                                     <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" name="fax_no" value="{{ $branch->fax_no }}"
-                                        > @if ($errors->has('fax_no'))
+                                    placeholder="0x-xxxxxxxx"> @if ($errors->has('fax_no'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('fax_no') }}</strong>
                                     </span> @endif

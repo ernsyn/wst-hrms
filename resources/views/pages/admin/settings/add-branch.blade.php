@@ -28,7 +28,7 @@
                                 <label class="col-md-12 col-form-label">Contact (Primary)*</label>
                                 <div class="col-md-12">
                                     <input id="contact_no_primary" type="text" class="form-control{{ $errors->has('contact_no_primary') ? ' is-invalid' : '' }}"
-                                        placeholder="Enter primary contact number" name="contact_no_primary" value="{{ old('contact_no_primary') }}"
+                                        placeholder="0x-xxxxxxxx" name="contact_no_primary" value="{{ old('contact_no_primary') }}"
                                         required>
                                         @if ($errors->has('contact_no_primary'))
                                         <span class="invalid-feedback" role="alert">
@@ -40,8 +40,8 @@
                             <div class="col-4">
                                 <label class="col-md-12 col-form-label">Contact (Secondary)</label>
                                 <div class="col-md-12">
-                                    <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('concontact_no_secondarytact_no_primary') ? ' is-invalid' : '' }}"
-                                        placeholder="Enter Secondary contact number" name="contact_no_secondary" value="{{ old('contact_no_secondary') }}"
+                                    <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('contact_no_secondary') ? ' is-invalid' : '' }}"
+                                        placeholder="0x-xxxxxxxx" name="contact_no_secondary" value="{{ old('contact_no_secondary') }}"
                                         >
                                         @if ($errors->has('contact_no_secondary'))
                                         <span class="invalid-feedback" role="alert">
@@ -53,7 +53,7 @@
                             <div class="col-4">
                                 <label class="col-md-12 col-form-label">Contact (Fax)</label>
                                 <div class="col-md-12">
-                                    <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" placeholder="Enter Fax number"
+                                    <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" placeholder="0x-xxxxxxxx"
                                         name="fax_no" value="{{ old('fax_no') }}" >
                                         @if ($errors->has('fax_no'))
                                         <span class="invalid-feedback" role="alert">

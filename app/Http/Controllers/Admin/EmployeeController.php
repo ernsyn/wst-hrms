@@ -152,7 +152,7 @@ class EmployeeController extends Controller
             'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
             'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
             'main_security_group_id'=>'',
-            'contact_no' => 'required|regex:/^01[0-9]\-*\d{7,8}$/',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'nationality' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
         ],
@@ -414,7 +414,7 @@ class EmployeeController extends Controller
             'attach' => 'nullable|max:2000000|regex:/^data:image/',
 
             'code'=>'required|unique:employees',
-            'contact_no' => 'required|regex:/^01[0-9]\-*\d{7,8}$/',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'address' => 'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
@@ -520,7 +520,7 @@ class EmployeeController extends Controller
         $emergencyContactData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'contact_no' => 'required|regex:/^01[0-9]\-*\d{7,8}$/',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
         $emergencyContactData['created_by'] = auth()->user()->id;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
@@ -1061,7 +1061,7 @@ Employee::where('id', $id)
         $emergencyContactUpdatedData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'contact_no' => 'required|regex:/^01[0-9]\-*\d{7,8}$/',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
 
         EmployeeEmergencyContact::where('id', $id)->update($emergencyContactUpdatedData);
