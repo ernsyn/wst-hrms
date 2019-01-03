@@ -25,6 +25,7 @@ use App\Mail\LeaveApprovalMail;
 use App\Employee;
 use Carbon\Carbon;
 use App\User;
+use Artisan;
 
 class ELeaveController extends Controller
 {
@@ -113,6 +114,26 @@ class ELeaveController extends Controller
         } else {
             return view('pages.admin.e-leave.configuration.edit-custom-leave-type', [ 'leave_type' => $leaveType]);
         }
+    }
+
+    // Generate Leave Allocations
+    public function generateLeaveAllocation()
+    {       
+        $year = Carbon::now()->year;
+
+        Artisan::call("leave-allocation:generate", ['year' => $year]);
+
+        $leave_allocation = DB::table('leave_allocations')
+        ->join('employees', 'leave_allocations.emp_id', '=', 'employees.id')
+        ->join('users', 'employees.user_id', '=', 'users.id')
+        ->join('leave_types', 'leave_allocations.leave_type_id', '=', 'leave_types.id')
+        ->join('employee_jobs', 'leave_allocations.emp_job_id', '=', 'employee_jobs.id')
+        ->select('leave_allocations.*', 'employees.code', 'users.name', 'leave_types.name as lt_code', 'employee_jobs.remarks')
+        ->whereYear('valid_from_date', '=', $year)
+        ->whereYear('valid_until_date', '=', $year)
+        ->get();
+        
+        return view('pages.admin.e-leave.configuration.generate-leave-allocation', ['message' => Artisan::output(), 'leave_allocation' => $leave_allocation]);
     }
 
     // List Of Leave Public Holidays List
