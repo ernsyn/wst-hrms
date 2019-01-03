@@ -98,7 +98,7 @@ $(function(){
     });
 
     $('.site_quick_jump').change(function(){
-        window.location.href = '{{ route('admin.e-leave.leave-report') }}/' + $(this).val();
+        window.location.href = '{{ route('admin.e-leave.leave-report') }}/total-balanced-report/' + $(this).val();
     });
 })
 </script>
