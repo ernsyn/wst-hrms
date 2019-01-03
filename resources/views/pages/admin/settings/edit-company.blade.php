@@ -11,7 +11,7 @@
                             <label class="col-md-12 col-form-label">Name*</label>
                             <div class="col-md-12">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name"
-                                    name="name" value="{{ $company->name }}" required> @if ($errors->has('name'))
+                                    name="name" value="{{ $company->name }}" > @if ($errors->has('name'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('name') }}</strong>
                                     </span> @endif
@@ -21,7 +21,7 @@
                             <label class="col-md-12 col-form-label">Code*</label>
                             <div class="col-md-12">
                                 <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" placeholder="Code"
-                                    name="code" value="{{ $company->code }}" required> @if ($errors->has('code'))
+                                    name="code" value="{{ $company->code }}" > @if ($errors->has('code'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('code') }}</strong>
                                     </span> @endif
@@ -31,7 +31,7 @@
                             <label class="col-md-12 col-form-label">Registration No*</label>
                             <div class="col-md-12">
                                 <input id="registration_no" type="text" class="form-control{{ $errors->has('registration_no') ? ' is-invalid' : '' }}" placeholder="Registration No."
-                                    name="registration_no" value="{{ $company->registration_no }}" required>                                @if ($errors->has('registration_no'))
+                                    name="registration_no" value="{{ $company->registration_no }}" >                                @if ($errors->has('registration_no'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('registration_no') }}</strong>
                                     </span> @endif
@@ -43,7 +43,7 @@
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-12">
                                 <input id="description" type="text" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" placeholder="Description"
-                                    name="description" value="{{ $company->description }}" required>                                @if ($errors->has('description'))
+                                    name="description" value="{{ $company->description }}" >                                @if ($errors->has('description'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('description') }}</strong>
                                     </span> @endif
@@ -53,7 +53,7 @@
                             <label class="col-md-12 col-form-label">Url*</label>
                             <div class="col-md-12">
                                 <input id="url" type="text" class="form-control{{ $errors->has('url') ? ' is-invalid' : '' }}" placeholder="https://example.com" name="url"
-                                    value="{{ $company->url }}" required> @if ($errors->has('url'))
+                                    value="{{ $company->url }}" > @if ($errors->has('url'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('url') }}</strong>
                                     </span> @endif
@@ -65,7 +65,7 @@
                             <label class="col-md-12 col-form-label">Address Line 1*</label>
                             <div class="col-md-12">
                                 <input id="address" type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" placeholder="Address"
-                                    name="address" value="{{ $company->address }}" required>
+                                    name="address" value="{{ $company->address }}" >
                                     @if ($errors->has('address'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('address') }}</strong>
@@ -100,7 +100,7 @@
                             <label class="col-md-12 col-form-label">Phone*</label>
                             <div class="col-md-12">
                                 <input id="phone" type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" placeholder="0x-xxxxxxxx"
-                                    name="phone" value="{{ $company->phone }}" required> @if($errors->has('phone'))
+                                    name="phone" value="{{ $company->phone }}" > @if($errors->has('phone'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('phone') }}</strong>
                                     </span> @endif
@@ -110,7 +110,7 @@
                             <label class="col-md-12 col-form-label">Tax No*</label>
                             <div class="col-md-12">
                                 <input id="tax_no" type="text" class="form-control{{ $errors->has('tax_no') ? ' is-invalid' : '' }}" placeholder="Tax No"
-                                    name="tax_no" value="{{ $company->tax_no }}" required> @if($errors->has('tax_no'))
+                                    name="tax_no" value="{{ $company->tax_no }}" > @if($errors->has('tax_no'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('tax_no') }}</strong>
                                     </span> @endif
@@ -122,7 +122,7 @@
                             <label class="col-md-12 col-form-label">EPF No*</label>
                             <div class="col-md-12">
                                 <input id="epf_no" type="text" class="form-control{{ $errors->has('epf_no') ? ' is-invalid' : '' }}" placeholder="Epf No"
-                                    name="epf_no" value="{{ $company->epf_no }}" required> @if($errors->has('epf_no'))
+                                    name="epf_no" value="{{ $company->epf_no }}" > @if($errors->has('epf_no'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('epf_no') }}</strong>
                                     </span> @endif
@@ -132,7 +132,7 @@
                             <label class="col-md-12 col-form-label">EIS No*</label>
                             <div class="col-md-12">
                                 <input id="eis_no" type="text" class="form-control{{ $errors->has('eis_no') ? ' is-invalid' : '' }}" placeholder="EIS No"
-                                    name="eis_no" value="{{ $company->eis_no }}" required> @if($errors->has('eis_no'))
+                                    name="eis_no" value="{{ $company->eis_no }}" > @if($errors->has('eis_no'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('eis_no') }}</strong>
                                     </span> @endif
@@ -142,7 +142,7 @@
                             <label class="col-md-12 col-form-label">Socso No*</label>
                             <div class="col-md-12">
                                 <input id="socso_no" type="text" class="form-control{{ $errors->has('socso_no') ? ' is-invalid' : '' }}" placeholder="Socso No"
-                                    name="socso_no" value="{{ $company->socso_no }}" required>
+                                    name="socso_no" value="{{ $company->socso_no }}" >
                                 @if ($errors->has('socso_no'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('socso_no') }}</strong>

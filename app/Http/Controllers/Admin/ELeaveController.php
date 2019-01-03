@@ -469,7 +469,7 @@ class ELeaveController extends Controller
         return view('pages.admin.e-leave.configuration.leave-report', ['employees' => $employees]);
     }
 
-    public function getLeaveReport(Request $request, $id) 
+    public function getTotalBalancedReport(Request $request, $id) 
     {
         if (strpos($id, '-') !== false) {
             $params = explode('-', $id);
@@ -551,7 +551,100 @@ class ELeaveController extends Controller
         ->where('emp_id', $emp_id)
         ->get();
 
-        return view('pages.admin.e-leave.configuration.leave-report-employee', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
+        return view('pages.admin.e-leave.configuration.total-balanced-report', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
+    }
+
+    public function getTotalTransactionReport(Request $request, $id) 
+    {
+        if (strpos($id, '-') !== false) {
+            $params = explode('-', $id);
+            $emp_id = $params[0];
+            $year = $params[1];
+        }
+        else {
+            $emp_id = $id;
+            $now = Carbon::now();
+            $year = $now->year;
+        }
+        
+        $report_array = array();
+
+        // get employee data
+        $employee = DB::table('users')
+        ->join('employees', 'users.id', '=', 'employees.user_id')
+        ->select('users.name','users.email','employees.*')
+        ->where('employees.id', $emp_id)
+        ->first();
+
+        // get employee leave requests
+        $leaves = DB::table('leave_requests')
+        ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
+        ->select('leave_requests.*', 'leave_types.name')
+        ->where('leave_types.code', '!=', 'UNPAID')
+        ->whereYear('leave_requests.start_date', '=', $year)
+        ->get();
+
+        foreach ($leaves as $row) {
+            $report_array[$row->id]['leave_type'] = $row->name;
+            $report_array[$row->id]['submission_date'] = Carbon::parse($row->created_at)->format('d/m/Y');
+            $report_array[$row->id]['from'] = Carbon::parse($row->start_date)->format('d/m/Y');
+            $report_array[$row->id]['to'] = Carbon::parse($row->end_date)->format('d/m/Y');
+            $report_array[$row->id]['number_of_days'] = $row->applied_days;
+            $report_array[$row->id]['reason'] = $row->reason;
+            $report_array[$row->id]['status'] = ucfirst($row->status);
+        }
+
+        $years = LeaveRequest::selectRaw('distinct(year(start_date)) as year_data')
+        ->where('emp_id', $emp_id)
+        ->get();
+
+        return view('pages.admin.e-leave.configuration.total-transaction-report', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
+    }
+
+    public function getUnpaidLeaveReport(Request $request, $id) 
+    {
+        if (strpos($id, '-') !== false) {
+            $params = explode('-', $id);
+            $emp_id = $params[0];
+            $year = $params[1];
+        }
+        else {
+            $emp_id = $id;
+            $now = Carbon::now();
+            $year = $now->year;
+        }
+        
+        $report_array = array();
+
+        // get employee data
+        $employee = DB::table('users')
+        ->join('employees', 'users.id', '=', 'employees.user_id')
+        ->select('users.name','users.email','employees.*')
+        ->where('employees.id', $emp_id)
+        ->first();
+
+        // get employee leave requests
+        $leaves = DB::table('leave_requests')
+        ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
+        ->select('leave_requests.*', 'leave_types.code', 'leave_types.name')
+        ->where('leave_types.code', 'UNPAID')
+        ->whereYear('leave_requests.start_date', '=', $year)
+        ->get();
+
+        foreach ($leaves as $row) {
+            $report_array[$row->id]['leave_code'] = $row->code;
+            $report_array[$row->id]['leave_type'] = $row->name;
+            $report_array[$row->id]['taken'] = $row->applied_days;
+            $report_array[$row->id]['date'] = Carbon::parse($row->start_date)->format('d/m/Y');
+            $report_array[$row->id]['until'] = Carbon::parse($row->end_date)->format('d/m/Y');            
+            $report_array[$row->id]['reason'] = $row->reason;
+        }
+
+        $years = LeaveRequest::selectRaw('distinct(year(start_date)) as year_data')
+        ->where('emp_id', $emp_id)
+        ->get();
+
+        return view('pages.admin.e-leave.configuration.unpaid-leave-report', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
     }
 
     public function ajaxGetEmployees(Request $request)

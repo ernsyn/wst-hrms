@@ -462,10 +462,15 @@ class SettingsController extends Controller
             'contact_no_secondary' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
             'fax_no' =>'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
             'address'=>'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric|digits:5'
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
         Branch::create($branchData);
@@ -513,12 +518,17 @@ class SettingsController extends Controller
             'contact_no_secondary' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
             'fax_no' =>'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
             'address'=>'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
             'zip_code'=> 'required|numeric|digits:5'
 
 
+            ],
+            [
+                'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
             ]);
 
             Branch::where('id', $id)->update($branchData);
@@ -1201,7 +1211,7 @@ public function postAddCompanySecurityGroup(Request $request,$id)
 
     $validateSecurityGroup = $request->validate([
         'description' => 'required',
-        'name' => 'required'
+        'security_name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
     ]);
 
     $validateSecurityGroup['company_id']=$id;
