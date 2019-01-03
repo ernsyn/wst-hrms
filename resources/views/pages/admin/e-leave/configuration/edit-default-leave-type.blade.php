@@ -310,9 +310,48 @@
             <h5 class="title text-primary">Non Prorated</h5>
         </div>
     </div>
+    {{-- RULE: Minimum Apply Days Before --}}
+    <div id="rule-min-apply-days-before" class="card rule-entry mt-2">
+        <div class="card-body">
+            <input type="number" name="id" hidden> 
+            <h5 class="title text-primary">Minimum Apply Days Before</h5>
+            <div class="entries-table container">
+                <div class="entry-headers row">
+                    <div class="col-5">Min Applied Days</div>
+                    <div class="col-6">Must Apply Before (Days)</div>
+                    <div class="col-1"></div>
+                </div>
+                <div class="entry-list">
+                    
+                </div>
+                <div class="footer row justify-content-end">
+                    <div class="col-2 p-0">
+                        <a role="button" class="float-right btn add-btn">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     {{-- (TODO) RULE: Deduct Other Leave Types if Insufficient --}}
     {{-- (TODO) RULE: Include Off Days (Based on Minimum Applied Days) --}}
+</div>
+<div id="leave-type-rule-min-apply-days-before-template" hidden>
+    <div class="min-apply-days-before-entry row">
+        <div class="col-5">
+            <input name="min-leave-days" type="number" class="form-control min-leave-days" placeholder="eg. 3">
+        </div>
+        <div class="col-6">
+            <input name="min-apply-before-days" type="number" class="form-control min-apply-before-days" placeholder="eg. 3">
+        </div>
+        <div class="col-1 p-0">
+            <a role="button" class="remove-btn float-right btn" hidden>
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
 </div>
 <div id="leave-type-entitled-days-by-years-template" hidden>
     <div class="entitlement-by-years-entry input-group mt-2">
@@ -362,8 +401,8 @@
             <div class="row mt-2">
                 <div class="col">
                     <a role="button" class="add-entitlement-by-years-btn float-right btn btn-light">
-                                <i class="fas fa-plus"></i>
-                            </a>
+                        <i class="fas fa-plus"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -506,7 +545,26 @@
 
                             nonProrated.appendTo('#leave-rules-list');
                             break;
-                        // rule-min-apply-days-before
+                        case 'min_apply_days_before':
+                            let minApplyDaysBefore = leaveRulesTemplates.find('#rule-min-apply-days-before');
+                            minApplyDaysBefore.find('input[name=id]').val(rule.id);
+                            
+                            let minApplyDaysBeforeEntryTemplate = $('#leave-type-rule-min-apply-days-before-template .min-apply-days-before-entry');
+                            let minApplyDaysBeforeEntryList = minApplyDaysBefore.find('.entry-list');
+                            for(let i = 0; i < configuration.length; i++) {
+                                let entryEl = minApplyDaysBeforeEntryTemplate.clone();
+                                
+                                entryEl.find('.min-leave-days').val(configuration[i].min_leave_days);
+                                entryEl.find('.min-apply-before-days').val(configuration[i].min_apply_days_before);
+                                if(i > 0) {
+                                    entryEl.find('.remove-btn').removeAttr('hidden');
+                                }
+
+                                entryEl.appendTo(minApplyDaysBeforeEntryList);
+                            }
+
+                            minApplyDaysBefore.appendTo('#leave-rules-list');
+                            break;
                         // rule-deduct-after-leave-types-insufficient
                     }
                 }
@@ -587,6 +645,20 @@
                     }
                 }
             }
+
+            // EVENT: Add / Remove - Min Apply Days Before Entry
+            $('#rule-min-apply-days-before .add-btn').click(function(addEvent) {
+                let minApplyDaysBefore = $('#rule-min-apply-days-before');
+                let newMinApplyDaysBeforeEntry = $('#leave-type-rule-min-apply-days-before-template .min-apply-days-before-entry').clone();
+                let minApplyDaysBeforeEntryList = minApplyDaysBefore.find('.entry-list');
+
+                newMinApplyDaysBeforeEntry.find('.remove-btn').removeAttr('hidden');
+                newMinApplyDaysBeforeEntry.appendTo(minApplyDaysBeforeEntryList);
+            });
+
+            $(document).on('click', '.min-apply-days-before-entry .remove-btn', function(removeEvent) {
+                $(removeEvent.target).closest('.min-apply-days-before-entry').remove();
+            });
         })();
 
         // SECTION: Init Page Logic
@@ -795,6 +867,12 @@
                         console.log("Multiple Approval Levels Required: ", leaveRuleEl);
                         ruleData.rule = 'multiple_approval_levels_needed';
                     break;
+                    // case 'rule-min-apply-days-before':
+                    //     ruleData.rule = 'gender';
+                    //     ruleData.configuration = {
+                    //         gender: leaveRule.find('#gender-input').val(),
+                    //     };
+                    // break;
                     case 'rule-restrict-gender':
                         ruleData.rule = 'gender';
                         ruleData.configuration = {
@@ -860,6 +938,34 @@
                     break;
                     case 'rule-non-prorated':
                         ruleData.rule = 'non_prorated';
+                    case 'rule-min-apply-days-before':
+                        ruleData.rule = 'min_apply_days_before';
+
+                        let config = [];
+                        minApplyDaysBeforeEntries = leaveRule.find('.entry-list .min-apply-days-before-entry');
+                        $.each(minApplyDaysBeforeEntries, function(index, entryEl) {
+                            let minLeaveDays = $(entryEl).find('.min-leave-days').val();
+                            let minApplyDaysBefore = $(entryEl).find('.min-apply-before-days').val();
+                            if(minLeaveDays && minApplyDaysBefore) {
+                                config.push({
+                                    min_leave_days: +(minLeaveDays),
+                                    min_apply_days_before: +(minApplyDaysBefore)
+                                })
+                            }
+                        });
+
+                        ruleData.configuration = config;
+                        // for(let i = 0; i < configuration.length; i++) {
+                        //         let entryEl = minApplyDaysBeforeEntryTemplate.clone();
+                                
+                        //         entryEl.find('.min-leave-days').val(configuration[i].min_leave_days);
+                        //         entryEl.find('.min-apply-before-days').val(configuration[i].min_apply_days_before);
+                        //         if(i > 0) {
+                        //             entryEl.find('.remove-btn').removeAttr('hidden');
+                        //         }
+
+                        //         entryEl.appendTo(minApplyDaysBeforeEntryList);
+                        //     }
                     break;
                 }
 
