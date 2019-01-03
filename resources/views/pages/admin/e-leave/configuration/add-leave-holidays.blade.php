@@ -43,7 +43,7 @@
                             <div class="form-group row w-100">
                                 <label class="col-md-5 col-form-label">Repeated annually*</label>
                                 <div class="col-md-7">
-                                    <select class="form-control" id="repeat_annually" name="repeat_annually">
+                                    <select class="form-control" id="repeat_annually" name="repeat_annually" required>
                                         <option value="">Please Select</option>
                                         <option value="1">Yes</option>
                                         <option value="2">No</option>
@@ -69,7 +69,7 @@
                                                               </span> @endif
                                     </select>  --}}
                                     <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]"
-                                            required >
+                                            >
                                             <option value="">Please Select</option>
                                             @foreach(App\Constants\MalaysianStates::$all as $state)
                                             <option value="{{ $state }}">{{ $state }}</option value="">
@@ -88,7 +88,7 @@
                                             <label class="col-md-5 col-form-label">Note</label>
                                             <div class="col-md-7">
                                                 <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder=""
-                                                    name="note" value="{{ old('note') }}" required>
+                                                    name="note" value="{{ old('note') }}" >
                                             </div>                            
                                         </div>
                     </div>
@@ -101,7 +101,7 @@
                 <button type="submit" class="btn btn-primary">
                             {{ __('Submit') }}
                             </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
             </div>
         </form>
     </div>

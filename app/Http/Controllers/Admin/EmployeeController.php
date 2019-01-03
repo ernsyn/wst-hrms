@@ -683,7 +683,7 @@ Employee::where('id', $id)
     {
         $bankAccountData = $request->validate([
             'bank_code' => 'required',
-            'acc_no' => 'required',
+            'acc_no' => 'required|numeric',
             'acc_status' => 'required'
         ]);
         $bankAccountData['created_by'] = auth()->user()->id;
@@ -692,7 +692,7 @@ Employee::where('id', $id)
         $employee = Employee::find($id);
         $employee->employee_bank_accounts()->save($bankAccount);
 
-        return response()->json(['success'=>'Record is successfully added']);
+        return response()->json(['success'=>'Bank Account is successfully added']);
     }
 
     public function postCompany(Request $request, $id)

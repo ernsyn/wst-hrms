@@ -115,9 +115,9 @@
                 <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-application') ? 'active' : '' }}">
                     <a href="{{ route('admin.e-leave.leave-application') }}">Leave Application</a>
                 </li>
-                    {{-- <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
-                    <a href="{{ route('admin.e-leave.leave-report') }}">Leave Report</a>
-                    </li> --}}
+                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.leave-report') }}">Leave Reports</a>
+                    </li>
                 </ul>
             </li>
     
@@ -131,13 +131,13 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/attendance*') ? 'show' : '' }}" id="attendanceSubmenu">
                 {{-- OPTION: Current Day Attendance --}}
-                    {{-- <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
+                    <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
                     <a href="{{ route('admin.attendance.current-day') }}">Current Day</a>
-                    </li> --}}
+                    </li>
                 {{-- OPTION: Attendance Report --}}
-                    {{-- <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
+                    <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
                     <a href="{{ route('admin.attendance.report') }}">Attendance Report</a>
-                    </li> --}}
+                    </li>
             </ul>
         </li>
 
