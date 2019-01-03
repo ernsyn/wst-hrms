@@ -85,14 +85,17 @@ class SettingsController extends Controller
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'address2' => 'nullable',
+            'address2' => 'required_with:address3',
             'address3' => 'nullable',
-            'phone' => 'required',
+            'phone' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'tax_no' => 'required|numeric',
             'epf_no' => 'required|numeric',
             'socso_no' => 'required|numeric',
             'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies',
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
         $companyData['status'] = 'Active';
@@ -455,14 +458,19 @@ class SettingsController extends Controller
 
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,NULL,id,deleted_at,NULL',
-            'contact_no_primary' =>'required|numeric',
-            'contact_no_secondary' => '',
-            'fax_no' =>'',
+            'contact_no_primary' =>'required|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'contact_no_secondary' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'fax_no' =>'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
             'address'=>'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
-            'zip_code'=> 'required|numeric'
+            'zip_code'=> 'required|numeric|digits:5'
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
         Branch::create($branchData);
@@ -506,16 +514,21 @@ class SettingsController extends Controller
     {
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,'.$id.',id,deleted_at,NULL',
-            'contact_no_primary' =>'required|numeric',
-            'contact_no_secondary' => '',
-            'fax_no' =>'',
+            'contact_no_primary' =>'required|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'contact_no_secondary' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'fax_no' =>'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
             'address'=>'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'country_code'=> 'nullable|integer',
             'state'=> 'required',
             'city'=>   'required',
-            'zip_code'=> 'required|numeric'
+            'zip_code'=> 'required|numeric|digits:5'
 
 
+            ],
+            [
+                'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
             ]);
 
             Branch::where('id', $id)->update($branchData);
@@ -534,15 +547,18 @@ class SettingsController extends Controller
             'registration_no' => 'required',
             'description' => 'required',
             'address' => 'required',
-            'address2' => 'nullable',
+            'address2' => 'required_with:address3',
             'address3' => 'nullable',
-            'phone' => 'required',
+            'phone' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'tax_no' => 'required|numeric',
             'epf_no' => 'required|numeric',
             'socso_no' => 'required|numeric',
             'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies,code,'.$id,
             'status' => 'required',
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
         Company::where('id', $id)->update($companyData);
@@ -668,8 +684,8 @@ class SettingsController extends Controller
         $grade = EmployeeGrade::all();
 
 
-     
- 
+
+
 
         return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
         'security'=>$security, 'additions'=>$additions,'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company,
@@ -933,16 +949,16 @@ public function editCompanyDeduction(Request $request, $id) {
 }
 
 public function postEditCompanyDeduction(Request $request)
-{   
+{
     $id = $request->id;
-    
+
     $validateDeductionData = $request->validate([
         'code' => 'required',
         'name' => 'required',
         'type' => 'required',
         'amount' => 'required',
         'statutory'=> '',
-        
+
         'status'=>'required',
         'ea_form_id' =>'required',
 
@@ -1029,7 +1045,7 @@ public function postEditCompanyAddition(Request $request)
         'type' => 'required',
         'amount' => 'required',
         'statutory'=> '',
-        
+
         'status'=>'required',
         'ea_form_id' =>'required',
 
@@ -1128,12 +1144,12 @@ public function postEditCompanyBank(Request $request)
         CompanyBank::where('company_id',$id)
         ->where('status','Active')
         ->update(['status'=>'Inactive']);
-    
-    
+
+
         $additionData['status'] = 'Active';
         $additionData['company_id']= $id;
         $additionData['created_by'] = auth()->user()->id;
-   
+
 
 
     CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
@@ -1154,7 +1170,7 @@ public function postEditCompanyBank(Request $request)
 public function deleteCompanyBank(Request $request, $id)
 {
 
-    
+
     CompanyBank::find($id)->delete();
 
     return redirect()->route('admin.settings.company.company-details', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');
@@ -1195,7 +1211,7 @@ public function postAddCompanySecurityGroup(Request $request,$id)
 
     $validateSecurityGroup = $request->validate([
         'description' => 'required',
-        'name' => 'required'
+        'security_name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
     ]);
 
     $validateSecurityGroup['company_id']=$id;

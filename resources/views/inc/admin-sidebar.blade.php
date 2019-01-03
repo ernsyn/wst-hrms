@@ -25,11 +25,54 @@
                 <a href="{{ route('super-admin.dashboard') }}">
                     Super Admin
                 </a>
-            </div>
-            @endhasrole @hasrole('employee')
-            <div class="option row col mx-0">
-                <a href="{{ route('employee.dashboard') }}">
-                    Employee
+                <ul class="collapse list-unstyled {{ request()->is('admin/e-leave*') ? 'show' : '' }}" id="leaveSubmenu">
+                    {{-- OPTION: Leave Request --}}
+                    <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.configuration') }}">Configuration</a>
+                    </li>
+                    {{-- OPTION: PH Setup --}}
+                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.configuration.leave-holidays') }}">Holidays Setup</a>
+                    </li>
+                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-requests') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.configuration.leave-requests') }}">Leave Requests</a>
+                    </li>
+                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-application') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.leave-application') }}">Leave Application</a>
+                    </li>
+                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
+                        <a href="{{ route('admin.e-leave.leave-report') }}">Leave Reports</a>
+                    </li>
+                </ul>
+            </li>
+    
+            {{-- SECTION: Attendance --}}
+            <li class="menu-section {{ request()->is('admin/attendance*') ? 'active' : '' }}">
+                <a class="info dropdown-toggle" href="#attendanceSubmenu" data-toggle="collapse" aria-expanded="false">
+                    <div class="row">
+                        <div class="col-1"><i class="far fa-clock"></i></div>
+                        <div class="col-10">Attendance</div>
+                    </div>
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('admin/attendance*') ? 'show' : '' }}" id="attendanceSubmenu">
+                    {{-- OPTION: Current Day Attendance --}}
+                    <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
+                        <a href="{{ route('admin.attendance.current-day') }}">Current Day</a>
+                    </li>
+                    {{-- OPTION: Attendance Report --}}
+                    <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
+                        <a href="{{ route('admin.attendance.report') }}">Attendance Report</a>
+                    </li>
+                </ul>
+            </li>
+    
+            {{-- SECTION: Settings --}}
+            <li class="menu-section {{ request()->is('admin/settings*') ? 'active' : '' }}">
+                <a class="info dropdown-toggle" href="#setupSubmenu" data-toggle="collapse" aria-expanded="false">
+                    <div class="row">
+                        <div class="col-1"><i class="fas fa-cog"></i></div>
+                        <div class="col-10">Settings</div>
+                    </div>
                 </a>
             </div>
             @endhasrole
