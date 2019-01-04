@@ -45,7 +45,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-lg-right">Email*</label>
                             <div class="col-lg-6">
-                                <input type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}">
+                                <input type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" placeholder="name@example.com">
 								@if ($errors->has('email'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('email') }}</strong>
@@ -78,7 +78,7 @@
 
                             <label class="col-lg-3 col-form-label text-lg-right">Contact No*</label>
                             <div class="col-lg-6">
-                                <input type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" name="contact_no" value="{{ old('contact_no') }}">
+                                <input type="text" class="form-control{{ $errors->has('contact_no') ? ' is-invalid' : '' }}" name="contact_no" value="{{ old('contact_no') }}" placeholder="01x-xxxxxxxx">
                                 @if ($errors->has('contact_no'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('contact_no') }}</strong>
@@ -134,7 +134,7 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">ID No*</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">Employee ID No*</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}">
 								@if ($errors->has('code'))

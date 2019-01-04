@@ -16,9 +16,9 @@
                         <div class="col-md-12 mb-3">
                             <label><strong>Bank Name*</strong></label>
                             <select class="form-control{{ $errors->has('bank-code') ? ' is-invalid' : '' }}" name="bank-code" id="bank-code">
-                                    <option value=""></option>
-                                    @foreach(App\BankCode::all()->sortBy('name') as $banks)
-                                    <option value="{{ $banks->name }}">{{ $banks->name }}</option>
+                                    <option value=""></option>  
+                                @foreach(App\CompanyBank::where('company_id',$employee->company_id)->get() as $bank)
+                                    <option value="{{ $bank->id }}">{{ $bank->acc_name }}</option>
                                     @endforeach
                             </select>
                         </div>

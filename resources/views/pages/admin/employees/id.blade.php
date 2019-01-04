@@ -321,7 +321,7 @@
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="contact-no"><strong>Contact Number*</strong></label>
-                                    <input id="contact-no" type="text" class="form-control" placeholder="" value="" >
+                                    <input id="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" >
                                     <div id="contact-no-error" class="invalid-feedback">
                                     </div>
                                 </div>

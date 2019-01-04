@@ -84,6 +84,11 @@ Breadcrumbs::for('admin.e-leave.unpaid-leave-report', function ($trail, $id) {
     $trail->push('Unpaid Leave Report', route('admin.e-leave.unpaid-leave-report', $id));
 });
 
+Breadcrumbs::for('admin.e-leave.configuration.generate-leave-allocation', function ($trail) {
+    $trail->parent('admin.e-leave.configuration');
+    $trail->push('Generate Leave Allocation', route('admin.e-leave.configuration.generate-leave-allocation'));
+});
+
 Breadcrumbs::for('admin.e-leave.add-leave-request-disapprove', function ($trail,$id) {
     $trail->parent('admin.dashboard');
     $trail->push('Leave Disapprove', route('admin.e-leave.add-leave-request-disapprove',$id));

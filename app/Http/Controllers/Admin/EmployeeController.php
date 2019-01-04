@@ -142,7 +142,7 @@ class EmployeeController extends Controller
 
             'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
             'code'=>'required|unique:employees,code,'.$id.',id',
-            'dob' => 'required',
+            'dob' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'gender' => 'required',
             'marital_status' => 'required',
             'race' => 'required|alpha',
@@ -153,13 +153,13 @@ class EmployeeController extends Controller
             'address3' => 'nullable',
             'postcode' => 'required|numeric',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable',
+            'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
             'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
             'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
             'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
             'main_security_group_id'=>'',
-            'contact_no' => 'required',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'nationality' => 'required',
             // 'contact_no' => 'required|regex:/^[0-9]+-/',
         ],
@@ -421,13 +421,13 @@ class EmployeeController extends Controller
             'attach' => 'nullable|max:2000000|regex:/^data:image/',
 
             'code'=>'required|unique:employees',
-            'contact_no' => 'required',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'address' => 'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
             'postcode' => 'required|numeric',
             'company_id' => 'required',
-            'dob' => 'required',
+            'dob' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'gender' => 'required',
             'race' => 'required|alpha',
             'nationality' => 'required',
@@ -440,7 +440,7 @@ class EmployeeController extends Controller
             'eis_no' => 'required|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable',
+            'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'main_security_group_id'=>'required',
         ],
         [
@@ -531,7 +531,7 @@ class EmployeeController extends Controller
         $emergencyContactData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'contact_no' => 'required|numeric',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
         $emergencyContactData['created_by'] = auth()->user()->id;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
@@ -1073,7 +1073,7 @@ Employee::where('id', $id)
         $emergencyContactUpdatedData = $request->validate([
             'name' => 'required',
             'relationship' => 'required',
-            'contact_no' => 'required|numeric',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
 
         EmployeeEmergencyContact::where('id', $id)->update($emergencyContactUpdatedData);
