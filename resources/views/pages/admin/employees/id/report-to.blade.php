@@ -3,7 +3,7 @@
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-report-to-popup">
-                Add Report To
+                Assign Report To
             </button>
         </div>
     </div>
@@ -13,9 +13,9 @@
                 <th>No</th>
                 <th>Full Name</th>
                 <th>Type</th>
-                <th>Note</th>
                 <th>KPI Proposer</th>
                 <th>Report To Level</th>
+                <th>Notes</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -37,11 +37,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report-to"><strong>Report To*</strong></label>
-                            <select name="report-to" id="report-to" class="form-control" placeholder="Select a superior...">
-                                {{-- <option value="">Select Name</option>
-                                @foreach(App\Employee::with('user')->get() as $employee)
-                                <option value="{{ $employee->id }}">{{ $employee->user->name }}</option>
-                                @endforeach --}}
+                            <select name="report-to" class="form-control" placeholder="Select a superior...">
                             </select>
                             <div id="report-to-error" class="invalid-feedback">
                             </div>
@@ -51,7 +47,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="type"><strong>Type*</strong></label>
-                            <select class="form-control" id="type" name="type">
+                            <select class="form-control" name="type">
                                 <option value="">Select Name</option>
                                 <option value="Direct">Direct</option>
                                 <option value="Indirect">Indirect</option>
@@ -64,7 +60,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="report_to_level"><strong>Report To Level*</strong></label>
-                            <select class="form-control" id="report-to-level" name="report_to_level">
+                            <select class="form-control" name="report-to-level">
                                 <option value="">Select Level</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -78,8 +74,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                            <select class="form-control" id="kpi-proposer" name="kpi_proposer">
-                            <option value="">Select Level</option>
+                            <select class="form-control" name="kpi-proposer">
+                            <option value="">Select KPI Proposer</option>
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -89,20 +85,17 @@
                         </div>
                     </div>
                     <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="notes"><strong>Notes*</strong></label>
-                                <input id="notes" type="text" class="form-control" placeholder="" value="" >
+                        <div class="col-md-12 mb-3">
+                            <label for="notes"><strong>Notes</strong></label>
+                            <input name="notes" type="text" class="form-control" placeholder="" value="" >
 
-                            </div>
                         </div>
-
-
                     </div>
-
+                </div>
                 <div class="modal-footer">
                     <button id="add-report-to-submit" type="submit" class="btn btn-primary">
-                    {{ __('Submit') }}
-                </button>
+                        {{ __('Submit') }}
+                    </button>
                 </div>
             </form>
         </div>
@@ -138,7 +131,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="type"><strong>Type*</strong></label>
-                            <select class="form-control" id="type" name="type">
+                            <select class="form-control" name="type">
                                     <option value="Direct">Direct</option>
                                     <option value="Indirect">Indirect</option>
                                 </select>
@@ -149,7 +142,7 @@
                     <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="report_to_level"><strong>Report To Level*</strong></label>
-                                <select class="form-control" id="report-to-level" name="report_to_level">
+                                <select class="form-control" name="report-to-level">
                                     <option value="">Select Level</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -163,8 +156,8 @@
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                                <select class="form-control" id="kpi-proposer" name="kpi_proposer">
-                                <option value="">Select Level</option>
+                                <select class="form-control" name="kpi-proposer">
+                                <option value="">Select KPI Proposer</option>
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </select>
@@ -175,8 +168,8 @@
                         </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+                            <label for="notes"><strong>Notes</strong></label>
+                            <input name="notes" type="text" class="form-control" placeholder="" value="" >
 
                         </div>
                     </div>
@@ -190,7 +183,7 @@
         </div>
     </div>
 </div>
-{{-- DELETE EXP--}}
+{{-- DELETE--}}
 <div class="modal fade" id="confirm-delete-report-to-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-report-to-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -237,9 +230,6 @@
                 "data": "type"
             },
             {
-                "data": "notes",
-            },
-            {
                 "data": "kpi_proposer",
 
                 render: function(data) {
@@ -256,6 +246,9 @@
                 },
             {
                 "data": "report_to_level",
+            },
+            {
+                "data": "notes",
             },
             {
                 "data": null,
@@ -303,8 +296,8 @@
             }
         };
 
-        $('#add-report-to-form #report-to').selectize(reportToSelectizeOptions);
-        var editReportToEmpSelectize = $('#edit-report-to-form #report-to').selectize(reportToSelectizeOptions);
+        $('#add-report-to-form select[name=report-to]').selectize(reportToSelectizeOptions);
+        var editReportToEmpSelectize = $('#edit-report-to-form select[name=report-to]').selectize(reportToSelectizeOptions);
         editReportToEmpSelectize = editReportToEmpSelectize[0].selectize;
         console.log("Selectize: ", editReportToEmpSelectize);
 
@@ -320,11 +313,11 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    report_to_emp_id: $('#add-report-to-form #report-to').val(),
-                    type: $('#add-report-to-form #type').val(),
-                    kpi_proposer: $('#add-report-to-form #kpi-proposer').val(),
-                    notes: $('#add-report-to-form #notes').val(),
-                    report_to_level: $('#add-report-to-form #report-to-level').val()
+                    report_to_emp_id: $('#add-report-to-form select[name=report-to]').val(),
+                    type: $('#add-report-to-form select[name=type]').val(),
+                    report_to_level: $('#add-report-to-form select[name=report-to-level]').val(),
+                    kpi_proposer: $('#add-report-to-form select[name=kpi-proposer]').val(),
+                    notes: $('#add-report-to-form input[name=notes]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -341,20 +334,19 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'report_to_emp_id':
-                                        $('#add-report-to-form #report-to').addClass('is-invalid');
+                                        $('#add-report-to-form select[name=report-to]').addClass('is-invalid');
                                         $('#add-report-to-form #report-to-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'type':
-                                        $('#add-report-to-form #type').addClass('is-invalid');
+                                        $('#add-report-to-form select[name=type]').addClass('is-invalid');
                                         $('#add-report-to-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'kpi_proposer':
-                                        $('#add-report-to-form #kpi-proposer').addClass('is-invalid');
+                                        $('#add-report-to-form select[name=kpi-proposer]').addClass('is-invalid');
                                         $('#add-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-
                                     case 'report_to_level':
-                                        $('#add-report-to-form #report_to_level').addClass('is-invalid');
+                                        $('#add-report-to-form select[name=report-to-level]').addClass('is-invalid');
                                         $('#add-report-to-form #report-to-level-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
@@ -375,7 +367,7 @@
             console.log('Data: ', currentData)
 
             editReportToId = currentData.id;
-            // $('#edit-report-to-form #report-to').html(
+            // $('#edit-report-to-form select[name=report-to]').html(
             //     '<option value="' + currentData.report_to_emp_id + '" selected="selected">' +
             //     '(Insert Name)' + '</option>'
             // );
@@ -386,10 +378,10 @@
             });
             editReportToEmpSelectize.setValue(currentData.report_to_emp_id, false);
 
-            $('#edit-report-to-form #type').val(currentData.type);
-            $('#edit-report-to-form #kpi-proposer').val(currentData.kpi_proposer);
-            $('#edit-report-to-form #notes').val(currentData.notes);
-            $('#edit-report-to-form #report-to-level').val(currentData.report_to_level);
+            $('#edit-report-to-form select[name=type]').val(currentData.type);
+            $('#edit-report-to-form select[name=kpi-proposer]').val(currentData.kpi_proposer);
+            $('#edit-report-to-form input[name=notes]').val(currentData.notes);
+            $('#edit-report-to-form select[name=report-to-level]').val(currentData.report_to_level);
         });
 
         var editReportToRouteTemplate = "{{ route('admin.employees.report-to.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -402,11 +394,11 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    report_to_emp_id: $('#edit-report-to-form #report-to').val(),
-                    type: $('#edit-report-to-form #type').val(),
-                    kpi_proposer: $('#edit-report-to-form #kpi-proposer').val(),
-                    notes: $('#edit-report-to-form #notes').val(),
-                    report_to_level: $('#edit-report-to-form #report-to-level').val()
+                    report_to_emp_id: $('#edit-report-to-form select[name=report-to]').val(),
+                    type: $('#edit-report-to-form select[name=type]').val(),
+                    kpi_proposer: $('#edit-report-to-form select[name=kpi-proposer]').val(),
+                    notes: $('#edit-report-to-form input[name=notes]').val(),
+                    report_to_level: $('#edit-report-to-form select[name=report-to-level]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -423,20 +415,20 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'report_to_emp_id':
-                                        $('#edit-report-to-form #report-to').addClass('is-invalid');
+                                        $('#edit-report-to-form select[name=report-to]').addClass('is-invalid');
                                         $('#edit-report-to-form #report-to-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'type':
-                                        $('#edit-report-to-form #type').addClass('is-invalid');
+                                        $('#edit-report-to-form select[name=type]').addClass('is-invalid');
                                         $('#edit-report-to-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'kpi_proposer':
-                                        $('#edit-report-to-form #kpi-proposer').addClass('is-invalid');
+                                        $('#edit-report-to-form select[name=kpi-proposer]').addClass('is-invalid');
                                         $('#edit-report-to-form #kpi-proposer-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
 
                                     case 'report_to_level':
-                                        $('#edit-report-to-form #report_to_level').addClass('is-invalid');
+                                        $('#edit-report-to-form select[name=report-to-level]').addClass('is-invalid');
                                         $('#edit-report-to-form #report-to-level-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
@@ -486,25 +478,25 @@
 
     // GENERAL FUNCTIONS
     function clearReportToModal(htmlId) {
-        $(htmlId + ' #report-to').val('');
-        $(htmlId + ' #type').val('');
-        $(htmlId + ' #kpi-proposer').val();
-        $(htmlId + ' #notes').val('');
-        $(htmlId + ' #report-to-level').val('');
+        $(htmlId + ' select[name=report-to]').val('');
+        $(htmlId + ' select[name=type]').val('');
+        $(htmlId + ' select[name=kpi-proposer]').val();
+        $(htmlId + ' input[name=notes]').val('');
+        $(htmlId + ' select[name=report-to-level]').val('');
 
-        $(htmlId + ' #report-to').removeClass('is-invalid');
-        $(htmlId + ' #type').removeClass('is-invalid');
-        $(htmlId + ' #kpi-proposer').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
-        $(htmlId + ' #report-to-level').removeClass('is-invalid');
+        $(htmlId + ' select[name=report-to]').removeClass('is-invalid');
+        $(htmlId + ' select[name=type]').removeClass('is-invalid');
+        $(htmlId + ' select[name=kpi-proposer]').removeClass('is-invalid');
+        $(htmlId + ' input[name=notes]').removeClass('is-invalid');
+        $(htmlId + ' select[name=report-to-level]').removeClass('is-invalid');
     }
 
     function clearReportToError(htmlId) {
-        $(htmlId + ' #report-to').removeClass('is-invalid');
-        $(htmlId + ' #type').removeClass('is-invalid');
-        $(htmlId + ' #kpi-proposer').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
-        $(htmlId + ' #report-to-level').removeClass('is-invalid');
+        $(htmlId + ' select[name=report-to]').removeClass('is-invalid');
+        $(htmlId + ' select[name=type]').removeClass('is-invalid');
+        $(htmlId + ' select[name=kpi-proposer]').removeClass('is-invalid');
+        $(htmlId + ' input[name=notes]').removeClass('is-invalid');
+        $(htmlId + ' select[name=report-to-level]').removeClass('is-invalid');
     }
 
     function showAlert(message) {

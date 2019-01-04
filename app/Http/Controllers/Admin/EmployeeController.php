@@ -863,10 +863,9 @@ class EmployeeController extends Controller
         $reportToData = $request->validate([
             'report_to_emp_id' => 'required',
             'type' => 'required',
-
-            'notes' => '',
             'report_to_level' =>'required',
             'kpi_proposer' => 'sometimes|required',
+            'notes' => 'nullable',
 
         ]);
         if($request->get('kpi_proposer') == null){

@@ -66,8 +66,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="monday"><strong>Monday*</strong></label>
-                            <select id="monday" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="monday" required>
+                            <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="monday">
                                 <option value="full" {{ old('monday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('monday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('monday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -80,8 +80,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="tuesday"><strong>Tuesday*</strong></label>
-                            <select id="tuesday" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="tuesday" required>
+                            <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="tuesday">
                                 <option value="full" {{ old('tuesday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('tuesday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('tuesday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -94,8 +94,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="wednesday"><strong>Wednesday*</strong></label>
-                            <select id="wednesday" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="wednesday" required>
+                            <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="wednesday">
                                 <option value="full" {{ old('wednesday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('wednesday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('wednesday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -108,8 +108,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="thursday"><strong>Thursday*</strong></label>
-                            <select id="thursday" class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="thursday" required>
+                            <select class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="thursday">
                                 <option value="full" {{ old('thursday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('thursday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('thursday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -122,8 +122,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="friday"><strong>Friday*</strong></label>
-                            <select id="friday" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="friday" required>
+                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="friday">
                                 <option value="full" {{ old('friday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('friday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('friday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -136,8 +136,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="saturday"><strong>Saturday*</strong></label>
-                            <select id="saturday" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="saturday" required>
+                            <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="saturday">
                                 <option value="full" {{ old('saturday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('saturday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('saturday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -150,8 +150,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="sunday"><strong>Sunday*</strong></label>
-                            <select id="sunday" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="saturday" required>
+                            <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="sunday">
                                 <option value="full" {{ old('sunday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('sunday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('sunday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -165,7 +165,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
                             <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="start_work_time" value="" required>
+                                placeholder="" name="start_work_time" value="">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
                             <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="end_work_time" value="" required>
+                                placeholder="" name="end_work_time" value="">
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -217,8 +217,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="monday"><strong>Monday*</strong></label>
-                            <select id="monday" class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="monday" required>
+                            <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="monday">
                                 <option value="full" {{ old('monday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('monday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('monday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -231,8 +231,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="tuesday"><strong>Tuesday*</strong></label>
-                            <select id="tuesday" class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="tuesday" required>
+                            <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="tuesday">
                                 <option value="full" {{ old('tuesday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('tuesday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('tuesday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -245,8 +245,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="wednesday"><strong>Wednesday*</strong></label>
-                            <select id="wednesday" class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="wednesday" required>
+                            <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="wednesday">
                                 <option value="full" {{ old('wednesday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('wednesday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('wednesday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -259,8 +259,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="thursday"><strong>Thursday*</strong></label>
-                            <select id="thursday" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="thursday" required>
+                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="thursday">
                                 <option value="full" {{ old('thursday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('thursday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('thursday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -273,8 +273,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="friday"><strong>Friday*</strong></label>
-                            <select id="friday" class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="friday" required>
+                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="friday">
                                 <option value="full" {{ old('friday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('friday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('friday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -287,8 +287,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="saturday"><strong>Saturday*</strong></label>
-                            <select id="saturday" class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="saturday" required>
+                            <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="saturday">
                                 <option value="full" {{ old('saturday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('saturday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('saturday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -301,8 +301,8 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="sunday"><strong>Sunday*</strong></label>
-                            <select id="sunday" class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="sunday" required>
+                            <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
+                                placeholder="" name="sunday">
                                 <option value="full" {{ old('sunday') == 'full' ? 'selected' : '' }}>Full Day</option>
                                 <option value="half" {{ old('sunday') == 'half' ? 'selected' : '' }}>Half Day</option>
                                 <option value="off" {{ old('sunday') == 'off' ? 'selected' : '' }}>Off Day</option>
@@ -316,7 +316,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
                             <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="start_work_time" value="" required>
+                                placeholder="" name="start_work_time" value="">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -325,7 +325,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
                             <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="end_work_time" value="" required>
+                                placeholder="" name="end_work_time" value="">
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -362,25 +362,25 @@
     $("#add-working-day-form #working_day").change(function() {
         var data_id = $(this).find(':selected').attr('data-id');
 
-        $("#add-working-day-form #monday").val(workingDaysTemplates[data_id].monday);
-        $("#add-working-day-form #tuesday").val(workingDaysTemplates[data_id].tuesday);
-        $("#add-working-day-form #wednesday").val(workingDaysTemplates[data_id].wednesday);
-        $("#add-working-day-form #thursday").val(workingDaysTemplates[data_id].thursday);
-        $("#add-working-day-form #friday").val(workingDaysTemplates[data_id].friday);
-        $("#add-working-day-form #saturday").val(workingDaysTemplates[data_id].saturday);
-        $("#add-working-day-form #sunday").val(workingDaysTemplates[data_id].sunday);
+        $("#add-working-day-form select[name=monday]").val(workingDaysTemplates[data_id].monday);
+        $("#add-working-day-form select[name=tuesday]").val(workingDaysTemplates[data_id].tuesday);
+        $("#add-working-day-form select[name=wednesday]").val(workingDaysTemplates[data_id].wednesday);
+        $("#add-working-day-form select[name=thursday]").val(workingDaysTemplates[data_id].thursday);
+        $("#add-working-day-form select[name=friday]").val(workingDaysTemplates[data_id].friday);
+        $("#add-working-day-form select[name=saturday]").val(workingDaysTemplates[data_id].saturday);
+        $("#add-working-day-form select[name=sunday]").val(workingDaysTemplates[data_id].sunday);
     });
 
     $("#edit-working-day-form #working_day").change(function() {
         var data_id = $(this).find(':selected').attr('data-id');
 
-        $("#edit-working-day-form #monday").val(workingDaysTemplates[data_id].monday);
-        $("#edit-working-day-form #tuesday").val(workingDaysTemplates[data_id].tuesday);
-        $("#edit-working-day-form #wednesday").val(workingDaysTemplates[data_id].wednesday);
-        $("#edit-working-day-form #thursday").val(workingDaysTemplates[data_id].thursday);
-        $("#edit-working-day-form #friday").val(workingDaysTemplates[data_id].friday);
-        $("#edit-working-day-form #saturday").val(workingDaysTemplates[data_id].saturday);
-        $("#edit-working-day-form #sunday").val(workingDaysTemplates[data_id].sunday);
+        $("#edit-working-day-form select[name=monday]").val(workingDaysTemplates[data_id].monday);
+        $("#edit-working-day-form select[name=tuesday]").val(workingDaysTemplates[data_id].tuesday);
+        $("#edit-working-day-form select[name=wednesday]").val(workingDaysTemplates[data_id].wednesday);
+        $("#edit-working-day-form select[name=thursday]").val(workingDaysTemplates[data_id].thursday);
+        $("#edit-working-day-form select[name=friday]").val(workingDaysTemplates[data_id].friday);
+        $("#edit-working-day-form select[name=saturday]").val(workingDaysTemplates[data_id].saturday);
+        $("#edit-working-day-form select[name=sunday]").val(workingDaysTemplates[data_id].sunday);
     });
 
     function getEmployeeWorkingDaysData() {
@@ -411,13 +411,13 @@
                 $("#working_time_container #start_work_time").html(convertTime(data[0].start_work_time));
                 $("#working_time_container #end_work_time").html(convertTime(data[0].end_work_time));
 
-                $("#edit-working-day-form #monday").val(data[0].monday);
-                $("#edit-working-day-form #tuesday").val(data[0].tuesday);
-                $("#edit-working-day-form #wednesday").val(data[0].wednesday);
-                $("#edit-working-day-form #thursday").val(data[0].thursday);
-                $("#edit-working-day-form #friday").val(data[0].friday);
-                $("#edit-working-day-form #saturday").val(data[0].saturday);
-                $("#edit-working-day-form #sunday").val(data[0].sunday);
+                $("#edit-working-day-form select[name=monday]").val(data[0].monday);
+                $("#edit-working-day-form select[name=tuesday]").val(data[0].tuesday);
+                $("#edit-working-day-form select[name=wednesday]").val(data[0].wednesday);
+                $("#edit-working-day-form select[name=thursday]").val(data[0].thursday);
+                $("#edit-working-day-form select[name=friday]").val(data[0].friday);
+                $("#edit-working-day-form select[name=saturday]").val(data[0].saturday);
+                $("#edit-working-day-form select[name=sunday]").val(data[0].sunday);
                 $("#edit-working-day-form #start_work_time").val(data[0].start_work_time);
                 $("#edit-working-day-form #end_work_time").val(data[0].end_work_time);
 
@@ -451,13 +451,13 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    monday: $('#add-working-day-form #monday').val(),
-                    tuesday: $('#add-working-day-form #tuesday').val(),
-                    wednesday: $('#add-working-day-form #wednesday').val(),
-                    thursday: $('#add-working-day-form #thursday').val(),
-                    friday: $('#add-working-day-form #friday').val(),
-                    saturday: $('#add-working-day-form #saturday').val(),
-                    sunday: $('#add-working-day-form #sunday').val(),
+                    monday: $('#add-working-day-form select[name=monday]').val(),
+                    tuesday: $('#add-working-day-form select[name=tuesday]').val(),
+                    wednesday: $('#add-working-day-form select[name=wednesday]').val(),
+                    thursday: $('#add-working-day-form select[name=thursday]').val(),
+                    friday: $('#add-working-day-form select[name=friday]').val(),
+                    saturday: $('#add-working-day-form select[name=saturday]').val(),
+                    sunday: $('#add-working-day-form select[name=sunday]').val(),
                     start_work_time: $("#add-working-day-form #start_work_time").val(),
                     end_work_time: $("#add-working-day-form #end_work_time").val()
                 },
@@ -476,31 +476,31 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'monday':
-                                        $('#add-working-day-form #monday').addClass('is-invalid');
+                                        $('#add-working-day-form select[name=monday]').addClass('is-invalid');
                                         $('#add-working-day-form #monday-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'tuesday':
-                                        $('#add-working-day-form #tuesday').addClass('is-invalid');
+                                        $('#add-working-day-form select[name=tuesday]').addClass('is-invalid');
                                         $('#add-working-day-form #tuesday-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'wednesday':
-                                        $('#add-working-day-form #wednesday').addClass('is-invalid');
+                                        $('#add-working-day-form select[name=wednesday]').addClass('is-invalid');
                                         $('#add-working-day-form #wednesday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'thursday':
-                                        $('#add-working-day-form #thursday').addClass('is-invalid');
+                                        $('#add-working-day-form select[name=thursday]').addClass('is-invalid');
                                         $('#add-working-day-form #thursday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'friday':
-                                        $('#add-working-day-form #friday').addClass('is-invalid');
+                                        $('#add-working-day-form select[name=friday]').addClass('is-invalid');
                                         $('#add-working-day-form #friday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'saturday':
-                                        $('#add-working-day-form #saturday').addClass('is-invalid');
+                                        $('#add-working-day-form select[name=saturday]').addClass('is-invalid');
                                         $('#add-working-day-form #saturday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'sunday':
-                                        $('#add-working-day-form #sunday').addClass('is-invalid');
+                                        $('#add-working-day-form select[name=sunday]').addClass('is-invalid');
                                         $('#add-working-day-form #sunday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -522,13 +522,13 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    monday: $('#edit-working-day-form #monday').val(),
-                    tuesday: $('#edit-working-day-form #tuesday').val(),
-                    wednesday: $('#edit-working-day-form #wednesday').val(),
-                    thursday: $('#edit-working-day-form #thursday').val(),
-                    friday: $('#edit-working-day-form #friday').val(),
-                    saturday: $('#edit-working-day-form #saturday').val(),
-                    sunday: $('#edit-working-day-form #sunday').val(),
+                    monday: $('#edit-working-day-form select[name=monday]').val(),
+                    tuesday: $('#edit-working-day-form select[name=tuesday]').val(),
+                    wednesday: $('#edit-working-day-form select[name=wednesday]').val(),
+                    thursday: $('#edit-working-day-form select[name=thursday]').val(),
+                    friday: $('#edit-working-day-form select[name=friday]').val(),
+                    saturday: $('#edit-working-day-form select[name=saturday]').val(),
+                    sunday: $('#edit-working-day-form select[name=sunday]').val(),
                     start_work_time: $("#edit-working-day-form #start_work_time").val(),
                     end_work_time: $("#edit-working-day-form #end_work_time").val()
                 },
@@ -547,31 +547,31 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'monday':
-                                        $('#edit-working-day-form #monday').addClass('is-invalid');
+                                        $('#edit-working-day-form select[name=monday]').addClass('is-invalid');
                                         $('#edit-working-day-form #monday-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'tuesday':
-                                        $('#edit-working-day-form #tuesday').addClass('is-invalid');
+                                        $('#edit-working-day-form select[name=tuesday]').addClass('is-invalid');
                                         $('#edit-working-day-form #tuesday-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'wednesday':
-                                        $('#edit-working-day-form #wednesday').addClass('is-invalid');
+                                        $('#edit-working-day-form select[name=wednesday]').addClass('is-invalid');
                                         $('#edit-working-day-form #wednesday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'thursday':
-                                        $('#edit-working-day-form #thursday').addClass('is-invalid');
+                                        $('#edit-working-day-form select[name=thursday]').addClass('is-invalid');
                                         $('#edit-working-day-form #thursday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'friday':
-                                        $('#edit-working-day-form #friday').addClass('is-invalid');
+                                        $('#edit-working-day-form select[name=friday]').addClass('is-invalid');
                                         $('#edit-working-day-form #friday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'saturday':
-                                        $('#edit-working-day-form #saturday').addClass('is-invalid');
+                                        $('#edit-working-day-form select[name=saturday]').addClass('is-invalid');
                                         $('#edit-working-day-form #saturday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'sunday':
-                                        $('#edit-working-day-form #sunday').addClass('is-invalid');
+                                        $('#edit-working-day-form select[name=sunday]').addClass('is-invalid');
                                         $('#edit-working-day-form #sunday-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
