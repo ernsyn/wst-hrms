@@ -74,71 +74,19 @@
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
-                            <div id="accordion" role="tablist">
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
-                                        <i class="fas fa-search"></i> Filter
-                                    </div>
-                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-                                        <div class="card-body">
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlCostCentres">Cost Centres</label>
-                                                    <select class="form-control" id="selectCostCentres" name="selectCostCentres">
-                                                        <option value="0">--Select--</option>
-                                                        @foreach($costcentres as $key => $value)
-                                                        <option value="{{$value['id']}}">{{$value['name']}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <label for="exampleFormControlDepartments">Departments</label>
-                                                    <select class="form-control" id="selectDepartments" name="selectDepartments">
-                                                        <option value="0">--Select--</option>
-                                                        @foreach($departments as $key => $value)
-                                                        <option value="{{$value['id']}}">{{$value['name']}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <label for="exampleFormControlBranches">Branches</label>
-                                                    <select class="form-control" id="selectBranches" name="selectBranches">
-                                                        <option value="0">--Select--</option>
-                                                        @foreach($branches as $key => $value)
-                                                        <option value="{{$value['id']}}">{{$value['name']}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <label for="exampleFormControlPositions">Positions</label>
-                                                    <select class="form-control" id="selectPositions" name="selectPositions">
-                                                        <option value="0">--Select--</option>
-                                                        @foreach($positions as $key => $value)
-                                                        <option value="{{$value['id']}}">{{$value['name']}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            	@include('inc.filter')
                             @endif
                         </div>
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
                                 @if ($form->getShowPeriod() == 'true')
-
-                                <div class="row">
-                                <div class="col-md-6 mx-auto">
-                                    <label for="exampleFormDate">Date</label>
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control" name="year_month" autocomplete="off" readonly id="payroll_month_{{$form->getReportTarget()}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mx-auto">
-                                    <label for="exampleFormPeriod">Periods</label>
-                                    <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                        <option value="0">--Select--</option>
-                                        @foreach($period['period'] as $key => $value)
-                                        <option value="{{$key}}">{{$value}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                </div>
+								<label for="exampleFormPeriod">Periods</label>
+                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                    @foreach($period as $key => $value)
+                                    <option value="{{$value['yearmonth'].'-'.$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    @endforeach
+                                </select>
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
@@ -212,70 +160,19 @@
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
-                            <div id="accordion" role="tablist">
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
-                                        <i class="fas fa-search"></i> Filter
-                                    </div>
-                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label for="exampleFormControlCostCentres">Cost Centres</label>
-                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
-                                                    <option value="0">--Select--</option>
-                                                    @foreach($costcentres as $key => $value)
-                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="exampleFormControlDepartments">Departments</label>
-                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
-                                                    <option value="0">--Select--</option>
-                                                    @foreach($departments as $key => $value)
-                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="exampleFormControlBranches">Branches</label>
-                                                <select class="form-control" id="selectBranches" name="selectBranches">
-                                                    <option value="0">--Select--</option>
-                                                    @foreach($branches as $key => $value)
-                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="exampleFormControlPositions">Positions</label>
-                                                <select class="form-control" id="selectPositions" name="selectPositions">
-                                                    <option value="0">--Select--</option>
-                                                    @foreach($positions as $key => $value)
-                                                    <option value="{{$value['id']}}">{{$value['name']}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            	@include('inc.filter')
                             @endif
                         </div>
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
                                 @if ($form->getShowPeriod() == 'true')
-                                <div class="row">
-                                <div class="col-md-6 mx-auto">
-                                    <label for="exampleFormDate">Date</label>
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control" name="year_month"  autocomplete="off" readonly id="payroll_month_{{$form->getReportTarget()}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mx-auto">
-                                    <label for="exampleFormPeriod">Periods</label>
-                                    <select class="form-control" id="selectPeriod" name="selectPeriod">
-                                        <option value="0">--Select--</option>
-                                        @foreach($period['period'] as $key => $value)
-                                        <option value="{{$key}}">{{$value}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                </div>
+                                <label for="exampleFormPeriod">Periods</label>
+                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                    @foreach($period as $key => $value)
+                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    @endforeach
+                                </select>
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>

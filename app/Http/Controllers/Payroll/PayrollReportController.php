@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Mpdf\Output\Destination;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Http\Controllers\Popo\payrollreport\PayrollReport;
 
 class PayrollReportController extends Controller
 {
@@ -26,6 +27,33 @@ class PayrollReportController extends Controller
 //         $this->payroll_report = $payroll_report;
         $this->report = $report;
         $this->payrollService = $payrollService;
+    }
+    
+    // Add payroll form
+    public function showReport()
+    {
+        $arr = PayrollReport::getPayrollReport();
+        
+        //get company information based on user login
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        $officers = GenerateReportsHelper::getListOfficerInformation($company->id);
+        $form = PayrollReport::getPayrollReportForm();
+        $costcentres = GenerateReportsHelper::getCostCentre();
+        $departments = GenerateReportsHelper::getDepartments();
+        $branches = GenerateReportsHelper::getBranches();
+        $positions = GenerateReportsHelper::getPosition();
+        $period = GenerateReportsHelper::getPeriod($company->id);
+        
+        return view('pages.payroll.payroll-report', ['period' => $period, 'sliders' => $arr['slider'],
+            'sliders1' => $arr['slider1'],
+            'dforms' => $form['form'],
+            'dforms1' => $form['form1'],
+            'costcentres' => $costcentres,
+            'departments' => $departments,
+            'branches' => $branches,
+            'positions' => $positions,
+            'officers' => $officers
+        ]);
     }
     
     // *Note: Total type of reports: 8
@@ -42,8 +70,9 @@ class PayrollReportController extends Controller
 //         dd($request);
         
         // Request Data
-        $year = substr($request->input('year_month'),0,4);
-        $month = substr($request->input('year_month'),5);
+        $periods = explode('-',$request->input('selectPeriod'));
+        $year = substr($periods[0],0,4);
+        $month = substr($periods[0],4);
         $type = $request->input('reportName');
         $filter_data = [
             'year'      => $year,
@@ -73,8 +102,8 @@ class PayrollReportController extends Controller
         
         $company = GenerateReportsHelper::getUserLogonCompanyInformation();
         $data = array(
-            'year_month' => $request->input('year_month').'-01',
-            'period' => $request->input('selectPeriod'),
+            'year_month' => $year.'-'.$month.'-01',
+            'period' => $periods[1],
             'companyId' => $company->id
         );
         // Condition

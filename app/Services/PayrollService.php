@@ -34,5 +34,10 @@ class PayrollService
     {
         return $this->payrollRepository->findByPayrollMonthPeriod($data);
     }
+    
+    public function findByPayrollMonth(array $data)
+    {
+        return $this->payrollRepository->findByPayrollMonth($data);
+    }
 }
 

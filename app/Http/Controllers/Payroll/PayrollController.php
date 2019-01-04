@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Payroll;
 use App\Company;
 use App\CostCentre;
 use App\Employee;
-use App\Epf;
 use App\LeaveAllocation;
 use App\PayrollMaster;
 use App\PayrollProcessedLeaveAttendance;
@@ -34,10 +33,6 @@ use App\Services\PayrollService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Eis;
-use App\Socso;
-use App\Pcb;
-use App\Http\Controllers\Popo\payrollreport\PayrollReport;
 use PDF;
 use App\Repositories\Payroll\ReportRepository;
 use App\EmployeeJob;
@@ -51,6 +46,7 @@ use App\EmployeeWorkingDay;
 use App\EmployeeClockInOutRecord;
 use App\Enums\AttendanceEnum;
 use App\LeaveRequest;
+use App\Http\Requests\PayslipRequest;
 
 class PayrollController extends Controller
 {
@@ -519,39 +515,6 @@ class PayrollController extends Controller
     }
     
     //Reports
-    // Add payroll form
-    public function showReport()
-    {
-//         $period = PayrollPeriodEnum::choices();
-//         $payrollReport = PayrollReportEnum::choices();
-//         $sliders = array_chunk($payrollReport, 3);
-        $arr = PayrollReport::getPayrollReport();
-//         $arr = array_chunk($report[0], 3);
-//         dd($arr);
-
-        $form = PayrollReport::getPayrollReportForm();
-        $costcentres = GenerateReportsHelper::getCostCentre();
-        $departments = GenerateReportsHelper::getDepartments();
-        $branches = GenerateReportsHelper::getBranches();
-        $positions = GenerateReportsHelper::getPosition();
-        $period = PayrollPeriodEnum::list();
-        
-        //get company information based on user login
-        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
-        $officers = GenerateReportsHelper::getListOfficerInformation($company->id);
-        
-        return view('pages.payroll.payroll-report', ['period' => $period, 'sliders' => $arr['slider'],
-            'sliders1' => $arr['slider1'],
-            'dforms' => $form['form'],
-            'dforms1' => $form['form1'],
-            'costcentres' => $costcentres,
-            'departments' => $departments,
-            'branches' => $branches,
-            'positions' => $positions,
-            'officers' => $officers
-        ]);
-    }
-    
     //Generate Report
     public function generateReport(Request $request)
     {
@@ -1509,11 +1472,12 @@ class PayrollController extends Controller
     // Download payslip form
     public function showPayslip()
     {
-        $period = PayrollPeriodEnum::choices();
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        $period = GenerateReportsHelper::getPeriod($company->id);
         return view('pages.payroll.payslip', ['period' => $period]);
     }
     
-    public function downloadPayslip(PayrollRequest $request)
+    public function downloadPayslip(PayslipRequest $request)
     {
 //         dd($request);
         $currentUser = auth()->user()->id;
@@ -1521,28 +1485,64 @@ class PayrollController extends Controller
         $companyId = $employee->company_id;
         $validated = $request->validated();
         $data = array(
-            'year_month' => $validated['year_month'].'-01',
-            'period' => $validated['period'],
+            'year_month' => substr($validated['payrollMonth'],0,4).'-'.substr($validated['payrollMonth'],4,2).'-01',
             'companyId' => $companyId
         );
         
-        $payroll = $this->payrollService->findByPayrollMonthPeriod($data);
+        $payroll = $this->payrollService->findByPayrollMonth($data);
         if (count($payroll) > 0) {
             $payrollMasterId = $payroll->first()->id;
             $info = $this->payrollTrx->findByEmployee($payrollMasterId, $employee->id);
-           
-            $addition = $this->payrollTrxAdditionRepository->findByPayrollTrxId($info->id);
-            $deduction = $this->payrollTrxDeductionRepository->findByPayrollTrxId($info->id);
+            if(isset($info)){
+                $addition = $this->payrollTrxAdditionRepository->findByPayrollTrxId($info->id);
+                $deduction = $this->payrollTrxDeductionRepository->findByPayrollTrxId($info->id);
+                
+                $info->extra_count = (count($addition) > count($deduction))? count($addition) : count($deduction);
+            }else{
+                $msg = 'Payslip ' . substr($validated['payrollMonthPeriod'],0,4).'-'.substr($validated['payrollMonthPeriod'],4,2) . ' is not ready.';
+                return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
+            }
+
+            $annualLeaves = LeaveAllocation::where([
+                ['leave_type_id', 1],
+                ['emp_id', $employee->id],
+                ['valid_until_date', '<=', $payroll->first()->end_date]
+            ])->whereYear('valid_until_date', substr($validated['payrollMonthPeriod'],0,4))
+            ->get();
             
-            $info->extra_count = (count($addition) > count($deduction))? count($addition) : count($deduction);
-            //addition
-            //deduction
+            $sickLeaves = LeaveAllocation::where([
+                ['leave_type_id', 7],
+                ['emp_id', $employee->id],
+                ['valid_until_date', '<=', $payroll->first()->end_date]
+            ])->whereYear('valid_until_date', substr($validated['payrollMonthPeriod'],0,4))
+            ->get();
+            
+            $leavesArray = [];
+            if(count($annualLeaves) > 0){
+                $leave = [
+                    'name' => 'ANNUAL LEAVE',
+                    'taken' => $annualLeaves['spent_days'],
+                    'balance' => $annualLeaves['allocated_days'] - $annualLeaves['spent_days']
+                ];
+                $leavesArray[] = $leave;
+            }
+            
+            if(count($sickLeaves) > 0){
+                $leave = [
+                    'name' => 'SICK LEAVE',
+                    'taken' => $sickLeaves['spent_days'],
+                    'balance' => $sickLeaves['allocated_days'] - $sickLeaves['spent_days']
+                ];
+                $leavesArray[] = $leave;
+            }
+            
+            $info->leave = $leavesArray;
         } else {
-            $msg = 'Payslip ' . $validated['year_month'] . ' does not exist.';
+            $msg = 'Payslip ' . substr($validated['payrollMonthPeriod'],0,4).'-'.substr($validated['payrollMonthPeriod'],4,2) . ' is not ready.';
             return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
         }
         
-        //TODO: year to date
+        //TODO: leave summary, year to date
 //         dd($addition,$info);
         $pdf = PDF::loadView('pages/payroll/payslip/payslip',
             [
@@ -1551,10 +1551,9 @@ class PayrollController extends Controller
                 'deduction' => $deduction
             ])->setOrientation('landscape');
             
-            $pdf->setTemporaryFolder(storage_path("temp"));
-            // download pdf
-            return $pdf->download('payslip.pdf');
-            
+        $pdf->setTemporaryFolder(storage_path("temp"));
+        // download pdf
+        return $pdf->download('payslip.pdf');
     }
     
     private function storeAdditionDeduction($company, $employee, $payrollMonth, $payrollTrxId)

@@ -536,7 +536,7 @@ Route::get('/payroll/trx/{id}', 'Payroll\PayrollController@showPayrollTrx')->nam
 Route::post('/payroll/trx/{id}', 'Payroll\PayrollController@updatePayrollTrx')->name('payroll.trx.update');
 Route::get('/payroll/create', 'Payroll\PayrollController@create')->name('payroll.create');
 
-Route::get('payroll-report', 'Payroll\PayrollController@showReport')->name('payroll.report.show');
+Route::get('payroll-report', 'Payroll\PayrollReportController@showReport')->name('payroll.report.show');
 Route::post('/payroll/generate-report', 'Payroll\PayrollController@generateReport')->name('payroll.generate-report');
 Route::post('/report/generate', 'Payroll\PayrollReportController@exportReport')->name('report.generate');
 

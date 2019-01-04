@@ -1085,7 +1085,7 @@ class GenerateReportsHelper
         //  sample query : ->toSql()
         return DB::table('payroll_master')
             ->select(DB::raw('id, EXTRACT( YEAR_MONTH FROM `year_month` ) as yearmonth, period'))
-            ->where('company_id', $company_id)->get();
+            ->where([['company_id', $company_id],['status',1]])->get();
 
     }
 

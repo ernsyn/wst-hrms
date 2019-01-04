@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pay Slip</title>
+    <title>Payslip</title>
     <style type="text/css">
         .table{
             border-spacing: 0;
@@ -46,14 +46,13 @@
 </head>
 <body>
     <table class="table">
-        <thead></thead>
         <tbody>
             <tr>
                 <td colspan="2" class="br0" width="50%">
                     <p>COMP: {{ @$info->company_name }}</p>
                     <p>NAME: {{ @$info->name }}</p>
                     <p>I/C #: {{ @$info->ic_no }}</p>
-                    <p>SEX: {{ strtoupper(@$info->gender) }}</p>
+                    <p>GENDER: {{ strtoupper(@$info->gender) }}</p>
                 </td>
                 <td colspan="2" class="bl0" valign="top" width="50%">
                     <p>{{ strtoupper(str_replace(' Month', '', PayrollPeriodEnum::getDescription($info->period)).'-'.DateHelper::dateWithFormat($info->year_month, 'M-Y')) }}</p>
@@ -65,27 +64,26 @@
                 <td class="line bt0" style="border-bottom-style:none;">EARNINGS DESCRIPTION</td>
                 <td class="line text-right" style="border:none;border-bottom-style:none;">RM</td>
                 <td class="line" style="border-bottom-style:none;">DEDUCTION DESCRIPTION</td>
-                <td class="line text-right" style="border:none;border-bottom-style:none;">RM</td>
+                <td class="line text-right" style="border-bottom-style:none;">RM</td>
             </tr>
-            
 
             @for($i = 0; $i < $info->extra_count; $i++)
-                <tr>
-                    @if(@$info->addition[$i])
-                        <td class="br0 bt0" style="border:none;"> {!! $info->addition[$i]->name !!} </td>
-                        <td class="text-right" style="border:none;"> {!! number_format($info->addition[$i]->amount, 2) !!} </td>
-                    @else
-                        <td class="br0 bt0" style="border:none;"></td>
-                        <td style="border:none;"></td>
-                    @endif
-                    @if(@$info->deduction[$i])
-                        <td class="br0 bt0" style="border:none;"> {!! $info->deduction[$i]->name !!} </td>
-                        <td class="text-right" style="border:none;"> {!! number_format($info->deduction[$i]->amount, 2) !!}</td>
-                    @else
-                        <td class="br0 bt0" style="border:none;"></td>
-                        <td style="border:none;"></td>
-                    @endif
-                </tr>
+            <tr>
+                @if(@$info->addition[$i])
+                    <td class="br0 bt0" style="border:none;"> {!! $info->addition[$i]->name !!} </td>
+                    <td class="text-right" style="border:none;"> {!! number_format($info->addition[$i]->amount, 2) !!} </td>
+                @else
+                    <td class="br0 bt0" style="border:none;"></td>
+                    <td style="border:none;"></td>
+                @endif
+                @if(@$info->deduction[$i])
+                    <td class="br0 bt0" style="border:none;"> {!! $info->deduction[$i]->name !!} </td>
+                    <td class="text-right" style="border:none;"> {!! number_format($info->deduction[$i]->amount, 2) !!}</td>
+                @else
+                    <td class="br0 bt0" style="border:none;"></td>
+                    <td style="border:none;"></td>
+                @endif
+            </tr>
             @endfor
 
             <tr class="bt0">
@@ -94,43 +92,39 @@
                 <td class="text-right">TOTAL:</td>
                 <td class="text-right">{!! number_format(@$info->salary->total_deduction+@$info->salary->employee_epf+@$info->salary->employee_socso+@$info->salary->employee_eis+@$info->salary->employee_pcb,2) !!}</td>
             </tr>
-            <tr>
-                @for($y = 0; $y < $info->leave_count; $y++)
-                    @php $class = ($y+1 == $info->leave_count)? 'bb1' : 'bb0'; @endphp
-                    <tr class="bt0 {{$class}}">
-                        @if(@$info->leave[$y])
-                            <td class="br0">{!! strtoupper($info->leave[$y]->name) !!}: {!! $info->leave[$y]->total_days !!}</td>
-                            <td class="bl0">BALANCE: {!! $info->leave[$y]->start_balance-$info->leave[$y]->total_days !!}</td>
-                        @else
-                            <td class="br0"></td>
-                            <td class="bl0"></td>
-                        @endif
+            @for($y = 0; $y < $info->leave_count; $y++)
+                @php $class = ($y+1 == $info->leave_count)? 'bb1' : 'bb0'; @endphp
+                <tr class="bt0 {{$class}}">
+                    @if(@$info->leave[$y])
+                        <td class="br0">{!! strtoupper($info->leave[$y]->name) !!} TAKEN: {!! $info->leave[$y]->taken !!}</td>
+                        <td class="bl0">BALANCE: {!! $info->leave[$y]->balance !!}</td>
+                    @else
+                        <td class="br0"></td>
+                        <td class="bl0"></td>
+                    @endif
 
-                        @if($y == 0)
-                            <td class="text-right">NETT PAY:</td>
-                            <td class="text-right" style="border-bottom: 1px solid">{!! (@$info->salary->final_payment > 0)? number_format(@$info->salary->final_payment,2) : number_format(@$info->salary->contract_base+@$info->salary->total_bonus+@$info->salary->total_addition-(@$info->salary->total_deduction+@$info->salary->employee_epf+@$info->salary->employee_socso+@$info->salary->employee_eis+@$info->salary->employee_pcb),2) !!}</td>
-                        @elseif($y == 1)
-                            <td colspan="2">
-                                <p>EPF#: {{ @$info->employee->epf_no }}</p>
-                                <p>SOCSO#: {{ @$info->employee->socso_no }}</p>
-                                <p>TAX#: {{ @$info->employee->tax_no }}</p>
-                                <p>BANK A/C: {!! @$info->salary->account_number !!}</p>
-                            </td>
-                        @else
-                            <td colspan="2"></td>
-                        @endif
-                    </tr>
-                @endfor
-
-            </tr>
+                    @if($y == 0)
+                        <td class="text-right">NETT PAY:</td>
+                        <td class="text-right" style="border-bottom: 1px solid">{!! (@$info->salary->final_payment > 0)? number_format(@$info->salary->final_payment,2) : number_format(@$info->salary->contract_base+@$info->salary->total_bonus+@$info->salary->total_addition-(@$info->salary->total_deduction+@$info->salary->employee_epf+@$info->salary->employee_socso+@$info->salary->employee_eis+@$info->salary->employee_pcb),2) !!}</td>
+                    @elseif($y == 1)
+                        <td colspan="2">
+                            <p>EPF#: {{ @$info->employee->epf_no }}</p>
+                            <p>SOCSO#: {{ @$info->employee->socso_no }}</p>
+                            <p>TAX#: {{ @$info->employee->tax_no }}</p>
+                            <p>BANK A/C: {!! @$info->salary->account_number !!}</p>
+                        </td>
+                    @else
+                        <td colspan="2"></td>
+                    @endif
+                </tr>
+            @endfor
         </tbody>
     </table>
     <table class="table">
-        <thead></thead>
         <tbody>
             <tr class="bt0">
                 <td colspan="5" class="text-center bl0 br0 bt0">Current Month</td>
-                <td colspan="5" class="text-center bl0 br0 bt0">Year to Date</td>
+                <td colspan="5" class="text-center bl0 br0 bt0">Year-to-Date</td>
             </tr>
             <tr class="bt0 bb0 text-right-all">
                 <td></td>

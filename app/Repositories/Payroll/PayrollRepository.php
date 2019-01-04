@@ -8,5 +8,7 @@ interface PayrollRepository
     public function getPayrollStartDate(array $data);
     
     public function findByPayrollMonthPeriod(array $data);
+    
+    public function findByPayrollMonth(array $data);
 }
 
