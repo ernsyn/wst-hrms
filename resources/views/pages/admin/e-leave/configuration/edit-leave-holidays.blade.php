@@ -24,7 +24,7 @@
 
                     
                         <div class="col-4">
-                            <label class="col-md-12 col-form-label">Start_date*</label>
+                            <label class="col-md-12 col-form-label">Start Date*</label>
                             <div class="col-md-12">
                                 <input id="start-date" type="text" class="form-control" value="{{ $holidays->start_date }}" 
                                 placeholder="Start Date" aria-label="Start Date" aria-describedby="dob-icon" name="start_date" readonly>
@@ -71,11 +71,19 @@
                                 <div class="form-group">
                                         <label class="col-md-12 col-form-label">Repeated Annually*</label>
                                         <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('repeat_annually') ? ' is-invalid' : '' }}" id="repeat_annually" name="repeat_annually" value="{{ $holidays->repeat_annually }}">
+                                    {{-- <select class="form-control{{ $errors->has('repeat_annually') ? ' is-invalid' : '' }}" id="repeat_annually" name="repeat_annually" value="{{ $holidays->repeat_annually }}">
                                             <option value="1">Yes</option>
                                             <option value="2">No</option>
-                                            </select>
+                                            </select> --}}
+
+                                            <select class="form-control" id="status" name="status" value="{{ $holidays->repeat_annually}}">
+                                                <option value="">Please Select</option>
+                                                    <option value="1"  {{ $holidays->repeat_annually == '1' ? 'selected' : ''}}>Yes</option>
+                                                    <option value="2"{{ $holidays->repeat_annually == '2' ? 'selected' : ''}}>No</option>
+                                                </select>
                                         </div>
+
+
                                 </div>
                             </div>
                             <div class="col-8">
@@ -104,9 +112,20 @@
 
            
                             <div class="col-8">
-                                <label class="col-md-5 col-form-label">State</label>
-                                <div class="col-md-7">
-                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $holidays->state }}">
+                                <label class="col-md-12 col-form-label">State</label>
+                                <div class="col-md-12">
+                                    <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]"
+                                        >
+                                        <option value="">Please Select</option>
+                                        @foreach(App\Constants\MalaysianStates::$all as $state)
+                                        <option value="{{ $state }}">{{ $state }}</option value="">
+                                        @endforeach
+                                    </select> @if ($errors->has('state'))
+                                    <span class="invalid-feedback" role="alert">
+                                                                      <strong>{{ $errors->first('state') }}</strong>
+                                                                  </span> @endif
+                                    </select>
+                                                                            {{-- <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $holidays->state }}">
                                                 <option value="">Please Select</option>
                                             @foreach(App\Constants\MalaysianStates::$all as $state)
                                             <option value="{{$state }}">{{ $state }}</option value="">
@@ -115,7 +134,7 @@
                                         <span class="invalid-feedback" role="alert">
                                                                   <strong>{{ $errors->first('state') }}</strong>
                                                               </span> @endif
-                                    </select>
+                                    </select> --}}
                                     <div id="state-error" class="invalid-feedback">
                                     </div>
                                 </div>

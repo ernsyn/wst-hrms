@@ -18618,6 +18618,36 @@ button.dropdown-toggle::after {
   background-color: #e0e5f3;
 }
 
+#page-add-leave-type #section-rules #rule-min-apply-days-before .entries-table {
+  max-width: 450px;
+  margin-left: 0px;
+  margin-top: 20px;
+  border-radius: 5px;
+  border: 1px solid #dfdfdf;
+  background-color: #ebfcf5;
+}
+
+#page-add-leave-type #section-rules #rule-min-apply-days-before .entries-table .entry-headers {
+  color: white;
+  font-weight: 600;
+  border-radius: 5px 5px 0px 0px;
+  background-color: #1bce83;
+  border-bottom: 1.5px solid #1ac57d;
+  text-align: center;
+  padding: 5px;
+}
+
+#page-add-leave-type #section-rules #rule-min-apply-days-before .entries-table .min-apply-days-before-entry {
+  text-align: center;
+  padding: 5px;
+  font-weight: 600;
+}
+
+#page-add-leave-type #section-rules #rule-min-apply-days-before .entries-table .footer {
+  background-color: #bef7df;
+  border-radius: 0px 0px 5px 5px;
+}
+
 #nav-attendance .attendance-log .type {
   font-weight: 700;
 }

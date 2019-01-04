@@ -25,6 +25,8 @@ use App\Mail\LeaveApprovalMail;
 use App\Employee;
 use Carbon\Carbon;
 use App\User;
+use Artisan;
+use App\EmployeeJob;
 
 class ELeaveController extends Controller
 {
@@ -39,7 +41,13 @@ class ELeaveController extends Controller
         $defaultLeaveTypes = LeaveType::default()->get();
         $customLeaveTypes = LeaveType::custom()->get();
 
-        return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes]);
+        $currentYear = Carbon::now()->year;
+
+        $leaveAllocation = LeaveAllocation::selectRaw('DISTINCT(YEAR(valid_from_date)) AS allocation_year')
+        ->whereYear('valid_from_date', '<', $currentYear)
+        ->get();
+
+        return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes, 'leaveAllocation' => $leaveAllocation]);
     }
 
     public function addLeaveType() 
@@ -113,6 +121,26 @@ class ELeaveController extends Controller
         } else {
             return view('pages.admin.e-leave.configuration.edit-custom-leave-type', [ 'leave_type' => $leaveType]);
         }
+    }
+
+    // Generate Leave Allocations
+    public function generateLeaveAllocation()
+    {       
+        $year = Carbon::now()->year;
+
+        Artisan::call("leave-allocation:generate", ['year' => $year]);
+
+        $leave_allocation = DB::table('leave_allocations')
+        ->join('employees', 'leave_allocations.emp_id', '=', 'employees.id')
+        ->join('users', 'employees.user_id', '=', 'users.id')
+        ->join('leave_types', 'leave_allocations.leave_type_id', '=', 'leave_types.id')
+        ->join('employee_jobs', 'leave_allocations.emp_job_id', '=', 'employee_jobs.id')
+        ->select('leave_allocations.*', 'employees.code', 'users.name', 'leave_types.name as lt_code', 'employee_jobs.remarks')
+        ->whereYear('valid_from_date', '=', $year)
+        ->whereYear('valid_until_date', '=', $year)
+        ->get();
+        
+        return view('pages.admin.e-leave.configuration.generate-leave-allocation', ['message' => Artisan::output(), 'leave_allocation' => $leave_allocation]);
     }
 
     // List Of Leave Public Holidays List
@@ -720,6 +748,13 @@ class ELeaveController extends Controller
         return $result;
     }
 
+    public function ajaxCheckEmployeeJob($emp_id)
+    {
+        $employeeJob = EmployeeJob::where('emp_id', $emp_id)->count();
+
+        return $employeeJob;
+    }
+
     public function ajaxGetEmployeeLeaves(Request $request, $emp_id)
     {
         $leaveRequest = LeaveRequest::where('emp_id', $emp_id)
@@ -975,6 +1010,7 @@ class ELeaveController extends Controller
         ->bcc($bcc_recepients)
         ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
+    
     public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval, $emp_id) {
         $cc_recepients = array();
         $bcc_recepients = array();
@@ -1007,5 +1043,12 @@ class ELeaveController extends Controller
         ->cc($cc_recepients)
         ->bcc($bcc_recepients)
         ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
+    }
+
+    private static function error($message) {
+        return [
+            'error' => true,
+            'message' => $message
+        ];
     }
 }

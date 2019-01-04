@@ -13,7 +13,8 @@
                     </div> 
                     <div class="alert alert-warning" id="must-select-employee" role="alert">
                         Please select an Employee to proceed!
-                    </div>                       
+                    </div>
+                    <div class="alert alert-danger" id="error-message-alert" role="alert" hidden></div>
                 </div>               
             </div>
         </div>
@@ -234,7 +235,13 @@
                 });
             },
             onChange: function(value) { 
-                getWorkingDays();
+                if(value) {
+                    getWorkingDays();
+                }
+                else {
+                    $('#must-select-employee').prop('hidden', false);
+                    $('#error-message-alert').prop('hidden', true);
+                }
             } 
         };
 
@@ -252,16 +259,37 @@
             $('#calendar-leave .progress').attr('hidden', false);
             $('#calendar-leave').fullCalendar('destroy'); 
 
-            let getEmployeeWorkingDaysTemplate = '{{ route('admin.e-leave.ajax.working-days', ['emp_id' => '<<emp_id>>']) }}';
-
             var employee_id = $('#select-employee').find('option:selected').val();
+
+            let getEmployeeWorkingDaysTemplate = '{{ route('admin.e-leave.ajax.working-days', ['emp_id' => '<<emp_id>>']) }}';            
 
             var getEmployeeWorkingDays = getEmployeeWorkingDaysTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
 
             $.get(getEmployeeWorkingDays, function(workingDaysData, status) {
-                workingDays = workingDaysData;
-                initCalendar();
-                loadLeaveTypes();
+                if(workingDaysData.error) {
+                    $('#error-message-alert').text(workingDaysData.message);
+                    $('#error-message-alert').prop('hidden', false);
+                    $('#must-select-employee').prop('hidden', true);
+                }
+                else {
+                    let getEmployeeJobTemplate = '{{ route('admin.e-leave.ajax.employee-job', ['emp_id' => '<<emp_id>>']) }}';
+
+                    var getEmployeeJob = getEmployeeJobTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
+
+                    $.get(getEmployeeJob, function(employeeJob, status) {
+                        if(employeeJob == 0) {
+                            $('#error-message-alert').text('Employees Job is not set');
+                            $('#error-message-alert').prop('hidden', false);
+                            $('#must-select-employee').prop('hidden', true);
+                        }
+                        else {
+                            workingDays = workingDaysData;
+                            initCalendar();
+                            loadLeaveTypes();
+                            $('#error-message-alert').prop('hidden', true);
+                        }
+                    });
+                }
             });
         }        
 
