@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="company"><strong>Company*</strong></label>
-                            <input id="company" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="company" type="text" class="form-control" placeholder="" value="" required>
                             <div id="company-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="position"><strong>Position*</strong></label>
-                            <input id="position" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="position" type="text" class="form-control" placeholder="" value="" required>
                             <div id="position-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+                            <input name="notes" type="text" class="form-control" placeholder="" value="" >
 
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="institution"><strong>Institution*</strong></label>
-                            <input id="institution" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="institution" type="text" class="form-control" placeholder="" value="" required>
                             <div id="institution-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="level"><strong>Level*</strong></label>
-                            <input id="level" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="level" type="text" class="form-control" placeholder="" value="" required>
                             <div id="level-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="major"><strong>Major*</strong></label>
-                            <input id="major" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="major" type="text" class="form-control" placeholder="" value="" required>
                             <div id="major-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="gpa"><strong>Gpa*</strong></label>
-                            <input id="gpa" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="gpa" type="text" class="form-control" placeholder="" value="" required>
                             <div id="gpa-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -145,7 +145,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="description"><strong>Description</strong></label>
-                            <input id="description" type="text" class="form-control" placeholder="" value="" >
+                            <input name="description" type="text" class="form-control" placeholder="" value="" >
 
                         </div>
                     </div>
@@ -176,7 +176,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Skill Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
 
                             </div>
@@ -185,7 +185,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Year Experience*</strong></label>
-                            <input id="years-of-experience" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="years-of-experience" type="text" class="form-control" placeholder="" value="" required>
                             <div id="years-of-experience-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -193,7 +193,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Competency*</strong></label>
-                            <select id="competency" type="text" class="form-control" placeholder="" value="" required>
+                            <select name="competency" type="text" class="form-control" placeholder="" value="" required>
                                 <option value="">Select Competency</option>
                                 <option value="beginner">Beginner</option>
                                 <option value="intermediate">Intermediate</option>
@@ -230,7 +230,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="company"><strong>Company*</strong></label>
-                            <input id="company" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="company" type="text" class="form-control" placeholder="" value="" required>
                             <div id="company-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -238,7 +238,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="position"><strong>Position*</strong></label>
-                            <input id="position" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="position" type="text" class="form-control" placeholder="" value="" required>
                             <div id="position-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -272,7 +272,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" >
+                            <input name="notes" type="text" class="form-control" placeholder="" value="" >
 
                         </div>
                     </div>
@@ -303,7 +303,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="institution"><strong>Institution*</strong></label>
-                            <input id="institution" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="institution" type="text" class="form-control" placeholder="" value="" required>
                             <div id="institution-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -337,7 +337,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="level"><strong>Level*</strong></label>
-                            <input id="level" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="level" type="text" class="form-control" placeholder="" value="" required>
                             <div id="level-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -345,7 +345,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="major"><strong>Major*</strong></label>
-                            <input id="major" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="major" type="text" class="form-control" placeholder="" value="" required>
                             <div id="major-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -353,7 +353,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="gpa"><strong>Gpa*</strong></label>
-                            <input id="gpa" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="gpa" type="text" class="form-control" placeholder="" value="" required>
                             <div id="gpa-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -361,15 +361,14 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="description"><strong>Description</strong></label>
-                            <input id="description" type="text" class="form-control" placeholder="" value="" >
-
+                            <input name="description" type="text" class="form-control" placeholder="" value="" >
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button id="edit-education-submit" type="submit" class="btn btn-primary">
-                                {{ __('Submit') }}
-                            </button>
+                        {{ __('Submit') }}
+                    </button>
                 </div>
             </form>
         </div>
@@ -392,7 +391,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Skill Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
 
                             </div>
@@ -401,7 +400,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Year Experience*</strong></label>
-                            <input id="years-of-experience" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="years-of-experience" type="text" class="form-control" placeholder="" value="" required>
                             <div id="years-of-experience-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -409,7 +408,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Competency*</strong></label>
-                            <select id="competency" type="text" class="form-control" placeholder="" value="" required>
+                            <select name="competency" type="text" class="form-control" placeholder="" value="" required>
                                     <option value="">Select Competency</option>
                                     <option value="beginner">Beginner</option>
                                     <option value="intermediate">Intermediate</option>
@@ -736,11 +735,11 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     // Form Data
-                    company: $('#add-experience-form #company').val(),
-                    position: $('#add-experience-form #position').val(),
+                    company: $('#add-experience-form input[name=company]').val(),
+                    position: $('#add-experience-form input[name=position]').val(),
                     start_date: $('#add-experience-form #start-date-experience').val(),
                     end_date: $('#add-experience-form #end-date-experience').val(),
-                    notes: $('#add-experience-form #notes').val()
+                    notes: $('#add-experience-form input[name=notes]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -757,11 +756,11 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'company':
-                                        $('#add-experience-form #company').addClass('is-invalid');
+                                        $('#add-experience-form input[name=company]').addClass('is-invalid');
                                         $('#add-experience-form #company-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'position':
-                                        $('#add-experience-form #position').addClass('is-invalid');
+                                        $('#add-experience-form input[name=position]').addClass('is-invalid');
                                         $('#add-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
@@ -773,7 +772,7 @@
                                         $('#add-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     // case 'notes':
-                                    //     $('#add-experience-form #notes').addClass('is-invalid');
+                                    //     $('#add-experience-form input[name=notes]').addClass('is-invalid');
                                     //     $('#add-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     // break;
                                 }
@@ -795,11 +794,11 @@
 
             editExperienceId = currentData.id;
 
-            $('#edit-experience-form #company').val(currentData.company);
-            $('#edit-experience-form #position').val(currentData.position);
+            $('#edit-experience-form input[name=company]').val(currentData.company);
+            $('#edit-experience-form input[name=position]').val(currentData.position);
             $('#edit-experience-form #start-date-experience-edit').val(currentData.start_date);
             $('#edit-experience-form #end-date-experience-edit').val(currentData.end_date);
-            $('#edit-experience-form #notes').val(currentData.notes);
+            $('#edit-experience-form input[name=notes]').val(currentData.notes);
         });
 
         var editExperienceRouteTemplate = "{{ route('admin.employees.companies.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -812,11 +811,11 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    company: $('#edit-experience-form #company').val(),
-                    position: $('#edit-experience-form #position').val(),
+                    company: $('#edit-experience-form input[name=company]').val(),
+                    position: $('#edit-experience-form input[name=position]').val(),
                     start_date: $('#edit-experience-form #start-date-experience-edit').val(),
                     end_date: $('#edit-experience-form #end-date-experience-edit').val(),
-                    notes: $('#edit-experience-form #notes').val()
+                    notes: $('#edit-experience-form input[name=notes]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -833,11 +832,11 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'company':
-                                        $('#edit-experience-form #company').addClass('is-invalid');
+                                        $('#edit-experience-form input[name=company]').addClass('is-invalid');
                                         $('#edit-experience-form #company-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'position':
-                                        $('#edit-experience-form #position').addClass('is-invalid');
+                                        $('#edit-experience-form input[name=position]').addClass('is-invalid');
                                         $('#edit-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
@@ -849,7 +848,7 @@
                                         $('#edit-experience-form #end-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     // case 'notes':
-                                    //     $('#edit-experience-form #notes').addClass('is-invalid');
+                                    //     $('#edit-experience-form input[name=notes]').addClass('is-invalid');
                                     //     $('#edit-experience-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     // break;
                                 }
@@ -901,24 +900,24 @@
 
     // GENERAL FUNCTIONS
     function clearExperiencesModal(htmlId) {
-        $(htmlId + ' #company').val('');
-        $(htmlId + ' #position').val('');
+        $(htmlId + ' input[name=company]').val('');
+        $(htmlId + ' input[name=position]').val('');
         $(htmlId + ' #start-date-experience').val('');
         $(htmlId + ' #end-date-experience').val('');
-        $(htmlId + ' #notes').val('');
+        $(htmlId + ' input[name=notes]').val('');
 
-        $(htmlId + ' #company').removeClass('is-invalid');
-        $(htmlId + ' #position').removeClass('is-invalid');
+        $(htmlId + ' input[name=company]').removeClass('is-invalid');
+        $(htmlId + ' input[name=position]').removeClass('is-invalid');
         $(htmlId + ' #start-date-experience').removeClass('is-invalid');
         $(htmlId + ' #end-date-experience').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' input[name=notes]').removeClass('is-invalid');
     }
     function clearExperiencesError(htmlId) {
-        $(htmlId + ' #company').removeClass('is-invalid');
-        $(htmlId + ' #position').removeClass('is-invalid');
+        $(htmlId + ' input[name=company]').removeClass('is-invalid');
+        $(htmlId + ' input[name=position]').removeClass('is-invalid');
         $(htmlId + ' #start-date-experience').removeClass('is-invalid');
         $(htmlId + ' #end-date-experience').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
+        $(htmlId + ' input[name=notes]').removeClass('is-invalid');
     }
 
     function showAlert(message) {
@@ -948,13 +947,13 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     // Form Data
-                    institution: $('#add-education-form #institution').val(),
+                    institution: $('#add-education-form input[name=institution]').val(),
                     start_year: $('#add-education-form #start-year').val(),
                     end_year: $('#add-education-form #end-year').val(),
-                    level: $('#add-education-form #level').val(),
-                    major: $('#add-education-form #major').val(),
-                    gpa: $('#add-education-form #gpa').val(),
-                    description: $('#add-education-form #description').val()
+                    level: $('#add-education-form input[name=level]').val(),
+                    major: $('#add-education-form input[name=major]').val(),
+                    gpa: $('#add-education-form input[name=gpa]').val(),
+                    description: $('#add-education-form input[name=description]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -971,7 +970,7 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'institution':
-                                        $('#add-education-form #institution').addClass('is-invalid');
+                                        $('#add-education-form input[name=institution]').addClass('is-invalid');
                                         $('#add-education-form #institution-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_year':
@@ -983,15 +982,15 @@
                                         $('#add-education-form #end-year-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'level':
-                                        $('#add-education-form #level').addClass('is-invalid');
+                                        $('#add-education-form input[name=level]').addClass('is-invalid');
                                         $('#add-education-form #level-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'major':
-                                        $('#add-education-form #major').addClass('is-invalid');
+                                        $('#add-education-form input[name=major]').addClass('is-invalid');
                                         $('#add-education-form #major-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'gpa':
-                                        $('#add-education-form #gpa').addClass('is-invalid');
+                                        $('#add-education-form input[name=gpa]').addClass('is-invalid');
                                         $('#add-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
 
@@ -1014,13 +1013,13 @@
 
             editEducationId = currentData.id;
 
-            $('#edit-education-form #institution').val(currentData.institution);
+            $('#edit-education-form input[name=institution]').val(currentData.institution);
             $('#edit-education-form #start-year-edit').val(currentData.start_year);
             $('#edit-education-form #end-year-edit').val(currentData.end_year);
-            $('#edit-education-form #level').val(currentData.level);
-            $('#edit-education-form #major').val(currentData.major);
-            $('#edit-education-form #gpa').val(currentData.gpa);
-            $('#edit-education-form #description').val(currentData.description);
+            $('#edit-education-form input[name=level]').val(currentData.level);
+            $('#edit-education-form input[name=major]').val(currentData.major);
+            $('#edit-education-form input[name=gpa]').val(currentData.gpa);
+            $('#edit-education-form input[name=description]').val(currentData.description);
         });
 
         var editEducationRouteTemplate = "{{ route('admin.employees.educations.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -1033,13 +1032,13 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    institution: $('#edit-education-form #institution').val(),
+                    institution: $('#edit-education-form input[name=institution]').val(),
                     start_year: $('#edit-education-form #start-year-edit').val(),
                     end_year: $('#edit-education-form #end-year-edit').val(),
-                    level: $('#edit-education-form #level').val(),
-                    major: $('#edit-education-form #major').val(),
-                    gpa: $('#edit-education-form #gpa').val(),
-                    description: $('#edit-education-form #description').val()
+                    level: $('#edit-education-form input[name=level]').val(),
+                    major: $('#edit-education-form input[name=major]').val(),
+                    gpa: $('#edit-education-form input[name=gpa]').val(),
+                    description: $('#edit-education-form input[name=description]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -1056,7 +1055,7 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'institution':
-                                        $('#edit-education-form #institution').addClass('is-invalid');
+                                        $('#edit-education-form input[name=institution]').addClass('is-invalid');
                                         $('#edit-education-form #institution-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_year':
@@ -1068,15 +1067,15 @@
                                         $('#edit-education-form #end-year-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'level':
-                                        $('#edit-education-form #level').addClass('is-invalid');
+                                        $('#edit-education-form input[name=level]').addClass('is-invalid');
                                         $('#edit-education-form #level-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'major':
-                                        $('#edit-education-form #major').addClass('is-invalid');
+                                        $('#edit-education-form input[name=major]').addClass('is-invalid');
                                         $('#edit-education-form #major-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'gpa':
-                                        $('#edit-education-form #gpa').addClass('is-invalid');
+                                        $('#edit-education-form input[name=gpa]').addClass('is-invalid');
                                         $('#edit-education-form #gpa-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
 
@@ -1129,31 +1128,31 @@
 
     // GENERAL FUNCTIONS
     function clearEducationsModal(htmlId) {
-        $(htmlId + ' #institution').val('');
+        $(htmlId + ' input[name=institution]').val('');
         $(htmlId + ' #start-year').val('');
         $(htmlId + ' #end-year').val('');
-        $(htmlId + ' #level').val('');
-        $(htmlId + ' #major').val('');
-        $(htmlId + ' #gpa').val('');
-        $(htmlId + ' #description').val('');
+        $(htmlId + ' input[name=level]').val('');
+        $(htmlId + ' input[name=major]').val('');
+        $(htmlId + ' input[name=gpa]').val('');
+        $(htmlId + ' input[name=description]').val('');
 
-        $(htmlId + ' #institution').removeClass('is-invalid');
+        $(htmlId + ' input[name=institution]').removeClass('is-invalid');
         $(htmlId + ' #start-year').removeClass('is-invalid');
         $(htmlId + ' #end-year').removeClass('is-invalid');
-        $(htmlId + ' #level').removeClass('is-invalid');
-        $(htmlId + ' #major').removeClass('is-invalid');
-        $(htmlId + ' #gpa').removeClass('is-invalid');
-        $(htmlId + ' #description').removeClass('is-invalid');
+        $(htmlId + ' input[name=level]').removeClass('is-invalid');
+        $(htmlId + ' input[name=major]').removeClass('is-invalid');
+        $(htmlId + ' input[name=gpa]').removeClass('is-invalid');
+        $(htmlId + ' input[name=description]').removeClass('is-invalid');
     }
 
     function clearEducationsError(htmlId) {
-        $(htmlId + ' #institution').removeClass('is-invalid');
+        $(htmlId + ' input[name=institution]').removeClass('is-invalid');
         $(htmlId + ' #start-year').removeClass('is-invalid');
         $(htmlId + ' #end-year').removeClass('is-invalid');
-        $(htmlId + ' #level').removeClass('is-invalid');
-        $(htmlId + ' #major').removeClass('is-invalid');
-        $(htmlId + ' #gpa').removeClass('is-invalid');
-        $(htmlId + ' #description').removeClass('is-invalid');
+        $(htmlId + ' input[name=level]').removeClass('is-invalid');
+        $(htmlId + ' input[name=major]').removeClass('is-invalid');
+        $(htmlId + ' input[name=gpa]').removeClass('is-invalid');
+        $(htmlId + ' input[name=description]').removeClass('is-invalid');
     }
 
     function showAlert(message) {
@@ -1184,9 +1183,9 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     // Form Data
-                    name: $('#add-skill-form #name').val(),
-                    years_of_experience: $('#add-skill-form #years-of-experience').val(),
-                    competency: $('#add-skill-form #competency').val()
+                    name: $('#add-skill-form input[name=name]').val(),
+                    years_of_experience: $('#add-skill-form input[name=years-of-experience]').val(),
+                    competency: $('#add-skill-form select[name=competency]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -1203,15 +1202,15 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#add-skill-form #name').addClass('is-invalid');
+                                        $('#add-skill-form input[name=name]').addClass('is-invalid');
                                         $('#add-skill-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'years_of_experience':
-                                        $('#add-skill-form #years-of-experience').addClass('is-invalid');
+                                        $('#add-skill-form input[name=years-of-experience]').addClass('is-invalid');
                                         $('#add-skill-form #years-of-experience-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'competency':
-                                        $('#add-skill-form #competency').addClass('is-invalid');
+                                        $('#add-skill-form select[name=competency]').addClass('is-invalid');
                                         $('#add-skill-form #competency-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -1233,9 +1232,9 @@
 
             editSkillId = currentData.id;
 
-            $('#edit-skill-form #name').val(currentData.name);
-            $('#edit-skill-form #years-of-experience').val(currentData.years_of_experience);
-            $('#edit-skill-form #competency').val(currentData.competency);
+            $('#edit-skill-form input[name=name]').val(currentData.name);
+            $('#edit-skill-form input[name=years-of-experience]').val(currentData.years_of_experience);
+            $('#edit-skill-form select[name=competency]').val(currentData.competency);
         });
 
         var editSkillRouteTemplate = "{{ route('admin.employees.skills.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -1248,9 +1247,9 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    name: $('#edit-skill-form #name').val(),
-                    years_of_experience: $('#edit-skill-form #years-of-experience').val(),
-                    competency: $('#edit-skill-form #competency').val()
+                    name: $('#edit-skill-form input[name=name]').val(),
+                    years_of_experience: $('#edit-skill-form input[name=years-of-experience]').val(),
+                    competency: $('#edit-skill-form select[name=competency]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -1267,15 +1266,15 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#edit-skill-form #name').addClass('is-invalid');
+                                        $('#edit-skill-form input[name=name]').addClass('is-invalid');
                                         $('#edit-skill-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'years_of_experience':
-                                        $('#edit-skill-form #years-of-experience').addClass('is-invalid');
+                                        $('#edit-skill-form input[name=years-of-experience]').addClass('is-invalid');
                                         $('#edit-skill-form #years-of-experience-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'competency':
-                                        $('#edit-skill-form #competency').addClass('is-invalid');
+                                        $('#edit-skill-form select[name=competency]').addClass('is-invalid');
                                         $('#edit-skill-form #competency-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -1327,19 +1326,19 @@
 
     // GENERAL FUNCTIONS
     function clearSkillsModal(htmlId) {
-        $(htmlId + ' #name').val('');
-        $(htmlId + ' #years-of-experience').val('');
-        $(htmlId + ' #competency').val('');
+        $(htmlId + ' input[name=name]').val('');
+        $(htmlId + ' input[name=years-of-experience]').val('');
+        $(htmlId + ' select[name=competency]').val('');
 
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #years-of-experience').removeClass('is-invalid');
-        $(htmlId + ' #competency').removeClass('is-invalid');
+        $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=years-of-experience]').removeClass('is-invalid');
+        $(htmlId + ' select[name=competency]').removeClass('is-invalid');
     }
 
     function clearSkillsError(htmlId) {
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #years-of-experience').removeClass('is-invalid');
-        $(htmlId + ' #competency').removeClass('is-invalid');
+        $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=years-of-experience]').removeClass('is-invalid');
+        $(htmlId + ' select[name=competency]').removeClass('is-invalid');
     }
 
     function showAlert(message) {
