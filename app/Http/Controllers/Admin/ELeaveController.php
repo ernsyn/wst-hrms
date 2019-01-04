@@ -26,6 +26,7 @@ use App\Employee;
 use Carbon\Carbon;
 use App\User;
 use Artisan;
+use App\EmployeeJob;
 
 class ELeaveController extends Controller
 {
@@ -747,6 +748,13 @@ class ELeaveController extends Controller
         return $result;
     }
 
+    public function ajaxCheckEmployeeJob($emp_id)
+    {
+        $employeeJob = EmployeeJob::where('emp_id', $emp_id)->count();
+
+        return $employeeJob;
+    }
+
     public function ajaxGetEmployeeLeaves(Request $request, $emp_id)
     {
         $leaveRequest = LeaveRequest::where('emp_id', $emp_id)
@@ -1002,6 +1010,7 @@ class ELeaveController extends Controller
         ->bcc($bcc_recepients)
         ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
+    
     public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval, $emp_id) {
         $cc_recepients = array();
         $bcc_recepients = array();
@@ -1034,5 +1043,12 @@ class ELeaveController extends Controller
         ->cc($cc_recepients)
         ->bcc($bcc_recepients)
         ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
+    }
+
+    private static function error($message) {
+        return [
+            'error' => true,
+            'message' => $message
+        ];
     }
 }
