@@ -40,7 +40,13 @@ class ELeaveController extends Controller
         $defaultLeaveTypes = LeaveType::default()->get();
         $customLeaveTypes = LeaveType::custom()->get();
 
-        return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes]);
+        $currentYear = Carbon::now()->year;
+
+        $leaveAllocation = LeaveAllocation::selectRaw('DISTINCT(YEAR(valid_from_date)) AS allocation_year')
+        ->whereYear('valid_from_date', '<', $currentYear)
+        ->get();
+
+        return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes, 'leaveAllocation' => $leaveAllocation]);
     }
 
     public function addLeaveType() 
