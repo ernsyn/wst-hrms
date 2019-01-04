@@ -10,7 +10,8 @@
                         <div class="progress m-3">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
                         </div>
-                    </div>                        
+                    </div>
+                    <div class="alert alert-danger" id="error-message-alert" role="alert" hidden></div>
                 </div>               
             </div>
         </div>
@@ -199,9 +200,25 @@
         $("#cancel-edit-leave-request").hide();
 
         $.get("{{ route('employee.e-leave.ajax.working-days') }}", function(workingDaysData, status) {
-            workingDays = workingDaysData;
-            initCalendar();
-            loadLeaveTypes();
+            if(workingDaysData.error) {
+                $('#error-message-alert').text(workingDaysData.message);
+                $('#error-message-alert').prop('hidden', false);
+            }
+            else {
+                $.get("{{ route('employee.e-leave.ajax.employee-job') }}", function(employeeJob, status) {
+                    console.log(employeeJob);
+
+                    if(employeeJob == 0) {
+                        $('#error-message-alert').text('Employees Job is not set');
+                        $('#error-message-alert').prop('hidden', false);
+                    }
+                    else {
+                        workingDays = workingDaysData;
+                        initCalendar();
+                        loadLeaveTypes();
+                    }
+                });                
+            }
         });
 
         function initCalendar() {
