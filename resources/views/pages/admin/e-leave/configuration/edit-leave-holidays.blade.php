@@ -22,9 +22,9 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <label class="col-md-12 col-form-label">Start_date*</label>
+                            <label class="col-md-12 col-form-label">Start Date*</label>
                             <div class="col-md-12">
-                                <input id="start_date" type="text" class="form-control{{ $errors->has('start_date') ? ' is-invalid' : '' }}" placeholder="Code here"
+                                <input id="start_date" type="text" class="form-control{{ $errors->has('start_date') ? ' is-invalid' : '' }}" placeholder="Start Date"
                                     name="start_date" value="{{ $holidays->start_date }}" required> @if ($errors->has('start_date'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('start_date') }}</strong>
@@ -34,7 +34,7 @@
                         <div class="col-4">
                             <label class="col-md-12 col-form-label">End Date*</label>
                             <div class="col-md-12">
-                                <input id="end_date" type="text" class="form-control{{ $errors->has('end_date') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
+                                <input id="end_date" type="text" class="form-control{{ $errors->has('end_date') ? ' is-invalid' : '' }}" placeholder="End Date"
                                     name="end_date" value="{{ $holidays->end_date }}" required>                                @if ($errors->has('end_date'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('end_date') }}</strong>
@@ -57,11 +57,19 @@
                                 <div class="form-group">
                                         <label class="col-md-12 col-form-label">Repeated Annually*</label>
                                         <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('repeat_annually') ? ' is-invalid' : '' }}" id="repeat_annually" name="repeat_annually" value="{{ $holidays->repeat_annually }}">
+                                    {{-- <select class="form-control{{ $errors->has('repeat_annually') ? ' is-invalid' : '' }}" id="repeat_annually" name="repeat_annually" value="{{ $holidays->repeat_annually }}">
                                             <option value="1">Yes</option>
                                             <option value="2">No</option>
-                                            </select>
+                                            </select> --}}
+
+                                            <select class="form-control" id="status" name="status" value="{{ $holidays->repeat_annually}}">
+                                                <option value="">Please Select</option>
+                                                    <option value="1"  {{ $holidays->repeat_annually == '1' ? 'selected' : ''}}>Yes</option>
+                                                    <option value="2"{{ $holidays->repeat_annually == '2' ? 'selected' : ''}}>No</option>
+                                                </select>
                                         </div>
+
+
                                 </div>
                             </div>
                             <div class="col-8">
@@ -90,9 +98,20 @@
 
            
                             <div class="col-8">
-                                <label class="col-md-5 col-form-label">State</label>
-                                <div class="col-md-7">
-                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $holidays->state }}">
+                                <label class="col-md-12 col-form-label">State</label>
+                                <div class="col-md-12">
+                                    <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]"
+                                        >
+                                        <option value="">Please Select</option>
+                                        @foreach(App\Constants\MalaysianStates::$all as $state)
+                                        <option value="{{ $state }}">{{ $state }}</option value="">
+                                        @endforeach
+                                    </select> @if ($errors->has('state'))
+                                    <span class="invalid-feedback" role="alert">
+                                                                      <strong>{{ $errors->first('state') }}</strong>
+                                                                  </span> @endif
+                                    </select>
+                                                                            {{-- <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $holidays->state }}">
                                                 <option value="">Please Select</option>
                                             @foreach(App\Constants\MalaysianStates::$all as $state)
                                             <option value="{{$state }}">{{ $state }}</option value="">
@@ -101,7 +120,7 @@
                                         <span class="invalid-feedback" role="alert">
                                                                   <strong>{{ $errors->first('state') }}</strong>
                                                               </span> @endif
-                                    </select>
+                                    </select> --}}
                                     <div id="state-error" class="invalid-feedback">
                                     </div>
                                 </div>

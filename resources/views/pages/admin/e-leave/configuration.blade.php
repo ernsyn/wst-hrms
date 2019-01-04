@@ -104,7 +104,13 @@
             </div>
             @endforeach
         </ul>
-
+        <div class="card-header bg-primary text-white">
+            <strong>Generate Leave Allocations for {{ \Carbon\Carbon::now()->year }}</strong>
+            <a role="button" id="add-leave-type-btn" class="float-right btn btn-primary btn-sm" href={{ route(
+                'admin.e-leave.configuration.generate-leave-allocation') }}>
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
     </div>
 </div>
 @endsection
