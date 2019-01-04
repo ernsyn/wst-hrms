@@ -21,26 +21,40 @@
                                     </span> @endif
                             </div>
                         </div>
+
+                    
                         <div class="col-4">
                             <label class="col-md-12 col-form-label">Start Date*</label>
                             <div class="col-md-12">
-                                <input id="start_date" type="text" class="form-control{{ $errors->has('start_date') ? ' is-invalid' : '' }}" placeholder="Start Date"
-                                    name="start_date" value="{{ $holidays->start_date }}" required> @if ($errors->has('start_date'))
+                                <input id="start-date" type="text" class="form-control" value="{{ $holidays->start_date }}" 
+                                placeholder="Start Date" aria-label="Start Date" aria-describedby="dob-icon" name="start_date" readonly>
+                                @if ($errors->has('start_date'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('start_date') }}</strong>
                                     </span> @endif
-                            </div>
+                                <input id="alt-start-date" type="text" class="form-control" name="start_date" hidden>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="dob-icon"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                            </div>                          
                         </div>
+                                   
                         <div class="col-4">
                             <label class="col-md-12 col-form-label">End Date*</label>
                             <div class="col-md-12">
-                                <input id="end_date" type="text" class="form-control{{ $errors->has('end_date') ? ' is-invalid' : '' }}" placeholder="End Date"
-                                    name="end_date" value="{{ $holidays->end_date }}" required>                                @if ($errors->has('end_date'))
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('end_date') }}</strong>
-                                    </span> @endif
+                                    <input id="end-date" type="text" class="form-control" value="{{ $holidays->end_date }}"  placeholder="End Date" aria-label="End Date" aria-describedby="dob-icon" name="end_date" readonly>
+                                    @if ($errors->has('end_date'))
+                                    <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('end_date') }}</strong>
+                                        </span> @endif
+                                         <input id="alt-end-date" type="text" class="form-control" name="end_date" hidden>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="dob-icon"><i class="far fa-calendar-alt"></i></span>
+                                    </div>                       
+                                </div>
                             </div>
-                        </div>
+                            
+
                     </div>
                     <div class="form-group row w-100">
                         <div class="col-8">
@@ -140,3 +154,49 @@
     </div>
 </div>
 @endsection
+
+
+@section('scripts') 
+<script>
+    $('#end-date').datepicker({
+        altField: "#alt-end-date",
+        altFormat: 'yy-mm-dd',
+        format: 'dd/mm/yy'
+        
+    });
+
+    $('#start-date').datepicker({
+        altField: "#alt-start-date",
+        altFormat: 'yy-mm-dd',
+        format: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-80:+0"
+    });
+</script>
+<script type="text/javascript">
+
+
+$('.itemName').select2({
+  placeholder: 'Select an item',
+  ajax: {
+    url: '/select2-autocomplete-ajax',
+    dataType: 'json',
+    delay: 250,
+    processResults: function (data) {
+      return {
+        results:  $.map(data, function (item) {
+              return {
+                  text: item.name,
+                  id: item.id
+              }
+          })
+      };
+    },
+    cache: true
+  }
+});
+
+
+</script>
+@append
