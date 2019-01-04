@@ -608,35 +608,24 @@ class EmployeeController extends Controller
 
         $jobData['created_by'] = auth()->user()->id;
 
-
-
         DB::transaction(function() use ($jobData, $id) {
-            $currentJob = EmployeeJob::where('emp_id', $id)
-            ->whereNull('end_date')->first();
+            $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
 
             if(!empty($currentJob)) {
-
-                if ($jobData['status']  = 'Confirmed Employment'){
+                if ($jobData['status']  == "confirmed-employment"){
                     Employee::where('id', $id)
                     ->update(array('confirmed_date'=> ($jobData['start_date'])));
                     $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                     LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
+                } else {
+                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                    LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
                 }
-else{
-                $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
-                LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
-}
-
+            } else {
+                $jobData['status']  = 'Probationer';
             }
-elseif(empty($currentjob)){
 
-$jobData['status']  = 'Probationer';
-
-}
-
-Employee::where('id', $id)
-->update(array('basic_salary'=> ($jobData['basic_salary'])));
-
+            Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
 
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));

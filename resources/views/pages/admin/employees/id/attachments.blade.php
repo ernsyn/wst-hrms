@@ -30,7 +30,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="attachment"><strong>Attachment*</strong></label>
-                            <input type="file" name="required-attachment" id="attachment" class="form-control-file">
+                            <input type="file" name="required-attachment" class="form-control-file">
                             <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="attachment"><strong>Attachment*</strong></label>
-                            <input type="file" name="required-attachment" id="attachment" class="form-control-file">
+                            <input type="file" name="required-attachment" class="form-control-file">
                             <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -248,7 +248,7 @@
                                         $('#add-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'attachment':
-                                        $('#add-attachment-form #attachment').addClass('is-invalid');
+                                        $('#add-attachment-form input[name=required-attachment]').addClass('is-invalid');
                                         $('#add-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -310,7 +310,7 @@
                                         $('#edit-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'attachment':
-                                        $('#edit-attachment-form #attachment').addClass('is-invalid');
+                                        $('#edit-attachment-form input[name=required-attachment]').addClass('is-invalid');
                                         $('#edit-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -377,16 +377,16 @@
     function clearAttachmentsModal(htmlId) {
         $(htmlId + ' #name').val('');
         $(htmlId + ' #notes').val('');
-        $(htmlId + ' #attachment').val('');
+        $(htmlId + ' input[name=required-attachment]').val('');
 
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
-        $(htmlId + ' #attachment').removeClass('is-invalid');
+        $(htmlId + ' input[name=required-attachment]').removeClass('is-invalid');
     }
     function clearAttachmentsError(htmlId) {
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #notes').removeClass('is-invalid');
-        $(htmlId + ' #attachment').removeClass('is-invalid');
+        $(htmlId + ' input[name=required-attachment]').removeClass('is-invalid');
     }
 
     function showAlert(message) {
