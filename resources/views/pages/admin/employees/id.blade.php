@@ -50,10 +50,8 @@
                         {{-- <i class="fas fa-pen"></i> --}}
                         Roles
                     </button>
-                    @endhasanyrole
-                    <button id="emp-change-password-btn" data-toggle="modal" data-target="#change-password-popup" type="button" class="btn btn-sm text-white rounded">
-                        {{-- <i class="fas fa-pen"></i> --}}
-                        Change Password
+					@endhasanyrole					<button id="emp-reset-password-btn" data-toggle="modal" data-target="#reset-password-popup" type="button" class="btn btn-sm text-white rounded">                        {{-- <i class="fas fa-pen"></i> --}}
+                        Reset Password
                     </button>
                 </div>
             </div>
@@ -445,27 +443,27 @@
         </div>
     </div>
 </div>
-{{-- Change Password --}}
-<div class="modal fade" id="change-password-popup" tabindex="-1" role="dialog" aria-labelledby="change-password-label" aria-hidden="true">
+{{-- Reset Password --}}
+<div class="modal fade" id="reset-password-popup" tabindex="-1" role="dialog" aria-labelledby="reset-password-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="change-password-label">Change Password</h5>
+                <h5 class="modal-title" id="reset-password-label">Reset Password</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="change-password-form">
+            <form id="reset-password-form">
                 <div class="modal-body">
                     @csrf
-                    <div class="form-row">
+                    {{-- <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Current Password*</strong></label>
                             <input name="current_password" type="password" class="form-control" placeholder="" value="" >
                             <div id="current-password-error" class="invalid-feedback">
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>New Password*</strong></label>
@@ -484,7 +482,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="change-password-submit" type="submit" class="btn btn-primary">
+                    <button id="reset-password-submit" type="submit" class="btn btn-primary">
                         {{ __('Submit') }}
                     </button>
                 </div>
@@ -845,28 +843,27 @@
 </script>
 <script>
     $(function () {
-        $('#change-password-submit').click(function(e){
+        $('#reset-password-submit').click(function(e){
             e.preventDefault();
             $(e.target).attr('disabled', true);
 
             $.ajax({
-                url: "{{ route('admin.employees.change-password.post', ['id' => $employee->id]) }}",
+                url: "{{ route('admin.employees.reset-password.post', ['id' => $employee->id]) }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    current_password: $('#change-password-form input[name=current_password]').val(),
-                    new_password: $('#change-password-form input[name=new_password]').val(),
-                    confirm_new_password: $('#change-password-form input[name=confirm_new_password]').val(),
+                    new_password: $('#reset-password-form input[name=new_password]').val(),
+                    confirm_new_password: $('#reset-password-form input[name=confirm_new_password]').val(),
                 },
                 success: function(data) {
                     if(data.success) showAlert(data.success);
                     if(data.fail) showAlertDanger(data.fail);
-                    clearChangePasswordModal('#change-password-form');
-                    $('#change-password-popup').modal('toggle');
+                    clearChangePasswordModal('#reset-password-form');
+                    $('#reset-password-popup').modal('toggle');
                     $(e.target).removeAttr('disabled');
                 },
                 error: function(xhr) {
-                    clearChangePasswordModal('#change-password-form');
+                    clearChangePasswordModal('#reset-password-form');
                     $(e.target).removeAttr('disabled');
                     if(xhr.status == 422) {
                         var errors = xhr.responseJSON.errors;
@@ -875,17 +872,13 @@
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
-                                    case 'current_password':
-                                        $('#change-password-form input[name=current_password]').addClass('is-invalid');
-                                        $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    break;
                                     case 'new_password':
-                                        $('#change-password-form input[name=new_password]').addClass('is-invalid');
-                                        $('#change-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        $('#reset-password-form input[name=new_password]').addClass('is-invalid');
+                                        $('#reset-password-form #new-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'confirm_new_password':
-                                        $('#change-password-form input[name=confirm_new_password]').addClass('is-invalid');
-                                        $('#change-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        $('#reset-password-form input[name=confirm_new_password]').addClass('is-invalid');
+                                        $('#reset-password-form #current-password-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
                             }
@@ -897,29 +890,16 @@
         });
 
         function clearChangePasswordModal(htmlId) {
-            $(htmlId + ' input[name=current_password]').val('');
             $(htmlId + ' input[name=new_password]').val('');
             $(htmlId + ' input[name=confirm_new_password]').val('');
 
-            $(htmlId + ' input[name=current_password]').removeClass('is-invalid');
             $(htmlId + ' input[name=new_password]').removeClass('is-invalid');
             $(htmlId + ' input[name=confirm_new_password]').removeClass('is-invalid');
         }
         function clearChangePasswordError(htmlId) {
-            $(htmlId + ' input[name=current_password]').removeClass('is-invalid');
             $(htmlId + ' input[name=new_password]').removeClass('is-invalid');
             $(htmlId + ' input[name=confirm_new_password]').removeClass('is-invalid');
         }
-
-        // $('#employee-profile-details #emp-roles-btn').click(function (e) {
-        //     console.log("ON: Roles Clicked!");
-        // });
-
-        // $('#employee-profile-details #emp-change-password-btn').click(function (e) {
-        //     console.log("ON: Change Password Clicked!");
-        // });
-        // var asdsf = $('#save-role-changes-btn')
-        // console.log("asdad", asdsf);
 
         $('#save-role-changes-btn').click(function () {
             assignRemoveAdminRole($("input[name='role-admin-checkbox[]']"),
@@ -953,8 +933,7 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    assignRoles: assignRoles,
-                },
+					assign_remove: assign ? 'assign': 'remove',					assignRoles: assignRoles,                },
                 success: function(data) {
                     onSuccess(data);
                 },

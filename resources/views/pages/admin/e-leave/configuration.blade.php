@@ -104,13 +104,38 @@
             </div>
             @endforeach
         </ul>
+    </div>
+    <div id="leave-types-card" class="card mb-4">
         <div class="card-header bg-primary text-white">
+            <strong>Leave Allocations</strong>
+        </div>
+        <ul id="leave-types-list" class="list-group list-group-flush">
+            @foreach ($leaveAllocation as $row)
+            <li class="leave-type list-group-item" data-toggle="collapse">
+                <span class="code badge badge-primary">{{ $row->allocation_year }}</span>
+                <span class="name">Leave Allocation</span>
+                <div class="float-right">
+                    <span class="text-success" style="font-weight:600">Generated</span>
+                </div>
+            </li>
+            @endforeach
+            <li class="leave-type list-group-item" data-toggle="collapse">
+                <span class="code badge badge-primary">{{ \Carbon\Carbon::now()->year }}</span>
+                <span class="name">Leave Allocation</span>
+                <div class="float-right">
+                    <a role="button" id="add-leave-type-btn" class="float-right btn btn-primary btn-sm" href={{ route('admin.e-leave.configuration.generate-leave-allocation') }}>
+                        Generate
+                    </a>
+                </div>
+            </li>
+        </ul>
+        {{-- <div class="card-header bg-primary text-white">
             <strong>Generate Leave Allocations for {{ \Carbon\Carbon::now()->year }}</strong>
             <a role="button" id="add-leave-type-btn" class="float-right btn btn-primary btn-sm" href={{ route(
                 'admin.e-leave.configuration.generate-leave-allocation') }}>
                 <i class="fas fa-plus"></i>
             </a>
-        </div>
+        </div> --}}
     </div>
 </div>
 @endsection

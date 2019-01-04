@@ -217,6 +217,20 @@ class EmployeeController extends Controller
         }
     }
 
+    public function postResetPassword(Request $request, $id) {
+        $data = $request->validate([
+            'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+
+        User::where('id', $employee->user->id)->update([
+            'password' => bcrypt($data['new_password'])
+        ]);
+        return response()->json(['success'=>'Password was successfully reset.']);
+
+    }
+
 //     {
 //         $departmentData = $request->validate([
 //             'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
