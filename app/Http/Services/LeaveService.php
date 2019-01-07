@@ -564,13 +564,23 @@ class LeaveService
                         'id' => $leaveType->id,
                         'name' => $leaveType->name,
                         'description' => $leaveType->description,
-                        'available_days' => self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id)
+                        'available_days' => self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id),
+                        'valid_until' => self::getValidUntilDate($employee->id, $leaveType->id)
                     ], 
                     $additionalLeaveTypeDetails)
                 );
             }
         }
-        
+
+        $types = array();
+
+        foreach ($leaveTypesForUser as $key => $row)
+        {
+            $types[$key] = $row['valid_until'];
+        }
+
+        array_multisort($types, SORT_ASC, $leaveTypesForUser);
+
         return $leaveTypesForUser;
     }
     
@@ -594,6 +604,25 @@ class LeaveService
         }
 
         return $totalAllocatedDays - $totalSpentDays;
+    }
+
+    private static function getValidUntilDate($emp_id, $leave_type_id) {
+        $today = Carbon::now();
+
+        $leaveAllocations = LeaveAllocation::where('emp_id', $emp_id)
+        ->where('leave_type_id', $leave_type_id)
+        ->where('valid_from_date', '<=', $today)
+        ->where('valid_until_date', '>=', $today)
+        ->orderBy('valid_until_date', 'ASC')
+        ->first();
+
+        $result = '';
+
+        if($leaveAllocations) {
+            $result = Carbon::parse($leaveAllocations->valid_until_date)->format('Y-m-d');
+        }
+
+        return $result;
     }
 
     private static function leaveTypeHasRule($leaveType, $rule) {
