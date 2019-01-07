@@ -537,15 +537,38 @@ class ELeaveController extends Controller
         ->get();
 
         foreach ($leaves as $row) {
-            $report_array[$row->id]['code'] = $row->code;
-            $report_array[$row->id]['name'] = $row->name;
-            $report_array[$row->id]['carried_forward_days'] = round($row->carried_forward_days, 0);
-            $report_array[$row->id]['allocated_days'] = round($row->allocated_days, 0);
-            $report_array[$row->id]['pending'] = 0;
-            $report_array[$row->id]['approved'] = 0;
-            $report_array[$row->id]['rejected'] = 0;
-            $report_array[$row->id]['allowed_to_take'] = 0;
-            $report_array[$row->id]['year_of_balance'] = 0;
+            $gender_rules = LTAppliedRule::where('leave_type_id', $row->id)
+            ->where('rule', 'gender')
+            ->first();
+
+            if($gender_rules) {
+                $gender_check = LTAppliedRule::where('id', $gender_rules->id)
+                ->where('configuration', 'like', '%"' . $employee->gender . '"%')
+                ->first();
+
+                if($gender_check) {
+                    $report_array[$row->id]['code'] = $row->code;
+                    $report_array[$row->id]['name'] = $row->name;
+                    $report_array[$row->id]['carried_forward_days'] = round($row->carried_forward_days, 0);
+                    $report_array[$row->id]['allocated_days'] = round($row->allocated_days, 0);
+                    $report_array[$row->id]['pending'] = 0;
+                    $report_array[$row->id]['approved'] = 0;
+                    $report_array[$row->id]['rejected'] = 0;
+                    $report_array[$row->id]['allowed_to_take'] = 0;
+                    $report_array[$row->id]['year_of_balance'] = 0;
+                }
+            }
+            else {
+                $report_array[$row->id]['code'] = $row->code;
+                $report_array[$row->id]['name'] = $row->name;
+                $report_array[$row->id]['carried_forward_days'] = round($row->carried_forward_days, 0);
+                $report_array[$row->id]['allocated_days'] = round($row->allocated_days, 0);
+                $report_array[$row->id]['pending'] = 0;
+                $report_array[$row->id]['approved'] = 0;
+                $report_array[$row->id]['rejected'] = 0;
+                $report_array[$row->id]['allowed_to_take'] = 0;
+                $report_array[$row->id]['year_of_balance'] = 0;
+            }
         }
 
         // get employee leave request data
