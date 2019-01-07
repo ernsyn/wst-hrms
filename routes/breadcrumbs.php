@@ -32,7 +32,7 @@ Breadcrumbs::for('super-admin.dashboard', function ($trail) {
 
 Breadcrumbs::for('leaveapplication', function ($trail) {
     // $trail->parent('admin.employees');
-    $trail->push('Add Leave Application', route('leaveapplication', ''));
+    $trail->push('Leave Application', route('leaveapplication', ''));
 });
 
 
