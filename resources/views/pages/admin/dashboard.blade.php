@@ -46,7 +46,7 @@
                 </div>
             </a>
         </div>
-        {{-- <div class="p-2 col-xl-3 col-lg-6">
+        <div class="p-2 col-xl-3 col-lg-6">
             <a href="{{ route('admin.attendance.current-day') }}" style="text-decoration: none">
                 <div class="card border-1">
                     <div class="card-body adjust-height">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </a>
-        </div> --}}
+        </div>
     </div>
     {{-- <div class="row">
         <div class="p-2 col-lg-8">
