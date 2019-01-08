@@ -326,7 +326,7 @@ class ELeaveController extends Controller
         public function ajaxGetEmployeeWorkingDays()
         {
             $working_day = Auth::user()->employee->working_day;
-        
+
             if(empty($working_day)) {
                 return self::error("Employees working days not set yet.");
             }
@@ -371,6 +371,13 @@ class ELeaveController extends Controller
             }
 
             return $result;
+        }
+
+        public function ajaxCheckEmployeeJob()
+        {
+            $employeeJob = EmployeeJob::where('emp_id', Auth::user()->employee->id)->count();
+
+            return $employeeJob;
         }
 
         public function ajaxPostCreateLeaveRequest(Request $request)

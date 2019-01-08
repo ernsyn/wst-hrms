@@ -153,6 +153,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('e-leave/request', 'Employee\EleaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
     Route::get('e-leave/request/{status}', 'Employee\EleaveController@ajaxGetEmployeeLeaves')->name('employee.e-leave.ajax.status')->where('status', '[A-Za-z0-9\-\/]+');
     Route::get('e-leave/working-days', 'Employee\EleaveController@ajaxGetEmployeeWorkingDays')->name('employee.e-leave.ajax.working-days');
+    Route::get('e-leave/employee-job', 'Employee\EleaveController@ajaxCheckEmployeeJob')->name('employee.e-leave.ajax.employee-job');
     Route::get('e-leave/holidays', 'Employee\EleaveController@ajaxGetHolidays')->name('employee.e-leave.ajax.holidays');
     Route::get('e-leave/edit/{id}', 'Employee\EleaveController@ajaxGetLeaveRequestSingle')->name('employee.e-leave.ajax.edit')->where('id', '[0-9]+');
     Route::post('e-leave/edit/{id}/post','Employee\EleaveController@ajaxPostEditLeaveRequest')->name('employee.e-leave.ajax.edit.post')->where('id', '[0-9]+');
@@ -183,7 +184,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
 
 
-    Route::post('employees/{id}/change-password','Admin\EmployeeController@postChangePassword')->name('admin.employees.change-password.post')->where('id', '[0-9]+');
+    Route::post('employees/{id}/reset-password','Admin\EmployeeController@postResetPassword')->name('admin.employees.reset-password.post')->where('id', '[0-9]+');
     Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
 
     // > Data Tables
@@ -461,7 +462,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
    Route::post('e-leave/configuration/leave-types/{id}/activate', 'Admin\ELeaveController@postActivateLeaveType')->name('admin.e-leave.configuration.leave-types.activate.post');
    Route::post('e-leave/configuration/leave-types/{id}/deactivate', 'Admin\ELeaveController@postDeactivateLeaveType')->name('admin.e-leave.configuration.leave-types.deactivate.post')->where('id', '[0-9]+');
    Route::delete('e-leave/configuration/leave-types/{id}/delete', 'Admin\ELeaveController@deleteLeaveType')->name('admin.e-leave.configuration.leave-types.delete');
-
+   Route::get('e-leave/configuration/generate-leave-allocation', 'Admin\ELeaveController@generateLeaveAllocation')->name('admin.e-leave.configuration.generate-leave-allocation');
 
 
    Route::get('e-leave/configuration/leaveholidays', 'Admin\ELeaveController@displayPublicHolidays')->name('admin.e-leave.configuration.leave-holidays');
@@ -480,6 +481,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('e-leave/leave-report/unpaid-leave-report/{emp_id}','Admin\ELeaveController@getUnpaidLeaveReport')->name('admin.e-leave.unpaid-leave-report')->where('emp_id', '[A-Za-z0-9\-\/]+');
     Route::get('e-leave/employees', 'Admin\ELeaveController@ajaxGetEmployees')->name('admin.e-leave.ajax.employees');
     Route::get('e-leave/employees/{emp_id}/working-days', 'Admin\EleaveController@ajaxGetEmployeeWorkingDays')->name('admin.e-leave.ajax.working-days')->where('emp_id', '[0-9]+');
+    Route::get('e-leave/employees/{emp_id}/employee-job', 'Admin\EleaveController@ajaxCheckEmployeeJob')->name('admin.e-leave.ajax.employee-job')->where('emp_id', '[0-9]+');
     Route::get('e-leave/employee/{emp_id}/leave-requests', 'Admin\EleaveController@ajaxGetEmployeeLeaves')->name('admin.e-leave.ajax.employees.leave-requests')->where('status', '[A-Za-z0-9\-\/]+')->where('emp_id', '[0-9]+');
     Route::get('e-leave/employee/{emp_id}/holidays', 'Admin\ELeaveController@ajaxGetEmployeeHolidays')->name('admin.e-leave.ajax.employee.holidays')->where('emp_id', '[0-9]+');
     Route::get('e-leave/employee/{emp_id}/leave-types', 'Admin\EleaveController@ajaxGetLeaveTypes')->name('admin.e-leave.ajax.employee.leave-types')->where('emp_id', '[0-9]+');

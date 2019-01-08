@@ -402,7 +402,8 @@
                     report_to_level: $('#edit-report-to-form select[name=report-to-level]').val()
                 },
                 success: function(data) {
-                    showAlert(data.success);
+                    if(data.success) showAlert(data.success);
+                    if(data.fail) showAlertDanger(data.fail);
                     reportTosTable.ajax.reload();
                     $('#edit-report-to-popup').modal('toggle');
                     clearReportToModal('#edit-report-to-form');

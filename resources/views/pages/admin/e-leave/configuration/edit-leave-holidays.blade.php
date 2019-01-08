@@ -21,26 +21,40 @@
                                     </span> @endif
                             </div>
                         </div>
+
+                    
                         <div class="col-4">
-                            <label class="col-md-12 col-form-label">Start_date*</label>
+                            <label class="col-md-12 col-form-label">Start Date*</label>
                             <div class="col-md-12">
-                                <input id="start_date" type="text" class="form-control{{ $errors->has('start_date') ? ' is-invalid' : '' }}" placeholder="Code here"
-                                    name="start_date" value="{{ $holidays->start_date }}" required> @if ($errors->has('start_date'))
+                                <input id="start-date" type="text" class="form-control" value="{{ $holidays->start_date }}" 
+                                placeholder="Start Date" aria-label="Start Date" aria-describedby="dob-icon" name="start_date" readonly>
+                                @if ($errors->has('start_date'))
                                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('start_date') }}</strong>
                                     </span> @endif
-                            </div>
+                                <input id="alt-start-date" type="text" class="form-control" name="start_date" hidden>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="dob-icon"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                            </div>                          
                         </div>
+                                   
                         <div class="col-4">
                             <label class="col-md-12 col-form-label">End Date*</label>
                             <div class="col-md-12">
-                                <input id="end_date" type="text" class="form-control{{ $errors->has('end_date') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
-                                    name="end_date" value="{{ $holidays->end_date }}" required>                                @if ($errors->has('end_date'))
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('end_date') }}</strong>
-                                    </span> @endif
+                                    <input id="end-date" type="text" class="form-control" value="{{ $holidays->end_date }}"  placeholder="End Date" aria-label="End Date" aria-describedby="dob-icon" name="end_date" readonly>
+                                    @if ($errors->has('end_date'))
+                                    <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('end_date') }}</strong>
+                                        </span> @endif
+                                         <input id="alt-end-date" type="text" class="form-control" name="end_date" hidden>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="dob-icon"><i class="far fa-calendar-alt"></i></span>
+                                    </div>                       
+                                </div>
                             </div>
-                        </div>
+                            
+
                     </div>
                     <div class="form-group row w-100">
                         <div class="col-8">
@@ -57,11 +71,19 @@
                                 <div class="form-group">
                                         <label class="col-md-12 col-form-label">Repeated Annually*</label>
                                         <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('repeat_annually') ? ' is-invalid' : '' }}" id="repeat_annually" name="repeat_annually" value="{{ $holidays->repeat_annually }}">
+                                    {{-- <select class="form-control{{ $errors->has('repeat_annually') ? ' is-invalid' : '' }}" id="repeat_annually" name="repeat_annually" value="{{ $holidays->repeat_annually }}">
                                             <option value="1">Yes</option>
                                             <option value="2">No</option>
-                                            </select>
+                                            </select> --}}
+
+                                            <select class="form-control" id="status" name="status" value="{{ $holidays->repeat_annually}}">
+                                                <option value="">Please Select</option>
+                                                    <option value="1"  {{ $holidays->repeat_annually == '1' ? 'selected' : ''}}>Yes</option>
+                                                    <option value="2"{{ $holidays->repeat_annually == '2' ? 'selected' : ''}}>No</option>
+                                                </select>
                                         </div>
+
+
                                 </div>
                             </div>
                             <div class="col-8">
@@ -90,9 +112,20 @@
 
            
                             <div class="col-8">
-                                <label class="col-md-5 col-form-label">State</label>
-                                <div class="col-md-7">
-                                        <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $holidays->state }}">
+                                <label class="col-md-12 col-form-label">State</label>
+                                <div class="col-md-12">
+                                    <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]"
+                                        >
+                                        <option value="">Please Select</option>
+                                        @foreach(App\Constants\MalaysianStates::$all as $state)
+                                        <option value="{{ $state }}">{{ $state }}</option value="">
+                                        @endforeach
+                                    </select> @if ($errors->has('state'))
+                                    <span class="invalid-feedback" role="alert">
+                                                                      <strong>{{ $errors->first('state') }}</strong>
+                                                                  </span> @endif
+                                    </select>
+                                                                            {{-- <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" value="{{ $holidays->state }}">
                                                 <option value="">Please Select</option>
                                             @foreach(App\Constants\MalaysianStates::$all as $state)
                                             <option value="{{$state }}">{{ $state }}</option value="">
@@ -101,7 +134,7 @@
                                         <span class="invalid-feedback" role="alert">
                                                                   <strong>{{ $errors->first('state') }}</strong>
                                                               </span> @endif
-                                    </select>
+                                    </select> --}}
                                     <div id="state-error" class="invalid-feedback">
                                     </div>
                                 </div>
@@ -121,3 +154,49 @@
     </div>
 </div>
 @endsection
+
+
+@section('scripts') 
+<script>
+    $('#end-date').datepicker({
+        altField: "#alt-end-date",
+        altFormat: 'yy-mm-dd',
+        format: 'dd/mm/yy'
+        
+    });
+
+    $('#start-date').datepicker({
+        altField: "#alt-start-date",
+        altFormat: 'yy-mm-dd',
+        format: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-80:+0"
+    });
+</script>
+<script type="text/javascript">
+
+
+$('.itemName').select2({
+  placeholder: 'Select an item',
+  ajax: {
+    url: '/select2-autocomplete-ajax',
+    dataType: 'json',
+    delay: 250,
+    processResults: function (data) {
+      return {
+        results:  $.map(data, function (item) {
+              return {
+                  text: item.name,
+                  id: item.id
+              }
+          })
+      };
+    },
+    cache: true
+  }
+});
+
+
+</script>
+@append

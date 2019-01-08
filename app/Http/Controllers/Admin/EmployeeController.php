@@ -210,6 +210,20 @@ class EmployeeController extends Controller
         }
     }
 
+    public function postResetPassword(Request $request, $id) {
+        $data = $request->validate([
+            'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+
+        User::where('id', $employee->user->id)->update([
+            'password' => bcrypt($data['new_password'])
+        ]);
+        return response()->json(['success'=>'Password was successfully reset.']);
+
+    }
+
 //     {
 //         $departmentData = $request->validate([
 //             'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
@@ -866,8 +880,8 @@ class EmployeeController extends Controller
             'report_to_level' =>'required|unique:employee_report_to,report_to_level,NULL,id,deleted_at,NULL,emp_id,'.$id,
             'kpi_proposer' => 'nullable',
             'notes' => 'nullable',
-
         ]);
+
         if($request->get('kpi_proposer') == null){
             $reportToData['kpi_proposer'] = 0;
         } else {
@@ -1144,14 +1158,31 @@ class EmployeeController extends Controller
         $reportToUpdatedData = $request->validate([
             'report_to_emp_id' => 'required',
             'type' => 'required',
-            'kpi_proposer' => 'required',
-            'notes' => 'required',
-            'report_to_level'=>'required'
+            'report_to_level' =>'required|unique:employee_report_to,report_to_level,'.$id.',id,deleted_at,NULL,emp_id,'.$emp_id,
+            'kpi_proposer' => 'nullable',
+            'notes' => 'nullable',
         ]);
 
-        EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+        if($request->get('kpi_proposer') == null){
+            $reportToUpdatedData['kpi_proposer'] = 0;
+        } else {
+            $reportToUpdatedData['kpi_proposer'] = request('kpi_proposer');
+        }
 
-        return response()->json(['success'=>'Report To was successfully updated.']);
+        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$emp_id)
+        ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
+
+        if($request->kpi_proposer == 0){
+            EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+            return response()->json(['success'=>'Report To was successfully updated.']);
+        } else {
+            if($employee_kpi_proposer == 0){
+                EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+                return response()->json(['success'=>'Report To was successfully updated.']);
+            } else {
+                return response()->json(['fail'=>'KPI Proposer already exist']);
+            }
+        }
     }
 
     public function postEditAttachment(Request $request, $emp_id, $id)

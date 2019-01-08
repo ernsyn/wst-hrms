@@ -30,6 +30,11 @@ Breadcrumbs::for('super-admin.dashboard', function ($trail) {
     $trail->push('Super Admin Dashboard', route('super-admin.dashboard'));
 });
 
+Breadcrumbs::for('leaveapplication', function ($trail) {
+    // $trail->parent('admin.employees');
+    $trail->push('Leave Application', route('leaveapplication', ''));
+});
+
 
 //--- Settings company ----
 
@@ -80,6 +85,11 @@ Breadcrumbs::for('admin.e-leave.total-transaction-report', function ($trail, $id
 Breadcrumbs::for('admin.e-leave.unpaid-leave-report', function ($trail, $id) {
     $trail->parent('admin.e-leave.leave-report');
     $trail->push('Unpaid Leave Report', route('admin.e-leave.unpaid-leave-report', $id));
+});
+
+Breadcrumbs::for('admin.e-leave.configuration.generate-leave-allocation', function ($trail) {
+    $trail->parent('admin.e-leave.configuration');
+    $trail->push('Generate Leave Allocation', route('admin.e-leave.configuration.generate-leave-allocation'));
 });
 
 Breadcrumbs::for('admin.e-leave.add-leave-request-disapprove', function ($trail,$id) {
@@ -593,10 +603,6 @@ Breadcrumbs::for('admin.e-leave.configuration.leave-types.edit', function ($trai
 Breadcrumbs::for('add_team', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Add Team', route('add_team'));
-});
-Breadcrumbs::for('leaveapplication', function ($trail) {
-    $trail->parent('admin.employees');
-    $trail->push('Add Leave Application', route('leaveapplication', ''));
 });
 
 // Error 404
