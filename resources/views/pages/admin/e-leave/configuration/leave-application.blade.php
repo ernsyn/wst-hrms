@@ -241,6 +241,7 @@
                 else {
                     $('#must-select-employee').prop('hidden', false);
                     $('#error-message-alert').prop('hidden', true);
+                    $('#calendar-leave').fullCalendar('destroy');
                 }
             } 
         };
@@ -258,6 +259,7 @@
         function getWorkingDays() {
             $('#calendar-leave .progress').attr('hidden', false);
             $('#calendar-leave').fullCalendar('destroy'); 
+            $("#available_days").text('0.0');
 
             var employee_id = $('#select-employee').find('option:selected').val();
 

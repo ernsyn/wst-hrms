@@ -614,6 +614,15 @@ class ELeaveController extends Controller
         foreach ($report_array as $key => $value) {
             $report_array[$key]['allowed_to_take'] = ($report_array[$key]['carried_forward_days'] + $report_array[$key]['allocated_days']) - ($report_array[$key]['pending'] + $report_array[$key]['approved']);
             $report_array[$key]['year_of_balance'] = ($report_array[$key]['carried_forward_days'] + $report_array[$key]['allocated_days']) - ($report_array[$key]['approved']);
+
+            // format values
+            $report_array[$key]['carried_forward_days'] = number_format($report_array[$key]['carried_forward_days'], 1);
+            $report_array[$key]['allocated_days'] = number_format($report_array[$key]['allocated_days'], 1);
+            $report_array[$key]['pending'] = number_format($report_array[$key]['pending'], 1);
+            $report_array[$key]['approved'] = number_format($report_array[$key]['approved'], 1);
+            $report_array[$key]['rejected'] = number_format($report_array[$key]['rejected'], 1);
+            $report_array[$key]['allowed_to_take'] = number_format($report_array[$key]['allowed_to_take'], 1);
+            $report_array[$key]['year_of_balance'] = number_format($report_array[$key]['year_of_balance'], 1);
         }
 
         $years = LeaveAllocation::selectRaw('distinct(year(valid_from_date)) as year_data')
