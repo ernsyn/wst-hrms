@@ -165,18 +165,15 @@
                                             </div>
                                             <span class="col-lg-5 p-3">Joined Date</span>
                                             <div class="col-lg-7 font-weight-bold p-3">
-                                                <span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? $employee->employee_jobs()->first()->start_date  : '<strong>(not set)</strong>' !!}</span>
-                                                {{-- <span class="field-value">{!! $employee->employee_jobs_joined_date->implode('start_date') ? $employee->employee_jobs_joined_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
+                                                <span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? \Carbon\Carbon::parse($employee->employee_jobs()->first()->start_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
                                             </div>
                                             <span class="col-lg-5 p-3">Confirmation Date</span>
                                             <div class="col-lg-7 font-weight-bold p-3">
-                                                <span class="field-value">{!! $employee->confirmed_date ? $employee->confirmed_date :'<strong>(not set)</strong>' !!}</span>
-                                                {{-- <span class="field-value">{!! $employee->employee_confirmed->implode('start_date') ? $employee->employee_confirmed->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
+                                                <span class="field-value">{!! isset($employee->confirmed_date) ?  \Carbon\Carbon::parse($employee->confirmed_date)->format('d/m/Y') :'<strong>(not set)</strong>' !!}</span>
                                             </div>
                                             <span class="col-lg-5 p-3">Resignation Date</span>
                                             <div class="col-lg-7 font-weight-bold p-3">
-                                                <span class="field-value">{!! isset($employee->employee_jobs()->where('status','=','Resigned')->first()->start_date ) ? $employee->employee_jobs()->where('status','Resigned')->first()->start_date  : '<strong>(not set)</strong>' !!}</span>
-                                                {{-- <span class="field-value">{!! $employee->employee_jobs_resigned_date->implode('start_date') ? $employee->employee_jobs_resigned_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
+                                                <span class="field-value">{!! isset($employee->employee_jobs()->where('status','=','Resigned')->first()->start_date ) ? \Carbon\Carbon::parse($employee->employee_jobs()->where('status','Resigned')->first()->start_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
                                             </div>
                                         </div>
                                     </div>
