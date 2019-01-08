@@ -605,13 +605,9 @@ class ELeaveController extends Controller
         ->get();
 
         foreach ($requests as $row) {
-            $pending = round($row->pending, 0);
-            $approved = round($row->approved, 0);
-            $rejected = round($row->rejected, 0);
-
-            $report_array[$row->leave_type_id]['pending'] = round($row->pending, 0);
-            $report_array[$row->leave_type_id]['approved'] = round($row->approved, 0);
-            $report_array[$row->leave_type_id]['rejected'] = round($row->rejected, 0);
+            $report_array[$row->leave_type_id]['pending'] = $row->pending;
+            $report_array[$row->leave_type_id]['approved'] = $row->approved;
+            $report_array[$row->leave_type_id]['rejected'] = $row->rejected;
         }
 
         // total columns
@@ -620,7 +616,7 @@ class ELeaveController extends Controller
             $report_array[$key]['year_of_balance'] = ($report_array[$key]['carried_forward_days'] + $report_array[$key]['allocated_days']) - ($report_array[$key]['approved']);
         }
 
-        $years = LeaveRequest::selectRaw('distinct(year(start_date)) as year_data')
+        $years = LeaveAllocation::selectRaw('distinct(year(valid_from_date)) as year_data')
         ->where('emp_id', $emp_id)
         ->get();
 
