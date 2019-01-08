@@ -131,7 +131,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-outline-info waves-effect" data-toggle="modal" data-target="#add-dependent-popup">
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-dependent-popup">
                 Add Dependent
             </button>
         </div>
