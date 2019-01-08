@@ -56,7 +56,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label class="working-day"><strong>Template</strong></label>
-                            <select class="form-control{{ $errors->has('departments') ? ' is-invalid' : '' }}" name="working_day" id="working_day">
+                            <select class="form-control{{ $errors->has('departments') ? ' is-invalid' : '' }}" name="working_day">
                                 <option>Select a Template</option>
                             </select>
                             <div id="working-day-error" class="invalid-feedback">
@@ -164,7 +164,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
-                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
+                            <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
                                 placeholder="" name="start_work_time" value="">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
@@ -173,7 +173,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
-                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
+                            <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
                                 placeholder="" name="end_work_time" value="">
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
@@ -207,7 +207,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label class="working-day"><strong>Template</strong></label>
-                            <select class="form-control{{ $errors->has('departments') ? ' is-invalid' : '' }}" name="working_day" id="working_day">
+                            <select class="form-control{{ $errors->has('departments') ? ' is-invalid' : '' }}" name="working_day">
                                 <option>Select a Template</option>
                             </select>
                             <div id="working-day-error" class="invalid-feedback">
@@ -315,7 +315,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
-                            <input id="start_work_time" type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
+                            <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
                                 placeholder="" name="start_work_time" value="">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
@@ -324,7 +324,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
-                            <input id="end_work_time" type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
+                            <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
                                 placeholder="" name="end_work_time" value="">
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
@@ -353,13 +353,13 @@
     let workingDaysTemplates = {!! App\EmployeeWorkingDay::templates()->get() !!};
 
     $.each(workingDaysTemplates, function(i) {
-        $("#add-working-day-form #working_day").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
-        $("#edit-working-day-form #working_day").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
+        $("#add-working-day-form select[name=working_day]").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
+        $("#edit-working-day-form select[name=working_day]").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
     });
 
     $('.timepicker').timeDropper({ format: 'HH:mm' });
 
-    $("#add-working-day-form #working_day").change(function() {
+    $("#add-working-day-form select[name=working_day]").change(function() {
         var data_id = $(this).find(':selected').attr('data-id');
 
         $("#add-working-day-form select[name=monday]").val(workingDaysTemplates[data_id].monday);
@@ -371,7 +371,7 @@
         $("#add-working-day-form select[name=sunday]").val(workingDaysTemplates[data_id].sunday);
     });
 
-    $("#edit-working-day-form #working_day").change(function() {
+    $("#edit-working-day-form select[name=working_day]").change(function() {
         var data_id = $(this).find(':selected').attr('data-id');
 
         $("#edit-working-day-form select[name=monday]").val(workingDaysTemplates[data_id].monday);
@@ -418,8 +418,8 @@
                 $("#edit-working-day-form select[name=friday]").val(data[0].friday);
                 $("#edit-working-day-form select[name=saturday]").val(data[0].saturday);
                 $("#edit-working-day-form select[name=sunday]").val(data[0].sunday);
-                $("#edit-working-day-form #start_work_time").val(data[0].start_work_time);
-                $("#edit-working-day-form #end_work_time").val(data[0].end_work_time);
+                $("#edit-working-day-form input[name=start_work_time]").val(data[0].start_work_time);
+                $("#edit-working-day-form input[name=end_work_time]").val(data[0].end_work_time);
 
                 $("#assign-working-day-button").hide();
                 $("#edit-working-day-button").show();
@@ -458,8 +458,8 @@
                     friday: $('#add-working-day-form select[name=friday]').val(),
                     saturday: $('#add-working-day-form select[name=saturday]').val(),
                     sunday: $('#add-working-day-form select[name=sunday]').val(),
-                    start_work_time: $("#add-working-day-form #start_work_time").val(),
-                    end_work_time: $("#add-working-day-form #end_work_time").val()
+                    start_work_time: $("#add-working-day-form input[name=start_work_time]").val(),
+                    end_work_time: $("#add-working-day-form input[name=end_work_time]").val()
                 },
                 success: function(data) {
                     getEmployeeWorkingDaysData();
@@ -529,8 +529,8 @@
                     friday: $('#edit-working-day-form select[name=friday]').val(),
                     saturday: $('#edit-working-day-form select[name=saturday]').val(),
                     sunday: $('#edit-working-day-form select[name=sunday]').val(),
-                    start_work_time: $("#edit-working-day-form #start_work_time").val(),
-                    end_work_time: $("#edit-working-day-form #end_work_time").val()
+                    start_work_time: $("#edit-working-day-form input[name=start_work_time]").val(),
+                    end_work_time: $("#edit-working-day-form input[name=end_work_time]").val()
                 },
                 success: function(data) {
                     getEmployeeWorkingDaysData();
