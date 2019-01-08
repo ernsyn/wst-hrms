@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="passport-no"><strong>Passport No*</strong></label>
-                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="passport-no" type="text" class="form-control" placeholder="" value="" required>
                             <div id="passport-no-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="issued-by"><strong>Issued By*</strong></label>
-                            <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="issued-by" type="text" class="form-control" placeholder="" value="" required>
                             <div id="issued-by-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="passport-no"><strong>Passport No*</strong></label>
-                            <input id="passport-no" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="passport-no" type="text" class="form-control" placeholder="" value="" required>
                             <div id="passport-no-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="issued-by"><strong>Issued By*</strong></label>
-                            <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="issued-by" type="text" class="form-control" placeholder="" value="" required>
                             <div id="issued-by-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -259,8 +259,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     // Form Data
-                    passport_no: $('#add-immigration-form #passport-no').val(),
-                    issued_by: $('#add-immigration-form #issued-by').val(),
+                    passport_no: $('#add-immigration-form input[name=passport-no]').val(),
+                    issued_by: $('#add-immigration-form input[name=issued-by]').val(),
                     issued_date: $('#add-immigration-form #issued-date-immigration').val(),
                     expiry_date: $('#add-immigration-form #expiry-date-immigration').val()
                 },
@@ -279,11 +279,11 @@
                                 console.log("Error errorfield: ", errorField);
                                 switch(errorField) {
                                     case 'passport_no':
-                                        $('#add-immigration-form #passport-no').addClass('is-invalid');
+                                        $('#add-immigration-form input[name=passport-no]').addClass('is-invalid');
                                         $('#add-immigration-form #passport-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'issued_by':
-                                        $('#add-immigration-form #issued-by').addClass('is-invalid');
+                                        $('#add-immigration-form input[name=issued-by]').addClass('is-invalid');
                                         $('#add-immigration-form #issued-by-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'issued_date':
@@ -313,8 +313,8 @@
 
             editImmigrationId = currentData.id;
 
-            $('#edit-immigration-form #passport-no').val(currentData.passport_no);
-            $('#edit-immigration-form #issued-by').val(currentData.issued_by);
+            $('#edit-immigration-form input[name=passport-no]').val(currentData.passport_no);
+            $('#edit-immigration-form input[name=issued-by]').val(currentData.issued_by);
             $('#edit-immigration-form #issued-date-immigration-edit').val(currentData.issued_date);
             $('#edit-immigration-form #expiry-date-immigration-edit').val(currentData.expiry_date);
         });
@@ -329,8 +329,8 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    passport_no: $('#edit-immigration-form #passport-no').val(),
-                    issued_by: $('#edit-immigration-form #issued-by').val(),
+                    passport_no: $('#edit-immigration-form input[name=passport-no]').val(),
+                    issued_by: $('#edit-immigration-form input[name=issued-by]').val(),
                     issued_date: $('#edit-immigration-form #issued-date-immigration-edit').val(),
                     expiry_date: $('#edit-immigration-form #expiry-date-immigration-edit').val()
                 },
@@ -349,11 +349,11 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'passport_no':
-                                        $('#edit-immigration-form #passport-no').addClass('is-invalid');
+                                        $('#edit-immigration-form input[name=passport-no]').addClass('is-invalid');
                                         $('#edit-immigration-form #passport-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'issued_by':
-                                        $('#edit-immigration-form #issued-by').addClass('is-invalid');
+                                        $('#edit-immigration-form input[name=issued-by]').addClass('is-invalid');
                                         $('#edit-immigration-form #issued-by-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'issued_date':
@@ -413,20 +413,20 @@
 
     // GENERAL FUNCTIONS
     function clearImmigrationsModal(htmlId) {
-        $(htmlId + ' #passport-no').val('');
-        $(htmlId + ' #issued-by').val('');
+        $(htmlId + ' input[name=passport-no]').val('');
+        $(htmlId + ' input[name=issued-by]').val('');
         $(htmlId + ' #issued-date-immigration').val('');
         $(htmlId + ' #expiry-date-immigration').val('');
 
-        $(htmlId + ' #passport-no').removeClass('is-invalid');
-        $(htmlId + ' #issued-by').removeClass('is-invalid');
+        $(htmlId + ' input[name=passport-no]').removeClass('is-invalid');
+        $(htmlId + ' input[name=issued-by]').removeClass('is-invalid');
         $(htmlId + ' #issued-date-immigration').removeClass('is-invalid');
         $(htmlId + ' #expiry-date-immigration').removeClass('is-invalid');
     }
 
     function clearImmigrationsError(htmlId) {
-        $(htmlId + ' #passport-no').removeClass('is-invalid');
-        $(htmlId + ' #issued-by').removeClass('is-invalid');
+        $(htmlId + ' input[name=passport-no]').removeClass('is-invalid');
+        $(htmlId + ' input[name=issued-by]').removeClass('is-invalid');
         $(htmlId + ' #issued-date-immigration').removeClass('is-invalid');
         $(htmlId + ' #expiry-date-immigration').removeClass('is-invalid');
     }

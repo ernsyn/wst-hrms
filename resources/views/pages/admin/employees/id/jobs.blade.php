@@ -48,8 +48,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="basic-salary"><strong>New Basic Salary*</strong></label>
-                            <input id="basic-salary" type="number" class="form-control" placeholder="" value=""
-                                required>
+                            <input name="basic-salary" type="number" class="form-control" placeholder="" value="" >
                             <div id="basic-salary-error" class="invalid-feedback">
 
                             </div>
@@ -58,7 +57,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="cost-centre"><strong>Cost Centre*</strong></label>
-                            <select class="form-control" id="cost-centre" required>
+                            <select class="form-control" name="cost-centre" >
                                 <option value="">Please Select</option>
                                 @foreach(App\CostCentre::all() as $cost_centre)
                                 <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
@@ -71,7 +70,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="department"><strong>Department*</strong></label>
-                            <select class="form-control" id="department" required>
+                            <select class="form-control" name="department" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Department::all() as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -84,7 +83,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="team"><strong>Team*</strong></label>
-                            <select class="form-control" id="team" required>
+                            <select class="form-control" name="team" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Team::all() as $team)
                                 <option value="{{ $team->id }}">{{ $team->name }}</option>
@@ -98,7 +97,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="main-position"><strong>Position*</strong></label>
-                            <select class="form-control" id="main-position" required>
+                            <select class="form-control" name="main-position" >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeePosition::all() as $position)
                                 <option value="{{ $position->id }}">{{ $position->name }}</option>
@@ -112,7 +111,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="grade"><strong>Grade*</strong></label>
-                            <select class="form-control" id="grade" required>
+                            <select class="form-control" name="grade" >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeeGrade::all() as $grade)
                                 <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -125,7 +124,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="branch"><strong>Branch*</strong></label>
-                            <select class="form-control" id="branch" required>
+                            <select class="form-control" name="branch" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Branch::all() as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -152,7 +151,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="employment-status"><strong>Employment Status*</strong></label>
-                            <select class="form-control" id="employment-status" required>
+                            <select class="form-control" name="employment-status" >
                                 <option value="">Please Select</option>
                                 <option value="confirmed-employment">Confirmed Employment</option>
                                 <option value="confirmed-promotion">Confirmed Promotion</option>
@@ -165,7 +164,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="remarks"><strong>Remarks</strong></label>
-                            <textarea id="remarks" type="number" class="form-control" placeholder="" value=""></textarea>
+                            <textarea name="remarks" type="number" class="form-control" placeholder="" value=""></textarea>
                             <div id="remarks-error" class="invalid-feedback">
 
                             </div>
@@ -199,14 +198,14 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="basic-salary"><strong>New Basic Salary*</strong></label>
-                            <input id="basic-salary" type="number" class="form-control" placeholder="" value=""
-                                required>
+                            <input name="basic-salary" type="number" class="form-control" placeholder="" value=""
+                                >
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="cost-centre"><strong>Cost Centre*</strong></label>
-                            <select class="form-control" id="cost-centre" required>
+                            <select class="form-control" name="cost-centre" >
                                 <option value="">Please Select</option>
                                 @foreach(App\CostCentre::all() as $cost_centre)
                                 <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
@@ -218,7 +217,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="department"><strong>Department*</strong></label>
-                            <select class="form-control" id="department" required>
+                            <select class="form-control" name="department" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Department::all() as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -230,7 +229,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="team"><strong>Team*</strong></label>
-                            <select class="form-control" id="team" required>
+                            <select class="form-control" name="team" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Team::all() as $team)
                                 <option value="{{ $team->id }}">{{ $team->name }}</option>
@@ -242,7 +241,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="main-position"><strong>Main Position*</strong></label>
-                            <select class="form-control" id="main-position" required>
+                            <select class="form-control" name="main-position" >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeePosition::all() as $position)
                                 <option value="{{ $position->id }}">{{ $position->name }}</option>
@@ -256,7 +255,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="grade"><strong>Grade*</strong></label>
-                            <select class="form-control" id="grade" required>
+                            <select class="form-control" name="grade" >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeeGrade::all() as $grade)
                                 <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -268,7 +267,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="branch"><strong>Branch*</strong></label>
-                            <select class="form-control" id="branch" required>
+                            <select class="form-control" name="branch" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Branch::all() as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -294,7 +293,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="employment-status"><strong>Employment Status*</strong></label>
-                            <select class="form-control" id="employment-status" required>
+                            <select class="form-control" name="employment-status" >
                                 <option value="">Please Select</option>
                                 <option value="confirmed-employment">Confirmed Employment</option>
                                 <option value="confirmed-promotion">Confirmed Promotion</option>
@@ -309,7 +308,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="remarks"><strong>Remarks</strong></label>
-                            <textarea id="remarks" type="number" class="form-control" placeholder="" value=""></textarea>
+                            <textarea name="remarks" type="number" class="form-control" placeholder="" value=""></textarea>
                             <div id="remarks-error" class="invalid-feedback">
 
                             </div>
@@ -414,16 +413,16 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    basic_salary: $('#add-job-form #basic-salary').val(),
-                    cost_centre_id: $('#add-job-form #cost-centre').val(),
-                    department_id: $('#add-job-form #department').val(),
-                    team_id: $('#add-job-form #team').val(),
-                    emp_mainposition_id: $('#add-job-form #main-position').val(),
-                    emp_grade_id: $('#add-job-form #grade').val(),
-                    branch_id: $('#add-job-form #branch').val(),
+                    basic_salary: $('#add-job-form input[name=basic-salary]').val(),
+                    cost_centre_id: $('#add-job-form select[name=cost-centre]').val(),
+                    department_id: $('#add-job-form select[name=department]').val(),
+                    team_id: $('#add-job-form select[name=team]').val(),
+                    emp_mainposition_id: $('#add-job-form select[name=main-position]').val(),
+                    emp_grade_id: $('#add-job-form select[name=grade]').val(),
+                    branch_id: $('#add-job-form select[name=branch]').val(),
                     start_date: $('#add-job-form #date-job').val(),
-                    status: $('#add-job-form #employment-status').val(),
-                    remarks: $('#add-job-form #remarks').val()
+                    status: $('#add-job-form select[name=employment-status]').val(),
+                    remarks: $('#add-job-form textarea[name=remarks]').val()
                 },
                 success: function (data) {
                     $(e.target).removeAttr('disabled');
@@ -444,45 +443,45 @@
                                 console.log("Error: ", errorField);
                                 switch (errorField) {
                                     case 'basic_salary':
-                                        $('#add-job-form #basic-salary').addClass(
+                                        $('#add-job-form input[name=basic-salary]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #basic-salary-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'cost_centre_id':
-                                        $('#add-job-form #cost-centre').addClass(
+                                        $('#add-job-form select[name=cost-centre]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #cost-centre-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'department_id':
-                                        $('#add-job-form #department').addClass(
+                                        $('#add-job-form select[name=department]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #department-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'team_id':
-                                        $('#add-job-form #team').addClass('is-invalid');
+                                        $('#add-job-form select[name=team]').addClass('is-invalid');
                                         $('#add-job-form #team-error').html('<strong>' +
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'emp_mainposition_id':
-                                        $('#add-job-form #main-position').addClass(
+                                        $('#add-job-form select[name=main-position]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #main-position-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'emp_grade_id':
-                                        $('#add-job-form #grade').addClass('is-invalid');
+                                        $('#add-job-form select[name=grade]').addClass('is-invalid');
                                         $('#add-job-form #grade-error').html('<strong>' +
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'branch_id':
-                                        $('#add-job-form #branch').addClass('is-invalid');
+                                        $('#add-job-form select[name=branch]').addClass('is-invalid');
                                         $('#add-job-form #branch-error').html('<strong>' +
                                             errors[errorField][0] + "</strong>");
                                         break;
@@ -492,14 +491,14 @@
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'status':
-                                        $('#add-job-form #employment-status').addClass(
+                                        $('#add-job-form select[name=employment-status]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #employment-status-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'remarks':
-                                        $('#add-job-form #remarks').addClass(
+                                        $('#add-job-form textarea[name=remarks]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #remarks-error').html(
                                             '<strong>' + errors[errorField][0] +
@@ -529,16 +528,16 @@
             console.log('Data: ', currentData)
 
             editId = currentData.id;
-            $('#edit-job-form #basic-salary').val(currentData.basic_salary);
-            $('#edit-job-form #cost-centre').val(currentData.cost_centre_id);
-            $('#edit-job-form #department').val(currentData.department_id);
-            $('#edit-job-form #team').val(currentData.team_id);
-            $('#edit-job-form #main-position').val(currentData.emp_mainposition_id);
-            $('#edit-job-form #grade').val(currentData.emp_grade_id);
-            $('#edit-job-form #branch').val(currentData.branch_id);
+            $('#edit-job-form input[name=basic-salary]').val(currentData.basic_salary);
+            $('#edit-job-form select[name=cost-centre]').val(currentData.cost_centre_id);
+            $('#edit-job-form select[name=department]').val(currentData.department_id);
+            $('#edit-job-form select[name=team]').val(currentData.team_id);
+            $('#edit-job-form select[name=main-position]').val(currentData.emp_mainposition_id);
+            $('#edit-job-form select[name=grade]').val(currentData.emp_grade_id);
+            $('#edit-job-form select[name=branch]').val(currentData.branch_id);
             $('#edit-job-form #date-job-edit').val(currentData.start_date);
-            $('#edit-job-form #employment-status').val(currentData.status);
-            $('#edit-job-form #remarks').val(currentData.remarks);
+            $('#edit-job-form select[name=employment-status]').val(currentData.status);
+            $('#edit-job-form textarea[name=remarks]').val(currentData.remarks);
         });
 
         var editRouteTemplate =
@@ -552,16 +551,16 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    basic_salary: $('#edit-job-form #basic-salary').val(),
-                    cost_centre_id: $('#edit-job-form #cost-centre').val(),
-                    department_id: $('#edit-job-form #department').val(),
-                    team_id: $('#edit-job-form #team').val(),
-                    emp_mainposition_id: $('#edit-job-form #main-position').val(),
-                    emp_grade_id: $('#edit-job-form #grade').val(),
-                    branch_id: $('#edit-job-form #branch').val(),
+                    basic_salary: $('#edit-job-form input[name=basic-salary]').val(),
+                    cost_centre_id: $('#edit-job-form select[name=cost-centre]').val(),
+                    department_id: $('#edit-job-form select[name=department]').val(),
+                    team_id: $('#edit-job-form select[name=team]').val(),
+                    emp_mainposition_id: $('#edit-job-form select[name=main-position]').val(),
+                    emp_grade_id: $('#edit-job-form select[name=grade]').val(),
+                    branch_id: $('#edit-job-form select[name=branch]').val(),
                     start_date: $('#edit-job-form #date-job-edit').val(),
-                    status: $('#edit-job-form #employment-status').val(),
-                    remarks: $('#edit-job-form #remarks').val()
+                    status: $('#edit-job-form select[name=employment-status]').val(),
+                    remarks: $('#edit-job-form textarea[name=remarks]').val()
                 },
                 success: function (data) {
                     showAlert(data.success);
@@ -578,45 +577,45 @@
                                 console.log("Error: ", errorField);
                                 switch (errorField) {
                                     case 'basic_salary':
-                                        $('#edit-job-form #basic-salary').addClass(
+                                        $('#edit-job-form input[name=basic-salary]').addClass(
                                             'is-invalid');
                                         $('#edit-job-form #basic-salary-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'cost_centre_id':
-                                        $('#edit-job-form #cost-centre').addClass(
+                                        $('#edit-job-form select[name=cost-centre]').addClass(
                                             'is-invalid');
                                         $('#edit-job-form #cost-centre-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'department_id':
-                                        $('#edit-job-form #department').addClass(
+                                        $('#edit-job-form select[name=department]').addClass(
                                             'is-invalid');
                                         $('#edit-job-form #department-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'team_id':
-                                        $('#edit-job-form #team').addClass('is-invalid');
+                                        $('#edit-job-form select[name=team]').addClass('is-invalid');
                                         $('#edit-job-form #team-error').html('<strong>' +
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'emp_mainposition_id':
-                                        $('#edit-job-form #main-position').addClass(
+                                        $('#edit-job-form select[name=main-position]').addClass(
                                             'is-invalid');
                                         $('#edit-job-form #main-position-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'emp_grade_id':
-                                        $('#edit-job-form #grade').addClass('is-invalid');
+                                        $('#edit-job-form select[name=grade]').addClass('is-invalid');
                                         $('#edit-job-form #grade-error').html('<strong>' +
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'branch_id':
-                                        $('#edit-job-form #branch').addClass('is-invalid');
+                                        $('#edit-job-form select[name=branch]').addClass('is-invalid');
                                         $('#edit-job-form #branch-error').html('<strong>' +
                                             errors[errorField][0] + "</strong>");
                                         break;
@@ -627,14 +626,14 @@
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'status':
-                                        $('#edit-job-form #employment-status').addClass(
+                                        $('#edit-job-form select[name=employment-status]').addClass(
                                             'is-invalid');
                                         $('#edit-job-form #employment-status-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'remarks':
-                                        $('#edit-job-form #remarks').addClass(
+                                        $('#edit-job-form textarea[name=remarks]').addClass(
                                             'is-invalid');
                                         $('#edit-job-form #remarks-error').html(
                                             '<strong>' + errors[errorField][0] +
@@ -652,43 +651,43 @@
 
     // GENERAL FUNCTIONS
     function clearJobModal(htmlId) {
-        $(htmlId + ' #basic-salary').val('');
-        $(htmlId + ' #cost-centre').val('');
-        $(htmlId + ' #department').val('');
-        $(htmlId + ' #team').val('');
-        $(htmlId + ' #main-position').val('');
-        $(htmlId + ' #grade').val('');
-        $(htmlId + ' #branch').val('');
+        $(htmlId + ' input[name=basic-salary]').val('');
+        $(htmlId + ' select[name=cost-centre]').val('');
+        $(htmlId + ' select[name=department]').val('');
+        $(htmlId + ' select[name=team]').val('');
+        $(htmlId + ' select[name=main-position]').val('');
+        $(htmlId + ' select[name=grade]').val('');
+        $(htmlId + ' select[name=branch]').val('');
         $(htmlId + ' #date-job').val('');
         $(htmlId + ' #date-job-edit').val('');
-        $(htmlId + ' #employment-status').val('');
-        $(htmlId + ' #remarks').val('');
+        $(htmlId + ' select[name=employment-status]').val('');
+        $(htmlId + ' textarea[name=remarks]').val('');
 
-        $(htmlId + ' #basic-salary').removeClass('is-invalid');
-        $(htmlId + ' #cost-centre').removeClass('is-invalid');
-        $(htmlId + ' #department').removeClass('is-invalid');
-        $(htmlId + ' #team').removeClass('is-invalid');
-        $(htmlId + ' #main-position').removeClass('is-invalid');
-        $(htmlId + ' #grade').removeClass('is-invalid');
-        $(htmlId + ' #branch').removeClass('is-invalid');
+        $(htmlId + ' input[name=basic-salary]').removeClass('is-invalid');
+        $(htmlId + ' select[name=cost-centre]').removeClass('is-invalid');
+        $(htmlId + ' select[name=department]').removeClass('is-invalid');
+        $(htmlId + ' select[name=team]').removeClass('is-invalid');
+        $(htmlId + ' select[name=main-position]').removeClass('is-invalid');
+        $(htmlId + ' select[name=grade]').removeClass('is-invalid');
+        $(htmlId + ' select[name=branch]').removeClass('is-invalid');
         $(htmlId + ' #date-job').removeClass('is-invalid');
         $(htmlId + ' #date-job-edit').removeClass('is-invalid');
-        $(htmlId + ' #employment-status').removeClass('is-invalid');
-        $(htmlId + ' #remarks').removeClass('is-invalid');
+        $(htmlId + ' select[name=employment-status]').removeClass('is-invalid');
+        $(htmlId + ' textarea[name=remarks]').removeClass('is-invalid');
     }
 
     function clearJobError(htmlId) {
-        $(htmlId + ' #basic-salary').removeClass('is-invalid');
-        $(htmlId + ' #cost-centre').removeClass('is-invalid');
-        $(htmlId + ' #department').removeClass('is-invalid');
-        $(htmlId + ' #team').removeClass('is-invalid');
-        $(htmlId + ' #main-position').removeClass('is-invalid');
-        $(htmlId + ' #grade').removeClass('is-invalid');
-        $(htmlId + ' #branch').removeClass('is-invalid');
+        $(htmlId + ' input[name=basic-salary]').removeClass('is-invalid');
+        $(htmlId + ' select[name=cost-centre]').removeClass('is-invalid');
+        $(htmlId + ' select[name=department]').removeClass('is-invalid');
+        $(htmlId + ' select[name=team]').removeClass('is-invalid');
+        $(htmlId + ' select[name=main-position]').removeClass('is-invalid');
+        $(htmlId + ' select[name=grade]').removeClass('is-invalid');
+        $(htmlId + ' select[name=branch]').removeClass('is-invalid');
         $(htmlId + ' #date-job').removeClass('is-invalid');
         $(htmlId + ' #date-job-edit').removeClass('is-invalid');
-        $(htmlId + ' #employment-status').removeClass('is-invalid');
-        $(htmlId + ' #remarks').removeClass('is-invalid');
+        $(htmlId + ' select[name=employment-status]').removeClass('is-invalid');
+        $(htmlId + ' textarea[name=remarks]').removeClass('is-invalid');
     }
 
     function showAlert(message) {

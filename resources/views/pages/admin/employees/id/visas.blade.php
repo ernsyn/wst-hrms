@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="type"><strong>Type*</strong></label>
-                            <input id="type" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="type" type="text" class="form-control" placeholder="" value="" required>
                             <div id="type-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="issued-by"><strong>Issued By*</strong></label>
-                            <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="issued-by" type="text" class="form-control" placeholder="" value="" required>
                             <div id="issued-by-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="family-members"><strong>Relationship*</strong></label>
-                            <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="family-members" type="text" class="form-control" placeholder="" value="" required>
                             <div id="family-members-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="type"><strong>Type*</strong></label>
-                            <input id="type" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="type" type="text" class="form-control" placeholder="" value="" required>
                             <div id="type-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -112,7 +112,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="issued-by"><strong>Issued By*</strong></label>
-                            <input id="issued-by" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="issued-by" type="text" class="form-control" placeholder="" value="" required>
                             <div id="issued-by-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -146,7 +146,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="family-members"><strong>Relationship*</strong></label>
-                            <input id="family-members" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="family-members" type="text" class="form-control" placeholder="" value="" required>
                             <div id="family-members-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -302,12 +302,12 @@
             data: {
                 _token: '{{ csrf_token() }}',
                 // Form Data
-                type: $('#add-visa-form #type').val(),
+                type: $('#add-visa-form input[name=type]').val(),
                 visa_number: $('#add-visa-form #visa-number').val(),
-                issued_by: $('#add-visa-form #issued-by').val(),
+                issued_by: $('#add-visa-form input[name=issued-by]').val(),
                 issued_date: $('#add-visa-form #issued-date-visa').val(),
                 expiry_date: $('#add-visa-form #expiry-date-visa').val(),
-                family_members: $('#add-visa-form #family-members').val()
+                family_members: $('#add-visa-form input[name=family-members]').val()
             },
             success: function(data) {
                 showAlert(data.success);
@@ -324,7 +324,7 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'type':
-                                        $('#add-visa-form #type').addClass('is-invalid');
+                                        $('#add-visa-form input[name=type]').addClass('is-invalid');
                                         $('#add-visa-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'visa_number':
@@ -333,7 +333,7 @@
                                     break;
 
                                     case 'issued_by':
-                                        $('#add-visa-form #issued-by').addClass('is-invalid');
+                                        $('#add-visa-form input[name=issued-by]').addClass('is-invalid');
                                         $('#add-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'issued_date':
@@ -345,7 +345,7 @@
                                         $('#add-visa-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'family_members':
-                                        $('#add-visa-form #family-members').addClass('is-invalid');
+                                        $('#add-visa-form input[name=family-members]').addClass('is-invalid');
                                         $('#add-visa-form #family-members-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -367,12 +367,12 @@
 
             editVisaId = currentData.id;
 
-            $('#edit-visa-form #type').val(currentData.type);
+            $('#edit-visa-form input[name=type]').val(currentData.type);
             $('#edit-visa-form #visa-number-edit').val(currentData.visa_number);
-            $('#edit-visa-form #issued-by').val(currentData.issued_by);
+            $('#edit-visa-form input[name=issued-by]').val(currentData.issued_by);
             $('#edit-visa-form #issued-date-visa-edit').val(currentData.issued_date);
             $('#edit-visa-form #expiry-date-visa-edit').val(currentData.expiry_date);
-            $('#edit-visa-form #family-members').val(currentData.family_members);
+            $('#edit-visa-form input[name=family-members]').val(currentData.family_members);
         });
 
         var editVisaRouteTemplate = "{{ route('admin.employees.visas.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -385,13 +385,13 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    type: $('#edit-visa-form #type').val(),
+                    type: $('#edit-visa-form input[name=type]').val(),
                     visa_number: $('#edit-visa-form #visa-number-edit').val(),
 
-                    issued_by: $('#edit-visa-form #issued-by').val(),
+                    issued_by: $('#edit-visa-form input[name=issued-by]').val(),
                     issued_date: $('#edit-visa-form #issued-date-visa-edit').val(),
                     expiry_date: $('#edit-visa-form #expiry-date-visa-edit').val(),
-                    family_members: $('#edit-visa-form #family-members').val()
+                    family_members: $('#edit-visa-form input[name=family-members]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -408,7 +408,7 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'type':
-                                        $('#edit-visa-form #type').addClass('is-invalid');
+                                        $('#edit-visa-form input[name=type]').addClass('is-invalid');
                                         $('#edit-visa-form #type-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'visa_number':
@@ -417,7 +417,7 @@
                                     break;
 
                                     case 'issued_by':
-                                        $('#edit-visa-form #issued-by').addClass('is-invalid');
+                                        $('#edit-visa-form input[name=issued-by]').addClass('is-invalid');
                                         $('#edit-visa-form #issued-by-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'issued_date':
@@ -429,7 +429,7 @@
                                         $('#edit-visa-form #expiry-date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'family_members':
-                                        $('#edit-visa-form #family-members').addClass('is-invalid');
+                                        $('#edit-visa-form input[name=family-members]').addClass('is-invalid');
                                         $('#edit-visa-form #family-members-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -481,34 +481,34 @@
 
     // GENERAL FUNCTIONS
     function clearVisasModal(htmlId) {
-        $(htmlId + ' #type').val('');
+        $(htmlId + ' input[name=type]').val('');
         $(htmlId + ' #visa-number').val('');
         $(htmlId + ' #visa-number-edit').val('');
 
-        $(htmlId + ' #issued-by').val('');
+        $(htmlId + ' input[name=issued-by]').val('');
         $(htmlId + ' #issued-date-visa').val('');
         $(htmlId + ' #expiry-date-visa').val('');
-        $(htmlId + ' #family-members').val('');
+        $(htmlId + ' input[name=family-members]').val('');
 
-        $(htmlId + ' #type').removeClass('is-invalid');
+        $(htmlId + ' input[name=type]').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
         $(htmlId + ' #visa-number-edit').removeClass('is-invalid');
 
-        $(htmlId + ' #issued-by').removeClass('is-invalid');
+        $(htmlId + ' input[name=issued-by]').removeClass('is-invalid');
         $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
         $(htmlId + ' #expiry-date-visa').removeClass('is-invalid');
-        $(htmlId + ' #family-members').removeClass('is-invalid');
+        $(htmlId + ' input[name=family-members]').removeClass('is-invalid');
     }
 
     function clearVisasError(htmlId) {
-        $(htmlId + ' #type').removeClass('is-invalid');
+        $(htmlId + ' input[name=type]').removeClass('is-invalid');
         $(htmlId + ' #visa-number').removeClass('is-invalid');
         $(htmlId + ' #visa-number-edit').removeClass('is-invalid');
 
-        $(htmlId + ' #issued-by').removeClass('is-invalid');
+        $(htmlId + ' input[name=issued-by]').removeClass('is-invalid');
         $(htmlId + ' #issued-date-visa').removeClass('is-invalid');
         $(htmlId + ' #expiry-date-visa').removeClass('is-invalid');
-        $(htmlId + ' #family-members').removeClass('is-invalid');
+        $(htmlId + ' input[name=family-members]').removeClass('is-invalid');
     }
 
     function showAlert(message) {

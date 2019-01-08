@@ -15,21 +15,21 @@ aria-hidden="true">
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback"></div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Relationship*</strong></label>
-                            <input id="relationship" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="relationship" type="text" class="form-control" placeholder="" value="" required>
                             <div id="relationship-error" class="invalid-feedback"></div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Contact Number*</strong></label>
-                            <input id="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" required>
+                            <input name="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" required>
                             <div id="contact-no-error" class="invalid-feedback"></div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@ aria-hidden="true">
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             {{-- <div class="valid-feedback">
                             Looks good!
                             </div> --}}
@@ -71,8 +71,8 @@ aria-hidden="true">
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="name"><strong>Relationship*</strong></label>
-                            <input id="relationship" type="text" class="form-control" placeholder="" value="" required>
+                            <label for="relationship"><strong>Relationship*</strong></label>
+                            <input name="relationship" type="text" class="form-control" placeholder="" value="" required>
                             {{-- <div class="valid-feedback">
                             Looks good!
                             </div> --}}
@@ -83,8 +83,8 @@ aria-hidden="true">
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="name"><strong>Contact Number*</strong></label>
-                            <input id="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" required>
+                            <label for="contact-no"><strong>Contact Number*</strong></label>
+                            <input name="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" required>
                             {{-- <div class="valid-feedback">
                             Looks good!
                             </div> --}}
@@ -202,9 +202,9 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
                 data: {
                     _token: '{{ csrf_token() }}',
                     // Form Data
-                    name: $('#add-emergency-contact-form #name').val(),
-                    relationship: $('#add-emergency-contact-form #relationship').val(),
-                    contact_no: $('#add-emergency-contact-form #contact-no').val()
+                    name: $('#add-emergency-contact-form input[name=name]').val(),
+                    relationship: $('#add-emergency-contact-form input[name=relationship]').val(),
+                    contact_no: $('#add-emergency-contact-form input[name=contact-no]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -221,15 +221,15 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#add-emergency-contact-form #name').addClass('is-invalid');
+                                        $('#add-emergency-contact-form input[name=name]').addClass('is-invalid');
                                         $('#add-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'relationship':
-                                        $('#add-emergency-contact-form #relationship').addClass('is-invalid');
+                                        $('#add-emergency-contact-form input[name=relationship]').addClass('is-invalid');
                                         $('#add-emergency-contact-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'contact_no':
-                                        $('#add-emergency-contact-form #contact-no').addClass('is-invalid');
+                                        $('#add-emergency-contact-form input[name=contact-no]').addClass('is-invalid');
                                         $('#add-emergency-contact-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -252,9 +252,9 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
 
             editId = currentData.id;
 
-            $('#edit-emergency-contact-form #name').val(currentData.name);
-            $('#edit-emergency-contact-form #relationship').val(currentData.relationship);
-            $('#edit-emergency-contact-form #contact-no').val(currentData.contact_no);
+            $('#edit-emergency-contact-form input[name=name]').val(currentData.name);
+            $('#edit-emergency-contact-form input[name=relationship]').val(currentData.relationship);
+            $('#edit-emergency-contact-form input[name=contact-no]').val(currentData.contact_no);
         });
 
         var editRouteTemplate = "{{ route('employee.emergency-contacts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -267,9 +267,9 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    name: $('#edit-emergency-contact-form #name').val(),
-                    relationship: $('#edit-emergency-contact-form #relationship').val(),
-                    contact_no: $('#edit-emergency-contact-form #contact-no').val()
+                    name: $('#edit-emergency-contact-form input[name=name]').val(),
+                    relationship: $('#edit-emergency-contact-form input[name=relationship]').val(),
+                    contact_no: $('#edit-emergency-contact-form input[name=contact-no]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -286,15 +286,15 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#edit-emergency-contact-form #name').addClass('is-invalid');
+                                        $('#edit-emergency-contact-form input[name=name]').addClass('is-invalid');
                                         $('#edit-emergency-contact-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'relationship':
-                                        $('#edit-emergency-contact-form #relationship').addClass('is-invalid');
+                                        $('#edit-emergency-contact-form input[name=relationship]').addClass('is-invalid');
                                         $('#edit-emergency-contact-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'contact_no':
-                                        $('#edit-emergency-contact-form #contact-no').addClass('is-invalid');
+                                        $('#edit-emergency-contact-form input[name=contact-no]').addClass('is-invalid');
                                         $('#edit-emergency-contact-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -346,19 +346,19 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
 
     // GENERAL FUNCTIONS
     function clearEmergencyContactModal(htmlId) {
-        $(htmlId + ' #name').val('');
-        $(htmlId + ' #relationship').val('');
-        $(htmlId + ' #contact-no').val('');
+        $(htmlId + ' input[name=name]').val('');
+        $(htmlId + ' input[name=relationship]').val('');
+        $(htmlId + ' input[name=contact-no]').val('');
 
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #relationship').removeClass('is-invalid');
-        $(htmlId + ' #contact-no').removeClass('is-invalid');
+        $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=relationship]').removeClass('is-invalid');
+        $(htmlId + ' input[name=contact-no]').removeClass('is-invalid');
     }
 
     function clearEmergencyContactError(htmlId) {
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #relationship').removeClass('is-invalid');
-        $(htmlId + ' #contact-no').removeClass('is-invalid');
+        $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=relationship]').removeClass('is-invalid');
+        $(htmlId + ' input[name=contact-no]').removeClass('is-invalid');
     }
 
     function showAlert(message) {
