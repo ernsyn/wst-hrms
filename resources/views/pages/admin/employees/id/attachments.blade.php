@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <input id="name" name="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" name="notes" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="notes" type="text" class="form-control" placeholder="" value="" required>
                             <div id="notes-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="attachment"><strong>Attachment*</strong></label>
-                            <input type="file" name="required-attachment" id="attachment" class="form-control-file">
+                            <input type="file" name="required-attachment" class="form-control-file">
                             <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes*</strong></label>
-                            <input id="notes" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="notes" type="text" class="form-control" placeholder="" value="" required>
                             <div id="notes-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="attachment"><strong>Attachment*</strong></label>
-                            <input type="file" name="required-attachment" id="attachment" class="form-control-file">
+                            <input type="file" name="required-attachment" class="form-control-file">
                             <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -248,7 +248,7 @@
                                         $('#add-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'attachment':
-                                        $('#add-attachment-form #attachment').addClass('is-invalid');
+                                        $('#add-attachment-form input[name=required-attachment]').addClass('is-invalid');
                                         $('#add-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -270,8 +270,8 @@
 
             editAttachmentId = currentData.id;
 
-            $('#edit-attachment-form #name').val(currentData.name);
-            $('#edit-attachment-form #notes').val(currentData.notes);
+            $('#edit-attachment-form input[name=name]').val(currentData.name);
+            $('#edit-attachment-form input[name=notes]').val(currentData.notes);
         });
 
         var editAttachmentRouteTemplate = "{{ route('admin.employees.attachments.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -284,8 +284,8 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    name: $('#edit-attachment-form #name').val(),
-                    notes: $('#edit-attachment-form #notes').val()
+                    name: $('#edit-attachment-form input[name=name]').val(),
+                    notes: $('#edit-attachment-form input[name=notes]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -302,15 +302,15 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#edit-attachment-form #name').addClass('is-invalid');
+                                        $('#edit-attachment-form input[name=name]').addClass('is-invalid');
                                         $('#edit-attachment-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'notes':
-                                        $('#edit-attachment-form #notes').addClass('is-invalid');
+                                        $('#edit-attachment-form input[name=notes]').addClass('is-invalid');
                                         $('#edit-attachment-form #notes-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'attachment':
-                                        $('#edit-attachment-form #attachment').addClass('is-invalid');
+                                        $('#edit-attachment-form input[name=required-attachment]').addClass('is-invalid');
                                         $('#edit-attachment-form #attachment-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -375,18 +375,18 @@
     }
 
     function clearAttachmentsModal(htmlId) {
-        $(htmlId + ' #name').val('');
-        $(htmlId + ' #notes').val('');
-        $(htmlId + ' #attachment').val('');
+        $(htmlId + ' input[name=name]').val('');
+        $(htmlId + ' input[name=notes]').val('');
+        $(htmlId + ' input[name=required-attachment]').val('');
 
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
-        $(htmlId + ' #attachment').removeClass('is-invalid');
+        $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=notes]').removeClass('is-invalid');
+        $(htmlId + ' input[name=required-attachment]').removeClass('is-invalid');
     }
     function clearAttachmentsError(htmlId) {
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #notes').removeClass('is-invalid');
-        $(htmlId + ' #attachment').removeClass('is-invalid');
+        $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=notes]').removeClass('is-invalid');
+        $(htmlId + ' input[name=required-attachment]').removeClass('is-invalid');
     }
 
     function showAlert(message) {
