@@ -76,20 +76,36 @@ class EmployeeController extends Controller
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
-            'ic_no' => 'required|numeric',
-            'dob' => 'required|date',
+            'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
+            'code'=>'required|unique:employees,code,'.$id.',id',
+            'dob' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'gender' => 'required',
-            'contact_no' => 'required|numeric',
             'marital_status' => 'required',
             'race' => 'required|alpha',
             'total_children' => 'nullable|numeric',
+            'address' => 'required',
+            'address2' => 'required_with:address3',
+            'address3' => 'nullable',
             'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable',
-            'epf_no' => 'required',
-            'tax_no' => 'required',
-            'eis_no' => 'required',
-            'socso_no' => 'required'
+            'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
+            'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
+            'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
+            'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
+            'main_security_group_id'=>'',
+            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'nationality' => 'required'
+        ],
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
+        $profileUpdatedData['dob'] = implode("-", array_reverse(explode("/", $profileUpdatedData['dob'])));
+
+        $profileUpdatedData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $profileUpdatedData['driver_license_expiry_date'])));
+
+        if($profileUpdatedData['driver_license_expiry_date']==='') {
+            $profileUpdatedData['driver_license_expiry_date'] = null;
+        }
 
         Employee::where('id', $id)->update($profileUpdatedData);
 
