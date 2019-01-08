@@ -43,7 +43,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
                 <div id="end-btn-group">
                 	@hasanyrole('super-admin|admin')
                     <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
@@ -103,14 +102,14 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <div class="field pb-1">
                                                         <span class="field-value">{{$employee->address}}</span>
-                                                    </div>
-                                                    <div class="field pb-1">
-                                                            <span class="field-value">{{$employee->address2}}</span>
-                                                    </div>
-                                                    <div class="field pb-1">
-                                                            <span class="field-value">{{$employee->address3}}</span>
-                                                    </div>
-                                                </div>
+                                            </div>
+                                            <div class="field pb-1">
+                                                    <span class="field-value">{{$employee->address2}}</span>
+                                            </div>
+                                            <div class="field pb-1">
+                                                    <span class="field-value">{{$employee->address3}}</span>
+                                            </div>
+                                        </div>
                                                 <span class="col-lg-5 p-3">Postcode</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <div class="field pb-1">
@@ -188,7 +187,6 @@
                                                 <span class="col-lg-5 p-3">Resignation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                         <span class="field-value">{!! isset($employee->employee_jobs()->where('status','=','Resigned')->first()->start_date ) ? $employee->employee_jobs()->where('status','Resigned')->first()->start_date  : '<strong>(not set)</strong>' !!}</span>
-                                                 </span>
                                                 </div>
                                             </div>
                                         </div>

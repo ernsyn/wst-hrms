@@ -187,7 +187,6 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!! isset($employee->employee_jobs()->where('status','=','Resigned')->first()->start_date ) ? $employee->employee_jobs()->where('status','Resigned')->first()->start_date  : '<strong>(not set)</strong>' !!}</span>
                                                     {{-- <span class="field-value">{!! $employee->employee_jobs_resigned_date->implode('start_date') ? $employee->employee_jobs_resigned_date->implode('start_date'):'<strong>(not set)</strong>' !!}</span> --}}
-                                                    </span>
                                                 </div>
                                             </div>
                                         </div>

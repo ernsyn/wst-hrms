@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Relationship*</strong></label>
-                            <input id="relationship" type="text" class="form-control" placeholder="eg. Father, Son" value="" required>
+                            <input name="relationship" type="text" class="form-control" placeholder="eg. Father, Son" value="" required>
                             <div id="relationship-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <input id="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Relationship*</strong></label>
-                            <input id="relationship" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="relationship" type="text" class="form-control" placeholder="" value="" required>
                             <div id="relationship-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -207,8 +207,8 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    name: $('#add-dependent-form #name').val(),
-                    relationship: $('#add-dependent-form #relationship').val(),
+                    name: $('#add-dependent-form input[name=name]').val(),
+                    relationship: $('#add-dependent-form input[name=relationship]').val(),
                     dob: $('#add-dependent-form #dob-dependent').val()
                 },
             success: function(data) {
@@ -226,11 +226,11 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#add-dependent-form #name').addClass('is-invalid');
+                                        $('#add-dependent-form input[name=name]').addClass('is-invalid');
                                         $('#add-dependent-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'relationship':
-                                        $('#add-dependent-form #relationship').addClass('is-invalid');
+                                        $('#add-dependent-form input[name=relationship]').addClass('is-invalid');
                                         $('#add-dependent-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'dob':
@@ -256,8 +256,8 @@
 
             editDependentId = currentData.id;
 
-            $('#edit-dependent-form #name').val(currentData.name);
-            $('#edit-dependent-form #relationship').val(currentData.relationship);
+            $('#edit-dependent-form input[name=name]').val(currentData.name);
+            $('#edit-dependent-form input[name=relationship]').val(currentData.relationship);
             $('#edit-dependent-form #dob-dependent-edit').val(currentData.dob);
         });
 
@@ -271,8 +271,8 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    name: $('#edit-dependent-form #name').val(),
-                    relationship: $('#edit-dependent-form #relationship').val(),
+                    name: $('#edit-dependent-form input[name=name]').val(),
+                    relationship: $('#edit-dependent-form input[name=relationship]').val(),
                     dob: $('#edit-dependent-form #dob-dependent-edit').val()
                 },
                 success: function(data) {
@@ -290,11 +290,11 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'name':
-                                        $('#edit-dependent-form #name').addClass('is-invalid');
+                                        $('#edit-dependent-form input[name=name]').addClass('is-invalid');
                                         $('#edit-dependent-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'relationship':
-                                        $('#edit-dependent-form #relationship').addClass('is-invalid');
+                                        $('#edit-dependent-form input[name=relationship]').addClass('is-invalid');
                                         $('#edit-dependent-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'dob':
@@ -348,20 +348,20 @@
 
     // GENERAL FUNCTIONS
     function clearDependentsModal(htmlId) {
-        $(htmlId + ' #name').val('');
-        $(htmlId + ' #relationship').val('');
+        $(htmlId + ' input[name=name]').val('');
+        $(htmlId + ' input[name=relationship]').val('');
         $(htmlId + ' #dob-dependent').val('');
         $(htmlId + ' #dob-dependent-edit').val('');
 
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #relationship').removeClass('is-invalid');
+        $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=relationship]').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
     }
 
     function clearDependentsError(htmlId) {
-        $(htmlId + ' #name').removeClass('is-invalid');
-        $(htmlId + ' #relationship').removeClass('is-invalid');
+        $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=relationship]').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
     }
