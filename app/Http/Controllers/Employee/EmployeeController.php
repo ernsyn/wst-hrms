@@ -203,7 +203,7 @@ class EmployeeController extends Controller
 
     public function getDataTableAttachments()
     {
-        $attachments = EmployeeAttachment::where('emp_id', Auth::user()->employee->id)->get();
+        $attachments = EmployeeAttachment::with('medias')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($attachments)->make(true);
     }
 

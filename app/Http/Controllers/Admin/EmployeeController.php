@@ -524,7 +524,7 @@ class EmployeeController extends Controller
             $employee = Employee::create($validatedEmployeeData);
         });
 
-        return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
+        return redirect()->route('admin.employees')->with('status', 'Employee was successfully added!');
     }
 
 
@@ -542,7 +542,7 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $employee->employee_emergency_contacts()->save($emergencyContact);
 
-        return response()->json(['success'=>'Record is successfully added']);
+        return response()->json(['success'=>'Emergency Contact was successfully added']);
     }
 
     public function postDependent(Request $request, $id)
@@ -559,7 +559,7 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $employee->employee_dependents()->save($dependent);
 
-        return response()->json(['success'=>'Dependent is successfully added']);
+        return response()->json(['success'=>'Dependent was successfully added']);
     }
 
     public function postImmigration(Request $request, $id)
@@ -578,7 +578,7 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $employee->employee_immigrations()->save($immigration);
 
-        return response()->json(['success'=>'Record is successfully added']);
+        return response()->json(['success'=>'Immigration was successfully added']);
     }
 
     public function postVisa(Request $request, $id)
@@ -599,7 +599,7 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $employee->employee_visas()->save($visa);
 
-        return response()->json(['success'=>'Visa is successfully added']);
+        return response()->json(['success'=>'Visa was successfully added']);
     }
 
     public function postJob(Request $request, $id)
@@ -622,42 +622,27 @@ class EmployeeController extends Controller
 
         $jobData['created_by'] = auth()->user()->id;
 
-
-
         DB::transaction(function() use ($jobData, $id) {
-            $currentJob = EmployeeJob::where('emp_id', $id)
-            ->whereNull('end_date')->first();
+            $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
 
-            if(!empty($currentJob)) {
-
-                if ($jobData['status']  = 'Confirmed Employment'){
-                    Employee::where('id', $id)
-                    ->update(array('confirmed_date'=> ($jobData['start_date'])));
-                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
-                    LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
-                }
-else{
+            if ($jobData['status']  == "confirmed-employment"){
+                Employee::where('id', $id)
+                ->update(array('confirmed_date'=> ($jobData['start_date'])));
                 $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                 LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
-}
-
+            } else {
+                $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
             }
-elseif(empty($currentjob)){
 
-$jobData['status']  = 'Probationer';
-
-}
-
-Employee::where('id', $id)
-->update(array('basic_salary'=> ($jobData['basic_salary'])));
-
+            Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
 
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
         });
 
-        return response()->json(['success'=>'Job is successfully added']);
+        return response()->json(['success'=>'Job was successfully added']);
     }
 
     public function actionResign(Request $request, $id) {
@@ -695,7 +680,7 @@ Employee::where('id', $id)
         $employee = Employee::find($id);
         $employee->employee_bank_accounts()->save($bankAccount);
 
-        return response()->json(['success'=>'Bank Account is successfully added']);
+        return response()->json(['success'=>'Bank Account was successfully added']);
     }
 
     public function postCompany(Request $request, $id)
@@ -716,7 +701,7 @@ Employee::where('id', $id)
         $employee = Employee::find($id);
         $employee->employee_experiences()->save($experience);
 
-        return response()->json(['success'=>'Experience is successfully added']);
+        return response()->json(['success'=>'Experience was successfully added']);
     }
 
     public function postEducation(Request $request, $id)
@@ -736,7 +721,7 @@ Employee::where('id', $id)
         $employee = Employee::find($id);
         $employee->employee_educations()->save($education);
 
-        return response()->json(['success'=>'Education is successfully added']);
+        return response()->json(['success'=>'Education was successfully added']);
     }
 
     public function postSkill(Request $request, $id)
@@ -752,7 +737,7 @@ Employee::where('id', $id)
         $employee = Employee::find($id);
         $employee->employee_skills()->save($skill);
 
-        return response()->json(['success'=>'Skill is successfully added']);
+        return response()->json(['success'=>'Skill was successfully added']);
     }
 
 
@@ -786,7 +771,7 @@ Employee::where('id', $id)
         $employee = Employee::find($id);
         $employee->employee_attachments()->save($attachment);
 
-        return response()->json(['success'=>'Attachment is successfully added']);
+        return response()->json(['success'=>'Attachment was successfully added']);
     }
 
     private static function processBase64DataUrl($dataUrl) {
@@ -827,7 +812,7 @@ Employee::where('id', $id)
         $employee = Employee::find($id);
         $employee->working_day()->save($workingDay);
 
-        return response()->json(['success' => 'Working Day is successfully added']);
+        return response()->json(['success' => 'Working Day was successfully added']);
 
     }
 
@@ -892,157 +877,112 @@ Employee::where('id', $id)
         $reportToData = $request->validate([
             'report_to_emp_id' => 'required',
             'type' => 'required',
-
-            'notes' => '',
-            'report_to_level' =>'required',
-            'kpi_proposer' => 'sometimes|required',
-
+            'report_to_level' =>'required|unique:employee_report_to,report_to_level,NULL,id,deleted_at,NULL,emp_id,'.$id,
+            'kpi_proposer' => 'nullable',
+            'notes' => 'nullable',
         ]);
+
         if($request->get('kpi_proposer') == null){
             $reportToData['kpi_proposer'] = 0;
         } else {
             $reportToData['kpi_proposer'] = request('kpi_proposer');
         }
 
-        $reportToData['created_by'] = auth()->user()->id;
-
-        // $employee_report_to_level = EmployeeReportTo::where('emp_id','=',$id)
-        // ->where(function($q) {
-        //     $q->where('report_to_level', 2)
-        //       ->orWhere('kpi_proposer', 1)
-        //       ->orWhere('report_to_level',1);
-        // })
-        // ->where ('report_to_level',1)
-        // ->count();  // "5"
-
-        $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
-        ->where('report_to_level', 2)->count();
-
-        $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
-        ->where('report_to_level', 1)->count();
-
         $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
-        ->where('kpi_proposer', 1)->count();
+        ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
-
-   if($request->report_to_level ==1 )
-    {
-        $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
-        ->where('report_to_level', 1)->count();
-        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
-        ->where('kpi_proposer', 1)->count();
-
-
-        if ($employee_report_to_level_one == 0 ){
-            if($request->kpi_proposer = 0){
+        if($request->kpi_proposer == 0){
+            $reportToData['created_by'] = auth()->user()->id;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
 
-            return response()->json(['success'=>'Record is successfully added']);
-            }
-            else
-            {
-                if ($employee_kpi_proposer>0)
-                {
+            return response()->json(['success'=>'Report To was successfully added']);
+        } else {
+            if($employee_kpi_proposer == 0){
+                $reportToData['created_by'] = auth()->user()->id;
+                $reportTo = new EmployeeReportTo($reportToData);
+                $employee = Employee::find($id);
+                $employee->report_tos()->save($reportTo);
 
-                    return "error kpi_proposer 1";
-                }
-                else
-{
-
-    $reportTo = new EmployeeReportTo($reportToData);
-    $employee = Employee::find($id);
-    $employee->report_tos()->save($reportTo);
-
-    return response()->json(['success'=>'Record is successfully added']);
-}
-
-
-
+                return response()->json(['success'=>'Report To was successfully added']);
+            } else {
+                return response()->json(['fail'=>'KPI Proposer already exist']);
             }
         }
-        elseif($employee_report_to_level_one == 1) {
 
-            return "you already have level one";
-        }
+        // $reportTo = new EmployeeReportTo($reportToData);
+        // $employee = Employee::find($id);
+        // $employee->report_tos()->save($reportTo);
+        // return response()->json(['success'=>'Report To was successfully added']);
 
-        else
-        {
-    return "error";
+        // $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
+        // ->where('report_to_level', 2)->count();
 
-        }
+        // $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
+        // ->where('report_to_level', 1)->count();
+
+
+
+        // if($request->report_to_level ==1 ) {
+
+        //     if ($employee_report_to_level_one == 0 ) {
+        //         if($request->kpi_proposer == 0){
+        //             $reportTo = new EmployeeReportTo($reportToData);
+        //             $employee = Employee::find($id);
+        //             $employee->report_tos()->save($reportTo);
+
+        //             return response()->json(['success'=>'Report To was successfully added']);
+        //         } else {
+        //             if ($employee_kpi_proposer >= 0) {
+        //                 return response()->json(['fail'=>'error kpi_proposer 1']);
+        //             } else {
+        //                 $reportTo = new EmployeeReportTo($reportToData);
+        //                 $employee = Employee::find($id);
+        //                 $employee->report_tos()->save($reportTo);
+
+        //                 return response()->json(['success'=>'Report To was successfully added']);
+        //             }
+        //         }
+        //     } else if ($employee_report_to_level_one == 1) {
+        //         return response()->json(['fail'=>'You already have Level 1']);
+        //     } else {
+        //         return "error";
+        //     }
+        // } else if($request->report_to_level == 2) {
+        //     $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
+        //     ->where('report_to_level', 2)->count();
+        //     $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
+        //     ->where('kpi_proposer', 1)->count();
+
+        //     if ($employee_report_to_level_two == 0 ) {
+        //         if($request->kpi_proposer == 0) {
+        //             $reportTo = new EmployeeReportTo($reportToData);
+        //             $employee = Employee::find($id);
+        //             $employee->report_tos()->save($reportTo);
+
+        //             return response()->json(['success'=>'Report To was successfully added']);
+        //         } else {
+        //             if ($employee_kpi_proposer >= 0) {
+        //                 return response()->json(['fail'=>'error kpi_proposer2']);
+        //             } else {
+        //                 $reportTo = new EmployeeReportTo($reportToData);
+        //                 $employee = Employee::find($id);
+        //                 $employee->report_tos()->save($reportTo);
+
+        //                 return response()->json(['fail'=>'Report To was successfully added']);
+        //             }
+        //         }
+        //     } else if($employee_report_to_level_two == 1) {
+        //         return response()->json(['fail'=>'You already have Level 2']);
+        //     } else {
+        //         return response()->json(['fail'=>'Error']);
+        //     }
+        // }
+
+
 
     }
-    elseif($request->report_to_level ==2)
-
-    {
-        $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
-        ->where('report_to_level', 2)->count();
-        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
-        ->where('kpi_proposer', 1)->count();
-
-
-        if ($employee_report_to_level_two == 0 ){
-            if($request->kpi_proposer == 0){
-            $reportTo = new EmployeeReportTo($reportToData);
-            $employee = Employee::find($id);
-            $employee->report_tos()->save($reportTo);
-
-            return response()->json(['success'=>'Record is successfully added']);
-            }
-            else
-            {
-                if ($employee_kpi_proposer>0)
-                {
-
-                    return "error kpi_proposer2";
-                }
-                else
-                {
-
-                  $reportTo = new EmployeeReportTo($reportToData);
-                  $employee = Employee::find($id);
-                  $employee->report_tos()->save($reportTo);
-
-                  return response()->json(['success'=>'Record is successfully added']);
-                }
-
-
-
-            }
-        }
-        elseif($employee_report_to_level_two == 1) {
-
-            return "you already have level two ";
-        }
-
-        else
-        {
-    return "error";
-
-        }
-
-    }
-
-   }
-
-
-// if($employee_report_to_level_two > 0 |$employee_report_to_level_one >0 | $employee_kpi_proposer>0){
-// return "error";
-// }else{
-
-//         $reportTo = new EmployeeReportTo($reportToData);
-
-//         $employee = Employee::find($id);
-//         $employee->report_tos()->save($reportTo);
-
-//         return response()->json(['success'=>'Record is successfully added']);
-
-//      }
-
-
-
     public function postSecurityGroup(Request $request, $id)
     {
         $securityGroupData = $request->validate([
@@ -1150,7 +1090,7 @@ Employee::where('id', $id)
 
         EmployeeJob::where('id', $id)->update($jobData);
 
-        return response()->json(['success'=>'Job is successfully updated.']);
+        return response()->json(['success'=>'Job was successfully updated.']);
     }
 
     public function postEditBankAccount(Request $request, $emp_id, $id)
@@ -1218,14 +1158,31 @@ Employee::where('id', $id)
         $reportToUpdatedData = $request->validate([
             'report_to_emp_id' => 'required',
             'type' => 'required',
-            'kpi_proposer' => 'required',
-            'notes' => 'required',
-            'report_to_level'=>'required'
+            'report_to_level' =>'required|unique:employee_report_to,report_to_level,'.$id.',id,deleted_at,NULL,emp_id,'.$emp_id,
+            'kpi_proposer' => 'nullable',
+            'notes' => 'nullable',
         ]);
 
-        EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+        if($request->get('kpi_proposer') == null){
+            $reportToUpdatedData['kpi_proposer'] = 0;
+        } else {
+            $reportToUpdatedData['kpi_proposer'] = request('kpi_proposer');
+        }
 
-        return response()->json(['success'=>'Report To was successfully updated.']);
+        $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$emp_id)
+        ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
+
+        if($request->kpi_proposer == 0){
+            EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+            return response()->json(['success'=>'Report To was successfully updated.']);
+        } else {
+            if($employee_kpi_proposer == 0){
+                EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+                return response()->json(['success'=>'Report To was successfully updated.']);
+            } else {
+                return response()->json(['fail'=>'KPI Proposer already exist']);
+            }
+        }
     }
 
     public function postEditAttachment(Request $request, $emp_id, $id)
@@ -1348,177 +1305,4 @@ Employee::where('id', $id)
 
         return $attendances;
     }
-
-    // public function ajaxGetAttendancesOld(Request $request, $id) {
-    //     $now = Carbon::now();
-    //     $startOfMonth = $now->copy()->startOfMonth();
-    //     $endOfMonth = $now->copy()->endOfMonth();
-
-    //     $workingDays = EmployeeWorkingDay::where('emp_id', $id)->first();
-    //     if(empty($workingDays)) {
-    //         return [
-    //             'error' => true,
-    //             'errorMessage' => 'No working days set.'
-    //         ];
-    //     }
-
-    //     $attendances = EmployeeClockInOutRecord::where('emp_id', $id)->whereMonth('clock_in_time', $now->month)->get();
-    //     $holidays = Holiday::where('start_date', '>=', $startOfMonth)
-    //     ->where(function($q) use ($startOfMonth, $endOfMonth) {
-    //         $q->where('start_date', '>=', $startOfMonth);
-    //         $q->where('start_date', '<=', $endOfMonth);
-    //     })
-    //     ->OrWhere(function($q) use ($startOfMonth, $endOfMonth) {
-    //         $q->where('end_date', '>=', $startOfMonth);
-    //         $q->where('end_date', '<=', $endOfMonth);
-    //     })
-    //     ->where('status', 'active')->get();
-
-    //     $leaveRequests = LeaveRequest::with('leave_type')->where('emp_id', $id)->where('start_date', '>=', $startOfMonth)
-    //     ->where(function($q) use ($startOfMonth, $endOfMonth) {
-    //         $q->where(function($q) use ($startOfMonth, $endOfMonth) {
-    //             $q->where('start_date', '>=', $startOfMonth);
-    //             $q->where('start_date', '<=', $endOfMonth);
-    //         })
-    //         ->OrWhere(function($q) use ($startOfMonth, $endOfMonth) {
-    //             $q->where('end_date', '>=', $startOfMonth);
-    //             $q->where('end_date', '<=', $endOfMonth);
-    //         });
-    //     })
-    //     ->where('status', 'approved')->get();
-
-    //     $workingDaysIntArray = $this->getWorkingDaysInIntegerArray($workingDays);
-
-    //     $period = CarbonPeriod::between($startOfMonth, $endOfMonth);
-    //     $workDaysFilter = function ($date) use ($workingDaysIntArray) {
-    //         return in_array($date->dayOfWeek, $workingDaysIntArray);
-    //     };
-    //     $period->addFilter($workDaysFilter);
-    //     $future = false;
-    //     foreach ($period as $date) {
-    //         $holiday = $this->isAHoliday($holidays, $date);
-    //         if(!empty($holiday)) {
-    //             $days[] = [
-    //                 'date' => $date->toFormattedDateString(),
-    //                 'type' => 'holiday',
-    //                 'name' => $holiday->name
-    //             ];
-    //         } else {
-    //             $leaveRequest = $this->isOnLeave($leaveRequests, $date);
-    //             if(!empty($leaveRequest)) {
-    //                 $days[] = [
-    //                     'date' => $date->toFormattedDateString(),
-    //                     'type' => 'leave',
-    //                     'name' => $leaveRequest->leave_type->name,
-    //                 ];
-    //             } else {
-    //                 if($future) {
-    //                     $days[] = [
-    //                         'date' => $date->toFormattedDateString(),
-    //                         'type' => 'future',
-    //                         'name' => 'Future Date'
-    //                     ];
-    //                 } else {
-    //                     $attendance = $this->hasAttendance($attendances, $date);
-    //                     if(!empty($attendance)) {
-    //                         $days[] = [
-    //                             'date' => $date->toFormattedDateString(),
-    //                             'type' => 'attendance',
-    //                             'name' => 'Clocked-In Attendance',
-    //                             'clock_in_status' => $attendance->clock_in_status,
-    //                             'clock_in_time' => $attendance->clock_in_time,
-    //                             'clock_in_address' => $attendance->clock_in_address,
-    //                             'clock_out_status' => $attendance->clock_out_status,
-    //                             'clock_out_time' => $attendance->clock_out_time,
-    //                             'clock_out_address' => $attendance->clock_out_address,
-    //                         ];
-    //                     } else {
-
-    //                         $days[] = [
-    //                             'date' => $date->toFormattedDateString(),
-    //                             'type' => 'missing',
-    //                             'name' => "Missing Attendance",
-    //                         ];
-
-    //                     }
-    //                 }
-    //             }
-
-    //         }
-
-    //         if($date->isToday()) {
-    //             $future = true;
-    //         }
-    //     }
-
-
-    //     return $days;
-    // }
-
-    // private function getWorkingDaysInIntegerArray($workingDays) {
-    //     $arr = array();
-
-    //     $work_day = array('full', 'half');
-
-    //     if(in_array($workingDays->sunday, $work_day)) {
-    //         array_push($arr, Carbon::SUNDAY);
-    //     }
-
-    //     if(in_array($workingDays->monday, $work_day)) {
-    //         array_push($arr, Carbon::MONDAY);
-    //     }
-
-    //     if(in_array($workingDays->tuesday, $work_day)) {
-    //         array_push($arr, Carbon::TUESDAY);
-    //     }
-    //     if(in_array($workingDays->wednesday, $work_day)) {
-    //         array_push($arr, Carbon::WEDNESDAY);
-    //     }
-    //     if(in_array($workingDays->thursday, $work_day)) {
-    //         array_push($arr, Carbon::THURSDAY);
-    //     }
-    //     if(in_array($workingDays->friday, $work_day)) {
-    //         array_push($arr, Carbon::FRIDAY);
-    //     }
-    //     if(in_array($workingDays->saturday, $work_day)) {
-    //         array_push($arr, Carbon::SATURDAY);
-    //     }
-
-    //     return $arr;
-    // }
-
-    // private function isAHoliday($holidays, Carbon $date) {
-    //     foreach($holidays as $holiday) {
-    //         $startDate = Carbon::parse($holiday->start_date);
-    //         $endDate = Carbon::parse($holiday->end_date);
-    //         if($date->between($startDate, $endDate)) {
-    //             return $holiday;
-    //         }
-    //     }
-
-    //     return null;
-    // }
-
-    // private function isOnLeave($leaveRequests, Carbon $date) {
-    //     foreach($leaveRequests as $leaveRequest) {
-    //         $startDate = Carbon::parse($leaveRequest->start_date);
-    //         $endDate = Carbon::parse($leaveRequest->end_date);
-    //         if($date->between($startDate, $endDate)) {
-    //             return $leaveRequest;
-    //         }
-    //     }
-
-    //     return null;
-    // }
-
-    // private function hasAttendance($attendances, Carbon $date) {
-    //     foreach($attendances as $attendance) {
-    //         $clockInTime = Carbon::parse($attendance->clock_in_time);
-    //         if($date->isSameDay($clockInTime)) {
-    //             return $attendance;
-    //         }
-    //     }
-
-    //     return null;
-    // }
 }

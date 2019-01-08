@@ -15,27 +15,28 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Bank Name*</strong></label>
-                            <select class="form-control{{ $errors->has('bank-code') ? ' is-invalid' : '' }}" name="bank-code" id="bank-code">
-                                    <option value=""></option>  
-                                @foreach(App\CompanyBank::where('company_id',$employee->company_id)->get() as $bank)
-                                    <option value="{{ $bank->id }}">{{ $bank->acc_name }}</option>
+                            <select class="form-control" name="bank-code">
+                                    <option value=""></option>
+                                    @foreach(App\BankCode::all()->sortBy('name') as $banks)
+                                    <option value="{{ $banks->name }}">{{ $banks->name }}</option>
                                     @endforeach
                             </select>
+                            <div id="bank-code-error" class="invalid-feedback">
+                            </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Number*</strong></label>
-                            <input id="acc-no" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="acc-no" type="text" class="form-control" placeholder="" value="" >
                             <div id="acc-no-error" class="invalid-feedback">
-
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Status*</strong></label>
-                            <select name="acc-status" id="acc-status" type="text" class="form-control" placeholder="" value="" required>
+                            <select name="acc-status" class="form-control">
                                 <option value="">Select Type</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
@@ -72,7 +73,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Bank Name*</strong></label>
-                            <select class="form-control{{ $errors->has('bank-code') ? ' is-invalid' : '' }}" name="bank-code" id="bank-code">
+                            <select class="form-control{{ $errors->has('bank-code') ? ' is-invalid' : '' }}" name="bank-code">
                                     <option value=""></option>
                                     @foreach(App\BankCode::all()->sortBy('name') as $banks)
                                     <option value="{{ $banks->name }}">{{ $banks->name }}</option>
@@ -83,7 +84,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Number*</strong></label>
-                            <input id="acc-no" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="acc-no" type="text" class="form-control" placeholder="" value="" >
                             <div id="acc-no-error" class="invalid-feedback">
 
                             </div>
@@ -92,7 +93,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Status*</strong></label>
-                            <select name="acc-status" id="acc-status" type="text" class="form-control" placeholder="" value="" required>
+                            <select name="acc-status" type="text" class="form-control" placeholder="" value="" >
                                 <option value="">Select Type</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
@@ -210,9 +211,9 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     // Form Data
-                    bank_code: $('#add-bank-accounts-form #bank-code').val(),
-                    acc_no: $('#add-bank-accounts-form #acc-no').val(),
-                    acc_status: $('#add-bank-accounts-form #acc-status').val()
+                    bank_code: $('#add-bank-accounts-form select[name=bank-code]').val(),
+                    acc_no: $('#add-bank-accounts-form input[name=acc-no]').val(),
+                    acc_status: $('#add-bank-accounts-form select[name=acc-status]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -229,15 +230,15 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'bank_code':
-                                        $('#add-bank-accounts-form #bank-code').addClass('is-invalid');
+                                        $('#add-bank-accounts-form select[name=bank-code]').addClass('is-invalid');
                                         $('#add-bank-accounts-form #bank-code-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'acc_no':
-                                        $('#add-bank-accounts-form #acc-no').addClass('is-invalid');
+                                        $('#add-bank-accounts-form input[name=acc-no]').addClass('is-invalid');
                                         $('#add-bank-accounts-form #acc-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'acc_status':
-                                        $('#add-bank-accounts-form #acc-status').addClass('is-invalid');
+                                        $('#add-bank-accounts-form select[name=acc-status]').addClass('is-invalid');
                                         $('#add-bank-accounts-form #acc-status-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -259,9 +260,9 @@
 
             editId = currentData.id;
 
-            $('#edit-bank-accounts-form #bank-code').val(currentData.bank_code);
-            $('#edit-bank-accounts-form #acc-no').val(currentData.acc_no);
-            $('#edit-bank-accounts-form #acc-status').val(currentData.acc_status);
+            $('#edit-bank-accounts-form select[name=bank-code]').val(currentData.bank_code);
+            $('#edit-bank-accounts-form input[name=acc-no]').val(currentData.acc_no);
+            $('#edit-bank-accounts-form select[name=acc-status]').val(currentData.acc_status);
         });
 
         var editRouteTemplate = "{{ route('admin.employees.bank-accounts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
@@ -274,9 +275,9 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    bank_code: $('#edit-bank-accounts-form #bank-code').val(),
-                    acc_no: $('#edit-bank-accounts-form #acc-no').val(),
-                    acc_status: $('#edit-bank-accounts-form #acc-status').val()
+                    bank_code: $('#edit-bank-accounts-form select[name=bank-code]').val(),
+                    acc_no: $('#edit-bank-accounts-form input[name=acc-no]').val(),
+                    acc_status: $('#edit-bank-accounts-form select[name=acc-status]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -293,15 +294,15 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'bank_code':
-                                        $('#edit-bank-accounts-form #bank-code').addClass('is-invalid');
+                                        $('#edit-bank-accounts-form select[name=bank-code]').addClass('is-invalid');
                                         $('#edit-bank-accounts-form #bank-code-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'acc_no':
-                                        $('#edit-bank-accounts-form #acc-no').addClass('is-invalid');
+                                        $('#edit-bank-accounts-form input[name=acc-no]').addClass('is-invalid');
                                         $('#edit-bank-accounts-form #acc-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'acc_status':
-                                        $('#edit-bank-accounts-form #acc-status').addClass('is-invalid');
+                                        $('#edit-bank-accounts-form select[name=acc-status]').addClass('is-invalid');
                                         $('#edit-bank-accounts-form #acc-status-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
@@ -351,19 +352,19 @@
 
     // GENERAL FUNCTIONS
     function clearBankAccountModal(htmlId) {
-        $(htmlId + ' #bank-code').val('');
-        $(htmlId + ' #acc-no').val('');
-        $(htmlId + ' #acc-status').val('');
+        $(htmlId + ' select[name=bank-code]').val('');
+        $(htmlId + ' input[name=acc-no]').val('');
+        $(htmlId + ' select[name=acc-status]').val('');
 
-        $(htmlId + ' #bank-code').removeClass('is-invalid');
-        $(htmlId + ' #acc-no').removeClass('is-invalid');
-        $(htmlId + ' #acc-status').removeClass('is-invalid');
+        $(htmlId + ' select[name=bank-code]').removeClass('is-invalid');
+        $(htmlId + ' input[name=acc-no]').removeClass('is-invalid');
+        $(htmlId + ' select[name=acc-status]').removeClass('is-invalid');
     }
 
     function clearBankAccountError(htmlId) {
-        $(htmlId + ' #bank-code').removeClass('is-invalid');
-        $(htmlId + ' #acc-no').removeClass('is-invalid');
-        $(htmlId + ' #acc-status').removeClass('is-invalid');
+        $(htmlId + ' select[name=bank-code]').removeClass('is-invalid');
+        $(htmlId + ' input[name=acc-no]').removeClass('is-invalid');
+        $(htmlId + ' select[name=acc-status]').removeClass('is-invalid');
     }
 
     function showAlert(message) {
