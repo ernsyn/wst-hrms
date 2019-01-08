@@ -320,7 +320,8 @@
                     notes: $('#add-report-to-form input[name=notes]').val()
                 },
                 success: function(data) {
-                    showAlert(data.success);
+                    if(data.success) showAlert(data.success);
+                    if(data.fail) showAlertDanger(data.fail);
                     reportTosTable.ajax.reload();
                     $('#add-report-to-popup').modal('toggle');
                     clearReportToModal('#add-report-to-form');
@@ -501,6 +502,14 @@
 
     function showAlert(message) {
         $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <span id="alert-message">${message}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`)
+    }
+    function showAlertDanger(message) {
+        $('#alert-container').html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
             <span id="alert-message">${message}</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
