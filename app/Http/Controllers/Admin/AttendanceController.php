@@ -78,7 +78,7 @@ class AttendanceController extends Controller
     public function getAttendanceReport($date = null)
     {
         if (!$date) {
-            $date = Carbon::now()->format('Y-m-d');
+            $date = Carbon::yesterday()->format('Y-m-d');
         }
 
         // get attendance data
