@@ -15,7 +15,7 @@ class Holiday extends Model
     'end_date',
     'note',
     'status',
-   'repeat_annually',
+    'repeat_annually',
     'total_days',
     'state'
 

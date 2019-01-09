@@ -225,7 +225,7 @@ class ELeaveController extends Controller
         $publicHolidayData['status'] =  'active';
         Holiday::create($publicHolidayData);
 
-        return redirect()->route('admin.e-leave.configuration.leave-holidays');
+        return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been added.');
     }
 
     public function editHoliday(Request $request, $id)
@@ -237,19 +237,30 @@ class ELeaveController extends Controller
 
     public function postEditHoliday(Request $request, $id)
     {
-
-        $holidayData = $request->validate([
+        $holidayUpdatedData = $request->validate([
             'name' => 'required',
-            'start_date' =>'required',
-            'end_date' => 'required',
-            'total_days' =>'required',
+            'start_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'end_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'repeat_annually' => 'required',
             'status' =>'required',
-            'note'=>'',
-            'state'=>''
+            'note'=>'nullable',
+            'state'=>'nullable'
         ]);
 
-        Holiday::where('id', $id)->update($holidayData);
+        if($request->state != null)
+            $holidayUpdatedData['state'] = implode(",", $request->state);
+        else
+            $holidayUpdatedData['state'] = null;
+
+        $holidayUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['start_date'])));
+        $holidayUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['end_date'])));
+
+        $startTimeStamp  = strtotime($publicHolidayData['start_date']);
+        $endTimeStamp  = strtotime($publicHolidayData['end_date']);
+        $timeDiff = $endTimeStamp - $startTimeStamp;
+        $publicHolidayData['total_days'] = $timeDiff/86400 + 1;
+
+        Holiday::where('id', $id)->update($holidayUpdatedData);
 
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
     }
