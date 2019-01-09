@@ -31,12 +31,12 @@
                         <tr>
                             <td>{{ $value['code'] }}</td>
                             <td>{{ $value['name'] }}</td>
-                            <td>{{ \Carbon\Carbon::parse($value['clock_in_time'])->format('g:m:s a') }}</td>
-                            <td>{{ $value['clock_in_status']}}</td>
-                            <td>{{ $value['clock_in_reason']}}</td>
-                            <td>{{ \Carbon\Carbon::parse($value['clock_out_time'])->format('g:m:s a') }}</td>
-                            <td>{{ $value['clock_out_status']}}</td>
-                            <td>{{ $value['clock_out_reason']}}</td>
+                            <td>{{ $value['clock_in_time'] }}</td>
+                            <td>{{ $value['clock_in_status'] }}</td>
+                            <td>{{ $value['clock_in_reason'] }}</td>
+                            <td>{{ $value['clock_out_time'] }}</td>
+                            <td>{{ $value['clock_out_status'] }}</td>
+                            <td>{{ $value['clock_out_reason'] }}</td>
                             <td>
                                 <button class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#attendance_details_modal_{{ $key }}">
                                     <span class="fas fa-eye"></span>
