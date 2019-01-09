@@ -2,13 +2,15 @@
 <div class="tab-pane fade show p-3" id="nav-job" role="tabpanel" aria-labelledby="nav-job-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
-        <div class="col-auto">
+        <div class="col-auto" id="show-resign-button">
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
                 Add Job
-            </button> @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
+            </button>
+            @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
             <button type="button" class="btn btn-outline-danger waves-effect" onclick="window.location='{{ route('admin.employees.id.action.resign', ['id' => $id ]) }}';">
                 Resign
-            </button> @else
+            </button>
+            @else
             <h5><span class="badge badge-danger">Resigned / Job Not Assigned</span></h5>
             @endif
         </div>
@@ -425,9 +427,10 @@
                     remarks: $('#add-job-form textarea[name=remarks]').val()
                 },
                 success: function (data) {
-                    $(e.target).removeAttr('disabled');
 
+                    $(e.target).removeAttr('disabled');
                     showAlert(data.success);
+                    $("#show-resign-button").load(" #show-resign-button");
                     jobsTable.ajax.reload();
                     $('#add-job-popup').modal('toggle');
                     clearJobModal('#add-job-form');

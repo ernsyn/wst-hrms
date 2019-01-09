@@ -105,14 +105,14 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
     Route::get('e-leave/approvals','Employee\ELeaveController@displayLeaveRequestReportTo')->name('leaverequest');
     Route::get('e-leave/requests','Employee\ELeaveController@displayLeaveRequests')->name('leavehistory');
-    Route::get('e-leave/rules/{leave_type_id}', 'Employee\EleaveController@ajaxGetLeaveRules')->name('employee.e-leave.rules.ajax.get')->where('leave_type_id', '[0-9]+');
-    Route::get('e-leave/days/{start_date}/{end_date}', 'Employee\EleaveController@ajaxCalculateActualLeaveDays')
+    Route::get('e-leave/rules/{leave_type_id}', 'Employee\ELeaveController@ajaxGetLeaveRules')->name('employee.e-leave.rules.ajax.get')->where('leave_type_id', '[0-9]+');
+    Route::get('e-leave/days/{start_date}/{end_date}', 'Employee\ELeaveController@ajaxCalculateActualLeaveDays')
     ->name('employee.e-leave.days.ajax.get')->where(['start_date' => '[A-Za-z0-9\-\/]+', 'end_date' => '[A-Za-z0-9\-\/]+']);
-    Route::post('e-leave/working-day','Employee\EleaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
+    Route::post('e-leave/working-day','Employee\ELeaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
 
-    Route::get('e-leave/types', 'Employee\EleaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
-    Route::post('e-leave/request/check', 'Employee\EleaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
-    Route::post('e-leave/request', 'Employee\EleaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
+    Route::get('e-leave/types', 'Employee\ELeaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
+    Route::post('e-leave/request/check', 'Employee\ELeaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
+    Route::post('e-leave/request', 'Employee\ELeaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
     Route::post('employee/{id}/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
     Route::post('employee/{id}/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');
     Route::post('employee/{id}/immigrations','Employee\EmployeeController@postImmigration')->name('employee.immigrations.post');
@@ -143,21 +143,21 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/{emp_id}/report-tp/{id}/edit','Employee\EmployeeController@postEditReportTo')->name('employee.report-to.edit.post');
 
     //to be edit
-    Route::post('add_leave_application','Employee\EleaveController@addLeaveApplication')->name('add_leave_application');
+    Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
     Route::get('e-leave','Employee\ELeaveController@displayLeaveApplication')->name('leaveapplication');
    // Route::get('leavetype','EmployeeController@displayEmployeeLeave')->name('employee/leavetype');
-    Route::post('e-leave/working-day','Employee\EleaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
+    Route::post('e-leave/working-day','Employee\ELeaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
 
-    Route::get('e-leave/types', 'Employee\EleaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
-    Route::post('e-leave/request/check', 'Employee\EleaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
-    Route::post('e-leave/request', 'Employee\EleaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
-    Route::get('e-leave/request/{status}', 'Employee\EleaveController@ajaxGetEmployeeLeaves')->name('employee.e-leave.ajax.status')->where('status', '[A-Za-z0-9\-\/]+');
-    Route::get('e-leave/working-days', 'Employee\EleaveController@ajaxGetEmployeeWorkingDays')->name('employee.e-leave.ajax.working-days');
-    Route::get('e-leave/employee-job', 'Employee\EleaveController@ajaxCheckEmployeeJob')->name('employee.e-leave.ajax.employee-job');
-    Route::get('e-leave/holidays', 'Employee\EleaveController@ajaxGetHolidays')->name('employee.e-leave.ajax.holidays');
-    Route::get('e-leave/edit/{id}', 'Employee\EleaveController@ajaxGetLeaveRequestSingle')->name('employee.e-leave.ajax.edit')->where('id', '[0-9]+');
-    Route::post('e-leave/edit/{id}/post','Employee\EleaveController@ajaxPostEditLeaveRequest')->name('employee.e-leave.ajax.edit.post')->where('id', '[0-9]+');
-    Route::get('e-leave/delete/{id}','Employee\EleaveController@ajaxCancelLeaveRequest')->name('employee.e-leave.ajax.delete')->where('id', '[0-9]+');
+    Route::get('e-leave/types', 'Employee\ELeaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
+    Route::post('e-leave/request/check', 'Employee\ELeaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
+    Route::post('e-leave/request', 'Employee\ELeaveController@ajaxPostCreateLeaveRequest')->name('employee.e-leave.ajax.request');
+    Route::get('e-leave/request/{status}', 'Employee\ELeaveController@ajaxGetEmployeeLeaves')->name('employee.e-leave.ajax.status')->where('status', '[A-Za-z0-9\-\/]+');
+    Route::get('e-leave/working-days', 'Employee\ELeaveController@ajaxGetEmployeeWorkingDays')->name('employee.e-leave.ajax.working-days');
+    Route::get('e-leave/employee-job', 'Employee\ELeaveController@ajaxCheckEmployeeJob')->name('employee.e-leave.ajax.employee-job');
+    Route::get('e-leave/holidays', 'Employee\ELeaveController@ajaxGetHolidays')->name('employee.e-leave.ajax.holidays');
+    Route::get('e-leave/edit/{id}', 'Employee\ELeaveController@ajaxGetLeaveRequestSingle')->name('employee.e-leave.ajax.edit')->where('id', '[0-9]+');
+    Route::post('e-leave/edit/{id}/post','Employee\ELeaveController@ajaxPostEditLeaveRequest')->name('employee.e-leave.ajax.edit.post')->where('id', '[0-9]+');
+    Route::get('e-leave/delete/{id}','Employee\ELeaveController@ajaxCancelLeaveRequest')->name('employee.e-leave.ajax.delete')->where('id', '[0-9]+');
 
     //admin/employee/delete
     Route::get('employees/{emp_id}/emergency-contacts/{id}/delete','Employee\EmployeeController@deleteEmergencyContact')->name('employee.emergency-contacts.delete');
@@ -480,16 +480,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('e-leave/leave-report/total-transaction-report/{emp_id}','Admin\ELeaveController@getTotalTransactionReport')->name('admin.e-leave.total-transaction-report')->where('emp_id', '[A-Za-z0-9\-\/]+');
     Route::get('e-leave/leave-report/unpaid-leave-report/{emp_id}','Admin\ELeaveController@getUnpaidLeaveReport')->name('admin.e-leave.unpaid-leave-report')->where('emp_id', '[A-Za-z0-9\-\/]+');
     Route::get('e-leave/employees', 'Admin\ELeaveController@ajaxGetEmployees')->name('admin.e-leave.ajax.employees');
-    Route::get('e-leave/employees/{emp_id}/working-days', 'Admin\EleaveController@ajaxGetEmployeeWorkingDays')->name('admin.e-leave.ajax.working-days')->where('emp_id', '[0-9]+');
-    Route::get('e-leave/employees/{emp_id}/employee-job', 'Admin\EleaveController@ajaxCheckEmployeeJob')->name('admin.e-leave.ajax.employee-job')->where('emp_id', '[0-9]+');
-    Route::get('e-leave/employee/{emp_id}/leave-requests', 'Admin\EleaveController@ajaxGetEmployeeLeaves')->name('admin.e-leave.ajax.employees.leave-requests')->where('status', '[A-Za-z0-9\-\/]+')->where('emp_id', '[0-9]+');
+    Route::get('e-leave/employees/{emp_id}/working-days', 'Admin\ELeaveController@ajaxGetEmployeeWorkingDays')->name('admin.e-leave.ajax.working-days')->where('emp_id', '[0-9]+');
+    Route::get('e-leave/employees/{emp_id}/employee-job', 'Admin\ELeaveController@ajaxCheckEmployeeJob')->name('admin.e-leave.ajax.employee-job')->where('emp_id', '[0-9]+');
+    Route::get('e-leave/employee/{emp_id}/leave-requests', 'Admin\ELeaveController@ajaxGetEmployeeLeaves')->name('admin.e-leave.ajax.employees.leave-requests')->where('status', '[A-Za-z0-9\-\/]+')->where('emp_id', '[0-9]+');
     Route::get('e-leave/employee/{emp_id}/holidays', 'Admin\ELeaveController@ajaxGetEmployeeHolidays')->name('admin.e-leave.ajax.employee.holidays')->where('emp_id', '[0-9]+');
-    Route::get('e-leave/employee/{emp_id}/leave-types', 'Admin\EleaveController@ajaxGetLeaveTypes')->name('admin.e-leave.ajax.employee.leave-types')->where('emp_id', '[0-9]+');
-    Route::post('e-leave/employee/{emp_id}/leave-request/check', 'Admin\EleaveController@ajaxPostCheckLeaveRequest')->name('admin.e-leave.ajax.employee.leave-request.check')->where('emp_id', '[0-9]+');
-    Route::post('e-leave/employee/{emp_id}/leave-request/post', 'Admin\EleaveController@ajaxPostCreateLeaveRequest')->name('admin.e-leave.ajax.employee.leave-request.post')->where('emp_id', '[0-9]+');
-    Route::get('e-leave/leave-request/{id}', 'Admin\EleaveController@ajaxGetLeaveRequestSingle')->name('admin.e-leave.ajax.leave-request.edit')->where('id', '[0-9]+');
-    Route::post('e-leave/leave-request/{id}/post','Admin\EleaveController@ajaxPostEditLeaveRequest')->name('admin.e-leave.ajax.leave-request.edit.post')->where('id', '[0-9]+');
-    Route::get('e-leave/leave-request/{id}/delete','Admin\EleaveController@ajaxCancelLeaveRequest')->name('admin.e-leave.ajax.leave-request.delete')->where('id', '[0-9]+');
+    Route::get('e-leave/employee/{emp_id}/leave-types', 'Admin\ELeaveController@ajaxGetLeaveTypes')->name('admin.e-leave.ajax.employee.leave-types')->where('emp_id', '[0-9]+');
+    Route::post('e-leave/employee/{emp_id}/leave-request/check', 'Admin\ELeaveController@ajaxPostCheckLeaveRequest')->name('admin.e-leave.ajax.employee.leave-request.check')->where('emp_id', '[0-9]+');
+    Route::post('e-leave/employee/{emp_id}/leave-request/post', 'Admin\ELeaveController@ajaxPostCreateLeaveRequest')->name('admin.e-leave.ajax.employee.leave-request.post')->where('emp_id', '[0-9]+');
+    Route::get('e-leave/leave-request/{id}', 'Admin\ELeaveController@ajaxGetLeaveRequestSingle')->name('admin.e-leave.ajax.leave-request.edit')->where('id', '[0-9]+');
+    Route::post('e-leave/leave-request/{id}/post','Admin\ELeaveController@ajaxPostEditLeaveRequest')->name('admin.e-leave.ajax.leave-request.edit.post')->where('id', '[0-9]+');
+    Route::get('e-leave/leave-request/{id}/delete','Admin\ELeaveController@ajaxCancelLeaveRequest')->name('admin.e-leave.ajax.leave-request.delete')->where('id', '[0-9]+');
 
     Route::get('attendance/report/{date?}','Admin\AttendanceController@getAttendanceReport')->name('admin.attendance.report')->where('date', '[A-Za-z0-9\-\/]+');
     Route::get('attendance/current-day','Admin\AttendanceController@getCurrentDayAttendance')->name('admin.attendance.current-day');
