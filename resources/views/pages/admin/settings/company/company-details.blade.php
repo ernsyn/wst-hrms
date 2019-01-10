@@ -514,15 +514,14 @@
                             </div>
                             <label class="col-md-12 col-form-label">Type*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="type" name="type">
+                                <select class="form-control" id="type" name="type" onchange="myFunction(event)">
                                             <option value="Fixed">Fixed</option>
                                             <option value="Custom">Custom</option>
-                                        </select>
+                                </select>
                             </div>
                             <label class="col-md-12 col-form-label">Amount</label>
                             <div class="col-md-12">
-                                <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                    required>
+                            <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}" disabled="true">
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
@@ -653,7 +652,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Type*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="type" name="type">
+                                    <select class="form-control" id="type" name="type" onchange="myFunction(event)">
                                     <option value="Fixed">Fixed</option>
                                     <option value="Custom">Custom</option>
                                 </select>
@@ -661,7 +660,7 @@
                                 <label class="col-md-12 col-form-label">Amount</label>
                                 <div class="col-md-12">
                                     <input id="amount" type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                        required>
+                                    disabled="true">
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
@@ -786,15 +785,14 @@
                             </div>
                             <label class="col-md-12 col-form-label">Type*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="type" name="type">
+                                <select class="form-control" id="type" name="type" onchange="myFunction(event)">
                                             <option value="Fixed">Fixed</option>
                                             <option value="Custom">Custom</option>
-                                        </select>
+                                </select>
                             </div>
                             <label class="col-md-12 col-form-label">Amount</label>
                             <div class="col-md-12">
-                                <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                    required>
+                            <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}" disabled="true">
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
@@ -926,7 +924,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Type*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="type" name="type">
+                                <select class="form-control" id="type" name="type" onchange="myFunction(event)">
                                 <option value="Fixed">Fixed</option>
                                 <option value="Custom">Custom</option>
                             </select>
@@ -934,7 +932,7 @@
                             <label class="col-md-12 col-form-label">Amount</label>
                             <div class="col-md-12">
                                 <input id="amount" type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                    required>
+                                disabled="true">
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
@@ -1230,6 +1228,17 @@
                 ]
 
             });
+
+
+$('#type').change(function() {
+    if( $(this).val() == "Custom") {
+        $('#amount').prop( "disabled", false );
+    } else {       
+        $('#amount').prop( "disabled", true );
+    }
+});
+
+
 
 </script>
 @append
