@@ -1,6 +1,14 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
 <div class="container">
+    @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+    </div>
+    @endif
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -22,19 +30,21 @@
                         <th>Name</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Total Days</th>                        
+                        <th>Total Days</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($holiday as $holidays)
-                    <tr>
+                    <tr class="text-capitalize">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$holidays['name']}}</td>
-                        <td>{{$holidays['start_date']}}</td>
-                        <td>{{$holidays['end_date']}}</td>
+                        <td>{{ \Carbon\Carbon::parse($holidays['start_date'])->format('d/m/Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($holidays['end_date'])->format('d/m/Y') }}</td>
                         <td>{{$holidays['total_days']}}</td>
-                        <td> 
+                        <td>{{$holidays['status']}}</td>
+                        <td>
                             <button onclick="window.location='{{ route('admin.e-leave.configuration.leave-holidays.edit', ['id' => $holidays->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
                         </td>
@@ -46,7 +56,7 @@
     </div>
 </div>
 @endsection
- 
+
 @section('scripts')
 <script>
 $(function() {
@@ -81,13 +91,13 @@ $(function() {
                 className: 'btn-segment',
                 titleAttr: 'Print'
             },
-        ]    
+        ]
     });
 
     $('[data-toggle="tooltip"]').tooltip();
 
     $('#generate-holiday').on('click', function(){
-        $.get('{{ route('admin.e-leave.configuration.leave-holidays.generate') }}', function(leaveRequestData, status) { 
+        $.get('{{ route('admin.e-leave.configuration.leave-holidays.generate') }}', function(leaveRequestData, status) {
             location.reload();
         });
     });
