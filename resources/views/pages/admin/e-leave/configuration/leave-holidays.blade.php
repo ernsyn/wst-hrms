@@ -31,17 +31,19 @@
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Total Days</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($holiday as $holidays)
-                    <tr>
+                    <tr class="text-capitalize">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$holidays['name']}}</td>
-                        <td>{{$holidays['start_date']}}</td>
-                        <td>{{$holidays['end_date']}}</td>
+                        <td>{{ \Carbon\Carbon::parse($holidays['start_date'])->format('d/m/Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($holidays['end_date'])->format('d/m/Y') }}</td>
                         <td>{{$holidays['total_days']}}</td>
+                        <td>{{$holidays['status']}}</td>
                         <td>
                             <button onclick="window.location='{{ route('admin.e-leave.configuration.leave-holidays.edit', ['id' => $holidays->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
