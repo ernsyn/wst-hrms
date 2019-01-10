@@ -1065,8 +1065,8 @@ class ELeaveController extends Controller
             array_push($bcc_recepients, $row->email);
         }
 
-        \Mail::to(Auth::user()->email)
-        ->cc($cc_recepients)
+        \Mail::to($cc_recepients)
+        ->cc(Auth::user()->email)
         ->bcc($bcc_recepients)
         ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
@@ -1099,8 +1099,8 @@ class ELeaveController extends Controller
             array_push($bcc_recepients, $row->email);
         }
 
-        \Mail::to(Auth::user()->email)
-        ->cc($cc_recepients)
+        \Mail::to($cc_recepients)
+        ->cc(Auth::user()->email)
         ->bcc($bcc_recepients)
         ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
     }
