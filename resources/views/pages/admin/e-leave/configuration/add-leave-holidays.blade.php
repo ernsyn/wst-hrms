@@ -1,153 +1,152 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('content')
-
-@foreach ($errors->all() as $error)
-<li>{{ $error }}</li>
-@endforeach
 <div class="container">
     <div class="card">
-        <form method="POST" action="{{ route('admin.e-leave.configuration.leave-holidays.add.post') }}" id="form_validate" data-parsley-validate>
+        <form method="POST" action="{{ route('admin.e-leave.configuration.leave-holidays.add.post') }}">
             <div class="card-body">
                 @csrf
                 <div class="row p-3">
-                    <div class="row p-3">
-                        <div class="form-group row w-100">
-                            <label class="col-md-5 col-form-label">Name*</label>
-                            <div class="col-md-7">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder=""
-                                    name="name" value="{{ old('name') }}" required>
-                            </div>                            
+                    <div class="form-group row w-100">
+                        <label class="col-md-5 col-form-label">Name*</label>
+                        <div class="col-md-7">
+                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="" name="name" value="{{ old('name') }}">
+                            @if ($errors->has('name'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
+                            @endif
                         </div>
-                    
-                        <div class="form-group row w-100">
-                            <label class="col-md-5 col-form-label">Start Date*</label>
-                            <div class="input-group mb-3 col-md-7">
-                                <input id="start-date" type="text" class="form-control" placeholder="Start Date" aria-label="Start Date" aria-describedby="dob-icon" name="start_date" readonly>
-                                <input id="alt-start-date" type="text" class="form-control" name="start_date" hidden>
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="dob-icon"><i class="far fa-calendar-alt"></i></span>
-                                </div>
-                            </div>                          
+                    </div>
+                    <div class="form-group row w-100">
+                        <label class="col-md-5 col-form-label">Start Date*</label>
+                        <div class="input-group col-md-7 date" data-target-input="nearest">
+                            <input type="text" id="start-date" name="start_date" class="form-control{{ $errors->has('start_date') ? ' is-invalid' : '' }}" value="{{ old('start_date') }}" data-target="#start-date">
+                            <div class="input-group-append" data-target="#start-date" data-toggle="datetimepicker">
+                                <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                            @if ($errors->has('start_date'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('start_date') }}</strong>
+                            </span>
+                            @endif
                         </div>
-                            <div class="form-group row w-100">
-                                <label class="col-md-5 col-form-label">End Date*</label>
-                                <div class="input-group mb-3 col-md-7">
-                                    <input id="end-date" type="text" class="form-control" placeholder="End Date" aria-label="End Date" aria-describedby="dob-icon" name="end_date" readonly>
-                                    <input id="alt-end-date" type="text" class="form-control" name="end_date" hidden>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="dob-icon"><i class="far fa-calendar-alt"></i></span>
-                                    </div>                       
-                                </div>
+                    </div>
+                    <div class="form-group row w-100">
+                        <label class="col-md-5 col-form-label">End Date*</label>
+                        <div class="input-group col-md-7 date" data-target-input="nearest">
+                            <input type="text" id="end-date" name="end_date" class="form-control{{ $errors->has('end_date') ? ' is-invalid' : '' }}" value="{{ old('end_date') }}" data-target="#end-date">
+                            <div class="input-group-append" data-target="#end-date" data-toggle="datetimepicker">
+                                <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                             </div>
-
-                            <div class="form-group row w-100">
-                                <label class="col-md-5 col-form-label">Repeated annually*</label>
-                                <div class="col-md-7">
-                                    <select class="form-control" id="repeat_annually" name="repeat_annually" required>
-                                        <option value="">Please Select</option>
-                                        <option value="1">Yes</option>
-                                        <option value="2">No</option>
-                                    </select>
-                          
-
-                                    <div id="repeat-annually-error" class="invalid-feedback">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row w-100">
-                                <label class="col-md-5 col-form-label">State</label>
-                                <div class="col-md-7">
-                                        {{-- <select  class=" form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
-                                                <option value="">Please Select</option>
-                                            @foreach(App\Constants\MalaysianStates::$all as $state)
-                                            <option value="{{ $state }}">{{ $state }}</option value="">
-                                            @endforeach
-                                        </select> @if ($errors->has('state'))
-                                        <span class="invalid-feedback" role="alert">
-                                                                  <strong>{{ $errors->first('state') }}</strong>
-                                                              </span> @endif
-                                    </select>  --}}
-                                    <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]"
-                                            >
-                                            <option value="">Please Select</option>
-                                            @foreach(App\Constants\MalaysianStates::$all as $state)
-                                            <option value="{{ $state }}">{{ $state }}</option value="">
-                                            @endforeach
-                                        </select> @if ($errors->has('state'))
-                                        <span class="invalid-feedback" role="alert">
-                                                                          <strong>{{ $errors->first('state') }}</strong>
-                                                                      </span> @endif
-                                        </select>
-                                    <div id="state-error" class="invalid-feedback">
-                                    </div>
-                                </div>
-                            </div>
-    
-                                    <div class="form-group row w-100">
-                                            <label class="col-md-5 col-form-label">Note</label>
-                                            <div class="col-md-7">
-                                                <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder=""
-                                                    name="note" value="{{ old('note') }}" >
-                                            </div>                            
-                                        </div>
+                            @if ($errors->has('end_date'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('end_date') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group row w-100">
+                        <label class="col-md-5 col-form-label">Repeated annually*</label>
+                        <div class="col-md-7">
+                            <select class="form-control{{ $errors->has('repeat_annually') ? ' is-invalid' : '' }}" id="repeat_annually" name="repeat_annually">
+                                <option value="">Please Select</option>
+                                <option value="1" {{ old('repeat_annually') == '1' ? 'selected' : ''}}>Yes</option>
+                                <option value="2" {{ old('repeat_annually') == '2' ? 'selected' : ''}}>No</option>
+                            </select>
+                            @if ($errors->has('repeat_annually'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('repeat_annually') }}</strong>
+                            </span>
+                            @endif
+                        </div>
                     </div>
 
+                    <div class="form-group row w-100">
+                        <label class="col-md-5 col-form-label">State</label>
+                        <div class="col-md-7">
+                            <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]">
+                                <option value="">Please Select</option>
+                                @foreach(App\Constants\MalaysianStates::$all as $state)
+                                <option value="{{ $state }}" {{ (collect(old("state"))->contains($state)) == $state ? "selected":"" }}>{{ $state }}</option value="">
+                                @endforeach
+                            </select>
+                            @if ($errors->has('state'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('state') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group row w-100">
+                        <label class="col-md-5 col-form-label">Note</label>
+                        <div class="col-md-7">
+                            <input id="note" type="text" class="form-control{{ $errors->has('note') ? ' is-invalid' : '' }}" placeholder="" name="note"
+                                value="{{ old('note') }}">
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">
-                            {{ __('Submit') }}
-                            </button>
-                            <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
+                <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 @endsection
 
-@section('scripts') 
+@section('scripts')
 <script>
-    $('#end-date').datepicker({
-        altField: "#alt-end-date",
-        altFormat: 'yy-mm-dd',
-        format: 'dd/mm/yy'
+    $('#start-date').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    $('#end-date').datetimepicker({
+        format: 'DD/MM/YYYY',
+        useCurrent: false
     });
 
-    $('#start-date').datepicker({
-        altField: "#alt-start-date",
-        altFormat: 'yy-mm-dd',
-        format: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-80:+0"
+    $("#start-date").on("change.datetimepicker", function (e) {
+        $('#end-date').datetimepicker('minDate', e.date);
     });
+    $("#end-date").on("change.datetimepicker", function (e) {
+        $('#start-date').datetimepicker('maxDate', e.date);
+    });
+    // $('#end-date').datepicker({
+    //     altField: "#alt-end-date",
+    //     altFormat: 'yy-mm-dd',
+    //     format: 'dd/mm/yy'
+    // });
+
+    // $('#start-date').datepicker({
+    //     altField: "#alt-start-date",
+    //     altFormat: 'yy-mm-dd',
+    //     format: 'dd/mm/yy',
+    //     changeMonth: true,
+    //     changeYear: true,
+    //     yearRange: "-80:+0"
+    // });
+
 </script>
 <script type="text/javascript">
-
-
-$('.itemName').select2({
-  placeholder: 'Select an item',
-  ajax: {
-    url: '/select2-autocomplete-ajax',
-    dataType: 'json',
-    delay: 250,
-    processResults: function (data) {
-      return {
-        results:  $.map(data, function (item) {
-              return {
-                  text: item.name,
-                  id: item.id
-              }
-          })
-      };
-    },
-    cache: true
-  }
-});
-
+    // $('.itemName').select2({
+//   placeholder: 'Select an item',
+//   ajax: {
+//     url: '/select2-autocomplete-ajax',
+//     dataType: 'json',
+//     delay: 250,
+//     processResults: function (data) {
+//       return {
+//         results:  $.map(data, function (item) {
+//               return {
+//                   text: item.name,
+//                   id: item.id
+//               }
+//           })
+//       };
+//     },
+//     cache: true
+//   }
+// });
 
 </script>
 @append
