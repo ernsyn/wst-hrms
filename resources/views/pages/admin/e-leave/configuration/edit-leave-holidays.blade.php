@@ -67,8 +67,8 @@
                         <label class="col-md-5 col-form-label">Status*</label>
                         <div class="col-md-7">
                             <select class="form-control{{ $errors->has('status') ? ' is-invalid' : '' }}" name="status">
-                                <option value="1" {{ $holidays->status == 'active' ? 'selected' : ''}}>Active</option>
-                                <option value="2" {{ $holidays->status == 'inactive' ? 'selected' : ''}}>Inactive</option>
+                                <option value="active" {{ $holidays->status == 'active' ? 'selected' : ''}}>Active</option>
+                                <option value="inactive" {{ $holidays->status == 'inactive' ? 'selected' : ''}}>Inactive</option>
                             </select>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                             <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]">
                                 <option value="">Please Select</option>
                                 @foreach(App\Constants\MalaysianStates::$all as $state)
-                                <option value="{{ $state }}" {{ (collect($holidays->state)->contains($state)) == $state ? "selected":"" }}>{{ $state }}</option value="">
+                                <option value="{{ $state }}" {{ collect(explode(',',$holidays->state))->contains($state) ? "selected":"" }}>{{ $state }}</option>
                                 @endforeach
                             </select>
                             @if ($errors->has('state'))

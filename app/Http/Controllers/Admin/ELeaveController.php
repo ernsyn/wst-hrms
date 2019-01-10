@@ -255,10 +255,10 @@ class ELeaveController extends Controller
         $holidayUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['start_date'])));
         $holidayUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['end_date'])));
 
-        $startTimeStamp  = strtotime($publicHolidayData['start_date']);
-        $endTimeStamp  = strtotime($publicHolidayData['end_date']);
+        $startTimeStamp  = strtotime($holidayUpdatedData['start_date']);
+        $endTimeStamp  = strtotime($holidayUpdatedData['end_date']);
         $timeDiff = $endTimeStamp - $startTimeStamp;
-        $publicHolidayData['total_days'] = $timeDiff/86400 + 1;
+        $holidayUpdatedData['total_days'] = $timeDiff/86400 + 1;
 
         Holiday::where('id', $id)->update($holidayUpdatedData);
 
