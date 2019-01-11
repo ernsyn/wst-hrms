@@ -2,6 +2,7 @@
 namespace App\Repositories\Payroll;
 
 use App\PayrollTrxDeduction;
+use App\Enums\PayrollAdditionDeductionEnum;
 
 class EloquentPayrollTrxDeduction implements PayrollTrxDeductionRepository
 {
@@ -40,13 +41,22 @@ class EloquentPayrollTrxDeduction implements PayrollTrxDeductionRepository
             if($request == null){
                 $request = 0;
             }
-            if(strpos($key, 'payrolltrxdeduction_id_days_') === 0){
-                $id = substr($key, 28);
-                PayrollTrxDeduction::where('id', $id)->update(['days'=>$request]);
-                continue;
-            } else if(strpos($key, 'payrolltrxdeduction_id_') === 0){
+//             if(strpos($key, 'payrolltrxdeduction_id_days_') === 0){
+//                 $id = substr($key, 28);
+//                 PayrollTrxDeduction::where('id', $id)->update(['days'=>$request]);
+//                 continue;
+//             } else if(strpos($key, 'payrolltrxdeduction_id_') === 0){
+//                 $id = substr($key, 23);
+//                 PayrollTrxDeduction::where('id', $id)->update(['amount'=>$request]);
+//             }
+            
+            if(strpos($key, 'payrolltrxdeduction_id_') === 0){
                 $id = substr($key, 23);
-                PayrollTrxDeduction::where('id', $id)->update(['amount'=>$request]);
+                $payrollTrxDeduction = $this->query()->where('payroll_trx_deduction.id', $id)->first();
+                //                 dd($payrollTrxAddition);
+                if(!in_array($payrollTrxDeduction['code'],PayrollAdditionDeductionEnum::consts()) && $payrollTrxDeduction['type'] == 'Custom'){
+                    PayrollTrxDeduction::where('id', $id)->update(['amount'=>$request]);
+                }
             }
         }
         

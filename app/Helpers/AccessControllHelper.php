@@ -43,14 +43,19 @@ class AccessControllHelper
     
     public static function getSecurityGroupAccess()
     {
+        $securityGroupId = array();
+        
         if(self::hasHrAdminRole()){
-            
             $securityGroupAccess = SecurityGroup::where('company_id',GenerateReportsHelper::getUserLogonCompanyInformation()->id)->select('id')->get();
         }else{
             $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',Employee::where('user_id',Auth::id())->first()->id)->select('security_group_id')->get();
         }
-//         dd($securityGroupAccess,Auth::id());
-        return $securityGroupAccess;
+        
+        foreach($securityGroupAccess as $s){
+            array_push($securityGroupId, $s->id);
+        }
+        
+        return $securityGroupId;
     }
     
     public static function hasAnyRoles($role) 

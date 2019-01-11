@@ -2,6 +2,7 @@
 namespace App\Repositories\Payroll;
 
 use App\PayrollTrxAddition;
+use App\Enums\PayrollAdditionDeductionEnum;
 
 class EloquentPayrollTrxAddition implements PayrollTrxAdditionRepository
 {
@@ -32,28 +33,27 @@ class EloquentPayrollTrxAddition implements PayrollTrxAdditionRepository
         }
     }
     
-    public function findByPayrollTrxId($payrolltrx_id)
+    public function findByPayrollTrxId($payrollTrxId)
     {
-        return $this->query()->where('payroll_trx_id', $payrolltrx_id)->get();
+        return $this->query()->where('payroll_trx_id', $payrollTrxId)->get();
     }
     
     public function updateMulitpleData($request_data)
     {
+//         dd($request_data);
+        
         foreach($request_data as $key => $request) {
             if($request == null){
                 $request = 0;
             }
-            if(strpos($key, 'payrolltrxaddition_id_days_') === 0){
-                $id = substr($key, 27);
-                PayrollTrxAddition::where('id', $id)->update(['days'=>$request]);
-                continue;
-            } else if(strpos($key, 'payrolltrxaddition_id_hours_') === 0){
-                $id = substr($key, 28);
-                PayrollTrxAddition::where('id', $id)->update(['hours'=>$request]);
-                continue;
-            } else if(strpos($key, 'payrolltrxaddition_id_') === 0){
+            
+            if(strpos($key, 'payrolltrxaddition_id_') === 0){
                 $id = substr($key, 22);
-                PayrollTrxAddition::where('id', $id)->update(['amount'=>$request]);
+                $payrollTrxAddition = $this->query()->where('payroll_trx_addition.id', $id)->first();
+                //                 dd($payrollTrxAddition);
+                if(!in_array($payrollTrxAddition['code'],PayrollAdditionDeductionEnum::consts()) && $payrollTrxAddition['type'] == 'Custom'){
+                    PayrollTrxAddition::where('id', $id)->update(['amount'=>$request]);
+                }
             }
         }
         

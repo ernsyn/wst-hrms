@@ -164,6 +164,11 @@
         							$diff = date_diff(date_create($r->clock_in_time), date_create($r->clock_out_time));
         							$tooltip .= 'from '.$r->clock_in_time.' to '.$r->clock_out_time.' ('.$diff->format('%d').' day(s))<br>';
         						}
+        					} else if ($row->code == 'OD' && count($od) > 0) {
+        						foreach($od as $r){
+        							$diff = date_diff(date_create($r->clock_in_time), date_create($r->clock_out_time));
+        							$tooltip .= 'from '.$r->clock_in_time.' to '.$r->clock_out_time.' ('.$diff->format('%d').' day(s))<br>';
+        						}
         					} 
     					@endphp
     					<div class="row p-2" data-code="{{ $row->code }}" data-statutory="">

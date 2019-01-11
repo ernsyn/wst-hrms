@@ -34,6 +34,7 @@ class EloquentPayrollTrx implements PayrollTrxRepository
         ->select('payroll_trx.*', 'U.id as user_id', 
             //'C.citizenship', 
             'PM.company_id as company_id', 'PM.year_month', 'PM.period', 'PM.status', 'EM.id as employee_id', 'EM.code as employee_code', 'U.name', 'EM.total_children', 'EM.pcb_group', 'JM.name as position', 'PayrollTrx.basic_salary as bs', 'PayrollTrx.seniority_pay as is', 'PayrollTrx.note as remark', 'EB.account_number',
+            'EM.main_security_group_id', 'EM.dob',
             DB::raw('
                 (SELECT start_date FROM employee_jobs WHERE id_EmployeeMaster = EM.id ORDER BY id ASC LIMIT 1) as joined_date,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
@@ -96,7 +97,9 @@ class EloquentPayrollTrx implements PayrollTrxRepository
             ->join('users as u', 'u.id', '=', 'e.user_id')
             ->join('employee_jobs as ej', 'ej.emp_id', '=', 'e.id') 
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
-            ->select('payroll_trx.*', 'pm.company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
+            ->select('payroll_trx.*', 'pm.company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', 
+                'e.main_security_group_id', 'e.dob', 'e.nationality', 'e.pcb_group', 'e.total_children',
+                DB::raw('
                 (SELECT start_date FROM employee_jobs WHERE emp_id = e.id ORDER BY id ASC LIMIT 1) as joined_date,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
@@ -126,7 +129,7 @@ class EloquentPayrollTrx implements PayrollTrxRepository
         return;
     }
     
-    public function findNext($id, $payroll_id) {
+    public function findNext($id, $payrollId) {
         return
         PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')
         ->join('employees as e', 'e.id', '=', 'payroll_trx.employee_id')
@@ -139,10 +142,11 @@ class EloquentPayrollTrx implements PayrollTrxRepository
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
                 payroll_trx.take_home_pay as thp
             '))
-            ->where('payroll_trx.id', $id)
-        ->where('pm.id', $payroll_id)
+//         ->where('payroll_trx.id', $id)
+        ->where('pm.id', $payrollId)
         ->where('payroll_trx.id', '>', $id)
-        ->orderby('payroll_trx.id', 'ASC')
+//         ->orderby('payroll_trx.id', 'ASC')
+        ->orderby('e.code', 'ASC')
         ->first();
     }
     

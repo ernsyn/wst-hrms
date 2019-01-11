@@ -96,6 +96,7 @@ class PayrollHelper
             'CFLP'      => 'Carry Forward Leave Payback',
             'PH'        => 'Public Holiday',
             'RD'        => 'Rest Day',
+            'OD'        => 'Off Day'
         ];
     }
     

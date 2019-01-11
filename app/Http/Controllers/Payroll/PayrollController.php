@@ -38,8 +38,6 @@ use App\Repositories\Payroll\ReportRepository;
 use App\EmployeeJob;
 use App\Addition;
 use App\Deduction;
-use App\LeaveRequestApproval;
-use App\EmployeeAttendance;
 use App\Helpers\AccessControllHelper;
 use App\PayrollTrxAddition;
 use App\EmployeeWorkingDay;
@@ -173,6 +171,7 @@ class PayrollController extends Controller
             $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
         })
         ->select('employees.*', 'employee_jobs.id as ejId')
+        ->orderby('employees.code', 'ASC')
         ->get();
 //      dd($employeeList);
         foreach ($employeeList as $employee) {
@@ -254,7 +253,6 @@ class PayrollController extends Controller
         DB::commit();
         
         return redirect('/payroll')->with('success', 'Payroll month has been added');
-
     }
 
     // Show payroll month
@@ -308,7 +306,8 @@ class PayrollController extends Controller
             })
             ->whereNull('ert.deleted_at')
             ->distinct()
-            ->orderby('e.code', 'ASC')->get();
+            ->orderby('payroll_trx.id', 'ASC')
+            ->get();
 
         // Condition
         // if(!count($list)) return redirect('/payroll')->with('error', 'Payroll not found.');
@@ -328,8 +327,9 @@ class PayrollController extends Controller
             ]
         ])->get();
 //             dd($info);
-        if (! @$info)
+        if (! @$info) {
             return redirect($request->server('HTTP_REFERER'))->with('error', 'Payroll not found.');
+        }
 
         DB::beginTransaction();
         $storeData = [];
@@ -386,132 +386,201 @@ class PayrollController extends Controller
         $total_days = cal_days_in_month(CAL_GREGORIAN, substr($year_month,5,2), substr($year_month,0,4));
         $start_date = $year_month.'-01';
         $joined_date = $info->joined_date;
+        $annualLeaves = array();
+        $unpaidLeaves = array();
+        $carryForwardLeaves = array();
+        $ph = array();
+        $rd = array();
+        $od = array();
+        $ot = array();
+        $unpaidLeaves = array();
         
         if(strtotime($joined_date) > strtotime($start_date)) {
             $different_of_dates = date_diff(date_create($start_date), date_create($joined_date));
             $total_days = $total_days - $different_of_dates->format('%a')+1;
         }
         
-        //UL, show last 3 month, save update payroll_trx_id
-        $unpaidLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
-        ->where([
-//             ['payroll_trx_id', $id],
-            ['lr.leave_type_id', 5],
-            ['lr.emp_id', $employee->id]
-        ])
-        ->select('leave_request_approvals.*', 'lr.*')
-        ->get();
+        foreach($payrollTrxAdditionList as $payrollTrxAddition){
+            switch ($payrollTrxAddition['code']) {
+                case "ALP":
+                    $annualLeaves = PayrollProcessedLeaveAttendance::join('leave_requests as lr', 'lr.id', '=', 'payroll_processed_leave_attendance.leave_request_id')
+                        ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                        ->select('payroll_processed_leave_attendance.*', 'lr.*')
+                        ->get();
+                    break;
+                    
+                case "CFLP":
+                    $carryForwardLeaves = PayrollProcessedLeaveAttendance::join('leave_requests as lr', 'lr.id', '=', 'payroll_processed_leave_attendance.leave_request_id')
+                        ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                        ->select('payroll_processed_leave_attendance.*', 'lr.*')
+                        ->get();
+                    break;
+                    
+                case "PH":
+                    $ph = PayrollProcessedLeaveAttendance::join('employee_attendances as ea', 'ea.id', '=', 'payroll_processed_leave_attendance.employee_attendance_id')
+                        ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                        ->select('payroll_processed_leave_attendance.*', 'ea.*')
+                        ->get();
+                    break;
+                
+                case "RD":
+                    $rd = PayrollProcessedLeaveAttendance::join('employee_attendances as ea', 'ea.id', '=', 'payroll_processed_leave_attendance.employee_attendance_id')
+                        ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                        ->select('payroll_processed_leave_attendance.*', 'ea.*')
+                        ->get();
+                    break;
+                    
+                case "OD":
+                    $od = PayrollProcessedLeaveAttendance::join('employee_attendances as ea', 'ea.id', '=', 'payroll_processed_leave_attendance.employee_attendance_id')
+                        ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                        ->select('payroll_processed_leave_attendance.*', 'ea.*')
+                        ->get();
+                    break;
+                    
+                case "OT":
+                    $ot = PayrollProcessedLeaveAttendance::join('employee_attendances as ea', 'ea.id', '=', 'payroll_processed_leave_attendance.employee_attendance_id')
+                    ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                    ->select('payroll_processed_leave_attendance.*', 'ea.*')
+                    ->get();
+                    break;
+            }
+        }
+        
+        foreach($payrollTrxDeductionList as $payrollTrxDeduction){
+            if($payrollTrxDeduction['code'] == 'UL') {
+                $unpaid = PayrollProcessedLeaveAttendance::join('leave_requests as lr', 'lr.id', '=', 'payroll_processed_leave_attendance.leave_request_id')
+                    ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                    ->select('payroll_processed_leave_attendance.*', 'lr.*')
+                    ->get();
+                
+                $absent = PayrollProcessedLeaveAttendance::join('employee_attendances as ea', 'ea.id', '=', 'payroll_processed_leave_attendance.employee_attendance_id')
+                    ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                    ->select('payroll_processed_leave_attendance.*', 'ea.*')
+                    ->get();
+                
+                $unpaidLeaves = $unpaid->merge($absent);
+            }
+        }
+       
 //         dd($employee);
-
-        // ALP
-        $annualLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
-            ->where([
-//                 ['payroll_trx_id', $id],
-                ['lr.leave_type_id', 1],
-                ['lr.emp_id', $employee->id]
-            ])
-            ->select('leave_request_approvals.*', 'lr.*')
-            ->get();
-        
-        //CFLP
-        $carryForwardLeaves = LeaveRequestApproval::join('leave_requests as lr', 'lr.id', '=', 'leave_request_approvals.leave_request_id')
-        ->where([
-//             ['payroll_trx_id', $id],
-            ['lr.leave_type_id', 6],
-            ['lr.emp_id', $employee->id]
-        ])
-        ->select('leave_request_approvals.*', 'lr.*')
-        ->get();
-        
-        //PH
-        $ph = EmployeeAttendance::where([
-//             ['clock_in_status', 'ph'],
-            ['emp_id', $info->employee_id]
-        ])
-        ->get();
-        
-        //RD
-        $rd = EmployeeAttendance::where([
-//             ['clock_in_status', 'rest'],
-            ['emp_id', $info->employee_id]
-        ])
-        ->get();
-        
-        //OT
-        $ot = EmployeeAttendance::where([
-//             ['clock_in_status', 'ot'],
-            ['emp_id', $info->employee_id]
-        ])
-        ->get();
-        
 //         dd($payrollTrxAdditionList);
         return view('pages.payroll.show-payroll-trx', compact('id', 'payrollId', 'title', 'additions', 'deductions', 'payrollTrxAdditionList', 
             'payrollTrxDeductionList', 'info', 'company', 'employee', 'addition_days_array', 'addition_hours_array', 'deduction_days_array', 
-            'year_month', 'total_days', 'unpaidLeaves', 'annualLeaves', 'carryForwardLeaves', 'ot', 'ph', 'rd', 'payrollMaster', 'addMonthBonus', 'commission'));
+            'year_month', 'total_days', 'unpaidLeaves', 'annualLeaves', 'carryForwardLeaves', 'ot', 'ph', 'rd', 'od', 'payrollMaster', 'addMonthBonus', 'commission'));
     }
     
     public function updatePayrollTrx(Request $request, $id)
     {
+        AccessControllHelper::hasPayrollAccess();
 //         dd($request->all());
         $info = $this->payrollTrx->find($id)->first();
         if(!@$info) return redirect($request->server('HTTP_REFERER'))->with('error', 'Payroll not found.');
+        $employeeContribution = 0;
+        $totalEpf = 0;
+        $totalEis = 0;
+        $totalSocso = 0;
+        $totalPcb = 0;
+        $storeData = [];
+        $epfFilter = array();
+        $pcbFilter = array();
+//         dd($info);
+        
+        $payrollTrxAdditions = $this->payrollTrxAdditionRepository->findByPayrollTrxId($id);
+        foreach($payrollTrxAdditions as $payrollTrxAddition){
+            if (strpos($payrollTrxAddition['statutory'], 'EPF') !== false) {
+                $totalEpf += $payrollTrxAddition['amount'];
+            }
+            
+            if (strpos($payrollTrxAddition['statutory'], 'EIS') !== false) {
+                $totalEis += $payrollTrxAddition['amount'];
+            }
+            
+            if (strpos($payrollTrxAddition['statutory'], 'SOCSO') !== false) {
+                $totalSocso += $payrollTrxAddition['amount'];
+            }
+            
+            if (strpos($payrollTrxAddition['statutory'], 'PCB') !== false) {
+                $totalPcb += $payrollTrxAddition['amount'];
+            }
+        }
         
         //update KPI
         DB::beginTransaction();
+        
         if(isset($request['saveKpi'])){
-            $storeData = [];
+            AccessControllHelper::isKpiProposer();
+            
+            //recalculate gross pay, epf, eis, socso, pcb, thp
             $storeData['kpi'] = $request['kpi'];
             $storeData['bonus'] = $request['bonus'];
+            $storeData['gross_pay'] = $info->gross_pay + ($request['bonus'] * $request['kpi']);
+            $epfFilter['age'] = PayrollHelper::getAge($info->dob);
+            $epfFilter['nationality'] = $info->nationality;
+            $epfFilter['salary'] = $storeData['gross_pay'] + $totalEpf;
+            $epf = $this->epfRepository->findByFilter($epfFilter);
+            $eis = $this->eisRepository->findBySalary($storeData['gross_pay'] + $totalEis);
+            $socso = $this->socsoRepository->findBySalary($storeData['gross_pay'] + $totalSocso);
+            $pcbFilter['salary'] = $storeData['gross_pay'] + $totalPcb;
+            $pcbFilter['pcbGroup'] = $info->pcb_group;
+            $pcbFilter['noOfChildren'] = $info->total_children;
+            $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+            $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
+            $storeData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
+            $storeData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
+            $storeData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
+            $storeData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
+            $storeData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
+            $storeData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
+            $employeeContribution = $storeData['employee_epf'] + $storeData['employee_eis'] + $storeData['employee_socso'] + $storeData['employee_pcb'];
+            $storeData['take_home_pay'] = $storeData['gross_pay'] + $info->total_addition - $info->total_deduction - $employeeContribution;
+            
             PayrollTrx::where('id', $id)->update($storeData);
         }else{
-            //TODO: calculate here instead get from input
-            $this->payrollTrxAdditionRepository->updateMulitpleData($request->input());
-            $this->payrollTrxDeductionRepository->updateMulitpleData($request->input());
-            $storeData = [];
-            $storeData['take_home_pay'] = $request['take_home_pay'];
-            $storeData['total_addition'] = $request['total_addition'];
-            $storeData['total_deduction'] = $request['total_deduction'];
-            PayrollTrx::where('id', $id)->update($storeData);
-//             dd($info);
-            $next = $this->payrollTrx->findNext($id, $info->payroll_master_id);
-            $save_n_next = $request->input('save_n_next');
+            $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
+            
+            if (in_array($info->main_security_group_id, $securityGroupAccess)){
+                $this->payrollTrxAdditionRepository->updateMulitpleData($request->input());
+                $this->payrollTrxDeductionRepository->updateMulitpleData($request->input());
+                $totalAddition = DB::table("payroll_trx_addition")->where('payroll_trx_id',$id)->sum('amount');
+                $totalDeduction = DB::table("payroll_trx_deduction")->where('payroll_trx_id',$id)->sum('amount');
+                
+                $epfFilter['age'] = PayrollHelper::getAge($info->dob);
+                $epfFilter['nationality'] = $info->nationality;
+                $epfFilter['salary'] = $info->gross_pay + $totalEpf;
+                $epf = $this->epfRepository->findByFilter($epfFilter);
+                $eis = $this->eisRepository->findBySalary($info->gross_pay + $totalEis);
+                $socso = $this->socsoRepository->findBySalary($info->gross_pay + $totalSocso);
+                $pcbFilter['salary'] = $info->gross_pay + $totalPcb;
+                $pcbFilter['pcbGroup'] = $info->pcb_group;
+                $pcbFilter['noOfChildren'] = $info->total_children;
+                $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+                $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
+                $storeData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
+                $storeData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
+                $storeData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
+                $storeData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
+                $storeData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
+                $storeData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
+                $storeData['total_addition'] = $totalAddition;
+                $storeData['total_deduction'] = $totalDeduction;
+                $employeeContribution = $storeData['employee_epf'] + $storeData['employee_eis'] + $storeData['employee_socso'] + $storeData['employee_pcb'];
+                $storeData['take_home_pay'] = $storeData['gross_pay'] + $info->total_addition - $info->total_deduction - $employeeContribution;
+                
+                PayrollTrx::where('id', $id)->update($storeData);
+                //             dd($info);
+                $next = $this->payrollTrx->findNext($id, $info->payroll_master_id);
+                $save_n_next = $request->input('save_n_next');
+            } else {
+                return redirect($request->server('HTTP_REFERER'))->with('error', 'You are not allowed to update this payroll.');
+            }
         }
         DB::commit();
+      
+        if(!@$save_n_next) {
+            return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully updated payroll.');
+        }
         
-//         return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully updated payroll.');
-        
-        if(!@$save_n_next) return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully updated payroll.');
         return (@$next)? redirect()->route('payroll.trx.show', ['id'=>$next->id])->with('success', 'Successfully updated payroll.') : redirect('/payroll/'.$request->input('payroll_id'))->with('success', 'All employees updated.');
-        
-        
-        
-//         DB::beginTransaction();
-//         $is_in_charge = $this->employeereportto->find_employee_in_charge($info->employee_id, Auth::user()->id);
-        
-//         // if(!@$is_in_charge && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Superadmin'))) {
-//         if(Auth::user()->id != $info->user_id && ($info->status !== 'Locked') && !@$is_in_charge) {
-//             $this->payrolltrx_addition->updateMulitpleData($request->input());
-//             $this->payrolltrx_deduction->updateMulitpleData($request->input());
-            
-//             $calculate_result = $this->calculate($request->input(), $info);
-//             $request->request->add(['final_payment'=>$calculate_result['net_pay']]);
-//             $this->payrolltrx->update($id, $request->input());
-            
-//             // 20181011 Lin : Calculate the additions & deductions which affect the contributions
-            
-            
-//             // 20180919 Lin : Find next payroll trx
-//             $payroll_id = $request->input('payroll_id');
-//             $next = $this->payrolltrx->find_next($id, $request->input('payroll_id'), $request->input('payroll_type'));
-//             $save_n_next = $request->input('save_n_next');
-//         } else {
-//             // Only able to update bonus
-//             $this->payrolltrx->update($id, $request->input());
-//         }
-//         DB::commit();
-        
-//         if(!@$save_n_next) return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully updated payroll.');
-//         return (@$next)? redirect()->route('payroll.trx.show', ['id'=>$next->id])->with('success', 'Successfully updated payroll.') : redirect('/payroll/'.$request->input('payroll_id'))->with('success', 'All employees updated.');
     }
     
     //Reports
@@ -1611,7 +1680,7 @@ class PayrollController extends Controller
 //         dd($payrollTrxAdditionList);
         foreach($payrollTrxAdditionList as $payrollTrxAddition) {
             /*
-             * ALP, OT, PH,  CFLP, RD
+             * ALP, OT, PH,  CFLP, RD, OD
              */
             $updateData = [];
             $updateData['payroll_trx_id'] = $payrollTrxAddition['payroll_trx_id'];

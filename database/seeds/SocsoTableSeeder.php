@@ -195,7 +195,7 @@ class SocsoTableSeeder extends Seeder
         Socso::create([
             'salary' => 2700.00,
             'first_category_employer' => 46.35,
-            'first_category_employee' => 12.25
+            'first_category_employee' => 13.25
         ]);
         
         Socso::create([
