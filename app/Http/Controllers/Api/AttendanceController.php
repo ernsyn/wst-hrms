@@ -153,7 +153,8 @@ class AttendanceController extends Controller
         $mimeType = $matches[1];
         $extension = explode('/', $mimeType)[1];
 
-        $data = base64_decode($parts[1]);
+        // $data = base64_decode($parts[1]);
+        $data = $parts[1];
 
         return [
             'data' => $data,
