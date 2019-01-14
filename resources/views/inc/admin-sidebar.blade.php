@@ -2,7 +2,6 @@
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
-    @hasanyrole('super-admin|admin')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -25,60 +24,17 @@
                 <a href="{{ route('super-admin.dashboard') }}">
                     Super Admin
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('admin/e-leave*') ? 'show' : '' }}" id="leaveSubmenu">
-                    {{-- OPTION: Leave Request --}}
-                    <li class="menu-option {{ request()->is('admin.e-leave') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave.configuration') }}">Configuration</a>
-                    </li>
-                    {{-- OPTION: PH Setup --}}
-                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leaveholidays') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave.configuration.leave-holidays') }}">Holidays Setup</a>
-                    </li>
-                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-requests') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave.configuration.leave-requests') }}">Leave Requests</a>
-                    </li>
-                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-application') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave.leave-application') }}">Leave Application</a>
-                    </li>
-                    <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
-                        <a href="{{ route('admin.e-leave.leave-report') }}">Leave Reports</a>
-                    </li>
-                </ul>
             </li>
-    
-            {{-- SECTION: Attendance --}}
-            <li class="menu-section {{ request()->is('admin/attendance*') ? 'active' : '' }}">
-                <a class="info dropdown-toggle" href="#attendanceSubmenu" data-toggle="collapse" aria-expanded="false">
-                    <div class="row">
-                        <div class="col-1"><i class="far fa-clock"></i></div>
-                        <div class="col-10">Attendance</div>
-                    </div>
+            @endhasrole
+            @hasrole('employee')
+            <div class="option row col mx-0">
+                <a href="{{ route('employee.dashboard') }}">
+                    Employee
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('admin/attendance*') ? 'show' : '' }}" id="attendanceSubmenu">
-                    {{-- OPTION: Current Day Attendance --}}
-                    <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
-                        <a href="{{ route('admin.attendance.current-day') }}">Current Day</a>
-                    </li>
-                    {{-- OPTION: Attendance Report --}}
-                    <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
-                        <a href="{{ route('admin.attendance.report') }}">Attendance Report</a>
-                    </li>
-                </ul>
             </li>
-    
-            {{-- SECTION: Settings --}}
-            <li class="menu-section {{ request()->is('admin/settings*') ? 'active' : '' }}">
-                <a class="info dropdown-toggle" href="#setupSubmenu" data-toggle="collapse" aria-expanded="false">
-                    <div class="row">
-                        <div class="col-1"><i class="fas fa-cog"></i></div>
-                        <div class="col-10">Settings</div>
-                    </div>
-                </a>
-            </div>
             @endhasrole
         </div>
     </div>
-    @endhasanyrole
 
     <ul id="menu-container" class="list-unstyled">
         <li id="dashboard-option" class="menu-section {{ request()->is('admin/dashboard') ? 'active' : '' }}">
