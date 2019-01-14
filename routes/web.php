@@ -79,7 +79,6 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('employee/dt/report-to', 'Employee\EmployeeController@getDataTableReportTo')->name('employee.dt.report-to');
 
     Route::post('employee/jobs','Employee\EmployeeController@postJob')->name('employee.jobs.post');
-    Route::post('employee/jobs','Employee\EmployeeController@postResign')->name('employee.resign.post');
     Route::post('employee/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
     Route::post('employee/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');
     Route::post('employee/immigrations','Employee\EmployeeController@postImmigration')->name('employee.immigrations.post');
@@ -119,7 +118,6 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/{id}/immigrations','Employee\EmployeeController@postImmigration')->name('employee.immigrations.post');
     Route::post('employee/{id}/visas','Employee\EmployeeController@postVisa')->name('employee.visas.post');
     Route::post('employee/{id}/jobs','Employee\EmployeeController@postJob')->name('employee.jobs.post');
-    Route::post('employee/{id}/resign','Employee\EmployeeController@postResign')->name('employee.resign.post');
     Route::post('employee/{id}/bank-accounts','Employee\EmployeeController@postBankAccount')->name('employee.bank-accounts.post');
     Route::post('employee/{id}/companies','Employee\EmployeeController@postCompany')->name('employee.companies.post');
     Route::post('employee/{id}/education','Employee\EmployeeController@postEducation')->name('employee.educations.post');
@@ -218,7 +216,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees/id/working-days/{emp_id}', 'Admin\EmployeeController@getEmployeeWorkingDay')->name('admin.employees.id.working-day.get')->where('id', '[0-9]+');
 
     Route::post('employees/{emp_id}/jobs','Admin\EmployeeController@postJob')->name('admin.employees.jobs.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/resign','Admin\EmployeeController@postResign')->name('admin.employees.resign.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/emergency-contacts','Admin\EmployeeController@postEmergencyContact')->name('admin.employees.emergency-contacts.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/dependents','Admin\EmployeeController@postDependent')->name('admin.employees.dependents.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/immigrations','Admin\EmployeeController@postImmigration')->name('admin.employees.immigrations.post')->where('id', '[0-9]+');
