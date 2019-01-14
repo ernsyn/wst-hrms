@@ -68,8 +68,8 @@
 
                                                     <td><button type="button" class="btn btn-success btn-smt " data-toggle="modal"
                                                             data-bank-id="{{$companybanks['id']}}" 
-                                                            data-bank-code="{{$companybanks['bank_code']}}"
-                                                            data-bank-acc="{{$companybanks['acc_name']}}" 
+                                                            data-bank-bank_code="{{$companybanks['bank_code']}}"
+                                                            data-bank-acc_name="{{$companybanks['acc_name']}}" 
                                                             data-bank-status="{{$companybanks['status']}}"
                                                             data-target="#editCompanyBankPopup"><i class="fas fa-edit"></i></button>
 {{--
