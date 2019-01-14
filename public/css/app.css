@@ -18594,31 +18594,31 @@ button.dropdown-toggle::after {
   /* max-height: 250px; */
 }
 
-#page-add-leave-type .entitlement-by-years-entry .min-years-input {
+.page-leave-type .entitlement-by-years-entry .min-years-input {
   background-color: #18b775;
 }
 
-#page-add-leave-type .entitlement-by-years-entry .min-years-input::-webkit-input-placeholder {
+.page-leave-type .entitlement-by-years-entry .min-years-input::-webkit-input-placeholder {
   color: #ffffffb7 !important;
 }
 
-#page-add-leave-type .entitlement-by-years-entry .min-years-input::-ms-input-placeholder {
+.page-leave-type .entitlement-by-years-entry .min-years-input::-ms-input-placeholder {
   color: #ffffffb7 !important;
 }
 
-#page-add-leave-type .entitlement-by-years-entry .min-years-input::placeholder {
+.page-leave-type .entitlement-by-years-entry .min-years-input::placeholder {
   color: #ffffffb7 !important;
 }
 
-#page-add-leave-type #section-rules .rule-entry .title {
+.page-leave-type #section-rules .rule-entry .title {
   font-weight: 600;
 }
 
-#page-add-leave-type #section-rules #rule-leave-calculation {
+.page-leave-type #section-rules #rule-leave-calculation {
   background-color: #e0e5f3;
 }
 
-#page-add-leave-type #section-rules #rule-min-apply-days-before .entries-table {
+.page-leave-type #section-rules #rule-min-apply-days-before .entries-table {
   max-width: 450px;
   margin-left: 0px;
   margin-top: 20px;
@@ -18627,7 +18627,7 @@ button.dropdown-toggle::after {
   background-color: #ebfcf5;
 }
 
-#page-add-leave-type #section-rules #rule-min-apply-days-before .entries-table .entry-headers {
+.page-leave-type #section-rules #rule-min-apply-days-before .entries-table .entry-headers {
   color: white;
   font-weight: 600;
   border-radius: 5px 5px 0px 0px;
@@ -18637,13 +18637,13 @@ button.dropdown-toggle::after {
   padding: 5px;
 }
 
-#page-add-leave-type #section-rules #rule-min-apply-days-before .entries-table .min-apply-days-before-entry {
+.page-leave-type #section-rules #rule-min-apply-days-before .entries-table .min-apply-days-before-entry {
   text-align: center;
   padding: 5px;
   font-weight: 600;
 }
 
-#page-add-leave-type #section-rules #rule-min-apply-days-before .entries-table .footer {
+.page-leave-type #section-rules #rule-min-apply-days-before .entries-table .footer {
   background-color: #bef7df;
   border-radius: 0px 0px 5px 5px;
 }
