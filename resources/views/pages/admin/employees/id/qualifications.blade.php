@@ -1170,6 +1170,14 @@
 {{-- SKILLS --}}
 <script type="text/javascript">
     $(function(){
+        $('#add-skill-form select[name=competency]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editCompetency = $('#edit-skill-form select[name=competency]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
         // ADD SKILLS
         $('#add-skill-popup').on('show.bs.modal', function (event) {
             clearSkillsError('#add-skill-form');
@@ -1234,7 +1242,7 @@
 
             $('#edit-skill-form input[name=name]').val(currentData.name);
             $('#edit-skill-form input[name=years-of-experience]').val(currentData.years_of_experience);
-            $('#edit-skill-form select[name=competency]').val(currentData.competency);
+            editCompetency[0].selectize.setValue(currentData.competency);
         });
 
         var editSkillRouteTemplate = "{{ route('admin.employees.skills.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
