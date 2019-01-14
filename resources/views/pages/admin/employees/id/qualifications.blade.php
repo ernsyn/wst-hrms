@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="company"><strong>Company*</strong></label>
-                            <input name="company" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="company" type="text" class="form-control" placeholder="" value="">
                             <div id="company-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="position"><strong>Position*</strong></label>
-                            <input name="position" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="position" type="text" class="form-control" placeholder="" value="">
                             <div id="position-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="institution"><strong>Institution*</strong></label>
-                            <input name="institution" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="institution" type="text" class="form-control" placeholder="" value="">
                             <div id="institution-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="level"><strong>Level*</strong></label>
-                            <input name="level" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="level" type="text" class="form-control" placeholder="" value="">
                             <div id="level-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="major"><strong>Major*</strong></label>
-                            <input name="major" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="major" type="text" class="form-control" placeholder="" value="">
                             <div id="major-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="gpa"><strong>Gpa*</strong></label>
-                            <input name="gpa" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="gpa" type="text" class="form-control" placeholder="" value="">
                             <div id="gpa-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -176,7 +176,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Skill Name*</strong></label>
-                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="">
                             <div id="name-error" class="invalid-feedback">
 
                             </div>
@@ -185,7 +185,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Year Experience*</strong></label>
-                            <input name="years-of-experience" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="years-of-experience" type="text" class="form-control" placeholder="" value="">
                             <div id="years-of-experience-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -193,7 +193,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Competency*</strong></label>
-                            <select name="competency" type="text" class="form-control" placeholder="" value="" required>
+                            <select name="competency" type="text" class="form-control" placeholder="" value="">
                                 <option value="">Select Competency</option>
                                 <option value="beginner">Beginner</option>
                                 <option value="intermediate">Intermediate</option>
@@ -230,7 +230,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="company"><strong>Company*</strong></label>
-                            <input name="company" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="company" type="text" class="form-control" placeholder="" value="">
                             <div id="company-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -238,7 +238,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="position"><strong>Position*</strong></label>
-                            <input name="position" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="position" type="text" class="form-control" placeholder="" value="">
                             <div id="position-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -303,7 +303,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="institution"><strong>Institution*</strong></label>
-                            <input name="institution" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="institution" type="text" class="form-control" placeholder="" value="">
                             <div id="institution-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -337,7 +337,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="level"><strong>Level*</strong></label>
-                            <input name="level" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="level" type="text" class="form-control" placeholder="" value="">
                             <div id="level-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -345,7 +345,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="major"><strong>Major*</strong></label>
-                            <input name="major" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="major" type="text" class="form-control" placeholder="" value="">
                             <div id="major-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -353,7 +353,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="gpa"><strong>Gpa*</strong></label>
-                            <input name="gpa" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="gpa" type="text" class="form-control" placeholder="" value="">
                             <div id="gpa-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -391,7 +391,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Skill Name*</strong></label>
-                            <input name="name" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="name" type="text" class="form-control" placeholder="" value="">
                             <div id="name-error" class="invalid-feedback">
 
                             </div>
@@ -400,7 +400,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Year Experience*</strong></label>
-                            <input name="years-of-experience" type="text" class="form-control" placeholder="" value="" required>
+                            <input name="years-of-experience" type="text" class="form-control" placeholder="" value="">
                             <div id="years-of-experience-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -408,7 +408,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Competency*</strong></label>
-                            <select name="competency" type="text" class="form-control" placeholder="" value="" required>
+                            <select name="competency" type="text" class="form-control" placeholder="" value="">
                                     <option value="">Select Competency</option>
                                     <option value="beginner">Beginner</option>
                                     <option value="intermediate">Intermediate</option>
@@ -690,38 +690,115 @@
 
 </script>
 
-{{-- EXPERIENCES --}}
+{{-- datepicker --}}
 <script type="text/javascript">
-    $(function(){
-        //datepicker
+    $(function () {
+        // datepicker add exp
         $('#start-date-experience').datetimepicker({
             format: 'DD/MM/YYYY'
         });
-        $('#end-date-experience').datetimepicker({
-            format: 'DD/MM/YYYY'
+        $("#start-date-experience").on("change.datetimepicker", function (e) {
+            $('#end-date-experience').datetimepicker('minDate', e.date);
+        });
+        $('#start-date-experience').on('change keydown', function(e){
+            if(e.which){
+                e.preventDefault();
+            }
         });
 
+        $('#end-date-experience').datetimepicker({
+            format: 'DD/MM/YYYY',
+            useCurrent: false
+        });
+        $("#end-date-experience").on("change.datetimepicker", function (e) {
+            $('#start-date-experience').datetimepicker('maxDate', e.date);
+        });
+        $('#end-date-experience').on('change keydown', function(e){
+            if(e.which){
+                e.preventDefault();
+            }
+        });
+
+        // datepicker add exp
         $('#start-date-experience-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
-        $('#end-date-experience-edit').datetimepicker({
-            format: 'DD/MM/YYYY'
+        $("#start-date-experience-edit").on("change.datetimepicker", function (e) {
+            $('#end-date-experience-edit').datetimepicker('minDate', e.date);
+        });
+        $('#start-date-experience-edit').on('change keydown', function(e){
+            if(e.which){
+                e.preventDefault();
+            }
         });
 
+        $('#end-date-experience-edit').datetimepicker({
+            format: 'DD/MM/YYYY',
+            useCurrent: false
+        });
+        $("#end-date-experience-edit").on("change.datetimepicker", function (e) {
+            $('#start-date-experience-edit').datetimepicker('maxDate', e.date);
+        });
+        $('#end-date-experience-edit').on('change keydown', function(e){
+            if(e.which){
+                e.preventDefault();
+            }
+        });
+
+        // datepicker add edu
         $('#start-year').datetimepicker({
             format: 'YYYY'
         });
-        $('#end-year').datetimepicker({
-            format: 'YYYY'
+        $("#start-year").on("change.datetimepicker", function (e) {
+            $('#end-year').datetimepicker('minDate', e.date);
+        });
+        $('#start-year').on('change keydown', function(e){
+            if(e.which){
+                e.preventDefault();
+            }
         });
 
+        $('#end-year').datetimepicker({
+            format: 'YYYY',
+            useCurrent: false
+        });
+        $("#end-year").on("change.datetimepicker", function (e) {
+            $('#start-year').datetimepicker('maxDate', e.date);
+        });
+        $('#end-year').on('change keydown', function(e){
+            if(e.which){
+                e.preventDefault();
+            }
+        });
+
+        // datepicker edit edu
         $('#start-year-edit').datetimepicker({
             format: 'YYYY'
+        });
+        $("#start-year-edit").on("change.datetimepicker", function (e) {
+            $('#end-year-edit').datetimepicker('minDate', e.date);
+        });
+        $('#start-year-edit').on('change keydown', function(e){
+            if(e.which){
+                e.preventDefault();
+            }
         });
         $('#end-year-edit').datetimepicker({
             format: 'YYYY'
         });
-
+        $("#end-year-edit").on("change.datetimepicker", function (e) {
+            $('#start-year-edit').datetimepicker('maxDate', e.date);
+        });
+        $('#end-year-edit').on('change keydown', function(e){
+            if(e.which){
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+{{-- EXPERIENCES --}}
+<script type="text/javascript">
+    $(function(){
         // ADD EXPERIENCES
         $('#add-experience-popup').on('show.bs.modal', function (event) {
             clearExperiencesError('#add-experience-form');
