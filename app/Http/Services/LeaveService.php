@@ -38,6 +38,14 @@ class LeaveService
 
         $leaveTypes = LeaveType::with('applied_rules', 'lt_conditional_entitlements', 'lt_entitlements_grade_groups.lt_conditional_entitlements', 'lt_entitlements_grade_groups.grades')->where('active', true)->get();
         foreach($leaveTypes as $leaveType) {
+            $appliedRule = self::leaveTypeGetRule($leaveType, LeaveTypeRule::GENDER);
+            if(!empty($appliedRule)) {
+                $configuration = json_decode($appliedRule->configuration);
+                if(Employee::where('id', $emp_id)->where('gender', $configuration->gender)->count() == 0) {
+                    continue;
+                }
+            }
+
             $allocatedDaysInAYear = self::calculateEntitledDays($leaveType, $yearsOfService, $grade_id);
             
             // Add leave allocation for employee
@@ -633,6 +641,14 @@ class LeaveService
         }
 
         return false;
+    }
+
+    private static function leaveTypeGetRule($leaveType, $rule) {
+        foreach($leaveType->applied_rules as $applied_rule) {
+            if($applied_rule->rule == $rule) {
+                return $applied_rule;
+            }
+        }
     }
 
     public static function calculateEntitledDays($leaveType, $yearsOfService, $grade_id) {
