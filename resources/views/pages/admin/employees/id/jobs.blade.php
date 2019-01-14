@@ -200,9 +200,12 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="basic-salary"><strong>New Basic Salary*</strong></label>
-                            <input name="basic-salary" type="number" class="form-control" placeholder="" value=""
-                                >
+                            <input name="basic-salary" type="number" class="form-control" placeholder="" value="">
+                            
+                            <div id="basic-salary-error" class="invalid-feedback">
+                            </div>
                         </div>
+                        
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">

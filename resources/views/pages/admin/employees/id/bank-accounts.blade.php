@@ -21,7 +21,7 @@
                                     <option value="{{ $banks->name }}">{{ $banks->name }}</option>
                                     @endforeach
                             </select>
-                            <div id="bank-code-error" class="invalid-feedback">
+                            <div id="bank-name-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -79,6 +79,8 @@
                                     <option value="{{ $banks->name }}">{{ $banks->name }}</option>
                                     @endforeach
                             </select>
+                            <div id="bank-name-error" class="invalid-feedback">
+                            </div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -231,7 +233,7 @@
                                 switch(errorField) {
                                     case 'bank_code':
                                         $('#add-bank-accounts-form select[name=bank-code]').addClass('is-invalid');
-                                        $('#add-bank-accounts-form #bank-code-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        $('#add-bank-accounts-form #bank-name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'acc_no':
                                         $('#add-bank-accounts-form input[name=acc-no]').addClass('is-invalid');
@@ -295,7 +297,7 @@
                                 switch(errorField) {
                                     case 'bank_code':
                                         $('#edit-bank-accounts-form select[name=bank-code]').addClass('is-invalid');
-                                        $('#edit-bank-accounts-form #bank-code-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        $('#edit-bank-accounts-form #bank-name-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'acc_no':
                                         $('#edit-bank-accounts-form input[name=acc-no]').addClass('is-invalid');
