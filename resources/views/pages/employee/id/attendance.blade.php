@@ -159,7 +159,7 @@
     @section('scripts')
     <script>
         $(function() {
-            $.get("{{ route('employees.attendances.get') }}", function(attendanceLogList) {
+            $.get("{{ route('employee.attendances.get') }}", function(attendanceLogList) {
                 console.log("attendanceLogList: ", attendanceLogList);
                 if(attendanceLogList) {
                     for(var log of attendanceLogList) {
