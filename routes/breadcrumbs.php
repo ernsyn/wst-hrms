@@ -677,3 +677,7 @@ Breadcrumbs::for('payroll-setup.edit', function ($trail,$id) {
     $trail->parent('payroll');
     $trail->push('Edit Payroll Setup', route('payroll-setup.edit',$id));
 });
+
+Breadcrumbs::for('login-activity', function ($trail) {
+    $trail->push('User Login Activity', route('login-activity'));
+});

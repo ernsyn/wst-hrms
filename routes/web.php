@@ -554,3 +554,5 @@ Route::get('payroll-setup/{id}/delete','Payroll\PayrollSetupController@destroy')
 Route::get('settings/pcb/import', 'Admin\SettingsController@importPcb')->name('admin.settings.pcb.import');
 
 Route::get('get-pcb-data-datatables', ['as'=>'get.pcb.data','uses'=>'Admin\SettingsController@getPcbData']);
+
+Route::get('/login-activity', 'LoginActivityController@index')->middleware('auth')->name('login-activity');
