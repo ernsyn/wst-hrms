@@ -25,6 +25,7 @@ Route::group(['prefix' => 'employee', 'middleware' => 'auth:api'], function() {
 
 Route::group(['prefix' => 'attendance', 'middleware' => 'auth:api'], function() {
     Route::get('list', 'Api\AttendanceController@getAttendanceList');
+    Route::get('clock-in/ability', 'Api\AttendanceController@getClockInAbility');
     Route::post('clock-in', 'Api\AttendanceController@postClockIn');
     Route::post('clock-out', 'Api\AttendanceController@postClockOut');
 });

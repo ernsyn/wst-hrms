@@ -150,7 +150,7 @@
 
                             <label class="col-lg-4 col-form-label text-lg-right">Gender*</label>
                             <div class="col-lg-6">
-                                <select name="gender" class="form-control{{ $errors->has('gender') ? ' is-invalid' : '' }}">
+                                <select class="form-control{{ $errors->has('gender') ? ' is-invalid' : '' }}"name="gender" id="gender">
                                     <option value="">Select Gender</option>
                                     <option value="Male" {{ old('gender') == 'Male' ? 'selected' : ''}}>Male</option>
                                     <option value="Female" {{ old('gender') == 'Female' ? 'selected' : ''}}>Female</option>
@@ -184,7 +184,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Marital Status*</label>
                             <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status">
+                                <select class="form-control{{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status" id="marital_status">
                                     <option value="">Select Marital Status</option>
                                     <option value="Single" {{ old('marital_status') == 'Single' ? 'selected' : ''}}>Single</option>
                                     <option value="Married" {{ old('marital_status') == 'Married' ? 'selected' : ''}}>Married</option>
@@ -211,7 +211,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Nationality*</label>
                             <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality">
+                                <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
                                     <option value="">Select Nationality</option>
                                     @foreach($countries as $country)
                                     <option value="{{ $country->id }}" {{ old('nationality') == $country->id ? 'selected' : ''}}>{{ $country->citizenship }}</option>
@@ -398,6 +398,34 @@
         readURL(this);
         $('#profile-img-tag').show();
     });
+
+</script>
+
+<script>
+    $(function(){
+        $('#gender').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#marital_status').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#nationality').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#company_id').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#main_security_group_id').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+
+    });
+
 
 </script>
 @append
