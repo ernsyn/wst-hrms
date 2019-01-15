@@ -203,7 +203,7 @@
             clearDependentsError('#add-dependent-form');
             e.preventDefault();
             $.ajax({
-                url: "{{ route('employee.dependents.post', ['id' => $id]) }}",
+                url: "{{ route('employee.dependents.post') }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',

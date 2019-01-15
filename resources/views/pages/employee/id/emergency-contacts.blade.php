@@ -197,7 +197,7 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
             clearEmergencyContactError('#add-emergency-contact-form');
             e.preventDefault();
             $.ajax({
-                url: "{{ route('employee.emergency-contacts.post', ['id' => $id]) }}",
+                url: "{{ route('employee.emergency-contacts.post') }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
