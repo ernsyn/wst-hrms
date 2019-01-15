@@ -78,6 +78,8 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('employee/dt/security-groups', 'Employee\EmployeeController@getDataTableSecurityGroup')->name('employee.dt.security-groups');
     Route::get('employee/dt/report-to', 'Employee\EmployeeController@getDataTableReportTo')->name('employee.dt.report-to');
 
+    Route::get('employee/attendances', 'Employee\EmployeeController@ajaxGetAttendances')->name('employees.attendances.get');
+
     Route::post('employee/jobs','Employee\EmployeeController@postJob')->name('employee.jobs.post');
     Route::post('employee/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
     Route::post('employee/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');

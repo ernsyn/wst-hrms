@@ -15,16 +15,13 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="name"><strong>Name*</strong></label>
-                            <div class="col-md-6">
-                                <select class="form-control{{ $errors->has('security-group-id') ? ' is-invalid' : '' }}" name="security-group-id" id="security-group-id">
-                                    @foreach(App\SecurityGroup::all() as $company)
-                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                    @endforeach
-                                </select>
-                                <div id="security-group-id-error" class="invalid-feedback"></div>
-                            </div>
-
-
+                            <select class="form-control{{ $errors->has('security-group-id') ? ' is-invalid' : '' }}" name="security-group-id" id="security-group-id">
+                                <option value="">Select Security Group</option>
+                                @foreach(App\SecurityGroup::all() as $company)
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                @endforeach
+                            </select>
+                            <div id="security-group-id-error" class="invalid-feedback"></div>
                         </div>
                     </div>
 
@@ -123,6 +120,11 @@
 </script>
 <script type="text/javascript">
     $(function(){
+        $('#add-security-group-form #security-group-id').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+
         // ADD SECURITY GROUP
         $('#add-security-group-popup').on('show.bs.modal', function (event) {
             clearSecurityGroupError('#add-security-group-form');

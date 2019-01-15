@@ -722,12 +722,12 @@ class EmployeeController extends Controller
     {
         $educationData = $request->validate([
             'institution' => 'required',
-            'start_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
-            'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
+            'start_year' => 'required|digits:4|integer',
+            'end_year' => 'required|digits:4|integer',
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|between:0,99.99',
-            'description' => ''
+            'gpa' => 'required|integer|between:0,4.00',
+            'description' => 'nullable'
         ]);
         $educationData['created_by'] = auth()->user()->id;
         $education = new EmployeeEducation($educationData);

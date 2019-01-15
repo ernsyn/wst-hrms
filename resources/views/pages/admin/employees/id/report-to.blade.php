@@ -301,6 +301,34 @@
         editReportToEmpSelectize = editReportToEmpSelectize[0].selectize;
         console.log("Selectize: ", editReportToEmpSelectize);
 
+
+        $('#add-report-to-form select[name=type]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editType = $('#edit-report-to-form select[name=type]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+
+        $('#add-report-to-form select[name=report-to-level]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editLevel = $('#edit-report-to-form select[name=report-to-level]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+
+        $('#add-report-to-form select[name=kpi-proposer]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editKpiProposer = $('#edit-report-to-form select[name=kpi-proposer]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+
         // ADD
         $('#add-report-to-popup').on('show.bs.modal', function (event) {
             clearReportToError('#add-report-to-form');
@@ -378,11 +406,10 @@
                 code: currentData.employee_report_to.code
             });
             editReportToEmpSelectize.setValue(currentData.report_to_emp_id, false);
-
-            $('#edit-report-to-form select[name=type]').val(currentData.type);
-            $('#edit-report-to-form select[name=kpi-proposer]').val(currentData.kpi_proposer);
+            editType[0].selectize.setValue(currentData.type);
+            editLevel[0].selectize.setValue(currentData.report_to_level);
+            editKpiProposer[0].selectize.setValue(currentData.kpi_proposer);
             $('#edit-report-to-form input[name=notes]').val(currentData.notes);
-            $('#edit-report-to-form select[name=report-to-level]').val(currentData.report_to_level);
         });
 
         var editReportToRouteTemplate = "{{ route('admin.employees.report-to.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
