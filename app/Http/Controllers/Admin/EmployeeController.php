@@ -1397,7 +1397,7 @@ class EmployeeController extends Controller
             
             //send email
             Mail::to($row['email'])
-            ->bcc('chennee.lim@wisetech.com.my')
+            ->bcc(env('BCC_EMAIL'))
             ->send(new NewUserMail($emailData));
         }
         return "Total ".count($collection[0])." records";

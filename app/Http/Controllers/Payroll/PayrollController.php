@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payroll;
 use App\Company;
 use App\CostCentre;
 use App\Employee;
+use App\EmployeeReportTo;
 use App\LeaveAllocation;
 use App\PayrollMaster;
 use App\PayrollProcessedLeaveAttendance;
@@ -33,6 +34,7 @@ use App\Services\PayrollService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use PDF;
 use App\Repositories\Payroll\ReportRepository;
 use App\EmployeeJob;
@@ -45,6 +47,7 @@ use App\EmployeeClockInOutRecord;
 use App\Enums\AttendanceEnum;
 use App\LeaveRequest;
 use App\Http\Requests\PayslipRequest;
+use App\Mail\NewPayrollNotificationMail;
 
 class PayrollController extends Controller
 {
@@ -251,6 +254,23 @@ class PayrollController extends Controller
         }
         
         DB::commit();
+        
+        // send email notification to kpi proposer
+        $kpiProposers = EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where('kpi_proposer',1)
+            ->get();
+        
+        $emailData = array();
+        foreach($kpiProposers as $kpiProposer){
+            $emailData['name'] = $kpiProposer['name'];
+            $emailData['payrollMonth'] = PayrollPeriodEnum::getDescription($validated['period']).' '.DateHelper::dateWithFormat($validated['year_month'], 'M-Y');
+            
+            //send email
+            Mail::to($kpiProposer['email'])
+            ->bcc(env('BCC_EMAIL'))
+            ->send(new NewPayrollNotificationMail($emailData));
+        }
         
         return redirect('/payroll')->with('success', 'Payroll month has been added');
     }
