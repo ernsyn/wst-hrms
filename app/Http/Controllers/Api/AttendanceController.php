@@ -99,8 +99,8 @@ class AttendanceController extends Controller
 
         $workingDays = Auth::user()->employee->working_day;
         if($this->isWorkingDay($workingDays, $clockInTime) && !empty($workingDays->start_work_time)) {
-            $startWorkTime = Carbon::parse($workingDays->start_work_time);
-            if($clockInTime->greaterThan($startWorkTime)) {
+            $lateStartWorkTime = Carbon::parse($workingDays->start_work_time)->addMinutes(5);
+            if($clockInTime->greaterThan($lateStartWorkTime)) {
                 $clockInData['clock_in_status'] = 'late';
             }
         }
