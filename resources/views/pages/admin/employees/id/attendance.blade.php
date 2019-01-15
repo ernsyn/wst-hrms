@@ -23,6 +23,19 @@
                 </div>
             </div>
         </li>
+        <li class="list-group-item late">
+            <div class="row">
+                <div class="date col-md-2">
+                    
+                </div>
+                <div class="type col-md-2 text-success">
+                    Present (Late)
+                </div>
+                <div class="details col-md-8">
+                    
+                </div>
+            </div>
+        </li>
         <li class="list-group-item absent">
             <div class="row">
                 <div class="date col-md-2">
@@ -127,6 +140,19 @@
                 </div>
             </div>
         </li>
+        <li class="list-group-item misc">
+            <div class="row">
+                <div class="date col-md-2">
+                    
+                </div>
+                <div class="type col-md-2 text-dark">
+                        (Misc)
+                </div>
+                <div class="details col-md-8">
+                    
+                </div>
+            </div>
+        </li>
     </div>
 </div>
 
@@ -144,6 +170,11 @@
                             el.find('.date').text(log.date);
                             // el.find('.details').html("<strong>Clock-In</strong> (Time: " + log.clock_in_time + ", Address: " + log.clock_in_address + ") <br><strong>Clock-Out</strong> (Time: " + log.clock_out_time + ", Address: " + log.clock_out_address + ")");
                             
+                            el.appendTo('.attendance-log');
+                        break;
+                        case 'late':
+                            var el = $('.templates .late').clone();
+                            el.find('.date').text(log.date);
                             el.appendTo('.attendance-log');
                         break;
                         case 'absent':
@@ -192,7 +223,14 @@
                             el.find('.date').text(log.date);
                             // el.find('.details').text(log.name);
                             el.appendTo('.attendance-log');
-                        break;
+                            break;
+                        default:
+                            var el = $('.templates .misc').clone();
+                            el.find('.date').text(log.date);
+                            el.find('.details').text(log.attendance);
+                            el.appendTo('.attendance-log');
+                            break;
+
                     }
                 }
             }

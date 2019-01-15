@@ -9,6 +9,7 @@ use Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
 
 use App\User;
 use App\Employee;
@@ -25,6 +26,7 @@ use App\EmployeeEmergencyContact;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
+use App\EmployeeAttendance;
 use App\Media;
 
 class EmployeeController extends Controller
@@ -245,6 +247,19 @@ class EmployeeController extends Controller
     {
         $security_groups = EmployeeSecurityGroup::with('security_groups')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($security_groups)->make(true);
+    }
+
+    // SECTION: Ajax 
+    public function ajaxGetAttendances() {
+        $now = Carbon::now();
+        $startOfMonth = $now->copy()->startOfMonth();
+        $endOfMonth = $now->copy()->endOfMonth();
+
+        $attendances = EmployeeAttendance::where('emp_id', Auth::user()->employee->id)
+        ->whereDate('date', '>=', $startOfMonth)
+        ->whereDate('date', '<=', $endOfMonth)->get();
+
+        return $attendances;
     }
 
     // SECTION: Add
