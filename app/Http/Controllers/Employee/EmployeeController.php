@@ -75,8 +75,9 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
     }
 
-    public function postEditProfile(Request $request, $id)
+    public function postEditProfile(Request $request)
     {
+        $id = Auth::user()->employee->id;
         $profileUpdatedData = $request->validate([
             'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
             'code'=>'required|unique:employees,code,'.$id.',id',
@@ -90,10 +91,10 @@ class EmployeeController extends Controller
             'address3' => 'nullable',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
-            'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
-            'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
-            'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
+            // 'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
+            // 'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
+            // 'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
+            // 'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
             'main_security_group_id'=>'',
             'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'nationality' => 'required'
@@ -115,7 +116,7 @@ class EmployeeController extends Controller
     }
 
 
-    public function postChangePassword(Request $request, $id) {
+    public function postChangePassword(Request $request) {
         $data = $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
@@ -136,6 +137,12 @@ class EmployeeController extends Controller
 
 
     // SECTION: Data Tables
+    public function getDataTableEmergencyContacts()
+    {
+        $contacts = EmployeeEmergencyContact::where('emp_id', Auth::user()->employee->id)->get();
+        return DataTables::of($contacts)->make(true);
+    }
+
     public function getDataTableDependents()
     {
         $dependents = EmployeeDependent::where('emp_id', Auth::user()->employee->id)->get();
@@ -143,9 +150,6 @@ class EmployeeController extends Controller
         return DataTables::of($dependents)
         ->editColumn('dob', function ($dependent) {
             return date('d/m/Y', strtotime($dependent->dob) );
-        })
-        ->editColumn('alt_dob', function ($dependent) {
-            return date('Y-m-d', strtotime($dependent->dob) );
         })
         ->make(true);
     }
@@ -223,12 +227,6 @@ class EmployeeController extends Controller
     {
         $attachments = EmployeeAttachment::with('medias')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($attachments)->make(true);
-    }
-
-    public function getDataTableEmergencyContacts()
-    {
-        $contacts = EmployeeEmergencyContact::where('emp_id', Auth::user()->employee->id)->get();
-        return DataTables::of($contacts)->make(true);
     }
 
     public function getDataTableReportTo()
@@ -332,7 +330,7 @@ class EmployeeController extends Controller
 
 
     // SECTION: Edit
-    public function postEditEmergencyContact(Request $request, $emp_id, $id)
+    public function postEditEmergencyContact(Request $request, $id)
     {
         $emergencyContactUpdatedData = $request->validate([
             'name' => 'required',

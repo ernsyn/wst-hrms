@@ -261,7 +261,7 @@
             $('#edit-dependent-form #dob-dependent-edit').val(currentData.dob);
         });
 
-        var editDependentRouteTemplate = "{{ route('employee.dependents.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        var editDependentRouteTemplate = "{{ route('employee.dependents.edit.post', ['id' => '<<id>>']) }}";
         $('#edit-dependent-submit').click(function(e){
             var editDependentRoute = editDependentRouteTemplate.replace(encodeURI('<<id>>'), editDependentId);
             clearDependentsError('#edit-dependent-form');
@@ -319,7 +319,7 @@
             deleteDependentId = currentData.id;
         });
 
-        var deleteDependentRouteTemplate = "{{ route('employee.dependents.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        var deleteDependentRouteTemplate = "{{ route('employee.dependents.delete', ['id' => '<<id>>']) }}";
         $('#delete-dependent-submit').click(function(e){
             var deleteDependentRoute = deleteDependentRouteTemplate.replace(encodeURI('<<id>>'), deleteDependentId);
             e.preventDefault();

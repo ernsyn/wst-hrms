@@ -30,10 +30,6 @@ Route::group(['middleware' => ['auth']], function() {
 
 // MODE: Employee
 Route::group(['middleware' => ['auth', 'role:employee']], function() {
-    // Route::get('/employee','EmployeeController@displayProfile')->name('employee');
-    // Route::get('profile','EmployeeController@displayProfile')->name('profile');
-    // Route::get('changepassword', 'EmployeeController@changePassword')->name('employee.password');
-
     Route::get('dependentdata','EmployeeController@displayEmployeeDependent')->name('dependent');
     Route::get('employeeimmigrationdata','EmployeeController@displayImmigration')->name('immigration');
     Route::get('qualificationcompaniesdata','EmployeeController@displayQualificationCompanies')->name('companies');
@@ -46,9 +42,8 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('historydata','EmployeeController@displayHistory')->name('history');
     Route::get('attachmentdata','EmployeeController@displayAttachment')->name('attachment');
 
-    Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
-    // Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
-    Route::post('employee/{id}/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
+    // Route::get('/employee','Employee\EmployeeController@displayProfile')->name('employee');
+    Route::post('profile/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
 
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
 
@@ -80,10 +75,6 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     // Route::post('employee/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
     Route::post('employee/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');
 
-    Route::post('employee/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
-    Route::post('employee/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
-
-
 //to be edit
     Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
 
@@ -101,13 +92,13 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('profile/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
     Route::post('profile/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');
 
-    Route::post('employee/{id}/edit','Employee\EmployeeController@postEditProfile')->name('employee.profile.edit.post');
+    Route::post('profile/edit','Employee\EmployeeController@postEditProfile')->name('employee.profile.edit.post');
 
     //employee edit profile pic
     Route::post('employees/{id}/editpicture','Employee\EmployeeController@postEditPicture')->name('employees.picture.edit.post')->where('profile_media_id', '[0-9]+');
 
-    Route::post('employee/{emp_id}/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
-    Route::post('employee/{emp_id}/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
+    Route::post('profile/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
+    Route::post('profile/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
 
     //to be edit
     Route::post('add_leave_application','Employee\ELeaveController@addLeaveApplication')->name('add_leave_application');
@@ -126,9 +117,9 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('e-leave/edit/{id}/post','Employee\ELeaveController@ajaxPostEditLeaveRequest')->name('employee.e-leave.ajax.edit.post')->where('id', '[0-9]+');
     Route::get('e-leave/delete/{id}','Employee\ELeaveController@ajaxCancelLeaveRequest')->name('employee.e-leave.ajax.delete')->where('id', '[0-9]+');
 
-    //admin/employee/delete
-    Route::get('employees/{emp_id}/emergency-contacts/{id}/delete','Employee\EmployeeController@deleteEmergencyContact')->name('employee.emergency-contacts.delete');
-    Route::get('employees/{emp_id}/dependents/{id}/delete','Employee\EmployeeController@deleteDependent')->name('employee.dependents.delete')->where('id', '[0-9]+');
+    //employee/delete
+    Route::get('profile/emergency-contacts/{id}/delete','Employee\EmployeeController@deleteEmergencyContact')->name('employee.emergency-contacts.delete');
+    Route::get('profile/dependents/{id}/delete','Employee\EmployeeController@deleteDependent')->name('employee.dependents.delete')->where('id', '[0-9]+');
 });
 
 // MODE: Admin
