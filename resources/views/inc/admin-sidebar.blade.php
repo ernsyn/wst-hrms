@@ -91,7 +91,7 @@
                     @endhasanyrole
                 </ul>
             </li>
-            @hasanyrole('super-admin|admin')
+           
             {{-- SECTION: E-Leave --}}
             <li class="menu-section {{ request()->is('admin/e-leave*') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
@@ -200,5 +200,6 @@
                     </li>
                 </ul>
             </li>
-			@endhasanyrole        </ul>
+			@endhasanyrole        
+	</ul>
 </nav>
