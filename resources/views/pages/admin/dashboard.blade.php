@@ -57,9 +57,10 @@
                             </div>
                             <span class="fraction">
                                 <span class="today_attendance">{{ 
-                                    App\EmployeeClockInOutRecord::selectRaw('DISTINCT(emp_id)')
+                                    DB::table('employee_clock_in_out_records')
+                                    ->distinct('emp_id')
                                     ->whereDate('clock_in_time', \Carbon\Carbon::today())
-                                    ->count() 
+                                    ->count('emp_id')
                                 }}</span>/<span class="total_working_today">{{ 
                                     DB::table('employees')
                                     ->join('employee_working_days', 'employees.id', '=', 'employee_working_days.emp_id')
