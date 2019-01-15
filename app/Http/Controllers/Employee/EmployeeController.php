@@ -109,7 +109,7 @@ class EmployeeController extends Controller
             $profileUpdatedData['driver_license_expiry_date'] = null;
         }
 
-        Employee::where('id', $id)->update($profileUpdatedData);
+        Employee::find($id)->update($profileUpdatedData);
 
         return response()->json(['success'=>'Profile was successfully updated.']);
     }
