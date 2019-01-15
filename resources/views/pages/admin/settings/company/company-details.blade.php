@@ -652,7 +652,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Type*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="type" name="type" onchange="myFunction(event)">
+                                    <select class="form-control" id="type" name="type" >
                                     <option value="Fixed">Fixed</option>
                                     <option value="Custom">Custom</option>
                                 </select>
@@ -785,7 +785,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Type*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="type" name="type" onchange="myFunction(event)">
+                                <select class="form-control" id="type" name="type">
                                             <option value="Fixed">Fixed</option>
                                             <option value="Custom">Custom</option>
                                 </select>
@@ -924,7 +924,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Type*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="type" name="type" onchange="myFunction(event)">
+                                <select class="form-control" id="type" name="type" >
                                 <option value="Fixed">Fixed</option>
                                 <option value="Custom">Custom</option>
                             </select>
