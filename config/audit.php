@@ -58,8 +58,7 @@ return [
         'created',
         'updated',
         'deleted',
-        'restored',
-        'saved'
+        'restored'
     ],
 
     /*
