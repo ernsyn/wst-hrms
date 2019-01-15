@@ -1,6 +1,6 @@
 @extends('layouts.admin-base') 
 @section('content')
-<div id="page-add-leave-type" class="container">
+<div class="page-leave-type container">
     <div class="card mb-4">
         <form id="add-leave-type-form" data-parsley-validate>
             <div class="card-body">

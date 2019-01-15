@@ -3,7 +3,6 @@
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
 
-    @hasanyrole('super-admin|admin')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -37,7 +36,6 @@
             @endhasrole
         </div>
     </div>
-    @endhasanyrole
     <ul id="menu-container" class="list-unstyled">
     </ul>
 </nav>

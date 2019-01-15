@@ -16,7 +16,7 @@
                         <div class="col-md-12 mb-3">
                             <label><strong>Bank Name*</strong></label>
                             <select class="form-control" name="bank-code">
-                                    <option value=""></option>
+                                    <option value="">Select Bank</option>
                                     @foreach(App\BankCode::all()->sortBy('name') as $banks)
                                     <option value="{{ $banks->name }}">{{ $banks->name }}</option>
                                     @endforeach
@@ -155,12 +155,6 @@
         </thead>
     </table>
 </div>
-
-
-
-
-
-
 @section('scripts')
 <script>
     var bankAccountsTable = $('#employee-bank-accounts-table').DataTable({
@@ -200,6 +194,22 @@
 </script>
 <script type="text/javascript">
     $(function(){
+        $('#add-bank-accounts-form select[name=bank-code]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editBankCode = $('#edit-bank-accounts-form select[name=bank-code]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#add-bank-accounts-form select[name=acc-status]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editAccStatus = $('#edit-bank-accounts-form select[name=acc-status]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
         // ADD
         $('#add-bank-accounts-popup').on('show.bs.modal', function (event) {
             clearBankAccountError('#add-bank-accounts-form');
@@ -261,10 +271,9 @@
             console.log('Data: ', currentData)
 
             editId = currentData.id;
-
-            $('#edit-bank-accounts-form select[name=bank-code]').val(currentData.bank_code);
+            editBankCode[0].selectize.setValue(currentData.bank_code);
             $('#edit-bank-accounts-form input[name=acc-no]').val(currentData.acc_no);
-            $('#edit-bank-accounts-form select[name=acc-status]').val(currentData.acc_status);
+            editAccStatus[0].selectize.setValue(currentData.acc_status);
         });
 
         var editRouteTemplate = "{{ route('admin.employees.bank-accounts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";

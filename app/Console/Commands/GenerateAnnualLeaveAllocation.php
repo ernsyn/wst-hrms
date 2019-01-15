@@ -147,6 +147,14 @@ class GenerateAnnualLeaveAllocation extends Command
                 // In order to calculate the leave allocations - we need to know how many years he has been working
                 $yearsOfService = self::calculateEmployeeWorkingYears($emp_id, $validFromDate);
                 foreach($leaveTypes as $leaveType) {
+                    $appliedRule = self::leaveTypeGetRule($leaveType, LeaveTypeRule::GENDER);
+                    if(!empty($appliedRule)) {
+                        $configuration = json_decode($appliedRule->configuration);
+                        if(Employee::where('id', $emp_id)->where('gender', $configuration->gender)->count() == 0) {
+                            continue;
+                        }
+                    }
+
                     $allocatedDays = LeaveService::calculateEntitledDays($leaveType, $yearsOfService, $currentJob->emp_grade_id);
 
                     $leaveAllocation = LeaveAllocation::create([
@@ -181,5 +189,13 @@ class GenerateAnnualLeaveAllocation extends Command
         $startDateTime = date_create($firstJob->start_date);
         
         return date_diff($startDateTime, $untilDateTime)->y;
+    }
+
+    private static function leaveTypeGetRule($leaveType, $rule) {
+        foreach($leaveType->applied_rules as $applied_rule) {
+            if($applied_rule->rule == $rule) {
+                return $applied_rule;
+            }
+        }
     }
 }

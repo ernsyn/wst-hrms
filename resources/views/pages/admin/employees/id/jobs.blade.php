@@ -395,11 +395,66 @@
 </script>
 <script type="text/javascript">
     $(function () {
-        console.log("Initializing Job!")
+        $('#add-job-form select[name=cost-centre]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editCostCentre = $('#edit-job-form select[name=cost-centre]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#add-job-form select[name=department]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editDepartment = $('#edit-job-form select[name=department]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#add-job-form select[name=team]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editTeam = $('#edit-job-form select[name=team]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#add-job-form select[name=main-position]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editMainPosition = $('#edit-job-form select[name=main-position]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#add-job-form select[name=grade]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editGrade = $('#edit-job-form select[name=grade]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#add-job-form select[name=branch]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editBranch = $('#edit-job-form select[name=branch]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#add-job-form select[name=employment-status]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editEmpStatus = $('#edit-job-form select[name=employment-status]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+
         $('#date-job').datetimepicker({
             format: 'DD/MM/YYYY'
         });
-
         $('#date-job-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
@@ -535,14 +590,14 @@
 
             editId = currentData.id;
             $('#edit-job-form input[name=basic-salary]').val(currentData.basic_salary);
-            $('#edit-job-form select[name=cost-centre]').val(currentData.cost_centre_id);
-            $('#edit-job-form select[name=department]').val(currentData.department_id);
-            $('#edit-job-form select[name=team]').val(currentData.team_id);
-            $('#edit-job-form select[name=main-position]').val(currentData.emp_mainposition_id);
-            $('#edit-job-form select[name=grade]').val(currentData.emp_grade_id);
-            $('#edit-job-form select[name=branch]').val(currentData.branch_id);
+            editCostCentre[0].selectize.setValue(currentData.cost_centre_id);
+            editDepartment[0].selectize.setValue(currentData.department_id);
+            editTeam[0].selectize.setValue(currentData.team_id);
+            editMainPosition[0].selectize.setValue(currentData.emp_mainposition_id);
+            editGrade[0].selectize.setValue(currentData.emp_grade_id);
+            editBranch[0].selectize.setValue(currentData.branch_id);
             $('#edit-job-form #date-job-edit').val(currentData.start_date);
-            $('#edit-job-form select[name=employment-status]').val(currentData.status);
+            editEmpStatus[0].selectize.setValue(currentData.status);
             $('#edit-job-form textarea[name=remarks]').val(currentData.remarks);
         });
 
