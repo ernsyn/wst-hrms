@@ -1035,7 +1035,7 @@ class EmployeeController extends Controller
         ]);
         $dependentUpdatedData['dob'] = implode("-", array_reverse(explode("/", $dependentUpdatedData['dob'])));
 
-        EmployeeDependent::where('id', $id)->update($dependentUpdatedData);
+        EmployeeDependent::find($id)->update($dependentUpdatedData);
 
         return response()->json(['success'=>'Dependent was successfully updated.']);
     }
