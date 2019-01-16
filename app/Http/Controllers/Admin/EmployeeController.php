@@ -1151,7 +1151,7 @@ class EmployeeController extends Controller
             'competency' => 'required',
         ]);
 
-        EmployeeSkill::where('id', $id)->update($skillUpdatedData);
+        EmployeeSkill::find($id)->update($skillUpdatedData);
 
         return response()->json(['success'=>'Skill was successfully updated.']);
     }
