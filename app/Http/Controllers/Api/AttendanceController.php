@@ -28,6 +28,49 @@ class AttendanceController extends Controller
         return response()->json(EmployeeClockInOutRecordResource::collection($attendances), 200);  
     }
 
+    public function getClockInAbility(Request $request) {
+        return $this->checkAbleToClockIn();
+    }
+
+    private function checkAbleToClockIn() {
+        $canClockIn = true;
+        $reason = null;
+
+        // Check if already clocked-in for the day
+        $todaysClockInCount = EmployeeClockInOutRecord::where('emp_id', Auth::user()->employee->id)
+            ->whereDate('clock_in_time', Carbon::today())
+            ->count();
+        if($todaysClockInCount > 0) {
+            $canClockIn = false;
+            $reason = "You have already clocked-in for today.";
+        } else {
+            // Check if too early
+            $workingDay = Auth::user()->employee->working_day;
+            if(!empty($workingDay)) {
+                $minStartWorkTime = Carbon::parse($workingDay->start_work_time)->subHour();
+                $now = Carbon::now();
+                if($now->lt($minStartWorkTime)) {
+                    $canClockIn = false;
+                    $reason = "Too early to clock-in. The earliest you may clock-in is one hour before your start working time.";
+                }
+            } else {
+                $canClockIn = false;
+                $reason = "Your working days have not been set.";
+            }
+        }
+
+        if($canClockIn) {
+            return [
+                'can_clock_in' => true
+            ];
+        } else {
+            return [
+                'can_clock_in' => false,
+                'reason' => $reason
+            ];
+        }
+    } 
+
     public function postClockIn(Request $request)
     {
         $clockInData = $request->validate([
@@ -44,6 +87,11 @@ class AttendanceController extends Controller
             return response()->json(['error' => 'Please clock-out your previous attendance first!'], 400);
         }
 
+        $clockInAbility = $this->checkAbleToClockIn();
+        if(!$clockInAbility['can_clock_in']) {
+            return response()->json(['error' => $clockInAbility['reason']], 400);
+        }
+
         $clockInData['clock_in_time'] = date('Y-m-d H:i:s');
         $clockInTime = Carbon::parse($clockInData['clock_in_time']);
 
@@ -51,8 +99,8 @@ class AttendanceController extends Controller
 
         $workingDays = Auth::user()->employee->working_day;
         if($this->isWorkingDay($workingDays, $clockInTime) && !empty($workingDays->start_work_time)) {
-            $startWorkTime = Carbon::parse($workingDays->start_work_time);
-            if($clockInTime->greaterThan($startWorkTime)) {
+            $lateStartWorkTime = Carbon::parse($workingDays->start_work_time)->addMinutes(5);
+            if($clockInTime->greaterThan($lateStartWorkTime)) {
                 $clockInData['clock_in_status'] = 'late';
             }
         }

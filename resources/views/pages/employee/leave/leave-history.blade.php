@@ -24,6 +24,7 @@
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Total Days</th>
+                            <th>Attachment</th>
                             <th>Status</th>
 
                     </tr>
@@ -41,7 +42,12 @@
                             <td>{{$leaveRequest['start_date']}}</td>
                             <td>{{$leaveRequest['end_date']}}</td>
                             <td>{{$leaveRequest['applied_days']}}</td>
-
+                            <td>
+                                    <img src="data:{{$leaveRequest->attachment->mimetype}};base64, {{$leaveRequest->attachment->data}}" height="80px" width="80px">
+                                    <a href="data:{{$leaveRequest->attachment->mimetype}};base64, {{$leaveRequest->attachment->data}}"download="{{$leaveRequest->attachment->filename}}">Download </a></td>
+                            
+                            
+                           
                             <td>{{$leaveRequest['status']}}</td>
 
                             <td>
