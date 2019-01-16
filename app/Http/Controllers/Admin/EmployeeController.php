@@ -1176,11 +1176,11 @@ class EmployeeController extends Controller
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
         if($request->kpi_proposer == 0){
-            EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+            EmployeeReportTo::find($id)->update($reportToUpdatedData);
             return response()->json(['success'=>'Report To was successfully updated.']);
         } else {
             if($employee_kpi_proposer == 0){
-                EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+                EmployeeReportTo::find($id)->update($reportToUpdatedData);
                 return response()->json(['success'=>'Report To was successfully updated.']);
             } else {
                 return response()->json(['fail'=>'KPI Proposer already exist']);
