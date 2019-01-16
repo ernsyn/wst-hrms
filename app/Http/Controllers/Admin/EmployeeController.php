@@ -1195,7 +1195,7 @@ class EmployeeController extends Controller
             'notes' => 'required'
         ]);
 
-        EmployeeAttachment::where('id', $id)->update($attachmentUpdatedData);
+        EmployeeAttachment::find($id)->update($attachmentUpdatedData);
 
         return response()->json(['success'=>'Attachment was successfully updated.']);
     }
