@@ -519,7 +519,7 @@
 
         });
 
-        var editProfileRouteTemplate = "{{ route('employee.profile.edit.post', ['id' => $employee->id]) }}";
+        var editProfileRouteTemplate = "{{ route('employee.profile.edit.post') }}";
         $('#edit-profile-submit').click(function(e){
             clearProfilesError('#edit-profile-form');
             // var editProfileRoute = editProfileRouteTemplate.replace($id, editProfileId);
@@ -740,7 +740,7 @@
             $(e.target).attr('disabled', true);
 
             $.ajax({
-                url: "{{ route('employee.change-password.post', ['id' => $employee->id]) }}",
+                url: "{{ route('employee.change-password.post') }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
