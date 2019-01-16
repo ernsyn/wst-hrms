@@ -1104,7 +1104,7 @@ class EmployeeController extends Controller
             'acc_status' => 'required'
         ]);
 
-        EmployeeBankAccount::where('id', $id)->update($bankAccountUpdateData);
+        EmployeeBankAccount::find($id)->update($bankAccountUpdateData);
 
         return response()->json(['success'=>'Bank Account was successfully updated.']);
     }
