@@ -719,7 +719,7 @@
             }
         });
 
-        // datepicker add exp
+        // datepicker edit exp
         $('#start-date-experience-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
@@ -803,7 +803,7 @@
         $('#add-experience-popup').on('show.bs.modal', function (event) {
             clearExperiencesError('#add-experience-form');
         });
-            $('#add-experience-form #add-experience-submit').click(function(e){
+        $('#add-experience-form #add-experience-submit').click(function(e){
             clearExperiencesError('#add-experience-form');
             e.preventDefault();
             $.ajax({
@@ -1015,7 +1015,7 @@
         $('#add-education-popup').on('show.bs.modal', function (event) {
             clearEducationsError('#add-education-form');
         });
-            $('#add-education-form #add-education-submit').click(function(e){
+        $('#add-education-form #add-education-submit').click(function(e){
             clearEducationsError('#add-education-form');
             e.preventDefault();
             $.ajax({
