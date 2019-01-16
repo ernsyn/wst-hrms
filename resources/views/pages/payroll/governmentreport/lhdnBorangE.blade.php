@@ -693,7 +693,7 @@
                     {{$emp->getIncomeTaxNo()}}
                 </td>
                 <td class="tg-s268 pleft">{{$emp->getIcNo()}}</td>
-                <td class="tg-s268 pleft">{{$emp->getEmployeeCategory()}}</td>
+                <td class="tg-s268 pleft text_center">{{$emp->getEmployeeCategory()}}</td>
                 <td class="tg-s268 pleft">{{$emp->getTaxPayByEmployer()}}</td>
                 <td class="tg-0lax pleft">{{$emp->getTotalChildren()}}</td>
                 <td class="tg-0lax pleft">{{number_format($emp->getAmountOfDeparture(),2)}}</td>

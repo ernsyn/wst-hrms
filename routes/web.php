@@ -136,7 +136,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{id}/reset-password','Admin\EmployeeController@postResetPassword')->name('admin.employees.reset-password.post')->where('id', '[0-9]+');
     Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
     Route::post('employees/{id}/update-roles','Admin\EmployeeController@postEditRoles')->name('admin.employees.update-roles.admin.post')->where('id', '[0-9]+');
-    
+
     // > Data Tables
     Route::get('employees/{id}/dt/dependents', 'Admin\EmployeeController@getDataTableDependents')->name('admin.employees.dt.dependents')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/immigrations', 'Admin\EmployeeController@getDataTableImmigrations')->name('admin.employees.dt.immigrations')->where('id', '[0-9]+');
@@ -488,12 +488,12 @@ Route::get('/payroll/create', 'Payroll\PayrollController@create')->name('payroll
 Route::get('payroll-report', 'Payroll\PayrollReportController@showReport')->name('payroll.report.show');
 Route::post('/payroll/generate-report', 'Payroll\PayrollController@generateReport')->name('payroll.generate-report');
 Route::post('/report/generate', 'Payroll\PayrollReportController@exportReport')->name('report.generate');
-
 Route::get('/payslip/show', 'Payroll\PayrollController@showPayslip')->name('payslip.show');
 Route::post('/payslip/download', 'Payroll\PayrollController@downloadPayslip')->name('payslip.download');
 
 Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
 Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');
+Route::get('government_report/employees', 'Payroll\GovernmentReportController@listEmployees')->name('payroll/government_report/employees');
 
 Route::resource('payroll-setup', 'Payroll\PayrollSetupController');
 Route::get('payroll-setup/{id}/delete','Payroll\PayrollSetupController@destroy')->name('payroll-setup.destroy')->where('id', '[0-9]+');

@@ -52,18 +52,20 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}" id="{{$form->getValue()}}-form">
                         {{csrf_field()}}
-                        <div class="col-md-8 mx-auto">
-                            @if ($form->getShowFilter() == 'true')
-                            <div id="accordion" role="tablist">
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
-                                        <i class="fas fa-search"></i> Filter
-                                    </div>
-                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-                                        <div class="card-body">
+                        <!--filter-->
+                            <div class="col-md-8 mx-auto">
+                                @if ($form->getShowFilter() == 'true')
+                                <div id="accordion" role="tablist">
+                                    <div class="card">
+                                        <div class="card-header" role="tab" id="headingOne" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer">
+                                            <i class="fas fa-search"></i> Filter
+                                        </div>
+                                        <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                            <div class="card-body">
                                                 <div class="form-group">
                                                     <label for="exampleFormControlCostCentres">Cost Centres</label>
                                                     <select class="form-control" id="selectCostCentres" name="selectCostCentres">
@@ -93,13 +95,24 @@
                                                         <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                         @endforeach
                                                     </select>
+                                                    <br>
+                                                    Employee &nbsp;&nbsp;&nbsp;
+                                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                        <label class="btn btn-secondary active employee-all" style="width: 60pt;">
+                                                            <input type="radio" name="government-employees-radio" autocomplete="off" checked> All
+                                                        </label>
+                                                        <label class="btn btn-secondary employee-selected" data-report-name="{{$form->getValue()}}" style="width: 60pt;">
+                                                            <input type="radio" name="government-employees-radio" autocomplete="off"> Selected
+                                                        </label>
+                                                    </div>
                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
-                            @endif
-                        </div>
+                        <!-- filter end-->
                         <br>
                         <div class="col-md-6 mx-auto">
                             <div class="form-group">
@@ -115,7 +128,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -129,9 +142,9 @@
                                 @endif
                             </div>
                         </div>
-
+                        <input type="hidden" class="hidden-employee-list" name="employeeList" value="">
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
-                        <input type="submit" class="btn btn-info" value="Generate">
+                        <input type="submit" class="btn btn-info generate-report-button" data-report-name="{{$form->getValue()}}" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
@@ -186,7 +199,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}" id="{{$form->getValue()}}-form">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -226,6 +239,16 @@
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
+                                                <br>
+                                                Employee &nbsp;&nbsp;&nbsp;
+                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                    <label class="btn btn-secondary active employee-all" style="width: 60pt;">
+                                                        <input type="radio" name="government-employees-radio" autocomplete="off" checked> All
+                                                    </label>
+                                                    <label class="btn btn-secondary employee-selected" data-report-name="{{$form->getValue()}}" style="width: 60pt;">
+                                                        <input type="radio" name="government-employees-radio" autocomplete="off"> Selected
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -248,7 +271,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -262,9 +285,9 @@
                                 @endif
                             </div>
                         </div>
-
+                        <input type="hidden" class="hidden-employee-list" name="employeeList" value="">
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
-                        <input type="submit" class="btn btn-info" value="Generate">
+                        <input type="submit" class="btn btn-info generate-report-button" data-report-name="{{$form->getValue()}}" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
@@ -320,7 +343,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}" id="{{$form->getValue()}}-form">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -360,6 +383,16 @@
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
+                                                <br>
+                                                Employee &nbsp;&nbsp;&nbsp;
+                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                    <label class="btn btn-secondary active employee-all" style="width: 60pt;">
+                                                        <input type="radio" name="government-employees-radio" autocomplete="off" checked> All
+                                                    </label>
+                                                    <label class="btn btn-secondary employee-selected" data-report-name="{{$form->getValue()}}" style="width: 60pt;">
+                                                        <input type="radio" name="government-employees-radio" autocomplete="off"> Selected
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -382,7 +415,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -396,9 +429,9 @@
                                 @endif
                             </div>
                         </div>
-
+                        <input type="hidden" class="hidden-employee-list" name="employeeList" value="">
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
-                        <input type="submit" class="btn btn-info" value="Generate">
+                        <input type="submit" class="btn btn-info generate-report-button" data-report-name="{{$form->getValue()}}" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
@@ -454,7 +487,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}" id="{{$form->getValue()}}-form">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -494,6 +527,16 @@
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
+                                                <br>
+                                                Employee &nbsp;&nbsp;&nbsp;
+                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                    <label class="btn btn-secondary active employee-all" style="width: 60pt;">
+                                                        <input type="radio" name="government-employees-radio" autocomplete="off" checked> All
+                                                    </label>
+                                                    <label class="btn btn-secondary employee-selected" data-report-name="{{$form->getValue()}}" style="width: 60pt;">
+                                                        <input type="radio" name="government-employees-radio" autocomplete="off"> Selected
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -516,7 +559,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -530,9 +573,9 @@
                                 @endif
                             </div>
                         </div>
-
+                        <input type="hidden" class="hidden-employee-list" name="employeeList" value="">
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
-                        <input type="submit" class="btn btn-info" value="Generate">
+                        <input type="submit" class="btn btn-info generate-report-button" data-report-name="{{$form->getValue()}}" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
@@ -587,7 +630,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}">
+                    <form method="post" action="{{action('Payroll\GovernmentReportController@generateReport')}}" id="{{$form->getValue()}}-form">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -627,6 +670,16 @@
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
+                                                <br>
+                                                Employee &nbsp;&nbsp;&nbsp;
+                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                    <label class="btn btn-secondary active employee-all" style="width: 60pt;">
+                                                        <input type="radio" name="government-employees-radio" autocomplete="off" checked> All
+                                                    </label>
+                                                    <label class="btn btn-secondary employee-selected" data-report-name="{{$form->getValue()}}" style="width: 60pt;">
+                                                        <input type="radio" name="government-employees-radio" autocomplete="off"> Selected
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -649,7 +702,7 @@
                                 <label for="exampleFormPeriod">Periods</label>
                                 <select class="form-control" id="selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
@@ -663,9 +716,9 @@
                                 @endif
                             </div>
                         </div>
-
+                        <input type="hidden" class="hidden-employee-list" name="employeeList" value="">
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
-                        <input type="submit" class="btn btn-info" value="Generate">
+                        <input type="submit" class="btn btn-info generate-report-button" data-report-name="{{$form->getValue()}}" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
@@ -674,6 +727,53 @@
             </div>
         </div>
         @endforeach
+    </div>
+
+    <!--employee sidebar right -->
+    <div class="modal right fade employeeSidebarModal" id="employeeSidebarModal" tabindex="-1" role="dialog" aria-labelledby="sidebarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input class="form-control search_employees" type="search" name="search_employees" placeholder="Search employees">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary button-search-employee" type="button" data-report-name="">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                    <br>
+                    <div class="scroll-report" data-report-name="" data-report-page="0" style="height: 363pt;overflow: scroll;">
+                        <table class="report-employees-table table table-hover table-sm table-bordered" id="report-employees-table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" name="all_employee_list_checkbox" onclick="javascript:toggleSelectAllEmployee(this)">
+                                </th>
+                                <th>name</th>
+                                <th>IC</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="3"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <span class="loading-span">Loading...</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

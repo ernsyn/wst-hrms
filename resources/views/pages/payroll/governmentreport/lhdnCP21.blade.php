@@ -729,7 +729,7 @@
             </td>
             <td class="text_center border_right" valign="top">{{$data->getSalaryFromB()}}</td>
             <td class="text_center border_right" valign="top">{{$data->getSalaryUntilB()}}</td>
-            <td class="text_center" valign="top">{{$data->getSalaryAmountB()}}</td>
+            <td class="text_center" valign="top">{{number_format($data->getSalaryAmountB(),2)}}</td>
         </tr>
         <tr class="border_bottom">
             <td class="pleft" style="border-right-style: none;">2)</td>

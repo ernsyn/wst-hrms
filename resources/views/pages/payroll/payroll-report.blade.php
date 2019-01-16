@@ -1,4 +1,4 @@
-@extends('layouts.admin-base') 
+@extends('layouts.admin-base')
 @section('pageTitle', 'Reports')
 @section('content')
 <div class="p-4">
@@ -11,8 +11,8 @@
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
-		@endif 
-		
+		@endif
+
 		@if(session()->get('success'))
 		<div class="alert alert-success alert-dismissible fade show" role="alert">
 			{{ session()->get('success') }}
@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-    
+
     <!--government report form -->
     <div class="row">
         @foreach($dforms as $form)
@@ -140,7 +140,7 @@
             </div>
         </div>
     </div>
-    
+
     <!--government report form  1-->
     <div class="row">
         @foreach($dforms1 as $form)
@@ -198,7 +198,7 @@
     </div>
 </div>
 
-@endsection 
+@endsection
 @section('scripts')
 <script>
 

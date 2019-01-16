@@ -25,6 +25,7 @@ use App\Http\Controllers\Popo\governmentreport\SocsoBorang8ABean;
 use App\Http\Controllers\Popo\governmentreport\PtptnP04Bean;
 use App\Http\Controllers\Popo\governmentreport\ZakatBean;
 use App\Http\Controllers\Popo\governmentreport\EISLampiranBean;
+use App\Http\Controllers\Popo\governmentreport\EmployeeBean;
 
 use App\Enums\PayrollPeriodEnum;
 use App\Services\GovernmentReportService;
@@ -37,6 +38,7 @@ use App\Department;
 use App\EmployeePosition;
 use App\User;
 use App\Company;
+use App\PayrollSetup;
 
 
 use \DB;
@@ -45,13 +47,14 @@ class GenerateReportsHelper
 {
 
     protected static $governmentReportService;
+    private static $count_per_page = 15;
 
     public function __construct(){
         self::$governmentReportService = new GovernmentReportRepositoryImpl();
     }
 
 
-    public static function generateBean($reportName,$periods,$year,$officerId,$filter){
+    public static function generateBean($reportName,$periods,$year,$officerId,$filter,$search){
         switch ($reportName) {
             case "LHDN_borangE":
 
@@ -59,25 +62,26 @@ class GenerateReportsHelper
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,null,$year);
-                $totalEmployeeActiveAndResign = self::getEmployeeTotalActiveAndResigned($companyInformation->id,$filter,null,$year);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,null,$year);
+                $totalEmployeeActiveAndResign = self::getEmployeeTotalActiveAndResigned($companyInformation->id,$filter,$search,null,$year); //TODO check need to filter with user id
+                $payrollSetup = self::getPayrollSetupValue('LHDN_CHILD_DEPARTURE_AMOUNT',$companyInformation->id);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
                 }else {
                     $data = new LhdnBorangEBean([
                         'employerName' => $companyInformation->name,
-                        'employerNoE' => 'E9119707907',
+                        'employerNoE' => $companyInformation->tax_no,
                         //'employerStatus' => 2,
                         'businessStatus' => 1,
-                        //'incomeTaxNo' => 'SG10234567090',
+                        //'incomeTaxNo' => $companyInformation->tax_no,  //'SG10234567090',
                         //'icNo' => 'B3200090304M',
                         //'passportNo' => 'A320000304',
                         'ssmNo' => $companyInformation->registration_no,
-                        'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                        'address3' => 'SELANGOR.',
-                        'postcode' => 46200,
+                        'address1' => $companyInformation->address,   //'LEVEL 15, TOWER 1, PJ 33,',
+                        'address2' => $companyInformation->address2,  //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'address3' => $companyInformation->address3,  //'SELANGOR.',
+                        'postcode' => $companyInformation->postcode,  //46200,
                         'phoneNo' => $companyInformation->phone,
                         //'mobileNo' => '013-7931 3550',
                         //'email' => 'oppo.amandachong@gmail.com',
@@ -102,14 +106,14 @@ class GenerateReportsHelper
                             'employeeName' => $userPayroll->name,
                             'incomeTaxNo' => $userPayroll->tax_no,
                             'icNo' => $userPayroll->ic_no,
-                            //'employeeCategory' => $userPayroll->name,
+                            'employeeCategory' => self::getMaritalCategory($userPayroll->marital_status),
                             'taxPayByEmployer' => 'Tidak',
                             'totalChildren' => $userPayroll->total_children,
-                            //'amountOfDeparture' => $userPayroll->name,
-                            'totalGrossRemuneration' => $userPayroll->total_gross_salary,
-                            //'benefitsOfGoods' => $userPayroll->name,
-                            //'valuePlaceOfResidence' => $userPayroll->name,
-                            //'benefitsOfESOS' => $userPayroll->name,
+                            'amountOfDeparture' => $userPayroll->total_children * $payrollSetup->value,
+                            'totalGrossRemuneration' => $userPayroll->B1a,
+                            'benefitsOfGoods' => $userPayroll->B3,
+                            'valuePlaceOfResidence' => $userPayroll->B4,
+                            'benefitsOfESOS' => $userPayroll->B1e,
                             //'taxExemptPerquisites' => $userPayroll->name,
                             //'TP1Departure' => $userPayroll->name,
                             //'TP1Zakat' => $userPayroll->name,
@@ -131,7 +135,8 @@ class GenerateReportsHelper
                     $data = array();
                     $companyInformation = self::getUserLogonCompanyInformation();
                     $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                    $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,null,$year);
+                    $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,null,$year);
+                    $yearlyPeriod = self::getPeriodFromAndUntil($year);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -139,18 +144,18 @@ class GenerateReportsHelper
                     foreach ($userInfoAndPayrollList as $userPayroll) {
                         $obj = new LhdnCP21Bean([
                             'employerName' => $companyInformation->name,
-                            'employerNoE' => 'E9119707907',
-                            'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                            'employerAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                            'employerAddress3' => 'SELANGOR.',
-                            'employerPostcode' => 46200,
+                            'employerNoE' => $companyInformation->tax_no,        //'E9119707907',
+                            'employerAddress1' => $companyInformation->address,  //'LEVEL 15, TOWER 1, PJ 33,',
+                            'employerAddress2' => $companyInformation->address2, //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                            'employerAddress3' => $companyInformation->address3, //'SELANGOR.',
+                            'employerPostcode' => $companyInformation->postcode, //46200,
                             'employerNoTel' => $companyInformation->phone,
                             'name_A' => $userPayroll->name,
                             'dateOfCommencement_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
-                            //'address1_A' => 'No 7 ,Simpang Empat',
-                            //'address2_A' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                            //'address3_A' => 'SELANGOR.',
-                            //'postcode_A' => 46200,
+                            'address1_A' => $userPayroll->address,   //'No 7 ,Simpang Empat',
+                            'address2_A' => $userPayroll->address2,  //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                            'address3_A' => $userPayroll->address3,  //'SELANGOR.',
+                            'postcode_A' => $userPayroll->postcode,  //46200,
                             'expectedDatetoLeaveMalaysia_A' => '',
                             'xAddressBelongsToTaxAgent_A' => '',
                             'ic_A' => $userPayroll->ic_no,
@@ -160,12 +165,60 @@ class GenerateReportsHelper
                             'natureOfEmployment_A' => $userPayroll->position,
                             'telno_A' => $userPayroll->contact_no,
 
-                            'salaryFrom_B' => self::changeMalaysianDate($userPayroll->remuneration_start_date),
+                            'salaryFrom_B' => self::changeMalaysianDate($userPayroll->remuneration_start_date), //TODO : remuneration date wrong
                             'salaryUntil_B' => self::changeMalaysianDate($userPayroll->remuneration_end_date),
-                            'salaryAmount_B' => $userPayroll->total_basic_salary,
+                            'salaryAmount_B' => $userPayroll->total_gross_salary, //TODO : is it included leave pay?
+
+                            'leavePayFrom_B' => $yearlyPeriod['period_from'],
+                            'leavePayUntil_B' => $yearlyPeriod['period_util'],
+                            'leavePayAmount_B' => $userPayroll->ALP + $userPayroll->CFLP,
+
+                            'commissionFrom_B' => $yearlyPeriod['period_from'],
+                            'commissionUntil_B' => $yearlyPeriod['period_util'],
+                            'commissionAmount_B' => $userPayroll->B1b,
+
+                            'gratuityFrom_B' => $yearlyPeriod['period_from'],
+                            'gratuityUntil_B' => $yearlyPeriod['period_util'],
+                            'gratuityAmount_B' => $userPayroll->B1f,
+
+                            'compensationFrom_B' => $yearlyPeriod['period_from'],
+                            'compensationUntil_B' => $yearlyPeriod['period_util'],
+                            'compensationAmount_B' => $userPayroll->B6,
+
+                            'cashAllowanceFrom_B' => $yearlyPeriod['period_from'],
+                            'cashAllowanceUntil_B' => $yearlyPeriod['period_util'],
+                            'cashAllowanceAmount_B' => $userPayroll->B1d,
+
+                            'pensionFrom_B' => $yearlyPeriod['period_from'],
+                            'pensionUntil_B' => $yearlyPeriod['period_util'],
+                            'pensionAmount_B' => $userPayroll->C1,
+
+                            'benefitSubjectToTaxFrom_B' => $yearlyPeriod['period_from'],
+                            'benefitSubjectToTaxUntil_B' => $yearlyPeriod['period_util'],
+                            'benefitSubjectToTaxAmount_B' => $userPayroll->B3,
+
+                            'livingAccommodationFrom_B' => $yearlyPeriod['period_from'],
+                            'livingAccommodationUntil_B' => $yearlyPeriod['period_util'],
+                            'livingAccommodationAmount_B' => $userPayroll->B4,
+
+                            //'otherAllowanceFrom_B' => $this->otherAllowanceFrom_B,
+                            //'otherAllowanceUntil_B' => $this->otherAllowanceUntil_B,
+                            //'otherAllowanceAmount_B' => $this->otherAllowanceAmount_B,
+
+                            //'otherPaymentsFrom_B' => $this->otherPaymentsFrom_B,
+                            //'otherPaymentsUntil_B' => $this->otherPaymentsUntil_B,
+                            //'otherPaymentsAmount_B' => $this->otherPaymentsAmount_B,
 
                             //TODO : need sum of total of B section
-                            'total_B' => $userPayroll->total_basic_salary,
+                            'total_B' => $userPayroll->total_basic_salary +
+                                         $userPayroll->ALP + $userPayroll->CFLP +
+                                         $userPayroll->B1b +
+                                         $userPayroll->B1f +
+                                         $userPayroll->B6 +
+                                         $userPayroll->B1d +
+                                         $userPayroll->C1 +
+                                         $userPayroll->B3 +
+                                         $userPayroll->B4,
 
                             //SECTION D
                             'contributionsToEmployeeProvidentFund_D' => $userPayroll->total_epf,
@@ -192,7 +245,7 @@ class GenerateReportsHelper
                 //Generate for new staff
                 $date = self::getPayrollYearMonth($periods,$companyInformation->id);
                 $extraFilter = 'year(`employee_jobs`.`start_date`) = '.$date->year.' and month(`employee_jobs`.`start_date`) = '.$date->month;
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$extraFilter,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,$extraFilter,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -202,14 +255,14 @@ class GenerateReportsHelper
                             'companyName' => $companyInformation->name,
                             'companyNoE' => 'E9119707907',
                             'companyNoTel' => $companyInformation->phone,
-                            'addressTo1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                            'addressTo2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                            'addressTo3' => 'SELANGOR.',
-                            'postcodeTo' => 46200,
-                            'addressFrom1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                            'addressFrom2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                            'addressFrom3' => 'SELANGOR.',
-                            'postcodeFrom' => 46200,
+                            'addressTo1' => $companyInformation->address,     //'LEVEL 15, TOWER 1, PJ 33,',
+                            'addressTo2' => $companyInformation->address2,    //'JALAN SEMANGAT, PETALING JAYA,',
+                            'addressTo3' => $companyInformation->address3,    //'SELANGOR.',
+                            'postcodeTo' => $companyInformation->postcode,    //46200,
+                            'addressFrom1' => $companyInformation->address,   //'LEVEL 15, TOWER 1, PJ 33,',
+                            'addressFrom2' => $companyInformation->address2,  //'JALAN SEMANGAT, PETALING JAYA,',
+                            'addressFrom3' => $companyInformation->address3,  //'SELANGOR.',
+                            'postcodeFrom' => $companyInformation->postcode,  //46200,
 
                             'name_A' => $userPayroll->name,
                             'incomeTaxNo_A' => $userPayroll->tax_no,
@@ -218,10 +271,10 @@ class GenerateReportsHelper
                             'employmentStartDate_A' => self::changeMalaysianDate($userPayroll->job_start_date),
                             'employmentExpectedDate_A' => '05/03/2018',
                             'immigrationNo_A' => $userPayroll->immigration_passport_no,
-                            'address1_A' => 'No 7 ,Simpang Empat',
-                            'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                            'address3_A' => 'SELANGOR.',
-                            'postcode_A' => 46200,
+                            'address1_A' => $userPayroll->address,            //'No 7 ,Simpang Empat',
+                            'address2_A' => $userPayroll->address2,           //'JALAN SEMANGAT, PETALING JAYA,',
+                            'address3_A' => $userPayroll->address3,           //'SELANGOR.',
+                            'postcode_A' => $userPayroll->postcode,            //46200,
                             'birthDate_A' => self::changeMalaysianDate($userPayroll->dob),
                             'maritalStatus_A' => $userPayroll->marital_status,
                             'signX_A' => '',
@@ -248,7 +301,7 @@ class GenerateReportsHelper
 
                 //generate for resigned staff
                 $extraFilter = 'employee_jobs.end_date IS NOT NULL';
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$extraFilter,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,$extraFilter,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -257,19 +310,19 @@ class GenerateReportsHelper
                         $obj = new LhdnCP22aBean([
                             'employerName' => $companyInformation->name,
                             'employerNoE' => 'E9119707907',
-                            'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                            'employerAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                            'employerAddress3' => 'SELANGOR.',
-                            'employerPostcode' => 46200,
+                            'employerAddress1' => $companyInformation->address,     //'LEVEL 15, TOWER 1, PJ 33,',
+                            'employerAddress2' => $companyInformation->address2,    //'JALAN SEMANGAT, PETALING JAYA,',
+                            'employerAddress3' => $companyInformation->address3,    //'SELANGOR.',
+                            'employerPostcode' => $companyInformation->postcode,    //46200,
                             'employerNoTel' => $companyInformation->phone,
 
                             'name_A' => $userPayroll->name,
                             'telNo_A' => $userPayroll->contact_no,
                             'commencementDate_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
-                            'address1_A' => 'No 7 ,Simpang Empat',
-                            'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                            'address3_A' => 'SELANGOR.',
-                            'postcode_A' => 46200,
+                            'address1_A' => $userPayroll->address,                  //'No 7 ,Simpang Empat',
+                            'address2_A' => $userPayroll->address2,                 //'JALAN SEMANGAT, PETALING JAYA,',
+                            'address3_A' => $userPayroll->address3,                 //'SELANGOR.',
+                            'postcode_A' => $userPayroll->postcode,                 //46200,
                             'resignDate_A' => self::changeTwoDigitDate($userPayroll->job_end_date),
                             'birthDate_A' => self::changeTwoDigitDate($userPayroll->dob),
                             //'resignType_A' => 'X',
@@ -349,7 +402,7 @@ class GenerateReportsHelper
 
                 //generate for resigned staff
                 $extraFilter = 'employee_jobs.end_date IS NOT NULL';
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$extraFilter,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,$extraFilter,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -358,19 +411,19 @@ class GenerateReportsHelper
                         $obj = new LhdnCP22bBean([
                             'employerName' => $companyInformation->name,
                             'employerNoE' => 'E9119707907',
-                            'employerAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                            'employerAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                            'employerAddress3' => 'SELANGOR.',
-                            'employerPostcode' => 46200,
+                            'employerAddress1' => $companyInformation->address,     //'LEVEL 15, TOWER 1, PJ 33,',
+                            'employerAddress2' => $companyInformation->address2,    //'JALAN SEMANGAT, PETALING JAYA,',
+                            'employerAddress3' => $companyInformation->address3,    //'SELANGOR.',
+                            'employerPostcode' => $companyInformation->postcode,    //46200,
                             'employerNoTel' => $companyInformation->phone,
 
                             'name_A' => $userPayroll->name,
                             'telNo_A' => $userPayroll->contact_no,
                             'commencementDate_A' => self::changeTwoDigitDate($userPayroll->job_start_date),
-                            'address1_A' => 'No 7 ,Simpang Empat',
-                            'address2_A' => 'JALAN SEMANGAT, PETALING JAYA,',
-                            'address3_A' => 'SELANGOR.',
-                            'postcode_A' => 46200,
+                            'address1_A' => $userPayroll->address,                  //'No 7 ,Simpang Empat',
+                            'address2_A' => $userPayroll->address2,                 //'JALAN SEMANGAT, PETALING JAYA,',
+                            'address3_A' => $userPayroll->address3,                 //'SELANGOR.',
+                            'postcode_A' => $userPayroll->postcode,                 //46200,
                             'resignDate_A' => self::changeTwoDigitDate($userPayroll->job_end_date),
                             'birthDate_A' => self::changeTwoDigitDate($userPayroll->dob),
                             /*                        'resignType_A' => 'X',
@@ -461,7 +514,7 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,$periods,null);
 
                 $empData = array();
                 $totalPcb = 0;
@@ -478,7 +531,7 @@ class GenerateReportsHelper
                             'name' => $userPayroll->name,
                             'oldIcNo' => '',
                             'newIcNo' => $userPayroll->ic_no,
-                            'staffNo' => '12473',
+                            'staffNo' => $userPayroll->id,
                             'foreignerPassportNo' => $userPayroll->immigration_passport_no,
                             'foreignerCountry' => '',
                             'pcbAmount' => $userPayroll->total_pcb,
@@ -497,10 +550,10 @@ class GenerateReportsHelper
                     $data = new LhdnCP39Bean([
                         'companyName' => $companyInformation->name,
                         'companyRegistrationNo' => $companyInformation->registration_no,
-                        'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                        'companyAddress3' => 'SELANGOR.',
-                        'companyPostcode' => 46200,
+                        'companyAddress1' => $companyInformation->address,          //'LEVEL 15, TOWER 1, PJ 33,',
+                        'companyAddress2' => $companyInformation->address2,         //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'companyAddress3' => $companyInformation->address3,         //'SELANGOR.',
+                        'companyPostcode' => $companyInformation->postcode,         //46200,
 
                         'employerNoE' => 'E9119707907',
                         'pcbTotalCut' => $totalPcb,
@@ -532,7 +585,7 @@ class GenerateReportsHelper
                 //set pojo
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInformation();
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -552,10 +605,10 @@ class GenerateReportsHelper
                             //'pcbMadeYears' => '1922',
                             'workStartedDate' => self::changeMalaysianDate($userPayroll->job_start_date),
                             'monthlySalary' => $userPayroll->total_gross_salary,
-                            'address1' => 'No 7 ,Simpang Empat',
-                            'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                            'address3' => 'SELANGOR.',
-                            'postcode' => 46200,
+                            'address1' => $userPayroll->address,        //'No 7 ,Simpang Empat',
+                            'address2' => $userPayroll->address2,       //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                            'address3' => $userPayroll->address3,       //'SELANGOR.',
+                            'postcode' => $userPayroll->postcode,       //46200,
                         /*  'foreignerBirthDate' => '01/05/2017',
                             'foreignerPassportNo' => '71817111A',
                             'spouseName' => 'KIMBERLY SWAZER',
@@ -577,7 +630,7 @@ class GenerateReportsHelper
                 $data = array();
                 $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,null,$year);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,null,$year);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -644,10 +697,10 @@ class GenerateReportsHelper
                             'officerName' => $officerInformation->name,
                             'officerPosition' => $officerInformation->position,
                             'companyName' => $companyInformation->name,
-                            'companyAddress1' => 'No 7 ,Simpang Empat',
-                            'companyAddress2' => 'JALAN SEMANGAT, PETALING JAYA,',
-                            'companyAddress3' => 'SELANGOR.',
-                            'companyPostcode' => 46200,
+                            'companyAddress1' => $companyInformation->address,      //'No 7 ,Simpang Empat',
+                            'companyAddress2' => $companyInformation->address2,     //'JALAN SEMANGAT, PETALING JAYA,',
+                            'companyAddress3' => $companyInformation->address3,     //'SELANGOR.',
+                            'companyPostcode' => $companyInformation->postcode,     //46200,
                             'companyNoTel' => $companyInformation->phone
                         ]);
                         $data[] = $obj;
@@ -661,7 +714,7 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,$periods,null);
 
                 if(count($userInfoAndPayrollList) == 0) {
                     return;
@@ -669,10 +722,10 @@ class GenerateReportsHelper
                     $data = new TabungHajiCarumanBean([
                         'companyName' => $companyInformation->name,
                         'employerCode' => 'AX2019211',
-                        'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                        'address3' => 'SELANGOR.',
-                        'postcode' => 46200,
+                        'address1' => $companyInformation->address,         //'LEVEL 15, TOWER 1, PJ 33,',
+                        'address2' => $companyInformation->address2,        //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'address3' => $companyInformation->address3,        //'SELANGOR.',
+                        'postcode' => $companyInformation->postcode,        //46200,
                     ]);
 
                     $empData = array();
@@ -699,7 +752,8 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,$periods,null);
+                //TODO: NOT COMPLETE
                 $data = new EpfBBCDBean([
                     //'employerReferenceNo' => '018884828',
                     'contributionAmount' => 5902.00,
@@ -726,7 +780,7 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,$periods,null);
 
                 $empData = array();
                 $totalEmployerContribution = 0;
@@ -764,10 +818,10 @@ class GenerateReportsHelper
 
                         'companyName' => $companyInformation->name,
                         'companyRegNo' => $companyInformation->registration_no,
-                        'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                        'companyAddress3' => 'SELANGOR.',
-                        'companyPostcode' => 46200,
+                        'companyAddress1' => $companyInformation->address,          //'LEVEL 15, TOWER 1, PJ 33,',
+                        'companyAddress2' => $companyInformation->address2,         //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'companyAddress3' => $companyInformation->address3,         //'SELANGOR.',
+                        'companyPostcode' => $companyInformation->postcode,         //46200,
                         'employeeTotal' => count($userInfoAndPayrollList),
 
                         'officerName' => $officerInformation->name,
@@ -786,7 +840,7 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,$periods,null);
                 $month = self::getPayrollMonth($periods,$companyInformation->id);
 
                 if(count($userInfoAndPayrollList) == 0) {
@@ -807,10 +861,10 @@ class GenerateReportsHelper
                         'employerCode' => 'B3200090304M',
                         'companyName' => $companyInformation->name,
                         'companyRegistrationNo' => $companyInformation->registration_no,
-                        'address1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'address2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                        'address3' => 'SELANGOR.',
-                        'postcode' => 46200,
+                        'address1' => $companyInformation->address,             //'LEVEL 15, TOWER 1, PJ 33,',
+                        'address2' => $companyInformation->address2,            //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'address3' => $companyInformation->address3,            //'SELANGOR.',
+                        'postcode' => $companyInformation->postcode,            //46200,
                         'officerName' => $officerInformation->name,
                         'officerTelNo' => $officerInformation->contact_no
                     ]);
@@ -823,10 +877,10 @@ class GenerateReportsHelper
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInformation();
                 $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
-                $active = self::getSocsoEmployeeActiveList($companyInformation->id,$periods);
-                $nonActive = self::getSocsoEmployeeResignList($companyInformation->id,$periods);
+                $active = self::getSocsoEmployeeActiveList($companyInformation->id,$periods,$search);
+                $nonActive = self::getSocsoEmployeeResignList($companyInformation->id,$periods,$search);
 
-                if(count($active) == 0 || count($nonActive) ==0) {
+                if(count($active) == 0 && count($nonActive) ==0) {
                     return;
                 }else {
                     $empData = array();
@@ -866,10 +920,10 @@ class GenerateReportsHelper
                         'totalContribution' => $totalContribution,
                         //'payNotBeforeDate' => '',
                         'companyName' => $companyInformation->name,
-                        'companyAddress1' => 'LEVEL 15, TOWER 1, PJ 33,',
-                        'companyAddress2' => 'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
-                        'companyAddress3' => 'SELANGOR.',
-                        'companyPostcode' => 46200,
+                        'companyAddress1' => $companyInformation->address,          //'LEVEL 15, TOWER 1, PJ 33,',
+                        'companyAddress2' => $companyInformation->address2,         //'JALAN SEMANGAT, SEKSYEN 13, PETALING JAYA,',
+                        'companyAddress3' => $companyInformation->address3,         //'SELANGOR.',
+                        'companyPostcode' => $companyInformation->postcode,         //46200,
                         'totalEmployee' => count($empData),
                         'officerName' => $companyInformation->name,
                         'officerTelNo' => $officerInformation->contact_no,
@@ -976,10 +1030,9 @@ class GenerateReportsHelper
             break;
 
             case "EIS_lampiran1":
-                //TODO :EIS currently not in used.
                 //set popo
                 $companyInformation = self::getUserLogonCompanyInformation();
-                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,null,$periods,null);
+                $userInfoAndPayrollList = self::getListUserInformationAndPayroll($companyInformation->id,$filter,$search,null,$periods,null);
                 $date = self::getPayrollYearMonth($periods,$companyInformation->id);
 
                 if(count($userInfoAndPayrollList) == 0) {
@@ -1026,19 +1079,81 @@ class GenerateReportsHelper
     }
 
 
-    public static function getFilterKey($filter,$value){
-        if(!empty($filter)){
-            if($filter == 'costcentres'){
-                return $arr = array("cost_centre_id"=>$value);
-            }else if($filter == 'departments'){
-                return $arr = array("department_id"=>$value);
-            }else if($filter == 'branches'){
-                return $arr = array("branch_id"=>$value);
-            }else if($filter == 'positions'){
-                return $arr = array("emp_mainposition_id"=>$value);
-            }else{
-                return null;
-            }
+    public static function generateEmployeeList($reportName,$periods,$year,$officerId,$filter,$search,$page){
+        switch ($reportName) {
+            case "LHDN_borangE":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id, $filter,$search, null, null, $year,$page);
+            break;
+            case "LHDN_cp21":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,null,$year,$page);
+            break;
+            case "LHDN_cp22":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                $date = self::getPayrollYearMonth($periods,$companyInformation->id);
+                $extraFilter = 'year(`employee_jobs`.`start_date`) = '.$date->year.' and month(`employee_jobs`.`start_date`) = '.$date->month;
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,$extraFilter,$periods,null,$page);
+            break;
+            case "LHDN_cp22a":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                $extraFilter = 'employee_jobs.end_date IS NOT NULL';
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,$extraFilter,$periods,null,$page);
+            break;
+            case "LHDN_cp22b":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                $extraFilter = 'employee_jobs.end_date IS NOT NULL';
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,$extraFilter,$periods,null,$page);
+            break;
+            case "LHDN_cp39":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,$periods,null,$page);
+            break;
+            case "LHDN_cp39lieu":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,$periods,null,$page);
+            break;
+            case "LHDN_eaform":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,null,$year,$page);
+            break;
+            case "Tabung_Haji_caruman":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,$periods,null,$page);
+            break;
+            case "Tabung_Haji_df":
+                return collect([]);
+            break;
+            case "EPF_bbcd":
+                return collect([]);
+            break;
+            case "EPF_borangA":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,$periods,null,$page);
+            break;
+            case "SOSCO_lampiranA":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,$periods,null,$page);
+            break;
+            case "SOSCO_borang8A":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformationSocsoActiveAndResigned($companyInformation->id,$periods,$page);
+            break;
+            case "PTPTN_monthly":
+                return collect([]);
+            break;
+            case "ZAKAT_monthly":
+                return collect([]);
+            break;
+            case "ASBN_monthly":
+                return collect([]);
+            break;
+            case "EIS_lampiran1":
+                $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,$periods,null,$page);
+            break;
+            default:
+                return collect([]);
         }
     }
 
@@ -1119,11 +1234,12 @@ class GenerateReportsHelper
 
     }
 
-    public static function getListUserInformationAndPayroll($companyId,$filter,$extraFilter,$periods,$year){
+    public static function getListUserInformationAndPayroll($companyId,$filter,$search,$extraFilter,$periods,$year){
 
         $query = DB::table('payroll_master')
             ->select(
-                DB::raw('employees.id,payroll_trx.id as trx_id,users.name, employees.contact_no, employees.address, employees.dob, employees.gender, employees.race'),
+                DB::raw('employees.id,payroll_trx.id as trx_id,users.name, employees.contact_no, employees.address,
+                employees.address2,employees.address3,employees.postcode, employees.dob, employees.gender, employees.race'),
                 DB::raw('countries.citizenship, employees.marital_status, employees.total_children, employees.ic_no, employees.tax_no'),
                 DB::raw('employees.epf_no, employees.socso_no, employees.insurance_no, employees.pcb_group, employees.driver_license_no'),
                 DB::raw('employees.driver_license_expiry_date, employees.confirmed_date, users.email, employee_positions.name as position'),
@@ -1155,7 +1271,15 @@ class GenerateReportsHelper
                 DB::raw('sum( if( additions.ea_form_id = 10, payroll_trx_addition.amount, 0 ) ) AS B5'),
                 DB::raw('sum( if( additions.ea_form_id = 11, payroll_trx_addition.amount, 0 ) ) AS B6'),
                 DB::raw('sum( if( additions.ea_form_id = 12, payroll_trx_addition.amount, 0 ) ) AS C1'),
-                DB::raw('sum( if( additions.ea_form_id = 13, payroll_trx_addition.amount, 0 ) ) AS C2')
+                DB::raw('sum( if( additions.ea_form_id = 13, payroll_trx_addition.amount, 0 ) ) AS C2'),
+
+                DB::raw('sum( if( payroll_trx_addition.additions_id = 1, payroll_trx_addition.amount, 0 ) ) AS OT'),
+                DB::raw('sum( if( payroll_trx_addition.additions_id = 2, payroll_trx_addition.amount, 0 ) ) AS ALP'),
+                DB::raw('sum( if( payroll_trx_addition.additions_id = 3, payroll_trx_addition.amount, 0 ) ) AS CFLP'),
+                DB::raw('sum( if( payroll_trx_addition.additions_id = 4, payroll_trx_addition.amount, 0 ) ) AS PH'),
+                DB::raw('sum( if( payroll_trx_addition.additions_id = 5, payroll_trx_addition.amount, 0 ) ) AS RD'),
+                DB::raw('sum( if( payroll_trx_addition.additions_id = 6, payroll_trx_addition.amount, 0 ) ) AS MC')
+
             )
             ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
@@ -1167,17 +1291,28 @@ class GenerateReportsHelper
             ->leftjoin('payroll_trx_addition', 'payroll_trx.id', 'payroll_trx_addition.payroll_trx_id')
             ->leftjoin('additions', 'payroll_trx_addition.additions_id', 'additions.id');
 
+
             //filter
-            if(!empty($filter)){
-                $query->where(array_keys($filter)[0], array_values($filter)[0]);
+            if(count($filter) > 0){
+                foreach($filter as $key => $value){
+                    $query->where($key, $value);
+                }
             }
+
+            //search
+            if(count($search) > 0){
+                foreach($search as $key => $value){
+                    $query->whereIn($key, $value);
+                }
+            }
+
 
             if(!empty($year)){
                 $query->whereYear('payroll_master.year_month', $year);
             }
 
             if(!empty($periods) && $periods != 0){
-                $query->where('payroll_master.period', $periods);
+                $query->where('payroll_master.id', $periods);
             }
 
             //extra filter
@@ -1193,10 +1328,100 @@ class GenerateReportsHelper
         return $result;
     }
 
-    public static function getSocsoEmployeeActiveList($companyId,$period){
-        return DB::table('payroll_master')
+    public static function getEmployeeListInformation($companyId,$filter,$search,$extraFilter,$periods,$year,$page){
+
+        $query = DB::table('payroll_master')
             ->select(
-                DB::raw('users.name,employees.ic_no,employee_jobs.start_date as job_start_date'),
+                DB::raw('users.id,users.name, employees.ic_no')
+            )
+            ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->join('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
+            ->join('employees', 'payroll_trx.employee_id', 'employees.id')
+            ->join('employee_positions', 'employee_jobs.emp_mainposition_id', 'employee_positions.id')
+            ->join('users', 'employees.user_id', 'users.id')
+            ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id');
+
+        //filter
+        if(count($filter) > 0){
+            foreach($filter as $key => $value){
+                $query->where($key, $value);
+            }
+        }
+
+        //search
+        if(count($search) > 0){
+            foreach($search as $key => $value){
+                $query->where($key,'LIKE', "%$value%");
+            }
+        }
+
+        if(!empty($year)){
+            $query->whereYear('payroll_master.year_month', $year);
+        }
+
+        if(!empty($periods) && $periods != 0){
+            $query->where('payroll_master.id', $periods);
+        }
+
+        //extra filter
+        if(!empty($extraFilter)){
+            $query->whereRaw($extraFilter);
+        }
+
+        $query->where('payroll_master.company_id', $companyId)
+            ->groupBy(DB::raw("payroll_trx.employee_id"));
+
+        $query->orderBy('users.name','ASC')
+              ->skip($page * self::$count_per_page)
+              ->take(self::$count_per_page);
+
+        $result= $query->get();
+
+        echo $result;
+    }
+
+    public static function getEmployeeListInformationSocsoActiveAndResigned($companyId,$periods,$page){
+
+        //active list
+        $queryActive = DB::table('payroll_master')
+                ->select(
+                    DB::raw('users.id,users.name,employees.ic_no')
+                )
+                ->leftjoin('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+                ->leftjoin('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
+                ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id')
+                ->leftjoin('users', 'employees.user_id', 'users.id')
+                ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id')
+                ->whereRaw('employee_jobs.end_date IS NULL')
+                ->whereRaw('`payroll_master`.`id` =  '.$periods)
+                ->whereRaw('`payroll_master`.`company_id` =  '.$companyId)
+                ->groupBy(DB::raw("payroll_trx.employee_id"))
+                ->orderBy(DB::raw("employee_jobs.start_date"))->get()->toArray();
+
+        //resign list
+
+        $queryResign = DB::table('payroll_master')
+                ->select(
+                    DB::raw('users.id,users.name,employees.ic_no')
+                )
+                ->leftjoin('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+                ->leftjoin('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
+                ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id')
+                ->leftjoin('users', 'employees.user_id', 'users.id')
+                ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id')
+                ->whereRaw('employee_jobs.end_date IS NOT NULL')
+                ->whereRaw('`payroll_master`.`id` =  '.$periods)
+                ->whereRaw('`payroll_master`.`company_id` =  '.$companyId)
+                ->groupBy(DB::raw("payroll_trx.employee_id"))
+                ->orderBy(DB::raw("employee_jobs.start_date"))->get()->toArray();
+
+         return json_encode(array_unique(array_merge($queryActive,$queryResign), SORT_REGULAR));
+    }
+
+    public static function getSocsoEmployeeActiveList($companyId,$period,$search){
+        $query = DB::table('payroll_master')
+            ->select(
+                DB::raw('users.id,users.name,employees.ic_no,employee_jobs.start_date as job_start_date'),
                 DB::raw('employee_jobs.end_date as job_end_date'),
                 DB::raw('sum(payroll_trx.employee_socso) as total_socso')
             )
@@ -1205,17 +1430,28 @@ class GenerateReportsHelper
             ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id')
             ->leftjoin('users', 'employees.user_id', 'users.id')
             ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id')
-            ->whereRaw('employee_jobs.end_date IS NULL')
-            ->whereRaw('`payroll_master`.`period` =  '.$period)
-            ->whereRaw('`payroll_master`.`company_id` =  '.$companyId)
-            ->groupBy(DB::raw("payroll_trx.employee_id"))
-            ->orderBy(DB::raw("employee_jobs.start_date"))->get();
+            ->whereRaw('employee_jobs.end_date IS NULL');
+
+            //search
+            if(count($search) > 0){
+                foreach($search as $key => $value){
+                    $query->whereIn($key, $value);
+                }
+            }
+
+        $query->whereRaw('`payroll_master`.`id` =  '.$period)
+              ->whereRaw('`payroll_master`.`company_id` =  '.$companyId)
+              ->groupBy(DB::raw("payroll_trx.employee_id"))
+              ->orderBy(DB::raw("employee_jobs.start_date"));
+
+        $result= $query->get();
+        return $result;
     }
 
-    public static function getSocsoEmployeeResignList($companyId,$period){
-        return DB::table('payroll_master')
+    public static function getSocsoEmployeeResignList($companyId,$period,$search){
+        $query = DB::table('payroll_master')
             ->select(
-                DB::raw('users.name,employees.ic_no,employee_jobs.start_date as job_start_date'),
+                DB::raw('users.id,users.name,employees.ic_no,employee_jobs.start_date as job_start_date'),
                 DB::raw('employee_jobs.end_date as job_end_date'),
                 DB::raw('sum(payroll_trx.employee_socso) as total_socso')
             )
@@ -1224,14 +1460,25 @@ class GenerateReportsHelper
             ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id')
             ->leftjoin('users', 'employees.user_id', 'users.id')
             ->leftjoin('employee_immigrations', 'employees.id', 'employee_immigrations.emp_id')
-            ->whereRaw('employee_jobs.end_date IS NOT NULL')
-            ->whereRaw('`payroll_master`.`period` =  '.$period)
-            ->whereRaw('`payroll_master`.`company_id` =  '.$companyId)
-            ->groupBy(DB::raw("payroll_trx.employee_id"))
-            ->orderBy(DB::raw("employee_jobs.start_date"))->get();
+            ->whereRaw('employee_jobs.end_date IS NOT NULL');
+
+            //search
+            if(count($search) > 0){
+                foreach($search as $key => $value){
+                    $query->whereIn($key, $value);
+                }
+            }
+
+        $query->whereRaw('`payroll_master`.`id` =  '.$period)
+              ->whereRaw('`payroll_master`.`company_id` =  '.$companyId)
+              ->groupBy(DB::raw("payroll_trx.employee_id"))
+              ->orderBy(DB::raw("employee_jobs.start_date"));
+
+        $result= $query->get();
+        return $result;
     }
 
-    public static function getEmployeeTotalActiveAndResigned($companyId,$filter,$periods,$year){
+    public static function getEmployeeTotalActiveAndResigned($companyId,$filter,$search,$periods,$year){
         $query = DB::table('payroll_master')
             ->select(
                 DB::raw('count(DISTINCT payroll_trx.employee_id) as total_employee'),
@@ -1241,11 +1488,19 @@ class GenerateReportsHelper
             )
             ->leftjoin('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
             ->leftjoin('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
-            ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id');
+            ->leftjoin('employees', 'employee_jobs.emp_id', 'employees.id')
+            ->leftjoin('users', 'employees.user_id', 'users.id');
 
             //filter
             if(!empty($filter)){
                 $query->where(array_keys($filter)[0], array_values($filter)[0]);
+            }
+
+            //search
+            if(count($search) > 0){
+                foreach($search as $key => $value){
+                    $query->whereIn($key, $value);
+                }
             }
 
             if(!empty($year)){
@@ -1253,7 +1508,7 @@ class GenerateReportsHelper
             }
 
             if(!empty($periods) && $periods != 0){
-                $query->where('payroll_master.period', $periods);
+                $query->where('payroll_master.id', $periods);
             }
 
         $query->where('payroll_master.company_id', $companyId);
@@ -1287,7 +1542,7 @@ class GenerateReportsHelper
                 DB::raw('EXTRACT( MONTH FROM `year_month` ) as month'),
                 DB::raw('EXTRACT( YEAR FROM `year_month` ) as year')
             )
-            ->where('period',$period)
+            ->where('id',$period)
             ->where('company_id',$companyId)->first();
     }
 
@@ -1354,6 +1609,59 @@ class GenerateReportsHelper
         }
     }
 
+    public static function getMaritalCategory($status){
+        if($status == "single"){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+
+    public static function getPeriodFromAndUntil($year){
+        $data = array();
+        if(date("Y") == $year){
+            $data['period_from']  = '01/01/2018';
+            $data['period_util']  = self::getCurrentDate();
+        }else{
+            $data['period_from']  = '01/01/'.$year;
+            $data['period_util']  = '31/12/'.$year;
+        }
+        return $data;
+    }
+
+    public static function getFilterKey($filter){
+        $arr = array();
+        if(count($filter) > 0){
+            if(array_key_exists('costcentres',$filter)){
+                $arr['cost_centre_id'] = $filter['costcentres'];
+            }
+            if(array_key_exists('departments',$filter)){
+                $arr['department_id'] = $filter['departments'];
+            }
+            if(array_key_exists('branches',$filter)){
+                $arr['branch_id'] = $filter['branches'];
+            }
+            if(array_key_exists('positions',$filter)){
+                $arr['emp_mainposition_id'] = $filter['positions'];
+            }
+        }
+        return $arr;
+    }
+
+    public static function getSearchKey($search){
+        $arr = array();
+        if(count($search) > 0){
+            if(array_key_exists('searchEmployee',$search)){
+                $arr['users.name'] = $search['searchEmployee'];
+            }
+            if(array_key_exists('employeeList',$search)){
+                $arr['users.id'] = $search['employeeList'];
+            }
+        }
+        return $arr;
+    }
+
+
 
     /**
      * @return Company Information Object
@@ -1377,5 +1685,20 @@ class GenerateReportsHelper
         }else{
             return Company::find($companyId)->where('status', 'Active')->first();
         }
+    }
+
+
+    /**
+     * @param $key
+     * @param $companyId
+     * @return Get Payroll setup value
+     * Get payroll setup value based on key
+     */
+    public static function getPayrollSetupValue($key,$companyId){
+        return PayrollSetup::where([
+            'key'=>$key,
+            'company_id'=>$companyId,
+            'status'=>1
+        ])->first();
     }
 }

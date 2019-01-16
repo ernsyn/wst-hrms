@@ -1610,37 +1610,48 @@ class LhdnCP21Bean
 
             'salaryFrom_B' => $this->salaryFrom_B,
             'salaryUntil_B' => $this->salaryUntil_B,
+            'salaryAmount_B' => $this->salaryAmount_B,
+
             'leavePayFrom_B' => $this->leavePayFrom_B,
             'leavePayUntil_B' => $this->leavePayUntil_B,
+            'leavePayAmount_B' => $this->leavePayAmount_B,
+
             'commissionFrom_B' => $this->commissionFrom_B,
             'commissionUntil_B' => $this->commissionUntil_B,
+            'commissionAmount_B' => $this->commissionAmount_B,
+
             'gratuityFrom_B' => $this->gratuityFrom_B,
             'gratuityUntil_B' => $this->gratuityUntil_B,
+            'gratuityAmount_B' => $this->gratuityAmount_B,
+
             'compensationFrom_B' => $this->compensationFrom_B,
             'compensationUntil_B' => $this->compensationUntil_B,
+            'compensationAmount_B' => $this->compensationAmount_B,
+
             'cashAllowanceFrom_B' => $this->cashAllowanceFrom_B,
             'cashAllowanceUntil_B' => $this->cashAllowanceUntil_B,
+            'cashAllowanceAmount_B' => $this->cashAllowanceAmount_B,
+
             'pensionFrom_B' => $this->pensionFrom_B,
             'pensionUntil_B' => $this->pensionUntil_B,
+            'pensionAmount_B' => $this->pensionAmount_B,
+
             'benefitSubjectToTaxFrom_B' => $this->benefitSubjectToTaxFrom_B,
             'benefitSubjectToTaxUntil_B' => $this->benefitSubjectToTaxUntil_B,
+            'benefitSubjectToTaxAmount_B' => $this->benefitSubjectToTaxAmount_B,
+
             'livingAccommodationFrom_B' => $this->livingAccommodationFrom_B,
             'livingAccommodationUntil_B' => $this->livingAccommodationUntil_B,
+            'livingAccommodationAmount_B' => $this->livingAccommodationAmount_B,
+
             'otherAllowanceFrom_B' => $this->otherAllowanceFrom_B,
             'otherAllowanceUntil_B' => $this->otherAllowanceUntil_B,
+            'otherAllowanceAmount_B' => $this->otherAllowanceAmount_B,
+
             'otherPaymentsFrom_B' => $this->otherPaymentsFrom_B,
             'otherPaymentsUntil_B' => $this->otherPaymentsUntil_B,
-            'salaryAmount_B' => $this->salaryAmount_B,
-            'leavePayAmount_B' => $this->leavePayAmount_B,
-            'commissionAmount_B' => $this->commissionAmount_B,
-            'gratuityAmount_B' => $this->gratuityAmount_B,
-            'compensationAmount_B' => $this->compensationAmount_B,
-            'cashAllowanceAmount_B' => $this->cashAllowanceAmount_B,
-            'pensionAmount_B' => $this->pensionAmount_B,
-            'benefitSubjectToTaxAmount_B' => $this->benefitSubjectToTaxAmount_B,
-            'livingAccommodationAmount_B' => $this->livingAccommodationAmount_B,
-            'otherAllowanceAmount_B' => $this->otherAllowanceAmount_B,
             'otherPaymentsAmount_B' => $this->otherPaymentsAmount_B,
+
             'total_B' => $this->total_B,
 
             'typeOfIncome1_C' => $this->typeOfIncome1_C,

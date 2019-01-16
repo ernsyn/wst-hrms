@@ -67,35 +67,34 @@ class GovernmentReportController extends Controller
             'reportName' => 'required'
         ]);
 
+        $filter = array();
+        $search = array();
         $reportName = $request->input('reportName');
         $year = $request->input('selectYear');
         $periods = $request->input('selectPeriod');
         $officerId = $request->input('selectOfficer');
+        $employeeList = $request->input('employeeList');
 
         //checking filter
         if($request->input('selectCostCentres') != 0){
-            $filter = "costcentres";
-            $value = $request->input('selectCostCentres');
-
-        }else if($request->input('selectDepartments') != 0){
-            $filter = "departments";
-            $value = $request->input('selectDepartments');
-
-        }else if($request->input('selectBranches') != 0){
-            $filter = "branches";
-            $value = $request->input('selectBranches');
-
-        }else if($request->input('selectPositions') != 0){
-            $filter = "positions";
-            $value = $request->input('selectPositions');
-
-        }else{
-            $filter = "none";
-            $value = 0;
+            $filter['costcentres']  = $request->input('selectCostCentres');
+        }
+        if($request->input('selectDepartments') != 0){
+            $filter['departments']  = $request->input('selectDepartments');
+        }
+        if($request->input('selectBranches') != 0){
+            $filter['branches']  = $request->input('selectBranches');
+        }
+        if($request->input('selectPositions') != 0){
+            $filter['positions']  = $request->input('selectPositions');
+        }
+        if($request->input('employeeList') != ''){
+            $search['employeeList']  = explode(',',$request->input('employeeList'));
         }
 
-        $filterOption = GenerateReportsHelper::getFilterKey($filter,$value);
-        $result = $this->generate($reportName,$periods,$year,$officerId,$filterOption);
+        $filterOption = GenerateReportsHelper::getFilterKey($filter);
+        $searchOption = GenerateReportsHelper::getSearchKey($search);
+        $result = $this->generate($reportName,$periods,$year,$officerId,$filterOption,$searchOption);
         if(!empty($result)){
             return $result;
         }else{
@@ -103,11 +102,43 @@ class GovernmentReportController extends Controller
         }
     }
 
+    public function listEmployees(Request $request){
 
-    private function generate($reportName,$periods,$year,$officerId,$filter){
+        $filter = array();
+        $search = array();
+        $reportName = $request->input('reportName');
+        $year = $request->input('selectYear');
+        $periods = $request->input('selectPeriod');
+        $officerId = $request->input('selectOfficer');
+        $page = $request->input('page');
+
+        //checking filter
+        if($request->input('selectCostCentres') != 0){
+            $filter['costcentres']  = $request->input('selectCostCentres');
+        }
+        if($request->input('selectDepartments') != 0){
+            $filter['departments']  = $request->input('selectDepartments');
+        }
+        if($request->input('selectBranches') != 0){
+            $filter['branches']  = $request->input('selectBranches');
+        }
+        if($request->input('selectPositions') != 0){
+            $filter['positions']  = $request->input('selectPositions');
+        }
+        if($request->input('searchEmployee') != 0 || $request->input('searchEmployee') != ''){
+            $search['searchEmployee']  = $request->input('searchEmployee');
+        }
+
+        $filterOption = GenerateReportsHelper::getFilterKey($filter);
+        $searchOption = GenerateReportsHelper::getSearchKey($search);
+        $result = $this->generateEmployeeList($reportName,$periods,$year,$officerId,$filterOption,$searchOption,$page);
+        echo $result;
+    }
+
+    private function generate($reportName,$periods,$year,$officerId,$filter,$search){
         switch ($reportName) {
             case "LHDN_borangE":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnBorangE',
                         [
@@ -124,7 +155,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp21":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP21',
                         [
@@ -140,7 +171,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp22":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22',
                         [
@@ -156,7 +187,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp22a":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22a',
                         [
@@ -172,7 +203,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp22b":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP22b',
                         [
@@ -187,7 +218,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp39":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39',
                         [
@@ -206,7 +237,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_cp39lieu":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnCP39_lieu',
                         [
@@ -221,7 +252,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "LHDN_eaform":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)){
                     $pdf = PDF::loadView('pages/payroll/governmentreport/lhdnEaForm1',
                         [
@@ -253,7 +284,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "EPF_bbcd":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/epf_bbcd',
                         [
@@ -268,7 +299,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "EPF_borangA":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/epf_borangA',
                         [
@@ -285,7 +316,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "SOSCO_lampiranA":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/soscoLampiranA',
                         [
@@ -300,7 +331,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "SOSCO_borang8A":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     $pdf = PDF::loadView('pages/payroll/governmentreport/soscoBorang8A',
                         [
@@ -363,7 +394,7 @@ class GovernmentReportController extends Controller
                 break;
 
             case "EIS_lampiran1":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 if(!empty($arr)) {
                     return Excel::download(new EISLampiranExport(
                         $arr['data'],
@@ -377,11 +408,28 @@ class GovernmentReportController extends Controller
                 break;
 
             case "test":
-                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter);
+                $arr = GenerateReportsHelper::generateBean($reportName,$periods,$year,$officerId,$filter,$search);
                 break;
             default:
                 echo "None";
         }
+    }
+
+
+    private function generateEmployeeList($reportName,$periods,$year,$officerId,$filter,$search,$page){
+        $arr = GenerateReportsHelper::generateEmployeeList($reportName,$periods,$year,$officerId,$filter,$search,$page);
+/*        $arr = array();
+            for($i=0; $i < 15; $i++) {
+                $newdata = array(
+                    'id' => 3,
+                    'name' => 'Lim Chen Nee',
+                    'ic_no' => '851111101234'
+                );
+                array_push($arr, $newdata);
+            }
+
+        return json_encode($arr);*/
+        return $arr;
     }
 
 
