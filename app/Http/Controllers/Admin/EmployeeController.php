@@ -1121,7 +1121,7 @@ class EmployeeController extends Controller
         $experienceUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $experienceUpdatedData['start_date'])));
         $experienceUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $experienceUpdatedData['end_date'])));
 
-        EmployeeExperience::where('id', $id)->update($experienceUpdatedData);
+        EmployeeExperience::find($id)->update($experienceUpdatedData);
 
         return response()->json(['success'=>'Experience was successfully updated.']);
     }
