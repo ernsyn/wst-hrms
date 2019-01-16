@@ -17,6 +17,7 @@ class CompanyBank extends Model
         'created_by'
     ];
     protected $dates = ['deleted_at'];
+    
     public function bank()
     {
         return $this->belongsTo('App\BankCode','bank_code');
