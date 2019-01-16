@@ -1021,7 +1021,7 @@ class EmployeeController extends Controller
             'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
 
-        EmployeeEmergencyContact::where('id', $id)->update($emergencyContactUpdatedData);
+        EmployeeEmergencyContact::find($id)->update($emergencyContactUpdatedData);
 
         return response()->json(['success'=>'Emergency Contact was successfully updated.']);
     }
