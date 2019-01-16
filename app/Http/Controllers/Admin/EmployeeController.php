@@ -1138,7 +1138,7 @@ class EmployeeController extends Controller
             'description' => ''
         ]);
 
-        EmployeeEducation::where('id', $id)->update($educationUpdatedData);
+        EmployeeEducation::find($id)->update($educationUpdatedData);
 
         return response()->json(['success'=>'Education was successfully updated.']);
     }
