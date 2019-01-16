@@ -141,7 +141,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="date-job" class="form-control datetimepicker-input" data-target="#date-job"/>
+                                <input type="text" id="date-job" class="form-control datetimepicker-input" data-target="#date-job" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#date-job" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -282,7 +282,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="date-job-edit" class="form-control datetimepicker-input" data-target="#date-job-edit"/>
+                                <input type="text" id="date-job-edit" class="form-control datetimepicker-input" data-target="#date-job-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#date-job-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -452,9 +452,16 @@
         $('#date-job').datetimepicker({
             format: 'DD/MM/YYYY'
         });
+        //disable keyboard input & hide caret
+        $('#date-job').keydown(false);
+        $('#date-job').css('caret-color', 'transparent');
+
         $('#date-job-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
+        //disable keyboard input & hide caret
+        $('#date-job-edit').keydown(false);
+        $('#date-job-edit').css('caret-color', 'transparent');
 
         // ADD
         $('#add-job-popup').on('show.bs.modal', function (event) {
