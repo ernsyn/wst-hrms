@@ -169,7 +169,7 @@
                             <div class="col-md-6">
                                 <div class="input-group date" data-target-input="nearest">
                                     <input type="text" id="dob-date" name="dob" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" data-target="#dob-date"
-                                    value="{{ old('dob') }}">
+                                    value="{{ old('dob') }}" autocomplete="off">
                                     <div class="input-group-append" data-target="#dob-date" data-toggle="datetimepicker">
                                         <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                     </div>
@@ -253,8 +253,8 @@
                             <label class="col-lg-4 col-form-label text-lg-right">License Expiry Date</label>
                             <div class="col-lg-6">
                                 <div class="input-group date" data-target-input="nearest">
-                                    <input type="text" id="license-expiry-date" name="driver_license_expiry_date" class="form-control{{ $errors->has('driver_license_expiry_date') ? ' is-invalid' : '' }}" data-target="#license-expiry-date"
-                                    value="{{ old('driver_license_expiry_date') }}">
+                                    <input type="text" id="license-expiry-date" name="driver_license_expiry_date" class="form-control{{ $errors->has('driver_license_expiry_date') ? 'is-invalid' : '' }}" data-target="#license-expiry-date"
+                                    value="{{ old('driver_license_expiry_date') }}" autocomplete="off">
                                     <div class="input-group-append" data-target="#license-expiry-date" data-toggle="datetimepicker">
                                         <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                     </div>
@@ -340,7 +340,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Main Security Group</label>
                             <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('main_security_group_id') ? ' is-invalid' : '' }}" name="main_security_group_id" id="main_security_group_id">
+                                <select class="form-control{{ $errors->has('main_security_group_id') ? 'is-invalid' : '' }}" name="main_security_group_id" id="main_security_group_id">
                                     <option value=""></option>
                                     @foreach(App\SecurityGroup::all() as $main_security_group)
                                     <option value="{{ $main_security_group->id }}">{{ $main_security_group->name }}</option>
