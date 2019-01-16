@@ -200,17 +200,14 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="basic-salary"><strong>New Basic Salary*</strong></label>
-                            <input name="basic-salary" type="number" class="form-control" placeholder="" value="">
+                            <input name="basic-salary" type="number" class="form-control" placeholder="" value="" readonly>
                             
-                            <div id="basic-salary-error" class="invalid-feedback">
-                            </div>
                         </div>
-                        
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="cost-centre"><strong>Cost Centre*</strong></label>
-                            <select class="form-control" name="cost-centre" >
+                            <select class="form-control" name="cost-centre" disabled >
                                 <option value="">Please Select</option>
                                 @foreach(App\CostCentre::all() as $cost_centre)
                                 <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
@@ -222,7 +219,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="department"><strong>Department*</strong></label>
-                            <select class="form-control" name="department" >
+                            <select class="form-control" name="department" disabled >
                                 <option value="">Please Select</option>
                                 @foreach(App\Department::all() as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -234,7 +231,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="team"><strong>Team*</strong></label>
-                            <select class="form-control" name="team" >
+                            <select class="form-control" name="team" disabled >
                                 <option value="">Please Select</option>
                                 @foreach(App\Team::all() as $team)
                                 <option value="{{ $team->id }}">{{ $team->name }}</option>
@@ -246,7 +243,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="main-position"><strong>Main Position*</strong></label>
-                            <select class="form-control" name="main-position" >
+                            <select class="form-control" name="main-position" disabled >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeePosition::all() as $position)
                                 <option value="{{ $position->id }}">{{ $position->name }}</option>
@@ -260,7 +257,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="grade"><strong>Grade*</strong></label>
-                            <select class="form-control" name="grade" >
+                            <select class="form-control" name="grade" disabled>
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeeGrade::all() as $grade)
                                 <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -272,7 +269,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="branch"><strong>Branch*</strong></label>
-                            <select class="form-control" name="branch" >
+                            <select class="form-control" name="branch" disabled>
                                 <option value="">Please Select</option>
                                 @foreach(App\Branch::all() as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -286,8 +283,8 @@
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
                                 <input type="text" id="date-job-edit" class="form-control datetimepicker-input" data-target="#date-job-edit"/>
-                                <div class="input-group-append" data-target="#date-job-edit" data-toggle="datetimepicker">
-                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                <div class="input-group-append" data-target="#date-job-edit" data-toggle="datetimepicker"  >
+                                    <div class="input-group-text rounded-right" ><i class="far fa-calendar-alt" ></i></div>
                                 </div>
                                 <div id="date-job-error" class="invalid-feedback">
                                 </div>
@@ -298,7 +295,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="employment-status"><strong>Employment Status*</strong></label>
-                            <select class="form-control" name="employment-status" >
+                            <select class="form-control" name="employment-status">
                                 <option value="">Please Select</option>
                                 <option value="confirmed-employment">Confirmed Employment</option>
                                 <option value="confirmed-promotion">Confirmed Promotion</option>
