@@ -197,7 +197,7 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
             clearEmergencyContactError('#add-emergency-contact-form');
             e.preventDefault();
             $.ajax({
-                url: "{{ route('employee.emergency-contacts.post', ['id' => $id]) }}",
+                url: "{{ route('employee.emergency-contacts.post') }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -257,7 +257,7 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
             $('#edit-emergency-contact-form input[name=contact-no]').val(currentData.contact_no);
         });
 
-        var editRouteTemplate = "{{ route('employee.emergency-contacts.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        var editRouteTemplate = "{{ route('employee.emergency-contacts.edit.post', ['id' => '<<id>>']) }}";
         $('#edit-emergency-contacts-submit').click(function(e){
             var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
             e.preventDefault();
@@ -316,7 +316,7 @@ var emergencyContactsTable = $('#emergency-contacts-table').DataTable({
             deleteId = currentData.id;
         });
 
-        var deleteRouteTemplate = "{{ route('employee.emergency-contacts.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        var deleteRouteTemplate = "{{ route('employee.emergency-contacts.delete', ['id' => '<<id>>']) }}";
         $('#delete-emergency-contacts-submit').click(function(e){
             var deleteRoute = deleteRouteTemplate.replace(encodeURI('<<id>>'), deleteId);
             e.preventDefault();
