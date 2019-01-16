@@ -1069,7 +1069,7 @@ class EmployeeController extends Controller
         $visaUpdatedData['issued_date'] = implode("-", array_reverse(explode("/", $visaUpdatedData['issued_date'])));
         $visaUpdatedData['expiry_date'] = implode("-", array_reverse(explode("/", $visaUpdatedData['expiry_date'])));
 
-        EmployeeVisa::where('id', $id)->update($visaUpdatedData);
+        EmployeeVisa::find($id)->update($visaUpdatedData);
 
         return response()->json(['success'=>'Visa was successfully updated.']);
     }
