@@ -1051,7 +1051,7 @@ class EmployeeController extends Controller
         $immigrationUpdatedData['issued_date'] = implode("-", array_reverse(explode("/", $immigrationUpdatedData['issued_date'])));
         $immigrationUpdatedData['expiry_date'] = implode("-", array_reverse(explode("/", $immigrationUpdatedData['expiry_date'])));
 
-        EmployeeImmigration::where('id', $id)->update($immigrationUpdatedData);
+        EmployeeImmigration::find($id)->update($immigrationUpdatedData);
 
         return response()->json(['success'=>'Immigration was successfully updated.']);
     }
