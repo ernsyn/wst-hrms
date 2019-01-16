@@ -638,7 +638,7 @@ class EmployeeController extends Controller
                 $jobData['status']  = "probationer";
             }
 
-            Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
+            Employee::find($id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
 
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
@@ -1091,7 +1091,7 @@ class EmployeeController extends Controller
         ]);
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
 
-        EmployeeJob::where('id', $id)->update($jobData);
+        EmployeeJob::find($id)->update($jobData);
 
         return response()->json(['success'=>'Job was successfully updated.']);
     }
