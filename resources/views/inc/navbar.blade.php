@@ -41,14 +41,6 @@
     </div>
 </nav>
 
-<div id="alert-container">
-</div>
-@if (session('alert'))
-    <div class="alert alert-warning">
-        {{ session('alert') }}
-    </div>
-@endif
-
 {{-- Change Password --}}
 <div class="modal fade" id="navbar-change-password-popup" tabindex="-1" role="dialog" aria-labelledby="navbar-change-password-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
