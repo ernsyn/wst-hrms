@@ -833,7 +833,7 @@ class EmployeeController extends Controller
             'end_work_time' => 'required',
         ]);
         $workingDayUpdateData['is_template'] = false;
-        EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
+        EmployeeWorkingDay::find($id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
     }
