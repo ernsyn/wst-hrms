@@ -372,9 +372,16 @@
     $('#dob-date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
+    //disable keyboard input & hide caret
+    $('#dob-date').keydown(false);
+    $('#dob-date').css('caret-color', 'transparent');
+
     $('#license-expiry-date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
+    //disable keyboard input & hide caret
+    $('#license-expiry-date').keydown(false);
+    $('#license-expiry-date').css('caret-color', 'transparent');
 
     function readURL(input, onLoad) {
         if (input.files && input.files[0]) {
