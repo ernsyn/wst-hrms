@@ -844,7 +844,7 @@ public function postEditSocso(Request $request, $id)
 
     ]);
 
-    Socso::where('id', $id)->update($socsoData);
+    Socso::find($id)->update($socsoData);
 
     return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been updated.');
 }
