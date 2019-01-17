@@ -531,7 +531,7 @@ class SettingsController extends Controller
                 'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
             ]);
 
-            Branch::where('id', $id)->update($branchData);
+            Branch::find($id)->update($branchData);
 
             return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been updated.');
     }
