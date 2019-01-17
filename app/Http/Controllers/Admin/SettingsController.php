@@ -745,7 +745,7 @@ public function postEditEpf(Request $request, $id)
 
     ]);
 
-    EPF::where('id', $id)->update($epfData);
+    EPF::find($id)->update($epfData);
 
     return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been updated.');
 }
