@@ -893,7 +893,7 @@ public function postEditPcb(Request $request, $id)
 
     ]);
 
-    Pcb::where('id', $id)->update($pcbData);
+    Pcb::find($id)->update($pcbData);
 
     return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
 }
