@@ -147,7 +147,7 @@ class SettingsController extends Controller
             'name' => 'required|unique:employee_positions,name,'.$id.',id,deleted_at,NULL',
         ]);
 
-        EmployeePosition::where('id', $id)->update($positionData);
+        EmployeePosition::find($id)->update($positionData);
 
         return redirect()->route('admin.settings.positions')->with('status', 'Position has successfully been updated.');
     }
