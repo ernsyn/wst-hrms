@@ -793,7 +793,7 @@ public function postEditEis(Request $request, $id)
 
     ]);
 
-    Eis::where('id', $id)->update($eisData);
+    Eis::find($id)->update($eisData);
 
     return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been updated.');
 }
