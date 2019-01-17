@@ -561,7 +561,7 @@ class SettingsController extends Controller
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
-        Company::where('id', $id)->update($companyData);
+        Company::find($id)->update($companyData);
 
         return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been updated.');
     }
