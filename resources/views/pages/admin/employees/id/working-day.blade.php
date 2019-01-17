@@ -68,10 +68,10 @@
                             <label for="monday"><strong>Monday*</strong></label>
                             <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="monday">
-                                <option value="full" {{ old('monday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('monday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('monday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('monday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="monday-error" class="invalid-feedback">
                             </div>
@@ -82,10 +82,10 @@
                             <label for="tuesday"><strong>Tuesday*</strong></label>
                             <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="tuesday">
-                                <option value="full" {{ old('tuesday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('tuesday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('tuesday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('tuesday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="tuesday-error" class="invalid-feedback">
                             </div>
@@ -96,10 +96,10 @@
                             <label for="wednesday"><strong>Wednesday*</strong></label>
                             <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="wednesday">
-                                <option value="full" {{ old('wednesday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('wednesday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('wednesday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('wednesday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="wednesday-error" class="invalid-feedback">
                             </div>
@@ -110,10 +110,10 @@
                             <label for="thursday"><strong>Thursday*</strong></label>
                             <select class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="thursday">
-                                <option value="full" {{ old('thursday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('thursday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('thursday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('thursday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="thursday-error" class="invalid-feedback">
                             </div>
@@ -124,10 +124,10 @@
                             <label for="friday"><strong>Friday*</strong></label>
                             <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="friday">
-                                <option value="full" {{ old('friday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('friday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('friday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('friday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="friday-error" class="invalid-feedback">
                             </div>
@@ -138,10 +138,10 @@
                             <label for="saturday"><strong>Saturday*</strong></label>
                             <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="saturday">
-                                <option value="full" {{ old('saturday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('saturday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('saturday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('saturday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="saturday-error" class="invalid-feedback">
                             </div>
@@ -152,10 +152,10 @@
                             <label for="sunday"><strong>Sunday*</strong></label>
                             <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="sunday">
-                                <option value="full" {{ old('sunday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('sunday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('sunday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('sunday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="sunday-error" class="invalid-feedback">
                             </div>
@@ -219,10 +219,10 @@
                             <label for="monday"><strong>Monday*</strong></label>
                             <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="monday">
-                                <option value="full" {{ old('monday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('monday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('monday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('monday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="monday-error" class="invalid-feedback">
                             </div>
@@ -233,10 +233,10 @@
                             <label for="tuesday"><strong>Tuesday*</strong></label>
                             <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="tuesday">
-                                <option value="full" {{ old('tuesday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('tuesday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('tuesday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('tuesday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="tuesday-error" class="invalid-feedback">
                             </div>
@@ -247,10 +247,10 @@
                             <label for="wednesday"><strong>Wednesday*</strong></label>
                             <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="wednesday">
-                                <option value="full" {{ old('wednesday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('wednesday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('wednesday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('wednesday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="wednesday-error" class="invalid-feedback">
                             </div>
@@ -261,10 +261,10 @@
                             <label for="thursday"><strong>Thursday*</strong></label>
                             <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="thursday">
-                                <option value="full" {{ old('thursday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('thursday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('thursday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('thursday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="thursday-error" class="invalid-feedback">
                             </div>
@@ -275,10 +275,10 @@
                             <label for="friday"><strong>Friday*</strong></label>
                             <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="friday">
-                                <option value="full" {{ old('friday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('friday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('friday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('friday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="friday-error" class="invalid-feedback">
                             </div>
@@ -289,10 +289,10 @@
                             <label for="saturday"><strong>Saturday*</strong></label>
                             <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="saturday">
-                                <option value="full" {{ old('saturday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('saturday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('saturday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('saturday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="saturday-error" class="invalid-feedback">
                             </div>
@@ -303,10 +303,10 @@
                             <label for="sunday"><strong>Sunday*</strong></label>
                             <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
                                 placeholder="" name="sunday">
-                                <option value="full" {{ old('sunday') == 'full' ? 'selected' : '' }}>Full Day</option>
-                                <option value="half" {{ old('sunday') == 'half' ? 'selected' : '' }}>Half Day</option>
-                                <option value="off" {{ old('sunday') == 'off' ? 'selected' : '' }}>Off Day</option>
-                                <option value="rest" {{ old('sunday') == 'rest' ? 'selected' : '' }}>Rest Day</option>
+                                <option value="full">Full Day</option>
+                                <option value="half">Half Day</option>
+                                <option value="off">Off Day</option>
+                                <option value="rest">Rest Day</option>
                             </select>
                             <div id="sunday-error" class="invalid-feedback">
                             </div>
