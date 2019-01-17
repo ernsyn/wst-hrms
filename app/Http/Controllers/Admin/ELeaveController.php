@@ -549,6 +549,8 @@ class ELeaveController extends Controller
         // get employee leave allocations
         $leaves = DB::table('leave_types')
         ->join('leave_allocations', 'leave_types.id', '=', 'leave_allocations.leave_type_id')
+        ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'employee_jobs.emp_id')
+        ->distinct()
         ->select(
             'leave_types.id',
             'leave_types.code',
@@ -561,13 +563,25 @@ class ELeaveController extends Controller
         ->where('leave_allocations.emp_id', $emp_id)
         ->whereYear('leave_allocations.valid_from_date', '=', $year)
         ->whereYear('leave_allocations.valid_until_date', '=', $year)
+        ->whereNull('employee_jobs.end_date')
         ->get();
 
         foreach ($leaves as $row) {
-            $leaveAllocations = LeaveAllocation::where('emp_id', $emp_id)
-            ->where('leave_type_id', $row->id)
-            ->where('valid_from_date', '<=', Carbon::now())
-            ->where('valid_until_date', '>=', Carbon::now())
+            $leaveAllocations = DB::table('leave_allocations')
+            ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'leave_allocations.emp_id')
+            ->select(
+                'leave_allocations.id',
+                'leave_allocations.allocated_days',
+                'leave_allocations.spent_days',
+                'leave_allocations.carried_forward_days',
+                'leave_allocations.is_carry_forward'
+            )
+            ->where('leave_allocations.leave_type_id', $row->id)
+            ->whereYear('leave_allocations.valid_from_date', '=', $year)
+            ->whereYear('leave_allocations.valid_until_date', '=', $year)
+            ->whereNull('employee_jobs.end_date')
+            ->orderBy('leave_allocations.id', 'desc')
+            ->limit(1)
             ->get();
 
             $totalAllocatedDays = 0;
@@ -575,8 +589,6 @@ class ELeaveController extends Controller
 
             if($leaveAllocations) {
                 foreach($leaveAllocations as $leaveAllocation) {
-                    // $totalAllocatedDays += $leaveAllocation->allocated_days;
-
                     if($leaveAllocation->is_carry_forward == 1) {
                         $carried_forward_days += $leaveAllocation->allocated_days;
                     }
