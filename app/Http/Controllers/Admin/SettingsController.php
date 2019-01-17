@@ -188,7 +188,7 @@ class SettingsController extends Controller
 
         ]);
 
-        EmployeeGrade::where('id', $id)->update($gradeData);
+        EmployeeGrade::find($id)->update($gradeData);
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been updated.');
     }
