@@ -33,6 +33,7 @@ class Employee extends Model
         'created_by',
         'main_security_group_id',
         'code',
+        'resignation_date'
     ];
 
     protected $dates = [

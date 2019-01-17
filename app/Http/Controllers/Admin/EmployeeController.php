@@ -614,9 +614,7 @@ class EmployeeController extends Controller
     }
 
     public function postJob(Request $request, $id)
-    {
-        // Add a new job
-
+    {   // Add a new job
         $jobData = $request->validate([
             'basic_salary' => 'required|numeric',
             'cost_centre_id' => 'required',
@@ -630,9 +628,7 @@ class EmployeeController extends Controller
             'status' => 'required',
         ]);
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
-
         $jobData['created_by'] = auth()->user()->id;
-
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
             if(!empty($currentJob)) {
@@ -641,16 +637,18 @@ class EmployeeController extends Controller
                     ->update(array('confirmed_date'=> ($jobData['start_date'])));
                     $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                     LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
+                    
+                    
                 } else {
                     $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                     LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
-                }
+                     }
             } else {
                 $jobData['status']  = "probationer";
             }
 
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
-
+            Employee::where('id', $id)->update(array('resignation_date'=> null)); 
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
@@ -659,25 +657,43 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Job was successfully added']);
     }
 
-    public function actionResign(Request $request, $id) {
+    public function postResign(Request $request, $id) {
+
+        $jobData = $request->validate([
+  
+            'resignation_date' => 'required',
+        ]);
 
         $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
-
         $currentDate = date("Y-m-d");
-
-        if(!empty($currentJob)) {
-
-        $jobs = EmployeeJob::where('emp_id', $id)
-        ->whereNull('end_date')->first();
-        $newJobs = $jobs->replicate();
-        $newJobs['status']  = 'Resigned';
-        $newJobs-> save();
-
-        $currentJob->update(['end_date'=> $currentDate ]);
         LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
-        return response()->json(['success'=>'Employee Resignation Date updated']);
-        }
+        $jobData['resignation_date'] = implode("-", array_reverse(explode("/", $jobData['resignation_date'])));
+
+        Employee::where('id', $id)->update(array('resignation_date'=> ($jobData['resignation_date']))); 
+        $currentJob->update(array('end_date'=> ($jobData['resignation_date']))); 
+        $currentJob->update(array('status'=> 'Resigned')); 
+        return response()->json(['success'=>'Job was successfully added']);
+
+
+        // $currentJob = EmployeeJob::where('emp_id', $id)
+        //     ->whereNull('end_date')->first();
+
+        // $currentDate = date("Y-m-d");
+
+        // if(!empty($currentJob)) {
+
+        // $jobs = EmployeeJob::where('emp_id', $id)
+        // ->whereNull('end_date')->first();
+        // $newJobs = $jobs->replicate();
+        // $newJobs['status']  = 'Resigned';
+        // $newJobs-> save();
+
+        // $currentJob->update(['end_date'=> $currentDate ]);
+        // LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
+        // return response()->json(['success'=>'Employee Resignation Date updated']);
+        // }
+        
 
     }
 
@@ -726,7 +742,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer',
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|numeric|between:0,4.00',
+            'gpa' => 'required|integer|between:0,4.00',
             'description' => 'nullable'
         ]);
         $educationData['created_by'] = auth()->user()->id;
@@ -1146,7 +1162,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|numeric|between:0,4.00',
+            'gpa' => 'required|between:0,99.99',
             'description' => ''
         ]);
 
