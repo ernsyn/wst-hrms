@@ -1107,22 +1107,22 @@ public function postAddCompanyBank(Request $request,$id)
 
     if ($request->status =='Active'){
 
-    CompanyBank::where('company_id',$id)
-    ->where('status','Active')
-    ->update(['status'=>'Inactive']);
+        CompanyBank::where('company_id',$id)
+        ->where('status','Active')
+        ->update(['status'=>'Inactive']);
 
 
-    $additionData['status'] = 'Active';
-    $additionData['company_id']= $id;
-    $additionData['created_by'] = auth()->user()->id;
-    CompanyBank::create($additionData);
-}
-else {
-    $additionData['status'] = 'Inactive';
-    $additionData['company_id']= $id;
-    $additionData['created_by'] = auth()->user()->id;
-    CompanyBank::create($additionData);
-}
+        $additionData['status'] = 'Active';
+        $additionData['company_id']= $id;
+        $additionData['created_by'] = auth()->user()->id;
+        CompanyBank::create($additionData);
+    }
+    else {
+        $additionData['status'] = 'Inactive';
+        $additionData['company_id']= $id;
+        $additionData['created_by'] = auth()->user()->id;
+        CompanyBank::create($additionData);
+    }
     return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
 }
 
@@ -1140,24 +1140,18 @@ public function postEditCompanyBank(Request $request)
 
 
     if ($request->status =='Active'){
-
-        CompanyBank::where('company_id',$id)
+        CompanyBank::find($id)
         ->where('status','Active')
         ->update(['status'=>'Inactive']);
-
 
         $additionData['status'] = 'Active';
         $additionData['company_id']= $id;
         $additionData['created_by'] = auth()->user()->id;
 
-
-
-    CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
-
+        CompanyBank::find($request->company_bank_id)->update($additionData);
     }
 
     else {
-
         $additionData['status'] = 'Inactive';
         $additionData['company_id']= $id;
         $additionData['created_by'] = auth()->user()->id;
