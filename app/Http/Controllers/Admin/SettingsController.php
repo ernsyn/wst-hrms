@@ -1182,7 +1182,7 @@ public function postEditSecurityGroup(Request $request)
         $additionData['created_by'] = auth()->user()->id;
 
 
-    SecurityGroup::where('id',  $request->security_group_id)->update($additionData);
+    SecurityGroup::find($request->security_group_id)->update($additionData);
 
     return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been updated.');
 }
