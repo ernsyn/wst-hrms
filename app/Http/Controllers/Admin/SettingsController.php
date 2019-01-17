@@ -486,7 +486,7 @@ class SettingsController extends Controller
             'name' => 'required|unique:departments,name,'.$id.',id,deleted_at,NULL'
         ]);
 
-        Department::where('id', $id)->update($departmentData);
+        Department::find($id)->update($departmentData);
 
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been updated.');
     }
