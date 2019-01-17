@@ -448,6 +448,17 @@
         // ADD
         $('#add-working-day-form #add-working-day-submit').click(function(e){
             e.preventDefault();
+
+            var start_work = '01/01/2019 ' + $("#add-working-day-form input[name=start_work_time]").val();
+            var end_work = '01/01/2019 ' + $("#add-working-day-form input[name=end_work_time]").val();
+
+            if(Date.parse(end_work) < Date.parse(start_work)) {
+                $('#add-working-day-form select[name=end_work_time]').addClass('is-invalid');
+                $('#add-working-day-form #end_work_time-error').html('<strong>End of Work must be later than Start of Work</strong>');
+                $('#add-working-day-form #end_work_time-error').show();
+                return false;
+            }
+
             $.ajax({
                 url: "{{ route('admin.employees.working-days.post', ['id' => $id]) }}",
                 type: 'POST',
@@ -466,6 +477,7 @@
                 success: function(data) {
                     getEmployeeWorkingDaysData();
                     showAlert(data.success);
+                    $('#add-working-day-form #end_work_time-error').hide();
                     $('#add-working-day-popup').modal('toggle');
                 },
                 error: function(xhr) {
@@ -519,6 +531,17 @@
         // EDIT
         $('#edit-working-day-form #edit-working-day-submit').click(function(e){
             e.preventDefault();
+
+            var start_work = '01/01/2019 ' + $("#edit-working-day-form input[name=start_work_time]").val();
+            var end_work = '01/01/2019 ' + $("#edit-working-day-form input[name=end_work_time]").val();
+
+            if(Date.parse(end_work) < Date.parse(start_work)) {
+                $('#edit-working-day-form select[name=end_work_time]').addClass('is-invalid');
+                $('#edit-working-day-form #end_work_time-error').html('<strong>End of Work must be later than Start of Work</strong>');
+                $('#edit-working-day-form #end_work_time-error').show();
+                return false;
+            }
+            
             $.ajax({
                 url: "{{ route('admin.employees.working-day.edit.post', ['id' => $id]) }}",
                 type: 'POST',
@@ -537,6 +560,7 @@
                 success: function(data) {
                     getEmployeeWorkingDaysData();
                     showAlert(data.success);
+                    $('#edit-working-day-form #end_work_time-error').hide();
                     $('#edit-working-day-popup').modal('toggle');
                 },
                 error: function(xhr) {
