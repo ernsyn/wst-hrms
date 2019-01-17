@@ -33,9 +33,9 @@
                         <td>{{$companybanks['created_at']}}</td>
                         <td>{{$companybanks['status']}}</td>
                         <td><button type="button" class="btn btn-success btn-smt " data-toggle="modal"
-                                data-bank-id="{{$companybanks['id']}}" data-bank-bank_code="{{$companybanks['bank_code']}}"
-                                data-bank-acc_name="{{$companybanks['acc_name']}}" data-bank-status="{{$companybanks['status']}}"
-                                data-target="#editCompanyBankPopup"><i class="fas fa-edit"></i></button>
+                                data-bank-id="{{$companybanks['id']}}" data-bank-bank-code="{{$companybanks['bank_code']}}"
+                                data-bank-account-name="{{$companybanks['acc_name']}}" data-bank-status="{{$companybanks['status']}}"
+                                data-target="#edit-company-bank-popup"><i class="fas fa-edit"></i></button>
                         </td>
                     </tr>
                     @endforeach
@@ -103,7 +103,7 @@
     </div>
 </div>
 <!-- UPDATE COMPANY BANK -->
-<div class="modal fade" id="editCompanyBankPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="edit-company-bank-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -111,18 +111,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                @foreach($bank as $banks)
-                <form method="POST" action="{{route('admin.settings.company-banks.edit.post', ['id' => $banks->company_id ])}}" id="edit_company_bank">
-                    @endforeach @csrf
+                <form method="POST" action="{{route('admin.settings.company-banks.edit.post', ['id' => $banks->company_id ])}}" id="edit-company-bank-form">
+                    @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <div class="col-md-12">
-                                <input id="company_bank_id" type="text" class="form-control{{ $errors->has('company_bank_id') ? ' is-invalid' : '' }}" name="company_bank_id"
+                                <input type="text" class="form-control{{ $errors->has('company_bank_id') ? ' is-invalid' : '' }}" name="company_bank_id"
                                     value="{{ old('company_bank_id') }}" hidden>
                             </div>
                             <label class="col-md-12 col-form-label">Bank*</label>
                             <div class="col-md-12">
                                 <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" value="{{ old('bank_code') }}">
+                                    <option value=""></option>
                                     @foreach(App\BankCode::all() as $banks)
                                     <option value="{{ $banks->id }}">{{ $banks->name }}</option>
                                     @endforeach
@@ -147,26 +147,6 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- DELETE COMPANY BANK -->
-<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure want to delete?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirm">Delete</button>
             </div>
         </div>
     </div>
@@ -206,17 +186,23 @@
             },
         ]
     });
-    $('#confirm-delete-modal').on('show.bs.modal', function (e) {
-        var entryTitle = $(e.relatedTarget).data('entry-title');
-        var link = $(e.relatedTarget).data('link');
-        $(this).find('.modal-body p').text('Are you sure you want to delete - ' + entryTitle + '?');
-        // Pass form reference to modal for submission on yes/ok
-        var form = $(e.relatedTarget).closest('form');
-        $(this).find('.modal-footer #confirm').data('form', link);
-    });
 
-    $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
-        window.location = $(this).data('form');
-    });
+
+    //update company
+    $('#edit-company-bank-popup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget)
+    var id = button.data('bank-id')
+    var bank_code = button.data('bank-code')
+    var account_name = button.data('bank-account-name')
+    var status = button.data('bank-status')
+
+    var modal = $(this)
+
+    modal.find('#edit-company-bank-form input[name=company_bank_id]').val(id)
+    modal.find('#edit-company-bank-form select[name=bank_code]').val(bank_code)
+    modal.find('#edit-company-bank-form input[name=acc_name]').val(account_name)
+    modal.find('#edit-company-bank-form select[name=status]').val(status)
+    })
 </script>
 @append

@@ -98,8 +98,7 @@
                 </button>
             </div>
             @foreach($company as $company_security_group)
-            <form method="POST" action="{{ route('admin.settings.security-groups.edit.post', ['id' => $company_security_group->id])}} "
-                id="add_security_group">
+            <form method="POST" action="{{ route('admin.settings.security-groups.edit.post', ['id' => $company_security_group->id])}} ">
                 @endforeach @csrf @csrf
                 <div class="modal-body">
                     <div class="row pb-5">
@@ -107,13 +106,11 @@
                             <input id="security_group_id" name="security_group_id" type="hidden">
                             <label class="col-md-12 col-form-label">Security Group Name*</label>
                             <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
-                                    required>
+                                <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required>
                             </div>
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-10">
-                                <textarea name="description" id="description" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}"
-                                    required>{{ old('description') }}</textarea>
+                                <textarea name="description" id="description" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" required>{{ old('description') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -160,6 +157,24 @@
             }
         ]
     });
+
+
+    //update company security group
+    $('#editSecurityGroupPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget)
+    var id = button.data('security-id')
+    var name = button.data('security-name')
+    var description = button.data('security-description')
+    var status = button.data('security-status')
+
+    var modal = $(this)
+
+    modal.find('.modal-body input[name=security_group_id]').val(id)
+    modal.find('.modal-body input[name=name]').val(name)
+    modal.find('.modal-body #description').val(description)
+    modal.find('.modal-body input[name=status]').val(status)
+    })
 </script>
 @append
 

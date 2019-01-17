@@ -52368,57 +52368,6 @@ $('#updateLeaveBalance').on('show.bs.modal', function (event) {
     modal.find('.modal-body #types').val(type_id);
 });
 
-//update company
-$('#editCompanyBankPopup').on('show.bs.modal', function (event) {
-
-    var button = $(event.relatedTarget);
-    var id = button.data('bank-id');
-    var bank_code = button.data('bank-bank_code');
-    var acc_name = button.data('bank-acc_name');
-    var status = button.data('bank-status');
-
-    var modal = $(this);
-
-    modal.find('.modal-body #company_bank_id').val(id);
-    modal.find('.modal-body #bank_code').val(bank_code);
-    modal.find('.modal-body #acc_name').val(acc_name);
-    modal.find('.modal-body #status').val(status);
-});
-
-//update company security group
-$('#editSecurityGroupPopup').on('show.bs.modal', function (event) {
-
-    var button = $(event.relatedTarget);
-    var id = button.data('security-id');
-    var name = button.data('security-name');
-    var description = button.data('security-description');
-    var status = button.data('security-status');
-
-    var modal = $(this);
-
-    modal.find('.modal-body #security_group_id').val(id);
-    modal.find('.modal-body #name').val(name);
-    modal.find('.modal-body #description').val(description);
-    modal.find('.modal-body #status').val(status);
-});
-
-//update company security group
-$('#editTravelPopup').on('show.bs.modal', function (event) {
-
-    var button = $(event.relatedTarget);
-    var id = button.data('travel-id');
-    var code = button.data('travel-code');
-    var rate = button.data('travel-rate');
-    var status = button.data('travel-status');
-
-    var modal = $(this);
-
-    modal.find('.modal-body #travel_id').val(id);
-    modal.find('.modal-body #code').val(code);
-    modal.find('.modal-body #rate').val(rate);
-    modal.find('.modal-body #status').val(status);
-});
-
 //update addition
 $('#editCompanyAdditionPopup').on('show.bs.modal', function (event) {
 
