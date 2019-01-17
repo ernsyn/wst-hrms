@@ -165,7 +165,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
                             <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="start_work_time" value="">
+                                placeholder="" name="start_work_time" value="09:00">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
                             <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="end_work_time" value="">
+                                placeholder="" name="end_work_time" value="18:00">
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -316,7 +316,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
                             <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="start_work_time" value="">
+                                placeholder="" name="start_work_time">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -325,7 +325,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
                             <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="end_work_time" value="">
+                                placeholder="" name="end_work_time">
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -357,7 +357,9 @@
         $("#edit-working-day-form select[name=working_day]").append($("<option data-id='" + i + "' />").val(this.id).text(this.template_name));
     });
 
-    $('.timepicker').timeDropper({ format: 'HH:mm' });
+    setTimeout(function(){ 
+        $('.timepicker').timeDropper({ format: 'HH:mm', setCurrentTime: false });
+    }, 1000);
 
     $("#add-working-day-form select[name=working_day]").change(function() {
         var data_id = $(this).find(':selected').attr('data-id');
@@ -418,8 +420,8 @@
                 $("#edit-working-day-form select[name=friday]").val(data[0].friday);
                 $("#edit-working-day-form select[name=saturday]").val(data[0].saturday);
                 $("#edit-working-day-form select[name=sunday]").val(data[0].sunday);
-                $("#edit-working-day-form input[name=start_work_time]").val(data[0].start_work_time);
-                $("#edit-working-day-form input[name=end_work_time]").val(data[0].end_work_time);
+                $("#edit-working-day-form input[name=start_work_time]").prop('value', data[0].start_work_time.substring(0, data[0].start_work_time.length - 3));
+                $("#edit-working-day-form input[name=end_work_time]").prop('value', data[0].end_work_time.substring(0, data[0].end_work_time.length - 3));
 
                 $("#assign-working-day-button").hide();
                 $("#edit-working-day-button").show();
