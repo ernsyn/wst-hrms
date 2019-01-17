@@ -504,7 +504,7 @@ class SettingsController extends Controller
             'sunday' => 'required',
         ]);
 
-        EmployeeWorkingDay::templates()->where('id', $id)->update($workingDayData);
+        EmployeeWorkingDay::templates()->find($id)->update($workingDayData);
 
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been updated.');
     }
