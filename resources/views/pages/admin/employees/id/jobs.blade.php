@@ -1,31 +1,49 @@
 {{-- Table --}}
 <div class="tab-pane fade show p-3" id="nav-job" role="tabpanel" aria-labelledby="nav-job-tab">
     <div class="row pb-3">
+            {{-- <div class="col-auto mr-auto"></div>
+            <div class="col-auto" id="show-resign-button">
+                <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
+                    Add Job
+                </button>
+                @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
+                <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#add-resign-popup">
+                    Add Resign
+                </button>
+                @else
+                <h5><span class="badge badge-danger">Resigned / Job Not Assigned</span></h5>
+                @endif
+            </div>         --}}    
+            {{-- old code  --}}
         <div class="col-auto mr-auto"></div>
         <div class="col-auto" id="show-resign-button">
+            @if(App\Employee::where('id', $id)->whereNull('resignation_date')->count() > 0)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
                 Add Job
             </button>
-            @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
-            <button type="button" class="btn btn-outline-danger waves-effect" onclick="window.location='{{ route('admin.employees.id.action.resign', ['id' => $id ]) }}';">
-                Resign
-            </button>
+            <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#add-resign-popup">
+                    Add Resign
+                </button>
             @else
-            <h5><span class="badge badge-danger">Resigned / Job Not Assigned</span></h5>
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
+            Re-Employ
+            </button> 
+            <h5><span class="badge badge-danger">Resigned</span></h5>
             @endif
+
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="employee-jobs-table">
         <thead>
             <tr>
                 <th>No</th>
-                <th>Date</th>
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Position</th>
                 <th>Department</th>
                 <th>Team</th>
                 <th>Cost Centre</th>
                 <th>Grade</th>
-                <th>Basic Salary</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -33,7 +51,42 @@
     </table>
 </div>
 
-
+<div class="modal fade" id="add-resign-popup" tabindex="-1" role="dialog" aria-labelledby="nav-job-tab" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nav-job-tab">Add Resignation Date</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="add-resign-form">
+                <div class="modal-body">
+                    @csrf
+                    <div class="row form-group">
+                        <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
+                        <div class="col-md-7">
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="date-resign" class="form-control datetimepicker-input" data-target="#date-resign"/>
+                                <div class="input-group-append" data-target="#date-resign" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="date-resign-error" class="invalid-feedback">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="add-resign-submit" type="submit" class="btn btn-primary">
+                        {{ __('Submit') }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- ADD -->
 <div class="modal fade" id="add-job-popup" tabindex="-1" role="dialog" aria-labelledby="nav-job-tab" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -346,6 +399,9 @@
                 "data": "start_date"
             },
             {
+                "data": "end_date"
+            },
+            {
                 "data": "main_position.name"
             },
             {
@@ -360,9 +416,7 @@
             {
                 "data": "grade.name"
             },
-            {
-                "data": "basic_salary"
-            },
+
             {
                 "data": "status",
                 render: function (data, type, row, meta) {
@@ -485,7 +539,7 @@
 
                     $(e.target).removeAttr('disabled');
                     showAlert(data.success);
-                    $("#show-resign-button").load(" #show-resign-button");
+                    $("#show-job-button").load(" #show-job-button");
                     jobsTable.ajax.reload();
                     $('#add-job-popup').modal('toggle');
                     clearJobModal('#add-job-form');
@@ -759,6 +813,88 @@
         )
     }
     });
+
+</script>
+<script type="text/javascript">
+    $(function () {
+
+        $('#date-resign').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#date-resign-edit').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+
+        // ADD
+        $('#add-resign-popup').on('show.bs.modal', function (event) {
+            clearResignError('#add-resign-form');
+        });
+
+
+        $('#add-resign-form #add-resign-submit').click(function (e) {
+            $(e.target).attr('disabled', 'disabled');
+            e.preventDefault();
+            clearResignError('#add-resign-form');
+            $.ajax({
+                url: "{{ route('admin.employees.id.action.resign', ['id' => $id]) }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    resignation_date: $('#add-resign-form #date-resign').val()
+                },
+                success: function (data) {
+
+                    $(e.target).removeAttr('disabled');
+                    showAlert(data.success);
+                    $("#show-resign-button").load(" #show-resign-button");
+                    jobsTable.ajax.reload();
+                    $('#add-resign-popup').modal('toggle');
+                    clearResignModal('#add-resign-form');
+                },
+                error: function (xhr) {
+                    $(e.target).removeAttr('disabled');
+                    if (xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch (errorField) {
+                                    case 'resignation_date':
+                                        $('#add-resign-form #date-resign').addClass('is-invalid');
+                                        $('#add-resign-form #date-resign-error').html('<strong>' +
+                                            errors[errorField][0] + '</strong>');
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        function clearResignModal(htmlId) {
+        $(htmlId + ' #date-resign').val('');
+        $(htmlId + ' #date-resign').removeClass('is-invalid');
+    }
+
+    function clearResignError(htmlId) {
+        $(htmlId + ' #date-resign').removeClass('is-invalid');
+    }
+
+    function showAlert(message) {
+        $('#alert-container').html(
+            `<div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <span id="alert-message">${message}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`
+        )
+    }
+    });
+
+         // DELETE
 
 </script>
 @append
