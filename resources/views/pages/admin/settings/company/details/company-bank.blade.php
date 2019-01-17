@@ -56,7 +56,7 @@
                 </button>
             </div>
             @foreach($company as $banks)
-            <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->id])}} " id="add_company_bank">
+            <form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->id])}} " id="add-company-bank-form">
                 @endforeach
                 <div class="modal-body">
                     @csrf
@@ -152,6 +152,26 @@
 
 @section('scripts')
 <script>
+    $('#add-company-bank-form select[name=bank_code]').selectize({
+        plugins: ['restore_on_backspace'],
+        sortField: 'text'
+    });
+    var editBankCode = $('#edit-company-bank-form select[name=bank_code]').selectize({
+        plugins: ['restore_on_backspace'],
+        sortField: 'text'
+    });
+
+
+    $('#add-company-bank-form select[name=status]').selectize({
+        plugins: ['restore_on_backspace'],
+        sortField: 'text'
+    });
+    var editStatus = $('#edit-company-bank-form select[name=status]').selectize({
+        plugins: ['restore_on_backspace'],
+        sortField: 'text'
+    });
+
+
     $('#company-banks-table').DataTable({
         responsive: true,
         stateSave: true,
@@ -188,19 +208,16 @@
 
     //update company
     $('#edit-company-bank-popup').on('show.bs.modal', function (event) {
-
     var button = $(event.relatedTarget)
     var id = button.data('bank-id')
     var bank_code = button.data('bank-bank-code')
     var account_name = button.data('bank-account-name')
     var status = button.data('bank-status')
 
-    var modal = $(this)
-
-    modal.find('#edit-company-bank-form input[name=company_bank_id]').val(id)
-    modal.find('#edit-company-bank-form select[name=bank_code]').val(bank_code)
-    modal.find('#edit-company-bank-form input[name=acc_name]').val(account_name)
-    modal.find('#edit-company-bank-form select[name=status]').val(status)
+    $('#edit-company-bank-form input[name=company_bank_id]').val(id)
+    editBankCode[0].selectize.setValue(bank_code);
+    $('#edit-company-bank-form input[name=acc_name]').val(account_name)
+    editStatus[0].selectize.setValue(status)
     })
 </script>
 @append
