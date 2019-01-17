@@ -935,18 +935,22 @@ class SettingsController extends Controller
             'code' => 'required',
             'name' => 'required',
             'type' => 'required',
-            'amount' => 'required',
+            'amount' => '',
             'statutory'=> '',
             'ea_form_id' =>'required'
             ]);
 
         //  dd($request->confirmed_employee);
             $validatedAdditionCostCentreData = $request->validate([
-                'cost_centres'=>'required|numeric',
+                'cost_centres'=>'numeric',
             ]);
             $validatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
             // dd($validatedData);
-            $validatedAdditionData['statutory'] = implode(",", $request->statutory);
+            if(!empty($validatedAdditionData['statutory']))
+                $validatedAdditionData['statutory'] = implode(",", $request->statutory);
+            else
+                $validatedAdditionData['statutory'] = null;
+
             $validatedAdditionData['status'] = 'Active';
             $validatedAdditionData['company_id']=$id;
         // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
@@ -988,25 +992,26 @@ class SettingsController extends Controller
 
     public function postAddCompanyBank(Request $request,$id)
     {
-        $additionData = $request->validate([
+        $companyBankData = $request->validate([
             'bank_code' => 'required',
-            'acc_name' => 'required'
+            'acc_name' => 'required',
+
         ]);
 
         if ($request->status =='Active'){
             CompanyBank::where('company_id',$id)
             ->where('status','Active')
             ->update(['status'=>'Inactive']);
-            $additionData['status'] = 'Active';
-            $additionData['company_id']= $id;
-            $additionData['created_by'] = auth()->user()->id;
-            CompanyBank::create($additionData);
+            $companyBankData['status'] = 'Active';
+            $companyBankData['company_id']= $id;
+            $companyBankData['created_by'] = auth()->user()->id;
+            CompanyBank::create($companyBankData);
         }
         else {
-            $additionData['status'] = 'Inactive';
-            $additionData['company_id']= $id;
-            $additionData['created_by'] = auth()->user()->id;
-            CompanyBank::create($additionData);
+            $companyBankData['status'] = 'Inactive';
+            $companyBankData['company_id']= $id;
+            $companyBankData['created_by'] = auth()->user()->id;
+            CompanyBank::create($companyBankData);
         }
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
     }
@@ -1015,63 +1020,17 @@ class SettingsController extends Controller
     {
 
         $id = $request->id;
-        $additionData = $request->validate([
+        $updateCompanyBankData = $request->validate([
             'bank_code' => 'required',
             'acc_name' => 'required',
             'status'  => 'required'
         ]);
 
+        $updateCompanyBankData['company_id']= $id;
+        $updateCompanyBankData['created_by'] = auth()->user()->id;
+        CompanyBank::where('id',  $request->company_bank_id)->update($updateCompanyBankData);
 
-        if ($request->status =='Active'){
-
-            CompanyBank::where('company_id',$id)
-            ->where('status','Active')
-            ->update(['status'=>'Inactive']);
-
-
-            $additionData['status'] = 'Active';
-            $additionData['company_id']= $id;
-            $additionData['created_by'] = auth()->user()->id;
-
-
-
-        CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
-
-        }
-
-        else {
-
-            $additionData['status'] = 'Inactive';
-            $additionData['company_id']= $id;
-            $additionData['created_by'] = auth()->user()->id;
-            CompanyBank::where('id',  $request->company_bank_id)->update($additionData);
-        }
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been updated.');
-    }
-
-
-    public function deleteCompanyBank(Request $request, $id)
-    {
-        CompanyBank::find($id)->delete();
-
-        return redirect()->route('admin.settings.company.company-details', ['id'=>$id])->with('status', 'Company Bank has successfully been deleted.');
-    }
-
-    public function postEditSecurityGroup(Request $request)
-    {
-        $id = $request->id;
-        $additionData = $request->validate([
-                'name' => 'required',
-                'description' => 'required'
-
-            ]);
-            $additionData['company_id']= $id;
-            $additionData['created_by'] = auth()->user()->id;
-
-
-        SecurityGroup::where('id',  $request->security_group_id)->update($additionData);
-
-        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been updated.');
     }
 
     public function addCompanySecurities()
@@ -1081,26 +1040,37 @@ class SettingsController extends Controller
 
     public function postAddCompanySecurityGroup(Request $request,$id)
     {
-
-        $validateSecurityGroup = $request->validate([
+        $securityGroupData = $request->validate([
             'name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
             'description' => 'required',
         ]);
 
-        $validateSecurityGroup['company_id']=$id;
-        $validateSecurityGroup['created_by'] = auth()->user()->id;
-        SecurityGroup::create($validateSecurityGroup);
+        $securityGroupData['company_id']=$id;
+        $securityGroupData['created_by'] = auth()->user()->id;
+        SecurityGroup::create($securityGroupData);
 
-    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been added.');
+        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been added.');
     }
+    public function postEditSecurityGroup(Request $request)
+    {
+        $id = $request->id;
+        $updateSecurityGroupData = $request->validate([
+                'name' => 'required',
+                'description' => 'required'
+
+            ]);
+            $updateSecurityGroupData['company_id']= $id;
+            $updateSecurityGroupData['created_by'] = auth()->user()->id;
+
+
+        SecurityGroup::where('id',  $request->security_group_id)->update($updateSecurityGroupData);
+
+        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been updated.');
+    }
+
     public function editCompanySecurities(Request $request, $id) {
         $deduction = Deduction::find($id);
 
         return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
-    }
-    public function destroyCompanyBank($id)
-    {
-        CompanyBank::find($id)->delete();
-        return redirect()->route('admin.settings.companies');
     }
 }

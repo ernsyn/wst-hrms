@@ -98,7 +98,7 @@
                 </button>
             </div>
             @foreach($company as $company_security_group)
-            <form method="POST" action="{{ route('admin.settings.security-groups.edit.post', ['id' => $company_security_group->id])}} ">
+            <form method="POST" action="{{ route('admin.settings.security-groups.edit.post', ['id' => $company_security_group->id])}}" id="edit-security-group-form">
                 @endforeach @csrf @csrf
                 <div class="modal-body">
                     <div class="row pb-5">
@@ -106,11 +106,11 @@
                             <input id="security_group_id" name="security_group_id" type="hidden">
                             <label class="col-md-12 col-form-label">Security Group Name*</label>
                             <div class="col-md-12">
-                                <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required>
+                                <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" required>
                             </div>
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-10">
-                                <textarea name="description" id="description" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" required>{{ old('description') }}</textarea>
+                                <textarea name="description" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" required></textarea>
                             </div>
                         </div>
                     </div>
@@ -158,7 +158,6 @@
         ]
     });
 
-
     //update company security group
     $('#editSecurityGroupPopup').on('show.bs.modal', function (event) {
 
@@ -170,10 +169,10 @@
 
     var modal = $(this)
 
-    modal.find('.modal-body input[name=security_group_id]').val(id)
-    modal.find('.modal-body input[name=name]').val(name)
-    modal.find('.modal-body #description').val(description)
-    modal.find('.modal-body input[name=status]').val(status)
+    modal.find('#edit-security-group-form input[name=security_group_id]').val(id)
+    modal.find('#edit-security-group-form input[name=name]').val(name)
+    modal.find('#edit-security-group-form textarea[name=description]').val(description)
+    modal.find('#edit-security-group-form input[name=status]').val(status)
     })
 </script>
 @append

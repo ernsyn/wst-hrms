@@ -111,18 +111,17 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
+                @foreach($bank as $banks)
                 <form method="POST" action="{{route('admin.settings.company-banks.edit.post', ['id' => $banks->company_id ])}}" id="edit-company-bank-form">
-                    @csrf
+                    @endforeach @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
                             <div class="col-md-12">
-                                <input type="text" class="form-control{{ $errors->has('company_bank_id') ? ' is-invalid' : '' }}" name="company_bank_id"
-                                    value="{{ old('company_bank_id') }}" hidden>
+                                <input type="text" class="form-control{{ $errors->has('company_bank_id') ? ' is-invalid' : '' }}" name="company_bank_id" hidden>
                             </div>
                             <label class="col-md-12 col-form-label">Bank*</label>
                             <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code" id="bank_code" value="{{ old('bank_code') }}">
-                                    <option value=""></option>
+                                <select class="form-control{{ $errors->has('bank_code') ? ' is-invalid' : '' }}" name="bank_code">
                                     @foreach(App\BankCode::all() as $banks)
                                     <option value="{{ $banks->id }}">{{ $banks->name }}</option>
                                     @endforeach
@@ -130,12 +129,11 @@
                             </div>
                             <label class="col-md-12 col-form-label">Account Name*</label>
                             <div class="col-md-12">
-                                <input id="acc_name" type="text" class="form-control{{ $errors->has('acc_name') ? ' is-invalid' : '' }}" name="acc_name"
-                                    value="{{ old('acc_name') }}" required>
+                                <input type="text" class="form-control{{ $errors->has('acc_name') ? ' is-invalid' : '' }}" name="acc_name" required>
                             </div>
                             <label class="col-md-12 col-form-label">Status* </label>
                             <div class="col-md-12">
-                                <select class="form-control" id="status" name="status" value="{{ old('status') }}">
+                                <select class="form-control" name="status">
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
                                 </select>
@@ -193,7 +191,7 @@
 
     var button = $(event.relatedTarget)
     var id = button.data('bank-id')
-    var bank_code = button.data('bank-code')
+    var bank_code = button.data('bank-bank-code')
     var account_name = button.data('bank-account-name')
     var status = button.data('bank-status')
 

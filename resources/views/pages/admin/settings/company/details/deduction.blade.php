@@ -341,5 +341,66 @@
         }
     });
 
+    //update deduction
+    $('#editCompanyDeductionPopup').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('deduction-id');
+        var code = button.data('deduction-code');
+        var name = button.data('deduction-name');
+        var type = button.data('deduction-type');
+        var amount = button.data('deduction-amount');
+        var statutory = button.data('deduction-statutory');
+        var status = button.data('deduction-status');
+
+        var modal = $(this);
+
+        modal.find('.modal-body #company_deduction_id').val(id);
+        modal.find('.modal-body #code').val(code);
+        modal.find('.modal-body #name').val(name);
+        modal.find('.modal-body #type').val(type);
+        modal.find('.modal-body #amount').val(amount);
+        modal.find('.modal-body #statutory').val(statutory);
+        modal.find('.modal-body #status').val(status);
+    });
+
+    //---- DEDUCTION ----
+    //---- ADD -----
+    $('#check_cost_centre_d').change(function() {
+        if(this.checked) {
+            $('#cost_centre_d').prop('disabled', false);
+        }
+        else{
+            $('#cost_centre_d').prop('disabled', true);
+        }
+    });
+
+    $('#check_job_grade_d').change(function() {
+        if(this.checked) {
+            $('#job_grade_d').prop('disabled', false);
+        }
+        else{
+            $('#job_grade_d').prop('disabled', true);
+        }
+    });
+
+    //----- EDIT -----
+    $('#check_cost_centre_de').change(function() {
+        if(this.checked) {
+            $('#cost_centre_de').prop('disabled', false);
+        }
+        else{
+            $('#cost_centre_de').prop('disabled', true);
+        }
+    });
+
+    $('#check_job_grade_de').change(function() {
+        if(this.checked) {
+            $('#job_grade_de').prop('disabled', false);
+        }
+        else{
+            $('#job_grade_de').prop('disabled', true);
+        }
+    });
+
 </script>
 @append

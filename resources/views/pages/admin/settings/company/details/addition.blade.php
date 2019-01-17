@@ -337,5 +337,66 @@
             },
         ]
     });
+
+    //update addition
+    $('#editCompanyAdditionPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget);
+    var id = button.data('addition-id');
+    var code = button.data('addition-code');
+    var name = button.data('addition-name');
+    var type = button.data('addition-type');
+    var amount = button.data('addition-amount');
+    var statutory = button.data('addition-statutory');
+    //var eaform = button.data('addition-eaform')
+    var status = button.data('addition-status');
+
+    var modal = $(this);
+
+    modal.find('.modal-body #company_addition_id').val(id);
+    modal.find('.modal-body #code').val(code);
+    modal.find('.modal-body #name').val(name);
+    modal.find('.modal-body #type').val(type);
+    modal.find('.modal-body #amount').val(amount);
+    modal.find('.modal-body #statutory').val(statutory);
+    //modal.find('.modal-body #ea_form').val(eaform)
+    modal.find('.modal-body #status').val(status);
+    });
+
+
+    //----ADDITION----
+    //---- ADD -----
+    $('#check_cost_centre').change(function () {
+        if (this.checked) {
+            $('#cost_centre').prop('disabled', false);
+        } else {
+            $('#cost_centre').prop('disabled', true);
+        }
+    });
+
+    $('#check_job_grade').change(function () {
+        if (this.checked) {
+            $('#job_grade').prop('disabled', false);
+        } else {
+            $('#job_grade').prop('disabled', true);
+        }
+    });
+
+    //----- EDIT --------
+    $('#check_cost_centre_a').change(function () {
+        if (this.checked) {
+            $('#cost_centre_a').prop('disabled', false);
+        } else {
+            $('#cost_centre_a').prop('disabled', true);
+        }
+    });
+
+    $('#check_job_grade_a').change(function () {
+        if (this.checked) {
+            $('#job_grade_a').prop('disabled', false);
+        } else {
+            $('#job_grade_a').prop('disabled', true);
+        }
+    });
 </script>
 @append
