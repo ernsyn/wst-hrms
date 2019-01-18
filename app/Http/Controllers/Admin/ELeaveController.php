@@ -260,7 +260,7 @@ class ELeaveController extends Controller
         $timeDiff = $endTimeStamp - $startTimeStamp;
         $holidayUpdatedData['total_days'] = $timeDiff/86400 + 1;
 
-        Holiday::where('id', $id)->update($holidayUpdatedData);
+        Holiday::find($id)->update($holidayUpdatedData);
 
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
     }
