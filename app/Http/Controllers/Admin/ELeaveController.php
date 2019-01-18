@@ -320,7 +320,7 @@ class ELeaveController extends Controller
 
     public function postEditLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::where('id', $id)->first();
+        $leaveType = LeaveType::find($id)->first();
 
 
         if($leaveType->is_custom) {
@@ -486,21 +486,21 @@ class ELeaveController extends Controller
 
     public function postDeactivateLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::where('id', $id)->update(['active' => false]);
+        $leaveType = LeaveType::find($id)->update(['active' => false]);
 
         return response()->json(['success'=>'Leave type has been deactivated.']);
     }
 
     public function postActivateLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::where('id', $id)->update(['active' => true]);
+        $leaveType = LeaveType::find($id)->update(['active' => true]);
 
         return response()->json(['success'=>'Leave type has been activated.']);
     }
 
     public function deleteLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::where('id', $id)->delete();
+        $leaveType = LeaveType::find($id)->delete();
 
         return response()->json(['success'=>'Leave type has been deleted.']);
     }
