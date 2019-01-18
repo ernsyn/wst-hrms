@@ -66,8 +66,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="monday"><strong>Monday*</strong></label>
-                            <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="monday">
+                            <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -80,8 +79,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="tuesday"><strong>Tuesday*</strong></label>
-                            <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="tuesday">
+                            <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -94,8 +92,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="wednesday"><strong>Wednesday*</strong></label>
-                            <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="wednesday">
+                            <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -108,8 +105,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="thursday"><strong>Thursday*</strong></label>
-                            <select class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="thursday">
+                            <select class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder="" name="thursday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -122,8 +118,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="friday"><strong>Friday*</strong></label>
-                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="friday">
+                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -136,8 +131,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="saturday"><strong>Saturday*</strong></label>
-                            <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="saturday">
+                            <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -150,8 +144,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="sunday"><strong>Sunday*</strong></label>
-                            <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="sunday">
+                            <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -164,8 +157,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
-                            <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="start_work_time" value="09:00">
+                            <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="09:00">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -173,8 +165,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
-                            <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="end_work_time" value="18:00">
+                            <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="18:00">
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -182,8 +173,8 @@
                 </div>
                 <div class="modal-footer">
                     <button id="add-working-day-submit" type="submit" class="btn btn-primary">
-                    {{ __('Submit') }}
-                </button>
+                        {{ __('Submit') }}
+                    </button>
                 </div>
             </form>
         </div>
@@ -217,8 +208,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="monday"><strong>Monday*</strong></label>
-                            <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="monday">
+                            <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -231,8 +221,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="tuesday"><strong>Tuesday*</strong></label>
-                            <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="tuesday">
+                            <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -245,8 +234,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="wednesday"><strong>Wednesday*</strong></label>
-                            <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="wednesday">
+                            <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -259,8 +247,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="thursday"><strong>Thursday*</strong></label>
-                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="thursday">
+                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="thursday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -273,8 +260,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="friday"><strong>Friday*</strong></label>
-                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="friday">
+                            <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -287,8 +273,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="saturday"><strong>Saturday*</strong></label>
-                            <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="saturday">
+                            <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -301,8 +286,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="sunday"><strong>Sunday*</strong></label>
-                            <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}"
-                                placeholder="" name="sunday">
+                            <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday">
                                 <option value="full">Full Day</option>
                                 <option value="half">Half Day</option>
                                 <option value="off">Off Day</option>
@@ -315,8 +299,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="start_work_time"><strong>Start of Work*</strong></label>
-                            <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="start_work_time">
+                            <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -324,8 +307,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="end_work_time"><strong>End of Work*</strong></label>
-                            <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker"
-                                placeholder="" name="end_work_time">
+                            <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time">
                             <div id="end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
