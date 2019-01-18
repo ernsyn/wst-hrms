@@ -34,6 +34,7 @@ use App\Services\PayrollService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use PDF;
 use App\Repositories\Payroll\ReportRepository;
@@ -48,6 +49,7 @@ use App\Enums\AttendanceEnum;
 use App\LeaveRequest;
 use App\Http\Requests\PayslipRequest;
 use App\Mail\NewPayrollNotificationMail;
+use Exception;
 
 class PayrollController extends Controller
 {
@@ -156,6 +158,7 @@ class PayrollController extends Controller
         $payroll->updated_by = $currentUser; 
         $payroll->start_date = $this->payrollService->getPayrollStartDate($data);
         $payroll->end_date = date('Y-m-d', strtotime('-1 days'));
+        $payroll->status = 0;
         $payroll->save();
 
         // Step 3. Find all employees under this company, generate all employees' payroll trx.
@@ -261,16 +264,21 @@ class PayrollController extends Controller
             ->where('kpi_proposer',1)
             ->get();
         
-        $emailData = array();
-        foreach($kpiProposers as $kpiProposer){
-            $emailData['name'] = $kpiProposer['name'];
-            $emailData['payrollMonth'] = PayrollPeriodEnum::getDescription($validated['period']).' '.DateHelper::dateWithFormat($validated['year_month'], 'M-Y');
+        try {
+            $emailData = array();
+            foreach($kpiProposers as $kpiProposer){
+                $emailData['name'] = $kpiProposer['name'];
+                $emailData['payrollMonth'] = PayrollPeriodEnum::getDescription($validated['period']).' '.DateHelper::dateWithFormat($validated['year_month'], 'M-Y');
+                
+                //send email
+                Mail::to($kpiProposer['email'])
+                ->bcc(env('BCC_EMAIL'))
+                ->send(new NewPayrollNotificationMail($emailData));
+            }
             
-            //send email
-            Mail::to($kpiProposer['email'])
-            ->bcc(env('BCC_EMAIL'))
-            ->send(new NewPayrollNotificationMail($emailData));
-        }
+        } catch (Exception $ex) {
+            Log::error($ex);
+        } 
         
         return redirect('/payroll')->with('success', 'Payroll month has been added');
     }
@@ -355,7 +363,7 @@ class PayrollController extends Controller
         $storeData = [];
         $storeData['status'] = $request['status'];
         $storeData['updated_by'] = auth()->user()->id;
-        PayrollMaster::where('id', $id)->update($storeData);
+        PayrollMaster::find($id)->update($storeData);
         DB::commit();
 
         return redirect($request->server('HTTP_REFERER'))->with('success', 'Payroll month '.DateHelper::dateWithFormat($info[0]->year_month, 'Y-m').' is '. strtolower(new PayrollStatus($request['status'])).'.');
@@ -494,7 +502,13 @@ class PayrollController extends Controller
         AccessControllHelper::hasPayrollAccess();
 //         dd($request->all());
         $info = $this->payrollTrx->find($id)->first();
-        if(!@$info) return redirect($request->server('HTTP_REFERER'))->with('error', 'Payroll not found.');
+        
+        if(!@$info) {
+            return redirect($request->server('HTTP_REFERER'))->with('error', 'Payroll not found.');
+        } else if($info->status == 1) {
+            return redirect($request->server('HTTP_REFERER'))->with('error', 'Payroll is locked.');
+        }
+        
         $employeeContribution = 0;
         $totalEpf = 0;
         $totalEis = 0;
@@ -553,8 +567,9 @@ class PayrollController extends Controller
             $storeData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
             $employeeContribution = $storeData['employee_epf'] + $storeData['employee_eis'] + $storeData['employee_socso'] + $storeData['employee_pcb'];
             $storeData['take_home_pay'] = $storeData['gross_pay'] + $info->total_addition - $info->total_deduction - $employeeContribution;
-            
-            PayrollTrx::where('id', $id)->update($storeData);
+            $storeData['updated_by'] = auth()->user()->id;
+
+            PayrollTrx::find($id)->update($storeData);
         }else{
             $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
             
@@ -585,8 +600,9 @@ class PayrollController extends Controller
                 $storeData['total_deduction'] = $totalDeduction;
                 $employeeContribution = $storeData['employee_epf'] + $storeData['employee_eis'] + $storeData['employee_socso'] + $storeData['employee_pcb'];
                 $storeData['take_home_pay'] = $storeData['gross_pay'] + $info->total_addition - $info->total_deduction - $employeeContribution;
+                $storeData['updated_by'] = auth()->user()->id;
                 
-                PayrollTrx::where('id', $id)->update($storeData);
+                PayrollTrx::find($id)->update($storeData);
                 //             dd($info);
                 $next = $this->payrollTrx->findNext($id, $info->payroll_master_id);
                 $save_n_next = $request->input('save_n_next');

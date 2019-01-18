@@ -37,8 +37,21 @@ class PayrollRequest extends FormRequest
     public function messages()
     {
         return [
-            'year_month.required' => 'Payroll month is required!',
-            'period.required' => 'Period is required!'
+            'year_month.required' => 'Payroll month is required',
+            'year_month.date_format' => 'Invalid date format',
+            'period.required' => 'Period is required'
+        ];
+    }
+    
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'year_month' => 'payroll month',
         ];
     }
 }

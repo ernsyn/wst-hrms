@@ -23,5 +23,20 @@ class PayrollStatus extends Enum
             
         ];
     }
+    
+    public static function getDescription($value)
+    {
+        $desc = '';
+        switch ($value) {
+            case 0:
+                $desc = 'Unlock';
+                break;
+            case 1:
+                $desc = 'Locked';
+                break;
+        }
+        
+        return $desc;
+    }
 }
 
