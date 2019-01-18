@@ -68,7 +68,8 @@
                             <label for="monday"><strong>Monday*</strong></label>
                             <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -81,7 +82,8 @@
                             <label for="tuesday"><strong>Tuesday*</strong></label>
                             <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -94,7 +96,8 @@
                             <label for="wednesday"><strong>Wednesday*</strong></label>
                             <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -107,7 +110,8 @@
                             <label for="thursday"><strong>Thursday*</strong></label>
                             <select class="form-control{{ $errors->has('thursday') ? ' is-invalid' : '' }}" placeholder="" name="thursday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -120,7 +124,8 @@
                             <label for="friday"><strong>Friday*</strong></label>
                             <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -133,7 +138,8 @@
                             <label for="saturday"><strong>Saturday*</strong></label>
                             <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -146,7 +152,8 @@
                             <label for="sunday"><strong>Sunday*</strong></label>
                             <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -210,7 +217,8 @@
                             <label for="monday"><strong>Monday*</strong></label>
                             <select class="form-control{{ $errors->has('monday') ? ' is-invalid' : '' }}" placeholder="" name="monday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -223,7 +231,8 @@
                             <label for="tuesday"><strong>Tuesday*</strong></label>
                             <select class="form-control{{ $errors->has('tuesday') ? ' is-invalid' : '' }}" placeholder="" name="tuesday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -236,7 +245,8 @@
                             <label for="wednesday"><strong>Wednesday*</strong></label>
                             <select class="form-control{{ $errors->has('wednesday') ? ' is-invalid' : '' }}" placeholder="" name="wednesday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -249,7 +259,8 @@
                             <label for="thursday"><strong>Thursday*</strong></label>
                             <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="thursday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -262,7 +273,8 @@
                             <label for="friday"><strong>Friday*</strong></label>
                             <select class="form-control{{ $errors->has('friday') ? ' is-invalid' : '' }}" placeholder="" name="friday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -275,7 +287,8 @@
                             <label for="saturday"><strong>Saturday*</strong></label>
                             <select class="form-control{{ $errors->has('saturday') ? ' is-invalid' : '' }}" placeholder="" name="saturday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -288,7 +301,8 @@
                             <label for="sunday"><strong>Sunday*</strong></label>
                             <select class="form-control{{ $errors->has('sunday') ? ' is-invalid' : '' }}" placeholder="" name="sunday">
                                 <option value="full">Full Day</option>
-                                <option value="half">Half Day</option>
+                                <option value="half">Half Day 1</option>
+                                <option value="half_2">Half Day 2</option>
                                 <option value="off">Off Day</option>
                                 <option value="rest">Rest Day</option>
                             </select>
@@ -373,7 +387,9 @@
                 case 'full':
                     return 'Full Day';
                 case 'half':
-                    return 'Half Day';
+                    return 'Half Day 1';
+                case 'half_2':
+                    return 'Half Day 2';
                 case 'off':
                     return 'Off Day';
                 case 'rest':

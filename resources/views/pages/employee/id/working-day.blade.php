@@ -42,7 +42,9 @@
                 case 'full':
                     return 'Full Day';
                 case 'half':
-                    return 'Half Day';
+                    return 'Half Day 1';
+                case 'half_2':
+                    return 'Half Day 2';
                 case 'off':
                     return 'Off Day';
                 case 'rest':

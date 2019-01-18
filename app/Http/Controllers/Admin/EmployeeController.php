@@ -814,13 +814,13 @@ class EmployeeController extends Controller
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'monday' => 'required|in:full,half,off,rest',
-            'tuesday' => 'required|in:full,half,off,rest',
-            'wednesday' => 'required|in:full,half,off,rest',
-            'thursday' => 'required|in:full,half,off,rest',
-            'friday' => 'required|in:full,half,off,rest',
-            'saturday' => 'required|in:full,half,off,rest',
-            'sunday' => 'required|in:full,half,off,rest',
+            'monday' => 'required|in:full,half,half_2,off,rest',
+            'tuesday' => 'required|in:full,half,half_2,off,rest',
+            'wednesday' => 'required|in:full,half,half_2,off,rest',
+            'thursday' => 'required|in:full,half,half_2,off,rest',
+            'friday' => 'required|in:full,half,half_2,off,rest',
+            'saturday' => 'required|in:full,half,half_2,off,rest',
+            'sunday' => 'required|in:full,half,half_2,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
@@ -838,13 +838,13 @@ class EmployeeController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayUpdateData = $request->validate([
-            'monday' => 'required|in:full,half,off,rest',
-            'tuesday' => 'required|in:full,half,off,rest',
-            'wednesday' => 'required|in:full,half,off,rest',
-            'thursday' => 'required|in:full,half,off,rest',
-            'friday' => 'required|in:full,half,off,rest',
-            'saturday' => 'required|in:full,half,off,rest',
-            'sunday' => 'required|in:full,half,off,rest',
+            'monday' => 'required|in:full,half,half_2,off,rest',
+            'tuesday' => 'required|in:full,half,half_2,off,rest',
+            'wednesday' => 'required|in:full,half,half_2,off,rest',
+            'thursday' => 'required|in:full,half,half_2,off,rest',
+            'friday' => 'required|in:full,half,half_2,off,rest',
+            'saturday' => 'required|in:full,half,half_2,off,rest',
+            'sunday' => 'required|in:full,half,half_2,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
         ]);
