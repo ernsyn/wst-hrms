@@ -167,12 +167,10 @@
     var description = button.data('security-description')
     var status = button.data('security-status')
 
-    var modal = $(this)
-
-    modal.find('#edit-security-group-form input[name=security_group_id]').val(id)
-    modal.find('#edit-security-group-form input[name=name]').val(name)
-    modal.find('#edit-security-group-form textarea[name=description]').val(description)
-    modal.find('#edit-security-group-form input[name=status]').val(status)
+    $('#edit-security-group-form input[name=security_group_id]').val(id)
+    $('#edit-security-group-form input[name=name]').val(name)
+    $('#edit-security-group-form textarea[name=description]').val(description)
+    $('#edit-security-group-form input[name=status]').val(status)
     })
 </script>
 @append

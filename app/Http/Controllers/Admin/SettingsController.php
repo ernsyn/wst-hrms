@@ -130,7 +130,7 @@ class SettingsController extends Controller
         $bank = CompanyBank::where('company_id', $id)->get();
         $company=Company::where('id', $id)->get();
         $security = SecurityGroup::where('company_id', $id)->get();
-        $additions = Addition::where('company_id', $id)->get();
+        $addition = Addition::where('company_id', $id)->get();
         $deductions = Deduction::where('company_id', $id)->get();
 
         $bank_list = Bank::all();
@@ -139,7 +139,7 @@ class SettingsController extends Controller
         $grade = EmployeeGrade::all();
 
         return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
-        'security'=>$security, 'additions'=>$additions,'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company]);
+        'security'=>$security, 'addition'=>$addition,'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company]);
     }
 
     // SECTION: Add

@@ -228,16 +228,16 @@
                             <label class="col-md-12 col-form-label">Statutory</label>
                             <div class="checkbox col-md-12">
                                 <label class="form-check-label">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions,'PCB') !== false ? 'checked':'' !!}> PCB
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($addition,'PCB') !== false ? 'checked':'' !!}> PCB
                                 </label>
                                 <label class="form-check-label">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions,'EPF') !== false ? 'checked':'' !!}> EPF
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($addition,'EPF') !== false ? 'checked':'' !!}> EPF
                                 </label>
                                 <label class="form-check-label">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($addition,'SOCSO') !== false ? 'checked':'' !!}> SOCSO
                                 </label>
                                 <label class="form-check-label">
-                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions,'EIS') !== false ? 'checked':'' !!}> EIS
+                                    <input type="checkbox" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($addition,'EIS') !== false ? 'checked':'' !!}> EIS
                                 </label>
                             </div>
                             <label class="col-md-12 col-form-label">EA Form*</label>
@@ -352,15 +352,13 @@
         var statutory = button.data('deduction-statutory');
         var status = button.data('deduction-status');
 
-        var modal = $(this);
-
-        modal.find('.modal-body #company_deduction_id').val(id);
-        modal.find('.modal-body #code').val(code);
-        modal.find('.modal-body #name').val(name);
-        modal.find('.modal-body #type').val(type);
-        modal.find('.modal-body #amount').val(amount);
-        modal.find('.modal-body #statutory').val(statutory);
-        modal.find('.modal-body #status').val(status);
+        $('.modal-body #company_deduction_id').val(id);
+        $('.modal-body #code').val(code);
+        $('.modal-body #name').val(name);
+        $('.modal-body #type').val(type);
+        $('.modal-body #amount').val(amount);
+        $('.modal-body #statutory').val(statutory);
+        $('.modal-body #status').val(status);
     });
 
     //---- DEDUCTION ----

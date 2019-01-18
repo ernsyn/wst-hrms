@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($additions as $additions)
+                    @foreach($addition as $additions)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$additions['code']}}</td>
@@ -228,19 +228,19 @@
                                 <label class="col-md-12 col-form-label">Statutory</label>
                                 <div class="checkbox col-md-12">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions,'PCB') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="statutory" name="statutory[]" value="PCB" {!! strpos($addition,'PCB') !== false ? 'checked':'' !!}>
                                         <label class="form-check-label">PCB</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions,'EPF') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="statutory" name="statutory[]" value="EPF" {!! strpos($addition,'EPF') !== false ? 'checked':'' !!}>
                                         <label class="form-check-label">EPF</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions,'SOCSO') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="statutory" name="statutory[]" value="SOCSO" {!! strpos($addition,'SOCSO') !== false ? 'checked':'' !!}>
                                         <label class="form-check-label">SOCSO</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions,'EIS') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="statutory" name="statutory[]" value="EIS" {!! strpos($addition,'EIS') !== false ? 'checked':'' !!}>
                                         <label class="form-check-label">EIS</label>
                                     </div>
                                 </div>
@@ -351,16 +351,14 @@
     //var eaform = button.data('addition-eaform')
     var status = button.data('addition-status');
 
-    var modal = $(this);
-
-    modal.find('.modal-body #company_addition_id').val(id);
-    modal.find('.modal-body #code').val(code);
-    modal.find('.modal-body #name').val(name);
-    modal.find('.modal-body #type').val(type);
-    modal.find('.modal-body #amount').val(amount);
-    modal.find('.modal-body #statutory').val(statutory);
-    //modal.find('.modal-body #ea_form').val(eaform)
-    modal.find('.modal-body #status').val(status);
+    $('.modal-body #company_addition_id').val(id);
+    $('.modal-body #code').val(code);
+    $('.modal-body #name').val(name);
+    $('.modal-body #type').val(type);
+    $('.modal-body #amount').val(amount);
+    $('.modal-body #statutory').val(statutory);
+    //$('.modal-body #ea_form').val(eaform)
+    $('.modal-body #status').val(status);
     });
 
 
