@@ -726,7 +726,7 @@ class LeaveService
     }
 
     private static function isWorkingDay($workingDays, $time) {
-        $work_day = array('full', 'half');
+        $work_day = array('full', 'half', 'half_2');
 
         switch($time->dayOfWeek) {
             case Carbon::MONDAY;
