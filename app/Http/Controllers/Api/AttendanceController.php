@@ -23,8 +23,11 @@ class AttendanceController extends Controller
     }
 
     public function getAttendanceList() {
-        $attendances = EmployeeClockInOutRecord::where('emp_id', Auth::user()->employee->id)->orderBy('clock_in_time', 'desc')->take(5)->get();
-        // dd($attendances);
+        $attendances = EmployeeClockInOutRecord::where('emp_id', Auth::user()->employee->id)
+        ->whereDate('clock_in_time', Carbon::today())
+        ->orderBy('clock_in_time', 'desc')
+        ->take(5)->get();
+
         return response()->json(EmployeeClockInOutRecordResource::collection($attendances), 200);  
     }
 
@@ -83,7 +86,10 @@ class AttendanceController extends Controller
         
         $imageData = $this->processBase64DataUrl($clockInData['clock_in_image']);
 
-        if(Auth::user()->employee->clock_in_out_records()->where('clock_out_time', null)->count() > 0) {
+        if(Auth::user()->employee->clock_in_out_records()
+            ->whereDate('clock_in_time', Carbon::today())
+            ->where('clock_out_time', null)->count() > 0
+        ) {
             return response()->json(['error' => 'Please clock-out your previous attendance first!'], 400);
         }
 
