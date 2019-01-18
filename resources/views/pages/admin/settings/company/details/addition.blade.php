@@ -53,7 +53,7 @@
             </div>
             <div class="modal-body">
                 @foreach($company as $company_addition)
-                <form method="POST" action="{{ route('admin.settings.additions.add.post', ['id' => $company_addition->id])}} " id="add_company_addition">
+                <form method="POST" action="{{ route('admin.settings.additions.add.post', ['id' => $company_addition->id])}} " id="add-company-addition-form">
                     @endforeach @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -69,21 +69,20 @@
                             </div>
                             <label class="col-md-12 col-form-label">Type*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="type" name="type" onchange="myFunction(event)">
-                                    <option value="Fixed">Fixed</option>
-                                    <option value="Custom">Custom</option>
+                                <select class="form-control" name="type">
+                                    <option value="fixed">Fixed</option>
+                                    <option value="custom">Custom</option>
                                 </select>
                             </div>
                             <label class="col-md-12 col-form-label">Amount</label>
                             <div class="col-md-12">
-                                <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                    disabled="true">
+                                <input type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="0" readonly required>
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
                                 <select class="form-control" id="status" name="status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
                                 </select>
                             </div>
                             <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
@@ -149,7 +148,7 @@
                             <label class="col-md-12 col-form-label">Job Grade</label>
                             <div class="col-md-12">
                                 <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade" name="job_grade[]"
-                                    required disabled>
+                                    required readonly>
                                     @foreach(App\EmployeeGrade::all() as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                     @endforeach
@@ -184,7 +183,7 @@
             <div class="modal-body">
                 <div class="modal-body">
                     @foreach($company as $company_addition)
-                    <form method="POST" action="{{ route('admin.settings.company-addition.edit.post', ['id' => $company_addition->id])}} " id="add_company_addition">
+                    <form method="POST" action="{{ route('admin.settings.company-addition.edit.post', ['id' => $company_addition->id])}} " id="edit-company-addition-form">
                         @endforeach @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
@@ -209,7 +208,7 @@
                                 <label class="col-md-12 col-form-label">Amount</label>
                                 <div class="col-md-12">
                                     <input id="amount" type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                        disabled="true">
+                                        readonly="true">
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
@@ -280,7 +279,7 @@
                                 <label class="col-md-12 col-form-label">Job Grade</label>
                                 <div class="col-md-12">
                                     <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]"
-                                        required disabled>
+                                        required readonly>
                                         @foreach(App\EmployeeGrade::all() as $grade)
                                         <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                         @endforeach
@@ -362,10 +361,29 @@
     });
 
 
+    $('#add-company-addition-form select[name=type]').change(function() {
+        if( $(this).val() == "custom") {
+            $('#add-company-addition-form input[name=amount]').prop("readonly", false );
+            $('#add-company-addition-form input[name=amount]').val("");
+        } else {
+            $('#add-company-addition-form input[name=amount]').prop("readonly", true );
+            $('#add-company-addition-form input[name=amount]').val("0");
+        }
+    });
+
+    $('#edit-company-addition-form select[name=type]').change(function() {
+        if( $(this).val() == "custom") {
+            $('#amount').prop( "readonly", false );
+        } else {
+            $('#amount').prop( "readonly", true );
+        }
+    });
+
+
     //----ADDITION----
     //---- ADD -----
-    $('#check_cost_centre').change(function () {
-        if (this.checked) {
+    $('#add-company-addition-form #check_cost_centre').change(function () {
+        if ($('#check_cost_centre:checked').length) {
             $('#cost_centre').prop('disabled', false);
         } else {
             $('#cost_centre').prop('disabled', true);

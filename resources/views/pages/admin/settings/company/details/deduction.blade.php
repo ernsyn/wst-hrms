@@ -333,13 +333,6 @@
             },
         ]
     });
-    $('#type').change(function() {
-        if( $(this).val() == "Custom") {
-            $('#amount').prop( "disabled", false );
-        } else {
-            $('#amount').prop( "disabled", true );
-        }
-    });
 
     //update deduction
     $('#editCompanyDeductionPopup').on('show.bs.modal', function (event) {

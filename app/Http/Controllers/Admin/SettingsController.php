@@ -930,17 +930,16 @@ class SettingsController extends Controller
 
     public function postAddCompanyAddition(Request $request, $id)
     {
-
         $validatedAdditionData = $request->validate([
             'code' => 'required',
             'name' => 'required',
             'type' => 'required',
+            'status'=> 'required',
             'amount' => '',
             'statutory'=> '',
             'ea_form_id' =>'required'
             ]);
 
-        //  dd($request->confirmed_employee);
             $validatedAdditionCostCentreData = $request->validate([
                 'cost_centres'=>'numeric',
             ]);
@@ -951,11 +950,16 @@ class SettingsController extends Controller
             else
                 $validatedAdditionData['statutory'] = null;
 
-            $validatedAdditionData['status'] = 'Active';
+            // $validatedAdditionData['status'] = 'active';
             $validatedAdditionData['company_id']=$id;
-        // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
 
             $addition = Addition::create($validatedAdditionData);
+
+            if(!empty($validatedAdditionCostCentreData['cost_centres']))
+                $validatedAdditionCostCentreData['cost_centres'] = implode(",", $validatedAdditionCostCentreData['cost_centres']);
+            else
+                $validatedAdditionCostCentreData['cost_centres'] = null;
+
             $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
 
 
