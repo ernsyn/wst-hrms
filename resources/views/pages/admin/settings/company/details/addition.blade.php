@@ -122,17 +122,17 @@
                             <label class="col-md-12 col-form-label">Applies To</label>
                             <div class="checkbox col-md-12">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="check_cost_centre" name="applies[]">
+                                    <input type="checkbox" class="form-check-input" id="check_cost_centre" name="check_cost_centre">
                                     <label class="form-check-label">Cost Centre</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="check_job_grade" name="applies[]">
+                                    <input type="checkbox" class="form-check-input" id="check_job_grade" name="check_job_grade">
                                     <label class="form-check-label">Job Grade</label>
                                 </div>
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centres"
+                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centres[]"
                                     required disabled>
                                     @foreach(App\CostCentre::all() as $cost_centre)
                                     <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
@@ -148,7 +148,7 @@
                             <label class="col-md-12 col-form-label">Job Grade</label>
                             <div class="col-md-12">
                                 <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade" name="job_grade[]"
-                                    required readonly>
+                                    required disabled>
                                     @foreach(App\EmployeeGrade::all() as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                     @endforeach
@@ -379,9 +379,6 @@
         }
     });
 
-
-    //----ADDITION----
-    //---- ADD -----
     $('#add-company-addition-form #check_cost_centre').change(function () {
         if ($('#check_cost_centre:checked').length) {
             $('#cost_centre').prop('disabled', false);
@@ -390,8 +387,8 @@
         }
     });
 
-    $('#check_job_grade').change(function () {
-        if (this.checked) {
+    $('#add-company-addition-form #check_job_grade').change(function () {
+        if ($('#check_job_grade:checked').length) {
             $('#job_grade').prop('disabled', false);
         } else {
             $('#job_grade').prop('disabled', true);
@@ -399,20 +396,20 @@
     });
 
     //----- EDIT --------
-    $('#check_cost_centre_a').change(function () {
-        if (this.checked) {
-            $('#cost_centre_a').prop('disabled', false);
-        } else {
-            $('#cost_centre_a').prop('disabled', true);
-        }
-    });
+    // $('#check_cost_centre_a').change(function () {
+    //     if (this.checked) {
+    //         $('#cost_centre_a').prop('disabled', false);
+    //     } else {
+    //         $('#cost_centre_a').prop('disabled', true);
+    //     }
+    // });
 
-    $('#check_job_grade_a').change(function () {
-        if (this.checked) {
-            $('#job_grade_a').prop('disabled', false);
-        } else {
-            $('#job_grade_a').prop('disabled', true);
-        }
-    });
+    // $('#check_job_grade_a').change(function () {
+    //     if (this.checked) {
+    //         $('#job_grade_a').prop('disabled', false);
+    //     } else {
+    //         $('#job_grade_a').prop('disabled', true);
+    //     }
+    // });
 </script>
 @append

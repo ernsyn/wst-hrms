@@ -30,7 +30,6 @@ use App\LeaveType;
 // use App\LeaveBalance;
 use App\Country;
 use App\Employee;
-use App\Holiday;
 use App\CompanyBank;
 use App\SecurityGroup;
 use App\Addition;
@@ -941,26 +940,30 @@ class SettingsController extends Controller
             ]);
 
             $validatedAdditionCostCentreData = $request->validate([
-                'cost_centres'=>'numeric',
+                'cost_centres'=>'nullable'
             ]);
+            if(empty($validatedAdditionCostCentreData)) $validatedAdditionCostCentreData['cost_centres'] = null;
+
+            $validatedAdditionEmployeeGradesData = $request->validate([
+                'job_grade'=>'nullable'
+            ]);
+            // dd($validatedAdditionEmployeeGradesData);
+            if(empty($validatedAdditionEmployeeGradesData)) $validatedAdditionEmployeeGradesData['job_grade'] = null;
+
             $validatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
-            // dd($validatedData);
+
             if(!empty($validatedAdditionData['statutory']))
                 $validatedAdditionData['statutory'] = implode(",", $request->statutory);
             else
                 $validatedAdditionData['statutory'] = null;
 
-            // $validatedAdditionData['status'] = 'active';
             $validatedAdditionData['company_id']=$id;
 
+
+
             $addition = Addition::create($validatedAdditionData);
-
-            if(!empty($validatedAdditionCostCentreData['cost_centres']))
-                $validatedAdditionCostCentreData['cost_centres'] = implode(",", $validatedAdditionCostCentreData['cost_centres']);
-            else
-                $validatedAdditionCostCentreData['cost_centres'] = null;
-
             $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
+            $addition->employee_grades()->sync($validatedAdditionEmployeeGradesData['job_grade']);
 
 
             return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been added.');
