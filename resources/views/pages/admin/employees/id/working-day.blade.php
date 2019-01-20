@@ -29,13 +29,29 @@
         <div class="col-md-12">
             <label class="working-day"><strong><u>Working Time:</u></strong></label>
         </div>
-        <div class="col-md-12">
-            <label class="working-day"><strong>Start of Work: </strong></label>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Full Day - Start of Work: </strong></label>
             <span id="start_work_time"></span>
         </div>
-        <div class="col-md-12">
-            <label class="working-day"><strong>End of Work: </strong></label>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Half Day 1 - Start of Work: </strong></label>
+            <span id="half_1_start_work_time"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Half Day 2 - Start of Work: </strong></label>
+            <span id="half_2_start_work_time"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Full Day - End of Work: </strong></label>
             <span id="end_work_time"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Half Day 1 - End of Work: </strong></label>
+            <span id="half_1_end_work_time"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Half Day 2 - End of Work: </strong></label>
+            <span id="half_2_end_work_time"></span>
         </div>
     </div>
 </div>
@@ -163,7 +179,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="start_work_time"><strong>Start of Work*</strong></label>
+                            <label for="start_work_time"><strong>Full Day - Start of Work*</strong></label>
                             <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time" value="09:00">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
@@ -171,9 +187,41 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="end_work_time"><strong>End of Work*</strong></label>
+                            <label for="end_work_time"><strong>Full Day -End of Work*</strong></label>
                             <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time" value="18:00">
                             <div id="end_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="half_1_start_work_time"><strong>Half Day 1 - Start of Work*</strong></label>
+                            <input type="text" class="form-control{{ $errors->has('half_1_start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="half_1_start_work_time" value="09:00">
+                            <div id="half_1_start_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="half_1_end_work_time"><strong>Half Day 1 - End of Work*</strong></label>
+                            <input type="text" class="form-control{{ $errors->has('half_1_end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="half_1_end_work_time" value="13:00">
+                            <div id="half_1_end_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="half_2_start_work_time"><strong>Half Day 2 - Start of Work*</strong></label>
+                            <input type="text" class="form-control{{ $errors->has('half_2_start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="half_2_start_work_time" value="14:00">
+                            <div id="half_2_start_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="half_2_end_work_time"><strong>Half Day 2 - End of Work*</strong></label>
+                            <input type="text" class="form-control{{ $errors->has('half_2_end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="half_2_end_work_time" value="18:00">
+                            <div id="half_2_end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -312,7 +360,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="start_work_time"><strong>Start of Work*</strong></label>
+                            <label for="start_work_time"><strong>Full Day - Start of Work*</strong></label>
                             <input type="text" class="form-control{{ $errors->has('start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="start_work_time">
                             <div id="start_work_time-error" class="invalid-feedback">
                             </div>
@@ -320,9 +368,41 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="end_work_time"><strong>End of Work*</strong></label>
+                            <label for="end_work_time"><strong>Full Day - End of Work*</strong></label>
                             <input type="text" class="form-control{{ $errors->has('end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="end_work_time">
                             <div id="end_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="half_1_start_work_time"><strong>Half Day 1 -Start of Work*</strong></label>
+                            <input type="text" class="form-control{{ $errors->has('half_1_start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="half_1_start_work_time">
+                            <div id="half_1_start_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="half_1_end_work_time"><strong>Half Day 1 - End of Work*</strong></label>
+                            <input type="text" class="form-control{{ $errors->has('half_1_end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="half_1_end_work_time">
+                            <div id="half_1_end_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="half_2_start_work_time"><strong>Half Day 2 -Start of Work*</strong></label>
+                            <input type="text" class="form-control{{ $errors->has('half_2_start_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="half_2_start_work_time">
+                            <div id="half_2_start_work_time-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="half_2_end_work_time"><strong>Half Day 2 - End of Work*</strong></label>
+                            <input type="text" class="form-control{{ $errors->has('half_2_end_work_time') ? ' is-invalid' : '' }} timepicker" placeholder="" name="half_2_end_work_time">
+                            <div id="half_2_end_work_time-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -411,6 +491,12 @@
                 $("#working_time_container #start_work_time").html(convertTime(data[0].start_work_time));
                 $("#working_time_container #end_work_time").html(convertTime(data[0].end_work_time));
 
+                $("#working_time_container #half_1_start_work_time").html(convertTime(data[0].half_1_start_work_time));
+                $("#working_time_container #half_1_end_work_time").html(convertTime(data[0].half_1_end_work_time));
+
+                $("#working_time_container #half_2_start_work_time").html(convertTime(data[0].half_2_start_work_time));
+                $("#working_time_container #half_2_end_work_time").html(convertTime(data[0].half_2_end_work_time));
+
                 $("#edit-working-day-form select[name=monday]").val(data[0].monday);
                 $("#edit-working-day-form select[name=tuesday]").val(data[0].tuesday);
                 $("#edit-working-day-form select[name=wednesday]").val(data[0].wednesday);
@@ -420,6 +506,10 @@
                 $("#edit-working-day-form select[name=sunday]").val(data[0].sunday);
                 $("#edit-working-day-form input[name=start_work_time]").prop('value', data[0].start_work_time.substring(0, data[0].start_work_time.length - 3));
                 $("#edit-working-day-form input[name=end_work_time]").prop('value', data[0].end_work_time.substring(0, data[0].end_work_time.length - 3));
+                $("#edit-working-day-form input[name=half_1_start_work_time]").prop('value', data[0].half_1_start_work_time.substring(0, data[0].half_1_start_work_time.length - 3));
+                $("#edit-working-day-form input[name=half_1_end_work_time]").prop('value', data[0].half_1_end_work_time.substring(0, data[0].half_1_end_work_time.length - 3));
+                $("#edit-working-day-form input[name=half_2_start_work_time]").prop('value', data[0].half_2_start_work_time.substring(0, data[0].half_2_start_work_time.length - 3));
+                $("#edit-working-day-form input[name=half_2_end_work_time]").prop('value', data[0].half_2_end_work_time.substring(0, data[0].half_2_end_work_time.length - 3));
 
                 $("#assign-working-day-button").hide();
                 $("#edit-working-day-button").show();
@@ -450,10 +540,30 @@
             var start_work = '01/01/2019 ' + $("#add-working-day-form input[name=start_work_time]").val();
             var end_work = '01/01/2019 ' + $("#add-working-day-form input[name=end_work_time]").val();
 
+            var half_1_start_work = '01/01/2019 ' + $("#add-working-day-form input[name=half_1_start_work_time]").val();
+            var half_1_end_work = '01/01/2019 ' + $("#add-working-day-form input[name=half_1_end_work_time]").val();
+
+            var half_2_start_work = '01/01/2019 ' + $("#add-working-day-form input[name=half_2_start_work_time]").val();
+            var half_2_end_work = '01/01/2019 ' + $("#add-working-day-form input[name=half_2_end_work_time]").val();
+
             if(Date.parse(end_work) < Date.parse(start_work)) {
                 $('#add-working-day-form select[name=end_work_time]').addClass('is-invalid');
                 $('#add-working-day-form #end_work_time-error').html('<strong>End of Work must be later than Start of Work</strong>');
                 $('#add-working-day-form #end_work_time-error').show();
+                return false;
+            }
+
+            if(Date.parse(half_1_end_work) < Date.parse(half_1_start_work)) {
+                $('#add-working-day-form select[name=half_1_end_work_time]').addClass('is-invalid');
+                $('#add-working-day-form #half_1_end_work_time-error').html('<strong>End of Work must be later than Start of Work</strong>');
+                $('#add-working-day-form #half_1_end_work_time-error').show();
+                return false;
+            }
+
+            if(Date.parse(half_2_end_work) < Date.parse(half_2_start_work)) {
+                $('#add-working-day-form select[name=half_2_end_work_time]').addClass('is-invalid');
+                $('#add-working-day-form #half_2_end_work_time-error').html('<strong>End of Work must be later than Start of Work</strong>');
+                $('#add-working-day-form #half_2_end_work_time-error').show();
                 return false;
             }
 
@@ -470,7 +580,11 @@
                     saturday: $('#add-working-day-form select[name=saturday]').val(),
                     sunday: $('#add-working-day-form select[name=sunday]').val(),
                     start_work_time: $("#add-working-day-form input[name=start_work_time]").val(),
-                    end_work_time: $("#add-working-day-form input[name=end_work_time]").val()
+                    end_work_time: $("#add-working-day-form input[name=end_work_time]").val(),
+                    half_1_start_work_time: $("#add-working-day-form input[name=half_1_start_work_time]").val(),
+                    half_1_end_work_time: $("#add-working-day-form input[name=half_1_end_work_time]").val(),
+                    half_2_start_work_time: $("#add-working-day-form input[name=half_2_start_work_time]").val(),
+                    half_2_end_work_time: $("#add-working-day-form input[name=half_2_end_work_time]").val()
                 },
                 success: function(data) {
                     getEmployeeWorkingDaysData();
@@ -553,7 +667,11 @@
                     saturday: $('#edit-working-day-form select[name=saturday]').val(),
                     sunday: $('#edit-working-day-form select[name=sunday]').val(),
                     start_work_time: $("#edit-working-day-form input[name=start_work_time]").val(),
-                    end_work_time: $("#edit-working-day-form input[name=end_work_time]").val()
+                    end_work_time: $("#edit-working-day-form input[name=end_work_time]").val(),
+                    half_1_start_work_time: $("#edit-working-day-form input[name=half_1_start_work_time]").val(),
+                    half_1_end_work_time: $("#edit-working-day-form input[name=half_1_end_work_time]").val(),
+                    half_2_start_work_time: $("#edit-working-day-form input[name=half_2_start_work_time]").val(),
+                    half_2_end_work_time: $("#edit-working-day-form input[name=half_2_end_work_time]").val()
                 },
                 success: function(data) {
                     getEmployeeWorkingDaysData();

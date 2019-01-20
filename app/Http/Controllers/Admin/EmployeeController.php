@@ -823,6 +823,10 @@ class EmployeeController extends Controller
             'sunday' => 'required|in:full,half,half_2,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
+            'half_1_start_work_time' => 'required',
+            'half_1_end_work_time' => 'required',
+            'half_2_start_work_time' => 'required',
+            'half_2_end_work_time' => 'required',
         ]);
         $workingDaysData['is_template'] = false;
         $workingDaysData['created_by'] = auth()->user()->id;
@@ -847,6 +851,10 @@ class EmployeeController extends Controller
             'sunday' => 'required|in:full,half,half_2,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
+            'half_1_start_work_time' => 'required',
+            'half_1_end_work_time' => 'required',
+            'half_2_start_work_time' => 'required',
+            'half_2_end_work_time' => 'required',
         ]);
         $workingDayUpdateData['is_template'] = false;
         EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);

@@ -18,13 +18,29 @@
         <div class="col-md-12">
             <label class="working-day"><strong><u>Working Time:</u></strong></label>
         </div>
-        <div class="col-md-12">
-            <label class="working-day"><strong>Start of Work: </strong></label>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Full Day - Start of Work: </strong></label>
             <span id="start_work_time"></span>
         </div>
-        <div class="col-md-12">
-            <label class="working-day"><strong>End of Work: </strong></label>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Half Day 1 - Start of Work: </strong></label>
+            <span id="half_1_start_work_time"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Half Day 2 - Start of Work: </strong></label>
+            <span id="half_2_start_work_time"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Full Day - End of Work: </strong></label>
             <span id="end_work_time"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Half Day 1 - End of Work: </strong></label>
+            <span id="half_1_end_work_time"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="working-day"><strong>Half Day 2 - End of Work: </strong></label>
+            <span id="half_2_end_work_time"></span>
         </div>
     </div>
 </div>
@@ -65,6 +81,12 @@
 
                 $("#working_time_container #start_work_time").html(convertTime(data[0].start_work_time));
                 $("#working_time_container #end_work_time").html(convertTime(data[0].end_work_time));
+
+                $("#working_time_container #half_1_start_work_time").html(convertTime(data[0].half_1_start_work_time));
+                $("#working_time_container #half_1_end_work_time").html(convertTime(data[0].half_1_end_work_time));
+
+                $("#working_time_container #half_2_start_work_time").html(convertTime(data[0].half_2_start_work_time));
+                $("#working_time_container #half_2_end_work_time").html(convertTime(data[0].half_2_end_work_time));
 
                 $("#working_time_container").show();
             }
