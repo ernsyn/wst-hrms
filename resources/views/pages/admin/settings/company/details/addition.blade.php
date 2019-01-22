@@ -33,7 +33,7 @@
                                 data-addition-name="{{$additions['name']}}" data-addition-type="{{$additions['type']}}"
                                 data-addition-amount="{{$additions['amount']}}" data-addition-status="{{$additions['status']}}"
                                 data-addition-confirmed_employee="{{$additions['confirmed_employee']}}" data-addition-statutory="{{$additions['statutory']}}"
-                                data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button>
+                                data-addition-eaform="{{$additions['ea_form_id']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button>
                         </td>
                     </tr>
                     @endforeach
@@ -123,11 +123,11 @@
                             <label class="col-md-12 col-form-label">Applies To</label>
                             <div class="checkbox col-md-12">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="check_cost_centre" name="check_cost_centre">
+                                    <input type="checkbox" class="form-check-input" name="check_cost_centre">
                                     <label class="form-check-label">Cost Centre</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="check_job_grade" name="check_job_grade">
+                                    <input type="checkbox" class="form-check-input" name="check_job_grade">
                                     <label class="form-check-label">Job Grade</label>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@
                         @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
-                                <input id="company_addition_id" name="company_addition_id" type="hidden">
+                                <input name="company_addition_id" type="hidden">
                                 <label class="col-md-12 col-form-label">Code*</label>
                                 <div class="col-md-12">
                                     <input type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
@@ -208,8 +208,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Amount</label>
                                 <div class="col-md-12">
-                                    <input type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}" required
-                                    {!! ($additions['type']=='fixed') ? 'readonly':'' !!}   >
+                                    <input type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}" required>
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
@@ -246,7 +245,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">EA Form*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id" value="{{ old('ea_form_id') }}">
+                                    <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" value="">
                                         @foreach($ea_form as $item)
                                         <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
                                         @endforeach
@@ -255,32 +254,32 @@
                                 <label class="col-md-12 col-form-label">Applies To</label>
                                 <div class="checkbox col-md-12">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="check_cost_centre_a" name="applies[]">
+                                        <input type="checkbox" class="form-check-input" name="check_cost_centre">
                                         <label class="form-check-label">Cost Centre</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="check_job_grade_a" name="applies[]">
+                                        <input type="checkbox" class="form-check-input" name="check_job_grade">
                                         <label class="form-check-label">Job Grade</label>
                                     </div>
                                 </div>
                                 <label class="col-md-12 col-form-label">Cost Centre</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre_a"
-                                        name="cost_centres" required disabled>
+                                    <select multiple class="tagsinput form-control{{ $errors->has('update_cost_centres') ? ' is-invalid' : '' }}" id="update_cost_centre"
+                                        name="update_cost_centres[]" required disabled>
                                         @foreach(App\CostCentre::all() as $cost_centre)
                                         <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('cost_centres'))
+                                    @if ($errors->has('update_cost_centres'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('cost_centres') }}</strong>
+                                        <strong>{{ $errors->first('update_cost_centres') }}</strong>
                                     </span>
                                     @endif
                                 </div>
                                 <label class="col-md-12 col-form-label">Job Grade</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]"
-                                        required readonly>
+                                    <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="update_job_grade" name="job_grade[]"
+                                        required disabled>
                                         @foreach(App\EmployeeGrade::all() as $grade)
                                         <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                         @endforeach
@@ -353,8 +352,7 @@
             var status = button.data('addition-status');
             var confirmed_employee = button.data('addition-confirmed_employee');
             var statutory = button.data('addition-statutory');
-            //var eaform = button.data('addition-eaform')
-            console.log('aaa',statutory);
+            var eaform = button.data('addition-eaform')
 
 
             $('#edit-company-addition-form input[name=company_addition_id]').val(id);
@@ -362,9 +360,11 @@
             $('#edit-company-addition-form input[name=name]').val(name);
             $('#edit-company-addition-form select[name=type]').val(type);
             $('#edit-company-addition-form input[name=amount]').val(amount);
+            if(type=="custom") $('#edit-company-addition-form input[name=amount]').attr('readonly',false);
+            else  $('#edit-company-addition-form input[name=amount]').attr('readonly',true);
+
             $('#edit-company-addition-form select[name=status]').val(status);
             $('#edit-company-addition-form select[name=confirmed_employee]').val(confirmed_employee);
-            //$('#edit-company-addition-form #ea_form').val(eaform)
 
             if(statutory.includes('PCB')) $('#edit-company-addition-form #updateAdditionPCB').prop("checked", true);
             else $('#edit-company-addition-form #updateAdditionPCB').prop("checked", false);
@@ -377,6 +377,11 @@
 
             if(statutory.includes('EIS')) $('#edit-company-addition-form #updateAdditionEIS').prop("checked", true);
             else $('#edit-company-addition-form #updateAdditionEIS').prop("checked", false);
+
+            $('#edit-company-addition-form select[name=ea_form_id]').val(eaform);
+
+
+
         });
 
         // add
@@ -390,16 +395,16 @@
             }
         });
 
-        $('#add-company-addition-form #check_cost_centre').change(function () {
-            if ($('#check_cost_centre:checked').length) {
+        $('#add-company-addition-form input[name=check_cost_centre]').change(function () {
+            if ($('input[name=check_cost_centre]:checked').length) {
                 $('#cost_centre').prop('disabled', false);
             } else {
                 $('#cost_centre').prop('disabled', true);
             }
         });
 
-        $('#add-company-addition-form #check_job_grade').change(function () {
-            if ($('#check_job_grade:checked').length) {
+        $('#add-company-addition-form input[name=check_job_grade]').change(function () {
+            if ($('input[name=check_job_grade]:checked').length) {
                 $('#job_grade').prop('disabled', false);
             } else {
                 $('#job_grade').prop('disabled', true);
@@ -416,21 +421,21 @@
                 $('#edit-company-addition-form input[name=amount]').val("0");
             }
         });
-        // $('#check_cost_centre_a').change(function () {
-        //     if (this.checked) {
-        //         $('#cost_centre_a').prop('disabled', false);
-        //     } else {
-        //         $('#cost_centre_a').prop('disabled', true);
-        //     }
-        // });
+        $('#edit-company-addition-form input[name=check_cost_centre]').change(function () {
+            if ($('input[name=check_cost_centre]:checked').length) {
+                $('#update_cost_centre').prop('disabled', false);
+            } else {
+                $('#update_cost_centre').prop('disabled', true);
+            }
+        });
 
-        // $('#check_job_grade_a').change(function () {
-        //     if (this.checked) {
-        //         $('#job_grade_a').prop('disabled', false);
-        //     } else {
-        //         $('#job_grade_a').prop('disabled', true);
-        //     }
-        // });
+        $('#edit-company-addition-form input[name=check_job_grade]').change(function () {
+            if ($('input[name=check_job_grade]:checked').length) {
+                $('#update_job_grade').prop('disabled', false);
+            } else {
+                $('#update_job_grade').prop('disabled', true);
+            }
+        });
     });
 </script>
 @append
