@@ -31,8 +31,9 @@
                         <td><button type="button" class="btn btn-success btn-smt" data-toggle="modal"
                                 data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
                                 data-addition-name="{{$additions['name']}}" data-addition-type="{{$additions['type']}}"
-                                data-addition-amount="{{$additions['amount']}}" data-addition-confirmed_employee="{{$additions['confirmed_employee']}}"
-                                data-addition-status="{{$additions['status']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button>
+                                data-addition-amount="{{$additions['amount']}}" data-addition-status="{{$additions['status']}}"
+                                data-addition-confirmed_employee="{{$additions['confirmed_employee']}}" data-addition-statutory="{{$additions['statutory']}}"
+                                data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button>
                         </td>
                     </tr>
                     @endforeach
@@ -184,42 +185,42 @@
                 <div class="modal-body">
                     @foreach($company as $company_addition)
                     <form method="POST" action="{{ route('admin.settings.company-addition.edit.post', ['id' => $company_addition->id])}} " id="edit-company-addition-form">
-                        @endforeach @csrf
+                        @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
                                 <input id="company_addition_id" name="company_addition_id" type="hidden">
                                 <label class="col-md-12 col-form-label">Code*</label>
                                 <div class="col-md-12">
-                                    <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
+                                    <input type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
                                         required>
                                 </div>
                                 <label class="col-md-12 col-form-label">Name*</label>
                                 <div class="col-md-12">
-                                    <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
+                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
                                         required>
                                 </div>
                                 <label class="col-md-12 col-form-label">Type*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="type" name="type">
-                                    <option value="Fixed">Fixed</option>
-                                    <option value="Custom">Custom</option>
+                                    <select class="form-control" name="type">
+                                    <option value="fixed">Fixed</option>
+                                    <option value="custom">Custom</option>
                                 </select>
                                 </div>
                                 <label class="col-md-12 col-form-label">Amount</label>
                                 <div class="col-md-12">
-                                    <input id="amount" type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                        readonly="true">
+                                    <input type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}" required
+                                    {!! ($additions['type']=='fixed') ? 'readonly':'' !!}   >
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="status" name="status" value="{{ old('status') }}">
+                                    <select class="form-control" name="status" value="{{ old('status') }}">
                                                 <option value="active">Active</option>
                                                 <option value="inactive">Inactive</option>
                                             </select>
                                 </div>
                                 <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="confirmed_employee" name="confirmed_employee">
+                                    <select class="form-control" name="confirmed_employee">
                                             <option value="1">Confirmed Employee</option>
                                             <option value="0">Not Related</option>
                                         </select>
@@ -227,19 +228,19 @@
                                 <label class="col-md-12 col-form-label">Statutory</label>
                                 <div class="checkbox col-md-12">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory" name="statutory[]" value="PCB" {!! strpos($addition,'PCB') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="updateAdditionPCB" name="statutory[]" value="PCB">
                                         <label class="form-check-label">PCB</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory" name="statutory[]" value="EPF" {!! strpos($addition,'EPF') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="updateAdditionEPF" name="statutory[]" value="EPF">
                                         <label class="form-check-label">EPF</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory" name="statutory[]" value="SOCSO" {!! strpos($addition,'SOCSO') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="updateAdditionSOCSO" name="statutory[]" value="SOCSO">
                                         <label class="form-check-label">SOCSO</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory" name="statutory[]" value="EIS" {!! strpos($addition,'EIS') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="updateAdditionEIS" name="statutory[]" value="EIS">
                                         <label class="form-check-label">EIS</label>
                                     </div>
                                 </div>
@@ -297,6 +298,7 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </form>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -337,79 +339,98 @@
         ]
     });
 
+
+    $(function(){
+
     //update addition
-    $('#editCompanyAdditionPopup').on('show.bs.modal', function (event) {
+        $('#editCompanyAdditionPopup').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('addition-id');
+            var code = button.data('addition-code');
+            var name = button.data('addition-name');
+            var type = button.data('addition-type');
+            var amount = button.data('addition-amount');
+            var status = button.data('addition-status');
+            var confirmed_employee = button.data('addition-confirmed_employee');
+            var statutory = button.data('addition-statutory');
+            //var eaform = button.data('addition-eaform')
+            console.log('aaa',statutory);
 
-    var button = $(event.relatedTarget);
-    var id = button.data('addition-id');
-    var code = button.data('addition-code');
-    var name = button.data('addition-name');
-    var type = button.data('addition-type');
-    var amount = button.data('addition-amount');
-    var statutory = button.data('addition-statutory');
-    //var eaform = button.data('addition-eaform')
-    var status = button.data('addition-status');
 
-    $('.modal-body #company_addition_id').val(id);
-    $('.modal-body #code').val(code);
-    $('.modal-body #name').val(name);
-    $('.modal-body #type').val(type);
-    $('.modal-body #amount').val(amount);
-    $('.modal-body #statutory').val(statutory);
-    //$('.modal-body #ea_form').val(eaform)
-    $('.modal-body #status').val(status);
+            $('#edit-company-addition-form input[name=company_addition_id]').val(id);
+            $('#edit-company-addition-form input[name=code]').val(code);
+            $('#edit-company-addition-form input[name=name]').val(name);
+            $('#edit-company-addition-form select[name=type]').val(type);
+            $('#edit-company-addition-form input[name=amount]').val(amount);
+            $('#edit-company-addition-form select[name=status]').val(status);
+            $('#edit-company-addition-form select[name=confirmed_employee]').val(confirmed_employee);
+            //$('#edit-company-addition-form #ea_form').val(eaform)
+
+            if(statutory.includes('PCB')) $('#edit-company-addition-form #updateAdditionPCB').prop("checked", true);
+            else $('#edit-company-addition-form #updateAdditionPCB').prop("checked", false);
+
+            if(statutory.includes('EPF')) $('#edit-company-addition-form #updateAdditionEPF').prop("checked", true);
+            else $('#edit-company-addition-form #updateAdditionEPF').prop("checked", false);
+
+            if(statutory.includes('SOCSO')) $('#edit-company-addition-form #updateAdditionSOCSO').prop("checked", true);
+            else $('#edit-company-addition-form #updateAdditionSOCSO').prop("checked", false);
+
+            if(statutory.includes('EIS')) $('#edit-company-addition-form #updateAdditionEIS').prop("checked", true);
+            else $('#edit-company-addition-form #updateAdditionEIS').prop("checked", false);
+        });
+
+        // add
+        $('#add-company-addition-form select[name=type]').change(function() {
+            if( $(this).val() == "custom") {
+                $('#add-company-addition-form input[name=amount]').prop("readonly", false );
+                $('#add-company-addition-form input[name=amount]').val("");
+            } else {
+                $('#add-company-addition-form input[name=amount]').prop("readonly", true );
+                $('#add-company-addition-form input[name=amount]').val("0");
+            }
+        });
+
+        $('#add-company-addition-form #check_cost_centre').change(function () {
+            if ($('#check_cost_centre:checked').length) {
+                $('#cost_centre').prop('disabled', false);
+            } else {
+                $('#cost_centre').prop('disabled', true);
+            }
+        });
+
+        $('#add-company-addition-form #check_job_grade').change(function () {
+            if ($('#check_job_grade:checked').length) {
+                $('#job_grade').prop('disabled', false);
+            } else {
+                $('#job_grade').prop('disabled', true);
+            }
+        });
+
+        // edit
+        $('#edit-company-addition-form select[name=type]').change(function() {
+            if( $(this).val() == "custom") {
+                $('#edit-company-addition-form input[name=amount]').prop("readonly", false );
+                $('#edit-company-addition-form input[name=amount]').val("");
+            } else {
+                $('#edit-company-addition-form input[name=amount]').prop("readonly", true );
+                $('#edit-company-addition-form input[name=amount]').val("0");
+            }
+        });
+        // $('#check_cost_centre_a').change(function () {
+        //     if (this.checked) {
+        //         $('#cost_centre_a').prop('disabled', false);
+        //     } else {
+        //         $('#cost_centre_a').prop('disabled', true);
+        //     }
+        // });
+
+        // $('#check_job_grade_a').change(function () {
+        //     if (this.checked) {
+        //         $('#job_grade_a').prop('disabled', false);
+        //     } else {
+        //         $('#job_grade_a').prop('disabled', true);
+        //     }
+        // });
     });
-
-
-    $('#add-company-addition-form select[name=type]').change(function() {
-        if( $(this).val() == "custom") {
-            $('#add-company-addition-form input[name=amount]').prop("readonly", false );
-            $('#add-company-addition-form input[name=amount]').val("");
-        } else {
-            $('#add-company-addition-form input[name=amount]').prop("readonly", true );
-            $('#add-company-addition-form input[name=amount]').val("0");
-        }
-    });
-
-    $('#edit-company-addition-form select[name=type]').change(function() {
-        if( $(this).val() == "custom") {
-            $('#amount').prop( "readonly", false );
-        } else {
-            $('#amount').prop( "readonly", true );
-        }
-    });
-
-    $('#add-company-addition-form #check_cost_centre').change(function () {
-        if ($('#check_cost_centre:checked').length) {
-            $('#cost_centre').prop('disabled', false);
-        } else {
-            $('#cost_centre').prop('disabled', true);
-        }
-    });
-
-    $('#add-company-addition-form #check_job_grade').change(function () {
-        if ($('#check_job_grade:checked').length) {
-            $('#job_grade').prop('disabled', false);
-        } else {
-            $('#job_grade').prop('disabled', true);
-        }
-    });
-
-    //----- EDIT --------
-    // $('#check_cost_centre_a').change(function () {
-    //     if (this.checked) {
-    //         $('#cost_centre_a').prop('disabled', false);
-    //     } else {
-    //         $('#cost_centre_a').prop('disabled', true);
-    //     }
-    // });
-
-    // $('#check_job_grade_a').change(function () {
-    //     if (this.checked) {
-    //         $('#job_grade_a').prop('disabled', false);
-    //     } else {
-    //         $('#job_grade_a').prop('disabled', true);
-    //     }
-    // });
 </script>
 @append
