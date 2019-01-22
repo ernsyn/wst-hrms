@@ -933,34 +933,30 @@ class SettingsController extends Controller
             'code' => 'required',
             'name' => 'required',
             'type' => 'required',
-            'status'=> 'required',
-            'amount' => '',
-            'statutory'=> '',
-            'ea_form_id' =>'required'
+            'amount' => 'required',
+            'statutory'=> 'nullable',
+            'status'=>'required',
+            'ea_form_id' =>'required',
+            'cost_centre' => 'nullable',
+            'employee_grade' => 'nullable'
             ]);
 
             if(!empty($validatedAdditionData['statutory'])) $validatedAdditionData['statutory'] = implode(",", $request->statutory);
             else $validatedAdditionData['statutory'] = null;
 
-            $validatedAdditionCostCentreData = $request->validate([
-                'cost_centres'=>'nullable'
-            ]);
-            if(empty($validatedAdditionCostCentreData)) $validatedAdditionCostCentreData['cost_centres'] = null;
-
-            $validatedAdditionEmployeeGradesData = $request->validate([
-                'job_grade'=>'nullable'
-            ]);
-            if(empty($validatedAdditionEmployeeGradesData)) $validatedAdditionEmployeeGradesData['job_grade'] = null;
-
             $validatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
+
+            if(!empty($validatedAdditionData['cost_centre'])) $validatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
+            else $validatedAdditionData['cost_centre'] = null;
+
+            if(!empty($validatedAdditionData['employee_grade'])) $validatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
+            else $validatedAdditionData['employee_grade'] = null;
 
             $validatedAdditionData['company_id']=$id;
 
+            // dd($validatedAdditionData['employee_grade']);
+
             $addition = Addition::create($validatedAdditionData);
-            $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
-            $addition->employee_grades()->sync($validatedAdditionEmployeeGradesData['job_grade']);
-
-
             return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been added.');
         }
 
@@ -978,33 +974,26 @@ class SettingsController extends Controller
             'name' => 'required',
             'type' => 'required',
             'amount' => 'required',
-            'statutory'=> '',
+            'statutory'=> 'nullable',
             'status'=>'required',
             'ea_form_id' =>'required',
+            'cost_centre' => 'nullable',
+            'employee_grade' => 'nullable'
         ]);
 
-        if(!empty($updateValidatedAdditionData['statutory']))
-            $updateValidatedAdditionData['statutory'] = implode(",", $request->statutory);
-        else
-            $updateValidatedAdditionData['statutory'] = null;
+        if(!empty($updateValidatedAdditionData['statutory'])) $updateValidatedAdditionData['statutory'] = implode(",", $request->statutory);
+        else $updateValidatedAdditionData['statutory'] = null;
 
         $updateValidatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
 
-        $updateValidatedAdditionCostCentreData = $request->validate([
-            'update_cost_centres'=>'nullable'
-        ]);
-        if(empty($updateValidatedAdditionCostCentreData)) $updateValidatedAdditionCostCentreData['update_cost_centres'] = null;
+        if(!empty($updateValidatedAdditionData['cost_centre'])) $updateValidatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
+        else $updateValidatedAdditionData['cost_centre'] = null;
 
-        // dd($updateValidatedAdditionCostCentreData);
-        $validatedAdditionEmployeeGradesData = $request->validate([
-            'job_grade'=>'nullable'
-        ]);
-        if(empty($validatedAdditionEmployeeGradesData)) $validatedAdditionEmployeeGradesData['job_grade'] = null;
-
+        if(!empty($updateValidatedAdditionData['employee_grade'])) $updateValidatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
+        else $updateValidatedAdditionData['employee_grade'] = null;
+        // dd($updateValidatedAdditionData['cost_centre']);
         $updateValidatedAdditionData['company_id']=$id;
         $addition =Addition::where('id', $request->company_addition_id)->update($updateValidatedAdditionData);
-        $addition->cost_centres()->sync($updateValidatedAdditionCostCentreData['update_cost_centres']);
-        // $addition->employee_grades()->sync($validatedAdditionEmployeeGradesData['job_grade']);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Addition Group has successfully been updated.');
     }
     public function addCompanyBank($id)

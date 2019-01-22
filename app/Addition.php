@@ -14,13 +14,14 @@ class Addition extends Model
         'code' ,
         'name' ,
         'type' ,
-    //    'day' => 'required',
         'amount' ,
         'statutory',
         'status',
         'company_id',
         'ea_form_id',
-        'confirmed_employee'
+        'confirmed_employee',
+        'cost_centre',
+        'employee_grade'
 
     ];
 

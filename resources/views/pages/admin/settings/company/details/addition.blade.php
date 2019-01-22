@@ -33,7 +33,8 @@
                                 data-addition-name="{{$additions['name']}}" data-addition-type="{{$additions['type']}}"
                                 data-addition-amount="{{$additions['amount']}}" data-addition-status="{{$additions['status']}}"
                                 data-addition-confirmed_employee="{{$additions['confirmed_employee']}}" data-addition-statutory="{{$additions['statutory']}}"
-                                data-addition-eaform="{{$additions['ea_form_id']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button>
+                                data-addition-eaform="{{$additions['ea_form_id']}}" data-addition-cost_centre="{{$additions['cost_centre']}}"
+                                data-addition-employee_grade="{{$additions['employee_grade']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button>
                         </td>
                     </tr>
                     @endforeach
@@ -128,35 +129,35 @@
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" name="check_job_grade">
-                                    <label class="form-check-label">Job Grade</label>
+                                    <label class="form-check-label">Employee Grade</label>
                                 </div>
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centres[]"
+                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centre[]"
                                     required disabled>
                                     @foreach(App\CostCentre::all() as $cost_centre)
                                     <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
                                     @endforeach
                                 </select>
-                                @if ($errors->has('cost_centres'))
+                                @if ($errors->has('cost_centrs'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('cost_centres') }}</strong>
+                                    <strong>{{ $errors->first('cost_centre') }}</strong>
                                 </span>
                                 @endif
 
                             </div>
-                            <label class="col-md-12 col-form-label">Job Grade</label>
+                            <label class="col-md-12 col-form-label">Employee Grade</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade" name="job_grade[]"
+                                <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="job_grade" name="employee_grade[]"
                                     required disabled>
                                     @foreach(App\EmployeeGrade::all() as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                     @endforeach
                                 </select>
-                                @if ($errors->has('name'))
+                                @if ($errors->has('employee_grade'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
+                                    <strong>{{ $errors->first('employee_grade') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -259,34 +260,34 @@
                                     </div>
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" name="check_job_grade">
-                                        <label class="form-check-label">Job Grade</label>
+                                        <label class="form-check-label">Employee Grade</label>
                                     </div>
                                 </div>
                                 <label class="col-md-12 col-form-label">Cost Centre</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('update_cost_centres') ? ' is-invalid' : '' }}" id="update_cost_centre"
-                                        name="update_cost_centres[]" required disabled>
+                                    <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="update_cost_centre"
+                                        name="cost_centre[]" required disabled>
                                         @foreach(App\CostCentre::all() as $cost_centre)
                                         <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('update_cost_centres'))
+                                    @if ($errors->has('cost_centre'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('update_cost_centres') }}</strong>
+                                        <strong>{{ $errors->first('cost_centre') }}</strong>
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-12 col-form-label">Job Grade</label>
+                                <label class="col-md-12 col-form-label">Employee Grade</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="update_job_grade" name="job_grade[]"
+                                    <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="update_job_grade" name="employee_grade[]"
                                         required disabled>
                                         @foreach(App\EmployeeGrade::all() as $grade)
                                         <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('name'))
+                                    @if ($errors->has('employee_grade'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('employee_grade') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -340,6 +341,14 @@
 
 
     $(function(){
+        var addCostCentre = $('#add-company-addition-form #cost_centre').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editCostCentre = $('#edit-company-addition-form #update_cost_centre').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
 
     //update addition
         $('#editCompanyAdditionPopup').on('show.bs.modal', function (event) {
@@ -352,8 +361,11 @@
             var status = button.data('addition-status');
             var confirmed_employee = button.data('addition-confirmed_employee');
             var statutory = button.data('addition-statutory');
-            var eaform = button.data('addition-eaform')
+            var eaform = button.data('addition-eaform');
+            var cost_centre = button.data('addition-cost_centre').split(',');
+            var employee_grade = button.data('addition-employee_grade');
 
+            console.log(cost_centre);
 
             $('#edit-company-addition-form input[name=company_addition_id]').val(id);
             $('#edit-company-addition-form input[name=code]').val(code);
@@ -380,8 +392,15 @@
 
             $('#edit-company-addition-form select[name=ea_form_id]').val(eaform);
 
+            if(cost_centre != '') {
+                $('#edit-company-addition-form input[name=check_cost_centre]').prop("checked", true);
+                editCostCentre[0].selectize.enable();
+            } else {
+                $('#edit-company-addition-form input[name=check_cost_centre]').prop("checked", false);
+                editCostCentre[0].selectize.disable();
+            }
 
-
+            editCostCentre[0].selectize.setValue(cost_centre);
         });
 
         // add
@@ -397,9 +416,10 @@
 
         $('#add-company-addition-form input[name=check_cost_centre]').change(function () {
             if ($('input[name=check_cost_centre]:checked').length) {
-                $('#cost_centre').prop('disabled', false);
+                addCostCentre[0].selectize.enable();
             } else {
-                $('#cost_centre').prop('disabled', true);
+                // $('#add-company-addition-form #cost_centre').prop('disabled', true);
+                addCostCentre[0].selectize.disable();
             }
         });
 
@@ -423,9 +443,9 @@
         });
         $('#edit-company-addition-form input[name=check_cost_centre]').change(function () {
             if ($('input[name=check_cost_centre]:checked').length) {
-                $('#update_cost_centre').prop('disabled', false);
+                editCostCentre[0].selectize.enable();
             } else {
-                $('#update_cost_centre').prop('disabled', true);
+                editCostCentre[0].selectize.disable();
             }
         });
 
