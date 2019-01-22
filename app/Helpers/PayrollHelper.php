@@ -64,7 +64,7 @@ class PayrollHelper
          * 2. If basic salary >= 2000 - use Basic salary / calendar days on that month * number of AL
          */  
         $payback = 0.00;
-//         if($employee->resigned_date != null || $employee->resigned_date <= DateHelper::getLastDayOfDate($payrollMonth)) {
+        //         if($employee->resignation_date != null || $employee->resignation_date <= DateHelper::getLastDayOfDate($payrollMonth)) {
             $basicSalary = $employee->basic_salary;
 //             $leaveBalance = self::getALBalance($employee, $payrollMonth);
             
@@ -132,8 +132,8 @@ class PayrollHelper
     //check if resigned for that payroll month
     public static function isResigned($employee, $payrollMonth) 
     {
-//         dd($employee->resigned_date);
-        if($employee->resigned_date == null || $employee->resigned_date > DateHelper::getLastDayOfDate($payrollMonth)){
+        //         dd($employee->resignation_date);
+        if($employee->resignation_date == null || $employee->resignation_date > DateHelper::getLastDayOfDate($payrollMonth)){
             return false;
         } else {
             return true;

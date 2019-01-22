@@ -170,7 +170,7 @@ class PayrollController extends Controller
         ])
         ->where(function ($query) use ($firstDayOfMonth) {
             // Either default or month/year greater or same
-            $query->whereNull('employees.resigned_date')->orWhere('employees.resigned_date', '>=', $firstDayOfMonth);
+            $query->whereNull('employees.resignation_date')->orWhere('employees.resignation_date', '>=', $firstDayOfMonth);
         })
         ->where(function ($query) use ($firstDayOfMonth) {
             // Either default or month/year greater or same
