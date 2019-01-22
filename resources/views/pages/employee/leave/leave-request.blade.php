@@ -1,6 +1,8 @@
 @extends('layouts.base')
 @section('content')
 <div class="container">
+        <div id="alert-container">
+            </div>   
     @if (session('status'))
     <div class="alert alert-primary fade show" role="alert">
         {{ session('status') }}
@@ -70,10 +72,15 @@
                             <td>{{$leaveRequest['end_date']}}</td>
                             <td>{{$leaveRequest['applied_days']}}</td>
                             <td>
-                                    <img src="data:{{$leaveRequest->attachment->mimetype}};base64, {{$leaveRequest->attachment->data}}" height="80px" width="80px">
-                                    <a href="data:{{$leaveRequest->attachment->mimetype}};base64, {{$leaveRequest->attachment->data}}"download="{{$leaveRequest->attachment->filename}}">Download </a></td>
-                            
-                            
+                                    @if($leaveRequest['attachment_media_id'])
+                                        {{-- <img src="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" height="80px" width="80px"> --}}
+                                        <a href="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" download="{{$leaveRequest->attachment->filename}}">
+                                            Download
+                                        </a>
+                                    @else
+                                        <span class="fas fa-ban"></span>
+                                    @endif
+                                </td> 
                            
                             <td>{{$leaveRequest['status']}}</td>
                             <td>             @if ($leaveRequest['status'] == 'new')
