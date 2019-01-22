@@ -766,7 +766,7 @@ public function addEis()
 public function postAddEis(Request $request)
 {
     $eisData = $request->validate([
-        'salary' => 'required|numeric',
+        'salary' =>  'required|unique:eis,salary,NULL,id,deleted_at,NULL',
         'employer' => 'required',
         'employee' => 'required',
     ]);
@@ -787,7 +787,7 @@ public function postEditEis(Request $request, $id)
 
     $eisData = $request->validate([
 
-        'salary' => 'required|numeric',
+        'salary' => 'required|unique:eis,salary,'.$id.',id,deleted_at,NULL',
         'employer' => 'required',
         'employee' => 'required',
 
@@ -815,7 +815,7 @@ public function postAddSocso(Request $request)
 {
     $socsoData = $request->validate([
 
-        'salary' => 'required|numeric',
+        'salary' => 'required|unique:socsos,salary,NULL,id,deleted_at,NULL',
         'first_category_employer' => 'required',
         'first_category_employee' => 'required',
 
@@ -838,7 +838,7 @@ public function postEditSocso(Request $request, $id)
 
     $socsoData = $request->validate([
 
-        'salary' => 'required|numeric',
+        'salary' => 'required|unique:socsos,salary,'.$id.',id,deleted_at,NULL',
         'first_category_employer' => 'required',
         'first_category_employee' => 'required',
 
