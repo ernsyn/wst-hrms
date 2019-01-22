@@ -173,5 +173,13 @@
                 </li>
             </ul>
         </li>
+        <li id="dashboard-option" class="menu-section {{ request()->is('admin/audit') ? 'active' : '' }}">
+                <a class="info" href="{{ route('admin.audit') }}">
+                    <div class="row">
+                        <div class="col-1"><i class="fas fa-history"></i></div>
+                        <div class="col-10">Audit Trail</div>
+                    </div>
+                </a>
+            </li>
     </ul>
 </nav>

@@ -70,6 +70,17 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.index', ['employees'=> $employees]);
     }
 
+    public function audit()
+    {
+       // $userlist = User::orderBy('id', 'Desc')->get();
+        // $employee_users = User::whereHas("roles", function($q){ $q->where("name", "employee"); })->get();
+        // dd($employee_users[0]->employee->id);
+
+        $employees = Employee::all();
+
+        return view('pages.admin.employees.index', ['employees'=> $employees]);
+    }
+
 
     public function dsplaySecurityGroup($id)
     {
