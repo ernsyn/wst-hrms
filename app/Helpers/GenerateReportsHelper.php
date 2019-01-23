@@ -1079,7 +1079,10 @@ class GenerateReportsHelper
     }
 
 
-    public static function generateEmployeeList($reportName,$periods,$year,$officerId,$filter,$search,$page){
+    public static function generateEmployeeList($reportName,$periods,$year,$officerId,$filter,$search,$page)
+    {
+        $companyInformation = self::getUserLogonCompanyInformation();
+        
         switch ($reportName) {
             case "LHDN_borangE":
                 $companyInformation = self::getUserLogonCompanyInformation();
@@ -1150,6 +1153,17 @@ class GenerateReportsHelper
             break;
             case "EIS_lampiran1":
                 $companyInformation = self::getUserLogonCompanyInformation();
+                return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,$periods,null,$page);
+            break;
+            //payroll reports
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+            case "8":
                 return self::getEmployeeListInformation($companyInformation->id,$filter,$search,null,$periods,null,$page);
             break;
             default:

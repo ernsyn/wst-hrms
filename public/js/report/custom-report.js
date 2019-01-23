@@ -60,13 +60,13 @@ function loadEmp(reportName,$page){
     var formName = "#"+reportName+"-form";
     var data = {
         reportName : reportName,
-        selectYear : $(formName+" #selectYear").val(),
-        selectPeriod : $(formName+" #selectPeriod").val(),
-        selectOfficer : $(formName+" #selectOfficer").val(),
-        selectCostCentres : $(formName+" #selectCostCentres").val(),
-        selectDepartments : $(formName+" #selectDepartments").val(),
-        selectBranches : $(formName+" #selectBranches").val(),
-        selectPositions : $(formName+" #selectPositions").val(),
+        selectYear : $(formName+" .selectYear").val(),
+        selectPeriod : $(formName+" .selectPeriod").val(),
+        selectOfficer : $(formName+" .selectOfficer").val(),
+        selectCostCentres : $(formName+" .selectCostCentres").val(),
+        selectDepartments : $(formName+" .selectDepartments").val(),
+        selectBranches : $(formName+" .selectBranches").val(),
+        selectPositions : $(formName+" .selectPositions").val(),
         page : $page
     };
 

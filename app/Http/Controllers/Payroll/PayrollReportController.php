@@ -8,12 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Company\CompanyRepository;
 use App\Repositories\Payroll\ReportRepository;
 use App\Services\PayrollService;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Mpdf\Output\Destination;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Http\Controllers\Popo\payrollreport\PayrollReport;
+use App\Enums\PayrollStatus;
 
 class PayrollReportController extends Controller
 {
@@ -29,7 +29,6 @@ class PayrollReportController extends Controller
         $this->payrollService = $payrollService;
     }
     
-    // Add payroll form
     public function showReport()
     {
         $arr = PayrollReport::getPayrollReport();
@@ -60,47 +59,30 @@ class PayrollReportController extends Controller
     // 1. Payroll Summary by Department
     // 2. Payroll Summary by Department, Cost-Centres
     // 3. Supplier Payment Form
-    // 4. Department Salary
+    // 4. Cash Transfer Document
     // 5. Bank Crediting Report
     // 6. Bank Credit Detail
     // 7. Payroll Detail
     // 8. Payroll Summary
     public function exportReport(Request $request)
     {
-//         dd($request);
+//                 dd($request->input('selectPeriod'));
         
         // Request Data
+        $this->validate($request, [
+            'reportName' => 'required'
+        ]);
+        
+        $reportName = $request->input('reportName');
         $periods = explode('-',$request->input('selectPeriod'));
         $year = substr($periods[0],0,4);
         $month = substr($periods[0],4);
-        $type = $request->input('reportName');
-        $filter_data = [
-            'year'      => $year,
-            'month'     => $month,
-            'type'      => $type,
-        ];
-        //checking filter
-        if($request->input('selectCostCentres') != 0){
-            $filter_data['costcentres'] = $request->input('selectCostCentres');
-            
-        } 
-        
-        if($request->input('selectDepartments') != 0){
-            $filter_data['departments'] = $request->input('selectDepartments');
-            
-        }
-        
-        if($request->input('selectBranches') != 0){
-            $filter_data['branches'] = $request->input('selectBranches');
-            
-        }
-        
-        if($request->input('selectPositions') != 0){
-            $filter_data['positions'] = $request->input('selectPositions');
-            
-        }
         
         $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        if(!isset($company)){
+            return redirect($request->server('HTTP_REFERER'))->withErrors(['Invalid company info!']);
+        }
+        
         $data = array(
             'year_month' => $year.'-'.$month.'-01',
             'period' => $periods[1],
@@ -111,76 +93,113 @@ class PayrollReportController extends Controller
         if (count($payroll) > 0) {
             $payroll = $payroll->first();
             
-            if($payroll->status !== 1) {
-                $error = 'Payroll must be locked before report generation.';
+            if($payroll->status !== PayrollStatus::LOCKED) {
+                $error = 'Payroll must be locked for report generation.';
                 return redirect($request->server('HTTP_REFERER'))->withErrors([$error]);
             }
         } else {
-            $msg = 'Report ' . $request['year_month'] . ' does not exist.';
+            $msg = 'Report with payroll month ' . $request['year_month'] . ' does not exist.';
             return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
         }
 //         dd($payroll);
         
-        // Process
-        DB::beginTransaction();
+        $filter = array();
+        $search = array();
+        $groupBy = array();
+        $requestData = array();
+        $requestData['year'] = $year;
+        $requestData['month'] = $month;
+        $requestData['report'] = $reportName;
+        $requestData['payrollId'] = $payroll->id;
+        
+        //checking filter
+        if($request->input('selectCostCentres') != 0){
+            $filter['costcentres'] = $request->input('selectCostCentres');
+        }
+        
+        if($request->input('selectDepartments') != 0){
+            $filter['departments'] = $request->input('selectDepartments');
+        }
+        
+        if($request->input('selectBranches') != 0){
+            $filter['branches'] = $request->input('selectBranches');
+        }
+        
+        if($request->input('selectPositions') != 0){
+            $filter['positions'] = $request->input('selectPositions');
+        }
+        
+        if($request->input('employeeList') != ''){
+            $search['employeeList']  = explode(',',$request->input('employeeList'));
+        }
+        
+        $filterOption = GenerateReportsHelper::getFilterKey($filter);
+        $searchOption = GenerateReportsHelper::getSearchKey($search);
+        
+//         dd($filterOption,$searchOption,$reportName);
 
 //         $company_list = $this->company->all(false, ['status'=>'Active']);
         $extra = [
             'period'    => strtoupper(PayrollPeriodEnum::getDescription($payroll->period).'-'.DateHelper::dateWithFormat($payroll->year_month, 'M-Y')),
         ];
-        $request_data = [
-            'payroll_master_id'  => $payroll->id,
-            'type'              => $type,
-        ];
+//         $request_data = [
+//             'payroll_master_id'  => $payroll->id,
+//             'report'              => $reportName,
+//         ];
 //         dd($company,$filter_data,$request_data,$extra);
-        switch ($type) {
+        switch ($reportName) {
             case '1':
-                $filter_data['groupby'] = ['JM_department.id'];
+                $groupBy = ['JM_department.id'];
                 // Run type 1.
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+//                 $this->generateReport($company, $requestData, $filterOption, $searchOption, $groupBy, $extra);
                 
-                $filter_data['cost_center'] = 'HQ';
-                // Run type 2.
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+//                 $filter['cost_center'] = 'HQ';
+//                 // Run type 2.
+//                 $this->generateReport($company, $filter, $request_data, $extra);
                 
                 break;
             case '2':
-                $filter_data['groupby'] = ['JM_department.id', 'JM_category.id'];
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+//                 $filter['groupby'] = ['JM_department.id', 'JM_category.id'];
+//                 $this->generateReport($company, $filter, $request_data, $extra);
+                $groupBy = ['JM_department.id', 'JM_category.id'];
+//                 $this->generateReport($company, $requestData, $filterOption, $searchOption, $groupBy, $extra);
                 
                 break;
             case '3':
-                $filter_data['groupby'] = ['JM_department.id', 'JM_category.id'];
-                $extra['filter_by'] = '';
+                $groupBy = ['JM_department.id', 'JM_category.id'];
+//                 $this->generateReport($company, $requestData, $filterOption, $searchOption, $groupBy, $extra);
+                /* $extra['filter_by'] = '';
                 // Run type 1.
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter, $requestData, $extra);
                 
-                $filter_data['groupby'] = ['JM_category.id'];
+                $filter['groupby'] = ['JM_category.id'];
                 $extra['filter_by'] = 'category';
                 // Run type 2.
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter, $requestData, $extra);
                 
-                $filter_data['groupby'] = ['JM_department.id'];
-                $filter_data['cost_center'] = 'HQ';
+                $filter['groupby'] = ['JM_department.id'];
+                $filter['cost_center'] = 'HQ';
                 $extra['filter_by'] = 'department';
                 // Run type 3.
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+                $this->generateReport($company, $filter, $requestData, $extra); */
                 
                 break;
             case '4':
-                $filter_data['groupby'] = ['JM_department.id'];
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+                $groupBy = ['JM_department.id'];
+//                 $this->generateReport($company, $filter, $requestData, $extra);
                 break;
             case '5':
             case '6':
-                $filter_data['groupby'] = ['EM.id', 'BM.id'];
+                $groupBy = ['EM.id', 'BM.id'];
                 $extra['payrollMonth'] = $payroll->year_month;
                 
-                $reportList = $this->report->find_by_company_id($company->id, $filter_data);
+//                 $reportList = $this->report->findByCompanyId($company->id, $filter);
+                $list = $this->report->findByCompanyId($company->id, $requestData, $filterOption, $searchOption, $groupBy);
+//                 dd($list);
                 $dataArray = [];
                 $netPay = 0;
                 
-                foreach($reportList as $info){
+                foreach($list as $info){
                     $data = [
                         '1' => 'LIP',
                         '2' => number_format((float)$info->net_pay,2, '.', ''),
@@ -242,7 +261,7 @@ class PayrollReportController extends Controller
                 
                 //first row
                 $sheet->getCell('A1')->setValue("PAYMENT DATE :\n(DD/MM/YYYY)");
-                $sheet->getCell('B1')->setValue($dataArray[0]['7']);
+                $sheet->getCell('B1')->setValue(DateHelper::getLastDayOfDate($payroll->year_month));
                 
                 //header
                 $headerArray1 = ['Payment Type/ Mode : LIP/LGP/LSP', 'Payment Amount', 'BIC', 'Bene Full Name', 'Bene Account No.', 'Payment Purpose', 'Bene Email', 'Bene Identification No / Passport', 'ID Type: NI, OI, PL, ML, PP, BR', 'Bene Mobile No.', 'Payor Corporation\'s Reference No.'];
@@ -313,73 +332,66 @@ class PayrollReportController extends Controller
                 break;
             case '7':
                 // Document 6. Summary
-                $filter_data['groupby'] = ['CM.id'];
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+                $groupBy = ['CM.id'];
+//                 $this->generateReport($company, $filter, $requestData, $extra);
                 break;
             case '8':
                 // Document 7. Payroll Details
-                $filter_data['groupby'] = ['EM.id', 'JM_department.id'];
-                $this->generateReport($company, $filter_data, $request_data, $extra);
+                $groupBy = ['EM.id', 'JM_department.id'];
+//                 $this->generateReport($company, $filter, $requestData, $extra);
                 break;
             default:
                 $error = 'Unknown type of report selected. Kindly contact admin to get more details.';
                 break;
         }
         
-        DB::commit();
+        $this->generateReport($company, $requestData, $filterOption, $searchOption, $groupBy, $extra);
         
-        if(@$error) return redirect($request->server('HTTP_REFERER'))->with('error', $error);
+        if(@$error){ 
+            return redirect($request->server('HTTP_REFERER'))->with('error', $error);
+        }
+        
         return redirect($request->server('HTTP_REFERER'))->with('success', 'Successfully generated report.');
     }
     
-    private function generateReport($company, $filter_data, $request_data, $extra)
+    private function generateReport($company, $requestData, $filterOption, $searchOption, $groupBy, $extra)
     {
-        if(isset($company)) {
-            $report_list = $this->report->find_by_company_id($company->id, $filter_data);
-//             dd($company, $filter_data, $request_data, $extra,$report_list);
-            $document_info = $this->get_document_html($filter_data['type'], $company, $report_list, $extra);
+        $list = $this->report->findByCompanyId($company->id, $requestData, $filterOption, $searchOption, $groupBy);
+//         dd($company, $filterOption, $groupBy, $extra, $list);
+        $documentInfo = $this->getDocumentHtml($requestData['report'], $company, $list, $extra);
 //                 $request_data['file'] = $file_name;
                 
-            switch ($filter_data['type']) {
-                case '1':
-                    $file_name = 'doc1.pdf';
-                    $request_data['document_name'] = 'Doc 1. Payment Form Group By Department - '.$company->name;
-                    if(@$filter_data['costcentres']) $request_data['document_name'] .= ' (HQ)';
-                    break;
-                case '2':
-                    $file_name = 'doc2.pdf';
-                    $request_data['document_name'] = 'Doc 2. Payment Form Group By Department & Cost Center - '.$company->name;
-                    break;
-                case '3':
-                    $file_name = 'doc3.pdf';
-                    $request_data['document_name'] = 'Doc 3. Supplier Payment Form [Cost Center] - '.$company->name;
-                    if(count($filter_data['groupby']) > 1) $request_data['document_name'] = 'Doc 3. Supplier Payment Form [Department - Cost Center] - '.$company->name;
-                    if(@$filter_data['cost_center']) $request_data['document_name'] .= ' (HQ)';
-                    break;
-                case '4':
-                    $file_name = 'doc4.pdf';
-                    $request_data['document_name'] = 'Doc 4. Cash Transfer Document [Department] - '.$company->name;
-                    break;
-                case '5':
-                    $file_name = 'doc5.pdf';
-                    $request_data['document_name'] = 'Doc 5. Group By Bank - '.$company->name;
-                    break;
-                case '7':
-                    $file_name = 'doc7.pdf';
-                    $request_data['document_name'] = 'Doc 6. Payroll Summary';
-                    break;
-                case '8':
-                    $file_name = 'doc8.pdf';
-                    $request_data['document_name'] = 'Doc 8. Payroll Details - '.$company->name;
-                    break;
-                default:
-                    $request_data['document_name'] = 'Not available.';
-                    break;
-            }
-            
-            $this->exportPdf($document_info['css'], $document_info['header'], $document_info['footer'], $document_info['body'], $document_info['pdf_format'], $file_name);
-//                 $this->payroll_report->update('new', $request_data);
-        } 
+        switch ($requestData['report']) {
+            case '1':
+                $fileName = 'Payroll Summary by Department.pdf';
+                break;
+            case '2':
+                $fileName = 'Payroll Summary by Department Cost Centre.pdf';
+                break;
+            case '3':
+                $fileName = 'Supplier Payment Form.pdf';
+                break;
+            case '4':
+                $fileName = 'Cash Transfer Document.pdf';
+                break;
+            case '5':
+                $fileName = 'Bank Crediting Report.pdf';
+//                 $request_data['document_name'] = 'Doc 5. Group By Bank - '.$company->name;
+                break;
+            case '7':
+                $fileName = 'Payroll Summary.pdf';
+//                 $request_data['document_name'] = 'Doc 6. Payroll Summary';
+                break;
+            case '8':
+                $fileName = 'Payroll Details.pdf';
+//                 $request_data['document_name'] = 'Doc 8. Payroll Details - '.$company->name;
+                break;
+            default:
+                $fileName = null;
+                break;
+        }
+        
+        $this->exportPdf($documentInfo['css'], $documentInfo['header'], $documentInfo['footer'], $documentInfo['body'], $documentInfo['pdf_format'], $fileName);
     }
     
     private function exportPdf($css, $header = null, $footer = null, $body, $pdf_format = [], $file_name = null)
@@ -392,7 +404,7 @@ class PayrollReportController extends Controller
         $mpdf->Output($file_name, Destination::DOWNLOAD);
     }
     
-    private function get_document_html($document_type, $company, $list, $extra = null)
+    private function getDocumentHtml($report, $company, $list, $extra = null)
     {
         $css = '
                 <style media="print">
@@ -433,7 +445,7 @@ class PayrollReportController extends Controller
             
         ';
         
-        switch ($document_type) {
+        switch ($report) {
             case '1':
             case 1:
             case '2':
@@ -446,13 +458,13 @@ class PayrollReportController extends Controller
                             <tr>
                                 <td class="w-15p">COMPANY</td>
                                 <td class="w-1p">:</td>
-                                <td class="w-40p">'.$company->name.' ('.$company->registration_number.')</td>
-                                <td class="text-right">Date: '.date_format(date_create(date('Y-m-d')), 'd-M-Y (D) H:i A').' Page: {PAGENO} </td>
+                                <td class="w-40p">'.$company->name.' ('.$company->registration_no.')</td>
+                                <td class="text-right" align="right" style="font-weight:normal;">Date: '.date('d-M-Y (D) h:i A').' Page: {PAGENO} </td>
                             </tr>
                             <tr>
                                 <td class="w-15p">FORMELY KNOWN</td>
                                 <td class="w-1p">:</td>
-                                <td class="w-40p">NO CUKAI PENDAPATAN: C2304727002</td>
+                                <td class="w-40p">NO CUKAI PENDAPATAN: '.$company->tax_no.'</td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -479,13 +491,14 @@ class PayrollReportController extends Controller
                 
                 $sum = [];
                 $content = '';
+                $displayNameTitle = ($report == 1) ? 'DEPARTMENT' : 'SECTION';
                 foreach ($list as $key => $info) {
-                    $display_name = ($document_type == 1)? $info->department : $info->department.'-'.$info->cost_center;
+                    $displayName = ($report == 1) ? $info->department : $info->department.'-'.$info->cost_center;
                     
                     $content .= '
                         <tr>
                             <td colspan="15">
-                                GROUP : '.$display_name.'
+                                GROUP : '.$displayName.'
                             </td>
                         </tr>
                         <tr>
@@ -493,36 +506,36 @@ class PayrollReportController extends Controller
                         </tr>
                         <tr>
                             <td>Sub Total</td>
-                            <td class="text-center">'.$info->total_basic_salary.'</td>
-                            <td class="text-center">'.$info->total_unpaid_leave.'</td>
-                            <td class="text-center">'.$info->total_overtime.'</td>
-                            <td class="text-center">'.$info->total_bonus.'</td>
-                            <td class="text-center">'.$info->total_other_addition.'</td>
-                            <td class="text-center">'.$info->total_gross_pay.'</td>
-                            <td class="text-center">'.$info->total_employee_epf.'</td>
-                            <td class="text-center">'.$info->total_employee_socso.'</td>
-                            <td class="text-center">'.$info->total_employee_pcb.'</td>
-                            <td class="text-center">'.$info->total_other_deduction.'</td>
-                            <td class="text-center">'.$info->total_net_pay.'</td>
-                            <td class="text-center">'.$info->total_employer_epf.'</td>
-                            <td class="text-center">'.$info->total_employer_socso.'</td>
-                            <td class="text-center">'.$info->total_employer_levy.'</td>
+                            <td class="text-center" align="right">'.$info->total_basic_salary.'</td>
+                            <td class="text-center" align="right">'.$info->total_unpaid_leave.'</td>
+                            <td class="text-center" align="right">'.$info->total_overtime.'</td>
+                            <td class="text-center" align="right">'.$info->total_bonus.'</td>
+                            <td class="text-center" align="right">'.$info->total_other_addition.'</td>
+                            <td class="text-center" align="right">'.$info->total_gross_pay.'</td>
+                            <td class="text-center" align="right">'.$info->total_employee_epf.'</td>
+                            <td class="text-center" align="right">'.$info->total_employee_socso.'</td>
+                            <td class="text-center" align="right">'.$info->total_employee_pcb.'</td>
+                            <td class="text-center" align="right">'.$info->total_other_deduction.'</td>
+                            <td class="text-center" align="right">'.$info->total_net_pay.'</td>
+                            <td class="text-center" align="right">'.$info->total_employer_epf.'</td>
+                            <td class="text-center" align="right">'.$info->total_employer_socso.'</td>
+                            <td class="text-center" align="right">'.$info->total_employer_levy.'</td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td class="text-center">'.$info->total_seniority_pay.'</td>
-                            <td class="text-center">'.$info->total_default_addition.'</td>
-                            <td class="text-center">'.$info->total_shift.'</td>
+                            <td class="text-center"></td>
+                            <td class="text-center" align="right">'.$info->total_default_addition.'</td>
+                            <td class="text-center" align="right">'.$info->total_shift.'</td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td class="text-center">'.$info->total_employee_vol.'</td>
-                            <td class="text-center">'.$info->total_employee_eis.'</td>
+                            <td class="text-center" align="right">'.$info->total_employee_vol.'</td>
+                            <td class="text-center" align="right">'.$info->total_employee_eis.'</td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td class="text-center">'.$info->total_employer_vol.'</td>
-                            <td class="text-center">'.$info->total_employer_eis.'</td>
+                            <td class="text-center" align="right">'.$info->total_employer_vol.'</td>
+                            <td class="text-center" align="right">'.$info->total_employer_eis.'</td>
                             <td></td>
                         </tr>
                     ';
@@ -558,37 +571,37 @@ class PayrollReportController extends Controller
                     <table style="font-size: 10px; text-align: left;" cellspacing="0" cellpadding="1">
                         <thead>
                             <tr>
-                                <th class="text-left black-top-border w-30p">DEPARTMENT</th>
-                                <th class="text-right black-top-border w-5p">BASIC</th>
-                                <th class="text-right black-top-border w-5p">NPL</th>
-                                <th class="text-right black-top-border w-5p">OT</th>
-                                <th class="text-right black-top-border w-5p">BONUS</th>
-                                <th class="text-right black-top-border w-5p">OTHERS</th>
-                                <th class="text-right black-top-border w-5p">GROSS</th>
-                                <th class="text-right black-top-border w-5p">E\'EPF</th>
-                                <th class="text-right black-top-border w-5p">E\'SOC</th>
-                                <th class="text-right black-top-border w-5p">E\'TAX</th>
-                                <th class="text-right black-top-border w-5p">OTHERS</th>
-                                <th class="text-right black-top-border w-5p">NETTPAY</th>
-                                <th class="text-right black-top-border w-5p">R\'EPF</th>
-                                <th class="text-right black-top-border w-5p">R\'SOC</th>
-                                <th class="text-right black-top-border w-5p">R\'LEVY</th>
+                                <th class="text-left black-top-border w-30p">'.$displayNameTitle.'</th>
+                                <th class="text-right black-top-border w-5p" align="right">BASIC</th>
+                                <th class="text-right black-top-border w-5p" align="right">NPL</th>
+                                <th class="text-right black-top-border w-5p" align="right">OT</th>
+                                <th class="text-right black-top-border w-5p" align="right">BONUS</th>
+                                <th class="text-right black-top-border w-5p" align="right">OTHERS</th>
+                                <th class="text-right black-top-border w-5p" align="right">GROSS</th>
+                                <th class="text-right black-top-border w-5p" align="right">E\'EPF</th>
+                                <th class="text-right black-top-border w-5p" align="right">E\'SOC</th>
+                                <th class="text-right black-top-border w-5p" align="right">E\'TAX</th>
+                                <th class="text-right black-top-border w-5p" align="right">OTHERS</th>
+                                <th class="text-right black-top-border w-5p" align="right">NETTPAY</th>
+                                <th class="text-right black-top-border w-5p" align="right">R\'EPF</th>
+                                <th class="text-right black-top-border w-5p" align="right">R\'SOC</th>
+                                <th class="text-right black-top-border w-5p" align="right">R\'LEVY</th>
                             </tr>
                             <tr>
                                 <th class="black-bottom-border"></th>
-                                <th class="black-bottom-border">S\'PAY</th>
-                                <th class="text-right black-bottom-border">ADDPAY</th>
-                                <th class="text-right black-bottom-border">SHIFT</th>
+                                <th class="black-bottom-border"></th>
+                                <th class="text-right black-bottom-border" align="right">ADDPAY</th>
+                                <th class="text-right black-bottom-border" align="right">SHIFT</th>
                                 <th class="black-bottom-border"></th>
                                 <th class="black-bottom-border"></th>
-                                <th class="black-bottom-border">PAY</th>
-                                <th class="text-right black-bottom-border">E\'VOL</th>
-                                <th class="text-right black-bottom-border">E\'EIS</th>
+                                <th class="black-bottom-border" align="right">PAY</th>
+                                <th class="text-right black-bottom-border" align="right">E\'VOL</th>
+                                <th class="text-right black-bottom-border" align="right">E\'EIS</th>
                                 <th class="black-bottom-border"></th>
                                 <th class="black-bottom-border"></th>
                                 <th class="black-bottom-border"></th>
-                                <th class="text-right black-bottom-border">R\'VOL</th>
-                                <th class="text-right black-bottom-border">R\'EIS</th>
+                                <th class="text-right black-bottom-border" align="right">R\'VOL</th>
+                                <th class="text-right black-bottom-border" align="right">R\'EIS</th>
                                 <th class="black-bottom-border"></th>
                             </tr>
                         </thead>
@@ -596,36 +609,36 @@ class PayrollReportController extends Controller
                             '.$content.'
                             <tr>
                                 <td class="black-top-border bold">Grand Total</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_basic_salary'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_unpaid_leave'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_overtime'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_bonus'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_other_addition'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_gross_pay'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_employee_epf'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_employee_socso'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_employee_pcb'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_other_deduction'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_net_pay'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_employer_epf'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_employer_socso'),2,'.','').'</td>
-                                <td class="black-top-border text-center bold">'.number_format($list->sum('total_employer_levy'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_basic_salary'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_unpaid_leave'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_overtime'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_bonus'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_other_addition'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_gross_pay'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_employee_epf'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_employee_socso'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_employee_pcb'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_other_deduction'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_net_pay'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_employer_epf'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_employer_socso'),2,'.','').'</td>
+                                <td class="black-top-border text-center bold" align="right">'.number_format($list->sum('total_employer_levy'),2,'.','').'</td>
                             </tr>
                             <tr>
                                 <td class="black-bottom-border "></td>
-                                <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_seniority_pay'),2,'.','').'</td>
-                                <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_default_addition'),2,'.','').'</td>
-                                <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_shift'),2,'.','').'</td>
+                                <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_seniority_pay'),2,'.','').'</td>
+                                <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_default_addition'),2,'.','').'</td>
+                                <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_shift'),2,'.','').'</td>
                                 <td class="black-bottom-border "></td>
                                 <td class="black-bottom-border "></td>
                                 <td class="black-bottom-border "></td>
-                                <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_employee_vol'),2,'.','').'</td>
-                                <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_employee_eis'),2,'.','').'</td>
+                                <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_employee_vol'),2,'.','').'</td>
+                                <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_employee_eis'),2,'.','').'</td>
                                 <td class="black-bottom-border "></td>
                                 <td class="black-bottom-border "></td>
                                 <td class="black-bottom-border "></td>
-                                <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_employer_vol'),2,'.','').'</td>
-                                <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_employer_eis'),2,'.','').'</td>
+                                <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_employer_vol'),2,'.','').'</td>
+                                <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_employer_eis'),2,'.','').'</td>
                                 <td class="black-bottom-border "></td>
                             </tr>
                             <tr>
@@ -643,7 +656,7 @@ class PayrollReportController extends Controller
                 break;
             case '3':
             case 3:
-                $filter_by = $extra['filter_by'];
+//                 $filter_by = $extra['filter_by'];
                 $final_net_pay = 0;
                 
                 $sub_header = '
@@ -707,21 +720,23 @@ class PayrollReportController extends Controller
                 foreach ($list as $key => $info) {
                     $i = $key + 1;
                     
-                    switch ($filter_by) {
+                    /* switch ($filter_by) {
                         case 'category':
-                            $display_name = $info->cost_center;
+                            $displayName = $info->cost_center;
                             break;
                         case 'department':
-                            $display_name = $info->department;
+                            $displayName = $info->department;
                             break;
                         default:
-                            $display_name = $info->department.' - '.$info->cost_center;
+                            $displayName = $info->department.' - '.$info->cost_center;
                             break;
-                    }
+                    } */
+                    
+                    $displayName = $info->department.' - '.$info->cost_center;
                     
                     $content .= '
                         <tr>
-                            <td> '.$i.') '.$display_name.' </td>
+                            <td> '.$i.') '.$displayName.' </td>
                             <td align="center"> '.$info->total_net_pay.' </td>
                         </tr>
                     ';

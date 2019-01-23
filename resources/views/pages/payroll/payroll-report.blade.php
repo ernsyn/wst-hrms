@@ -4,24 +4,26 @@
 <div class="p-4">
     <link rel="stylesheet" href="{{asset('css/report/government_report.css')}}" type="text/css"/>
     <link rel="stylesheet" href="{{asset('css/report/carousel.css')}}" type="text/css"/>
-@if($errors->any())
-		<div class="alert alert-danger alert-dismissible fade show" role="alert">
-			{{$errors->first()}}
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		@endif
+	
+	@if($errors->any())
+	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		{{$errors->first()}}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	@endif
 
-		@if(session()->get('success'))
-		<div class="alert alert-success alert-dismissible fade show" role="alert">
-			{{ session()->get('success') }}
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		@endif
-<div class="row">
+	@if(session()->get('success'))
+	<div class="alert alert-success alert-dismissible fade show" role="alert">
+		{{ session()->get('success') }}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	@endif
+	
+	<div class="row">
         <div class="carousel">
             <div class="carousel-row">
                 @foreach($sliders as $slider)
@@ -40,13 +42,13 @@
                             </div>
                         </div>
                         <div class="m-portlet__body engraved-text" style="text-align: center;height: 70pt;">
-                        	@php
-                        		echo wordwrap($slider->getReportName(),30,"<br>");
-                        		if($slider->getReportTarget() !='report2') {
-                        			echo "<br>";
-                        			echo "<br>";
-                        		}
-                        	@endphp
+                    	@php
+                    		echo wordwrap($slider->getReportName(),30,"<br>");
+                    		if($slider->getReportTarget() !='report2') {
+                    			echo "<br>";
+                    			echo "<br>";
+                    		}
+                    	@endphp
                         </div>
                     </div>
                 </div>
@@ -55,7 +57,7 @@
         </div>
     </div>
 
-    <!--government report form -->
+    <!--report form -->
     <div class="row">
         @foreach($dforms as $form)
         <div class="col-md-8 mx-auto">
@@ -70,7 +72,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\PayrollReportController@exportReport')}}">
+                    <form method="post" action="{{action('Payroll\PayrollReportController@exportReport')}}" id="{{$form->getValue()}}-form">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -82,7 +84,7 @@
                             <div class="form-group">
                                 @if ($form->getShowPeriod() == 'true')
 								<label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                <select class="form-control" name="selectPeriod">
                                     @foreach($period as $key => $value)
                                     <option value="{{$value['yearmonth'].'-'.$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
@@ -90,7 +92,7 @@
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
-                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                <select class="form-control" name="selectOfficer">
                                     @foreach($officers as  $value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
@@ -98,9 +100,10 @@
                                 @endif
                             </div>
                         </div>
-
+						
+						<input type="hidden" class="hidden-employee-list" name="employeeList" value="">
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
-                        <input type="submit" class="btn btn-info" value="Generate">
+                        <input type="submit" class="btn btn-info generate-report-button" data-report-name="{{$form->getValue()}}" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
@@ -130,9 +133,9 @@
                             </div>
                         </div>
                         <div class="m-portlet__body engraved-text" style="text-align: center;height: 70pt;">
-                            @php
-                        		echo wordwrap($slider->getReportName(),30,"<br>");
-                        	@endphp
+                        @php
+                    		echo wordwrap($slider->getReportName(),30,"<br>");
+                    	@endphp
                         </div>
                     </div>
                 </div>
@@ -141,7 +144,7 @@
         </div>
     </div>
 
-    <!--government report form  1-->
+    <!--report form row 2-->
     <div class="row">
         @foreach($dforms1 as $form)
         <div class="col-md-8 mx-auto">
@@ -156,7 +159,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{action('Payroll\PayrollReportController@exportReport')}}">
+                    <form method="post" action="{{action('Payroll\PayrollReportController@exportReport')}}" id="{{$form->getValue()}}-form">
                         {{csrf_field()}}
                         <div class="col-md-8 mx-auto">
                             @if ($form->getShowFilter() == 'true')
@@ -168,15 +171,15 @@
                             <div class="form-group">
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                <select class="form-control" name="selectPeriod">
                                     @foreach($period as $key => $value)
-                                    <option value="{{$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
+                                    <option value="{{$value['yearmonth'].'-'.$value['period_id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
                                 </select>
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
-                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                <select class="form-control" name="selectOfficer">
                                     @foreach($officers as  $value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
@@ -185,8 +188,9 @@
                             </div>
                         </div>
 
+						<input type="hidden" class="hidden-employee-list" name="employeeList" value="">
                         <input type="hidden" name="reportName" value="{{$form->getValue()}}">
-                        <input type="submit" class="btn btn-info" value="Generate">
+                        <input type="submit" class="btn btn-info generate-report-button" data-report-name="{{$form->getValue()}}" value="Generate">
                     </form>
                 </div>
                 <div class="card-footer text-muted">
@@ -197,33 +201,5 @@
         @endforeach
     </div>
 </div>
-
+@include('inc.employee-filter')
 @endsection
-@section('scripts')
-<script>
-
-$("[id^=payroll_month_report]").datepicker({
-	  changeMonth: true,
-	  changeYear: true,
-	  dateFormat: "yy-mm",
-//	  showButtonPanel: true,
-//	  currentText: "This Month",
-	  onChangeMonthYear: function (year, month, inst) {
-	    $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month - 1, 1)));
-	  },
-	  onClose: function(dateText, inst) {
-	    var month = $(".ui-datepicker-month :selected").val();
-	    var year = $(".ui-datepicker-year :selected").val();
-	    $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month, 1)));
-	  }
-	}).focus(function () {
-	  $(".ui-datepicker-calendar").hide();
-	});
-
-</script>
-<style>
-.ui-datepicker-calendar {
-    display: none;
-}
-</style>
-@append

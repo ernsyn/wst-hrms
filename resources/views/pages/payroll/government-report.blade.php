@@ -68,28 +68,28 @@
                                             <div class="card-body">
                                                 <div class="form-group">
                                                     <label for="exampleFormControlCostCentres">Cost Centres</label>
-                                                    <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                    <select class="form-control selectCostCentres" name="selectCostCentres">
                                                         <option value="0">--Select--</option>
                                                         @foreach($costcentres as $key => $value)
                                                         <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                         @endforeach
                                                     </select>
                                                     <label for="exampleFormControlDepartments">Departments</label>
-                                                    <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                    <select class="form-control selectDepartments" name="selectDepartments">
                                                         <option value="0">--Select--</option>
                                                         @foreach($departments as $key => $value)
                                                         <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                         @endforeach
                                                     </select>
                                                     <label for="exampleFormControlBranches">Branches</label>
-                                                    <select class="form-control" id="selectBranches" name="selectBranches">
+                                                    <select class="form-control selectBranches" name="selectBranches">
                                                         <option value="0">--Select--</option>
                                                         @foreach($branches as $key => $value)
                                                         <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                         @endforeach
                                                     </select>
                                                     <label for="exampleFormControlPositions">Positions</label>
-                                                    <select class="form-control" id="selectPositions" name="selectPositions">
+                                                    <select class="form-control selectPositions" name="selectPositions">
                                                         <option value="0">--Select--</option>
                                                         @foreach($positions as $key => $value)
                                                         <option value="{{$value['id']}}">{{$value['name']}}</option>
@@ -118,7 +118,7 @@
                             <div class="form-group">
                                 @if ($form->getShowYear() == 'true')
                                 <label for="exampleFormYear">Year</label>
-                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                <select class="form-control selectYear" name="selectYear" required>
                                     @foreach($year as $value)
                                     <option value="{{$value->year}}">{{$value->year}}</option>
                                     @endforeach
@@ -126,7 +126,7 @@
                                 @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                <select class="form-control selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
                                     <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
@@ -134,7 +134,7 @@
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
-                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                <select class="form-control selectOfficer" name="selectOfficer">
                                     @foreach($officers as  $value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
@@ -212,28 +212,28 @@
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label for="exampleFormControlCostCentres">Cost Centres</label>
-                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                <select class="form-control selectCostCentres" name="selectCostCentres">
                                                     <option value="0">--Select--</option>
                                                     @foreach($costcentres as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlDepartments">Departments</label>
-                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                <select class="form-control selectDepartments" name="selectDepartments">
                                                     <option value="0">--Select--</option>
                                                     @foreach($departments as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlBranches">Branches</label>
-                                                <select class="form-control" id="selectBranches" name="selectBranches">
+                                                <select class="form-control selectBranches" name="selectBranches">
                                                     <option value="0">--Select--</option>
                                                     @foreach($branches as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlPositions">Positions</label>
-                                                <select class="form-control" id="selectPositions" name="selectPositions">
+                                                <select class="form-control selectPositions" name="selectPositions">
                                                     <option value="0">--Select--</option>
                                                     @foreach($positions as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
@@ -261,7 +261,7 @@
                             <div class="form-group">
                                 @if ($form->getShowYear() == 'true')
                                 <label for="exampleFormYear">Year</label>
-                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                <select class="form-control selectYear" name="selectYear" required>
                                     @foreach($year as $value)
                                     <option value="{{$value->year}}">{{$value->year}}</option>
                                     @endforeach
@@ -269,7 +269,7 @@
                                 @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                <select class="form-control selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
                                     <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
@@ -277,7 +277,7 @@
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
-                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                <select class="form-control selectOfficer" name="selectOfficer">
                                     @foreach($officers as  $value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
@@ -356,28 +356,28 @@
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label for="exampleFormControlCostCentres">Cost Centres</label>
-                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                <select class="form-control selectCostCentres" name="selectCostCentres">
                                                     <option value="0">--Select--</option>
                                                     @foreach($costcentres as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlDepartments">Departments</label>
-                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                <select class="form-control selectDepartments" name="selectDepartments">
                                                     <option value="0">--Select--</option>
                                                     @foreach($departments as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlBranches">Branches</label>
-                                                <select class="form-control" id="selectBranches" name="selectBranches">
+                                                <select class="form-control selectBranches" name="selectBranches">
                                                     <option value="0">--Select--</option>
                                                     @foreach($branches as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlPositions">Positions</label>
-                                                <select class="form-control" id="selectPositions" name="selectPositions">
+                                                <select class="form-control selectPositions" name="selectPositions">
                                                     <option value="0">--Select--</option>
                                                     @foreach($positions as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
@@ -405,7 +405,7 @@
                             <div class="form-group">
                                 @if ($form->getShowYear() == 'true')
                                 <label for="exampleFormYear">Year</label>
-                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                <select class="form-control selectYear" name="selectYear" required>
                                     @foreach($year as $value)
                                     <option value="{{$value->year}}">{{$value->year}}</option>
                                     @endforeach
@@ -413,7 +413,7 @@
                                 @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                <select class="form-control selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
                                     <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
@@ -421,7 +421,7 @@
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
-                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                <select class="form-control selectOfficer" name="selectOfficer">
                                     @foreach($officers as  $value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
@@ -500,28 +500,28 @@
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label for="exampleFormControlCostCentres">Cost Centres</label>
-                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                <select class="form-control selectCostCentres" name="selectCostCentres">
                                                     <option value="0">--Select--</option>
                                                     @foreach($costcentres as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlDepartments">Departments</label>
-                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                <select class="form-control selectDepartments" name="selectDepartments">
                                                     <option value="0">--Select--</option>
                                                     @foreach($departments as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlBranches">Branches</label>
-                                                <select class="form-control" id="selectBranches" name="selectBranches">
+                                                <select class="form-control selectBranches" name="selectBranches">
                                                     <option value="0">--Select--</option>
                                                     @foreach($branches as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlPositions">Positions</label>
-                                                <select class="form-control" id="selectPositions" name="selectPositions">
+                                                <select class="form-control selectPositions" name="selectPositions">
                                                     <option value="0">--Select--</option>
                                                     @foreach($positions as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
@@ -549,7 +549,7 @@
                             <div class="form-group">
                                 @if ($form->getShowYear() == 'true')
                                 <label for="exampleFormYear">Year</label>
-                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                <select class="form-control selectYear" name="selectYear" required>
                                     @foreach($year as $value)
                                     <option value="{{$value->year}}">{{$value->year}}</option>
                                     @endforeach
@@ -557,7 +557,7 @@
                                 @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                <select class="form-control selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
                                     <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
@@ -565,7 +565,7 @@
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
-                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                <select class="form-control selectOfficer" name="selectOfficer">
                                     @foreach($officers as  $value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
@@ -643,28 +643,28 @@
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label for="exampleFormControlCostCentres">Cost Centres</label>
-                                                <select class="form-control" id="selectCostCentres" name="selectCostCentres">
+                                                <select class="form-control selectCostCentres" name="selectCostCentres">
                                                     <option value="0">--Select--</option>
                                                     @foreach($costcentres as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlDepartments">Departments</label>
-                                                <select class="form-control" id="selectDepartments" name="selectDepartments">
+                                                <select class="form-control selectDepartments" name="selectDepartments">
                                                     <option value="0">--Select--</option>
                                                     @foreach($departments as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlBranches">Branches</label>
-                                                <select class="form-control" id="selectBranches" name="selectBranches">
+                                                <select class="form-control selectBranches" name="selectBranches">
                                                     <option value="0">--Select--</option>
                                                     @foreach($branches as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="exampleFormControlPositions">Positions</label>
-                                                <select class="form-control" id="selectPositions" name="selectPositions">
+                                                <select class="form-control selectPositions" name="selectPositions">
                                                     <option value="0">--Select--</option>
                                                     @foreach($positions as $key => $value)
                                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
@@ -692,7 +692,7 @@
                             <div class="form-group">
                                 @if ($form->getShowYear() == 'true')
                                 <label for="exampleFormYear">Year</label>
-                                <select class="form-control" id="selectYear" name="selectYear" required>
+                                <select class="form-control selectYear" name="selectYear" required>
                                     @foreach($year as $value)
                                     <option value="{{$value->year}}">{{$value->year}}</option>
                                     @endforeach
@@ -700,7 +700,7 @@
                                 @endif
                                 @if ($form->getShowPeriod() == 'true')
                                 <label for="exampleFormPeriod">Periods</label>
-                                <select class="form-control" id="selectPeriod" name="selectPeriod">
+                                <select class="form-control selectPeriod" name="selectPeriod">
                                     @foreach($period as $key => $value)
                                     <option value="{{$value['id']}}">{{$value['yearmonth'].'-'.$value['period_desc']}}</option>
                                     @endforeach
@@ -708,7 +708,7 @@
                                 @endif
                                 @if ($form->getShowOfficer() == 'true')
                                 <label for="exampleFormOfficer">Officer</label>
-                                <select class="form-control" id="selectOfficer" name="selectOfficer">
+                                <select class="form-control selectOfficer" name="selectOfficer">
                                     @foreach($officers as  $value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
@@ -756,7 +756,7 @@
                                 <th>
                                     <input type="checkbox" name="all_employee_list_checkbox" onclick="javascript:toggleSelectAllEmployee(this)">
                                 </th>
-                                <th>name</th>
+                                <th>Name</th>
                                 <th>IC</th>
                             </tr>
                             </thead>
