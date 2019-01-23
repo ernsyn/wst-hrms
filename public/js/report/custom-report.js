@@ -29,6 +29,7 @@ $(document).ready(function(){
     $('.employee-all').click(function() {
         //reset
         employeeList = [];
+        $('.hidden-employee-list').val('');
         $('.scroll-report').data('report-name','');
         $('.scroll-report').data('report-page',0);
     });
