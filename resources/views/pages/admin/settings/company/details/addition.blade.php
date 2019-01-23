@@ -72,8 +72,8 @@
                             <label class="col-md-12 col-form-label">Type*</label>
                             <div class="col-md-12">
                                 <select class="form-control" name="type">
-                                    <option value="fixed">Fixed</option>
-                                    <option value="custom">Custom</option>
+                                    <option value="Fixed">Fixed</option>
+                                    <option value="Custom">Custom</option>
                                 </select>
                             </div>
                             <label class="col-md-12 col-form-label">Amount</label>
@@ -203,8 +203,8 @@
                                 <label class="col-md-12 col-form-label">Type*</label>
                                 <div class="col-md-12">
                                     <select class="form-control" name="type">
-                                    <option value="fixed">Fixed</option>
-                                    <option value="custom">Custom</option>
+                                            <option value="Fixed">Fixed</option>
+                                            <option value="Custom">Custom</option>
                                 </select>
                                 </div>
                                 <label class="col-md-12 col-form-label">Amount</label>

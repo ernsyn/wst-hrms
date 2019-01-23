@@ -130,7 +130,7 @@ class SettingsController extends Controller
         $company=Company::where('id', $id)->get();
         $security = SecurityGroup::where('company_id', $id)->get();
         $addition = Addition::where('company_id', $id)->get();
-        $deductions = Deduction::where('company_id', $id)->get();
+        $deduction = Deduction::where('company_id', $id)->get();
 
         $bank_list = Bank::all();
         $ea_form = EaForm::all();
@@ -138,7 +138,7 @@ class SettingsController extends Controller
         $grade = EmployeeGrade::all();
 
         return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
-        'security'=>$security, 'addition'=>$addition,'deductions'=>$deductions, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company]);
+        'security'=>$security, 'addition'=>$addition,'deduction'=>$deduction, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company]);
     }
 
     // SECTION: Add
@@ -858,29 +858,37 @@ class SettingsController extends Controller
 
 
     public function postAddCompanyDeduction(Request $request, $id)
-    {    $validatedDeductionData = $request->validate([
-    'code' => 'required',
-    'name' => 'required',
-    'type' => 'required',
-    'amount' => 'required',
-    'statutory'=> '',
+   
+   
+   { $validatedDeductionData = $request->validate([
+        'code' => 'required',
+        'name' => 'required',
+        'type' => 'required',
+        'amount' => 'required',
+        'statutory'=> 'nullable',
+        'status'=>'required',
+        'ea_form_id' =>'required',
+        'cost_centre' => 'nullable',
+        'employee_grade' => 'nullable'
         ]);
 
-        $validatedDeductionCostCentreData = $request->validate([
-            'cost_centres'=>'required|numeric',
-        ]);
+        if(!empty($validatedDeductionData['statutory'])) $validatedDeductionData['statutory'] = implode(",", $request->statutory);
+        else $validatedDeductionData['statutory'] = null;
 
-        // dd($validatedData);
-        $validatedDeductionData['statutory'] = implode(",", $request->statutory);
-        $validatedDeductionData['status'] = 'Active';
+        $validatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
+
+        if(!empty($validatedDeductionData['cost_centre'])) $validatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
+        else $validatedDeductionData['cost_centre'] = null;
+
+        if(!empty($validatedDeductionData['employee_grade'])) $validatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
+        else $validatedDeductionData['employee_grade'] = null;
+
         $validatedDeductionData['company_id']=$id;
-    // $validatedDeductionCostCentreData['cost_centre']=$request['cost_centre'];
+
+        // dd($validatedAdditionData['employee_grade']);
 
         $deduction = Deduction::create($validatedDeductionData);
-        $deduction->cost_centres()->sync($validatedDeductionCostCentreData['cost_centres']);
-
-    //  $user->save();
-    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been added.');
+        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been added.');
     }
 
 
@@ -895,30 +903,32 @@ class SettingsController extends Controller
     public function postEditCompanyDeduction(Request $request)
     {
         $id = $request->id;
-
-        $validateDeductionData = $request->validate([
+        $updateValidatedDeductionData = $request->validate([
             'code' => 'required',
             'name' => 'required',
             'type' => 'required',
             'amount' => 'required',
-            'statutory'=> '',
-
+            'statutory'=> 'nullable',
             'status'=>'required',
             'ea_form_id' =>'required',
-
+            'cost_centre' => 'nullable',
+            'employee_grade' => 'nullable'
         ]);
 
+        if(!empty($updateValidatedDeductionData['statutory'])) $updateValidatedDeductionData['statutory'] = implode(",", $request->statutory);
+        else $updateValidatedDeductionData['statutory'] = null;
 
-        $validateDeductionData['statutory'] = implode(",", $request->statutory);
-        $validateDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
+        $updateValidatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
 
+        if(!empty($updateValidatedDeductionData['cost_centre'])) $updateValidatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
+        else $updateValidatedDeductionData['cost_centre'] = null;
 
-
-
-        $deduction =Deduction::where('id', $request->company_deduction_id)->update($validateDeductionData);
-    //  $addition->cost_centres()->sync($validatedAdditionCostCentreData['cost_centres']);
-
-    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
+        if(!empty($updateValidatedDeductionData['employee_grade'])) $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
+        else $updateValidatedDeductionData['employee_grade'] = null;
+        // dd($updateValidatedAdditionData['cost_centre']);
+        $updateValidatedDeductionData['company_id']=$id;
+        $addition =Addition::where('id', $request->company_addition_id)->update($updateValidatedDeductionData);
+        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
     }
 
     public function addCompanyAddition()
