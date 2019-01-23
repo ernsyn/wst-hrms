@@ -871,9 +871,33 @@ public function postAddPcb(Request $request)
         'total_children' =>'required|numeric',
     ]);
 
-    Pcb::create($pcbData);
+    $pcb = Pcb::where('category','=',$request->category)->whereNull('deleted_at')->count();
+    $category = Pcb::where('salary','=',$request->salary)->whereNull('deleted_at')->count();
 
-    return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
+    if($pcb == 0){
+
+        if($category ==0)
+        {
+        Pcb::create($pcbData);
+
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to added -Same Salary with Same Category');
+        }
+        
+    }
+    else 
+
+    {
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has not successfully been added.');
+
+    }
+ 
+
+
+    
 }
 
 public function editPcb(Request $request, $id) {
@@ -893,10 +917,23 @@ public function postEditPcb(Request $request, $id)
 
     ]);
 
-    Pcb::where('id', $id)->update($pcbData);
+    $category = Pcb::where('salary','=',$request->salary)->where('id','!=',$id)
+    ->whereNull('deleted_at')
+    ->count();
 
-    return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
-}
+        if($category ==0)
+        {
+            Pcb::where('id', $id)->update($pcbData);
+
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to update -Same Salary with Same Category');
+        }
+        
+    }
+
 
 
 public function displayCompanyDeduction()
