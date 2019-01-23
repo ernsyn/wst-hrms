@@ -154,7 +154,7 @@ class ELeaveController extends Controller
     // List Of Leave Public Holidays List
     public function displayPublicHolidays()
     {
-        $holiday = Holiday::all();
+        $holiday = Holiday::orderBy('start_date', 'ASC')->get();
 
         $now = Carbon::now();
 
