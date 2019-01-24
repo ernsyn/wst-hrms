@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($additions as $additions)
+                    @foreach($addition as $additions)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$additions['code']}}</td>
@@ -31,8 +31,10 @@
                         <td><button type="button" class="btn btn-success btn-smt" data-toggle="modal"
                                 data-addition-id="{{$additions['id']}}" data-addition-code="{{$additions['code']}}"
                                 data-addition-name="{{$additions['name']}}" data-addition-type="{{$additions['type']}}"
-                                data-addition-amount="{{$additions['amount']}}" data-addition-confirmed_employee="{{$additions['confirmed_employee']}}"
-                                data-addition-status="{{$additions['status']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button>
+                                data-addition-amount="{{$additions['amount']}}" data-addition-status="{{$additions['status']}}"
+                                data-addition-confirmed_employee="{{$additions['confirmed_employee']}}" data-addition-statutory="{{$additions['statutory']}}"
+                                data-addition-eaform="{{$additions['ea_form_id']}}" data-addition-cost_centre="{{$additions['cost_centre']}}"
+                                data-addition-employee_grade="{{$additions['employee_grade']}}" data-target="#editCompanyAdditionPopup"><i class="fas fa-edit"></i></button>
                         </td>
                     </tr>
                     @endforeach
@@ -53,7 +55,7 @@
             </div>
             <div class="modal-body">
                 @foreach($company as $company_addition)
-                <form method="POST" action="{{ route('admin.settings.additions.add.post', ['id' => $company_addition->id])}} " id="add_company_addition">
+                <form method="POST" action="{{ route('admin.settings.additions.add.post', ['id' => $company_addition->id])}} " id="add-company-addition-form">
                     @endforeach @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">
@@ -69,21 +71,20 @@
                             </div>
                             <label class="col-md-12 col-form-label">Type*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="type" name="type" onchange="myFunction(event)">
+                                <select class="form-control" name="type">
                                     <option value="Fixed">Fixed</option>
                                     <option value="Custom">Custom</option>
                                 </select>
                             </div>
                             <label class="col-md-12 col-form-label">Amount</label>
                             <div class="col-md-12">
-                                <input id="amount" type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                    disabled="true">
+                                <input type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="0" readonly required>
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
                                 <select class="form-control" id="status" name="status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
                                 </select>
                             </div>
                             <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
@@ -123,40 +124,40 @@
                             <label class="col-md-12 col-form-label">Applies To</label>
                             <div class="checkbox col-md-12">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="check_cost_centre" name="applies[]">
+                                    <input type="checkbox" class="form-check-input" name="check_cost_centre">
                                     <label class="form-check-label">Cost Centre</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="check_job_grade" name="applies[]">
-                                    <label class="form-check-label">Job Grade</label>
+                                    <input type="checkbox" class="form-check-input" name="check_job_grade">
+                                    <label class="form-check-label">Employee Grade</label>
                                 </div>
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centres"
+                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centre[]"
                                     required disabled>
                                     @foreach(App\CostCentre::all() as $cost_centre)
                                     <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
                                     @endforeach
                                 </select>
-                                @if ($errors->has('cost_centres'))
+                                @if ($errors->has('cost_centrs'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('cost_centres') }}</strong>
+                                    <strong>{{ $errors->first('cost_centre') }}</strong>
                                 </span>
                                 @endif
 
                             </div>
-                            <label class="col-md-12 col-form-label">Job Grade</label>
+                            <label class="col-md-12 col-form-label">Employee Grade</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade" name="job_grade[]"
+                                <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="job_grade" name="employee_grade[]"
                                     required disabled>
                                     @foreach(App\EmployeeGrade::all() as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                     @endforeach
                                 </select>
-                                @if ($errors->has('name'))
+                                @if ($errors->has('employee_grade'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
+                                    <strong>{{ $errors->first('employee_grade') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -184,43 +185,42 @@
             <div class="modal-body">
                 <div class="modal-body">
                     @foreach($company as $company_addition)
-                    <form method="POST" action="{{ route('admin.settings.company-addition.edit.post', ['id' => $company_addition->id])}} " id="add_company_addition">
-                        @endforeach @csrf
+                    <form method="POST" action="{{ route('admin.settings.company-addition.edit.post', ['id' => $company_addition->id])}} " id="edit-company-addition-form">
+                        @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
-                                <input id="company_addition_id" name="company_addition_id" type="hidden">
+                                <input name="company_addition_id" type="hidden">
                                 <label class="col-md-12 col-form-label">Code*</label>
                                 <div class="col-md-12">
-                                    <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
+                                    <input type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
                                         required>
                                 </div>
                                 <label class="col-md-12 col-form-label">Name*</label>
                                 <div class="col-md-12">
-                                    <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
+                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
                                         required>
                                 </div>
                                 <label class="col-md-12 col-form-label">Type*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="type" name="type">
-                                    <option value="Fixed">Fixed</option>
-                                    <option value="Custom">Custom</option>
+                                    <select class="form-control" name="type">
+                                            <option value="Fixed">Fixed</option>
+                                            <option value="Custom">Custom</option>
                                 </select>
                                 </div>
                                 <label class="col-md-12 col-form-label">Amount</label>
                                 <div class="col-md-12">
-                                    <input id="amount" type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}"
-                                        disabled="true">
+                                    <input type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}" required>
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="status" name="status" value="{{ old('status') }}">
+                                    <select class="form-control" name="status" value="{{ old('status') }}">
                                                 <option value="active">Active</option>
                                                 <option value="inactive">Inactive</option>
                                             </select>
                                 </div>
                                 <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" id="confirmed_employee" name="confirmed_employee">
+                                    <select class="form-control" name="confirmed_employee">
                                             <option value="1">Confirmed Employee</option>
                                             <option value="0">Not Related</option>
                                         </select>
@@ -228,25 +228,25 @@
                                 <label class="col-md-12 col-form-label">Statutory</label>
                                 <div class="checkbox col-md-12">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory[]" name="statutory[]" value="PCB" {!! strpos($additions,'PCB') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="updateAdditionPCB" name="statutory[]" value="PCB">
                                         <label class="form-check-label">PCB</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory[]" name="statutory[]" value="EPF" {!! strpos($additions,'EPF') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="updateAdditionEPF" name="statutory[]" value="EPF">
                                         <label class="form-check-label">EPF</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory[]" name="statutory[]" value="SOCSO" {!! strpos($additions,'SOCSO') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="updateAdditionSOCSO" name="statutory[]" value="SOCSO">
                                         <label class="form-check-label">SOCSO</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="statutory[]" name="statutory[]" value="EIS" {!! strpos($additions,'EIS') !== false ? 'checked':'' !!}>
+                                        <input type="checkbox" class="form-check-input" id="updateAdditionEIS" name="statutory[]" value="EIS">
                                         <label class="form-check-label">EIS</label>
                                     </div>
                                 </div>
                                 <label class="col-md-12 col-form-label">EA Form*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id" value="{{ old('ea_form_id') }}">
+                                    <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" value="">
                                         @foreach($ea_form as $item)
                                         <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
                                         @endforeach
@@ -255,39 +255,39 @@
                                 <label class="col-md-12 col-form-label">Applies To</label>
                                 <div class="checkbox col-md-12">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="check_cost_centre_a" name="applies[]">
+                                        <input type="checkbox" class="form-check-input" name="check_cost_centre">
                                         <label class="form-check-label">Cost Centre</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="check_job_grade_a" name="applies[]">
-                                        <label class="form-check-label">Job Grade</label>
+                                        <input type="checkbox" class="form-check-input" name="check_job_grade">
+                                        <label class="form-check-label">Employee Grade</label>
                                     </div>
                                 </div>
                                 <label class="col-md-12 col-form-label">Cost Centre</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('cost_centres') ? ' is-invalid' : '' }}" id="cost_centre_a"
-                                        name="cost_centres" required disabled>
+                                    <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="update_cost_centre"
+                                        name="cost_centre[]" required disabled>
                                         @foreach(App\CostCentre::all() as $cost_centre)
                                         <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('cost_centres'))
+                                    @if ($errors->has('cost_centre'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('cost_centres') }}</strong>
+                                        <strong>{{ $errors->first('cost_centre') }}</strong>
                                     </span>
                                     @endif
                                 </div>
-                                <label class="col-md-12 col-form-label">Job Grade</label>
+                                <label class="col-md-12 col-form-label">Employee Grade</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('job_grade') ? ' is-invalid' : '' }}" id="job_grade_a" name="job_grade[]"
+                                    <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="update_job_grade" name="employee_grade[]"
                                         required disabled>
                                         @foreach(App\EmployeeGrade::all() as $grade)
                                         <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('name'))
+                                    @if ($errors->has('employee_grade'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('employee_grade') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -298,6 +298,7 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </form>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -336,6 +337,125 @@
                 titleAttr: 'Print'
             },
         ]
+    });
+
+
+    $(function(){
+        var addCostCentre = $('#add-company-addition-form #cost_centre').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        var editCostCentre = $('#edit-company-addition-form #update_cost_centre').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+
+    //update addition
+        $('#editCompanyAdditionPopup').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('addition-id');
+            var code = button.data('addition-code');
+            var name = button.data('addition-name');
+            var type = button.data('addition-type');
+            var amount = button.data('addition-amount');
+            var status = button.data('addition-status');
+            var confirmed_employee = button.data('addition-confirmed_employee');
+            var statutory = button.data('addition-statutory');
+            var eaform = button.data('addition-eaform');
+            var cost_centre = button.data('addition-cost_centre').split(',');
+            var employee_grade = button.data('addition-employee_grade');
+
+            console.log(cost_centre);
+
+            $('#edit-company-addition-form input[name=company_addition_id]').val(id);
+            $('#edit-company-addition-form input[name=code]').val(code);
+            $('#edit-company-addition-form input[name=name]').val(name);
+            $('#edit-company-addition-form select[name=type]').val(type);
+            $('#edit-company-addition-form input[name=amount]').val(amount);
+            if(type=="custom") $('#edit-company-addition-form input[name=amount]').attr('readonly',false);
+            else  $('#edit-company-addition-form input[name=amount]').attr('readonly',true);
+
+            $('#edit-company-addition-form select[name=status]').val(status);
+            $('#edit-company-addition-form select[name=confirmed_employee]').val(confirmed_employee);
+
+            if(statutory.includes('PCB')) $('#edit-company-addition-form #updateAdditionPCB').prop("checked", true);
+            else $('#edit-company-addition-form #updateAdditionPCB').prop("checked", false);
+
+            if(statutory.includes('EPF')) $('#edit-company-addition-form #updateAdditionEPF').prop("checked", true);
+            else $('#edit-company-addition-form #updateAdditionEPF').prop("checked", false);
+
+            if(statutory.includes('SOCSO')) $('#edit-company-addition-form #updateAdditionSOCSO').prop("checked", true);
+            else $('#edit-company-addition-form #updateAdditionSOCSO').prop("checked", false);
+
+            if(statutory.includes('EIS')) $('#edit-company-addition-form #updateAdditionEIS').prop("checked", true);
+            else $('#edit-company-addition-form #updateAdditionEIS').prop("checked", false);
+
+            $('#edit-company-addition-form select[name=ea_form_id]').val(eaform);
+
+            if(cost_centre != '') {
+                $('#edit-company-addition-form input[name=check_cost_centre]').prop("checked", true);
+                editCostCentre[0].selectize.enable();
+            } else {
+                $('#edit-company-addition-form input[name=check_cost_centre]').prop("checked", false);
+                editCostCentre[0].selectize.disable();
+            }
+
+            editCostCentre[0].selectize.setValue(cost_centre);
+        });
+
+        // add
+        $('#add-company-addition-form select[name=type]').change(function() {
+            if( $(this).val() == "custom") {
+                $('#add-company-addition-form input[name=amount]').prop("readonly", false );
+                $('#add-company-addition-form input[name=amount]').val("");
+            } else {
+                $('#add-company-addition-form input[name=amount]').prop("readonly", true );
+                $('#add-company-addition-form input[name=amount]').val("0");
+            }
+        });
+
+        $('#add-company-addition-form input[name=check_cost_centre]').change(function () {
+            if ($('input[name=check_cost_centre]:checked').length) {
+                addCostCentre[0].selectize.enable();
+            } else {
+                // $('#add-company-addition-form #cost_centre').prop('disabled', true);
+                addCostCentre[0].selectize.disable();
+            }
+        });
+
+        $('#add-company-addition-form input[name=check_job_grade]').change(function () {
+            if ($('input[name=check_job_grade]:checked').length) {
+                $('#job_grade').prop('disabled', false);
+            } else {
+                $('#job_grade').prop('disabled', true);
+            }
+        });
+
+        // edit
+        $('#edit-company-addition-form select[name=type]').change(function() {
+            if( $(this).val() == "custom") {
+                $('#edit-company-addition-form input[name=amount]').prop("readonly", false );
+                $('#edit-company-addition-form input[name=amount]').val("");
+            } else {
+                $('#edit-company-addition-form input[name=amount]').prop("readonly", true );
+                $('#edit-company-addition-form input[name=amount]').val("0");
+            }
+        });
+        $('#edit-company-addition-form input[name=check_cost_centre]').change(function () {
+            if ($('input[name=check_cost_centre]:checked').length) {
+                editCostCentre[0].selectize.enable();
+            } else {
+                editCostCentre[0].selectize.disable();
+            }
+        });
+
+        $('#edit-company-addition-form input[name=check_job_grade]').change(function () {
+            if ($('input[name=check_job_grade]:checked').length) {
+                $('#update_job_grade').prop('disabled', false);
+            } else {
+                $('#update_job_grade').prop('disabled', true);
+            }
+        });
     });
 </script>
 @append
