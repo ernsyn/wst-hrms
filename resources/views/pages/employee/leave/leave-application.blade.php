@@ -455,12 +455,18 @@
         // submit leave request ) (add/edit mode)
         $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
             e.preventDefault();
-
-            $('#add-leave-request-form .progress').attr('hidden', false);
+            $('#error-message').prop('hidden', true);
 
             var file = document.querySelector('input[name=required-attachment]').files[0];
 
-            console.log(file);
+            if(attachmentRequired && !file) {
+                $('#error-message').text('Attachement is required!');
+                $('#error-message').prop('hidden', false);
+
+                return false;
+            }
+
+            $('#add-leave-request-form .progress').attr('hidden', false);
 
             if($("#mode").val() == "add") {
                 var data = {
