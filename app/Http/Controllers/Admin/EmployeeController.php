@@ -125,7 +125,7 @@ class EmployeeController extends Controller
         $updatepictureData['data']= $attach['data'];
         $updatepictureData['size']= $attach['size'];
         $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
-        Media::where('id', $id)->update($updatepictureData);
+        Media::find($id)->update($updatepictureData);
 
 
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
@@ -453,68 +453,62 @@ class EmployeeController extends Controller
 
         $attachment_data_url = $validated['attach'];
 
-        if(!empty($attachment_data_url)){
-            $attach = self::processBase64DataUrl($attachment_data_url);
-            $mediaData = Media::create([
-                'category' => 'employee-profile',
-                'mimetype' => $attach['mime_type'],
-                'data' => $attach['data'],
-                'size' => $attach['size'],
-                'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
-            ]);
-        } else {
-            $mediaData = Media::create([
-                'category' => null,
-                'mimetype' => null,
-                'data' => null,
-                'size' => 0,
-                'filename' => null
-            ]);
-        }
 
-        $media_id = DB::getPdo()->lastInsertId();
+        DB::transaction(function () use ($attachment_data_url, $validated) {
+            // $validatedUserData['profile_media_id'] = $media_id;
 
-        // dd($media_id);
+            // $validatedUserData['profile_media_id'] = $mediaData->id;
 
-        $validatedUserData['profile_media_id'] = $media_id;
+            $validatedUserData['name'] = $validated['name'];
+            $validatedUserData['email'] = $validated['email'];
+            $validatedUserData['password'] = Hash::make($validated['password']);
 
-        // $validatedUserData['profile_media_id'] = $mediaData->id;
+            $validatedEmployeeData['code'] = $validated['code'];
+            $validatedEmployeeData['contact_no'] = $validated['contact_no'];
+            $validatedEmployeeData['address'] = $validated['address'];
+            $validatedEmployeeData['address2'] = $validated['address2'];
+            $validatedEmployeeData['address3'] = $validated['address3'];
+            $validatedEmployeeData['company_id'] = $validated['company_id'];
+            $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
+            $validatedEmployeeData['gender'] = $validated['gender'];
+            $validatedEmployeeData['race'] = $validated['race'];
+            $validatedEmployeeData['nationality'] = $validated['nationality'];
+            $validatedEmployeeData['marital_status'] = $validated['marital_status'];
+            $validatedEmployeeData['total_children'] = $validated['total_children'];
+            $validatedEmployeeData['ic_no'] = $validated['ic_no'];
+            $validatedEmployeeData['tax_no'] = $validated['tax_no'];
+            $validatedEmployeeData['epf_no'] = $validated['epf_no'];
+            $validatedEmployeeData['eis_no'] = $validated['eis_no'];
+            $validatedEmployeeData['socso_no'] = $validated['socso_no'];
+            $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
+            $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
+            if($validatedEmployeeData['driver_license_expiry_date']==='') {
+                $validatedEmployeeData['driver_license_expiry_date'] = null;
+            }
+            $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
-        $validatedUserData['name'] = $validated['name'];
-        $validatedUserData['email'] = $validated['email'];
-        $validatedUserData['password'] = Hash::make($validated['password']);
+            // $validatedEmployeeData = $request->validate([
+            // ]);
+            // dd($validatedEmployeeData);
 
-        $validatedEmployeeData['code'] = $validated['code'];
-        $validatedEmployeeData['contact_no'] = $validated['contact_no'];
-        $validatedEmployeeData['address'] = $validated['address'];
-        $validatedEmployeeData['address2'] = $validated['address2'];
-        $validatedEmployeeData['address3'] = $validated['address3'];
-        $validatedEmployeeData['company_id'] = $validated['company_id'];
-        $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
-        $validatedEmployeeData['gender'] = $validated['gender'];
-        $validatedEmployeeData['race'] = $validated['race'];
-        $validatedEmployeeData['nationality'] = $validated['nationality'];
-        $validatedEmployeeData['marital_status'] = $validated['marital_status'];
-        $validatedEmployeeData['total_children'] = $validated['total_children'];
-        $validatedEmployeeData['ic_no'] = $validated['ic_no'];
-        $validatedEmployeeData['tax_no'] = $validated['tax_no'];
-        $validatedEmployeeData['epf_no'] = $validated['epf_no'];
-        $validatedEmployeeData['eis_no'] = $validated['eis_no'];
-        $validatedEmployeeData['socso_no'] = $validated['socso_no'];
-        $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
-        $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
-        if($validatedEmployeeData['driver_license_expiry_date']==='') {
-            $validatedEmployeeData['driver_license_expiry_date'] = null;
-        }
-        $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
-        // $validatedEmployeeData = $request->validate([
-        // ]);
-        // dd($validatedEmployeeData);
-
-        DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
+
+            if(!empty($attachment_data_url)){
+                $attach = self::processBase64DataUrl($attachment_data_url);
+
+                $profileMedia = Media::create([
+                    'category' => 'employee-profile',
+                    'mimetype' => $attach['mime_type'],
+                    'data' => $attach['data'],
+                    'size' => $attach['size'],
+                    'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
+                ]);
+ 
+                $user->profile_media()->associate($profileMedia);
+                $user->save();
+            }
 
             $validatedEmployeeData['user_id'] = $user->id;
             $validatedEmployeeData['created_by'] = auth()->user()->id;
