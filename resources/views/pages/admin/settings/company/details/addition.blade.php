@@ -128,7 +128,7 @@
                                     <label class="form-check-label">Cost Centre</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="check_job_grade">
+                                    <input type="checkbox" class="form-check-input" name="check_employee_grade">
                                     <label class="form-check-label">Employee Grade</label>
                                 </div>
                             </div>
@@ -149,7 +149,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Employee Grade</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="job_grade" name="employee_grade[]"
+                                <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="employee_grade" name="employee_grade[]"
                                     required disabled>
                                     @foreach(App\EmployeeGrade::all() as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -203,8 +203,8 @@
                                 <label class="col-md-12 col-form-label">Type*</label>
                                 <div class="col-md-12">
                                     <select class="form-control" name="type">
-                                            <option value="Fixed">Fixed</option>
-                                            <option value="Custom">Custom</option>
+                                            <option value="fixed">Fixed</option>
+                                            <option value="custom">Custom</option>
                                 </select>
                                 </div>
                                 <label class="col-md-12 col-form-label">Amount</label>
@@ -259,7 +259,7 @@
                                         <label class="form-check-label">Cost Centre</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="check_job_grade">
+                                        <input type="checkbox" class="form-check-input" name="check_employee_grade">
                                         <label class="form-check-label">Employee Grade</label>
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Employee Grade</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="update_job_grade" name="employee_grade[]"
+                                    <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="update_employee_grade" name="employee_grade[]"
                                         required disabled>
                                         @foreach(App\EmployeeGrade::all() as $grade)
                                         <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -342,11 +342,16 @@
 
     $(function(){
         var addCostCentre = $('#add-company-addition-form #cost_centre').selectize({
-            plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
         var editCostCentre = $('#edit-company-addition-form #update_cost_centre').selectize({
-            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+
+        var addEmployeeGrade = $('#add-company-addition-form #employee_grade').selectize({
+            sortField: 'text'
+        });
+        var editEmployeeGrade = $('#edit-company-addition-form #update_employee_grade').selectize({
             sortField: 'text'
         });
 
@@ -362,10 +367,8 @@
             var confirmed_employee = button.data('addition-confirmed_employee');
             var statutory = button.data('addition-statutory');
             var eaform = button.data('addition-eaform');
-            var cost_centre = button.data('addition-cost_centre').split(',');
+            var cost_centre = button.data('addition-cost_centre');
             var employee_grade = button.data('addition-employee_grade');
-
-            console.log(cost_centre);
 
             $('#edit-company-addition-form input[name=company_addition_id]').val(id);
             $('#edit-company-addition-form input[name=code]').val(code);
@@ -400,7 +403,23 @@
                 editCostCentre[0].selectize.disable();
             }
 
-            editCostCentre[0].selectize.setValue(cost_centre);
+
+            if(employee_grade != '') {
+                $('#edit-company-addition-form input[name=check_employee_grade]').prop("checked", true);
+                editEmployeeGrade[0].selectize.enable();
+            } else {
+                $('#edit-company-addition-form input[name=check_employee_grade]').prop("checked", false);
+                editEmployeeGrade[0].selectize.disable();
+            }
+
+
+            if(isNaN(cost_centre)) editCostCentre[0].selectize.setValue(cost_centre.split(','));
+            else  editCostCentre[0].selectize.setValue(cost_centre);
+
+
+            if(isNaN(employee_grade)) editEmployeeGrade[0].selectize.setValue(employee_grade.split(','));
+            else  editEmployeeGrade[0].selectize.setValue(employee_grade);
+
         });
 
         // add
@@ -423,11 +442,11 @@
             }
         });
 
-        $('#add-company-addition-form input[name=check_job_grade]').change(function () {
-            if ($('input[name=check_job_grade]:checked').length) {
-                $('#job_grade').prop('disabled', false);
+        $('#add-company-addition-form input[name=check_employee_grade]').change(function () {
+            if ($('input[name=check_employee_grade]:checked').length) {
+                addEmployeeGrade[0].selectize.enable();
             } else {
-                $('#job_grade').prop('disabled', true);
+                addEmployeeGrade[0].selectize.disable();
             }
         });
 
@@ -449,11 +468,11 @@
             }
         });
 
-        $('#edit-company-addition-form input[name=check_job_grade]').change(function () {
-            if ($('input[name=check_job_grade]:checked').length) {
-                $('#update_job_grade').prop('disabled', false);
+        $('#edit-company-addition-form input[name=check_employee_grade]').change(function () {
+            if ($('input[name=check_employee_grade]:checked').length) {
+                editEmployeeGrade[0].selectize.enable();
             } else {
-                $('#update_job_grade').prop('disabled', true);
+                editEmployeeGrade[0].selectize.disable();
             }
         });
     });
