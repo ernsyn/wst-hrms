@@ -61,12 +61,12 @@
                         <div class="col-xl-8">
                             <label class="col-md-12 col-form-label">Code*</label>
                             <div class="col-md-12">
-                                <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
+                                <input type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}"
                                     required>
                             </div>
                             <label class="col-md-12 col-form-label">Name*</label>
                             <div class="col-md-12">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
+                                <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
                                     required>
                             </div>
                             <label class="col-md-12 col-form-label">Type*</label>
@@ -82,14 +82,14 @@
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="status" name="status">
+                                <select class="form-control" name="status">
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
                             </div>
                             <label class="col-md-12 col-form-label">Applies To (Employment Status)*</label>
                             <div class="col-md-12">
-                                <select class="form-control" id="confirmed_employee" name="confirmed_employee">
+                                <select class="form-control" name="confirmed_employee">
                                     <option value="1">Confirmed Employee</option>
                                     <option value="0">Not Related</option>
                                 </select>
@@ -97,25 +97,25 @@
                             <label class="col-md-12 col-form-label">Statutory</label>
                             <div class="checkbox col-md-12">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="inlineCheckbox1" name="statutory[]" value="PCB">
+                                    <input type="checkbox" class="form-check-input" name="statutory[]" value="PCB">
                                     <label class="form-check-label">PCB</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="inlineCheckbox2" name="statutory[]" value="EPF">
+                                    <input type="checkbox" class="form-check-input" name="statutory[]" value="EPF">
                                     <label class="form-check-label">EPF</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="inlineCheckbox3" name="statutory[]" value="SOCSO">
+                                    <input type="checkbox" class="form-check-input" name="statutory[]" value="SOCSO">
                                     <label class="form-check-label">SOCSO</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="inlineCheckbox4" name="statutory[]" value="EIS">
+                                    <input type="checkbox" class="form-check-input" name="statutory[]" value="EIS">
                                     <label class="form-check-label">EIS</label>
                                 </div>
                             </div>
                             <label class="col-md-12 col-form-label">EA Form*</label>
                             <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id">
+                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id">
                                 @foreach($ea_form as $item)
                                 <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
                                 @endforeach
@@ -134,7 +134,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Cost Centre</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="cost_centre" name="cost_centre[]"
+                                <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="cost_centre_addition" name="cost_centre[]"
                                     required disabled>
                                     @foreach(App\CostCentre::all() as $cost_centre)
                                     <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
@@ -149,7 +149,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Employee Grade</label>
                             <div class="col-md-12">
-                                <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="employee_grade" name="employee_grade[]"
+                                <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="employee_grade_addition" name="employee_grade[]"
                                     required disabled>
                                     @foreach(App\EmployeeGrade::all() as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -265,7 +265,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Cost Centre</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="update_cost_centre"
+                                    <select multiple class="tagsinput form-control{{ $errors->has('cost_centre') ? ' is-invalid' : '' }}" id="update_cost_centre_addition"
                                         name="cost_centre[]" required disabled>
                                         @foreach(App\CostCentre::all() as $cost_centre)
                                         <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
@@ -279,7 +279,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Employee Grade</label>
                                 <div class="col-md-12">
-                                    <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="update_employee_grade" name="employee_grade[]"
+                                    <select multiple class="tagsinput form-control{{ $errors->has('employee_grade') ? ' is-invalid' : '' }}" id="update_employee_grade_addition" name="employee_grade[]"
                                         required disabled>
                                         @foreach(App\EmployeeGrade::all() as $grade)
                                         <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -341,17 +341,17 @@
 
 
     $(function(){
-        var addCostCentre = $('#add-company-addition-form #cost_centre').selectize({
+        var addCostCentre = $('#add-company-addition-form #cost_centre_addition').selectize({
             sortField: 'text'
         });
-        var editCostCentre = $('#edit-company-addition-form #update_cost_centre').selectize({
+        var editCostCentre = $('#edit-company-addition-form #update_cost_centre_addition').selectize({
             sortField: 'text'
         });
 
-        var addEmployeeGrade = $('#add-company-addition-form #employee_grade').selectize({
+        var addEmployeeGrade = $('#add-company-addition-form #employee_grade_addition').selectize({
             sortField: 'text'
         });
-        var editEmployeeGrade = $('#edit-company-addition-form #update_employee_grade').selectize({
+        var editEmployeeGrade = $('#edit-company-addition-form #update_employee_grade_addition').selectize({
             sortField: 'text'
         });
 
@@ -403,7 +403,6 @@
                 editCostCentre[0].selectize.disable();
             }
 
-
             if(employee_grade != '') {
                 $('#edit-company-addition-form input[name=check_employee_grade]').prop("checked", true);
                 editEmployeeGrade[0].selectize.enable();
@@ -412,10 +411,8 @@
                 editEmployeeGrade[0].selectize.disable();
             }
 
-
             if(isNaN(cost_centre)) editCostCentre[0].selectize.setValue(cost_centre.split(','));
             else  editCostCentre[0].selectize.setValue(cost_centre);
-
 
             if(isNaN(employee_grade)) editEmployeeGrade[0].selectize.setValue(employee_grade.split(','));
             else  editEmployeeGrade[0].selectize.setValue(employee_grade);
@@ -437,7 +434,6 @@
             if ($('input[name=check_cost_centre]:checked').length) {
                 addCostCentre[0].selectize.enable();
             } else {
-                // $('#add-company-addition-form #cost_centre').prop('disabled', true);
                 addCostCentre[0].selectize.disable();
             }
         });

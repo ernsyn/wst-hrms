@@ -855,21 +855,18 @@ class SettingsController extends Controller
         return view('pages.admin.settings.add-deduction');
     }
 
-
-
     public function postAddCompanyDeduction(Request $request, $id)
-   
-   
-   { $validatedDeductionData = $request->validate([
-        'code' => 'required',
-        'name' => 'required',
-        'type' => 'required',
-        'amount' => 'required',
-        'statutory'=> 'nullable',
-        'status'=>'required',
-        'ea_form_id' =>'required',
-        'cost_centre' => 'nullable',
-        'employee_grade' => 'nullable'
+    {
+        $validatedDeductionData = $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'type' => 'required',
+            'amount' => 'required',
+            'statutory'=> 'nullable',
+            'status'=>'required',
+            'ea_form_id' =>'required',
+            'cost_centre' => 'nullable',
+            'employee_grade' => 'nullable'
         ]);
 
         if(!empty($validatedDeductionData['statutory'])) $validatedDeductionData['statutory'] = implode(",", $request->statutory);
@@ -891,12 +888,8 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been added.');
     }
 
-
-
-
     public function editCompanyDeduction(Request $request, $id) {
         $deduction = Deduction::find($id);
-
         return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
     }
 
@@ -925,9 +918,8 @@ class SettingsController extends Controller
 
         if(!empty($updateValidatedDeductionData['employee_grade'])) $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
         else $updateValidatedDeductionData['employee_grade'] = null;
-        // dd($updateValidatedAdditionData['cost_centre']);
         $updateValidatedDeductionData['company_id']=$id;
-        $addition =Addition::where('id', $request->company_addition_id)->update($updateValidatedDeductionData);
+        Deduction::where('id', $request->company_deduction_id)->update($updateValidatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
     }
 
@@ -935,7 +927,6 @@ class SettingsController extends Controller
     {
         return view('pages.admin.settings.add-addition');
     }
-
 
     public function postAddCompanyAddition(Request $request, $id)
     {
@@ -1001,11 +992,11 @@ class SettingsController extends Controller
 
         if(!empty($updateValidatedAdditionData['employee_grade'])) $updateValidatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
         else $updateValidatedAdditionData['employee_grade'] = null;
-        // dd($updateValidatedAdditionData['cost_centre']);
         $updateValidatedAdditionData['company_id']=$id;
-        $addition =Addition::where('id', $request->company_addition_id)->update($updateValidatedAdditionData);
+        Addition::where('id', $request->company_addition_id)->update($updateValidatedAdditionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Addition Group has successfully been updated.');
     }
+
     public function addCompanyBank($id)
     {
         return redirect()->route('admin.settings.company-banks.add');
