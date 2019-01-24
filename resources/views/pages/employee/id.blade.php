@@ -309,7 +309,7 @@
                     </div>
                         <div class="col-md-12 mb-3">
                                     <label for="main-security-group-id"><strong>Security Group Id*</strong></label>
-                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id" readonly>
+                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id" disabled="true">
                                         <option value=""></option>
                                         @foreach(App\SecurityGroup::all() as $company)
                                         <option value="{{ $company->id }}">{{ $company->name }}</option>

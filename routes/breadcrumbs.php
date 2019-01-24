@@ -61,7 +61,7 @@ Breadcrumbs::for('register_employee4', function ($trail) {
 
 Breadcrumbs::for('admin.e-leave.configuration.leave-requests', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Leave History', route('admin.e-leave.configuration.leave-requests'));
+    $trail->push('Leave Request', route('admin.e-leave.configuration.leave-requests'));
 });
 
 Breadcrumbs::for('admin.e-leave.leave-application', function ($trail) {
