@@ -229,6 +229,7 @@ return [
         'StatusEnum' => App\Enums\StatusEnum::class,
         'AttendanceEnum' => App\Enums\AttendanceEnum::class,
         'PCBGroupEnum' => App\Enums\PCBGroupEnum::class,
+        'EisCategoryEnum' => App\Enums\EisCategoryEnum::class,
 
     ],
 

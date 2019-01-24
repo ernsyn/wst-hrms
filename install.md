@@ -29,6 +29,12 @@ php artisan db:seed --class=DatabaseSeeder
 # Import EPF schedule from csv #
 load data local infile '/data/www/wst-hrms/database/seeds/epf.csv' into table epfs fields terminated by ',';
 
+# Import EIS schedule from csv #
+load data local infile '/data/www/wst-hrms/database/seeds/eis.csv' into table eis fields terminated by ',' set created_at=now(), deleted_at=null;
+
+# Import SOCSO schedule from csv #
+load data local infile '/data/www/wst-hrms/database/seeds/socso.csv' into table socsos fields terminated by ',' set created_at=now(), deleted_at=null;
+
 # Import PCB Schedule #
 php artisan tinker
 app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-2-50.xlsx',3]);

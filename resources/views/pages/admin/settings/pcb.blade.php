@@ -25,9 +25,9 @@
                     <tr>
                         <th>No</th>
                         <th>Category</th>
-                        <th>Salary</th>
+                        <th>Salary (RM)</th>
                         <th>Number of Children</th>
-                        <th>Amount</th>
+                        <th>Amount (RM)</th>
                         <th>Action</th>
                     </tr>
                 </thead>

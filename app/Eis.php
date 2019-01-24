@@ -8,10 +8,9 @@ class Eis extends Model
 {
     use SoftDeletes;
     protected $table = 'eis';
-   
 
     protected $fillable = [
-        'employer','employee','salary'
+        'category', 'employer', 'employee', 'salary'
     ];
 
     protected $dates = ['deleted_at'];

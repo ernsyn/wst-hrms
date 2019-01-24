@@ -19,8 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AdditionTableSeeder::class);
         $this->call(DeductionTableSeeder::class);
         $this->call(EaFormSeederTable::class);
-        $this->call(EisTableSeeder::class);
         $this->call(PayrollSetupTableSeeder::class);
-        $this->call(SocsoTableSeeder::class);
+
     }
 }

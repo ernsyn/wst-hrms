@@ -43,6 +43,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use App\Enums\EisCategoryEnum;
 
 class SettingsController extends Controller
 {
@@ -123,8 +124,7 @@ class SettingsController extends Controller
 
     public function displayPcb()
     {
-        $pcbs = Pcb::all();
-        return view('pages.admin.settings.pcb', ['pcbs' => $pcbs]);
+        return view('pages.admin.settings.pcb');
     }
 
     public function displayCompanyDetails(Request $request)
@@ -733,15 +733,17 @@ class SettingsController extends Controller
 
     public function addEis()
     {
-        return view('pages.admin.settings.add-eis');
+        $category = EisCategoryEnum::choices();
+        return view('pages.admin.settings.add-eis', ['category' => $category]);
     }
 
     public function postAddEis(Request $request)
     {
         $eisData = $request->validate([
+            'category' => 'required',
             'salary' => 'required|numeric',
-            'employer' => 'required',
-            'employee' => 'required'
+            'employer' => 'required|numeric',
+            'employee' => 'required|numeric'
         ]);
 
         Eis::create($eisData);
@@ -752,19 +754,21 @@ class SettingsController extends Controller
     public function editEis(Request $request, $id)
     {
         $eis = Eis::find($id);
-
+        $category = EisCategoryEnum::choices();
+        
         return view('pages.admin.settings.edit-eis', [
-            'eis' => $eis
+            'eis' => $eis,
+            'category' => $category
         ]);
     }
 
     public function postEditEis(Request $request, $id)
     {
         $eisData = $request->validate([
-
+            'category' => 'required',
             'salary' => 'required|numeric',
-            'employer' => 'required',
-            'employee' => 'required'
+            'employer' => 'required|numeric',
+            'employee' => 'required|numeric'
         ]);
 
         Eis::where('id', $id)->update($eisData);
