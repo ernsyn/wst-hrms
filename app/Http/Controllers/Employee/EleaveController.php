@@ -821,13 +821,13 @@ class ELeaveController extends Controller
 
         }
 
-            public function postDisapproved(Request $request)
-            {          
-    
-                $id = $request->input('id');     
-                $emp_id = $request->input('emp_id');    
-                $leave_type_id = $request->input('leave_type_id');   
-                $total_days =$request->input('total_days');  
+        public function postDisapproved(Request $request)
+        {          
+
+            $id = $request->input('id');     
+            $emp_id = $request->input('emp_id');    
+            $leave_type_id = $request->input('leave_type_id');   
+            $total_days =$request->input('total_days');  
 
             $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
             ->where('leave_type_id',$leave_type_id)->first()->spent_days;
@@ -838,17 +838,17 @@ class ELeaveController extends Controller
             $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
 
-                LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
-                $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+            LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
+            $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
 
 
-                $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-                ->where('leave_type_id',$leave_type_id)
-                ->update(array('spent_days'=>$leaveAllocationDataEntry));
-                    return redirect()->route('leaverequest');
-    
-                }
-        public function postReportTo(Request $request, $id)
+            $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+            ->where('leave_type_id',$leave_type_id)
+            ->update(array('spent_days'=>$leaveAllocationDataEntry));
+                return redirect()->route('leaverequest');
+
+        }
+    public function postReportTo(Request $request, $id)
     {
         $reportToData = $request->validate([
             'report_to_emp_id' => 'required',

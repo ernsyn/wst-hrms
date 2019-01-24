@@ -235,7 +235,6 @@ class EmployeeController extends Controller
 
 // }
     public function postChangePasswordEmployee(Request $request) {
-
         $data = $request->validate([
             // 'current_password' => 'required',
             'current_password' => 'required',
@@ -253,13 +252,12 @@ class EmployeeController extends Controller
             ]], 422);
             return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         }
-    else {
-        User::where('id',$id)->update([
-            'password' => bcrypt($data['new_password'])
-        ]);
-        return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
+        else {
+            User::where('id',$id)->update([
+                'password' => bcrypt($data['new_password'])
+            ]);
+            return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         }
-
     }
 
     public function postToggleRoleAdmin(Request $request, $id) {
@@ -518,7 +516,6 @@ class EmployeeController extends Controller
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
 
-
             $validatedEmployeeData['user_id'] = $user->id;
             $validatedEmployeeData['created_by'] = auth()->user()->id;
             $employee = Employee::create($validatedEmployeeData);
@@ -648,8 +645,8 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Job was successfully added']);
     }
 
-    public function actionResign(Request $request, $id) {
-
+    public function actionResign(Request $request, $id) 
+    {
         $currentJob = EmployeeJob::where('emp_id', $id)
             ->whereNull('end_date')->first();
 
@@ -1000,7 +997,6 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
-
     public function postMainSecurityGroup(Request $request, $id)
     {
         $mainSecurityGroupData = $request->validate([
@@ -1076,7 +1072,6 @@ class EmployeeController extends Controller
 
     public function postEditJob(Request $request, $emp_id, $id)
     {
-
         $jobData = $request->validate([
             'branch_id' => 'required',
             'emp_mainposition_id' => 'required',
@@ -1250,6 +1245,7 @@ class EmployeeController extends Controller
         EmployeeSkill::find($id)->delete();
         return response()->json(['success'=>'Skill was successfully deleted.']);
     }
+
     public function deleteAttachment(Request $request, $emp_id, $id)
     {
         EmployeeAttachment::find($id)->delete();
@@ -1268,10 +1264,8 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 
-
     public function postDisapproved(Request $request)
     {
-
         $id = $request->input('id');
         $emp_id = $request->input('emp_id');
         $leave_type_id = $request->input('leave_type_id');
