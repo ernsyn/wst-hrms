@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\EmployeeAttachment;
 use App\EmployeeBankAccount;
 use App\EmployeeDependent;
@@ -11,10 +10,8 @@ use App\EmployeeEducation;
 use App\EmployeeEmergencyContact;
 use App\EmployeeExperience;
 use App\EmployeeGrade;
-use App\EmployeeBank;
 use App\EmployeeImmigration;
 use App\EmployeeJob;
-use App\EmployeeLanguange;
 use App\EmployeePosition;
 use App\EmployeeSkill;
 use App\EmployeeSupervisor;
@@ -25,10 +22,6 @@ use App\CostCentre;
 use App\Department;
 use App\Branch;
 use App\Team;
-use App\LeaveRequest;
-use App\LeaveType;
-// use App\LeaveBalance;
-use App\Country;
 use App\Employee;
 use App\CompanyBank;
 use App\SecurityGroup;
@@ -41,15 +34,13 @@ use App\Eis;
 use App\Socso;
 use App\Pcb;
 use App\Imports\PcbImport;
-
 use DB;
 use App\User;
-use App\EmployeeInfo;
-use \Crypt;
+use Crypt;
 use Session;
 use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
-use \DateTime;
+use DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -58,7 +49,9 @@ class SettingsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:super-admin|admin']);
+        $this->middleware([
+            'role:super-admin|admin'
+        ]);
     }
 
     // SECTION: Display
@@ -67,69 +60,78 @@ class SettingsController extends Controller
         $companies = Company::all();
         return view('pages.admin.settings.company', ['companies' => $companies]);
     }
+
     public function displayCostCentres()
     {
         $costs = CostCentre::all();
-        return view('pages.admin.settings.cost-centre', ['costs'=>$costs]);
+        return view('pages.admin.settings.cost-centre', ['costs' => $costs]);
     }
+
     public function displayDepartments()
     {
         $departments = Department::all();
-        return view('pages.admin.settings.department', ['departments'=>$departments]);
+        return view('pages.admin.settings.department', ['departments' => $departments]);
     }
+
     public function displayBranches()
     {
         $branches = Branch::all();
-        return view('pages.admin.settings.branch', ['branches'=>$branches]);
+        return view('pages.admin.settings.branch', ['branches' => $branches]);
     }
+
     public function displayTeams()
     {
         $teams = Team::all();
-        return view('pages.admin.settings.team', ['teams'=>$teams]);
+        return view('pages.admin.settings.team', ['teams' => $teams]);
     }
+
     public function displayPositions()
     {
         $positions = EmployeePosition::all();
-        return view('pages.admin.settings.position', ['positions'=>$positions]);
+        return view('pages.admin.settings.position', ['positions' => $positions]);
     }
+
     public function displayGrades()
     {
         $grades = EmployeeGrade::all();
-        return view('pages.admin.settings.grade', ['grades'=>$grades]);
+        return view('pages.admin.settings.grade', ['grades' => $grades]);
     }
 
     public function displayWorkingDays()
     {
         $working_days = EmployeeWorkingDay::templates()->get();
-        return view('pages.admin.settings.working-day', ['working_days'=>$working_days]);
+        return view('pages.admin.settings.working-day', ['working_days' => $working_days]);
     }
+
     public function displayEpf()
     {
         $epfs = EPF::all();
         return view('pages.admin.settings.epf', ['epfs' => $epfs]);
     }
+
     public function displayEis()
     {
         $eiss = Eis::all();
         return view('pages.admin.settings.eis', ['eiss' => $eiss]);
     }
+
     public function displaySocso()
     {
         $socsos = Socso::all();
         return view('pages.admin.settings.socso', ['socsos' => $socsos]);
     }
+
     public function displayPcb()
     {
         $pcbs = Pcb::all();
         return view('pages.admin.settings.pcb', ['pcbs' => $pcbs]);
     }
 
-
     public function displayCompanyDetails(Request $request)
     {
         $id = $request->id;
         $bank = CompanyBank::where('company_id', $id)->get();
-        $company=Company::where('id', $id)->get();
+        $company = Company::where('id', $id)->get();
         $security = SecurityGroup::where('company_id', $id)->get();
         $addition = Addition::where('company_id', $id)->get();
         $deduction = Deduction::where('company_id', $id)->get();
@@ -139,8 +141,17 @@ class SettingsController extends Controller
         $cost_centre = CostCentre::all();
         $grade = EmployeeGrade::all();
 
-        return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
-        'security'=>$security, 'addition'=>$addition,'deduction'=>$deduction, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company]);
+        return view('pages.admin.settings.company.company-details', [
+            'bank' => $bank,
+            'bank_list' => $bank_list,
+            'grade' => $grade,
+            'security' => $security,
+            'addition' => $addition,
+            'deduction' => $deduction,
+            'ea_form' => $ea_form,
+            'cost_centre' => $cost_centre,
+            'company' => $company
+        ]);
     }
 
     // SECTION: Add
@@ -165,9 +176,10 @@ class SettingsController extends Controller
             'socso_no' => 'required|numeric',
             'eis_no' => 'required|numeric',
             'code' => 'required|unique:companies',
-			'postcode' => 'required|numeric'		],
-        [
-            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'        ]);
+            'postcode' => 'required|numeric'
+        ], [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
+        ]);
 
         $companyData['status'] = 'Active';
 
@@ -176,13 +188,12 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been added.');
     }
 
-    public function editCompany(Request $request, $id) {
+    public function editCompany(Request $request, $id)
+    {
         $company = Company::find($id);
 
         return view('pages.admin.settings.edit-company', ['company' => $company]);
     }
-
-
 
     public function addPosition()
     {
@@ -192,8 +203,7 @@ class SettingsController extends Controller
     public function postAddPosition(Request $request)
     {
         $positionData = $request->validate([
-            'name' => 'required|unique:employee_positions,name,NULL,id,deleted_at,NULL',
-
+            'name' => 'required|unique:employee_positions,name,NULL,id,deleted_at,NULL'
         ]);
 
         EmployeePosition::create($positionData);
@@ -201,16 +211,17 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.positions')->with('status', 'Position has successfully been added.');
     }
 
-    public function editPosition(Request $request, $id) {
+    public function editPosition(Request $request, $id)
+    {
         $position = EmployeePosition::find($id);
 
-        return view('pages.admin.settings.edit-position', ['position' => $position]);
+        return view('pages.admin.settings.edit-position', [ 'position' => $position ]);
     }
 
     public function postEditPosition(Request $request, $id)
     {
         $positionData = $request->validate([
-            'name' => 'required|unique:employee_positions,name,'.$id.',id,deleted_at,NULL',
+            'name' => 'required|unique:employee_positions,name,' . $id . ',id,deleted_at,NULL'
         ]);
 
         EmployeePosition::where('id', $id)->update($positionData);
@@ -226,8 +237,7 @@ class SettingsController extends Controller
     public function postAddGrade(Request $request)
     {
         $gradeData = $request->validate([
-            'name' => 'required|unique:employee_grades,name,NULL,id,deleted_at,NULL',
-
+            'name' => 'required|unique:employee_grades,name,NULL,id,deleted_at,NULL'
         ]);
 
         EmployeeGrade::create($gradeData);
@@ -235,25 +245,23 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been added.');
     }
 
-    public function editGrade(Request $request, $id) {
+    public function editGrade(Request $request, $id)
+    {
         $grade = EmployeeGrade::find($id);
 
-        return view('pages.admin.settings.edit-grade', ['grade' => $grade]);
+        return view('pages.admin.settings.edit-grade', [ 'grade' => $grade ]);
     }
 
     public function postEditGrade(Request $request, $id)
     {
-
         $gradeData = $request->validate([
-            'name' => 'required|unique:employee_grades,name,'.$id.',id,deleted_at,NULL',
-
+            'name' => 'required|unique:employee_grades,name,' . $id . ',id,deleted_at,NULL'
         ]);
 
         EmployeeGrade::where('id', $id)->update($gradeData);
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been updated.');
     }
-
 
     public function addTeam()
     {
@@ -263,7 +271,7 @@ class SettingsController extends Controller
     public function postAddTeam(Request $request)
     {
         $teamData = $request->validate([
-            'name' => 'required|unique:teams,name,NULL,id,deleted_at,NULL',
+            'name' => 'required|unique:teams,name,NULL,id,deleted_at,NULL'
         ]);
 
         Team::create($teamData);
@@ -271,122 +279,126 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been added.');
     }
 
-    public function editTeam(Request $request, $id) {
-
+    public function editTeam(Request $request, $id)
+    {
         $team = Team::find($id);
 
-        return view('pages.admin.settings.edit-team', ['team' => $team]);
+        return view('pages.admin.settings.edit-team', [
+            'team' => $team
+        ]);
     }
 
     public function postEditTeam(Request $request, $id)
-       {
-            $teamData = $request->validate([
-                'name' => 'required|unique:teams,name,'.$id.',id,deleted_at,NULL',
-            ]);
-            Team::where('id', $id)->update($teamData);
-            return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been updated.');
-        }
-        public function addCostCentre()
-        {
-            return view('pages.admin.settings.add-cost-centre');
-        }
+    {
+        $teamData = $request->validate([
+            'name' => 'required|unique:teams,name,' . $id . ',id,deleted_at,NULL'
+        ]);
+        Team::where('id', $id)->update($teamData);
+        return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been updated.');
+    }
 
+    public function addCostCentre()
+    {
+        return view('pages.admin.settings.add-cost-centre');
+    }
 
-        public function postAddCostCentre(Request $request)
-        {
-            $costCentreData = $request->validate([
-                'name' => 'required|unique:cost_centres,name,NULL,id,deleted_at,NULL',
-                'seniority_pay' =>'required'
+    public function postAddCostCentre(Request $request)
+    {
+        $costCentreData = $request->validate([
+            'name' => 'required|unique:cost_centres,name,NULL,id,deleted_at,NULL',
+            'seniority_pay' => 'required'
+        ]);
 
-            ]);
+        $costCentreData['amount'] = '50.00';
 
-            $costCentreData['amount'] = '50.00';
+        CostCentre::create($costCentreData);
+        return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been added.');
+    }
 
-            CostCentre::create($costCentreData);
-            return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been added.');
-        }
+    public function editBranch(Request $request, $id)
+    {
+        $branch = Branch::find($id);
 
+        return view('pages.admin.settings.edit-branch', [
+            'branch' => $branch
+        ]);
+    }
 
-        public function editBranch(Request $request, $id) {
-            $branch = Branch::find($id);
+    public function editCostCentre(Request $request, $id)
+    {
+        $costs = CostCentre::find($id);
 
-            return view('pages.admin.settings.edit-branch', ['branch' => $branch]);
-        }
+        return view('pages.admin.settings.edit-cost-centre', [
+            'costs' => $costs
+        ]);
+    }
 
-        public function editCostCentre(Request $request, $id) {
-            $costs = CostCentre::find($id);
+    public function postEditCostCentre(Request $request, $id)
+    {
+        $costCentreData = $request->validate([
+            'name' => 'required|unique:cost_centres,name,' . $id . ',id,deleted_at,NULL',
+            'seniority_pay' => 'required'
+        ]);
 
-            return view('pages.admin.settings.edit-cost-centre', ['costs' => $costs]);
-        }
+        CostCentre::where('id', $id)->update($costCentreData);
 
+        return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been updated.');
+    }
 
-        public function postEditCostCentre(Request $request,$id)
-        {
+    public function addDepartment()
+    {
+        return view('pages.admin.settings.add-department');
+    }
 
-            $costCentreData = $request->validate([
-                'name' => 'required|unique:cost_centres,name,'.$id.',id,deleted_at,NULL',
-                'seniority_pay' =>'required',
-            ]);
+    public function postAddDepartment(Request $request)
+    {
+        $departmentData = $request->validate([
+            'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
+        ]);
+        Department::create($departmentData);
+        return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
+    }
 
-            CostCentre::where('id', $id)->update($costCentreData);
+    public function editDepartment(Request $request, $id)
+    {
+        $department = Department::find($id);
 
-            return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been updated.');
-        }
+        return view('pages.admin.settings.edit-department', [
+            'department' => $department
+        ]);
+    }
 
+    public function addWorkingDay()
+    {
+        return view('pages.admin.settings.add-working-day');
+    }
 
+    public function postAddWorkingDay(Request $request)
+    {
+        $workingDaysData = $request->validate([
+            'template_name' => 'required|unique:employee_working_days,template_name,NULL,id,deleted_at,NULL',
+            'monday' => 'required',
+            'tuesday' => 'required',
+            'wednesday' => 'required',
+            'thursday' => 'required',
+            'friday' => 'required',
+            'saturday' => 'required',
+            'sunday' => 'required'
+        ]);
 
-        public function addDepartment()
-        {
-            return view('pages.admin.settings.add-department');
-        }
+        $workingDaysData['is_template'] = true;
 
+        EmployeeWorkingDay::create($workingDaysData);
+        return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been added.');
+    }
 
-        public function postAddDepartment(Request $request)
-        {
-            $departmentData = $request->validate([
-                'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
-
-            ]);
-            Department::create($departmentData);
-            return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
-        }
-
-
-        public function editDepartment(Request $request, $id) {
-            $department = Department::find($id);
-
-            return view('pages.admin.settings.edit-department', ['department' => $department]);
-        }
-
-        public function addWorkingDay()
-        {
-            return view('pages.admin.settings.add-working-day');
-        }
-
-
-        public function postAddWorkingDay(Request $request)
-        {
-            $workingDaysData = $request->validate([
-                'template_name' => 'required|unique:employee_working_days,template_name,NULL,id,deleted_at,NULL',
-                'monday' => 'required',
-                'tuesday' => 'required',
-                'wednesday' => 'required',
-                'thursday' => 'required',
-                'friday' => 'required',
-                'saturday' => 'required',
-                'sunday' => 'required',
-            ]);
-
-            $workingDaysData['is_template'] = true;
-
-            EmployeeWorkingDay::create($workingDaysData);
-            return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been added.');
-        }
-
-    public function editWorkingDay(Request $request, $id) {
+    public function editWorkingDay(Request $request, $id)
+    {
         $working_day = EmployeeWorkingDay::templates()->find($id);
 
-        return view('pages.admin.settings.edit-working-day', ['working_day' => $working_day]);
+        return view('pages.admin.settings.edit-working-day', [
+            'working_day' => $working_day
+        ]);
     }
 
     public function postAddJob(Request $request)
@@ -414,13 +426,24 @@ class SettingsController extends Controller
         (?,?,?,
         ?,?,?,
         ?,?,?,
-        ?,?,?)',
-        [$user->id, $branch, 'auto',
-        $position, $department, $team,
-        $cost_centre, $grade, $start_date,
-        $basic_salary, $emp_status, $created_by]);
+        ?,?,?)', [
+            $user->id,
+            $branch,
+            'auto',
+            $position,
+            $department,
+            $team,
+            $cost_centre,
+            $grade,
+            $start_date,
+            $basic_salary,
+            $emp_status,
+            $created_by
+        ]);
 
-        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);
+        return redirect()->route('admin/profile-employee/{id}', [
+            'id' => $user_id
+        ]);
     }
 
     public function editJob(Request $request)
@@ -440,7 +463,7 @@ class SettingsController extends Controller
         $emp_status = Input::get('emp_status');
         $created_by = auth()->user()->id;
 
-        EmployeeJob::where('id',$job_id)->update(array(
+        EmployeeJob::where('id', $job_id)->update(array(
             'branch_id' => $branch,
             'emp_mainposition_id' => $position,
             'department_id' => $department,
@@ -452,7 +475,9 @@ class SettingsController extends Controller
             'status' => $emp_status
         ));
 
-        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);
+        return redirect()->route('admin/profile-employee/{id}', [
+            'id' => $user_id
+        ]);
     }
 
     public function employeeResign()
@@ -460,33 +485,35 @@ class SettingsController extends Controller
         $user_id = Session::get('user_id');
         $user = Employee::where('user_id', $user_id)->first();
 
-        EmployeeJob::where('emp_id',$user->id)->update(array(
+        EmployeeJob::where('emp_id', $user->id)->update(array(
             'status' => 'resign'
         ));
 
-        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);
+        return redirect()->route('admin/profile-employee/{id}', [
+            'id' => $user_id
+        ]);
     }
+
     public function addBranch()
     {
         return view('pages.admin.settings.add-branch');
     }
+
     public function postAddBranch(Request $request)
     {
-
         $branchData = $request->validate([
             'name' => 'required|unique:branches,name,NULL,id,deleted_at,NULL',
-            'contact_no_primary' =>'required|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'contact_no_primary' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'contact_no_secondary' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
-            'fax_no' =>'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
-            'address'=>'required',
+            'fax_no' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'address' => 'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
-            'country_code'=> 'nullable|integer',
-            'state'=> 'required',
-            'city'=>   'required',
-            'zip_code'=> 'required|numeric|digits:5'
-        ],
-        [
+            'country_code' => 'nullable|integer',
+            'state' => 'required',
+            'city' => 'required',
+            'zip_code' => 'required|numeric|digits:5'
+        ], [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
@@ -494,13 +521,10 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been added.');
     }
 
-
-
-    public function postEditDepartment(Request $request,$id)
+    public function postEditDepartment(Request $request, $id)
     {
-
         $departmentData = $request->validate([
-            'name' => 'required|unique:departments,name,'.$id.',id,deleted_at,NULL'
+            'name' => 'required|unique:departments,name,' . $id . ',id,deleted_at,NULL'
         ]);
 
         Department::where('id', $id)->update($departmentData);
@@ -518,7 +542,7 @@ class SettingsController extends Controller
             'thursday' => 'required',
             'friday' => 'required',
             'saturday' => 'required',
-            'sunday' => 'required',
+            'sunday' => 'required'
         ]);
 
         EmployeeWorkingDay::templates()->where('id', $id)->update($workingDayData);
@@ -526,40 +550,33 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been updated.');
     }
 
-
     public function postEditBranch(Request $request, $id)
     {
         $branchData = $request->validate([
-            'name' => 'required|unique:branches,name,'.$id.',id,deleted_at,NULL',
-            'contact_no_primary' =>'required|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'name' => 'required|unique:branches,name,' . $id . ',id,deleted_at,NULL',
+            'contact_no_primary' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'contact_no_secondary' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
-            'fax_no' =>'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
-            'address'=>'required',
+            'fax_no' => 'nullable|regex:/^01?[0-9]\-*\d{7,8}$/',
+            'address' => 'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
-            'country_code'=> 'nullable|integer',
-            'state'=> 'required',
-            'city'=>   'required',
-            'zip_code'=> 'required|numeric|digits:5'
+            'country_code' => 'nullable|integer',
+            'state' => 'required',
+            'city' => 'required',
+            'zip_code' => 'required|numeric|digits:5'
+        ], [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
+        ]);
 
+        Branch::where('id', $id)->update($branchData);
 
-            ],
-            [
-                'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
-            ]);
-
-            Branch::where('id', $id)->update($branchData);
-
-            return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been updated.');
+        return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been updated.');
     }
-
-
 
     public function postEditCompany(Request $request, $id)
     {
-
         $companyData = $request->validate([
-            'name' => 'required|unique:companies,name,'.$id.',id,deleted_at,NULL',
+            'name' => 'required|unique:companies,name,' . $id . ',id,deleted_at,NULL',
             'url' => 'required|url',
             'registration_no' => 'required',
             'description' => 'required',
@@ -571,10 +588,10 @@ class SettingsController extends Controller
             'epf_no' => 'required|numeric',
             'socso_no' => 'required|numeric',
             'eis_no' => 'required|numeric',
-            'code' => 'required|unique:companies,code,'.$id,
+            'code' => 'required|unique:companies,code,' . $id,
             'status' => 'required',
-			'postcode' => 'required|numeric'		],
-        [
+            'postcode' => 'required|numeric'
+        ], [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
@@ -668,450 +685,497 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been deleted.');
     }
 
+    // Contribution List
+    public function addEpf()
+    {
+        return view('pages.admin.settings.add-epf');
+    }
 
+    public function postAddEpf(Request $request)
+    {
+        $epfData = $request->validate([
+            'category' => 'required|unique:epfs,category',
+            'salary' => 'required|numeric',
+            'employer' => 'required|numeric',
+            'employee' => 'required|numeric',
+            'name' => 'required'
+        ]);
 
+        EPF::create($epfData);
 
-// Contribution List
-public function addEpf()
-{
-    return view('pages.admin.settings.add-epf');
-}
+        return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been added.');
+    }
 
-public function postAddEpf(Request $request)
-{
-    $epfData = $request->validate([
-        'category' => 'required|unique:epfs,category',
-        'salary' => 'required|numeric',
-        'employer' => 'required|numeric',
-        'employee' => 'required|numeric',
-        'name'=>'required',
+    public function editEpf(Request $request, $id)
+    {
+        $epf = EPF::find($id);
 
-    ]);
+        return view('pages.admin.settings.edit-epf', [
+            'epf' => $epf
+        ]);
+    }
 
-    EPF::create($epfData);
+    public function postEditEpf(Request $request, $id)
+    {
+        $epfData = $request->validate([
+            // 'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
+            'category' => 'unique:epfs,category,' . $id . ',id,deleted_at,NULL',
+            'salary' => 'required|numeric',
+            'employer' => 'required|numeric',
+            'employee' => 'required|numeric',
+            'name' => 'required'
+        ]);
 
-    return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been added.');
-}
+        EPF::where('id', $id)->update($epfData);
 
-public function editEpf(Request $request, $id) {
-    $epf = EPF::find($id);
+        return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been updated.');
+    }
 
-    return view('pages.admin.settings.edit-epf', ['epf' => $epf]);
-}
-public function postEditEpf(Request $request, $id)
-{
+    public function addEis()
+    {
+        return view('pages.admin.settings.add-eis');
+    }
 
-    $epfData = $request->validate([
-        // 'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
-        'category' =>  'unique:epfs,category,'.$id.',id,deleted_at,NULL',
-        'salary' => 'required|numeric',
-        'employer' => 'required|numeric',
-        'employee' => 'required|numeric',
-        'name'=>'required',
+    public function postAddEis(Request $request)
+    {
+        $eisData = $request->validate([
+            'salary' => 'required|numeric',
+            'employer' => 'required',
+            'employee' => 'required'
+        ]);
 
-    ]);
+        Eis::create($eisData);
 
-    EPF::where('id', $id)->update($epfData);
+        return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been added.');
+    }
 
-    return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been updated.');
-}
+    public function editEis(Request $request, $id)
+    {
+        $eis = Eis::find($id);
 
+        return view('pages.admin.settings.edit-eis', [
+            'eis' => $eis
+        ]);
+    }
 
-// Contribution List
+    public function postEditEis(Request $request, $id)
+    {
+        $eisData = $request->validate([
 
-public function addEis()
-{
-    return view('pages.admin.settings.add-eis');
-}
+            'salary' => 'required|numeric',
+            'employer' => 'required',
+            'employee' => 'required'
+        ]);
 
-public function postAddEis(Request $request)
-{
-    $eisData = $request->validate([
-        'salary' => 'required|numeric',
-        'employer' => 'required',
-        'employee' => 'required',
-    ]);
+        Eis::where('id', $id)->update($eisData);
 
-    Eis::create($eisData);
+        return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been updated.');
+    }
 
-    return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been added.');
-}
+    public function addSocso()
+    {
+        return view('pages.admin.settings.add-socso');
+    }
 
-public function editEis(Request $request, $id) {
-    $eis = Eis::find($id);
+    public function postAddSocso(Request $request)
+    {
+        $socsoData = $request->validate([
 
-    return view('pages.admin.settings.edit-eis', ['eis' => $eis]);
-}
+            'salary' => 'required|numeric',
+            'first_category_employer' => 'required',
+            'first_category_employee' => 'required'
+        ]);
 
-public function postEditEis(Request $request, $id)
-{
+        Socso::create($socsoData);
 
-    $eisData = $request->validate([
+        return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been added.');
+    }
 
-        'salary' => 'required|numeric',
-        'employer' => 'required',
-        'employee' => 'required',
+    public function editSocso(Request $request, $id)
+    {
+        $socso = Socso::find($id);
 
-    ]);
+        return view('pages.admin.settings.edit-socso', [
+            'socso' => $socso
+        ]);
+    }
 
-    Eis::where('id', $id)->update($eisData);
+    public function postEditSocso(Request $request, $id)
+    {
+        $socsoData = $request->validate([
 
-    return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been updated.');
-}
+            'salary' => 'required|numeric',
+            'first_category_employer' => 'required',
+            'first_category_employee' => 'required'
+        ]);
 
+        Socso::where('id', $id)->update($socsoData);
 
-// Contribution List
+        return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been updated.');
+    }
 
-public function addSocso()
-{
-    return view('pages.admin.settings.add-socso');
-}
+    public function getPcbData()
+    {
+        $pcbs = Pcb::query(); // Pcb::select(['id', 'category', 'salary', 'total_children', 'amount'])->get();
 
-public function postAddSocso(Request $request)
-{
-    $socsoData = $request->validate([
-
-        'salary' => 'required|numeric',
-        'first_category_employer' => 'required',
-        'first_category_employee' => 'required',
-
-
-    ]);
-
-    Socso::create($socsoData);
-
-    return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been added.');
-}
-
-public function editSocso(Request $request, $id) {
-    $socso = Socso::find($id);
-
-    return view('pages.admin.settings.edit-socso', ['socso' => $socso]);
-}
-
-public function postEditSocso(Request $request, $id)
-{
-
-    $socsoData = $request->validate([
-
-        'salary' => 'required|numeric',
-        'first_category_employer' => 'required',
-        'first_category_employee' => 'required',
-
-    ]);
-
-    Socso::where('id', $id)->update($socsoData);
-
-    return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been updated.');
-}
-
-
-// Contribution List
-}
-public function getPcbData()
-{
-    $pcbs = Pcb::query();//Pcb::select(['id', 'category', 'salary', 'total_children', 'amount'])->get();
+        return Datatables::of($pcbs)
+            ->addColumn('action', function ($pcbs) {
+                return '<button onclick="window.location=\'' . url('/admin/settings/pcb/' . $pcbs->id . '/edit') . '\'" class="btn btn-success btn-smt fas fa-edit"></button>
+                    <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="' . $pcbs->category . '" data-link="' . url('/admin/settings/pcb/' . $pcbs->id . '/delete') . '" class="btn btn-danger btn-smt fas fa-trash-alt"></button>';
+            })->make(true);
+    }
     
-    return Datatables::of($pcbs)
-    ->addColumn('action', function ($pcbs) {
-        return '<button onclick="window.location=\''.url('/admin/settings/pcb/'.$pcbs->id.'/edit').'\'" class="btn btn-success btn-smt fas fa-edit">
-    </button>
-    <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="'.$pcbs->category .'" data-link="'.url('/admin/settings/pcb/'.$pcbs->id.'/delete').'" class="btn btn-danger btn-smt fas fa-trash-alt">
-    </button>';
-    })
-    ->make(true);
-}
+    public function addPcb()
+    {
+        return view('pages.admin.settings.add-pcb');
+    }
 
-public function addPcb()
-{
-    return view('pages.admin.settings.add-pcb');
-}
+    public function postAddPcb(Request $request)
+    {
+        $pcbData = $request->validate([
+            'category' => 'required|unique:pcbs,category,NULL,id,deleted_at,NULL',
+            'salary' => 'required|numeric',
+            'amount' => 'required|numeric',
+            'total_children' => 'required|numeric'
+        ]);
 
-public function postAddPcb(Request $request)
-{
-    $pcbData = $request->validate([
-        'category' => 'required|unique:pcbs,category,NULL,id,deleted_at,NULL',
-        'salary' => 'required|numeric',
-        'amount' => 'required|numeric',
-        'total_children' =>'required|numeric',
-    ]);
+        Pcb::create($pcbData);
 
-    Pcb::create($pcbData);
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
+    }
 
-    return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
-}
+    public function editPcb(Request $request, $id)
+    {
+        $pcbs = Pcb::find($id);
 
-public function editPcb(Request $request, $id) {
-    $pcbs = Pcb::find($id);
+        return view('pages.admin.settings.edit-pcb', [
+            'pcbs' => $pcbs
+        ]);
+    }
 
-    return view('pages.admin.settings.edit-pcb', ['pcbs' => $pcbs]);
-}
+    public function postEditPcb(Request $request, $id)
+    {
+        $pcbData = $request->validate([
+            'category' => 'required|unique:pcbs,category,' . $id . ',id,deleted_at,NULL',
+            'salary' => 'required',
+            'amount' => 'required',
+            'total_children' => 'required'
+        ]);
 
-public function postEditPcb(Request $request, $id)
-{
+        Pcb::where('id', $id)->update($pcbData);
 
-    $pcbData = $request->validate([
-        'category' => 'required|unique:pcbs,category,'.$id.',id,deleted_at,NULL',
-        'salary' => 'required',
-        'amount' => 'required',
-        'total_children' =>'required',
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
+    }
 
-    ]);
+    public function addCompanyDeduction()
+    {
+        return view('pages.admin.settings.add-deduction');
+    }
 
-    Pcb::where('id', $id)->update($pcbData);
+    public function postAddCompanyDeduction(Request $request, $id)
+    {
+        $validatedDeductionData = $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'type' => 'required',
+            'amount' => 'required',
+            'statutory' => 'nullable',
+            'status' => 'required',
+            'ea_form_id' => 'required',
+            'cost_centre' => 'nullable',
+            'employee_grade' => 'nullable'
+        ]);
 
-    return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
-}
-
-
-
-public function addCompanyDeduction()
-{
-    return view('pages.admin.settings.add-deduction');
-}
-
-
-
-public function postAddCompanyDeduction(Request $request, $id)
-   
-   
-{    $validatedDeductionData = $request->validate([
-   'code' => 'required',
-   'name' => 'required',
-   'type' => 'required',
-   'amount' => 'required',
-        'statutory'=> 'nullable',
-        'status'=>'required',
-        'ea_form_id' =>'required',
-        'cost_centre' => 'nullable',
-        'employee_grade' => 'nullable'
-    ]);
-
-        if(!empty($validatedDeductionData['statutory'])) $validatedDeductionData['statutory'] = implode(",", $request->statutory);
-        else $validatedDeductionData['statutory'] = null;
+        if (! empty($validatedDeductionData['statutory'])) {
+            $validatedDeductionData['statutory'] = implode(",", $request->statutory);
+        }
+        else {
+            $validatedDeductionData['statutory'] = null;
+        }
 
         $validatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
 
-        if(!empty($validatedDeductionData['cost_centre'])) $validatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
-        else $validatedDeductionData['cost_centre'] = null;
+        if (! empty($validatedDeductionData['cost_centre'])) {
+            $validatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
+        }
+        else {
+            $validatedDeductionData['cost_centre'] = null;
+        }
 
-        if(!empty($validatedDeductionData['employee_grade'])) $validatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
-        else $validatedDeductionData['employee_grade'] = null;
+        if (! empty($validatedDeductionData['employee_grade'])){
+            $validatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
+        }
+        else {
+            $validatedDeductionData['employee_grade'] = null;
+        }
 
-    $validatedDeductionData['company_id']=$id;
+        $validatedDeductionData['company_id'] = $id;
 
         // dd($validatedAdditionData['employee_grade']);
 
-    $deduction = Deduction::create($validatedDeductionData);
-  return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been added.');
-}
+        $deduction = Deduction::create($validatedDeductionData);
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Company Deduction has successfully been added.');
+    }
 
+    public function editCompanyDeduction(Request $request, $id)
+    {
+        $deduction = Deduction::find($id);
 
+        return view('pages.admin.settings.edit-deduction', [
+            'deduction' => $deduction
+        ]);
+    }
 
-
-public function editCompanyDeduction(Request $request, $id) {
-    $deduction = Deduction::find($id);
-
-    return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
-}
-
-public function postEditCompanyDeduction(Request $request)
-{
-    $id = $request->id;
+    public function postEditCompanyDeduction(Request $request)
+    {
+        $id = $request->id;
         $updateValidatedDeductionData = $request->validate([
-        'code' => 'required',
-        'name' => 'required',
-        'type' => 'required',
-        'amount' => 'required',
-            'statutory'=> 'nullable',
-        'status'=>'required',
-        'ea_form_id' =>'required',
+            'code' => 'required',
+            'name' => 'required',
+            'type' => 'required',
+            'amount' => 'required',
+            'statutory' => 'nullable',
+            'status' => 'required',
+            'ea_form_id' => 'required',
             'cost_centre' => 'nullable',
             'employee_grade' => 'nullable'
-    ]);
+        ]);
 
-        if(!empty($updateValidatedDeductionData['statutory'])) $updateValidatedDeductionData['statutory'] = implode(",", $request->statutory);
-        else $updateValidatedDeductionData['statutory'] = null;
+        if (! empty($updateValidatedDeductionData['statutory'])) {
+            $updateValidatedDeductionData['statutory'] = implode(",", $request->statutory);
+        }
+        else {
+            $updateValidatedDeductionData['statutory'] = null;
+        }
 
         $updateValidatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
 
-        if(!empty($updateValidatedDeductionData['cost_centre'])) $updateValidatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
-        else $updateValidatedDeductionData['cost_centre'] = null;
+        if (! empty($updateValidatedDeductionData['cost_centre'])) {
+            $updateValidatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
+        }
+        else {
+            $updateValidatedDeductionData['cost_centre'] = null;
+        }
 
-        if(!empty($updateValidatedDeductionData['employee_grade'])) $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
-        else $updateValidatedDeductionData['employee_grade'] = null;
+        if (! empty($updateValidatedDeductionData['employee_grade'])) {
+            $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
+        }
+        else {
+            $updateValidatedDeductionData['employee_grade'] = null;
+        }
+        
         // dd($updateValidatedAdditionData['cost_centre']);
-        $updateValidatedDeductionData['company_id']=$id;
-        $addition =Addition::where('id', $request->company_addition_id)->update($updateValidatedDeductionData);
-  return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
-}
+        $updateValidatedDeductionData['company_id'] = $id;
+        $addition = Addition::where('id', $request->company_addition_id)->update($updateValidatedDeductionData);
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Deduction Group has successfully been updated.');
+    }
 
-public function addCompanyAddition()
-{
-    return view('pages.admin.settings.add-addition');
-}
+    public function addCompanyAddition()
+    {
+        return view('pages.admin.settings.add-addition');
+    }
 
-
-public function postAddCompanyAddition(Request $request, $id)
-{
-    $validatedAdditionData = $request->validate([
-        'code' => 'required',
-        'name' => 'required',
-        'type' => 'required',
-        'amount' => 'required',
-            'statutory'=> 'nullable',
-            'status'=>'required',
-            'ea_form_id' =>'required',
+    public function postAddCompanyAddition(Request $request, $id)
+    {
+        $validatedAdditionData = $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'type' => 'required',
+            'amount' => 'required',
+            'statutory' => 'nullable',
+            'status' => 'required',
+            'ea_form_id' => 'required',
             'cost_centre' => 'nullable',
             'employee_grade' => 'nullable'
-         ]);
+        ]);
 
-            if(!empty($validatedAdditionData['statutory'])) $validatedAdditionData['statutory'] = implode(",", $request->statutory);
-            else $validatedAdditionData['statutory'] = null;
+        if (! empty($validatedAdditionData['statutory'])) {
+            $validatedAdditionData['statutory'] = implode(",", $request->statutory);
+        }
+        else {
+            $validatedAdditionData['statutory'] = null;
+        }
 
         $validatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
 
-            if(!empty($validatedAdditionData['cost_centre'])) $validatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
-            else $validatedAdditionData['cost_centre'] = null;
+        if (! empty($validatedAdditionData['cost_centre'])){
+            $validatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
+        }
+        else {
+            $validatedAdditionData['cost_centre'] = null;
+        }
 
-            if(!empty($validatedAdditionData['employee_grade'])) $validatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
-            else $validatedAdditionData['employee_grade'] = null;
+        if (! empty($validatedAdditionData['employee_grade'])){
+            $validatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
+        }
+        else{
+            $validatedAdditionData['employee_grade'] = null;
+        }
 
-        $validatedAdditionData['company_id']=$id;
+        $validatedAdditionData['company_id'] = $id;
 
-            // dd($validatedAdditionData['employee_grade']);
+        // dd($validatedAdditionData['employee_grade']);
 
         $addition = Addition::create($validatedAdditionData);
-        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been added.');
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Company Addition has successfully been added.');
     }
 
-public function editCompanyAddition(Request $request, $id) {
-    $addition = Addition::find($id);
+    public function editCompanyAddition(Request $request, $id)
+    {
+        $addition = Addition::find($id);
 
-    return view('pages.admin.settings.edit-addition', ['addition' => $addition]);
-}
+        return view('pages.admin.settings.edit-addition', [
+            'addition' => $addition
+        ]);
+    }
 
-public function postEditCompanyAddition(Request $request)
-{
-    $id = $request->id;
+    public function postEditCompanyAddition(Request $request)
+    {
+        $id = $request->id;
         $updateValidatedAdditionData = $request->validate([
-        'code' => 'required',
-        'name' => 'required',
-        'type' => 'required',
-        'amount' => 'required',
-            'statutory'=> 'nullable',
-        'status'=>'required',
-        'ea_form_id' =>'required',
+            'code' => 'required',
+            'name' => 'required',
+            'type' => 'required',
+            'amount' => 'required',
+            'statutory' => 'nullable',
+            'status' => 'required',
+            'ea_form_id' => 'required',
             'cost_centre' => 'nullable',
             'employee_grade' => 'nullable'
-    ]);
+        ]);
 
-        if(!empty($updateValidatedAdditionData['statutory'])) $updateValidatedAdditionData['statutory'] = implode(",", $request->statutory);
-        else $updateValidatedAdditionData['statutory'] = null;
+        if (! empty($updateValidatedAdditionData['statutory'])){
+            $updateValidatedAdditionData['statutory'] = implode(",", $request->statutory);
+        }
+        else{
+            $updateValidatedAdditionData['statutory'] = null;
+        }
 
         $updateValidatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
 
-        if(!empty($updateValidatedAdditionData['cost_centre'])) $updateValidatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
-        else $updateValidatedAdditionData['cost_centre'] = null;
+        if (! empty($updateValidatedAdditionData['cost_centre'])) {
+            $updateValidatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
+        }
+        else {
+            $updateValidatedAdditionData['cost_centre'] = null;
+        }
 
-        if(!empty($updateValidatedAdditionData['employee_grade'])) $updateValidatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
-        else $updateValidatedAdditionData['employee_grade'] = null;
+        if (! empty($updateValidatedAdditionData['employee_grade'])){
+            $updateValidatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
+        }
+        else {
+            $updateValidatedAdditionData['employee_grade'] = null;
+        }
         // dd($updateValidatedAdditionData['cost_centre']);
-        $updateValidatedAdditionData['company_id']=$id;
-        $addition =Addition::where('id', $request->company_addition_id)->update($updateValidatedAdditionData);
-        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Addition Group has successfully been updated.');
-}
-public function addCompanyBank($id)
-{
-    return redirect()->route('admin.settings.company-banks.add');
-}
+        $updateValidatedAdditionData['company_id'] = $id;
+        $addition = Addition::where('id', $request->company_addition_id)->update($updateValidatedAdditionData);
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Addition Group has successfully been updated.');
+    }
 
-public function postAddCompanyBank(Request $request,$id)
-{
+    public function addCompanyBank($id)
+    {
+        return redirect()->route('admin.settings.company-banks.add');
+    }
+
+    public function postAddCompanyBank(Request $request, $id)
+    {
         $companyBankData = $request->validate([
-        'bank_code' => 'required',
-            'acc_name' => 'required',
+            'bank_code' => 'required',
+            'acc_name' => 'required'
+        ]);
 
-    ]);
-
-    if ($request->status =='Active'){
-    CompanyBank::where('company_id',$id)
-    ->where('status','Active')
-    ->update(['status'=>'Inactive']);
+        if ($request->status == 'Active') {
+            CompanyBank::where('company_id', $id)->where('status', 'Active')->update([
+                'status' => 'Inactive'
+            ]);
             $companyBankData['status'] = 'Active';
-            $companyBankData['company_id']= $id;
+            $companyBankData['company_id'] = $id;
             $companyBankData['created_by'] = auth()->user()->id;
             CompanyBank::create($companyBankData);
-}
-else {
+        } else {
             $companyBankData['status'] = 'Inactive';
-            $companyBankData['company_id']= $id;
+            $companyBankData['company_id'] = $id;
             $companyBankData['created_by'] = auth()->user()->id;
             CompanyBank::create($companyBankData);
-}
-    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
-}
+        }
+        
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Company Bank has successfully been added.');
+    }
 
-public function postEditCompanyBank(Request $request)
-{
-
-    $id = $request->id;
+    public function postEditCompanyBank(Request $request)
+    {
+        $id = $request->id;
         $updateCompanyBankData = $request->validate([
-        'bank_code' => 'required',
-        'acc_name' => 'required',
-        'status'  => 'required'
-    ]);
+            'bank_code' => 'required',
+            'acc_name' => 'required',
+            'status' => 'required'
+        ]);
 
-        $updateCompanyBankData['company_id']= $id;
+        $updateCompanyBankData['company_id'] = $id;
         $updateCompanyBankData['created_by'] = auth()->user()->id;
-        CompanyBank::where('id',  $request->company_bank_id)->update($updateCompanyBankData);
+        CompanyBank::where('id', $request->company_bank_id)->update($updateCompanyBankData);
 
-    return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been updated.');
-}
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Company Bank has successfully been updated.');
+    }
 
-public function addCompanySecurities()
-{
-    return view('pages.admin.settings.add-securities');
-}
+    public function addCompanySecurities()
+    {
+        return view('pages.admin.settings.add-securities');
+    }
 
-public function postAddCompanySecurityGroup(Request $request,$id)
-{
+    public function postAddCompanySecurityGroup(Request $request, $id)
+    {
         $securityGroupData = $request->validate([
-        'name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
-        'description' => 'required',
-    ]);
+            'name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
+            'description' => 'required'
+        ]);
 
-        $securityGroupData['company_id']=$id;
+        $securityGroupData['company_id'] = $id;
         $securityGroupData['created_by'] = auth()->user()->id;
         SecurityGroup::create($securityGroupData);
 
-  return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been added.');
-}
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Security Group has successfully been added.');
+    }
+
     public function postEditSecurityGroup(Request $request)
-{
+    {
         $id = $request->id;
         $updateSecurityGroupData = $request->validate([
-                'name' => 'required',
-                'description' => 'required'
+            'name' => 'required',
+            'description' => 'required'
+        ]);
+        $updateSecurityGroupData['company_id'] = $id;
+        $updateSecurityGroupData['created_by'] = auth()->user()->id;
 
-    ]);
-            $updateSecurityGroupData['company_id']= $id;
-            $updateSecurityGroupData['created_by'] = auth()->user()->id;
+        SecurityGroup::where('id', $request->security_group_id)->update($updateSecurityGroupData);
 
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Security Group has successfully been updated.');
+    }
 
-        SecurityGroup::where('id',  $request->security_group_id)->update($updateSecurityGroupData);
-
-        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been updated.');
-}
-
-    public function editCompanySecurities(Request $request, $id) {
+    public function editCompanySecurities(Request $request, $id)
+    {
         $deduction = Deduction::find($id);
 
-        return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
-}
-}
-
-
+        return view('pages.admin.settings.edit-deduction', [
+            'deduction' => $deduction
+        ]);
+    }
 
     public function importPcb($fileName, $noOfCategory)
     {
@@ -1194,5 +1258,4 @@ public function postAddCompanySecurityGroup(Request $request,$id)
         
         return "Total ".count($pcbs)." records";
     }
-
 }
