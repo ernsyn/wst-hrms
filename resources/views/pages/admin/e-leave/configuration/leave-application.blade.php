@@ -709,6 +709,11 @@
                         if(data.total_days) {
                             $('#total-days b').text(data.total_days.toFixed(1));
                         }
+
+                        if(data.end_date) {
+                            $("#end-date").val(data.end_date);
+                            $("#alt-end-date").val(data.end_date);
+                        }
                     },
                     error: function(xhr) {
                         console.log("Error: ", xhr);
