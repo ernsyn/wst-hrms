@@ -5,7 +5,7 @@
             </div>   
     @foreach ($errors->all() as $error)
     <li>{{ $error }}</li>
-    @endforeach --}}
+    @endforeach 
     <div class="p-4">
         @if (session('status'))
         <div class="alert alert-primary fade show" role="alert">
