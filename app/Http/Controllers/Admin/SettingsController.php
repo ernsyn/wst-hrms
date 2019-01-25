@@ -691,13 +691,10 @@ class SettingsController extends Controller
             'name'=>'required',
     
         ]);
-<<<<<<< HEAD
 
         $epfData['created_by']= auth()->user()->name;
         
-=======
     
->>>>>>> 9d7c432d61b5234b492f8d17b4f2af59974912f5
         EPF::create($epfData);
     
         return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been added.');
@@ -743,13 +740,10 @@ public function postAddEis(Request $request)
 
     Eis::create($eisData);
 
-<<<<<<< HEAD
         $eisData['created_by'] =auth()->user()->name;
         Eis::create($eisData);
-=======
     return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been added.');
 }
->>>>>>> 9d7c432d61b5234b492f8d17b4f2af59974912f5
 
 public function editEis(Request $request, $id) {
     $eis = Eis::find($id);
@@ -797,13 +791,10 @@ public function postAddSocso(Request $request)
 public function editSocso(Request $request, $id) {
     $socso = Socso::find($id);
 
-<<<<<<< HEAD
         $socsoData['created_by']=auth()->user()->name;
         Socso::create($socsoData);
-=======
     return view('pages.admin.settings.edit-socso', ['socso' => $socso]);
 }
->>>>>>> 9d7c432d61b5234b492f8d17b4f2af59974912f5
 
 public function postEditSocso(Request $request, $id)
 {
@@ -855,22 +846,8 @@ public function postAddPcb(Request $request)
     else 
 
     {
-<<<<<<< HEAD
-        $pcbData = $request->validate([
-            'category' => 'required|unique:pcbs,category,NULL,id,deleted_at,NULL',
-            'salary' => 'required|numeric',
-            'amount' => 'required|numeric',
-            'total_children' =>'required|numeric',
-        ]);
-        
-        $pcbData['created_by'] = auth()->user()->name;
-        Pcb::create($pcbData);
-
-        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
-=======
         return redirect()->route('admin.settings.pcb')->with('status', 'PCB has not successfully been added.');
 
->>>>>>> 9d7c432d61b5234b492f8d17b4f2af59974912f5
     }
  
 
