@@ -201,6 +201,7 @@ class SettingsController extends Controller
     }
 
     public function editPosition(Request $request, $id) {
+       
         $position = EmployeePosition::find($id);
 
         return view('pages.admin.settings.edit-position', ['position' => $position]);
@@ -235,6 +236,7 @@ class SettingsController extends Controller
     }
 
     public function editGrade(Request $request, $id) {
+        
         $grade = EmployeeGrade::find($id);
 
         return view('pages.admin.settings.edit-grade', ['grade' => $grade]);
@@ -282,9 +284,11 @@ class SettingsController extends Controller
         $teamData = $request->validate([
             'name' => 'required|unique:teams,name,'.$id.',id,deleted_at,NULL',
         ]);
+
         Team::where('id', $id)->update($teamData);
         return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been updated.');
     }
+
     public function addCostCentre()
     {
         return view('pages.admin.settings.add-cost-centre');
@@ -306,13 +310,16 @@ class SettingsController extends Controller
     }
 
 
-    public function editBranch(Request $request, $id) {
+    public function editBranch(Request $request, $id) 
+    {
+       
         $branch = Branch::find($id);
 
         return view('pages.admin.settings.edit-branch', ['branch' => $branch]);
     }
 
-    public function editCostCentre(Request $request, $id) {
+    public function editCostCentre(Request $request, $id)
+    {
         $costs = CostCentre::find($id);
 
         return view('pages.admin.settings.edit-cost-centre', ['costs' => $costs]);
@@ -321,7 +328,6 @@ class SettingsController extends Controller
 
     public function postEditCostCentre(Request $request,$id)
     {
-
         $costCentreData = $request->validate([
             'name' => 'required|unique:cost_centres,name,'.$id.',id,deleted_at,NULL',
             'seniority_pay' =>'required',
@@ -331,8 +337,6 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been updated.');
     }
-
-
 
     public function addDepartment()
     {
@@ -346,12 +350,15 @@ class SettingsController extends Controller
             'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
 
         ]);
+
         Department::create($departmentData);
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
     }
 
 
-    public function editDepartment(Request $request, $id) {
+    public function editDepartment(Request $request, $id) 
+    {
+       
         $department = Department::find($id);
 
         return view('pages.admin.settings.edit-department', ['department' => $department]);
@@ -382,7 +389,8 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been added.');
     }
 
-    public function editWorkingDay(Request $request, $id) {
+    public function editWorkingDay(Request $request, $id) 
+    {
         $working_day = EmployeeWorkingDay::templates()->find($id);
 
         return view('pages.admin.settings.edit-working-day', ['working_day' => $working_day]);
@@ -465,10 +473,12 @@ class SettingsController extends Controller
 
         return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);
     }
+
     public function addBranch()
     {
         return view('pages.admin.settings.add-branch');
     }
+
     public function postAddBranch(Request $request)
     {
 
@@ -492,8 +502,6 @@ class SettingsController extends Controller
         Branch::create($branchData);
         return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been added.');
     }
-
-
 
     public function postEditDepartment(Request $request,$id)
     {
@@ -524,7 +532,6 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been updated.');
     }
-
 
     public function postEditBranch(Request $request, $id)
     {
@@ -713,7 +720,6 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been updated.');
     }
 
-
     // Contribution List
 
     public function addEis()
@@ -821,7 +827,8 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
     }
     
-    public function editPcb(Request $request, $id) {
+    public function editPcb(Request $request, $id) 
+    {
         $pcbs = Pcb::find($id);
     
         return view('pages.admin.settings.edit-pcb', ['pcbs' => $pcbs]);
@@ -842,8 +849,6 @@ class SettingsController extends Controller
     
         return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
     }
-
-
 
     public function addCompanyDeduction()
     {
@@ -889,7 +894,8 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been added.');
     }
 
-    public function editCompanyDeduction(Request $request, $id) {
+    public function editCompanyDeduction(Request $request, $id) 
+    {
         $deduction = Deduction::find($id);
         return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
     }
@@ -927,7 +933,7 @@ class SettingsController extends Controller
         $updateValidatedDeductionData['employee_grade'] = null;
 
         $updateValidatedDeductionData['company_id']=$id;
-        
+
         Deduction::where('id', $request->company_deduction_id)->update($updateValidatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
     }
@@ -970,7 +976,8 @@ class SettingsController extends Controller
             return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been added.');
         }
 
-    public function editCompanyAddition(Request $request, $id) {
+    public function editCompanyAddition(Request $request, $id) 
+    {
         $addition = Addition::find($id);
 
         return view('pages.admin.settings.edit-addition', ['addition' => $addition]);
@@ -1089,7 +1096,8 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been updated.');
     }
 
-    public function editCompanySecurities(Request $request, $id) {
+    public function editCompanySecurities(Request $request, $id) 
+    {
         $deduction = Deduction::find($id);
 
         return view('pages.admin.settings.edit-deduction', ['deduction' => $deduction]);
