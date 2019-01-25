@@ -70,7 +70,7 @@ class GenerateEmailExceededVisaExpiredDate extends Command
         }
 
         if(!empty($emailData)) {
-            $recepients = array();
+            $recipients = array();
         
             // get admin users
             $admin_users = User::whereHas("roles", function($q){ 
@@ -78,10 +78,10 @@ class GenerateEmailExceededVisaExpiredDate extends Command
             })->get();
 
             foreach ($admin_users as $row) {
-                array_push($recepients, $row->email);
+                array_push($recipients, $row->email);
             }
 
-            \Mail::to($recepients)->send(new VisaNotificationMail($emailData));
+            \Mail::to($recipients)->send(new VisaNotificationMail($emailData));
 
             $this->line('Email generated and notified Admins.');
         }        

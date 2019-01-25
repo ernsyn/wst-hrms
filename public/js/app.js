@@ -52373,15 +52373,15 @@ $('#editCompanyBankPopup').on('show.bs.modal', function (event) {
 
     var button = $(event.relatedTarget);
     var id = button.data('bank-id');
-    var bank_code = button.data('bank-bank_code');
-    var acc_name = button.data('bank-acc_name');
+    var bank_code = button.data('bank-code');
+    var account_name = button.data('bank-accout-name');
     var status = button.data('bank-status');
 
     var modal = $(this);
 
     modal.find('.modal-body #company_bank_id').val(id);
-    modal.find('.modal-body #bank_code').val(bank_code);
-    modal.find('.modal-body #acc_name').val(acc_name);
+    modal.find('.modal-body #bank_list').val(bank_code);
+    modal.find('.modal-body #account_name').val(account_name);
     modal.find('.modal-body #status').val(status);
 });
 
