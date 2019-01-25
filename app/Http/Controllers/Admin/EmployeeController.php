@@ -242,7 +242,7 @@ class EmployeeController extends Controller
             'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
         ]);
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
-        $id = auth()->user()->id;
+        $id = auth()->user()->name;
       //  dd($id);
         $current_password = Auth::user()->password;
         $current_password = bcrypt($data['current_password']);
@@ -520,7 +520,7 @@ class EmployeeController extends Controller
 
 
             $validatedEmployeeData['user_id'] = $user->id;
-            $validatedEmployeeData['created_by'] = auth()->user()->id;
+            $validatedEmployeeData['created_by'] = auth()->user()->name;
             $employee = Employee::create($validatedEmployeeData);
         });
 
@@ -536,7 +536,7 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
-        $emergencyContactData['created_by'] = auth()->user()->id;
+        $emergencyContactData['created_by'] = auth()->user()->name;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
 
         $employee = Employee::find($id);
@@ -553,7 +553,7 @@ class EmployeeController extends Controller
             'dob' => 'required',
         ]);
         $dependentData['dob'] = implode("-", array_reverse(explode("/", $dependentData['dob'])));
-        $dependentData['created_by'] = auth()->user()->id;
+        $dependentData['created_by'] = auth()->user()->name;
         $dependent = new EmployeeDependent($dependentData);
 
         $employee = Employee::find($id);
@@ -572,7 +572,7 @@ class EmployeeController extends Controller
         ]);
         $immigrationData['issued_date'] = implode("-", array_reverse(explode("/", $immigrationData['issued_date'])));
         $immigrationData['expiry_date'] = implode("-", array_reverse(explode("/", $immigrationData['expiry_date'])));
-        $immigrationData['created_by'] = auth()->user()->id;
+        $immigrationData['created_by'] = auth()->user()->name;
         $immigration = new EmployeeImmigration($immigrationData);
 
         $employee = Employee::find($id);
@@ -593,7 +593,7 @@ class EmployeeController extends Controller
         ]);
         $visaData['issued_date'] = implode("-", array_reverse(explode("/", $visaData['issued_date'])));
         $visaData['expiry_date'] = implode("-", array_reverse(explode("/", $visaData['expiry_date'])));
-        $visaData['created_by'] = auth()->user()->id;
+        $visaData['created_by'] = auth()->user()->name;
         $visa = new EmployeeVisa($visaData);
 
         $employee = Employee::find($id);
@@ -617,7 +617,7 @@ class EmployeeController extends Controller
             'status' => 'required',
         ]);
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
-        $jobData['created_by'] = auth()->user()->id;
+        $jobData['created_by'] = auth()->user()->name;
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
             if(!empty($currentJob)) {
@@ -693,7 +693,7 @@ class EmployeeController extends Controller
             'acc_no' => 'required|numeric',
             'acc_status' => 'required'
         ]);
-        $bankAccountData['created_by'] = auth()->user()->id;
+        $bankAccountData['created_by'] = auth()->user()->name;
         $bankAccount = new EmployeeBankAccount($bankAccountData);
 
         $employee = Employee::find($id);
@@ -714,7 +714,7 @@ class EmployeeController extends Controller
         ]);
         $experienceData['start_date'] = implode("-", array_reverse(explode("/", $experienceData['start_date'])));
         $experienceData['end_date'] = implode("-", array_reverse(explode("/", $experienceData['end_date'])));
-        $experienceData['created_by'] = auth()->user()->id;
+        $experienceData['created_by'] = auth()->user()->name;
         $experience = new EmployeeExperience($experienceData);
 
         $employee = Employee::find($id);
@@ -734,7 +734,7 @@ class EmployeeController extends Controller
             'gpa' => 'required|integer|between:0,4.00',
             'description' => 'nullable'
         ]);
-        $educationData['created_by'] = auth()->user()->id;
+        $educationData['created_by'] = auth()->user()->name;
         $education = new EmployeeEducation($educationData);
 
         $employee = Employee::find($id);
@@ -750,7 +750,7 @@ class EmployeeController extends Controller
             'years_of_experience' => 'required',
             'competency' => 'required'
         ]);
-        $skillData['created_by'] = auth()->user()->id;
+        $skillData['created_by'] = auth()->user()->name;
         $skill = new EmployeeSkill($skillData);
 
         $employee = Employee::find($id);
@@ -784,7 +784,7 @@ class EmployeeController extends Controller
         }
 
 
-        $attachmentData['created_by'] = auth()->user()->id;
+        $attachmentData['created_by'] = auth()->user()->name;
         $attachment = new EmployeeAttachment($attachmentData);
 
         $employee = Employee::find($id);
@@ -823,9 +823,12 @@ class EmployeeController extends Controller
             'sunday' => 'required|in:full,half,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
+       
+        
         ]);
         $workingDaysData['is_template'] = false;
-        $workingDaysData['created_by'] = auth()->user()->id;
+        $workingDaysData['created_by'] = auth()->user()->name;    //error
+       
         $workingDay = new EmployeeWorkingDay($workingDayData);
 
         $employee = Employee::find($id);
@@ -849,6 +852,7 @@ class EmployeeController extends Controller
             'end_work_time' => 'required',
         ]);
         $workingDayUpdateData['is_template'] = false;
+        $workingDayUpdateData['created_by'] = auth()->user()->name;
         EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
@@ -911,7 +915,7 @@ class EmployeeController extends Controller
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
         if($request->kpi_proposer == 0){
-            $reportToData['created_by'] = auth()->user()->id;
+            $reportToData['created_by'] = auth()->user()->name;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
@@ -919,7 +923,7 @@ class EmployeeController extends Controller
             return response()->json(['success'=>'Report To was successfully added']);
         } else {
             if($employee_kpi_proposer == 0){
-                $reportToData['created_by'] = auth()->user()->id;
+                $reportToData['created_by'] = auth()->user()->name;
                 $reportTo = new EmployeeReportTo($reportToData);
                 $employee = Employee::find($id);
                 $employee->report_tos()->save($reportTo);
@@ -1007,7 +1011,7 @@ class EmployeeController extends Controller
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
-        $securityGroupData['created_by'] = auth()->user()->id;
+        $securityGroupData['created_by'] = auth()->user()->name;
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
 
         $employee = Employee::find($id);

@@ -194,7 +194,8 @@ class SettingsController extends Controller
             'name' => 'required|unique:employee_positions,name,NULL,id,deleted_at,NULL',
 
         ]);
-
+        
+        $positionData['created_by'] = auth()->user()->name;
         EmployeePosition::create($positionData);
 
         return redirect()->route('admin.settings.positions')->with('status', 'Position has successfully been added.');
@@ -228,7 +229,8 @@ class SettingsController extends Controller
             'name' => 'required|unique:employee_grades,name,NULL,id,deleted_at,NULL',
 
         ]);
-
+        
+        $gradeData['created_by'] = auth()->user()->name;
         EmployeeGrade::create($gradeData);
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been added.');
@@ -300,6 +302,7 @@ class SettingsController extends Controller
         ]);
 
         $costCentreData['amount'] = '50.00';
+        $costCentreData['created_by'] = auth()->user()->name;
 
         CostCentre::create($costCentreData);
         return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been added.');
@@ -346,6 +349,8 @@ class SettingsController extends Controller
             'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
 
         ]);
+
+        $departmentData['created_by'] = auth()->user()->name;
         Department::create($departmentData);
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
     }
@@ -377,7 +382,8 @@ class SettingsController extends Controller
         ]);
 
         $workingDaysData['is_template'] = true;
-
+        $workingDaysData['created_by'] = auth()->user()->name;
+        
         EmployeeWorkingDay::create($workingDaysData);
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been added.');
     }
@@ -402,7 +408,7 @@ class SettingsController extends Controller
         $branch = Input::get('branch');
         $start_date = $request->input('jobDate');
         $emp_status = Input::get('emp_status');
-        $created_by = auth()->user()->id;
+        $created_by = auth()->user()->name;
 
         DB::insert('insert into employee_jobs
         (emp_id, branch_id, remarks,
@@ -437,7 +443,7 @@ class SettingsController extends Controller
         $branch = Input::get('branch');
         $start_date = $request->input('jobDate');
         $emp_status = Input::get('emp_status');
-        $created_by = auth()->user()->id;
+        $created_by = auth()->user()->name;
 
         EmployeeJob::where('id',$job_id)->update(array(
             'branch_id' => $branch,
@@ -687,6 +693,8 @@ class SettingsController extends Controller
 
         ]);
 
+        $epfData['created_by']= auth()->user()->name;
+        
         EPF::create($epfData);
 
         return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been added.');
@@ -731,6 +739,7 @@ class SettingsController extends Controller
             'employee' => 'required',
         ]);
 
+        $eisData['created_by'] =auth()->user()->name;
         Eis::create($eisData);
 
         return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been added.');
@@ -777,6 +786,7 @@ class SettingsController extends Controller
 
         ]);
 
+        $socsoData['created_by']=auth()->user()->name;
         Socso::create($socsoData);
 
         return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been added.');
@@ -820,7 +830,8 @@ class SettingsController extends Controller
             'amount' => 'required|numeric',
             'total_children' =>'required|numeric',
         ]);
-
+        
+        $pcbData['created_by'] = auth()->user()->name;
         Pcb::create($pcbData);
 
         return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
@@ -884,7 +895,7 @@ class SettingsController extends Controller
         else $validatedDeductionData['employee_grade'] = null;
 
         $validatedDeductionData['company_id']=$id;
-
+        $validatedDeductionData['created_by'] = auth()->user()->name;
         // dd($validatedAdditionData['employee_grade']);
 
         $deduction = Deduction::create($validatedDeductionData);
@@ -965,7 +976,7 @@ class SettingsController extends Controller
             $validatedAdditionData['company_id']=$id;
 
             // dd($validatedAdditionData['employee_grade']);
-
+            $validatedAdditionData['created_by'] = auth()->user()->name;
             $addition = Addition::create($validatedAdditionData);
             return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been added.');
         }
@@ -1025,13 +1036,13 @@ class SettingsController extends Controller
             ->update(['status'=>'Inactive']);
             $companyBankData['status'] = 'Active';
             $companyBankData['company_id']= $id;
-            $companyBankData['created_by'] = auth()->user()->id;
+            $companyBankData['created_by'] = auth()->user()->name;
             CompanyBank::create($companyBankData);
         }
         else {
             $companyBankData['status'] = 'Inactive';
             $companyBankData['company_id']= $id;
-            $companyBankData['created_by'] = auth()->user()->id;
+            $companyBankData['created_by'] = auth()->user()->name;
             CompanyBank::create($companyBankData);
         }
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been added.');
@@ -1048,7 +1059,7 @@ class SettingsController extends Controller
         ]);
 
         $updateCompanyBankData['company_id']= $id;
-        $updateCompanyBankData['created_by'] = auth()->user()->id;
+        $updateCompanyBankData['updated_by'] = auth()->user()->name;
         CompanyBank::where('id',  $request->company_bank_id)->update($updateCompanyBankData);
 
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Bank has successfully been updated.');
@@ -1067,7 +1078,7 @@ class SettingsController extends Controller
         ]);
 
         $securityGroupData['company_id']=$id;
-        $securityGroupData['created_by'] = auth()->user()->id;
+        $securityGroupData['created_by'] = auth()->user()->name;
         SecurityGroup::create($securityGroupData);
 
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been added.');
@@ -1081,7 +1092,7 @@ class SettingsController extends Controller
 
             ]);
             $updateSecurityGroupData['company_id']= $id;
-            $updateSecurityGroupData['created_by'] = auth()->user()->id;
+            $updateSecurityGroupData['created_by'] = auth()->user()->name;
 
 
         SecurityGroup::where('id',  $request->security_group_id)->update($updateSecurityGroupData);

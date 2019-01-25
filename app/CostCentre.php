@@ -11,7 +11,10 @@ class CostCentre extends Model
     protected $table = 'cost_centres';
 
     protected $fillable = [
-        'name','seniority_pay','amount'
+        'name',
+        'seniority_pay',
+        'amount',
+        'created_by'
     ];
     protected $dates = ['deleted_at'];
 }

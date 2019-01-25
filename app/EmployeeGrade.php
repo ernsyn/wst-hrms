@@ -11,7 +11,8 @@ class EmployeeGrade extends Model
     protected $table = 'employee_grades';
 
     protected $fillable = [
-        'name'
+        'name',
+        'created_by'
     ];
     protected $dates = ['deleted_at'];
 }

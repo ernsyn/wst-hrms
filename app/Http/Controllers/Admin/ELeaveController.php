@@ -64,7 +64,7 @@ class ELeaveController extends Controller
             "entitled_days" => '',
         ]);
         $leaveTypeData['active'] = true;
-
+        $leaveTypeData['created_by'] = auth()->user()->name;
         $appliedRulesData =  $request->validate([
             "applied_rules" => '',
         ]);
@@ -206,7 +206,7 @@ class ELeaveController extends Controller
             'state'=>'nullable',
             'note' => 'nullable',
         ]);
-        $created_by = auth()->user()->id;
+        $publicHolidayData['created_by'] = auth()->user()->name;
 
         if($request->state != null)
             $publicHolidayData['state'] = implode(",", $request->state);
@@ -446,6 +446,7 @@ class ELeaveController extends Controller
 
         $leaveRequestData['leave_request_id'] =$id;
         $leaveRequestData['approved_by_emp_id'] = 1;
+       
 
         $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
        // $employee = Employee::find($report_to_emp_id);

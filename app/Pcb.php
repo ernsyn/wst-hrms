@@ -13,7 +13,11 @@ class Pcb extends Model
     // public $timestamps = false;
 
     protected $fillable = [
-        'category','total_children','salary','amount'
+        'category',
+        'total_children',
+        'salary',
+        'amount',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

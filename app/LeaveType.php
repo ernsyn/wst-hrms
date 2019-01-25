@@ -17,6 +17,7 @@ class LeaveType extends Model
         'is_custom',
         'entitled_days',
         'active',
+        'created_by',
     ];
 
     protected $dates = ['deleted_at'];

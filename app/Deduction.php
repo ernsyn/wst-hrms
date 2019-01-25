@@ -16,7 +16,8 @@ class Deduction extends Model
         'amount' ,
         'statutory',
         'status',
-        'company_id'
+        'company_id',
+        'created_by'
 
     ];
     public function cost_centres()

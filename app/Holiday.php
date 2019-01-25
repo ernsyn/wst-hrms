@@ -17,7 +17,8 @@ class Holiday extends Model
     'status',
     'repeat_annually',
     'total_days',
-    'state'
+    'state',
+    'created_by'
 
 
     ];

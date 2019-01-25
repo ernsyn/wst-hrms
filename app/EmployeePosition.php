@@ -12,7 +12,8 @@ class EmployeePosition extends Model
     protected $table = 'employee_positions';
 
     protected $fillable = [
-        'name'
+        'name',
+        'created_by'
     ];
     protected $dates = ['deleted_at'];
 }

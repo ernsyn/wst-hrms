@@ -11,7 +11,10 @@ class Eis extends Model
    
 
     protected $fillable = [
-        'employer','employee','salary'
+        'employer',
+        'employee',
+        'salary',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

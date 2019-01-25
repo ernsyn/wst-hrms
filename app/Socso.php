@@ -11,7 +11,10 @@ class Socso extends Model
     // public $timestamps = false;
 
     protected $fillable = [
-        'first_category_employer','first_category_employee','salary'
+        'first_category_employer',
+        'first_category_employee',
+        'salary',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

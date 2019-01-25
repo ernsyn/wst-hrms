@@ -67,12 +67,14 @@ class LeaveService
             }
 
             // dd($validFromDate);
+            $created_by = auth()->user()->name;
             $leaveAllocation = LeaveAllocation::create([
                 'emp_id' => $emp_id,
                 'leave_type_id' => $leaveType->id,
                 'valid_from_date' => $validFromDate,
                 'valid_until_date' => $validUntilDate,
                 'allocated_days' => $allocatedDays,
+                'created_by' => $created_by,
             ]);
             
         }
@@ -142,7 +144,8 @@ class LeaveService
         ->first();
 
         $leaveRequest = null;
-        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason, $attachment_data_url, $attachment_required, &$leaveRequest) {
+        $created_by = auth()->user()->name;
+        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason,$created_by, $attachment_data_url, $attachment_required, &$leaveRequest) {
             $leaveRequest = LeaveRequest::create([
                 'emp_id' => $employee->id,
                 'leave_type_id' => $leave_type_id,
@@ -152,7 +155,8 @@ class LeaveService
                 'am_pm' => $am_pm, 
                 'applied_days' =>  $totalDays,
                 'reason' => $reason,
-                'status' => 'new'
+                'status' => 'new',
+                'created_by' => $created_by,
             ]);
 
             $leaveAllocation->update([
