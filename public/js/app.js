@@ -52368,9 +52368,105 @@ $('#updateLeaveBalance').on('show.bs.modal', function (event) {
     modal.find('.modal-body #types').val(type_id);
 });
 
-//update job
-$('#updateJob').on('show.bs.modal', function (event) {
+$('#editCompanyBankPopup').on('show.bs.modal', function (event) {
 
+    var button = $(event.relatedTarget);
+    var id = button.data('bank-id');
+    var bank_code = button.data('bank-code');
+    var account_name = button.data('bank-accout-name');
+    var status = button.data('bank-status');
+
+    var modal = $(this);
+
+    modal.find('.modal-body #company_bank_id').val(id);
+    modal.find('.modal-body #bank_list').val(bank_code);
+    modal.find('.modal-body #account_name').val(account_name);
+    modal.find('.modal-body #status').val(status);
+});
+
+//update company security group
+$('#editSecurityGroupPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget);
+    var id = button.data('security-id');
+    var name = button.data('security-name');
+    var description = button.data('security-description');
+    var status = button.data('security-status');
+
+    var modal = $(this);
+
+    modal.find('.modal-body #security_group_id').val(id);
+    modal.find('.modal-body #name').val(name);
+    modal.find('.modal-body #description').val(description);
+    modal.find('.modal-body #status').val(status);
+});
+
+//update company security group
+$('#editTravelPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget);
+    var id = button.data('travel-id');
+    var code = button.data('travel-code');
+    var rate = button.data('travel-rate');
+    var status = button.data('travel-status');
+
+    var modal = $(this);
+
+    modal.find('.modal-body #travel_id').val(id);
+    modal.find('.modal-body #code').val(code);
+    modal.find('.modal-body #rate').val(rate);
+    modal.find('.modal-body #status').val(status);
+});
+
+//update addition
+$('#editCompanyAdditionPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget);
+    var id = button.data('addition-id');
+    var code = button.data('addition-code');
+    var name = button.data('addition-name');
+    var type = button.data('addition-type');
+    var amount = button.data('addition-amount');
+    var statutory = button.data('addition-statutory');
+    //var eaform = button.data('addition-eaform')
+    var status = button.data('addition-status');
+
+    var modal = $(this);
+
+    modal.find('.modal-body #company_addition_id').val(id);
+    modal.find('.modal-body #code').val(code);
+    modal.find('.modal-body #name').val(name);
+    modal.find('.modal-body #type').val(type);
+    modal.find('.modal-body #amount').val(amount);
+    modal.find('.modal-body #statutory').val(statutory);
+    //modal.find('.modal-body #ea_form').val(eaform)
+    modal.find('.modal-body #status').val(status);
+});
+
+//update deduction
+$('#editCompanyDeductionPopup').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget);
+    var id = button.data('deduction-id');
+    var code = button.data('deduction-code');
+    var name = button.data('deduction-name');
+    var type = button.data('deduction-type');
+    var amount = button.data('deduction-amount');
+    var statutory = button.data('deduction-statutory');
+    var status = button.data('deduction-status');
+
+    var modal = $(this);
+
+    modal.find('.modal-body #company_deduction_id').val(id);
+    modal.find('.modal-body #code').val(code);
+    modal.find('.modal-body #name').val(name);
+    modal.find('.modal-body #type').val(type);
+    modal.find('.modal-body #amount').val(amount);
+    modal.find('.modal-body #statutory').val(statutory);
+    modal.find('.modal-body #status').val(status);
+});
+
+//update job
     var button = $(event.relatedTarget);
     var id = button.data('job-id');
     var date = button.data('job-date');
