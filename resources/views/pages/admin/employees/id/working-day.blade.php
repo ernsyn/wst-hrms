@@ -491,11 +491,25 @@
                 $("#working_time_container #start_work_time").html(convertTime(data[0].start_work_time));
                 $("#working_time_container #end_work_time").html(convertTime(data[0].end_work_time));
 
-                $("#working_time_container #half_1_start_work_time").html(convertTime(data[0].half_1_start_work_time));
-                $("#working_time_container #half_1_end_work_time").html(convertTime(data[0].half_1_end_work_time));
+                if(data[0].half_1_start_work_time) {
+                    $("#working_time_container #half_1_start_work_time").html(convertTime(data[0].half_1_start_work_time));
+                    $("#edit-working-day-form input[name=half_1_start_work_time]").prop('value', data[0].half_1_start_work_time.substring(0, data[0].half_1_start_work_time.length - 3));
+                }
 
-                $("#working_time_container #half_2_start_work_time").html(convertTime(data[0].half_2_start_work_time));
-                $("#working_time_container #half_2_end_work_time").html(convertTime(data[0].half_2_end_work_time));
+                if(data[0].half_1_end_work_time) {
+                    $("#working_time_container #half_1_end_work_time").html(convertTime(data[0].half_1_end_work_time));
+                    $("#edit-working-day-form input[name=half_1_end_work_time]").prop('value', data[0].half_1_end_work_time.substring(0, data[0].half_1_end_work_time.length - 3));
+                }
+                
+                if(data[0].half_2_start_work_time) {
+                    $("#working_time_container #half_2_start_work_time").html(convertTime(data[0].half_2_start_work_time));
+                    $("#edit-working-day-form input[name=half_2_start_work_time]").prop('value', data[0].half_2_start_work_time.substring(0, data[0].half_2_start_work_time.length - 3));
+                }
+
+                if(data[0].half_2_end_work_time) {
+                    $("#working_time_container #half_2_end_work_time").html(convertTime(data[0].half_2_end_work_time));
+                    $("#edit-working-day-form input[name=half_2_end_work_time]").prop('value', data[0].half_2_end_work_time.substring(0, data[0].half_2_end_work_time.length - 3));
+                }
 
                 $("#edit-working-day-form select[name=monday]").val(data[0].monday);
                 $("#edit-working-day-form select[name=tuesday]").val(data[0].tuesday);
@@ -506,10 +520,6 @@
                 $("#edit-working-day-form select[name=sunday]").val(data[0].sunday);
                 $("#edit-working-day-form input[name=start_work_time]").prop('value', data[0].start_work_time.substring(0, data[0].start_work_time.length - 3));
                 $("#edit-working-day-form input[name=end_work_time]").prop('value', data[0].end_work_time.substring(0, data[0].end_work_time.length - 3));
-                $("#edit-working-day-form input[name=half_1_start_work_time]").prop('value', data[0].half_1_start_work_time.substring(0, data[0].half_1_start_work_time.length - 3));
-                $("#edit-working-day-form input[name=half_1_end_work_time]").prop('value', data[0].half_1_end_work_time.substring(0, data[0].half_1_end_work_time.length - 3));
-                $("#edit-working-day-form input[name=half_2_start_work_time]").prop('value', data[0].half_2_start_work_time.substring(0, data[0].half_2_start_work_time.length - 3));
-                $("#edit-working-day-form input[name=half_2_end_work_time]").prop('value', data[0].half_2_end_work_time.substring(0, data[0].half_2_end_work_time.length - 3));
 
                 $("#assign-working-day-button").hide();
                 $("#edit-working-day-button").show();

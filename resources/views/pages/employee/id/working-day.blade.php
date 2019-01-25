@@ -82,11 +82,21 @@
                 $("#working_time_container #start_work_time").html(convertTime(data[0].start_work_time));
                 $("#working_time_container #end_work_time").html(convertTime(data[0].end_work_time));
 
-                $("#working_time_container #half_1_start_work_time").html(convertTime(data[0].half_1_start_work_time));
-                $("#working_time_container #half_1_end_work_time").html(convertTime(data[0].half_1_end_work_time));
+                if(data[0].half_1_start_work_time) {
+                    $("#working_time_container #half_1_start_work_time").html(convertTime(data[0].half_1_start_work_time));
+                }
 
-                $("#working_time_container #half_2_start_work_time").html(convertTime(data[0].half_2_start_work_time));
-                $("#working_time_container #half_2_end_work_time").html(convertTime(data[0].half_2_end_work_time));
+                if(data[0].half_1_end_work_time) {
+                    $("#working_time_container #half_1_end_work_time").html(convertTime(data[0].half_1_end_work_time));
+                }
+                
+                if(data[0].half_2_start_work_time) {
+                    $("#working_time_container #half_2_start_work_time").html(convertTime(data[0].half_2_start_work_time));
+                }
+
+                if(data[0].half_2_end_work_time) {
+                    $("#working_time_container #half_2_end_work_time").html(convertTime(data[0].half_2_end_work_time));
+                }
 
                 $("#working_time_container").show();
             }
