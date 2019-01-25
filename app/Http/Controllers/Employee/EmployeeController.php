@@ -54,7 +54,8 @@ class EmployeeController extends Controller
         }
     }
 
-    public function postEditPicture(Request $request, $id) {
+    public function postEditProfilePicture(Request $request) 
+    {
         $pictureData = $request->validate([
             'attachment' => 'required|max:2000000|regex:/^data:image/'
         ],
@@ -62,15 +63,32 @@ class EmployeeController extends Controller
             'attachment.max' => 'The file size may not be greater than 2MB.'
         ]);
 
+        $emp_id = Auth::user()->employee->id;
+
         $picture_data_url = $pictureData['attachment'];
         $attach = self::processBase64DataUrl($picture_data_url);
         $updatepictureData['category']= 'employee-picture';
         $updatepictureData['mimetype']= $attach['mime_type'];
         $updatepictureData['data']= $attach['data'];
         $updatepictureData['size']= $attach['size'];
-        $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
-        Media::where('id', $id)->update($updatepictureData);
+        $updatepictureData['filename']= 'employee_'.($emp_id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
+        
 
+        DB::transaction(function() use ($emp_id, $updatepictureData) {
+            $user = Employee::find($emp_id)->user;
+
+            $oldProfileMedia = $user->profile_media;
+    
+            if(!empty($oldProfileMedia)) {
+                $user->profile_media()->dissociate();
+                $user->save();
+        
+                $oldProfileMedia->delete();
+            }
+            
+            $user->profile_media()->associate(Media::create($updatepictureData));
+            $user->save();    
+        });
 
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
     }
