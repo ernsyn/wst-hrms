@@ -101,7 +101,6 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia]);
     }
 
-    //todo - edit the logic here such that it deletes the old medisa
     public function postEditProfilePicture(Request $request, $emp_id) 
     {
         $pictureData = $request->validate([

@@ -982,18 +982,28 @@ class SettingsController extends Controller
             'employee_grade' => 'nullable'
         ]);
 
-        if(!empty($updateValidatedAdditionData['statutory'])) $updateValidatedAdditionData['statutory'] = implode(",", $request->statutory);
-        else $updateValidatedAdditionData['statutory'] = null;
+        if (!empty($updateValidatedAdditionData['statutory'])) {
+            $updateValidatedAdditionData['statutory'] = implode(",", $request->statutory);
+        } else {
+            $updateValidatedAdditionData['statutory'] = null;
+        }
 
         $updateValidatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
 
-        if(!empty($updateValidatedAdditionData['cost_centre'])) $updateValidatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
-        else $updateValidatedAdditionData['cost_centre'] = null;
+        if (!empty($updateValidatedAdditionData['cost_centre'])) {
+            $updateValidatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
+        } else {
+            $updateValidatedAdditionData['cost_centre'] = null;
+        }
 
-        if(!empty($updateValidatedAdditionData['employee_grade'])) $updateValidatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
-        else $updateValidatedAdditionData['employee_grade'] = null;
+        if (!empty($updateValidatedAdditionData['employee_grade'])) {
+            $updateValidatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
+        } else {
+            $updateValidatedAdditionData['employee_grade'] = null;
+        }
+
         $updateValidatedAdditionData['company_id']=$id;
-        Addition::where('id', $request->company_addition_id)->update($updateValidatedAdditionData);
+        Addition::find($request->company_addition_id)->update($updateValidatedAdditionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Addition Group has successfully been updated.');
     }
 
