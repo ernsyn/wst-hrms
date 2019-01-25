@@ -114,8 +114,8 @@ class LeaveService
         }
     }
 
-    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url) {
-        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm);
+    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $is_admin = false) {
+        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm, $is_admin);
         if(array_key_exists('error', $result)) {
             return $result;
         }
@@ -277,6 +277,8 @@ class LeaveService
         $inc_off_days = false;
         $no_limit = false;
         $consecutive = false;
+
+        $is_unpaid_leave = false;
         
         $max_days_per_application;
         $min_apply_days_before_config;
@@ -389,11 +391,25 @@ class LeaveService
                         $invalidErrorMessage = "Multiple approval levels needed.";
                     }
                     break;
+                case LeaveTypeRule::UNPAID:
+                    $is_unpaid_leave = true;
+                    break;
             }
 
             if($invalid) {
                 break;
             }
+        }
+
+        // check if employee is under probation
+        $probation = EmployeeJob::where('emp_id', $employee->id)
+        ->where('status', 'probationer')
+        ->whereNull('end_date')
+        ->first();
+
+        if($probation) {
+            $invalid = true;
+            $invalidErrorMessage = "Employee is not eligable for leave application while on probation.";
         }
 
         if($invalid) {
@@ -480,8 +496,11 @@ class LeaveService
         }
 
         $availableDays = self::getLeaveAllocationsAvailableDays($employee->id, $leave_type_id, $now);
-        if($availableDays < $totalDays) {
-            return self::error("Insufficient days (".$availableDays." days) for application (".$totalDays." leave days applied).");
+
+        if(!$is_unpaid_leave) {
+            if($availableDays < $totalDays) {
+                return self::error("Insufficient days (".$availableDays." days) for application (".$totalDays." leave days applied).");
+            }
         }
 
         return array_merge(

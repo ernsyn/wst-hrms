@@ -52368,20 +52368,19 @@ $('#updateLeaveBalance').on('show.bs.modal', function (event) {
     modal.find('.modal-body #types').val(type_id);
 });
 
-//update company
 $('#editCompanyBankPopup').on('show.bs.modal', function (event) {
 
     var button = $(event.relatedTarget);
     var id = button.data('bank-id');
-    var bank_code = button.data('bank-bank_code');
-    var acc_name = button.data('bank-acc_name');
+    var bank_code = button.data('bank-code');
+    var account_name = button.data('bank-accout-name');
     var status = button.data('bank-status');
 
     var modal = $(this);
 
     modal.find('.modal-body #company_bank_id').val(id);
-    modal.find('.modal-body #bank_code').val(bank_code);
-    modal.find('.modal-body #acc_name').val(acc_name);
+    modal.find('.modal-body #bank_list').val(bank_code);
+    modal.find('.modal-body #account_name').val(account_name);
     modal.find('.modal-body #status').val(status);
 });
 
@@ -52468,8 +52467,6 @@ $('#editCompanyDeductionPopup').on('show.bs.modal', function (event) {
 });
 
 //update job
-$('#updateJob').on('show.bs.modal', function (event) {
-
     var button = $(event.relatedTarget);
     var id = button.data('job-id');
     var date = button.data('job-date');
@@ -52492,76 +52489,6 @@ $('#updateJob').on('show.bs.modal', function (event) {
     modal.find('.modal-body #grade').val(grade);
     modal.find('.modal-body #basic_salary').val(salary);
     modal.find('.modal-body #emp_status').val(status);
-});
-
-//----ADDITION----
-//---- ADD -----
-$('#check_cost_centre').change(function () {
-    if (this.checked) {
-        $('#cost_centre').prop('disabled', false);
-    } else {
-        $('#cost_centre').prop('disabled', true);
-    }
-});
-
-$('#check_job_grade').change(function () {
-    if (this.checked) {
-        $('#job_grade').prop('disabled', false);
-    } else {
-        $('#job_grade').prop('disabled', true);
-    }
-});
-
-//----- EDIT --------
-$('#check_cost_centre_a').change(function () {
-    if (this.checked) {
-        $('#cost_centre_a').prop('disabled', false);
-    } else {
-        $('#cost_centre_a').prop('disabled', true);
-    }
-});
-
-$('#check_job_grade_a').change(function () {
-    if (this.checked) {
-        $('#job_grade_a').prop('disabled', false);
-    } else {
-        $('#job_grade_a').prop('disabled', true);
-    }
-});
-
-//---- DEDUCTION ----
-//---- ADD -----
-$('#check_cost_centre_d').change(function () {
-    if (this.checked) {
-        $('#cost_centre_d').prop('disabled', false);
-    } else {
-        $('#cost_centre_d').prop('disabled', true);
-    }
-});
-
-$('#check_job_grade_d').change(function () {
-    if (this.checked) {
-        $('#job_grade_d').prop('disabled', false);
-    } else {
-        $('#job_grade_d').prop('disabled', true);
-    }
-});
-
-//----- EDIT -----
-$('#check_cost_centre_de').change(function () {
-    if (this.checked) {
-        $('#cost_centre_de').prop('disabled', false);
-    } else {
-        $('#cost_centre_de').prop('disabled', true);
-    }
-});
-
-$('#check_job_grade_de').change(function () {
-    if (this.checked) {
-        $('#job_grade_de').prop('disabled', false);
-    } else {
-        $('#job_grade_de').prop('disabled', true);
-    }
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
