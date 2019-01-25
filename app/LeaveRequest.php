@@ -23,7 +23,6 @@ class LeaveRequest extends Model
     ];
 
     protected $casts = [
-
         'applied_days' => 'float',
     ];
 

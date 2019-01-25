@@ -566,7 +566,6 @@ class ELeaveController extends Controller
     
         public function postAddApproval(Request $request)
         {          
-
             $id = $request->input('id');     
             $emp_id = $request->input('emp_id');    
             $leave_type_id = $request->input('leave_type_id');   
@@ -588,53 +587,42 @@ class ELeaveController extends Controller
 
             $employee_report_to = EmployeeReportTo::where('emp_id','=',$emp_id)->count();
             $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id)->count(); //check leave_request id in leave request approval
+            
             if ($multiple_approval_levels_required == false) {
-
                 if ($leave_request_approval == 0){    //if leave request approval = 0 then 
 
                     if($employee_report_to_level == 1){     // if report to level = 1 
-                    LeaveRequest::where('id',$id)->update(array('status' => 'new'));      //then update leave request status = new
-                    $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
-                    $leaveRequestData = $request->validate([
-                        ]);
-          
-                      $user = Auth::user();
-                      $report_to_emp_id = $user->employee->id;
-                      $leaveRequestData['leave_request_id'] =$request->id;
-                      $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
-                      $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
-                      $employee = Employee::find($report_to_emp_id);
-                      $employee->leave_request_approvals()->save($leaveRequestData);
-          
-                      return redirect()->route('leaverequest')->with('status','Leave Request Approved Level One');
-                    
-                    }
-                    else 
-
-                    {
+                        LeaveRequest::where('id',$id)->update(array('status' => 'new'));      //then update leave request status = new
+                        $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
+                        $leaveRequestData = $request->validate([
+                            ]);
+            
+                        $user = Auth::user();
+                        $report_to_emp_id = $user->employee->id;
+                        $leaveRequestData['leave_request_id'] =$request->id;
+                        $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
+                        $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
+                        $employee = Employee::find($report_to_emp_id);
+                        $employee->leave_request_approvals()->save($leaveRequestData);
+            
+                        return redirect()->route('leaverequest')->with('status','Leave Request Approved Level One');
+                    } else {
                         return redirect()->route('leaverequest')->with('status','You are not first approver');
                     }
-                }
-                    else
-                    { 
-                    if($employee_report_to_level == 1)
-                    {     
+                } else { 
+                    if($employee_report_to_level == 1) {     
                         return redirect()->route('leaverequest')->with('status','You are not first approver');
-                    }
-
-                        else
-
-                        {
+                    } else {
                         LeaveRequest::where('id',$id)->update(array('status' => 'approved'));
                         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
                         $leaveRequestData = $request->validate([
-                              ]);
+                                ]);
                 
                         $user = Auth::user();
                         $report_to_emp_id = $user->employee->id;
                         $leaveRequestData['leave_request_id'] =$request->id;
                         $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
- 
+
                         $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
                         $employee = Employee::find($report_to_emp_id);
                     
@@ -643,12 +631,7 @@ class ELeaveController extends Controller
                         return redirect()->route('leaverequest')->with('status','Leave Request Approved');
                     }
                 }
-
-            }
-
-            else 
-            {
-    
+            } else {
                 LeaveRequest::where('id',$id)->update(array('status' => 'approved'));
                 $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
                 $leaveRquestData = $request->validate([
@@ -663,10 +646,7 @@ class ELeaveController extends Controller
                 $employee = Employee::find($report_to_emp_id);
                 $employee->leave_request_approvals()->save($leaveRequestData);
                 return redirect()->route('leaverequest')->with('status','Leave Request Approved');
-    
             }
-    
-
         }
 
     public function postDisapproved(Request $request) {          
@@ -692,8 +672,6 @@ class ELeaveController extends Controller
         ->update(array('spent_days'=>$leaveAllocationDataEntry));
         return redirect()->route('leaverequest');
     }
-
-
 
 
     public function postReportTo(Request $request, $id) {
