@@ -405,6 +405,17 @@ class LeaveService
             }
         }
 
+        // check if employee is under probation
+        $probation = EmployeeJob::where('emp_id', $employee->id)
+        ->where('status', 'probationer')
+        ->whereNull('end_date')
+        ->first();
+
+        if($probation) {
+            $invalid = true;
+            $invalidErrorMessage = "Employee is not eligable for leave application while on probation.";
+        }
+
         if($invalid) {
             return self::error($invalidErrorMessage);
         }
