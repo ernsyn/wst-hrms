@@ -567,7 +567,7 @@ class ELeaveController extends Controller
         
                     $user = Auth::user();
                     $report_to_emp_id = $user->employee->id;
-                    $leaveRequestData['leave_request_id'] =$request->id;
+                    $leaveRequestData['leave_request_id'] = $request->id;
                     $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
                     $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
                     $employee = Employee::find($report_to_emp_id);
