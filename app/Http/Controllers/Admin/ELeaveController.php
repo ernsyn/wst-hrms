@@ -154,7 +154,7 @@ class ELeaveController extends Controller
     // List Of Leave Public Holidays List
     public function displayPublicHolidays()
     {
-        $holiday = Holiday::all();
+        $holiday = Holiday::orderBy('start_date', 'ASC')->get();
 
         $now = Carbon::now();
 
@@ -976,7 +976,9 @@ class ELeaveController extends Controller
 
         $employee = Employee::where('id', $emp_id)->first();
 
-        $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
+        $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, true);
+
+        // dd($result);
 
         $leave_request = LeaveRequest::where('id', $result)->first();
 
@@ -1033,7 +1035,7 @@ class ELeaveController extends Controller
             $attachment_data_url = $requestData['attachment'];
         }
 
-        $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
+        $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, true);
 
         $leave_request = LeaveRequest::where('id', $result)->first();
 
