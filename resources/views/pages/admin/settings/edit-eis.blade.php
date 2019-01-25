@@ -16,8 +16,10 @@
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('salary') }}</strong>
                                 </span>
-								@endif
+                                @endif
+                            </div>
                                 <label class="col-md-12 col-form-label">Employer*</label>
+                                <div class="col-md-12">
                                 <input id="employer" type="text" class="form-control{{ $errors->has('employer') ? ' is-invalid' : '' }}" placeholder="Name here"
                                     name="employer" value="{{ $eis->employer }}" required>
                                 @if ($errors->has('employer'))
@@ -25,8 +27,9 @@
                                     <strong>{{ $errors->first('employer') }}</strong>
                                 </span>
 								@endif
-
+                                </div>
                                 <label class="col-md-12 col-form-label">Employee**</label>
+                                <div class="col-md-12">
                                 <input id="employee" type="text" class="form-control{{ $errors->has('employee') ? ' is-invalid' : '' }}" placeholder="Name here"
                                     name="employee" value="{{ $eis->employee }}" required>
                                 @if ($errors->has('employee'))

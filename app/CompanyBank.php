@@ -19,6 +19,7 @@ class CompanyBank extends Model implements Auditable
         'created_by'
     ];
     protected $dates = ['deleted_at'];
+    
     public function bank()
     {
         return $this->belongsTo('App\BankCode','bank_code');

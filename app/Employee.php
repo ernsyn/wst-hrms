@@ -33,7 +33,8 @@ class Employee extends Model implements Auditable
         'driver_license_expiry_date',
         'created_by',
         'main_security_group_id',
-        'code'
+        'code',
+        'resignation_date'
     ];
 
     protected $dates = [

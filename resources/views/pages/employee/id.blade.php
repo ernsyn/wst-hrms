@@ -299,7 +299,7 @@
                                     </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="main-security-group-id"><strong>Security Group Id*</strong></label>
-                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id" readonly>
+                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id" disabled="true">
                                         <option value=""></option>
                                         @foreach(App\SecurityGroup::all() as $company)
                                         <option value="{{ $company->id }}">{{ $company->name }}</option>
@@ -509,7 +509,7 @@
 
         });
 
-        var editProfileRouteTemplate = "{{ route('employee.profile.edit.post', ['id' => $employee->id]) }}";
+        var editProfileRouteTemplate = "{{ route('employee.profile.edit.post') }}";
         $('#edit-profile-submit').click(function(e){
             clearProfilesError('#edit-profile-form');
             // var editProfileRoute = editProfileRouteTemplate.replace($id, editProfileId);
@@ -730,7 +730,7 @@
             $(e.target).attr('disabled', true);
 
             $.ajax({
-                url: "{{ route('employee.change-password.post', ['id' => $employee->id]) }}",
+                url: "{{ route('employee.change-password.post') }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',

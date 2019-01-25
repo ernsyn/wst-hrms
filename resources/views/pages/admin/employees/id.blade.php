@@ -176,7 +176,7 @@
                                             </div>
                                             <span class="col-lg-5 p-3">Resignation Date</span>
                                             <div class="col-lg-7 font-weight-bold p-3">
-                                                <span class="field-value">{!! isset($employee->employee_jobs()->where('status','=','Resigned')->first()->start_date ) ? \Carbon\Carbon::parse($employee->employee_jobs()->where('status','Resigned')->first()->start_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
+                                                <span class="field-value">{!! isset($employee->resignation_date ) ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
                                             </div>
                                         </div>
                                     </div>
