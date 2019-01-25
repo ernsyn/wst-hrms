@@ -12,23 +12,13 @@ class Deduction extends Model
         'code' ,
         'name' ,
         'type' ,
-    //    'day' => 'required',
         'amount' ,
         'statutory',
         'status',
-        'company_id'
-
+        'company_id',
+        'ea_form_id',
+        'confirmed_employee',
+        'cost_centre',
+        'employee_grade'
     ];
-    public function cost_centres()
-    {
-        return $this->belongsToMany('App\CostCentre', 'deduction_cost_centre')
-        ->withTimestamps();
-    }
-
-    public function employee_grades()
-    {
-        return $this->belongsToMany('App\EmployeeGrade')
-        ->withTimestamps();
-    }
-    
 }
