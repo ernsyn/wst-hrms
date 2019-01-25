@@ -104,6 +104,7 @@ class SettingsController extends Controller
     public function displayEpf()
     {
         $epfs = EPF::all();
+    
         return view('pages.admin.settings.epf', ['epfs' => $epfs]);
     }
     public function displayEis()
@@ -679,7 +680,7 @@ class SettingsController extends Controller
     {
         return view('pages.admin.settings.add-epf');
     }
-
+    
     public function postAddEpf(Request $request)
     {
         $epfData = $request->validate([
@@ -848,7 +849,14 @@ class SettingsController extends Controller
         Pcb::where('id', $id)->update($pcbData);
     
         return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to update - Same Salary with Same Category');
+        }
+        
     }
+
 
     public function addCompanyDeduction()
     {
