@@ -12,7 +12,7 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button id="generate-holiday" class="btn btn-primary tool-tip" {{ $show_button ? '' : 'hidden' }} {{ $disable_button ? 'disabled' : '' }} data-toggle="tooltip" data-placement="top" title="{{ $disable_button ? 'Holidays have been generated for '.$next_year : 'Generate Public Holidays for '.$next_year }}">
+            <button id="generate-holiday" class="btn btn-primary tool-tip" {{ $show_button ? '' : 'hidden' }} data-toggle="tooltip" data-placement="top" title="{{ $disable_button ? 'Holidays have been generated for '.$next_year : 'Generate Public Holidays for '.$next_year }}">
                 Generate Holidays for {{ $next_year }}
             </button>
             <a role="button" class="btn btn-primary" href="{{ route('admin.e-leave.configuration.leave-holidays.add') }}">

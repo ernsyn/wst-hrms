@@ -45,15 +45,15 @@
                             <td>{{$leaveRequest['end_date']}}</td>
                             <td>{{$leaveRequest['applied_days']}}</td>
                             <td>
-                                    @if($leaveRequest['attachment_media_id'])
-                                        {{-- <img src="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" height="80px" width="80px"> --}}
-                                        <a href="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" download="{{$leaveRequest->attachment->filename}}">
-                                            Download
-                                        </a>
-                                    @else
-                                        <span class="fas fa-ban"></span>
-                                    @endif
-                                </td> 
+                                @if($leaveRequest['attachment_media_id'])
+                                    {{-- <img src="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" height="80px" width="80px"> --}}
+                                    <a href="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" download="{{$leaveRequest->attachment->filename}}">
+                                        Download
+                                    </a>
+                                @else
+                                    <span class="fas fa-ban"></span>
+                                @endif                           
+                           
                             <td>{{$leaveRequest['status']}}</td>
 
                             
