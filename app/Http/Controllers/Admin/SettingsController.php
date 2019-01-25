@@ -756,13 +756,6 @@ public function postEditEis(Request $request, $id)
     return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been updated.');
 }
 
-
-public function displaySocso()
-{
-    $socsos = Socso::all();
-    return view('pages.admin.settings.socso', ['socsos' => $socsos]);
-}
-
 public function addSocso()
 {
     return view('pages.admin.settings.add-socso');
@@ -806,14 +799,6 @@ public function postEditSocso(Request $request, $id)
     return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been updated.');
 }
 
-
-
-public function displayPcb()
-{
-    $pcbs = Pcb::all();
-    return view('pages.admin.settings.pcb', ['pcbs' => $pcbs]);
-}
-
 public function addPcb()
 {
     return view('pages.admin.settings.add-pcb');
@@ -841,7 +826,7 @@ public function postAddPcb(Request $request)
         }
         else
         {
-        return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to added -Same Salary with Same Category');
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to added - Same Salary with Same Category');
         }
         
     }
@@ -886,7 +871,7 @@ public function postEditPcb(Request $request, $id)
         }
         else
         {
-        return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to update -Same Salary with Same Category');
+        return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to update - Same Salary with Same Category');
         }
         
     }
