@@ -64,6 +64,7 @@ class ELeaveController extends Controller
         $this->middleware(['role:employee']);
     }
     
+    //todo - change method name to displayLeaveApproval
     public function displayLeaveRequestReportTo()
     {
         $user = Auth::user();
@@ -75,11 +76,11 @@ class ELeaveController extends Controller
         $report_to_employee = EmployeeReportTo::select('report_to_emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
 
         $leaveRequests =LeaveRequest::with('leave_type','leave_request_approval')
-        ->whereIn('emp_id',$report_to)
-        ->get();
+            ->whereIn('emp_id',$report_to)
+            ->get();
         $employee = LeaveRequest::with('report_to')->get();
         $report_to = EmployeeReportTo::select('emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
-        $leaveRequests =LeaveRequest::with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
+        $leaveRequests = LeaveRequest::with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
 
         return view('pages.employee.leave.leave-request', ['leaveRequests' => $leaveRequests]);   
     }
@@ -121,10 +122,10 @@ class ELeaveController extends Controller
     public function ajaxGetEmployeeLeaves(Request $request, $status)
     {
         $leaveRequest = LeaveRequest::where('emp_id', Auth::user()->employee->id)
-        ->where('status', $status)
-        ->where('start_date', '>=', $request->start)
-        ->where('end_date', '<=', $request->end)
-        ->get();
+            ->where('status', $status)
+            ->where('start_date', '>=', $request->start)
+            ->where('end_date', '<=', $request->end)
+            ->get();
         
         $result = array();
 
@@ -165,21 +166,21 @@ class ELeaveController extends Controller
     public function ajaxGetHolidays(Request $request)
     {
         $branch = DB::table('employee_jobs')
-        ->join('branches', 'employee_jobs.branch_id', '=', 'branches.id')
-        ->select('branches.state')
-        ->where('employee_jobs.emp_id', Auth::user()->employee->id)
-        ->orderBy('employee_jobs.created_at', 'DESC')
-        ->first();
+            ->join('branches', 'employee_jobs.branch_id', '=', 'branches.id')
+            ->select('branches.state')
+            ->where('employee_jobs.emp_id', Auth::user()->employee->id)
+            ->orderBy('employee_jobs.created_at', 'DESC')
+            ->first();
 
         if(empty($branch)) {
             return self::error("Employee job is not set yet.");
         }
 
         $holidays = Holiday::where('status', 'active')
-        ->where('state', 'like', '%' . $branch->state . '%')
-        ->where('start_date', '>=', $request->start)
-        ->where('end_date', '<=', $request->end)
-        ->get();            
+            ->where('state', 'like', '%' . $branch->state . '%')
+            ->where('start_date', '>=', $request->start)
+            ->where('end_date', '<=', $request->end)
+            ->get();            
 
         if(empty($holidays)) {
             return self::error("Holidays not set yet.");
@@ -207,9 +208,7 @@ class ELeaveController extends Controller
     public function ajaxGetLeaveRequestSingle($id)
     {
         $leaveRequest = LeaveRequest::where('id', $id)->first();
-
         // dd($leaveRequest);
-
         return response()->json($leaveRequest);
     }
 
@@ -291,6 +290,7 @@ class ELeaveController extends Controller
         return response()->json($result);
     }
 
+    //todo - problematic (it deletes the old entry and replace it with a newly created entry)
     public function ajaxPostEditLeaveRequest(Request $request, $id)
     {
         $requestData = $request->validate([
@@ -308,10 +308,10 @@ class ELeaveController extends Controller
         $now = Carbon::now();
         
         $leaveAllocation = LeaveAllocation::where('emp_id', Auth::user()->employee->id)
-        ->where('leave_type_id', $request['leave_type'])
-        ->where('valid_from_date', '<=', $now)
-        ->where('valid_until_date', '>=', $now)
-        ->first();
+            ->where('leave_type_id', $request['leave_type'])
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
 
         $leaveAllocation->update([
             'spent_days' => $leaveAllocation->spent_days - $leaveRequest->applied_days
@@ -344,16 +344,15 @@ class ELeaveController extends Controller
         
         // get report to users
         $report_to = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
-        ->where('report_to_level', '1')
-        ->get();
+            ->where('report_to_level', '1')
+            ->get();
 
         foreach ($report_to as $row) {
             $employee = DB::table('employees')
-            ->join('users', 'users.id', '=', 'employees.user_id')
-            ->select('users.name','users.email')
-            ->where('employees.id', $row->report_to_emp_id)
-            ->first();
-
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->report_to_emp_id)
+                ->first();
             array_push($cc_recepients, $employee->email);
         }
 
@@ -367,9 +366,9 @@ class ELeaveController extends Controller
         }
 
         \Mail::to($cc_recepients)
-        ->cc(Auth::user()->email)
-        ->bcc($bcc_recepients)
-        ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+            ->cc(Auth::user()->email)
+            ->bcc($bcc_recepients)
+            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
 
     public function ajaxCancelLeaveRequest($id)
@@ -380,10 +379,10 @@ class ELeaveController extends Controller
         $now = Carbon::now();
         
         $leaveAllocation = LeaveAllocation::where('emp_id', Auth::user()->employee->id)
-        ->where('leave_type_id', $leaveRequest['leave_type_id'])
-        ->where('valid_from_date', '<=', $now)
-        ->where('valid_until_date', '>=', $now)
-        ->first();
+            ->where('leave_type_id', $leaveRequest['leave_type_id'])
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
 
         $leaveAllocation->update([
             'spent_days' => $leaveAllocation->spent_days - $leaveRequest->applied_days
@@ -417,8 +416,8 @@ class ELeaveController extends Controller
 
         $now = Carbon::now();
         $ltAppliedRule = LTAppliedRule::where('leave_type_id', $leave_type_id)
-        ->whereNull('deleted_at')
-        ->get();
+            ->whereNull('deleted_at')
+            ->get();
 
         return response()->json($ltAppliedRule);
     }
@@ -452,9 +451,9 @@ class ELeaveController extends Controller
 
         foreach ($getHolidays as $getHoliday) {
             $includeDatesBetween = new DatePeriod(
-                    new DateTime($getHoliday->start_date),
-                    new DateInterval('P1D'),
-                    new DateTime($getHoliday->end_date.'+1 day') // fix for excluding end_date
+                new DateTime($getHoliday->start_date),
+                new DateInterval('P1D'),
+                new DateTime($getHoliday->end_date.'+1 day') // fix for excluding end_date
             );
 
             foreach($includeDatesBetween as $date) { 
@@ -509,13 +508,15 @@ class ELeaveController extends Controller
     public function displayLeaveBalance()
     {
         $leavebalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
-        ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
-        ->join('users','users.id','=','employees.user_id')
-        ->select('users.name as name','users.id as user_id',
-        'leave_balance.balance as balance','leave_balance.id as balance_id',
-        'leave_balance.carry_forward as carry',
-        'leave_types.name as leave','leave_types.id as type_id')
-        ->get();
+            ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
+            ->join('users','users.id','=','employees.user_id')
+            ->select(
+                'users.name as name','users.id as user_id',
+                'leave_balance.balance as balance','leave_balance.id as balance_id',
+                'leave_balance.carry_forward as carry',
+                'leave_types.name as leave','leave_types.id as type_id'
+            )
+            ->get();
     }
 
     public function addLeaveApproval(Request $request, $id) 
@@ -539,26 +540,27 @@ class ELeaveController extends Controller
         $user = Auth::user();
         $report_to_emp_id = $user->employee->id;
         $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
-        ->where('leave_type_id',$leave_type_id)
-        ->count() == 0;
+            ->where('leave_type_id',$leave_type_id)
+            ->count() == 0;
 
         $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
-        ->where('report_to_emp_id','=',$report_to_emp_id)
-        ->where('emp_id','=',$emp_id)  
-        ->where ('report_to_level','=','1')
-        ->count();  // "5"
+            ->where('report_to_emp_id','=',$report_to_emp_id)
+            ->where('emp_id','=',$emp_id)  
+            ->where ('report_to_level','=','1')
+            ->count();  // "5"
 
+        //why is this code repeated at line 557?
         $leave_request_approval_by_emp_id = LeaveRequestApproval::where('leave_request_id','=',$id)  //check leave_request id in leave request approval
-        ->count();
+            ->count();
 
         $employee_report_to = EmployeeReportTo::where('emp_id','=',$emp_id)->count();
         $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id)->count(); //check leave_request id in leave request approval
         
         if ($multiple_approval_levels_required == false) {
-            if ($leave_request_approval == 0){    //if leave request approval = 0 then 
+            if ($leave_request_approval == 0) {    //if leave request approval = 0 then 
 
-                if($employee_report_to_level == 1){     // if report to level = 1 
-                    LeaveRequest::where('id',$id)->update(array('status' => 'new'));      //then update leave request status = new
+                if ($employee_report_to_level == 1) {     // if report to level = 1 
+                    LeaveRequest::find($id)->update(array('status' => 'new'));      //then update leave request status = new
                     $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
                     $leaveRequestData = $request->validate([
                         ]);
@@ -575,10 +577,10 @@ class ELeaveController extends Controller
                 } else {
                     return redirect()->route('leaverequest')->with('status','You are not first approver');
                 }
-            } else if($employee_report_to_level == 1) {     
-                    return redirect()->route('leaverequest')->with('status','You are not first approver');
+            } else if ($employee_report_to_level == 1) {     
+                return redirect()->route('leaverequest')->with('status','You are not first approver');
             } else {
-                LeaveRequest::where('id',$id)->update(array('status' => 'approved'));
+                LeaveRequest::find($id)->update(array('status' => 'approved'));
                 $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
                 $leaveRequestData = $request->validate([
                         ]);
@@ -596,7 +598,7 @@ class ELeaveController extends Controller
                 return redirect()->route('leaverequest')->with('status','Leave Request Approved');
             }
         } else {
-            LeaveRequest::where('id',$id)->update(array('status' => 'approved'));
+            LeaveRequest::find($id)->update(array('status' => 'approved'));
             $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
             $leaveRquestData = $request->validate([
                     ]);
@@ -620,8 +622,9 @@ class ELeaveController extends Controller
         $leave_type_id = $request->input('leave_type_id');   
         $total_days =$request->input('total_days');  
 
-        $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
-        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+        $leaveAllocationData1 = LeaveAllocation::select ('spent_days')
+            ->where('emp_id',$emp_id)
+            ->where('leave_type_id',$leave_type_id)->first()->spent_days;
     
         $leaveAllocationData = number_format($leaveAllocationData1,1);
         $total_days =number_format($total_days,1);
@@ -631,8 +634,8 @@ class ELeaveController extends Controller
         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
 
         $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-        ->where('leave_type_id',$leave_type_id)
-        ->update(array('spent_days'=>$leaveAllocationDataEntry));
+            ->where('leave_type_id',$leave_type_id)
+            ->update(array('spent_days'=>$leaveAllocationDataEntry));
         return redirect()->route('leaverequest');
     }
 
@@ -656,7 +659,6 @@ class ELeaveController extends Controller
     public function addLeaveApplication(Request $request)
     {         
         $leaveApllicationData =$request->validate([
-
         ]);
         return redirect()->route('employees');
     }
