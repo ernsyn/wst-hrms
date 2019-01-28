@@ -52,8 +52,8 @@ class LeaveService
             // - beginning of next month till end of year
 
             $validFromDate = $startDate->copy();
-            $validFromDate->month++;
-            $validFromDate->day = 1;
+            // $validFromDate->month++;
+            // $validFromDate->day = 1;
             $validUntilDate = $startDate->copy();
             $validUntilDate->month = 12;
             $validUntilDate->day = 31;
@@ -62,17 +62,20 @@ class LeaveService
             if(self::leaveTypeHasRule($leaveType, LeaveTypeRule::NON_PRORATED)) {
                 $allocatedDays = $allocatedDaysInAYear;
             } else {
-                $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
+                // $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
+                $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)) / 365;
                 $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
             }
 
             // dd($validFromDate);
+            $created_by = auth()->user()->name;
             $leaveAllocation = LeaveAllocation::create([
                 'emp_id' => $emp_id,
                 'leave_type_id' => $leaveType->id,
                 'valid_from_date' => $validFromDate,
                 'valid_until_date' => $validUntilDate,
                 'allocated_days' => $allocatedDays,
+                'created_by' => $created_by,
             ]);
             
         }
@@ -86,29 +89,31 @@ class LeaveService
             return;
         }
 
-        $endCalcDate = $endDate->copy();
-        $endCalcDate->month++;
-        $endCalcDate->day = 1;
-        $endCalcDate->subDay();
+        // $endCalcDate = $endDate->copy();
+        // $endCalcDate->month++;
+        // $endCalcDate->day = 1;
+        // $endCalcDate->subDay();
 
         $leaveAllocations = LeaveAllocation::with('leave_type.applied_rules')->where('emp_id', $emp_id)
-        ->where('valid_from_date', '<=', $endCalcDate)
-        ->where('valid_until_date', '>=', $endCalcDate)
+        ->where('valid_from_date', '<=', $endDate)
+        ->where('valid_until_date', '>=', $endDate)
         ->get();
 
         foreach($leaveAllocations as $leaveAllocation) {
             if(!self::leaveTypeHasRule($leaveAllocation->leave_type, LeaveTypeRule::NON_PRORATED)) {
                 $allocationValidFromDate = Carbon::parse($leaveAllocation->valid_from_date);
                 $allocationValidUntilDate = Carbon::parse($leaveAllocation->valid_until_date);
-                $totalAllocationMonths = $allocationValidUntilDate->month - $allocationValidFromDate->month + 1;
-                $totalActualMonths = $allocationValidUntilDate->month - $endCalcDate->month + 1;
+                $totalAllocationDays = $allocationValidFromDate->diffInDays($allocationValidUntilDate);
+                $totalActualDays = $allocationValidFromDate->diffInDays($endDate);
+                // $totalAllocationMonths = $allocationValidUntilDate->month - $allocationValidFromDate->month + 1;
+                // $totalActualMonths = $allocationValidUntilDate->month - $endCalcDate->month + 1;
 
-                $updatedAllocatedDays = $leaveAllocation->allocated_days * $totalActualMonths / $totalAllocationMonths;
+                $updatedAllocatedDays = $leaveAllocation->allocated_days * $totalActualDays / $totalAllocationDays;
                 $updatedAllocatedDays = floor($updatedAllocatedDays * 2)/2; // Round to closest .5 low
 
                 $leaveAllocation->update([
                     'allocated_days' => $updatedAllocatedDays,
-                    'valid_until_date' => $endCalcDate,
+                    'valid_until_date' => $endDate,
                 ]);
             }
         }
@@ -142,7 +147,8 @@ class LeaveService
         ->first();
 
         $leaveRequest = null;
-        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason, $attachment_data_url, $attachment_required, &$leaveRequest) {
+        $created_by = auth()->user()->name;
+        DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason,$created_by, $attachment_data_url, $attachment_required, &$leaveRequest) {
             $leaveRequest = LeaveRequest::create([
                 'emp_id' => $employee->id,
                 'leave_type_id' => $leave_type_id,
@@ -152,7 +158,8 @@ class LeaveService
                 'am_pm' => $am_pm, 
                 'applied_days' =>  $totalDays,
                 'reason' => $reason,
-                'status' => 'new'
+                'status' => 'new',
+                'created_by' => $created_by,
             ]);
 
             $leaveAllocation->update([
@@ -214,20 +221,16 @@ class LeaveService
         }
 
         // Check if already has a leave on that day
-        if(
-            LeaveRequest::where('emp_id', $employee->id)
-            ->where(function($q) use ($start_date, $end_date) {
-                $q->where('start_date', '>=', $start_date);
-                $q->where('start_date', '<=', $end_date);
-            })
-            ->OrWhere(function($q) use ($start_date, $end_date) {
-                $q->where('end_date', '>=', $start_date);
-                $q->where('end_date', '<=', $end_date);
-            })
-            ->where('status', '!=', 'rejected')
-            ->count() > 0
-        ) {
-            return self::error("You already have a leave request for this day.");
+        if(LeaveRequest::where('emp_id', $employee->id)
+        ->where('status', '!=', 'rejected')
+        ->where(function($q) use ($start_date, $end_date) {
+            $q->whereBetween('start_date', array($start_date, $end_date));
+            $q->orWhere(function($r) use ($start_date, $end_date) {
+                $r->whereBetween('end_date', array($start_date, $end_date));
+            });
+        })
+        ->count() > 0) {
+            return self::error("You already have a leave request for this day or, your leave request is overlapping with a previously applied leave.");
         }
         
         $working_day = $employee->working_day;
@@ -247,6 +250,7 @@ class LeaveService
             }
             
         }
+
         if(!self::isWorkingDay($working_day, $endDate)) {
             return self::error("End date cannot be a non-working day.");
         } else {
@@ -418,7 +422,6 @@ class LeaveService
 
         $additionalResponseData = array();
         if($consecutive) {
-
             $leaveAllocation = LeaveAllocation::where('emp_id', $employee->id)
             ->where('leave_type_id', $leave_type_id)
             ->where('valid_from_date', '<=', $now)
@@ -436,7 +439,6 @@ class LeaveService
 
         // Calculate Leave
         $totalDays = date_diff($startDate, $endDate)->days + 1;
-
         
         if(!empty($inc_off_days_based_on_applied_days_config)) {
             $inc_off_days_min_apply_days = $inc_off_days_based_on_applied_days_config->min_apply_days;
@@ -444,8 +446,6 @@ class LeaveService
                 $inc_off_days = true;
             }
         }
-        
-        
 
         if(!$inc_off_days) {
             $nextDayIsHoliday = false;  
@@ -463,7 +463,8 @@ class LeaveService
             ->where('status', 'active')->get();
 
             $cursorDate = $startDate->copy();
-           while($cursorDate->lessThanOrEqualTo($endDate)) {
+            
+            while($cursorDate->lessThanOrEqualTo($endDate)) {
                 if(!self::isWorkingDay($working_day, $cursorDate)) {
                     $nextDayIsHoliday = false;
                     if($cursorDate->dayOfWeek == Carbon::SUNDAY && self::isHoliday($holidays, $cursorDate)) {
@@ -477,13 +478,11 @@ class LeaveService
                 }
 
                 $cursorDate->addDays(1);
-           } 
+            } 
         }
-                
-       
 
-       // NEXT STAGE: Check leave days available
-       if($startDate->isSameDay($endDate) && $totalDays == 1) {
+        // NEXT STAGE: Check leave days available
+        if($startDate->isSameDay($endDate) && $totalDays == 1) {
             if(!empty($am_pm)) {
                 $totalDays -= 0.5;
             }

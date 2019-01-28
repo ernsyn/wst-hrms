@@ -13,7 +13,8 @@ class Department extends Model implements Auditable
     protected $table = 'departments';
 
     protected $fillable = [
-        'name'
+        'name',
+        'created_by'
     ];
     protected $dates = ['deleted_at'];
 }

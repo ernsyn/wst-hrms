@@ -13,6 +13,7 @@ class LTAppliedRule extends Model
     protected $fillable = [
         'rule',
         'configuration',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

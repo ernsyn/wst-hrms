@@ -13,7 +13,12 @@ class EPF extends Model implements Auditable
     // public $timestamps = false;
 
     protected $fillable = [
-        'name','category','employer','employee','salary'
+        'name',
+        'category',
+        'employer',
+        'employee',
+        'salary',
+        'created_by'
     ];
     protected $dates = ['deleted_at'];
 }
