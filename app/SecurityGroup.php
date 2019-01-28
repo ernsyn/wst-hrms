@@ -13,7 +13,8 @@ class SecurityGroup extends Model implements Auditable
     protected $fillable =[
         'name',
         'description',
-        'company_id'
+        'company_id',
+        'created_by'
     ];
 
 

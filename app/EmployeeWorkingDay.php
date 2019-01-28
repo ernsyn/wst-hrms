@@ -18,6 +18,7 @@ class EmployeeWorkingDay extends Model implements Auditable
         'emp_id',
         'is_template',
         'template_name',
+        'created_by',
         'monday',
         'tuesday',
         'wednesday',
@@ -27,7 +28,7 @@ class EmployeeWorkingDay extends Model implements Auditable
         'sunday',
         'start_work_time',
         'end_work_time',
-        'created_by'
+      
     ];
 
     protected $dates = ['deleted_at'];

@@ -20,6 +20,8 @@ class Addition extends Model implements Auditable
         'ea_form_id',
         'confirmed_employee',
         'cost_centre',
-        'employee_grade'
+        'employee_grade',
+        'created_by'
+
     ];
 }
