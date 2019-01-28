@@ -600,6 +600,13 @@ Breadcrumbs::for('admin.e-leave.configuration.leave-types.edit', function ($trai
     $trail->push('Edit Leave Type', route('admin.e-leave.configuration.leave-types.edit', $id));
 });
 
+// SECTION: (Admin) Audit Trail
+Breadcrumbs::for('admin.audit-trail', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Audit Trail', route('admin.audit-trail'));
+});
+
+
 Breadcrumbs::for('add_team', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Add Team', route('add_team'));

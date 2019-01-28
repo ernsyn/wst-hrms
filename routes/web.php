@@ -330,10 +330,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
     Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
     Route::post('settings/holidays/add','Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
-  //  Route::post('settings/security-groups/add','Admin\SettingsController@postAddSecurityGroup')->name('admin.settings.security-groups.add.post');
+    //  Route::post('settings/security-groups/add','Admin\SettingsController@postAddSecurityGroup')->name('admin.settings.security-groups.add.post');
 
-  Route::get('e-leave/configuration/holiday/{id}/edit','Admin\ELeaveController@editHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
-  Route::post('e-leave/configuration/holiday/{id}/edit','Admin\ELeaveController@postEditHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
+    Route::get('e-leave/configuration/holiday/{id}/edit','Admin\ELeaveController@editHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
+    Route::post('e-leave/configuration/holiday/{id}/edit','Admin\ELeaveController@postEditHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
 
     // > Edit
 
@@ -433,6 +433,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('attendance/report/{date?}','Admin\AttendanceController@getAttendanceReport')->name('admin.attendance.report')->where('date', '[A-Za-z0-9\-\/]+');
     Route::get('attendance/current-day','Admin\AttendanceController@getCurrentDayAttendance')->name('admin.attendance.current-day');
 
+    // SECTION: Audit Trail
+    Route::get('audit-trail', 'Admin\AuditTrailController@display')->name('admin.audit-trail');
+    Route::get('audit-trail/dt', 'Admin\AuditTrailController@getDataTableAuditTrails')->name('admin.audit-trail.dt');
+
     // Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
     // Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
 
@@ -453,7 +457,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('add_job','AdminController@addJob')->name('add_job');
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
     // Route::post('changepassword','Admin\EmployeeController@postChangePasswordEmployee')->name('admin.changepassword.post');
+
 });
+
 // MODE: Super Admin
 Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin']], function() {
     Route::get('', 'SuperAdmin\DashboardController@index')->name('super-admin.dashboard');
