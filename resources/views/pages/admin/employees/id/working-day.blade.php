@@ -408,6 +408,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" name="leave_id">
                     <button id="edit-working-day-submit" type="submit" class="btn btn-primary">
                     {{ __('Submit') }}
                 </button>
@@ -520,6 +521,8 @@
                 $("#edit-working-day-form select[name=sunday]").val(data[0].sunday);
                 $("#edit-working-day-form input[name=start_work_time]").prop('value', data[0].start_work_time.substring(0, data[0].start_work_time.length - 3));
                 $("#edit-working-day-form input[name=end_work_time]").prop('value', data[0].end_work_time.substring(0, data[0].end_work_time.length - 3));
+
+                $("#edit-working-day-form input[name=leave_id]").prop('value', data[0].id);
 
                 $("#assign-working-day-button").hide();
                 $("#edit-working-day-button").show();
@@ -681,7 +684,8 @@
                     half_1_start_work_time: $("#edit-working-day-form input[name=half_1_start_work_time]").val(),
                     half_1_end_work_time: $("#edit-working-day-form input[name=half_1_end_work_time]").val(),
                     half_2_start_work_time: $("#edit-working-day-form input[name=half_2_start_work_time]").val(),
-                    half_2_end_work_time: $("#edit-working-day-form input[name=half_2_end_work_time]").val()
+                    half_2_end_work_time: $("#edit-working-day-form input[name=half_2_end_work_time]").val(),
+                    leave_id: $("#edit-working-day-form input[name=leave_id]").val()
                 },
                 success: function(data) {
                     getEmployeeWorkingDaysData();

@@ -1831,16 +1831,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.4",
+            "version": "3.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "4f12069caa07c0b0e10cf369cd9cf2a6da1c6749"
+                "reference": "bbf8f11dd1138ce82b0c9a4dbd467cb1d0ab44bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/4f12069caa07c0b0e10cf369cd9cf2a6da1c6749",
-                "reference": "4f12069caa07c0b0e10cf369cd9cf2a6da1c6749",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/bbf8f11dd1138ce82b0c9a4dbd467cb1d0ab44bf",
+                "reference": "bbf8f11dd1138ce82b0c9a4dbd467cb1d0ab44bf",
                 "shasum": ""
             },
             "require": {
@@ -1893,7 +1893,7 @@
                 "php",
                 "phpspreadsheet"
             ],
-            "time": "2019-01-21T13:31:13+00:00"
+            "time": "2019-01-25T15:01:37+00:00"
         },
         {
             "name": "maddhatter/laravel-fullcalendar",
@@ -2793,16 +2793,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.13",
+            "version": "2.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "42603ce3f42a27f7e14e54feab95db7b680ad473"
+                "reference": "8ebfcadbf30524aeb75b2c446bc2519d5b321478"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/42603ce3f42a27f7e14e54feab95db7b680ad473",
-                "reference": "42603ce3f42a27f7e14e54feab95db7b680ad473",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/8ebfcadbf30524aeb75b2c446bc2519d5b321478",
+                "reference": "8ebfcadbf30524aeb75b2c446bc2519d5b321478",
                 "shasum": ""
             },
             "require": {
@@ -2881,7 +2881,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2018-12-16T17:45:25+00:00"
+            "time": "2019-01-27T19:37:29+00:00"
         },
         {
             "name": "psr/container",
