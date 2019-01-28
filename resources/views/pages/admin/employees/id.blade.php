@@ -7,7 +7,7 @@
         <div id="employee-profile-details" class="card-body bg-primary text-white">
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->user}}" data-target="#edit-picture-popup">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->id}}" data-target="#edit-picture-popup">
                         @if ($employee->user->profile_media_id != null)
                             <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:150px; height:150px">
                         @else
@@ -900,19 +900,7 @@
 <script type="text/javascript">
     $(function(){
 
-        // EDIT picture
-        var editMediaId = null;
-        // Function: On Modal Clicked Handler
-        $('#edit-picture-popup').on('show.bs.modal', function (event) {
-            clearPicturesError('#edit-picture-form');
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var currentData = button.data('current'); // Extract info from data-* attributes
-            console.log('Data pic: ', currentData)
-
-            editMediaId = currentData.profile_media_id;
-        });
-
-        var editPictureRouteTemplate = "{{ route('admin.employees.picture.edit.post', ['id' => $employee->user->profile_media_id]) }}";
+        // EDIT Profile Picture
         $('#edit-picture-submit').click(function(e){
             clearPicturesError('#edit-picture-form');
             e.preventDefault();
@@ -941,7 +929,7 @@
 
         function postEditPicture(data) {
             $.ajax({
-                url: editPictureRouteTemplate,
+                url: "{{ route('admin.employees.profile-pic.edit.post', ['id' => $employee->id]) }}",
                 type: 'POST',
                 data: data,
                 success: function(data) {
