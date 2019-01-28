@@ -543,7 +543,7 @@
             var file = document.querySelector('input[name=required-attachment]').files[0];
 
             if(attachmentRequired && !file) {
-                $('#error-message').text('Attachement is required!');
+                $('#error-message').text('Attachment is required!');
                 $('#error-message').prop('hidden', false);
 
                 return false;
