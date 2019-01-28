@@ -223,7 +223,7 @@ class LeaveService
             });
         })
         ->count() > 0) {
-            return self::error("You already have a leave request for this day or, your leave request is overlapping with a priviously applied leave.");
+            return self::error("You already have a leave request for this day or, your leave request is overlapping with a previously applied leave.");
         }
         
         $working_day = $employee->working_day;
