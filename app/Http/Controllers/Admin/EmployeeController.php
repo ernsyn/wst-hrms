@@ -836,8 +836,6 @@ class EmployeeController extends Controller
 
     public function postEditWorkingDay(Request $request, $id)
     {
-        // dd($request);
-
         $workingDayUpdateData = $request->validate([
             'monday' => 'required|in:full,half,half_2,off,rest',
             'tuesday' => 'required|in:full,half,half_2,off,rest',
@@ -853,7 +851,9 @@ class EmployeeController extends Controller
             'half_2_start_work_time' => 'required',
             'half_2_end_work_time' => 'required',
         ]);
+
         $workingDayUpdateData['is_template'] = false;
+        
         EmployeeWorkingDay::find($request->leave_id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
