@@ -26,7 +26,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Salary</th>
+                        <th>Salary (RM)</th>
                         <th>First Category Employer</th>
                         <th>First Category Employee</th>
                         {{-- <th>Total</th> --}}
@@ -37,7 +37,7 @@
                     @foreach($socsos as $socso)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>RM {{$socso['salary']}}</td>
+                        <td>{{$socso['salary']}}</td>
                         <td>{{$socso['first_category_employer']}}</td>
                         <td>{{$socso['first_category_employee']}}</td>
                         {{-- <td>{{$socso['total']}}</td> --}}

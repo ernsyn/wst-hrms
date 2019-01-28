@@ -796,18 +796,6 @@
     $(function(){
 
         // EDIT picture
-        var editMediaId = null;
-        // Function: On Modal Clicked Handler
-        $('#edit-picture-popup').on('show.bs.modal', function (event) {
-            clearPicturesError('#edit-picture-form');
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var currentData = button.data('current'); // Extract info from data-* attributes
-            console.log('Data pic: ', currentData)
-
-            editMediaId = currentData.profile_media_id;
-        });
-
-        var editPictureRouteTemplate = "{{ route('employees.picture.edit.post', ['id' => $employee->user->profile_media_id]) }}";
         $('#edit-picture-submit').click(function(e){
             clearPicturesError('#edit-picture-form');
             e.preventDefault();
@@ -836,7 +824,7 @@
 
         function postEditPicture(data) {
             $.ajax({
-                url: editPictureRouteTemplate,
+                url: "{{ route('employees.profile-pic.edit.post') }}",
                 type: 'POST',
                 data: data,
                 success: function(data) {
