@@ -452,7 +452,7 @@
             console.log(leave_type_data);
         });
 
-        // submit leave request ) (add/edit mode)
+        // submit leave request  (add/edit mode)
         $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
             e.preventDefault();
             $('#error-message').prop('hidden', true);
