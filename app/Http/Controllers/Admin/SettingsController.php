@@ -214,7 +214,7 @@ class SettingsController extends Controller
             'name' => 'required|unique:employee_positions,name,'.$id.',id,deleted_at,NULL',
         ]);
 
-        EmployeePosition::where('id', $id)->update($positionData);
+        EmployeePosition::find($id)->update($positionData);
 
         return redirect()->route('admin.settings.positions')->with('status', 'Position has successfully been updated.');
     }
@@ -251,7 +251,7 @@ class SettingsController extends Controller
 
         ]);
 
-        EmployeeGrade::where('id', $id)->update($gradeData);
+        EmployeeGrade::find($id)->update($gradeData);
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been updated.');
     }
@@ -509,7 +509,7 @@ class SettingsController extends Controller
             'name' => 'required|unique:departments,name,'.$id.',id,deleted_at,NULL'
         ]);
 
-        Department::where('id', $id)->update($departmentData);
+        Department::find($id)->update($departmentData);
 
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been updated.');
     }
@@ -527,7 +527,7 @@ class SettingsController extends Controller
             'sunday' => 'required',
         ]);
 
-        EmployeeWorkingDay::templates()->where('id', $id)->update($workingDayData);
+        EmployeeWorkingDay::templates()->find($id)->update($workingDayData);
 
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been updated.');
     }
@@ -554,7 +554,7 @@ class SettingsController extends Controller
                 'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
             ]);
 
-            Branch::where('id', $id)->update($branchData);
+            Branch::find($id)->update($branchData);
 
             return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been updated.');
     }
@@ -584,7 +584,7 @@ class SettingsController extends Controller
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
 
-        Company::where('id', $id)->update($companyData);
+        Company::find($id)->update($companyData);
 
         return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been updated.');
     }
@@ -913,21 +913,13 @@ public function postEditPcb(Request $request, $id)
             'employee_grade' => 'nullable'
         ]);
 
-        if(!empty($validatedDeductionData['statutory'])) $validatedDeductionData['statutory'] = implode(",", $request->statutory);
-        else $validatedDeductionData['statutory'] = null;
-
+        $validatedDeductionData['statutory'] = empty($validatedDeductionData['statutory']) ? null : implode(",", $request->statutory);
         $validatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
-
-        if(!empty($validatedDeductionData['cost_centre'])) $validatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
-        else $validatedDeductionData['cost_centre'] = null;
-
-        if(!empty($validatedDeductionData['employee_grade'])) $validatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
-        else $validatedDeductionData['employee_grade'] = null;
-
+        $validatedDeductionData['cost_centre'] = empty($validatedDeductionData['cost_centre']) ? null : implode(",", $request->cost_centre);
+        $validatedDeductionData['employee_grade'] = empty($validatedDeductionData['employee_grade']) ? null : implode(",", $request->employee_grade);
         $validatedDeductionData['company_id']=$id;
         $validatedDeductionData['created_by'] = auth()->user()->name;
         // dd($validatedAdditionData['employee_grade']);
-
         $deduction = Deduction::create($validatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been added.');
     }
@@ -952,18 +944,12 @@ public function postEditPcb(Request $request, $id)
             'employee_grade' => 'nullable'
         ]);
 
-        if(!empty($updateValidatedDeductionData['statutory'])) $updateValidatedDeductionData['statutory'] = implode(",", $request->statutory);
-        else $updateValidatedDeductionData['statutory'] = null;
-
+        $updateValidatedDeductionData['statutory'] = empty($updateValidatedDeductionData['statutory']) ? null : implode(",", $request->statutory);
         $updateValidatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
-
-        if(!empty($updateValidatedDeductionData['cost_centre'])) $updateValidatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
-        else $updateValidatedDeductionData['cost_centre'] = null;
-
-        if(!empty($updateValidatedDeductionData['employee_grade'])) $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
-        else $updateValidatedDeductionData['employee_grade'] = null;
+        $updateValidatedDeductionData['cost_centre'] = empty($updateValidatedDeductionData['cost_centre']) ? null : implode(",", $request->cost_centre);
+        $updateValidatedDeductionData['employee_grade'] = empty($updateValidatedDeductionData['employee_grade']) ? null : implode(",", $request->employee_grade);
         $updateValidatedDeductionData['company_id']=$id;
-        Deduction::where('id', $request->company_deduction_id)->update($updateValidatedDeductionData);
+        Deduction::find($request->company_deduction_id)->update($updateValidatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
     }
 
@@ -986,17 +972,10 @@ public function postEditPcb(Request $request, $id)
             'employee_grade' => 'nullable'
             ]);
 
-            if(!empty($validatedAdditionData['statutory'])) $validatedAdditionData['statutory'] = implode(",", $request->statutory);
-            else $validatedAdditionData['statutory'] = null;
-
+            $validatedAdditionData['statutory'] = empty($validatedAdditionData['statutory']) ? null : implode(",", $request->statutory);
             $validatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
-
-            if(!empty($validatedAdditionData['cost_centre'])) $validatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
-            else $validatedAdditionData['cost_centre'] = null;
-
-            if(!empty($validatedAdditionData['employee_grade'])) $validatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
-            else $validatedAdditionData['employee_grade'] = null;
-
+            $validatedAdditionData['cost_centre'] = empty($validatedAdditionData['cost_centre']) ? null : implode(",", $request->cost_centre);
+            $validatedAdditionData['employee_grade'] = empty($validatedAdditionData['employee_grade']) ? null : implode(",", $request->employee_grade);
             $validatedAdditionData['company_id']=$id;
 
             // dd($validatedAdditionData['employee_grade']);
@@ -1007,7 +986,6 @@ public function postEditPcb(Request $request, $id)
 
     public function editCompanyAddition(Request $request, $id) {
         $addition = Addition::find($id);
-
         return view('pages.admin.settings.edit-addition', ['addition' => $addition]);
     }
 
@@ -1026,18 +1004,13 @@ public function postEditPcb(Request $request, $id)
             'employee_grade' => 'nullable'
         ]);
 
-        if(!empty($updateValidatedAdditionData['statutory'])) $updateValidatedAdditionData['statutory'] = implode(",", $request->statutory);
-        else $updateValidatedAdditionData['statutory'] = null;
-
+        $updateValidatedAdditionData['statutory'] = empty($updateValidatedAdditionData['statutory']) ? null : implode(",", $request->statutory);
         $updateValidatedAdditionData['confirmed_employee'] = $request->input('confirmed_employee');
-
-        if(!empty($updateValidatedAdditionData['cost_centre'])) $updateValidatedAdditionData['cost_centre'] = implode(",", $request->cost_centre);
-        else $updateValidatedAdditionData['cost_centre'] = null;
-
-        if(!empty($updateValidatedAdditionData['employee_grade'])) $updateValidatedAdditionData['employee_grade'] = implode(",", $request->employee_grade);
-        else $updateValidatedAdditionData['employee_grade'] = null;
+        $updateValidatedAdditionData['cost_centre'] = empty($updateValidatedAdditionData['cost_centre']) ? null : implode(",", $request->cost_centre);
+        $updateValidatedAdditionData['employee_grade'] = empty($updateValidatedAdditionData['employee_grade']) ? null : implode(",", $request->employee_grade);
         $updateValidatedAdditionData['company_id']=$id;
-        Addition::where('id', $request->company_addition_id)->update($updateValidatedAdditionData);
+
+        Addition::find($request->company_addition_id)->update($updateValidatedAdditionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Addition Group has successfully been updated.');
     }
 

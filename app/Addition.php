@@ -3,12 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-
-class Addition extends Model
+class Addition extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     protected $table = 'additions';
-    protected $fillable =[
+    protected $fillable = [
         'code' ,
         'name' ,
         'type' ,

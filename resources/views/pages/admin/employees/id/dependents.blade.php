@@ -31,7 +31,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="dob-dependent" class="form-control datetimepicker-input" data-target="#dob-dependent"/>
+                                <input type="text" id="dob-dependent" class="form-control datetimepicker-input" data-target="#dob-dependent" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#dob-dependent" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -84,7 +84,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="dob-dependent-edit" class="form-control datetimepicker-input" data-target="#dob-dependent-edit"/>
+                                <input type="text" id="dob-dependent-edit" class="form-control datetimepicker-input" data-target="#dob-dependent-edit" autocomplete="off" />
                                 <div class="input-group-append" data-target="#dob-dependent-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -195,10 +195,17 @@
         $('#dob-dependent').datetimepicker({
             format: 'DD/MM/YYYY'
         });
+        //disable keyboard input & hide caret
+        $('#dob-dependent').keydown(false);
+        $('#dob-dependent').css('caret-color', 'transparent');
 
         $('#dob-dependent-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
+        //disable keyboard input & hide caret
+        $('#dob-dependent-edit').keydown(false);
+        $('#dob-dependent-edit').css('caret-color', 'transparent');
+
         // ADD
         $('#add-dependent-popup').on('show.bs.modal', function (event) {
             clearDependentsError('#add-dependent-form');
