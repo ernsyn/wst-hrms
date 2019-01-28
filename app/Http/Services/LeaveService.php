@@ -214,20 +214,16 @@ class LeaveService
         }
 
         // Check if already has a leave on that day
-        if(
-            LeaveRequest::where('emp_id', $employee->id)
-            ->where(function($q) use ($start_date, $end_date) {
-                $q->where('start_date', '>=', $start_date);
-                $q->where('start_date', '<=', $end_date);
-            })
-            ->OrWhere(function($q) use ($start_date, $end_date) {
-                $q->where('end_date', '>=', $start_date);
-                $q->where('end_date', '<=', $end_date);
-            })
-            ->where('status', '!=', 'rejected')
-            ->count() > 0
-        ) {
-            return self::error("You already have a leave request for this day.");
+        if(LeaveRequest::where('emp_id', $employee->id)
+        ->where('status', '!=', 'rejected')
+        ->where(function($q) use ($start_date, $end_date) {
+            $q->whereBetween('start_date', array($start_date, $end_date));
+            $q->orWhere(function($r) use ($start_date, $end_date) {
+                $r->whereBetween('end_date', array($start_date, $end_date));
+            });
+        })
+        ->count() > 0) {
+            return self::error("You already have a leave request for this day or, your leave request is overlapping with a priviously applied leave.");
         }
         
         $working_day = $employee->working_day;
