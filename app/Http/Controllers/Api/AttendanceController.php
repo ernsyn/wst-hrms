@@ -48,10 +48,24 @@ class AttendanceController extends Controller
             $reason = "You have already clocked-in for today.";
         } else {
             // Check if too early
-            $workingDay = Auth::user()->employee->working_day;
-            if(!empty($workingDay)) {
-                $minStartWorkTime = Carbon::parse($workingDay->start_work_time)->subHour();
+            $workingDays = Auth::user()->employee->working_day;
+            if(!empty($workingDays)) {
                 $now = Carbon::now();
+                $currentDayWorking = $this->getWorkingDay($workingDays, $now);
+                $minStartWorkTime = Carbon::parse($workingDays->start_work_time)->subHour();
+                switch($currentDayWorking) {
+                    case 'half':
+                        if(!empty($workingDays->half_1_start_work_time)) {
+                            $minStartWorkTime = Carbon::parse($workingDays->half_1_start_work_time)->subHour();
+                        }
+                    break;
+                    case 'half_2':
+                        if(!empty($workingDays->half_2_start_work_time)) {
+                            $minStartWorkTime = Carbon::parse($workingDays->half_2_start_work_time)->subHour();
+                        }
+                    break;
+                }
+
                 if($now->lt($minStartWorkTime)) {
                     $canClockIn = false;
                     $reason = "Too early to clock-in. The earliest you may clock-in is one hour before your start working time.";
@@ -105,7 +119,21 @@ class AttendanceController extends Controller
 
         $workingDays = Auth::user()->employee->working_day;
         if($this->isWorkingDay($workingDays, $clockInTime) && !empty($workingDays->start_work_time)) {
+            $currentDayWorking = $this->getWorkingDay($workingDays, $clockInTime);
             $lateStartWorkTime = Carbon::parse($workingDays->start_work_time)->addMinutes(5);
+            switch($currentDayWorking) {
+                case 'half':
+                    if(!empty($workingDays->half_1_start_work_time)) {
+                        $lateStartWorkTime = Carbon::parse($workingDays->half_1_start_work_time)->addMinutes(5);
+                    }
+                    break;
+                case 'half_2':
+                    if(!empty($workingDays->half_2_start_work_time)) {
+                        $lateStartWorkTime = Carbon::parse($workingDays->half_2_start_work_time)->addMinutes(5);
+                    }
+                    break;
+            }
+
             if($clockInTime->greaterThan($lateStartWorkTime)) {
                 $clockInData['clock_in_status'] = 'late';
             }
@@ -151,7 +179,21 @@ class AttendanceController extends Controller
 
         $workingDays = Auth::user()->employee->working_day;
         if($this->isWorkingDay($workingDays, $clockOutTime) && !empty($workingDays->start_work_time)) {
+            $currentDayWorking = $this->getWorkingDay($workingDays, $clockOutTime);
             $endWorkTime = Carbon::parse($workingDays->end_work_time);
+            switch($currentDayWorking) {
+                case 'half':
+                    if(!empty($workingDays->half_1_end_work_time)) {
+                        $endWorkTime = Carbon::parse($workingDays->half_1_end_work_time);
+                    }
+                    break;
+                case 'half_2':
+                    if(!empty($workingDays->half_2_end_work_time)) {
+                        $endWorkTime = Carbon::parse($workingDays->half_2_end_work_time);
+                    }
+                    break;
+            }
+
             if($clockOutTime->lessThan($endWorkTime)) {
                 $clockOutData['clock_out_status'] = 'early';
             }
@@ -196,6 +238,33 @@ class AttendanceController extends Controller
                 break;
             case Carbon::SUNDAY;
                 return in_array($workingDays->sunday, $work_day);
+                break;
+        }
+    }
+
+    private function getWorkingDay($workingDays, $time) {
+
+        switch($time->dayOfWeek) {
+            case Carbon::MONDAY;
+                return $workingDays->monday;
+                break;
+            case Carbon::TUESDAY;
+                return $workingDays->tuesday;
+                break;
+            case Carbon::WEDNESDAY;
+                return $workingDays->wednesday;
+                break;
+            case Carbon::THURSDAY;
+                return $workingDays->thursday;
+                break;
+            case Carbon::FRIDAY;
+                return $workingDays->friday;
+                break;
+            case Carbon::SATURDAY;
+                return $workingDays->saturday;
+                break;
+            case Carbon::SUNDAY;
+                return $workingDays->sunday;
                 break;
         }
     }
