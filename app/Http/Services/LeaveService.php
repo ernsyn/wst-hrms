@@ -243,6 +243,7 @@ class LeaveService
             }
             
         }
+
         if(!self::isWorkingDay($working_day, $endDate)) {
             return self::error("End date cannot be a non-working day.");
         } else {
@@ -414,7 +415,6 @@ class LeaveService
 
         $additionalResponseData = array();
         if($consecutive) {
-
             $leaveAllocation = LeaveAllocation::where('emp_id', $employee->id)
             ->where('leave_type_id', $leave_type_id)
             ->where('valid_from_date', '<=', $now)
@@ -432,7 +432,6 @@ class LeaveService
 
         // Calculate Leave
         $totalDays = date_diff($startDate, $endDate)->days + 1;
-
         
         if(!empty($inc_off_days_based_on_applied_days_config)) {
             $inc_off_days_min_apply_days = $inc_off_days_based_on_applied_days_config->min_apply_days;
@@ -440,8 +439,6 @@ class LeaveService
                 $inc_off_days = true;
             }
         }
-        
-        
 
         if(!$inc_off_days) {
             $nextDayIsHoliday = false;  
@@ -459,7 +456,8 @@ class LeaveService
             ->where('status', 'active')->get();
 
             $cursorDate = $startDate->copy();
-           while($cursorDate->lessThanOrEqualTo($endDate)) {
+            
+            while($cursorDate->lessThanOrEqualTo($endDate)) {
                 if(!self::isWorkingDay($working_day, $cursorDate)) {
                     $nextDayIsHoliday = false;
                     if($cursorDate->dayOfWeek == Carbon::SUNDAY && self::isHoliday($holidays, $cursorDate)) {
@@ -473,13 +471,11 @@ class LeaveService
                 }
 
                 $cursorDate->addDays(1);
-           } 
+            } 
         }
-                
-       
 
-       // NEXT STAGE: Check leave days available
-       if($startDate->isSameDay($endDate) && $totalDays == 1) {
+        // NEXT STAGE: Check leave days available
+        if($startDate->isSameDay($endDate) && $totalDays == 1) {
             if(!empty($am_pm)) {
                 $totalDays -= 0.5;
             }
