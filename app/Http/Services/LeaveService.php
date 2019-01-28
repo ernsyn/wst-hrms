@@ -52,8 +52,8 @@ class LeaveService
             // - beginning of next month till end of year
 
             $validFromDate = $startDate->copy();
-            $validFromDate->month++;
-            $validFromDate->day = 1;
+            // $validFromDate->month++;
+            // $validFromDate->day = 1;
             $validUntilDate = $startDate->copy();
             $validUntilDate->month = 12;
             $validUntilDate->day = 31;
@@ -62,7 +62,8 @@ class LeaveService
             if(self::leaveTypeHasRule($leaveType, LeaveTypeRule::NON_PRORATED)) {
                 $allocatedDays = $allocatedDaysInAYear;
             } else {
-                $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
+                // $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
+                $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)) / 365;
                 $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
             }
 
@@ -88,29 +89,31 @@ class LeaveService
             return;
         }
 
-        $endCalcDate = $endDate->copy();
-        $endCalcDate->month++;
-        $endCalcDate->day = 1;
-        $endCalcDate->subDay();
+        // $endCalcDate = $endDate->copy();
+        // $endCalcDate->month++;
+        // $endCalcDate->day = 1;
+        // $endCalcDate->subDay();
 
         $leaveAllocations = LeaveAllocation::with('leave_type.applied_rules')->where('emp_id', $emp_id)
-        ->where('valid_from_date', '<=', $endCalcDate)
-        ->where('valid_until_date', '>=', $endCalcDate)
+        ->where('valid_from_date', '<=', $endDate)
+        ->where('valid_until_date', '>=', $endDate)
         ->get();
 
         foreach($leaveAllocations as $leaveAllocation) {
             if(!self::leaveTypeHasRule($leaveAllocation->leave_type, LeaveTypeRule::NON_PRORATED)) {
                 $allocationValidFromDate = Carbon::parse($leaveAllocation->valid_from_date);
                 $allocationValidUntilDate = Carbon::parse($leaveAllocation->valid_until_date);
-                $totalAllocationMonths = $allocationValidUntilDate->month - $allocationValidFromDate->month + 1;
-                $totalActualMonths = $allocationValidUntilDate->month - $endCalcDate->month + 1;
+                $totalAllocationDays = $allocationValidFromDate->diffInDays($allocationValidUntilDate);
+                $totalActualDays = $allocationValidFromDate->diffInDays($endDate);
+                // $totalAllocationMonths = $allocationValidUntilDate->month - $allocationValidFromDate->month + 1;
+                // $totalActualMonths = $allocationValidUntilDate->month - $endCalcDate->month + 1;
 
-                $updatedAllocatedDays = $leaveAllocation->allocated_days * $totalActualMonths / $totalAllocationMonths;
+                $updatedAllocatedDays = $leaveAllocation->allocated_days * $totalActualDays / $totalAllocationDays;
                 $updatedAllocatedDays = floor($updatedAllocatedDays * 2)/2; // Round to closest .5 low
 
                 $leaveAllocation->update([
                     'allocated_days' => $updatedAllocatedDays,
-                    'valid_until_date' => $endCalcDate,
+                    'valid_until_date' => $endDate,
                 ]);
             }
         }
