@@ -39,7 +39,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="issued-date-visa"><strong>Issued Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issued-date-visa" class="form-control datetimepicker-input" data-target="#issued-date-visa"/>
+                                <input type="text" id="issued-date-visa" class="form-control datetimepicker-input" data-target="#issued-date-visa" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#issued-date-visa" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -52,7 +52,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="expiry-date-visa"><strong>Expiry Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="expiry-date-visa" class="form-control datetimepicker-input" data-target="#expiry-date-visa"/>
+                                <input type="text" id="expiry-date-visa" class="form-control datetimepicker-input" data-target="#expiry-date-visa" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#expiry-date-visa" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -121,7 +121,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="issued-date-visa-edit"><strong>Issued Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issued-date-visa-edit" class="form-control datetimepicker-input" data-target="#issued-date-visa-edit"/>
+                                <input type="text" id="issued-date-visa-edit" class="form-control datetimepicker-input" data-target="#issued-date-visa-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#issued-date-visa-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -134,7 +134,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="expiry-date-visa-edit"><strong>Expiry Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="expiry-date-visa-edit" class="form-control datetimepicker-input" data-target="#expiry-date-visa-edit"/>
+                                <input type="text" id="expiry-date-visa-edit" class="form-control datetimepicker-input" data-target="#expiry-date-visa-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#expiry-date-visa-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -264,10 +264,18 @@
         $('#issued-date-visa').datetimepicker({
             format: 'DD/MM/YYYY'
         });
+        //disable keyboard input & hide caret
+        $('#issued-date-visa').keydown(false);
+        $('#issued-date-visa').css('caret-color', 'transparent');
+
         $('#expiry-date-visa').datetimepicker({
             format: 'DD/MM/YYYY',
             useCurrent: false
         });
+        //disable keyboard input & hide caret
+        $('#expiry-date-visa').keydown(false);
+        $('#expiry-date-visa').css('caret-color', 'transparent');
+
         $("#issued-date-visa").on("change.datetimepicker", function (e) {
             $('#expiry-date-visa').datetimepicker('minDate', e.date);
         });
@@ -278,10 +286,18 @@
         $('#issued-date-visa-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
+        //disable keyboard input & hide caret
+        $('#issued-date-visa-edit').keydown(false);
+        $('#issued-date-visa-edit').css('caret-color', 'transparent');
+
         $('#expiry-date-visa-edit').datetimepicker({
             format: 'DD/MM/YYYY',
             useCurrent: false
         });
+        //disable keyboard input & hide caret
+        $('#expiry-date-visa-edit').keydown(false);
+        $('#expiry-date-visa-edit').css('caret-color', 'transparent');
+
         $("#issued-date-visa-edit").on("change.datetimepicker", function (e) {
             $('#expiry-date-visa-edit').datetimepicker('minDate', e.date);
         });

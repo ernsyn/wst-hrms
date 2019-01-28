@@ -127,5 +127,9 @@
     $("#end-date").on("change.datetimepicker", function (e) {
         $('#start-date').datetimepicker('maxDate', e.date);
     });
+
+    $('#state').selectize({
+        sortField: 'text'
+    });
 </script>
 @append

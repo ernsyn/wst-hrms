@@ -95,7 +95,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('profile/edit','Employee\EmployeeController@postEditProfile')->name('employee.profile.edit.post');
 
     //employee edit profile pic
-    Route::post('employees/{id}/editpicture','Employee\EmployeeController@postEditPicture')->name('employees.picture.edit.post')->where('profile_media_id', '[0-9]+');
+    Route::post('employees/profile-pic','Employee\EmployeeController@postEditProfilePicture')->name('employees.profile-pic.edit.post');
 
     Route::post('profile/emergency-contacts/{id}/edit','Employee\EmployeeController@postEditEmergencyContact')->name('employee.emergency-contacts.edit.post');
     Route::post('profile/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
@@ -181,7 +181,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{id}/edit','Admin\EmployeeController@postEditProfile')->name('admin.employees.profile.edit.post')->where('id', '[0-9]+');
 
     //admin edit profile pic
-    Route::post('employees/{id}/editpicture','Admin\EmployeeController@postEditPicture')->name('admin.employees.picture.edit.post')->where('profile_media_id', '[0-9]+');
+    Route::post('employees/{emp_id}/profile-pic/edit','Admin\EmployeeController@postEditProfilePicture')->name('admin.employees.profile-pic.edit.post')->where('emp_id', '[0-9]+');
 
     Route::post('employees/{emp_id}/dependents/{id}/edit','Admin\EmployeeController@postEditDependent')->name('admin.employees.dependents.edit.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/emergency-contacts/{id}/edit','Admin\EmployeeController@postEditEmergencyContact')->name('admin.employees.emergency-contacts.edit.post')->where('id', '[0-9]+');

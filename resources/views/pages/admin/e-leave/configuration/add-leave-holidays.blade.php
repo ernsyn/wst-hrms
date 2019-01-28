@@ -111,42 +111,14 @@
     $("#end-date").on("change.datetimepicker", function (e) {
         $('#start-date').datetimepicker('maxDate', e.date);
     });
-    // $('#end-date').datepicker({
-    //     altField: "#alt-end-date",
-    //     altFormat: 'yy-mm-dd',
-    //     format: 'dd/mm/yy'
-    // });
 
-    // $('#start-date').datepicker({
-    //     altField: "#alt-start-date",
-    //     altFormat: 'yy-mm-dd',
-    //     format: 'dd/mm/yy',
-    //     changeMonth: true,
-    //     changeYear: true,
-    //     yearRange: "-80:+0"
-    // });
+
+    $('#state').selectize({
+        sortField: 'text'
+    });
 
 </script>
 <script type="text/javascript">
-    // $('.itemName').select2({
-//   placeholder: 'Select an item',
-//   ajax: {
-//     url: '/select2-autocomplete-ajax',
-//     dataType: 'json',
-//     delay: 250,
-//     processResults: function (data) {
-//       return {
-//         results:  $.map(data, function (item) {
-//               return {
-//                   text: item.name,
-//                   id: item.id
-//               }
-//           })
-//       };
-//     },
-//     cache: true
-//   }
-// });
 
 </script>
 @append
