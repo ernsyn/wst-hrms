@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class LeaveRequest extends Model
+class LeaveRequest extends Model implements Auditable
 {
     use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
     protected $table = 'leave_requests';
 
     protected $fillable = [
@@ -23,17 +25,18 @@ class LeaveRequest extends Model
     ];
 
     protected $casts = [
-
         'applied_days' => 'float',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function approvals() {
+    public function approvals() 
+    {
         return $this->hasMany('App\LeaveRequestApproval'); 
     }
 
-    public function attachment() {
+    public function attachment() 
+    {
         return $this->belongsTo('App\Media', 'attachment_media_id'); 
     }
 
@@ -42,21 +45,23 @@ class LeaveRequest extends Model
         return $this->hasMany('App\EmployeeReportTo','emp_id');
     }
 
-    public function leave_type() {
+    public function leave_type() 
+    {
         return $this->belongsTo('App\LeaveType','leave_type_id'); 
     }
 
-    public function employee() {
+    public function employee() 
+    {
         return $this->belongsTo('App\Employee','emp_id'); 
     }
 
-    public function leave_allocation() {
+    public function leave_allocation() 
+    {
         return $this->belongsTo('App\LeaveAllocation','leave_allocation_id'); 
     }
 
-public function leave_request_approval()
-{
- return $this->hasMany('App\LeaveRequestApproval'); 
-
-}
+    public function leave_request_approval()
+    {
+        return $this->hasMany('App\LeaveRequestApproval'); 
+    }
 }

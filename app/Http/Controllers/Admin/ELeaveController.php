@@ -3,10 +3,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
 use App\LeaveType;
 use App\Holiday;
 use App\LTAppliedRule;
@@ -16,7 +14,6 @@ use Auth;
 use App\LeaveAllocation;
 use App\EmployeeReportTo;
 use App\LeaveRequestApproval;
-
 use App\EmployeeWorkingDay;
 use \stdClass;
 use App\Http\Services\LeaveService;
@@ -44,8 +41,8 @@ class ELeaveController extends Controller
         $currentYear = Carbon::now()->year;
 
         $leaveAllocation = LeaveAllocation::selectRaw('DISTINCT(YEAR(valid_from_date)) AS allocation_year')
-        ->whereYear('valid_from_date', '<', $currentYear)
-        ->get();
+            ->whereYear('valid_from_date', '<', $currentYear)
+            ->get();
 
         return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes, 'leaveAllocation' => $leaveAllocation]);
     }
@@ -99,13 +96,10 @@ class ELeaveController extends Controller
                         $gradeGroupData["conditional_entitlements"]
                     );
                 }
-
-            } else {
-                if(array_key_exists("conditional_entitlements", $conditionalEntitlementsData)) {
-                    $leaveType->lt_conditional_entitlements()->createMany(
-                        $conditionalEntitlementsData["conditional_entitlements"]
-                    );
-                }
+            } else if(array_key_exists("conditional_entitlements", $conditionalEntitlementsData)) {
+                $leaveType->lt_conditional_entitlements()->createMany(
+                    $conditionalEntitlementsData["conditional_entitlements"]
+                );
             }
         });
 
@@ -127,18 +121,16 @@ class ELeaveController extends Controller
     public function generateLeaveAllocation()
     {
         $year = Carbon::now()->year;
-
         Artisan::call("leave-allocation:generate", ['year' => $year]);
-
         $leave_allocation = DB::table('leave_allocations')
-        ->join('employees', 'leave_allocations.emp_id', '=', 'employees.id')
-        ->join('users', 'employees.user_id', '=', 'users.id')
-        ->join('leave_types', 'leave_allocations.leave_type_id', '=', 'leave_types.id')
-        ->join('employee_jobs', 'leave_allocations.emp_job_id', '=', 'employee_jobs.id')
-        ->select('leave_allocations.*', 'employees.code', 'users.name', 'leave_types.name as lt_code', 'employee_jobs.remarks')
-        ->whereYear('valid_from_date', '=', $year)
-        ->whereYear('valid_until_date', '=', $year)
-        ->get();
+            ->join('employees', 'leave_allocations.emp_id', '=', 'employees.id')
+            ->join('users', 'employees.user_id', '=', 'users.id')
+            ->join('leave_types', 'leave_allocations.leave_type_id', '=', 'leave_types.id')
+            ->join('employee_jobs', 'leave_allocations.emp_job_id', '=', 'employee_jobs.id')
+            ->select('leave_allocations.*', 'employees.code', 'users.name', 'leave_types.name as lt_code', 'employee_jobs.remarks')
+            ->whereYear('valid_from_date', '=', $year)
+            ->whereYear('valid_until_date', '=', $year)
+            ->get();
 
         return view('pages.admin.e-leave.configuration.generate-leave-allocation', ['message' => Artisan::output(), 'leave_allocation' => $leave_allocation]);
     }
@@ -147,7 +139,6 @@ class ELeaveController extends Controller
     public function displayLeaveRequests()
     {
         $leaveRequests = LeaveRequest::all();
-
         return view('pages.admin.e-leave.configuration.leave-requests', ['leaveRequests' => $leaveRequests]);
     }
 
@@ -162,8 +153,7 @@ class ELeaveController extends Controller
         $add_year = $now->year;
         $check_next_year = false;
 
-        if(count($holiday) > 0)
-        {
+        if (count($holiday) > 0) {
             // get current year holidays
             $holidays_year = Holiday::selectRaw('YEAR(start_date) as holiday_year')
             ->where('repeat_annually', 1)
@@ -172,18 +162,14 @@ class ELeaveController extends Controller
             ->orderBy('start_date', 'DESC')
             ->first();
 
-            if($holidays_year)
-            {
+            if ($holidays_year) {
                 $show_button = true;
-
                 $add_year = $holidays_year->holiday_year + 1;
 
                 $check_next_year = Holiday::whereYear('start_date', '=', $add_year)
-                ->whereYear('end_date', '=', $add_year)
-                ->count() > 0;
-            }
-            else
-            {
+                    ->whereYear('end_date', '=', $add_year)
+                    ->count() > 0;
+            } else {
                 $show_button = true;
             }
         }
@@ -208,10 +194,11 @@ class ELeaveController extends Controller
         ]);
         $created_by = auth()->user()->id;
 
-        if($request->state != null)
+        if($request->state != null) {
             $publicHolidayData['state'] = implode(",", $request->state);
-        else
+        } else {
             $publicHolidayData['state'] = null;
+        }
 
         $publicHolidayData['start_date'] = implode("-", array_reverse(explode("/", $publicHolidayData['start_date'])));
         $publicHolidayData['end_date'] = implode("-", array_reverse(explode("/", $publicHolidayData['end_date'])));
@@ -220,7 +207,6 @@ class ELeaveController extends Controller
         $endTimeStamp  = strtotime($publicHolidayData['end_date']);
         $timeDiff = $endTimeStamp - $startTimeStamp;
         $publicHolidayData['total_days'] = $timeDiff/86400 + 1;
-
 
         $publicHolidayData['status'] =  'active';
         Holiday::create($publicHolidayData);
@@ -231,7 +217,6 @@ class ELeaveController extends Controller
     public function editHoliday(Request $request, $id)
     {
         $holidays = Holiday::find($id);
-
         return view('pages.admin.e-leave.configuration.edit-leave-holidays', ['holidays' => $holidays]);
     }
 
@@ -247,10 +232,11 @@ class ELeaveController extends Controller
             'state'=>'nullable'
         ]);
 
-        if($request->state != null)
+        if ($request->state != null) {
             $holidayUpdatedData['state'] = implode(",", $request->state);
-        else
+        } else {
             $holidayUpdatedData['state'] = null;
+        }
 
         $holidayUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['start_date'])));
         $holidayUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['end_date'])));
@@ -260,7 +246,7 @@ class ELeaveController extends Controller
         $timeDiff = $endTimeStamp - $startTimeStamp;
         $holidayUpdatedData['total_days'] = $timeDiff/86400 + 1;
 
-        Holiday::where('id', $id)->update($holidayUpdatedData);
+        Holiday::find($id)->update($holidayUpdatedData);
 
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
     }
@@ -271,20 +257,19 @@ class ELeaveController extends Controller
 
         // get holidays for current year
         $holidays = Holiday::where('repeat_annually', 1)
-        ->whereYear('start_date', '=', $now->year)
-        ->whereYear('end_date', '=', $now->year)
-        ->orderBy('start_date', 'ASC')
-        ->get();
+            ->whereYear('start_date', '=', $now->year)
+            ->whereYear('end_date', '=', $now->year)
+            ->orderBy('start_date', 'ASC')
+            ->get();
 
-        if(count($holidays) == 0)
-        {
+        if (count($holidays) == 0) {
             $previous_year = $now->year - 1;
 
             $holidays = Holiday::where('repeat_annually', 1)
-            ->whereYear('start_date', '=', $previous_year)
-            ->whereYear('end_date', '=', $previous_year)
-            ->orderBy('start_date', 'ASC')
-            ->get();
+                ->whereYear('start_date', '=', $previous_year)
+                ->whereYear('end_date', '=', $previous_year)
+                ->orderBy('start_date', 'ASC')
+                ->get();
         }
 
         foreach ($holidays as $row) {
@@ -295,12 +280,12 @@ class ELeaveController extends Controller
 
             // check if holiday has already been duplicated
             $check_exist = Holiday::where('name', $row->name)
-            ->where('start_date', $start_next)
-            ->where('end_date', $end_next)
-            ->count() > 0;
+                ->where('start_date', $start_next)
+                ->where('end_date', $end_next)
+                ->count() > 0;
 
             // duplicate holidays for next year
-            if(!$check_exist) {
+            if (!$check_exist) {
                 $holidayData = array();
 
                 $holidayData['name'] = $row->name;
@@ -320,10 +305,9 @@ class ELeaveController extends Controller
 
     public function postEditLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::where('id', $id)->first();
+        $leaveType = LeaveType::find($id)->first();
 
-
-        if($leaveType->is_custom) {
+        if ($leaveType->is_custom) {
             $leaveTypeData = $request->validate([
                 "code" => "required|unique:leave_types,code,{$id},id,deleted_at,NULL",
                 "name" => "required|unique:leave_types,name,{$id},id,deleted_at,NULL",
@@ -335,7 +319,6 @@ class ELeaveController extends Controller
                 "entitled_days" => 'nullable',
             ]);
         }
-
 
         $appliedRulesData =  $request->validate([
             "applied_rules" => '',
@@ -396,7 +379,6 @@ class ELeaveController extends Controller
                     array_push($gradeGroupIds, $gradeGroup->id);
                 }
                 $leaveType->lt_entitlements_grade_groups()->whereNotIn('id', $gradeGroupIds)->delete();
-
             } else {
                 $leaveType->lt_entitlements_grade_groups()->delete();
             }
@@ -407,7 +389,6 @@ class ELeaveController extends Controller
                     $conditionalEntitlement = $leaveType->lt_conditional_entitlements()->updateOrCreate(['id' => $conditionalEntitlementData['id']], $conditionalEntitlementData);
                     array_push($conditionalEntitlementIds, $conditionalEntitlement->id);
                 }
-
             } else {
                 $leaveType->lt_conditional_entitlements()->delete();
             }
@@ -419,26 +400,23 @@ class ELeaveController extends Controller
     public function addLeaveApproval(Request $request, $id)
     {
         $leaveRequest = LeaveRequest::find($id);
-
         return view('pages.admin.e-leave.application.add-leave-request', ['leaveRequest' => $leaveRequest]);
     }
 
     public function rejectLeaveApproval(Request $request, $id)
     {
         $leaveRequest = LeaveRequest::find($id);
-
         return view('pages.admin.e-leave.application.reject-leave-request', ['leaveRequest' => $leaveRequest]);
     }
 
     public function postAddApproval(Request $request)
     {
-
         $id = $request->input('id');
         $emp_id = $request->input('emp_id');
         $leave_type_id = $request->input('leave_type_id');
         $total_days =$request->input('total_days');
 
-        LeaveRequest::where('id',$id)->update(array('status' => 'approved'));
+        LeaveRequest::find($id)->update(array('status' => 'approved'));
         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
         $leaveRequestData = $request->validate([
             ]);
@@ -461,47 +439,43 @@ class ELeaveController extends Controller
 
     public function postDisapproved(Request $request)
     {
-
         $id = $request->input('id');
         $emp_id = $request->input('emp_id');
         $leave_type_id = $request->input('leave_type_id');
         $total_days =$request->input('total_days');
 
         $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
-        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+            ->where('leave_type_id',$leave_type_id)->first()->spent_days;
 
         $leaveAllocationData = number_format($leaveAllocationData1,1);
-        $total_days =number_format($total_days,1);
+        $total_days = number_format($total_days,1);
         $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
-        LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
+        LeaveRequest::find($id)->update(array('status' => 'rejected'));
         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
 
-        $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-        ->where('leave_type_id',$leave_type_id)
-        ->update(array('spent_days'=>$leaveAllocationDataEntry));
+        $spent_days_allocation = LeaveAllocation::find($emp_id)
+            ->where('leave_type_id',$leave_type_id)
+            ->update(array('spent_days'=>$leaveAllocationDataEntry));
 
         return redirect()->route('admin.e-leave.configuration.leave-requests');
     }
 
     public function postDeactivateLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::where('id', $id)->update(['active' => false]);
-
+        $leaveType = LeaveType::find($id)->update(['active' => false]);
         return response()->json(['success'=>'Leave type has been deactivated.']);
     }
 
     public function postActivateLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::where('id', $id)->update(['active' => true]);
-
+        $leaveType = LeaveType::find($id)->update(['active' => true]);
         return response()->json(['success'=>'Leave type has been activated.']);
     }
 
     public function deleteLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::where('id', $id)->delete();
-
+        $leaveType = LeaveType::find($id)->delete();
         return response()->json(['success'=>'Leave type has been deleted.']);
     }
 
@@ -509,7 +483,6 @@ class ELeaveController extends Controller
     public function displayLeaveApplication()
     {
         $leavebalance = LeaveType::all();
-
         return view('pages.admin.e-leave.configuration.leave-application');
     }
 
@@ -517,9 +490,9 @@ class ELeaveController extends Controller
     public function displayLeaveReports()
     {
         $employees = DB::table('users')
-        ->join('employees', 'users.id', '=', 'employees.user_id')
-        ->select('users.name','users.email','employees.*')
-        ->get();
+            ->join('employees', 'users.id', '=', 'employees.user_id')
+            ->select('users.name','users.email','employees.*')
+            ->get();
 
         return view('pages.admin.e-leave.configuration.leave-report', ['employees' => $employees]);
     }
@@ -530,8 +503,7 @@ class ELeaveController extends Controller
             $params = explode('-', $id);
             $emp_id = $params[0];
             $year = $params[1];
-        }
-        else {
+        } else {
             $emp_id = $id;
             $now = Carbon::now();
             $year = $now->year;
@@ -541,48 +513,48 @@ class ELeaveController extends Controller
 
         // get employee data
         $employee = DB::table('users')
-        ->join('employees', 'users.id', '=', 'employees.user_id')
-        ->select('users.name','users.email','employees.*')
-        ->where('employees.id', $emp_id)
-        ->first();
+            ->join('employees', 'users.id', '=', 'employees.user_id')
+            ->select('users.name','users.email','employees.*')
+            ->where('employees.id', $emp_id)
+            ->first();
 
         // get employee leave allocations
         $leaves = DB::table('leave_types')
-        ->join('leave_allocations', 'leave_types.id', '=', 'leave_allocations.leave_type_id')
-        ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'employee_jobs.emp_id')
-        ->distinct()
-        ->select(
-            'leave_types.id',
-            'leave_types.code',
-            'leave_types.name',
-            'leave_allocations.allocated_days',
-            'leave_allocations.spent_days',
-            'leave_allocations.carried_forward_days'
-        )
-        ->where('leave_types.active', 1)
-        ->where('leave_allocations.emp_id', $emp_id)
-        ->whereYear('leave_allocations.valid_from_date', '=', $year)
-        ->whereYear('leave_allocations.valid_until_date', '=', $year)
-        ->whereNull('employee_jobs.end_date')
-        ->get();
-
-        foreach ($leaves as $row) {
-            $leaveAllocations = DB::table('leave_allocations')
-            ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'leave_allocations.emp_id')
+            ->join('leave_allocations', 'leave_types.id', '=', 'leave_allocations.leave_type_id')
+            ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'employee_jobs.emp_id')
+            ->distinct()
             ->select(
-                'leave_allocations.id',
+                'leave_types.id',
+                'leave_types.code',
+                'leave_types.name',
                 'leave_allocations.allocated_days',
                 'leave_allocations.spent_days',
-                'leave_allocations.carried_forward_days',
-                'leave_allocations.is_carry_forward'
+                'leave_allocations.carried_forward_days'
             )
-            ->where('leave_allocations.leave_type_id', $row->id)
+            ->where('leave_types.active', 1)
+            ->where('leave_allocations.emp_id', $emp_id)
             ->whereYear('leave_allocations.valid_from_date', '=', $year)
             ->whereYear('leave_allocations.valid_until_date', '=', $year)
             ->whereNull('employee_jobs.end_date')
-            ->orderBy('leave_allocations.id', 'desc')
-            ->limit(1)
             ->get();
+
+        foreach ($leaves as $row) {
+            $leaveAllocations = DB::table('leave_allocations')
+                ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'leave_allocations.emp_id')
+                ->select(
+                    'leave_allocations.id',
+                    'leave_allocations.allocated_days',
+                    'leave_allocations.spent_days',
+                    'leave_allocations.carried_forward_days',
+                    'leave_allocations.is_carry_forward'
+                )
+                ->where('leave_allocations.leave_type_id', $row->id)
+                ->whereYear('leave_allocations.valid_from_date', '=', $year)
+                ->whereYear('leave_allocations.valid_until_date', '=', $year)
+                ->whereNull('employee_jobs.end_date')
+                ->orderBy('leave_allocations.id', 'desc')
+                ->limit(1)
+                ->get();
 
             $totalAllocatedDays = 0;
             $carried_forward_days = 0;
@@ -591,21 +563,20 @@ class ELeaveController extends Controller
                 foreach($leaveAllocations as $leaveAllocation) {
                     if($leaveAllocation->is_carry_forward == 1) {
                         $carried_forward_days += $leaveAllocation->allocated_days;
-                    }
-                    else {
+                    } else {
                         $totalAllocatedDays = $leaveAllocation->allocated_days;
                     }
                 }
             }
 
             $gender_rules = LTAppliedRule::where('leave_type_id', $row->id)
-            ->where('rule', 'gender')
-            ->first();
+                ->where('rule', 'gender')
+                ->first();
 
             if($gender_rules) {
                 $gender_check = LTAppliedRule::where('id', $gender_rules->id)
-                ->where('configuration', 'like', '%"' . $employee->gender . '"%')
-                ->first();
+                    ->where('configuration', 'like', '%"' . $employee->gender . '"%')
+                    ->first();
 
                 if($gender_check) {
                     $report_array[$row->id]['code'] = $row->code;
@@ -618,8 +589,7 @@ class ELeaveController extends Controller
                     $report_array[$row->id]['allowed_to_take'] = 0;
                     $report_array[$row->id]['year_of_balance'] = 0;
                 }
-            }
-            else {
+            } else {
                 $report_array[$row->id]['code'] = $row->code;
                 $report_array[$row->id]['name'] = $row->name;
                 $report_array[$row->id]['carried_forward_days'] = $carried_forward_days;
@@ -677,8 +647,7 @@ class ELeaveController extends Controller
             $params = explode('-', $id);
             $emp_id = $params[0];
             $year = $params[1];
-        }
-        else {
+        } else {
             $emp_id = $id;
             $now = Carbon::now();
             $year = $now->year;
@@ -688,18 +657,18 @@ class ELeaveController extends Controller
 
         // get employee data
         $employee = DB::table('users')
-        ->join('employees', 'users.id', '=', 'employees.user_id')
-        ->select('users.name','users.email','employees.*')
-        ->where('employees.id', $emp_id)
-        ->first();
+            ->join('employees', 'users.id', '=', 'employees.user_id')
+            ->select('users.name','users.email','employees.*')
+            ->where('employees.id', $emp_id)
+            ->first();
 
         // get employee leave requests
         $leaves = DB::table('leave_requests')
-        ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
-        ->select('leave_requests.*', 'leave_types.name')
-        ->where('leave_types.code', '!=', 'UNPAID')
-        ->whereYear('leave_requests.start_date', '=', $year)
-        ->get();
+            ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
+            ->select('leave_requests.*', 'leave_types.name')
+            ->where('leave_types.code', '!=', 'UNPAID')
+            ->whereYear('leave_requests.start_date', '=', $year)
+            ->get();
 
         foreach ($leaves as $row) {
             $report_array[$row->id]['leave_type'] = $row->name;
@@ -712,8 +681,8 @@ class ELeaveController extends Controller
         }
 
         $years = LeaveRequest::selectRaw('distinct(year(start_date)) as year_data')
-        ->where('emp_id', $emp_id)
-        ->get();
+            ->where('emp_id', $emp_id)
+            ->get();
 
         return view('pages.admin.e-leave.configuration.total-transaction-report', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
     }
@@ -724,8 +693,7 @@ class ELeaveController extends Controller
             $params = explode('-', $id);
             $emp_id = $params[0];
             $year = $params[1];
-        }
-        else {
+        } else {
             $emp_id = $id;
             $now = Carbon::now();
             $year = $now->year;
@@ -735,18 +703,18 @@ class ELeaveController extends Controller
 
         // get employee data
         $employee = DB::table('users')
-        ->join('employees', 'users.id', '=', 'employees.user_id')
-        ->select('users.name','users.email','employees.*')
-        ->where('employees.id', $emp_id)
-        ->first();
+            ->join('employees', 'users.id', '=', 'employees.user_id')
+            ->select('users.name','users.email','employees.*')
+            ->where('employees.id', $emp_id)
+            ->first();
 
         // get employee leave requests
         $leaves = DB::table('leave_requests')
-        ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
-        ->select('leave_requests.*', 'leave_types.code', 'leave_types.name')
-        ->where('leave_types.code', 'UNPAID')
-        ->whereYear('leave_requests.start_date', '=', $year)
-        ->get();
+            ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
+            ->select('leave_requests.*', 'leave_types.code', 'leave_types.name')
+            ->where('leave_types.code', 'UNPAID')
+            ->whereYear('leave_requests.start_date', '=', $year)
+            ->get();
 
         foreach ($leaves as $row) {
             $report_array[$row->id]['leave_code'] = $row->code;
@@ -758,8 +726,8 @@ class ELeaveController extends Controller
         }
 
         $years = LeaveRequest::selectRaw('distinct(year(start_date)) as year_data')
-        ->where('emp_id', $emp_id)
-        ->get();
+            ->where('emp_id', $emp_id)
+            ->get();
 
         return view('pages.admin.e-leave.configuration.unpaid-leave-report', ['employee' => $employee, 'leaves' => $report_array, 'year_data' => $years, 'selected_year' => $year]);
     }
@@ -769,11 +737,11 @@ class ELeaveController extends Controller
         $pageLimit = $request->get("page_limit");
         $nameQuery = $request->get("q");
         $employees = Employee::with('user:id,name')
-        ->whereHas('user', function ($q) use ($nameQuery) {
-            $q->where('name', 'like', "%{$nameQuery}%");
-        })
-        ->take($pageLimit)
-        ->get(['id', 'code', 'user_id']);
+            ->whereHas('user', function ($q) use ($nameQuery) {
+                $q->where('name', 'like', "%{$nameQuery}%");
+            })
+            ->take($pageLimit)
+            ->get(['id', 'code', 'user_id']);
 
         $employee_list = [];
 
@@ -791,7 +759,7 @@ class ELeaveController extends Controller
     {
         $working_day = EmployeeWorkingDay::where('emp_id', $emp_id)->first();
 
-        if(empty($working_day)) {
+        if (empty($working_day)) {
             return self::error("Employees working days not set yet.");
         }
 
@@ -799,38 +767,31 @@ class ELeaveController extends Controller
 
         $work_day = array('full', 'half', 'half_2');
 
-        if(in_array($working_day->sunday, $work_day))
-        {
+        if (in_array($working_day->sunday, $work_day)) {
             array_push($result, 0);
         }
 
-        if(in_array($working_day->monday, $work_day))
-        {
+        if (in_array($working_day->monday, $work_day)) {
             array_push($result, 1);
         }
 
-        if(in_array($working_day->tuesday, $work_day))
-        {
+        if (in_array($working_day->tuesday, $work_day)) {
             array_push($result, 2);
         }
 
-        if(in_array($working_day->wednesday, $work_day))
-        {
+        if (in_array($working_day->wednesday, $work_day)) {
             array_push($result, 3);
         }
 
-        if(in_array($working_day->thursday, $work_day))
-        {
+        if (in_array($working_day->thursday, $work_day)) {
             array_push($result, 4);
         }
 
-        if(in_array($working_day->friday, $work_day))
-        {
+        if (in_array($working_day->friday, $work_day)) {
             array_push($result, 5);
         }
 
-        if(in_array($working_day->saturday, $work_day))
-        {
+        if (in_array($working_day->saturday, $work_day)) {
             array_push($result, 6);
         }
 
@@ -840,24 +801,22 @@ class ELeaveController extends Controller
     public function ajaxCheckEmployeeJob($emp_id)
     {
         $employeeJob = EmployeeJob::where('emp_id', $emp_id)->count();
-
         return $employeeJob;
     }
 
     public function ajaxGetEmployeeLeaves(Request $request, $emp_id)
     {
         $leaveRequest = LeaveRequest::where('emp_id', $emp_id)
-        ->where('status', $request->input('status'))
-        ->where('start_date', '>=', $request->input('start'))
-        ->where('end_date', '<=', $request->input('end'))
-        ->get();
+            ->where('status', $request->input('status'))
+            ->where('start_date', '>=', $request->input('start'))
+            ->where('end_date', '<=', $request->input('end'))
+            ->get();
 
         $result = array();
 
         foreach ($leaveRequest as $row)
         {
             $leave = new stdClass();
-
             $leaveType = LeaveType::where('id', $row->leave_type_id)->first();
 
             $leave->id = $row->id;
@@ -867,12 +826,9 @@ class ELeaveController extends Controller
             $leave->status = $row->status;
             $leave->reason = $row->reason;
 
-            if($row->am_pm)
-            {
+            if($row->am_pm) {
                 $leave->am_pm = strtoupper($row->am_pm);
-            }
-            else
-            {
+            } else {
                 $leave->am_pm = "Full Day";
             }
 
@@ -885,21 +841,21 @@ class ELeaveController extends Controller
     public function ajaxGetEmployeeHolidays(Request $request, $emp_id)
     {
         $branch = DB::table('employee_jobs')
-        ->join('branches', 'employee_jobs.branch_id', '=', 'branches.id')
-        ->select('branches.state')
-        ->where('employee_jobs.emp_id', $emp_id)
-        ->orderBy('employee_jobs.created_at', 'DESC')
-        ->first();
+            ->join('branches', 'employee_jobs.branch_id', '=', 'branches.id')
+            ->select('branches.state')
+            ->where('employee_jobs.emp_id', $emp_id)
+            ->orderBy('employee_jobs.created_at', 'DESC')
+            ->first();
 
         if(empty($branch)) {
             return self::error("Employee job is not set yet.");
         }
 
         $holidays = Holiday::where('status', 'active')
-        ->where('state', 'like', '%' . $branch->state . '%')
-        ->where('start_date', '>=', $request->input('start'))
-        ->where('end_date', '<=', $request->input('end'))
-        ->get();
+            ->where('state', 'like', '%' . $branch->state . '%')
+            ->where('start_date', '>=', $request->input('start'))
+            ->where('end_date', '<=', $request->input('end'))
+            ->get();
 
         if(empty($holidays)) {
             return self::error("Holidays not set yet.");
@@ -926,9 +882,7 @@ class ELeaveController extends Controller
     public function ajaxGetLeaveTypes($emp_id)
     {
         $employee = Employee::where('id', $emp_id)->first();
-
         $leaveTypes = LeaveService::getLeaveTypesForEmployee($employee, true);
-
         return response()->json($leaveTypes);
     }
 
@@ -947,7 +901,6 @@ class ELeaveController extends Controller
         }
 
         $employee = Employee::where('id', $emp_id)->first();
-
         $result = LeaveService::checkLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, true);
 
         return response()->json($result);
@@ -975,7 +928,6 @@ class ELeaveController extends Controller
         }
 
         $employee = Employee::where('id', $emp_id)->first();
-
         $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, true);
 
         // dd($result);
@@ -991,7 +943,6 @@ class ELeaveController extends Controller
     public function ajaxGetLeaveRequestSingle($id)
     {
         $leaveRequest = LeaveRequest::where('id', $id)->first();
-
         return response()->json($leaveRequest);
     }
 
@@ -1013,10 +964,10 @@ class ELeaveController extends Controller
         $now = Carbon::now();
 
         $leaveAllocation = LeaveAllocation::where('emp_id', $employee->id)
-        ->where('leave_type_id', $request['leave_type'])
-        ->where('valid_from_date', '<=', $now)
-        ->where('valid_until_date', '>=', $now)
-        ->first();
+            ->where('leave_type_id', $request['leave_type'])
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
 
         $leaveAllocation->update([
             'spent_days' => $leaveAllocation->spent_days - $leaveRequest->applied_days
@@ -1026,17 +977,16 @@ class ELeaveController extends Controller
 
         $am_pm = null;
 
-        if(array_key_exists('am_pm', $requestData)) {
+        if (array_key_exists('am_pm', $requestData)) {
             $am_pm = $requestData['am_pm'];
         }
 
         $attachment_data_url = null;
-        if(array_key_exists('attachment', $requestData)) {
+        if (array_key_exists('attachment', $requestData)) {
             $attachment_data_url = $requestData['attachment'];
         }
 
         $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, true);
-
         $leave_request = LeaveRequest::where('id', $result)->first();
 
         // send leave request email notification
@@ -1054,10 +1004,10 @@ class ELeaveController extends Controller
         $now = Carbon::now();
 
         $leaveAllocation = LeaveAllocation::where('emp_id', $employee->id)
-        ->where('leave_type_id', $leaveRequest['leave_type_id'])
-        ->where('valid_from_date', '<=', $now)
-        ->where('valid_until_date', '>=', $now)
-        ->first();
+            ->where('leave_type_id', $leaveRequest['leave_type_id'])
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
 
         $leaveAllocation->update([
             'spent_days' => $leaveAllocation->spent_days - $leaveRequest->applied_days
@@ -1068,21 +1018,22 @@ class ELeaveController extends Controller
         return response()->json(['success'=>'Leave Request was successfully cancelled.']);
     }
 
-    public function sendLeaveRequestNotification(LeaveRequest $leave_request, $emp_id) {
+    public function sendLeaveRequestNotification(LeaveRequest $leave_request, $emp_id) 
+    {
         $cc_recepients = array();
         $bcc_recepients = array();
 
         // get report to users
         $report_to = EmployeeReportTo::where('emp_id', $emp_id)
-        ->where('report_to_level', '1')
-        ->get();
+            ->where('report_to_level', '1')
+            ->get();
 
         foreach ($report_to as $row) {
             $employee = DB::table('employees')
-            ->join('users', 'users.id', '=', 'employees.user_id')
-            ->select('users.name','users.email')
-            ->where('employees.id', $row->report_to_emp_id)
-            ->first();
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->report_to_emp_id)
+                ->first();
 
             array_push($cc_recepients, $employee->email);
         }
@@ -1097,26 +1048,27 @@ class ELeaveController extends Controller
         }
 
         \Mail::to($cc_recepients)
-        ->cc(Auth::user()->email)
-        ->bcc($bcc_recepients)
-        ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+            ->cc(Auth::user()->email)
+            ->bcc($bcc_recepients)
+            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
 
-    public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval, $emp_id) {
+    public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval, $emp_id) 
+    {
         $cc_recepients = array();
         $bcc_recepients = array();
 
         // get report to users
         $report_to = EmployeeReportTo::where('emp_id', $emp_id)
-        ->where('report_to_level', '1')
-        ->get();
+            ->where('report_to_level', '1')
+            ->get();
 
         foreach ($report_to as $row) {
             $employee = DB::table('employees')
-            ->join('users', 'users.id', '=', 'employees.user_id')
-            ->select('users.name','users.email')
-            ->where('employees.id', $row->report_to_emp_id)
-            ->first();
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->report_to_emp_id)
+                ->first();
 
             array_push($cc_recepients, $employee->email);
         }
@@ -1131,12 +1083,13 @@ class ELeaveController extends Controller
         }
 
         \Mail::to($cc_recepients)
-        ->cc(Auth::user()->email)
-        ->bcc($bcc_recepients)
-        ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
+            ->cc(Auth::user()->email)
+            ->bcc($bcc_recepients)
+            ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
     }
 
-    private static function error($message) {
+    private static function error($message) 
+    {
         return [
             'error' => true,
             'message' => $message

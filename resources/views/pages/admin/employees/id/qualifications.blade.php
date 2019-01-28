@@ -31,7 +31,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="start-date-experience" class="form-control datetimepicker-input" data-target="#start-date-experience"/>
+                                <input type="text" id="start-date-experience" class="form-control datetimepicker-input" data-target="#start-date-experience" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#start-date-experience" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -44,7 +44,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="end-date-experience" class="form-control datetimepicker-input" data-target="#end-date-experience"/>
+                                <input type="text" id="end-date-experience" class="form-control datetimepicker-input" data-target="#end-date-experience" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#end-date-experience" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -96,7 +96,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start-year"><strong>Start Year*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="start-year" class="form-control datetimepicker-input" data-target="#start-year"/>
+                                <input type="text" id="start-year" class="form-control datetimepicker-input" data-target="#start-year" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#start-year" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -109,7 +109,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end-year"><strong>End Year*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="end-year" class="form-control datetimepicker-input" data-target="#end-year"/>
+                                <input type="text" id="end-year" class="form-control datetimepicker-input" data-target="#end-year" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#end-year" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -247,7 +247,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="start-date-experience-edit" class="form-control datetimepicker-input" data-target="#start-date-experience-edit"/>
+                                <input type="text" id="start-date-experience-edit" class="form-control datetimepicker-input" data-target="#start-date-experience-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#start-date-experience-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -260,7 +260,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="end-date-experience-edit" class="form-control datetimepicker-input" data-target="#end-date-experience-edit"/>
+                                <input type="text" id="end-date-experience-edit" class="form-control datetimepicker-input" data-target="#end-date-experience-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#end-date-experience-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -700,11 +700,9 @@
         $("#start-date-experience").on("change.datetimepicker", function (e) {
             $('#end-date-experience').datetimepicker('minDate', e.date);
         });
-        $('#start-date-experience').on('change keydown', function(e){
-            if(e.which){
-                e.preventDefault();
-            }
-        });
+        //disable keyboard input & hide caret
+        $("#start-date-experience").keydown(false);
+        $("#start-date-experience").css('caret-color', 'transparent');
 
         $('#end-date-experience').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -713,24 +711,20 @@
         $("#end-date-experience").on("change.datetimepicker", function (e) {
             $('#start-date-experience').datetimepicker('maxDate', e.date);
         });
-        $('#end-date-experience').on('change keydown', function(e){
-            if(e.which){
-                e.preventDefault();
-            }
-        });
+        //disable keyboard input & hide caret
+        $("#end-date-experience").keydown(false);
+        $("#end-date-experience").css('caret-color', 'transparent');
 
-        // datepicker add exp
+        // datepicker edit exp
         $('#start-date-experience-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
         $("#start-date-experience-edit").on("change.datetimepicker", function (e) {
             $('#end-date-experience-edit').datetimepicker('minDate', e.date);
         });
-        $('#start-date-experience-edit').on('change keydown', function(e){
-            if(e.which){
-                e.preventDefault();
-            }
-        });
+        //disable keyboard input & hide caret
+        $("#start-date-experience-edit").keydown(false);
+        $("#start-date-experience-edit").css('caret-color', 'transparent');
 
         $('#end-date-experience-edit').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -739,11 +733,9 @@
         $("#end-date-experience-edit").on("change.datetimepicker", function (e) {
             $('#start-date-experience-edit').datetimepicker('maxDate', e.date);
         });
-        $('#end-date-experience-edit').on('change keydown', function(e){
-            if(e.which){
-                e.preventDefault();
-            }
-        });
+        //disable keyboard input & hide caret
+        $("#end-date-experience-edit").keydown(false);
+        $("#end-date-experience-edit").css('caret-color', 'transparent');
 
         // datepicker add edu
         $('#start-year').datetimepicker({
@@ -752,11 +744,9 @@
         $("#start-year").on("change.datetimepicker", function (e) {
             $('#end-year').datetimepicker('minDate', e.date);
         });
-        $('#start-year').on('change keydown', function(e){
-            if(e.which){
-                e.preventDefault();
-            }
-        });
+        //disable keyboard input & hide caret
+        $("#start-year").keydown(false);
+        $("#start-year").css('caret-color', 'transparent');
 
         $('#end-year').datetimepicker({
             format: 'YYYY',
@@ -765,11 +755,9 @@
         $("#end-year").on("change.datetimepicker", function (e) {
             $('#start-year').datetimepicker('maxDate', e.date);
         });
-        $('#end-year').on('change keydown', function(e){
-            if(e.which){
-                e.preventDefault();
-            }
-        });
+        //disable keyboard input & hide caret
+        $("#end-year").keydown(false);
+        $("#end-year").css('caret-color', 'transparent');
 
         // datepicker edit edu
         $('#start-year-edit').datetimepicker({
@@ -778,22 +766,19 @@
         $("#start-year-edit").on("change.datetimepicker", function (e) {
             $('#end-year-edit').datetimepicker('minDate', e.date);
         });
-        $('#start-year-edit').on('change keydown', function(e){
-            if(e.which){
-                e.preventDefault();
-            }
-        });
+        //disable keyboard input & hide caret
+        $("#start-year-edit").keydown(false);
+        $("#start-year-edit").css('caret-color', 'transparent');
+
         $('#end-year-edit').datetimepicker({
             format: 'YYYY'
         });
         $("#end-year-edit").on("change.datetimepicker", function (e) {
             $('#start-year-edit').datetimepicker('maxDate', e.date);
         });
-        $('#end-year-edit').on('change keydown', function(e){
-            if(e.which){
-                e.preventDefault();
-            }
-        });
+        //disable keyboard input & hide caret
+        $("#end-year-edit").keydown(false);
+        $("#end-year-edit").css('caret-color', 'transparent');
     });
 </script>
 {{-- EXPERIENCES --}}
@@ -803,7 +788,7 @@
         $('#add-experience-popup').on('show.bs.modal', function (event) {
             clearExperiencesError('#add-experience-form');
         });
-            $('#add-experience-form #add-experience-submit').click(function(e){
+        $('#add-experience-form #add-experience-submit').click(function(e){
             clearExperiencesError('#add-experience-form');
             e.preventDefault();
             $.ajax({
@@ -1015,7 +1000,7 @@
         $('#add-education-popup').on('show.bs.modal', function (event) {
             clearEducationsError('#add-education-form');
         });
-            $('#add-education-form #add-education-submit').click(function(e){
+        $('#add-education-form #add-education-submit').click(function(e){
             clearEducationsError('#add-education-form');
             e.preventDefault();
             $.ajax({
