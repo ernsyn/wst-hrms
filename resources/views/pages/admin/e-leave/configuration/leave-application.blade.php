@@ -538,12 +538,18 @@
         // submit leave request ) (add/edit mode)
         $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
             e.preventDefault();
-
-            $('#add-leave-request-form .progress').attr('hidden', false);
+            $('#error-message').prop('hidden', true);
 
             var file = document.querySelector('input[name=required-attachment]').files[0];
 
-            console.log(file);
+            if(attachmentRequired && !file) {
+                $('#error-message').text('Attachement is required!');
+                $('#error-message').prop('hidden', false);
+
+                return false;
+            }
+
+            $('#add-leave-request-form .progress').attr('hidden', false);
 
             if($("#mode").val() == "add") {
                 var data = {
@@ -708,6 +714,11 @@
 
                         if(data.total_days) {
                             $('#total-days b').text(data.total_days.toFixed(1));
+                        }
+
+                        if(data.end_date) {
+                            $("#end-date").val(data.end_date);
+                            $("#alt-end-date").val(data.end_date);
                         }
                     },
                     error: function(xhr) {

@@ -136,6 +136,12 @@ class ProcessAttendance extends Command
 
                     $clockInOutRecord = EmployeeClockInOutRecord::where('emp_id', $id)->whereDate('clock_in_time', $processedDateString)->first();
 
+                    // CHECK: Clocked-out? If not, set status as not-clocked-out
+                    if(!empty($clockInOutRecord) && empty($clockInOutRecord->clock_out_status)) {
+                        $clockInOutRecord->clock_out_status = 'not-clocked-out';
+                        $clockInOutRecord->save();
+                    }
+
                     if($isHoliday) {
                         if(!empty($clockInOutRecord)) {
                             // $this->info("OT Holiday!");
