@@ -41,7 +41,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/e-leave/approve-leave', 'Employee\ELeaveController@approvedLeaveRequest')->name('approve-leave');
     Route::get('employee/e-leave/disapprove-leave/{id}/add','Employee\ELeaveController@rejectLeaveApproval')->name('employee.e-leave.add-leave-request-disapprove')->where('id', '[0-9]+');
     Route::post('employee/e-leave/approve-leaves/{id}/reject','Employee\ELeaveController@postDisapproved')->name('employee.e-leave.add-leave-request-disapprove.post')->where('id', '[0-9]+');
-    Route::get('employee/e-leave/approvals','Employee\ELeaveController@displayLeaveRequestReportTo')->name('employee.e-leave.request');
+    Route::get('employee/e-leave/approvals','Employee\ELeaveController@displayLeaveApproval')->name('employee.e-leave.request');
     Route::get('employee/e-leave/requests','Employee\ELeaveController@displayLeaveRequests')->name('employee.e-leave.history');
     Route::get('e-leave/rules/{leave_type_id}', 'Employee\ELeaveController@ajaxGetLeaveRules')->name('employee.e-leave.rules.ajax.get')->where('leave_type_id', '[0-9]+');
     Route::get('e-leave/days/{start_date}/{end_date}', 'Employee\ELeaveController@ajaxCalculateActualLeaveDays')
