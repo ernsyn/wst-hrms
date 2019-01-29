@@ -30,7 +30,7 @@
                     @foreach($attendances as $key => $value)
                         <tr>
                             <td>{{ $value['date'] }}</td>
-                            <td>{{ $value['code'] }} {{ $value['name'] }}</td>
+                            <td><span class="badge badge-warning">{{ $value['code'] }}</span> <b class="text-primary">{{ $value['name'] }}</span></td>
                             <td>{{ $value['clock_in_time'] }}</td>
                             <td>{{ $value['clock_in_status'] }}</td>
                             <td>{{ $value['clock_in_reason'] }}</td>

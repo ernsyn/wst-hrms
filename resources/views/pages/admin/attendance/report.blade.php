@@ -34,7 +34,7 @@
                         <tr>
                             <td>{{ $value['date'] }}</td>
                             <td>{{ $value['attendance'] }}</td>
-                            <td>{{ $value['code'] }} {{ $value['name'] }}</td>
+                            <td><span class="badge badge-warning">003{{ $value['code'] }}</span> <b class="text-primary">{{ $value['name'] }}</span></td>
                             <td>{{ $value['clock_in_time'] }}</td>
                             <td>{{ $value['clock_in_status'] }}</td>
                             <td>{{ $value['clock_in_reason'] }}</td>
@@ -42,7 +42,7 @@
                             <td>{{ $value['clock_out_status'] }}</td>
                             <td>{{ $value['clock_out_reason'] }}</td>
                             <td>
-                                @if($value['attendance'] == 'absent')
+                                @if($value['attendance'] == 'Absent')
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#attendance_details_modal_{{ $key }}" disabled="">
                                         <span class="fas fa-ban"></span>
                                     </button>
