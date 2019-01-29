@@ -5,17 +5,12 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Hash;
-
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-
-use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Mail;use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-
 use App\Country;
 use App\Roles;
 use App\Bank;
@@ -27,7 +22,6 @@ use App\EmployeePosition;
 use App\Company;
 use App\Holiday;
 use App\LeaveRequest;
-
 use App\User;
 use App\Employee;
 use App\EmployeeDependent;
@@ -47,9 +41,7 @@ use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
 use App\Media;
 use App\EmployeeClockInOutRecord;
-
 use App\Http\Services\LeaveService;
-
 use App\Http\Requests\Admin\AddEmployee;
 use App\Helpers\AccessControllHelper;
 use App\Imports\UserImport;
@@ -75,14 +67,12 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.index', ['employees'=> $employees]);
     }
 
-
     public function dsplaySecurityGroup($id)
     {
-
         $employees = Employee::all();
-
         return view('pages.admin.employees.id.security-group', ['employees'=> $employees]);
     }
+
     public function display($id)
     {
         $employee = Employee::with('user')
@@ -113,9 +103,11 @@ class EmployeeController extends Controller
         // $companies = Company::all();
         
 		$roles = AccessControllHelper::getRoles();
-		return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia, 'roles' => $roles]);    }
+		return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia, 'roles' => $roles]);    
+	}
 
-    public function postEditPicture(Request $request, $id) {
+    public function postEditProfilePicture(Request $request, $emp_id)
+    {
         $pictureData = $request->validate([
             'attachment' => 'required|max:2000000|regex:/^data:image/'
         ],
@@ -129,9 +121,24 @@ class EmployeeController extends Controller
         $updatepictureData['mimetype']= $attach['mime_type'];
         $updatepictureData['data']= $attach['data'];
         $updatepictureData['size']= $attach['size'];
-        $updatepictureData['filename']= 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
-        Media::where('id', $id)->update($updatepictureData);
+        $updatepictureData['filename']= 'employee_'.($emp_id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
 
+
+        DB::transaction(function() use ($emp_id, $updatepictureData) {
+            $user = Employee::find($emp_id)->user;
+
+            $oldProfileMedia = $user->profile_media;
+
+            if(!empty($oldProfileMedia)) {
+                $user->profile_media()->dissociate();
+                $user->save();
+
+                $oldProfileMedia->delete();
+            }
+
+            $user->profile_media()->associate(Media::create($updatepictureData));
+            $user->save();
+        });
 
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
     }
@@ -139,7 +146,6 @@ class EmployeeController extends Controller
     public function postEditProfile(Request $request, $id)
     {
         $profileUpdatedData = $request->validate([
-
             'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
             'code'=>'required|unique:employees,code,'.$id.',id',
             'dob' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
@@ -174,7 +180,7 @@ class EmployeeController extends Controller
             $profileUpdatedData['driver_license_expiry_date'] = null;
         }
 
-        Employee::where('id', $id)->update($profileUpdatedData);
+        Employee::find($id)->update($profileUpdatedData);
 
         return response()->json(['success'=>'Profile was successfully updated.']);
     }
@@ -192,8 +198,8 @@ class EmployeeController extends Controller
         return view('pages.admin.changepassword');
     }
 
-
-    public function postChangePassword(Request $request, $id) {
+    public function postChangePassword(Request $request, $id)
+    {
         $data = $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
@@ -217,7 +223,8 @@ class EmployeeController extends Controller
         }
     }
 
-    public function postResetPassword(Request $request, $id) {
+    public function postResetPassword(Request $request, $id)
+    {
         $data = $request->validate([
             'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
         ]);
@@ -228,7 +235,6 @@ class EmployeeController extends Controller
             'password' => bcrypt($data['new_password'])
         ]);
         return response()->json(['success'=>'Password was successfully reset.']);
-
     }
 
 //     {
@@ -241,15 +247,15 @@ class EmployeeController extends Controller
 //     }
 
 // }
-    public function postChangePasswordEmployee(Request $request) {
-
+    public function postChangePasswordEmployee(Request $request)
+    {
         $data = $request->validate([
             // 'current_password' => 'required',
             'current_password' => 'required',
             'new_password' => 'required|min:5|required_with:confirm_password|same:confirm_new_password',
         ]);
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
-        $id = auth()->user()->id;
+        $id = auth()->user()->name;
       //  dd($id);
         $current_password = Auth::user()->password;
         $current_password = bcrypt($data['current_password']);
@@ -259,17 +265,16 @@ class EmployeeController extends Controller
                 'current_password' => ['The current password is incorrect.']
             ]], 422);
             return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
-        }
-    else {
+        } else {
         User::where('id',$id)->update([
             'password' => bcrypt($data['new_password'])
         ]);
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         }
-
     }
 
-    public function postToggleRoleAdmin(Request $request, $id) {
+    public function postToggleRoleAdmin(Request $request, $id)
+    {
         $data = $request->validate([
             // 'current_password' => 'required',
             'assign_remove' => 'required',
@@ -464,31 +469,9 @@ class EmployeeController extends Controller
 
         $attachment_data_url = $validated['attach'];
 
-        if(!empty($attachment_data_url)){
-            $attach = self::processBase64DataUrl($attachment_data_url);
-            $mediaData = Media::create([
-                'category' => 'employee-profile',
-                'mimetype' => $attach['mime_type'],
-                'data' => $attach['data'],
-                'size' => $attach['size'],
-                'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
-            ]);
-        } else {
-            $mediaData = Media::create([
-                'category' => null,
-                'mimetype' => null,
-                'data' => null,
-                'size' => 0,
-                'filename' => null
-            ]);
-        }
 
-        $media_id = DB::getPdo()->lastInsertId();
-
-        // dd($media_id);
-
-        $validatedUserData['profile_media_id'] = $media_id;
-
+        DB::transaction(function () use ($attachment_data_url, $validated) {
+            // $validatedUserData['profile_media_id'] = $media_id;
         // $validatedUserData['profile_media_id'] = $mediaData->id;
 
         $validatedUserData['name'] = $validated['name'];
@@ -525,13 +508,26 @@ class EmployeeController extends Controller
         // ]);
         // dd($validatedEmployeeData);
 
-        DB::transaction(function () use ($validatedUserData, $validatedEmployeeData) {
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
 
+            if (!empty($attachment_data_url)) {
+                $attach = self::processBase64DataUrl($attachment_data_url);
+
+                $profileMedia = Media::create([
+                    'category' => 'employee-profile',
+                    'mimetype' => $attach['mime_type'],
+                    'data' => $attach['data'],
+                    'size' => $attach['size'],
+                    'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
+                ]);
+
+                $user->profile_media()->associate($profileMedia);
+                $user->save();
+            }
 
             $validatedEmployeeData['user_id'] = $user->id;
-            $validatedEmployeeData['created_by'] = auth()->user()->id;
+            $validatedEmployeeData['created_by'] = auth()->user()->name;
             $employee = Employee::create($validatedEmployeeData);
         });
 
@@ -547,7 +543,7 @@ class EmployeeController extends Controller
             'relationship' => 'required',
             'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
-        $emergencyContactData['created_by'] = auth()->user()->id;
+        $emergencyContactData['created_by'] = auth()->user()->name;
         $emergencyContact = new EmployeeEmergencyContact($emergencyContactData);
 
         $employee = Employee::find($id);
@@ -564,7 +560,7 @@ class EmployeeController extends Controller
             'dob' => 'required',
         ]);
         $dependentData['dob'] = implode("-", array_reverse(explode("/", $dependentData['dob'])));
-        $dependentData['created_by'] = auth()->user()->id;
+        $dependentData['created_by'] = auth()->user()->name;
         $dependent = new EmployeeDependent($dependentData);
 
         $employee = Employee::find($id);
@@ -583,7 +579,7 @@ class EmployeeController extends Controller
         ]);
         $immigrationData['issued_date'] = implode("-", array_reverse(explode("/", $immigrationData['issued_date'])));
         $immigrationData['expiry_date'] = implode("-", array_reverse(explode("/", $immigrationData['expiry_date'])));
-        $immigrationData['created_by'] = auth()->user()->id;
+        $immigrationData['created_by'] = auth()->user()->name;
         $immigration = new EmployeeImmigration($immigrationData);
 
         $employee = Employee::find($id);
@@ -604,7 +600,7 @@ class EmployeeController extends Controller
         ]);
         $visaData['issued_date'] = implode("-", array_reverse(explode("/", $visaData['issued_date'])));
         $visaData['expiry_date'] = implode("-", array_reverse(explode("/", $visaData['expiry_date'])));
-        $visaData['created_by'] = auth()->user()->id;
+        $visaData['created_by'] = auth()->user()->name;
         $visa = new EmployeeVisa($visaData);
 
         $employee = Employee::find($id);
@@ -614,7 +610,8 @@ class EmployeeController extends Controller
     }
 
     public function postJob(Request $request, $id)
-    {   // Add a new job
+    {
+        // Add a new job
         $jobData = $request->validate([
             'basic_salary' => 'required|numeric',
             'cost_centre_id' => 'required',
@@ -628,7 +625,7 @@ class EmployeeController extends Controller
             'status' => 'required',
         ]);
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
-        $jobData['created_by'] = auth()->user()->id;
+        $jobData['created_by'] = auth()->user()->name;
         DB::transaction(function() use ($jobData, $id) {
             $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
             if(!empty($currentJob)) {
@@ -704,7 +701,7 @@ class EmployeeController extends Controller
             'acc_no' => 'required|numeric',
             'acc_status' => 'required'
         ]);
-        $bankAccountData['created_by'] = auth()->user()->id;
+        $bankAccountData['created_by'] = auth()->user()->name;
         $bankAccount = new EmployeeBankAccount($bankAccountData);
 
         $employee = Employee::find($id);
@@ -721,11 +718,10 @@ class EmployeeController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
             'notes'=>''
-
         ]);
         $experienceData['start_date'] = implode("-", array_reverse(explode("/", $experienceData['start_date'])));
         $experienceData['end_date'] = implode("-", array_reverse(explode("/", $experienceData['end_date'])));
-        $experienceData['created_by'] = auth()->user()->id;
+        $experienceData['created_by'] = auth()->user()->name;
         $experience = new EmployeeExperience($experienceData);
 
         $employee = Employee::find($id);
@@ -742,10 +738,10 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer',
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|integer|between:0,4.00',
+            'gpa' => 'required|numeric|between:0,4.00',
             'description' => 'nullable'
         ]);
-        $educationData['created_by'] = auth()->user()->id;
+        $educationData['created_by'] = auth()->user()->name;
         $education = new EmployeeEducation($educationData);
 
         $employee = Employee::find($id);
@@ -761,7 +757,7 @@ class EmployeeController extends Controller
             'years_of_experience' => 'required',
             'competency' => 'required'
         ]);
-        $skillData['created_by'] = auth()->user()->id;
+        $skillData['created_by'] = auth()->user()->name;
         $skill = new EmployeeSkill($skillData);
 
         $employee = Employee::find($id);
@@ -795,7 +791,7 @@ class EmployeeController extends Controller
         }
 
 
-        $attachmentData['created_by'] = auth()->user()->id;
+        $attachmentData['created_by'] = auth()->user()->name;
         $attachment = new EmployeeAttachment($attachmentData);
 
         $employee = Employee::find($id);
@@ -804,7 +800,8 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Attachment was successfully added']);
     }
 
-    private static function processBase64DataUrl($dataUrl) {
+    private static function processBase64DataUrl($dataUrl)
+    {
         $parts = explode(',', $dataUrl);
 
         preg_match('#data:(.*?);base64#', $parts[0], $matches);
@@ -834,16 +831,18 @@ class EmployeeController extends Controller
             'sunday' => 'required|in:full,half,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
+       
+        
         ]);
         $workingDaysData['is_template'] = false;
-        $workingDaysData['created_by'] = auth()->user()->id;
+        $workingDaysData['created_by'] = auth()->user()->name;    //error
+       
         $workingDay = new EmployeeWorkingDay($workingDayData);
 
         $employee = Employee::find($id);
         $employee->working_day()->save($workingDay);
 
         return response()->json(['success' => 'Working Day was successfully added']);
-
     }
 
     public function postEditWorkingDay(Request $request, $id)
@@ -860,6 +859,7 @@ class EmployeeController extends Controller
             'end_work_time' => 'required',
         ]);
         $workingDayUpdateData['is_template'] = false;
+        $workingDayUpdateData['created_by'] = auth()->user()->name;
         EmployeeWorkingDay::where('emp_id', $id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
@@ -868,19 +868,17 @@ class EmployeeController extends Controller
     public function getWorkingDay($id)
     {
         $working_day = EmployeeWorkingDay::templates()->where('id', $id)->get();
-
         return response()->json($working_day);
     }
 
     public function getEmployeeWorkingDay($emp_id)
     {
         $working_day = EmployeeWorkingDay::where('emp_id', $emp_id)->get();
-
         return response()->json($working_day);
     }
 
-    public function getReportToEmployeeList(Request $request, $id) {
-
+    public function getReportToEmployeeList(Request $request, $id)
+    {
         $pageLimit = $request->get("page_limit");
         $nameQuery = $request->get("q");
         $employees = Employee::with('user:id,name')
@@ -922,7 +920,7 @@ class EmployeeController extends Controller
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
         if($request->kpi_proposer == 0){
-            $reportToData['created_by'] = auth()->user()->id;
+            $reportToData['created_by'] = auth()->user()->name;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
@@ -930,7 +928,7 @@ class EmployeeController extends Controller
             return response()->json(['success'=>'Report To was successfully added']);
         } else {
             if($employee_kpi_proposer == 0){
-                $reportToData['created_by'] = auth()->user()->id;
+                $reportToData['created_by'] = auth()->user()->name;
                 $reportTo = new EmployeeReportTo($reportToData);
                 $employee = Employee::find($id);
                 $employee->report_tos()->save($reportTo);
@@ -939,8 +937,9 @@ class EmployeeController extends Controller
             } else {
                 return response()->json(['fail'=>'KPI Proposer already exist']);
             }
-        }
 
+        }
+    }
         // $reportTo = new EmployeeReportTo($reportToData);
         // $employee = Employee::find($id);
         // $employee->report_tos()->save($reportTo);
@@ -951,7 +950,6 @@ class EmployeeController extends Controller
 
         // $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
         // ->where('report_to_level', 1)->count();
-
 
 
         // if($request->report_to_level ==1 ) {
@@ -1011,15 +1009,13 @@ class EmployeeController extends Controller
         // }
 
 
-
-    }
     public function postSecurityGroup(Request $request, $id)
     {
         AccessControllHelper::hasAnyRoles('admin');
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
-        $securityGroupData['created_by'] = auth()->user()->id;
+        $securityGroupData['created_by'] = auth()->user()->name;
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
 
         $employee = Employee::find($id);
@@ -1028,7 +1024,6 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
-
     public function postMainSecurityGroup(Request $request, $id)
     {
         $mainSecurityGroupData = $request->validate([
@@ -1036,7 +1031,6 @@ class EmployeeController extends Controller
         ]);
 
         Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
-
         return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
@@ -1049,8 +1043,7 @@ class EmployeeController extends Controller
             'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
         ]);
 
-        EmployeeEmergencyContact::where('id', $id)->update($emergencyContactUpdatedData);
-
+        EmployeeEmergencyContact::find($id)->update($emergencyContactUpdatedData);
         return response()->json(['success'=>'Emergency Contact was successfully updated.']);
     }
 
@@ -1063,8 +1056,7 @@ class EmployeeController extends Controller
         ]);
         $dependentUpdatedData['dob'] = implode("-", array_reverse(explode("/", $dependentUpdatedData['dob'])));
 
-        EmployeeDependent::where('id', $id)->update($dependentUpdatedData);
-
+        EmployeeDependent::find($id)->update($dependentUpdatedData);
         return response()->json(['success'=>'Dependent was successfully updated.']);
     }
 
@@ -1079,7 +1071,7 @@ class EmployeeController extends Controller
         $immigrationUpdatedData['issued_date'] = implode("-", array_reverse(explode("/", $immigrationUpdatedData['issued_date'])));
         $immigrationUpdatedData['expiry_date'] = implode("-", array_reverse(explode("/", $immigrationUpdatedData['expiry_date'])));
 
-        EmployeeImmigration::where('id', $id)->update($immigrationUpdatedData);
+        EmployeeImmigration::find($id)->update($immigrationUpdatedData);
 
         return response()->json(['success'=>'Immigration was successfully updated.']);
     }
@@ -1097,14 +1089,13 @@ class EmployeeController extends Controller
         $visaUpdatedData['issued_date'] = implode("-", array_reverse(explode("/", $visaUpdatedData['issued_date'])));
         $visaUpdatedData['expiry_date'] = implode("-", array_reverse(explode("/", $visaUpdatedData['expiry_date'])));
 
-        EmployeeVisa::where('id', $id)->update($visaUpdatedData);
+        EmployeeVisa::find($id)->update($visaUpdatedData);
 
         return response()->json(['success'=>'Visa was successfully updated.']);
     }
 
     public function postEditJob(Request $request, $emp_id, $id)
     {
-
         $jobData = $request->validate([
             'branch_id' => 'required',
             'emp_mainposition_id' => 'required',
@@ -1119,7 +1110,7 @@ class EmployeeController extends Controller
         ]);
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
 
-        EmployeeJob::where('id', $id)->update($jobData);
+        EmployeeJob::find($id)->update($jobData);
 
         return response()->json(['success'=>'Job was successfully updated.']);
     }
@@ -1132,7 +1123,7 @@ class EmployeeController extends Controller
             'acc_status' => 'required'
         ]);
 
-        EmployeeBankAccount::where('id', $id)->update($bankAccountUpdateData);
+        EmployeeBankAccount::find($id)->update($bankAccountUpdateData);
 
         return response()->json(['success'=>'Bank Account was successfully updated.']);
     }
@@ -1149,7 +1140,7 @@ class EmployeeController extends Controller
         $experienceUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $experienceUpdatedData['start_date'])));
         $experienceUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $experienceUpdatedData['end_date'])));
 
-        EmployeeExperience::where('id', $id)->update($experienceUpdatedData);
+        EmployeeExperience::find($id)->update($experienceUpdatedData);
 
         return response()->json(['success'=>'Experience was successfully updated.']);
     }
@@ -1162,11 +1153,11 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|between:0,99.99',
+            'gpa' => 'required|numeric|between:0,4.00',
             'description' => ''
         ]);
 
-        EmployeeEducation::where('id', $id)->update($educationUpdatedData);
+        EmployeeEducation::find($id)->update($educationUpdatedData);
 
         return response()->json(['success'=>'Education was successfully updated.']);
     }
@@ -1179,7 +1170,7 @@ class EmployeeController extends Controller
             'competency' => 'required',
         ]);
 
-        EmployeeSkill::where('id', $id)->update($skillUpdatedData);
+        EmployeeSkill::find($id)->update($skillUpdatedData);
 
         return response()->json(['success'=>'Skill was successfully updated.']);
     }
@@ -1204,17 +1195,15 @@ class EmployeeController extends Controller
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
         if($request->kpi_proposer == 0){
-            EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+            EmployeeReportTo::find($id)->update($reportToUpdatedData);
             return response()->json(['success'=>'Report To was successfully updated.']);
-        } else {
-            if($employee_kpi_proposer == 0){
-                EmployeeReportTo::where('id', $id)->update($reportToUpdatedData);
+        } else if($employee_kpi_proposer == 0){
+            EmployeeReportTo::find($id)->update($reportToUpdatedData);
                 return response()->json(['success'=>'Report To was successfully updated.']);
             } else {
                 return response()->json(['fail'=>'KPI Proposer already exist']);
             }
         }
-    }
 
     public function postEditAttachment(Request $request, $emp_id, $id)
     {
@@ -1223,11 +1212,10 @@ class EmployeeController extends Controller
             'notes' => 'required'
         ]);
 
-        EmployeeAttachment::where('id', $id)->update($attachmentUpdatedData);
+        EmployeeAttachment::find($id)->update($attachmentUpdatedData);
 
         return response()->json(['success'=>'Attachment was successfully updated.']);
     }
-
 
 
     //delete function
@@ -1278,6 +1266,7 @@ class EmployeeController extends Controller
         EmployeeSkill::find($id)->delete();
         return response()->json(['success'=>'Skill was successfully deleted.']);
     }
+
     public function deleteAttachment(Request $request, $emp_id, $id)
     {
         EmployeeAttachment::find($id)->delete();
@@ -1297,10 +1286,8 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 
-
     public function postDisapproved(Request $request)
     {
-
         $id = $request->input('id');
         $emp_id = $request->input('emp_id');
         $leave_type_id = $request->input('leave_type_id');
@@ -1309,24 +1296,22 @@ class EmployeeController extends Controller
         $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
         ->where('leave_type_id',$leave_type_id)->first()->spent_days;
 
-
         $leaveAllocationData = number_format($leaveAllocationData1,1);
         $total_days =number_format($total_days,1);
         $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
-
         LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-
 
         $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
         ->where('leave_type_id',$leave_type_id)
         ->update(array('spent_days'=>$leaveAllocationDataEntry));
-            return redirect()->route('leaverequest');
 
+            return redirect()->route('leaverequest');
     }
 
-    public function ajaxGetAttendances(Request $request, $id) {
+    public function ajaxGetAttendances(Request $request, $id)
+    {
         $now = Carbon::now();
         $startOfMonth = $now->copy()->startOfMonth();
         $endOfMonth = $now->copy()->endOfMonth();

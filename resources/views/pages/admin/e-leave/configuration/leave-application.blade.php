@@ -543,7 +543,7 @@
             var file = document.querySelector('input[name=required-attachment]').files[0];
 
             if(attachmentRequired && !file) {
-                $('#error-message').text('Attachement is required!');
+                $('#error-message').text('Attachment is required!');
                 $('#error-message').prop('hidden', false);
 
                 return false;
@@ -700,8 +700,8 @@
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        start_date: $('#add-leave-request-form #start-date').val(),
-                        end_date: $('#add-leave-request-form #end-date').val(),
+                        start_date: $('#add-leave-request-form #alt-start-date').val(),
+                        end_date: $('#add-leave-request-form #alt-end-date').val(),
                         leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val()
                     },
                     success: function(data) {
