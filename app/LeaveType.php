@@ -4,10 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class LeaveType extends Model
+class LeaveType extends Model implements Auditable
 {
     use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
+    
     protected $table = 'leave_types';
 
     protected $fillable = [
@@ -17,6 +20,7 @@ class LeaveType extends Model
         'is_custom',
         'entitled_days',
         'active',
+        'created_by',
     ];
 
     protected $dates = ['deleted_at'];

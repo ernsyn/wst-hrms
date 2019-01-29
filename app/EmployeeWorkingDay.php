@@ -5,10 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class EmployeeWorkingDay extends Model
+class EmployeeWorkingDay extends Model implements Auditable
 {
     use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
 
     protected $table = 'employee_working_days';
 
@@ -16,6 +18,7 @@ class EmployeeWorkingDay extends Model
         'emp_id',
         'is_template',
         'template_name',
+        'created_by',
         'monday',
         'tuesday',
         'wednesday',
@@ -25,7 +28,7 @@ class EmployeeWorkingDay extends Model
         'sunday',
         'start_work_time',
         'end_work_time',
-        'created_by'
+      
     ];
 
     protected $dates = ['deleted_at'];

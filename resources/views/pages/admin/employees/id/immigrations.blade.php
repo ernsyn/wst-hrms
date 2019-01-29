@@ -31,7 +31,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="issued-date-immigration"><strong>Issued Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issued-date-immigration" class="form-control datetimepicker-input" data-target="#issued-date-immigration"/>
+                                <input type="text" id="issued-date-immigration" class="form-control datetimepicker-input" data-target="#issued-date-immigration" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#issued-date-immigration" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -44,7 +44,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="expiry-date-immigration"><strong>Expiry Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="expiry-date-immigration" class="form-control datetimepicker-input" data-target="#expiry-date-immigration"/>
+                                <input type="text" id="expiry-date-immigration" class="form-control datetimepicker-input" data-target="#expiry-date-immigration" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#expiry-date-immigration" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -97,7 +97,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="issued-date-immigration-edit"><strong>Issued Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issued-date-immigration-edit" class="form-control datetimepicker-input" data-target="#issued-date-immigration-edit"/>
+                                <input type="text" id="issued-date-immigration-edit" class="form-control datetimepicker-input" data-target="#issued-date-immigration-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#issued-date-immigration-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -110,7 +110,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="expiry-date-immigration-edit"><strong>Expiry Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="expiry-date-immigration-edit" class="form-control datetimepicker-input" data-target="#expiry-date-immigration-edit"/>
+                                <input type="text" id="expiry-date-immigration-edit" class="form-control datetimepicker-input" data-target="#expiry-date-immigration-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#expiry-date-immigration-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -221,10 +221,18 @@
         $('#issued-date-immigration').datetimepicker({
             format: 'DD/MM/YYYY'
         });
+        //disable keyboard input & hide caret
+        $('#issued-date-immigration').keydown(false);
+        $('#issued-date-immigration').css('caret-color', 'transparent');
+
         $('#expiry-date-immigration').datetimepicker({
             format: 'DD/MM/YYYY',
             useCurrent: false
         });
+        //disable keyboard input & hide caret
+        $('#expiry-date-immigration').keydown(false);
+        $('#expiry-date-immigration').css('caret-color', 'transparent');
+
         $("#issued-date-immigration").on("change.datetimepicker", function (e) {
             $('#expiry-date-immigration').datetimepicker('minDate', e.date);
         });
@@ -235,10 +243,18 @@
         $('#issued-date-immigration-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
+        //disable keyboard input & hide caret
+        $('#issued-date-immigration-edit').keydown(false);
+        $('#issued-date-immigration-edit').css('caret-color', 'transparent');
+
         $('#expiry-date-immigration-edit').datetimepicker({
             format: 'DD/MM/YYYY',
             useCurrent: false
         });
+        //disable keyboard input & hide caret
+        $('#expiry-date-immigration-edit').keydown(false);
+        $('#expiry-date-immigration-edit').css('caret-color', 'transparent');
+
         $("#issued-date-immigration-edit").on("change.datetimepicker", function (e) {
             $('#expiry-date-immigration-edit').datetimepicker('minDate', e.date);
         });

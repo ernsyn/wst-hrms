@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         'App\Console\Commands\DuplicateHolidays',
+        'App\Console\Commands\GenerateEmailExceededVisaExpiredDate',
     ];
 
     /**
@@ -26,6 +27,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('attendance:process')->daily();
+
+        $schedule->command('employee_visa:generate')->daily();
 
         $schedule->command('duplicate:holidays')->cron('45 23 31 12 *')->timezone('Asia/Kuala_Lumpur');
     }

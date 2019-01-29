@@ -272,7 +272,7 @@ class LeaveTypesTableSeeder extends Seeder
             ]),
         ]);
 
-        // Leave Type: Marriage Leave
+        // Leave Type: Compassionate Leave
 
         $leaveType = App\LeaveType::create([
             'code' => 'COMPASSIONATE',
