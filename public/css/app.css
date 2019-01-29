@@ -18676,3 +18676,16 @@ button.dropdown-toggle::after {
   display: none;
 }
 
+.tooltip-inner {
+	min-width: 200px;
+	max-width: 450px; 
+	text-align: left;
+	font-size: 0.7em;
+}
+
+@media (max-width: 450px) {
+	.tooltip-inner {
+		min-width: initial;
+		max-width: 450px;
+	}
+} 

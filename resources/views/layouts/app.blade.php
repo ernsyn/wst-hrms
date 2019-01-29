@@ -25,7 +25,8 @@
     <script src="{{ asset('js/app.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.min.js"></script>
-	<script src="{{asset('js/report/custom-report.js')}}"></script>    
+	<script src="{{asset('js/report/custom-report.js')}}"></script> 
+	<script src="{{asset('js/employee.js')}}"></script>       
 	@yield('scripts')
 </body>
 

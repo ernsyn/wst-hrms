@@ -3,6 +3,6 @@ namespace App\Repositories\Payroll;
 
 interface SocsoRepository
 {
-    public function findBySalary($salary);
+    public function findByCategorySalary($category, $salary);
 }
 

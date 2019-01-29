@@ -29,8 +29,10 @@ class Employee extends Model implements Auditable
         'ic_no',
         'tax_no',
         'epf_no',
+        'epf_category',
         'eis_no',
         'socso_no',
+        'socso_category',
         'driver_license_no',
         'driver_license_expiry_date',
         'created_by',
@@ -60,19 +62,17 @@ class Employee extends Model implements Auditable
     public function employee_confirmed()
     {
         return $this->hasMany('App\EmployeeJob', 'emp_id');
-
     }
-
 
     public function employee_report_to()
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','emp_id');
     }
+    
     public function report_to()
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
     }
-
 
     public function employee_jobs()
     {
@@ -94,35 +94,31 @@ class Employee extends Model implements Auditable
         return $this->hasMany('App\EmployeeDependent', 'emp_id');
     }
 
-      public function leave_requests()
+    public function leave_requests()
     {
         return $this->hasMany('App\LeaveRequest', 'emp_id');
     }
 
     public function employee_security_groups()
-
     {
-
         return $this->hasMany('App\EmployeeSecurityGroup', 'emp_id');
-
     }
 
     public function employee_countries()
-
     {
-
         return $this->belongsTo('App\Country', 'nationality');
-
     }
 
     public function employee_experiences()
     {
         return $this->hasMany('App\EmployeeExperience', 'emp_id');
     }
+    
     public function employee_educations()
     {
         return $this->hasMany('App\EmployeeEducation', 'emp_id');
     }
+    
     public function employee_skills()
     {
         return $this->hasMany('App\EmployeeSkill', 'emp_id');

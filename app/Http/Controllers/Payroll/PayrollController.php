@@ -233,12 +233,16 @@ class PayrollController extends Controller
                 $epfFilter['salary'] = $remuneration + $contributionData['epf'];
                 $epf = $this->epfRepository->findByFilter($epfFilter);
                 
-                $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($employee->dob), $employee->nationality);
+                $eisCategory = PayrollHelper::getEisCategory($employee);//PayrollHelper::getAge($employee->dob), $employee->nationality);
                 if ($eisCategory > 0) {
                     $eis = $this->eisRepository->findByCategorySalary($eisCategory, $remuneration + $contributionData['eis']);
                 }
                 
-                $socso = $this->socsoRepository->findBySalary($remuneration + $contributionData['socso']);
+                $socsoCategory = PayrollHelper::getSocsoCategory($employee);
+                if ($socsoCategory > 0) {
+                    $socso = $this->socsoRepository->findByCategorySalary($socsoCategory, $remuneration + $contributionData['socso']);
+                }
+                
                 $pcbFilter = array();
                 $pcbFilter['salary'] = $remuneration + $contributionData['pcb'];
                 $pcbFilter['pcbGroup'] = $employee->pcb_group;
@@ -248,11 +252,11 @@ class PayrollController extends Controller
                 $storeData = [];
                 $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
                 $storeData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
-                $storeData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
+                $storeData['employee_socso'] = isset($socso->employee) ? $socso->employee : 0;
                 $storeData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
                 $storeData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
                 $storeData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
-                $storeData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
+                $storeData['employer_socso'] = isset($socso->employer) ? $socso->employer : 0;
                 $storeData['total_addition'] = $contributionData['addition'];
                 $storeData['total_deduction'] = $dedcution;
                 $storeData['gross_pay'] = $basicSalary + $seniorityPay;
@@ -558,23 +562,23 @@ class PayrollController extends Controller
             $epfFilter['salary'] = $storeData['gross_pay'] + $totalEpf;
             $epf = $this->epfRepository->findByFilter($epfFilter);
             
-            $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($info->dob), $info->nationality);
+            $eisCategory = PayrollHelper::getEisCategory($info);//PayrollHelper::getAge($info->dob), $info->nationality);
             if ($eisCategory > 0) {
                 $eis = $this->eisRepository->findByCategorySalary($eisCategory, $storeData['gross_pay'] + $totalEis);
             }
             
-            $socso = $this->socsoRepository->findBySalary($storeData['gross_pay'] + $totalSocso);
+            $socso = $this->socsoRepository->findByCategorySalary($storeData['gross_pay'] + $totalSocso);
             $pcbFilter['salary'] = $storeData['gross_pay'] + $totalPcb;
             $pcbFilter['pcbGroup'] = $info->pcb_group;
             $pcbFilter['noOfChildren'] = $info->total_children;
             $pcb = $this->pcbRepository->findByFilter($pcbFilter);
             $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
             $storeData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
-            $storeData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
+            $storeData['employee_socso'] = isset($socso->employee) ? $socso->employee : 0;
             $storeData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
             $storeData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
             $storeData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
-            $storeData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
+            $storeData['employer_socso'] = isset($socso->employer) ? $socso->employer : 0;
             $employeeContribution = $storeData['employee_epf'] + $storeData['employee_eis'] + $storeData['employee_socso'] + $storeData['employee_pcb'];
             $storeData['take_home_pay'] = $storeData['gross_pay'] + $info->total_addition - $info->total_deduction - $employeeContribution;
             $storeData['updated_by'] = auth()->user()->id;
@@ -594,23 +598,23 @@ class PayrollController extends Controller
                 $epfFilter['salary'] = $info->gross_pay + $totalEpf;
                 $epf = $this->epfRepository->findByFilter($epfFilter);
                 
-                $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($info->dob), $info->nationality);
+                $eisCategory = PayrollHelper::getEisCategory($info);//PayrollHelper::getAge($info->dob), $info->nationality);
                 if ($eisCategory > 0) {
                     $eis = $this->eisRepository->findByCategorySalary($eisCategory, $info->gross_pay + $totalEis);
                 }
                 
-                $socso = $this->socsoRepository->findBySalary($info->gross_pay + $totalSocso);
+                $socso = $this->socsoRepository->findByCategorySalary($info->gross_pay + $totalSocso);
                 $pcbFilter['salary'] = $info->gross_pay + $totalPcb;
                 $pcbFilter['pcbGroup'] = $info->pcb_group;
                 $pcbFilter['noOfChildren'] = $info->total_children;
                 $pcb = $this->pcbRepository->findByFilter($pcbFilter);
                 $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
                 $storeData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
-                $storeData['employee_socso'] = isset($socso->first_category_employee) ? $socso->first_category_employee : 0;
+                $storeData['employee_socso'] = isset($socso->employee) ? $socso->employee : 0;
                 $storeData['employee_pcb'] = isset($pcb->amount) ? $pcb->amount : 0;
                 $storeData['employer_epf'] = isset($epf->employer) ? $epf->employer : 0;
                 $storeData['employer_eis'] = isset($eis->employer) ? $eis->employer : 0;
-                $storeData['employer_socso'] = isset($socso->first_category_employer) ? $socso->first_category_employer : 0;
+                $storeData['employer_socso'] = isset($socso->employer) ? $socso->employer : 0;
                 $storeData['total_addition'] = $totalAddition;
                 $storeData['total_deduction'] = $totalDeduction;
                 $employeeContribution = $storeData['employee_epf'] + $storeData['employee_eis'] + $storeData['employee_socso'] + $storeData['employee_pcb'];

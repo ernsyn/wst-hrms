@@ -6,37 +6,60 @@
             <div class="card-body">
                 @csrf
                 <div class="row p-3">
+                	<div class="form-group row w-100">
+                        <label class="col-md-12 col-form-label">Category*</label>
+                        <div class="col-md-4">
+                        	<select class="form-control {{ $errors->has('category') ? ' is-invalid' : '' }} " id="category" name="category" required> 
+								<option value="">Please Select</option>
+								@foreach ($category as $k=>$v )
+									@if (old('category') == $k)
+										<option value="{{ $k }}" selected>{{ $v }}</option>
+									@elseif ($socso->category == $k)
+										<option value="{{ $k }}" selected>{{ $v }}</option>
+									@else
+										<option value="{{ $k }}">{{ $v }}</option>
+									@endif
+								@endforeach
+							</select>
+							@if ($errors->has('category'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('category') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="form-group row w-100">
-                        <div class="col-4">
-                            <div class="col-md-12">
-                                <label class="col-md-12 col-form-label">Salary*</label>
-                                <input id="salary" type="text" class="form-control{{ $errors->has('salary') ? ' is-invalid' : '' }}" placeholder="Name here"
-                                    name="salary" value="{{ $socso->salary }}" required>
-                                @if ($errors->has('salary'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('salary') }}</strong>
-                                </span>
-								@endif
-                                <label class="col-md-12 col-form-label">First Category Employer*</label>
-                                <input id="first_category_employer" type="text" class="form-control{{ $errors->has('first_category_employer') ? ' is-invalid' : '' }}"
-                                    placeholder="Name here" name="first_category_employer" value="{{ $socso->first_category_employer }}"
-                                    required>
-                                @if ($errors->has('first_category_employer'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('first_category_employer') }}</strong>
-                                </span>
-								@endif
-
-                                <label class="col-md-12 col-form-label">First Category Employee*</label>
-                                <input id="first_category_employee" type="text" class="form-control{{ $errors->has('first_category_employee') ? ' is-invalid' : '' }}"
-                                    placeholder="Name here" name="first_category_employee" value="{{ $socso->first_category_employee }}"
-                                    required>
-                                @if ($errors->has('first_category_employee'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('first_category_employee') }}</strong>
-                                </span>
-								@endif
-                            </div>
+                        <label class="col-md-12 col-form-label">Salary*</label>
+                        <div class="col-md-4">
+                            <input id="salary" type="text" class="form-control{{ $errors->has('salary') ? ' is-invalid' : '' }}" placeholder="0.00" name="salary" value="{{ $socso->salary }}" required>
+                            @if ($errors->has('salary'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('salary') }}</strong>
+                            </span>
+							@endif
+						</div>
+                    </div>
+                    <div class="form-group row w-100">
+                        <label class="col-md-12 col-form-label">Employer Contribution*</label>
+                        <div class="col-md-4">
+                            <input id="employer" type="text" class="form-control{{ $errors->has('employer') ? ' is-invalid' : '' }}" placeholder="0.00" name="employer" value="{{ $socso->employer }}" required>
+                            @if ($errors->has('employer'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('employer') }}</strong>
+                            </span>
+							@endif
+						</div>
+                    </div>
+                    <div class="form-group row w-100">
+                    	<div class="col-md-4">
+                            <label class="col-md-12 col-form-label">Employee Contribution*</label>
+                            <input id="employee" type="text" class="form-control{{ $errors->has('employee') ? ' is-invalid' : '' }}"
+                                placeholder="0.00" name="employee" value="{{ $socso->employee }}" required>
+                            @if ($errors->has('employee'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('employee') }}</strong>
+                            </span>
+							@endif
                         </div>
                     </div>
                 </div>

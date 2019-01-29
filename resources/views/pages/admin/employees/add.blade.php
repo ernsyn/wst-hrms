@@ -134,17 +134,6 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Employee ID No*</label>
-                            <div class="col-lg-6">
-                                <input type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}">
-								@if ($errors->has('code'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('code') }}</strong>
-                                </span>
-								@endif
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">IC No*</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control{{ $errors->has('ic_no') ? ' is-invalid' : '' }}" name="ic_no" value="{{ old('ic_no') }}">
@@ -191,22 +180,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Marital Status*</label>
-                            <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status" id="marital_status">
-                                    <option value="">Select Marital Status</option>
-                                    <option value="Single" {{ old('marital_status') == 'Single' ? 'selected' : ''}}>Single</option>
-                                    <option value="Married" {{ old('marital_status') == 'Married' ? 'selected' : ''}}>Married</option>
-                                </select>
-                                @if ($errors->has('marital_status'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('marital_status') }}</strong>
-                                </span>
-								@endif
-                            </div>
-                        </div>
-                        <div class="form-group row">
-
                             <label class="col-lg-4 col-form-label text-lg-right">Race*</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control{{ $errors->has('race') ? ' is-invalid' : '' }}" name="race" value="{{ old('race') }}">
@@ -225,7 +198,8 @@
                                     @foreach($countries as $country)
                                     <option value="{{ $country->id }}" {{ old('nationality') == $country->id ? 'selected' : ''}}>{{ $country->citizenship }}</option>
                                     @endforeach
-                                </select> @if ($errors->has('nationality'))
+                                </select> 
+                                @if ($errors->has('nationality'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('nationality') }}</strong>
                                 </span>
@@ -233,23 +207,21 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">PCB Group*</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">Marital Status*</label>
                             <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('pcb_group') ? ' is-invalid' : '' }}" name="pcb_group">
-                                    <option value="">Select PCB Group</option>
-                                    <option value="1" {{ old('pcb_group') == 1 ? 'selected' : ''}}>Single Person</option>
-                                    <option value="2" {{ old('pcb_group') == 2 ? 'selected' : ''}}>Spouse not working</option>
-                                    <option value="3" {{ old('pcb_group') == 3 ? 'selected' : ''}}>Spouse working</option>
+                                <select class="form-control{{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status" id="marital_status">
+                                    <option value="">Select Marital Status</option>
+                                    <option value="Single" {{ old('marital_status') == 'Single' ? 'selected' : ''}}>Single</option>
+                                    <option value="Married" {{ old('marital_status') == 'Married' ? 'selected' : ''}}>Married</option>
                                 </select>
-                                @if ($errors->has('pcb_group'))
+                                @if ($errors->has('marital_status'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('pcb_group') }}</strong>
+                                    <strong>{{ $errors->first('marital_status') }}</strong>
                                 </span>
 								@endif
                             </div>
                         </div>
                         <div class="form-group row">
-
                             <label class="col-lg-4 col-form-label text-lg-right">Number of Children*</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control{{ $errors->has('total_children') ? ' is-invalid' : '' }}" name="total_children"
@@ -262,7 +234,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-
                             <label class="col-lg-4 col-form-label text-lg-right">Driver License No</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control{{ $errors->has('driver_license_no') ? ' is-invalid' : '' }}"
@@ -304,7 +275,7 @@
                             <label class="col-lg-4 col-form-label text-lg-right">Company*</label>
                             <div class="col-lg-6">
                                 <select class="form-control{{ $errors->has('company_id') ? ' is-invalid' : '' }}" name="company_id" id="company_id">
-                                    <option value=""></option>
+                                    <option value="">Select Company</option>
                                     @foreach(App\Company::all() as $company)
                                     <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : ''}}>{{ $company->name }}</option>
                                     @endforeach
@@ -317,19 +288,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">EPF No*</label>
-                            <div class="col-lg-6">
-                                <input type="text" class="form-control{{ $errors->has('epf_no') ? ' is-invalid' : '' }}" name="epf_no" value="{{ old('epf_no') }}">
-								@if ($errors->has('epf_no'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('epf_no') }}</strong>
-                                </span>
-								@endif
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Tax No*</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">Tax No</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control{{ $errors->has('tax_no') ? ' is-invalid' : '' }}" name="tax_no" value="{{ old('tax_no') }}">
 								@if ($errors->has('tax_no'))
@@ -340,7 +299,61 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">EIS No*</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">PCB Group</label>
+                            <div class="col-lg-6">
+                                <select class="form-control{{ $errors->has('pcb_group') ? ' is-invalid' : '' }}" name="pcb_group" id="pcb_group">
+                                    <option value="">Select PCB Group</option>
+                                    @foreach ($pcbGroup as $k=>$v )
+    									@if (old('pcb_group') == $k)
+    										<option value="{{ $k }}" selected>{{ $v }}</option>
+    									@else
+    										<option value="{{ $k }}">{{ $v }}</option>
+    									@endif
+    								@endforeach
+                                </select>
+                                @if ($errors->has('pcb_group'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('pcb_group') }}</strong>
+                                </span>
+								@endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">EPF No</label>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control{{ $errors->has('epf_no') ? ' is-invalid' : '' }}" name="epf_no" value="{{ old('epf_no') }}">
+								@if ($errors->has('epf_no'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('epf_no') }}</strong>
+                                </span>
+								@endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right tooltip-wide">
+                            	EPF Category 
+                            	<i id="epfCategory" class="fas fa-info-circle" data-toggle="tooltip" data-container="body"></i>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control{{ $errors->has('epf_category') ? ' is-invalid' : '' }}" name="epf_category" id="epf_category">
+                                    <option value="">Select EPF Category</option>
+                                    @foreach ($epfCategory as $k=>$v )
+    									@if (old('epf_category') == $k)
+    										<option value="{{ $k }}" selected>{{ $v }}</option>
+    									@else
+    										<option value="{{ $k }}">{{ $v }}</option>
+    									@endif
+    								@endforeach
+                                </select>
+                                @if ($errors->has('epf_category'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('epf_category') }}</strong>
+                                </span>
+								@endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">EIS No</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control{{ $errors->has('eis_no') ? ' is-invalid' : '' }}" name="eis_no" value="{{ old('eis_no') }}">
 								@if ($errors->has('eis_no'))
@@ -361,14 +374,51 @@
 								@endif
                             </div>
                         </div>
-
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Main Security Group*</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">
+                            	SOCSO Category* 
+                            	<i id="socsoCategory" class="fas fa-info-circle" data-toggle="tooltip" data-container="body"></i>
+                           	</label>
+                            <div class="col-lg-6">
+                                <select class="form-control{{ $errors->has('socso_category') ? ' is-invalid' : '' }}" name="socso_category" id="socso_category">
+                                    <option value="">Select SOCSO Category</option>
+                                    @foreach ($socsoCategory as $k=>$v )
+    									@if (old('socso_category') == $k)
+    										<option value="{{ $k }}" selected>{{ $v }}</option>
+    									@else
+    										<option value="{{ $k }}">{{ $v }}</option>
+    									@endif
+    								@endforeach
+                                </select>
+                                @if ($errors->has('socso_category'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('socso_category') }}</strong>
+                                </span>
+								@endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">Employee ID*</label>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ old('code') }}">
+								@if ($errors->has('code'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('code') }}</strong>
+                                </span>
+								@endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">Security Group</label>
                             <div class="col-lg-6">
                                 <select class="form-control{{ $errors->has('main_security_group_id') ? 'is-invalid' : '' }}" name="main_security_group_id" id="main_security_group_id">
                                     <option value=""></option>
                                     @foreach(App\SecurityGroup::all() as $main_security_group)
-                                    <option value="{{ $main_security_group->id }}">{{ $main_security_group->name }}</option>
+                                        @if (old('main_security_group_id') == $main_security_group->id)
+                                        	<option value="{{ $main_security_group->id }}" selected>{{ $main_security_group->name }}</option>
+    									@else
+    										<option value="{{ $main_security_group->id }}">{{ $main_security_group->name }}</option>
+    									@endif
                                     @endforeach
                                 </select>
                                 @if ($errors->has('main_security_group_id'))
@@ -451,13 +501,23 @@
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
+        $('#epf_category').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#pcb_group').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
+        $('#socso_category').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
         $('#main_security_group_id').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-
     });
-
 
 </script>
 @append

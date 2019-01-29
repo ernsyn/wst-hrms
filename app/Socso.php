@@ -9,15 +9,19 @@ class Socso extends Model implements Auditable
 {
     use SoftDeletes;
     use \OwenIt\Auditing\Auditable;
-    protected $table = 'socsos';
-    // public $timestamps = false;
 
+    protected $table = 'socsos';
+
+    // public $timestamps = false;
     protected $fillable = [
-        'first_category_employer',
-        'first_category_employee',
+        'category',
+        'employer',
+        'employee',
         'salary',
         'created_by'
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
 }

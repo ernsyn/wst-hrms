@@ -24,9 +24,10 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Catogory</th>
                         <th>Salary (RM)</th>
-                        <th>First Category Employer</th>
-                        <th>First Category Employee</th>
+                        <th>Employer Contribution (RM)</th>
+                        <th>Employee Contribution (RM)</th>
                         {{-- <th>Total</th> --}}
                         <th>Action</th>
                     </tr>
@@ -35,14 +36,15 @@
                     @foreach($socsos as $socso)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td>{{ SocsoCategoryEnum::getDescription($socso['category']) }}</td>
                         <td>{{$socso['salary']}}</td>
-                        <td>{{$socso['first_category_employer']}}</td>
-                        <td>{{$socso['first_category_employee']}}</td>
+                        <td>{{$socso['employer']}}</td>
+                        <td>{{$socso['employee']}}</td>
                         {{-- <td>{{$socso['total']}}</td> --}}
                         <td>
                             <button onclick="window.location='{{ route('admin.settings.socso.edit.post', ['id' => $socso->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                                 </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $socso->salary }}' data-link='{{ route('admin.settings.socso.delete', ['id ' => $socso->id]) }}' class="btn btn-danger btn-smt fas fa-trash-alt">
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ SocsoCategoryEnum::getDescription($socso["category"]) }} : {{ $socso->salary }}' data-link='{{ route('admin.settings.socso.delete', ['id ' => $socso->id]) }}' class="btn btn-danger btn-smt fas fa-trash-alt">
                                 </button>
                         </td>
                     </tr>

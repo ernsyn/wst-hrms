@@ -6,6 +6,7 @@ use App\LeaveAllocation;
 use App\PayrollSetup;
 use App\EmployeeJob;
 use App\Enums\EisCategoryEnum;
+use App\Enums\SocsoCategoryEnum;
 
 class PayrollHelper
 {
@@ -212,17 +213,16 @@ class PayrollHelper
         
     }
     
-    public static function getEisCategory($age, $nationality)
+    public static function getEisCategory($employee)
     {
         $category=0;
         
-        if ($nationality == 132 && $age < 60) {
+        if ($employee->nationality == 132 && self::getAge($employee->dob) < 60 && $employee->eis_no != null) {
             $category = EisCategoryEnum::FIRST_CATEGORY;
-        } else if ($nationality != 132) {
-            $category = EisCategoryEnum::SECOND_CATEGORY;
-        }
+        } 
         
         return $category;
     }
+    
 }
 

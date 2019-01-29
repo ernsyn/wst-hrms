@@ -98,63 +98,39 @@
                                     <div class="row p-3">
                                         <div class="col-md-6">
                                             <div class="form-group row">
+                                            	<span class="col-lg-5 p-3">Contact No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->contact_no}}</span>
+                                                </div>
                                                 <span class="col-lg-5 p-3">Address</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <div class="field pb-1">
                                                         <span class="field-value">{{$employee->address}}</span>
-                                            </div>
-                                            <div class="field pb-1">
-                                                    <span class="field-value">{{$employee->address2}}</span>
-                                            </div>
-                                            <div class="field pb-1">
-                                                    <span class="field-value">{{$employee->address3}}</span>
-                                            </div>
-                                        </div>
-                                                <span class="col-lg-5 p-3">Postcode</span>
+                                                    </div>
+                                                    <div class="field pb-1">
+                                                            <span class="field-value">{{$employee->address2}}</span>
+                                                    </div>
+                                                    <div class="field pb-1">
+                                                            <span class="field-value">{{$employee->address3}}</span>
+                                                    </div>
+                                                </div>
+                                       			<span class="col-lg-5 p-3">Postcode</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <div class="field pb-1">
                                                         <span class="field-value">{{$employee->postcode}}</span>
                                                     </div>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Contact No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->contact_no}}</span>
+                                                <span class="col-lg-5 p-3">Race</span>
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                    <span class="field-value">{{$employee->race}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Marital Status</span>
                                                 <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">PCB Group</span>
-                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
-                                                    <span class="field-value">{{ PCBGroupEnum::getDescription($employee->pcb_group)}}</span>
-                                                </div>
                                                 <span class="col-lg-5 p-3">Number of Children</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!! $employee->total_children ? $employee->total_children:'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">EIS No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->eis_no ? $employee->eis_no:'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">SOCSO No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Security Group</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Basic Salary</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                        <span class="field-value">{!! $employee->basic_salary ? $employee->basic_salary :'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <span class="col-lg-5 p-3">Race</span>
-                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
-                                                    <span class="field-value">{{$employee->race}}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Driver License No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
@@ -164,29 +140,61 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!!$employee->driver_license_expiry_date ? $employee->driver_license_expiry_date->format('d/m/Y'): '<strong>(not set)</strong>'!!}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">EPF No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->epf_no}}</span>
-                                                </div>
                                                 <span class="col-lg-5 p-3">Tax No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->tax_no}}</span>
+                                                    <span class="field-value">{!!$employee->tax_no ? $employee->tax_no : '<strong>(not set)</strong>'!!}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">ID No</span>
+                                                <span class="col-lg-5 p-3">PCB Group</span>
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                    <span class="field-value">{!!$employee->pcb_group ? PCBGroupEnum::getDescription($employee->pcb_group) : '<strong>(not set)</strong>'!!}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                            	<span class="col-lg-5 p-3">EPF No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!!$employee->epf_no ? $employee->epf_no : '<strong>(not set)</strong>'!!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">EPF Category</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!!$employee->epf_category ? EpfCategoryEnum::getDescription($employee->epf_category) : '<strong>(not set)</strong>'!!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">EIS No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->eis_no ? $employee->eis_no:'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">SOCSO No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">SOCSO Category</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!!$employee->socso_category ? SocsoCategoryEnum::getDescription($employee->socso_category) : '<strong>(not set)</strong>'!!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Employee ID</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->code}}</span>
                                                 </div>
+                                                <span class="col-lg-5 p-3">Security Group</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Basic Salary</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!! $employee->basic_salary ? $employee->basic_salary :'<strong>(not set)</strong>' !!}</span>
+                                                </div>
                                                 <span class="col-lg-5 p-3">Joined Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                <span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? \Carbon\Carbon::parse($employee->employee_jobs()->first()->start_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
+                                                	<span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? \Carbon\Carbon::parse($employee->employee_jobs()->first()->start_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Confirmation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                <span class="field-value">{!! isset($employee->confirmed_date) ?  \Carbon\Carbon::parse($employee->confirmed_date)->format('d/m/Y') :'<strong>(not set)</strong>' !!}</span>
+                                                	<span class="field-value">{!! isset($employee->confirmed_date) ?  \Carbon\Carbon::parse($employee->confirmed_date)->format('d/m/Y') :'<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                                 <span class="col-lg-5 p-3">Resignation Date</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
-                                                <span class="field-value">{!! isset($employee->resignation_date ) ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
+                                                	<span class="field-value">{!! isset($employee->resignation_date ) ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -285,15 +293,20 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="ic-no"><strong>IC*</strong></label>
-                                    <input id="ic-no" type="text" class="form-control" placeholder="" value="">
-                                    <div id="ic-no-error" class="invalid-feedback"></div>
+                            	<div class="col-md-12 mb-3">
+                                    <label for="name"><strong>Name*</strong></label>
+                                    <input id="name" type="text" class="form-control" placeholder="" value="">
+                                    <div id="name-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="code"><strong>ID No*</strong></label>
-                                    <input id="code" type="text" class="form-control" placeholder="" value="" >
-                                    <div id="code-error" class="invalid-feedback"></div>
+                                    <label for="email"><strong>Email*</strong></label>
+                                    <input id="email" type="text" class="form-control" placeholder="" value="">
+                                    <div id="email-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="ic-no"><strong>IC No*</strong></label>
+                                    <input id="ic-no" type="text" class="form-control" placeholder="" value="">
+                                    <div id="ic-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="dob"><strong>Date of Birth*</strong></label>
@@ -308,7 +321,7 @@
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="gender"><strong>Gender*</strong></label>
-                                    <select name="gender" id="gender" class="form-control" placeholder="" value="" >
+                                    <select name="gender" id="gender" class="form-control">
                                         <option value="">Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
@@ -316,19 +329,14 @@
                                     <div id="gender-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="contact-no"><strong>Contact Number*</strong></label>
-                                    <input id="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" >
-                                    <div id="contact-no-error" class="invalid-feedback">
-                                    </div>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <label for="marital-status-no"><strong>Marital Status*</strong></label>
-                                    <select name="marital-status" id="marital-status" class="form-control" placeholder="" value="" >
-                                        <option value="">Select Marital Status</option>
-                                        <option value="single">Single</option>
-                                        <option value="married">Married</option>
+                                    <label for="nationality"><strong>Nationality*</strong></label>
+                                    <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
+                                        <option value=""></option>  
+                                    	@foreach(App\Country::all() as $countries)
+                                        <option value="{{ $countries->id }}">{{ $countries->citizenship }}</option>
+                                        @endforeach
                                     </select>
-                                    <div id="marital-status-error" class="invalid-feedback"></div>
+                                    <div id="nationality-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="race"><strong>Race*</strong></label>
@@ -336,7 +344,42 @@
                                     <div id="race-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                	<label for="pcb_group"><strong>PCB Group*</strong></label>
+                                    <label for="marital-status-no"><strong>Marital Status*</strong></label>
+                                    <select name="marital-status" id="marital-status" class="form-control">
+                                        <option value="">Select Marital Status</option>
+                                        <option value="single">Single</option>
+                                        <option value="married">Married</option>
+                                    </select>
+                                    <div id="marital-status-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="total-children"><strong>Number of Children*</strong></label>
+                                    <input id="total-children" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="total-children-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="driver-license-no"><strong>Driver License No</strong></label>
+                                    <input id="driver-license-no" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="driver-license-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="driver-license-expiry-date"><strong>License Expiry Date</strong></label>
+                                    <div class="input-group date" data-target-input="nearest">
+                                        <input type="text" id="driver-license-expiry-date" class="form-control datetimepicker-input" data-target="#driver-license-expiry-date"/>
+                                        <div class="input-group-append" data-target="#driver-license-expiry-date" data-toggle="datetimepicker">
+                                            <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                        </div>
+                                        <div id="driver-license-expiry-date-error" class="invalid-feedback">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="tax-no"><strong>Tax No</strong></label>
+                                    <input id="tax-no" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="tax-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                	<label for="pcb_group"><strong>PCB Group</strong></label>
                                     <select class="form-control{{ $errors->has('pcb_group') ? ' is-invalid' : '' }}" name="pcb_group" id="pcb_group">
                                         <option value="">Select PCB Group</option>
                                         <option value="1" {{ old('pcb_group') == 1 ? 'selected' : ''}}>Single Person</option>
@@ -345,35 +388,16 @@
                                     </select>
                                     <div id="pcb_group-error" class="invalid-feedback"></div>
                                 </div>
-                                <div class="col-md-12 mb-3">
-                                    <label for="total-children"><strong>Number of Children*</strong></label>
-                                    <input id="total-children" type="text" class="form-control" placeholder="" value="" >
-                                    <div id="total-children-error" class="invalid-feedback"></div>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                        <label for="nationality"><strong>Nationality*</strong></label>
-                                        <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" id="nationality">
-                                                <option value=""></option>  
-                                            @foreach(App\Country::all() as $countries)
-                                                <option value="{{ $countries->id }}">{{ $countries->citizenship }}</option>
-                                                @endforeach
-                                        </select>
-                                        <div id="nationality-error" class="invalid-feedback"></div>
-                                    </div>
-                                <div class="col-md-12 mb-3">
-                                    <label for="main-security-group-id"><strong>Security Group Id*</strong></label>
-                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
-                                        <option value=""></option>
-                                        @foreach(App\SecurityGroup::all() as $company)
-                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div id="main-security-group-id-error" class="invalid-feedback"></div>
-                                </div>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="contact-no"><strong>Contact Number*</strong></label>
+                                    <input id="contact-no" type="text" class="form-control" placeholder="01x-xxxxxxxx" value="" >
+                                    <div id="contact-no-error" class="invalid-feedback">
+                                    </div>
+                                </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="address"><strong>Address Line 1*</strong></label>
                                     <input id="address" type="text" class="form-control" placeholder="" value="" >
@@ -395,33 +419,26 @@
                                     <div id="postcode-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="driver-license-no"><strong>Driver License No</strong></label>
-                                    <input id="driver-license-no" type="text" class="form-control" placeholder="" value="" >
-                                    <div id="driver-license-no-error" class="invalid-feedback"></div>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <label for="driver-license-expiry-date"><strong>License Expiry Date</strong></label>
-                                    <div class="input-group date" data-target-input="nearest">
-                                        <input type="text" id="driver-license-expiry-date" class="form-control datetimepicker-input" data-target="#driver-license-expiry-date"/>
-                                        <div class="input-group-append" data-target="#driver-license-expiry-date" data-toggle="datetimepicker">
-                                            <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
-                                        </div>
-                                        <div id="driver-license-expiry-date-error" class="invalid-feedback">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <label for="epf-no"><strong>EPF No*</strong></label>
+                                    <label for="epf-no"><strong>EPF No</strong></label>
                                     <input id="epf-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="epf-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="tax-no"><strong>Tax No*</strong></label>
-                                    <input id="tax-no" type="text" class="form-control" placeholder="" value="" >
-                                    <div id="tax-no-error" class="invalid-feedback"></div>
+                                	<label for="epf_category"><strong>EPF Category</strong> <i id="epfCategory" class="fas fa-info-circle" data-toggle="tooltip" data-container="body"></i></label>
+                                    <select class="form-control{{ $errors->has('epf_category') ? ' is-invalid' : '' }}" name="epf_category" id="epf-category">
+                                        <option value="">Select EPF Category</option>
+                                        @foreach ($epfCategory as $k=>$v )
+    									@if (old('epf_category') == $k)
+    										<option value="{{ $k }}" selected>{{ $v }}</option>
+    									@else
+    										<option value="{{ $k }}">{{ $v }}</option>
+    									@endif
+    								@endforeach
+                                    </select>
+                                    <div id="epf_category-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="eis-no"><strong>EIS No*</strong></label>
+                                    <label for="eis-no"><strong>EIS No</strong></label>
                                     <input id="eis-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="eis-no-error" class="invalid-feedback"></div>
                                 </div>
@@ -429,6 +446,35 @@
                                     <label for="socso-no"><strong>SOCSO No*</strong></label>
                                     <input id="socso-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="socso-no-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                	<label for="socso_category"><strong>SOCSO Category*</strong> <i id="socsoCategory" class="fas fa-info-circle" data-toggle="tooltip" data-container="body"></i></label>
+                                    <select class="form-control{{ $errors->has('socso_category') ? ' is-invalid' : '' }}" name="socso_category" id="socso-category">
+                                        <option value="">Select SOCSO Category</option>
+                                        @foreach ($socsoCategory as $k=>$v )
+        									@if (old('socso_category') == $k)
+        										<option value="{{ $k }}" selected>{{ $v }}</option>
+        									@else
+        										<option value="{{ $k }}">{{ $v }}</option>
+        									@endif
+        								@endforeach
+                                    </select>
+                                    <div id="socso_category-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="code"><strong>Employee ID*</strong></label>
+                                    <input id="code" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="code-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="main-security-group-id"><strong>Security Group*</strong></label>
+                                    <select class="form-control{{ $errors->has('main-security-group-id') ? ' is-invalid' : '' }}" name="main-security-group-id" id="main-security-group-id">
+                                        <option value="">Select Security Group</option>
+                                        @foreach(App\SecurityGroup::all() as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="main-security-group-id-error" class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
@@ -581,6 +627,8 @@
 
             editProfileId = currentData.id;
 
+            $('#edit-profile-form #name').val(currentData.user.name);
+            $('#edit-profile-form #email').val(currentData.user.email);
             $('#edit-profile-form #ic-no').val(currentData.ic_no);
 
             $('#edit-profile-form #code').val(currentData.code);
@@ -599,22 +647,26 @@
             $('#edit-profile-form #driver-license-no').val(currentData.driver_license_no);
             $('#edit-profile-form #driver-license-expiry-date').val(currentData.driver_license_expiry_date);
             $('#edit-profile-form #epf-no').val(currentData.epf_no);
+            $('#edit-profile-form #epf-category').val(currentData.epf_category);
             $('#edit-profile-form #tax-no').val(currentData.tax_no);
             $('#edit-profile-form #eis-no').val(currentData.eis_no);
             $('#edit-profile-form #socso-no').val(currentData.socso_no);
+            $('#edit-profile-form #socso-category').val(currentData.socso_category);
             $('#edit-profile-form #main-security-group-id').val(currentData.main_security_group_id);
 
             if(currentData.dob!=null) {
                 formatDob = $.datepicker.formatDate("d/mm/yy", new Date(currentData.dob));
                 $('#edit-profile-form #dob').val(formatDob);
-            } else
+            } else {
                 $('#edit-profile-form #dob').val();
+            }
 
             if(currentData.driver_license_expiry_date!=null) {
                 formatLicenseExpiry = $.datepicker.formatDate("d/mm/yy", new Date(currentData.driver_license_expiry_date));
                 $('#edit-profile-form #driver-license-expiry-date').val(formatLicenseExpiry);
-            } else
+            } else {
                 $('#edit-profile-form #driver-license-expiry-date').val();
+            }
 
         });
 
@@ -629,6 +681,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     code: $('#edit-profile-form #code').val(),
+                    name: $('#edit-profile-form #name').val(),
+                    email: $('#edit-profile-form #email').val(),
                     ic_no: $('#edit-profile-form #ic-no').val(),
                     dob: $('#edit-profile-form #dob').val(),
                     gender: $('#edit-profile-form #gender').val(),
@@ -645,10 +699,11 @@
                     driver_license_no: $('#edit-profile-form #driver-license-no').val(),
                     driver_license_expiry_date: $('#edit-profile-form #driver-license-expiry-date').val(),
                     epf_no: $('#edit-profile-form #epf-no').val(),
+                    epf_category: $('#edit-profile-form #epf-category').val(),
                     tax_no: $('#edit-profile-form #tax-no').val(),
                     eis_no: $('#edit-profile-form #eis-no').val(),
                     socso_no: $('#edit-profile-form #socso-no').val(),
-
+                    socso_category: $('#edit-profile-form #socso-category').val(),
                     main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
                 },
                 success: function(data) {
@@ -666,6 +721,14 @@
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
+                                    case 'name':
+                                        $('#edit-profile-form #name').addClass('is-invalid');
+                                        $('#edit-profile-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'email':
+                                        $('#edit-profile-form #email').addClass('is-invalid');
+                                        $('#edit-profile-form #email-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                     case 'ic_no':
                                         $('#edit-profile-form #ic-no').addClass('is-invalid');
                                         $('#edit-profile-form #ic-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -734,6 +797,10 @@
                                         $('#edit-profile-form #epf-no').addClass('is-invalid');
                                         $('#edit-profile-form #epf-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'epf_category':
+                                        $('#edit-profile-form #epf-category').addClass('is-invalid');
+                                        $('#edit-profile-form #epf-category-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                     case 'tax_no':
                                         $('#edit-profile-form #tax-no').addClass('is-invalid');
                                         $('#edit-profile-form #tax-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -746,7 +813,10 @@
                                         $('#edit-profile-form #socso-no').addClass('is-invalid');
                                         $('#edit-profile-form #socso-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-
+                                    case 'socso_category':
+                                        $('#edit-profile-form #socso-category').addClass('is-invalid');
+                                        $('#edit-profile-form #socso-category-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                     case 'main_security_group_id':
                                         $('#edit-profile-form #main-security-group-id').addClass('is-invalid');
                                         $('#edit-profile-form #main-security-group-id-error').html('<strong>' + errors[errorField][0] + "</strong>");
@@ -761,9 +831,10 @@
 
     });
 
-
     // GENERAL FUNCTIONS
     function clearProfilesModal(htmlId) {
+    	$(htmlId + ' #name').val('');
+    	$(htmlId + ' #email').val('');
         $(htmlId + ' #ic-no').val('');
         $(htmlId + ' #code').val('');
         $(htmlId + ' #dob').val('');
@@ -780,11 +851,15 @@
         $(htmlId + ' #driver-license-no').val('');
         $(htmlId + ' #driver-license-expiry-date').val('');
         $(htmlId + ' #epf-no').val('');
+        $(htmlId + ' #epf-category').val('');
         $(htmlId + ' #tax-no').val('');
         $(htmlId + ' #eis-no').val('');
         $(htmlId + ' #socso-no').val('');
+        $(htmlId + ' #socso-category').val('');
         $(htmlId + ' #pcb_group').val('');
 
+        $(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #email').removeClass('is-invalid');
         $(htmlId + ' #ic-no').removeClass('is-invalid');
         $(htmlId + ' #code').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
@@ -802,11 +877,16 @@
         $(htmlId + ' #driver-license-no').removeClass('is-invalid');
         $(htmlId + ' #driver-license-expiry-date').removeClass('is-invalid');
         $(htmlId + ' #epf-no').removeClass('is-invalid');
+        $(htmlId + ' #epf-category').removeClass('is-invalid');
         $(htmlId + ' #tax-no').removeClass('is-invalid');
         $(htmlId + ' #eis-no').removeClass('is-invalid');
         $(htmlId + ' #socso-no').removeClass('is-invalid');
+        $(htmlId + ' #socso-category').removeClass('is-invalid');
     }
+    
     function clearProfilesError(htmlId) {
+    	$(htmlId + ' #name').removeClass('is-invalid');
+        $(htmlId + ' #email').removeClass('is-invalid');
         $(htmlId + ' #ic-no').removeClass('is-invalid');
         $(htmlId + ' #code').removeClass('is-invalid');
         $(htmlId + ' #dob').removeClass('is-invalid');
@@ -824,9 +904,11 @@
         $(htmlId + ' #driver-license-no').removeClass('is-invalid');
         $(htmlId + ' #driver-license-expiry-date').removeClass('is-invalid');
         $(htmlId + ' #epf-no').removeClass('is-invalid');
+        $(htmlId + ' #epf-category').removeClass('is-invalid');
         $(htmlId + ' #tax-no').removeClass('is-invalid');
         $(htmlId + ' #eis-no').removeClass('is-invalid');
         $(htmlId + ' #socso-no').removeClass('is-invalid');
+        $(htmlId + ' #socso-category').removeClass('is-invalid');
     }
 
     function showAlert(message) {
@@ -847,8 +929,6 @@
             </div>`)
     }
 
-</script>
-<script>
     $(function () {
         $('#reset-password-submit').click(function(e){
             e.preventDefault();
@@ -903,6 +983,7 @@
             $(htmlId + ' input[name=new_password]').removeClass('is-invalid');
             $(htmlId + ' input[name=confirm_new_password]').removeClass('is-invalid');
         }
+        
         function clearChangePasswordError(htmlId) {
             $(htmlId + ' input[name=new_password]').removeClass('is-invalid');
             $(htmlId + ' input[name=confirm_new_password]').removeClass('is-invalid');
@@ -949,11 +1030,6 @@
                 }
             });
         }
-    });
-</script>
-
-<script type="text/javascript">
-    $(function(){
 
         // EDIT Profile Picture
         $('#edit-picture-submit').click(function(e){
@@ -1027,8 +1103,6 @@
         }
     });
 
-
-
     // GENERAL FUNCTIONS
     // convert attachement to base64
     function getBase64(file, onLoad) {
@@ -1050,6 +1124,7 @@
         $(htmlId + ' #attachment').removeClass('is-invalid');
         $(htmlId + ' #picture').removeClass('is-invalid');
     }
+    
     function clearPicturesError(htmlId) {
         $(htmlId + ' #attachment').removeClass('is-invalid');
         $(htmlId + ' #picture').removeClass('is-invalid');

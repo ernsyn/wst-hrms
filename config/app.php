@@ -230,6 +230,8 @@ return [
         'AttendanceEnum' => App\Enums\AttendanceEnum::class,
         'PCBGroupEnum' => App\Enums\PCBGroupEnum::class,
         'EisCategoryEnum' => App\Enums\EisCategoryEnum::class,
+        'SocsoCategoryEnum' => App\Enums\SocsoCategoryEnum::class,
+        'EpfCategoryEnum' => App\Enums\EpfCategoryEnum::class,
 
     ],
 

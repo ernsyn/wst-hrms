@@ -24,7 +24,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Category</th>
+<!--                         <th>Category</th> -->
                         <th>Salary (RM)</th>
                         <th>Employer Contribution (RM)</th>
                         <th>Employee Contribution (RM)</th>
@@ -37,7 +37,7 @@
                     @foreach($eiss as $eis)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ EisCategoryEnum::getDescription($eis['category'])}}</td>
+<!--                         <td>{{ EisCategoryEnum::getDescription($eis['category']) }}</td> -->
                         <td>{{$eis['salary']}}</td>
                         <td>{{$eis['employer']}}</td>
                         <td>{{$eis['employee']}}</td>
