@@ -18,24 +18,74 @@
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Employee Code</th>
-                        <th>Employee Name</th>
                         <th>Attendance</th>
-                        {{-- <th>View</th> --}}
+                        <th>Employee</th>
+                        <th>Clock In Time</th>
+                        <th>Clock In Status</th>
+                        <th>Clock In Reason</th>
+                        <th>Clock Out Time</th>
+                        <th>Clock Out Status</th>
+                        <th>Clock Out Reason</th>
+                        <th>View</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($attendances as $row)
+                    @foreach($attendances as $key => $value)
                         <tr>
-                            <td>{{ \Carbon\Carbon::parse($row->date)->format('d/m/Y') }}</td>
-                            <td>{{ $row->code }}</td>
-                            <td>{{ $row->name }}</td>
-                            <td>{{ $row->attendance }}</td>
-                            {{-- <td>
-                                <button class="btn btn-outline-primary waves-effect" data-toggle="modal">
-                                    <span class="fas fa-eye"></span>
-                                </button>
-                            </td> --}}
+                            <td>{{ $value['date'] }}</td>
+                            <td>{{ $value['attendance'] }}</td>
+                            <td><span class="badge badge-warning">{{ $value['code'] }}</span> <b class="text-primary">{{ $value['name'] }}</span></td>
+                            <td>{{ $value['clock_in_time'] }}</td>
+                            <td>{{ $value['clock_in_status'] }}</td>
+                            <td>{{ $value['clock_in_reason'] }}</td>
+                            <td>{{ $value['clock_out_time'] }}</td>
+                            <td>{{ $value['clock_out_status'] }}</td>
+                            <td>{{ $value['clock_out_reason'] }}</td>
+                            <td>
+                                @if($value['attendance'] == 'Absent')
+                                    <button class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#attendance_details_modal_{{ $key }}" disabled="">
+                                        <span class="fas fa-ban"></span>
+                                    </button>
+                                @else
+                                    <button class="btn btn-outline-primary waves-effect" data-toggle="modal" data-target="#attendance_details_modal_{{ $key }}">
+                                        <span class="fas fa-eye"></span>
+                                    </button>
+                                    <div class="modal fade" id="attendance_details_modal_{{ $key }}" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="confirm-delete-label">Attendance Details</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="col-md-6 float-md-left">
+                                                        <p><strong>Clock In</strong></p>
+                                                        <p><img src="{{ $value['clock_in_media'] }}" class="img-responsive" width="100%" /></p>
+                                                        <p>
+                                                            <strong>Address:</strong><br />
+                                                            {{ $value['clock_in_address'] }}
+                                                        </p>
+                                                        <p><strong>Lat:</strong> {{ $value['clock_in_lat'] }}</p>
+                                                        <p><strong>Long:</strong> {{ $value['clock_in_long'] }}</p>
+                                                    </div>
+                                                    <div class="col-md-6 float-md-right">
+                                                        <p><strong>Clock Out</strong></p>
+                                                        <p><img src="{{ $value['clock_out_media'] }}" class="img-responsive" width="100%" /></p>
+                                                        <p>
+                                                            <strong>Address:</strong><br />
+                                                            {{ $value['clock_out_address'] }}
+                                                        </p>
+                                                        <p><strong>Lat:</strong> {{ $value['clock_out_lat'] }}</p>
+                                                        <p><strong>Long:</strong> {{ $value['clock_out_long'] }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -63,14 +113,20 @@ $(function(){
                 text: '<i class="fas fa-table"></i>',
                 className: 'btn-segment',
                 titleAttr: 'Export Excel',
-                messageTop: $('#employee-detail').text()
+                messageTop: $('#employee-detail').text(),
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+                }
             },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print "></i>',
                 className: 'btn-segment',
                 titleAttr: 'Print',
-                messageTop: $('#employee-detail').text()
+                messageTop: $('#employee-detail').text(),
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+                }
             },
         ]
     });

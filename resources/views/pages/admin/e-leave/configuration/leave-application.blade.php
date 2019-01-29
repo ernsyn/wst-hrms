@@ -370,6 +370,8 @@
         $("button.leave-day").on('click', function() {
             $("button.leave-day").removeClass("selected-day");
             $(this).addClass("selected-day");
+
+            checkLeaveRequest($('#start-date').val(), $('#end-date').val());
         });
 
         // Enable Edit Mode and Load Form Data
@@ -702,6 +704,7 @@
                         _token: '{{ csrf_token() }}',
                         start_date: $('#add-leave-request-form #alt-start-date').val(),
                         end_date: $('#add-leave-request-form #alt-end-date').val(),
+                        am_pm: $('#add-leave-request-form button.selected-day').data('value'),
                         leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val()
                     },
                     success: function(data) {
@@ -714,11 +717,32 @@
 
                         if(data.total_days) {
                             $('#total-days b').text(data.total_days.toFixed(1));
+
+                            if(data.total_days == 1) {
+                                $("#leave-full-day").addClass("selected-day");
+                            }
                         }
 
                         if(data.end_date) {
                             $("#end-date").val(data.end_date);
                             $("#alt-end-date").val(data.end_date);
+                        }
+
+                        if(data.set_am_pm) {
+                            $("button.leave-day").removeClass("selected-day");
+                            $("button.leave-day").prop('disabled', false);
+
+                            if(data.set_am_pm == "am") {
+                                $("#leave-half-day-am").addClass("selected-day");
+                                $("#leave-full-day").prop('disabled', true);
+                                $("#leave-half-day-pm").prop('disabled', true);
+                            } else if(data.set_am_pm == "pm") {
+                                $("#leave-half-day-pm").addClass("selected-day");
+                                $("#leave-full-day").prop('disabled', true);
+                                $("#leave-half-day-am").prop('disabled', true);
+                            }
+                        } else {
+                            $("button.leave-day").prop('disabled', false);
                         }
                     },
                     error: function(xhr) {

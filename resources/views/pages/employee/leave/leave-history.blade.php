@@ -1,6 +1,8 @@
 @extends('layouts.base')
 @section('content')
 <div class="container">
+        <div id="alert-container">
+            </div>
     @if (session('status'))
     <div class="alert alert-primary fade show" role="alert">
         {{ session('status') }}
@@ -54,20 +56,7 @@
                            
                             <td>{{$leaveRequest['status']}}</td>
 
-                            <td>
-                                @if ($leaveRequest['status']== 'new')
-
-                                <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                disabled><span class="fas fa-check-circle"></span></button>
-                                <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                disabled><span class="fas fa-times-circle"></span></button>
-                                @else
-                                    <button class="btn btn-outline-primary waves-effect" data-toggle="modal"
-                                    disabled><span class="fas fa-check-circle"></span></button>
-                                    <button class="btn btn-outline-danger waves-effect" data-toggle="modal"
-                                    disabled><span class="fas fa-times-circle"></span></button>
-                                @endif
-                            </td>
+                            
                         </tr>
                         @endforeach
                 </tbody>
