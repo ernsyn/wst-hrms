@@ -1,11 +1,7 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="container">
-        <div id="alert-container">
-            </div>   
-    @foreach ($errors->all() as $error)
-    <li>{{ $error }}</li>
-    @endforeach 
+    <div id="alert-container"></div>
     <div class="p-4">
         @if (session('status'))
         <div class="alert alert-primary fade show" role="alert">
