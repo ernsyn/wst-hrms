@@ -24,6 +24,10 @@ class EmployeeWorkingDay extends JsonResource
             'sunday' => $this->sunday,
             'start_work_time' => $this->start_work_time,
             'end_work_time' => $this->end_work_time,
+            'half_1_start_work_time' => $this->half_1_start_work_time,
+            'half_1_end_work_time' => $this->half_1_end_work_time,
+            'half_2_start_work_time' => $this->half_2_start_work_time,
+            'half_2_end_work_time' => $this->half_2_end_work_time,
         ];
     }
 }
