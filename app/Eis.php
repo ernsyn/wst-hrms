@@ -13,7 +13,10 @@ class Eis extends Model implements Auditable
    
 
     protected $fillable = [
-        'employer','employee','salary'
+        'employer',
+        'employee',
+        'salary',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];
