@@ -1,6 +1,6 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
+<div class="container company" style="display:none">
     <div id="alert-container"></div>
     <div class="p-4">
         @if (session('status'))
@@ -43,3 +43,20 @@
     </div>
 </div>
 @endsection
+
+
+@section('scripts')
+<script>
+    $(function() {
+        $('.company').show();
+
+        $('a[data-toggle="tab"]').on('click', function(e) {
+            window.localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = window.localStorage.getItem('activeTab');
+        if (activeTab) {
+            $('#nav-tab a[href="' + activeTab + '"]').tab('show');
+        }
+    });
+</script>
+@append
