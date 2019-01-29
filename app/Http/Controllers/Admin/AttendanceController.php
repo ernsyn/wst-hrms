@@ -39,14 +39,14 @@ class AttendanceController extends Controller
             $result_array[$row->id]['clock_in_lat'] = $row->clock_in_lat;
             $result_array[$row->id]['clock_in_long'] = $row->clock_in_long;
             $result_array[$row->id]['clock_in_address'] = $row->clock_in_address;
-            $result_array[$row->id]['clock_in_status'] = $row->clock_in_status;
+            $result_array[$row->id]['clock_in_status'] = ucwords($row->clock_in_status);
             $result_array[$row->id]['clock_in_reason'] = $row->clock_in_reason;
-            $result_array[$row->id]['clock_out_time'] = $row->clock_out_time ? Carbon::parse($row->clock_out_time)->format('g:m:s A') : '';
+            $result_array[$row->id]['clock_out_time'] = $row->clock_out_time ? Carbon::parse($row->clock_out_time)->format('g:m:s A') : 'NA';
             $result_array[$row->id]['clock_out_lat'] = $row->clock_out_lat;
             $result_array[$row->id]['clock_out_long'] = $row->clock_out_long;
             $result_array[$row->id]['clock_out_address'] = $row->clock_out_address;
-            $result_array[$row->id]['clock_out_status'] = $row->clock_out_status;
-            $result_array[$row->id]['clock_out_reason'] = $row->clock_out_reason;
+            $result_array[$row->id]['clock_out_status'] = $row->clock_out_status ? ucwords($row->clock_out_status) : 'NA';
+            $result_array[$row->id]['clock_out_reason'] = $row->clock_out_reason ? $row->clock_out_reason : 'NA';
 
             $media_in = Media::where('id', $row->clock_in_image_media_id)->first();
             $media_out = Media::where('id', $row->clock_out_image_media_id)->first();
@@ -99,18 +99,18 @@ class AttendanceController extends Controller
             $result_array[$row->id]['date'] = Carbon::parse($row->date)->format('d/m/Y');
             $result_array[$row->id]['code'] = $row->code;
             $result_array[$row->id]['name'] = $row->name;
-            $result_array[$row->id]['attendance'] = $row->attendance;
+            $result_array[$row->id]['attendance'] = ucwords($row->attendance);
             $result_array[$row->id]['clock_in_time'] = $row->clock_out_time ? Carbon::parse($row->clock_in_time)->format('g:m:s A') : 'NA';
             $result_array[$row->id]['clock_in_lat'] = $row->clock_in_lat ? $row->clock_in_lat : 'NA';
             $result_array[$row->id]['clock_in_long'] = $row->clock_in_long ? $row->clock_in_long : 'NA';
             $result_array[$row->id]['clock_in_address'] = $row->clock_in_address ? $row->clock_in_address : 'NA';
-            $result_array[$row->id]['clock_in_status'] = $row->clock_in_status ? $row->clock_in_status : 'NA';
+            $result_array[$row->id]['clock_in_status'] = $row->clock_in_status ? ucwords($row->clock_in_status) : 'NA';
             $result_array[$row->id]['clock_in_reason'] = $row->clock_in_reason ? $row->clock_in_reason : 'NA';
             $result_array[$row->id]['clock_out_time'] = $row->clock_out_time ? Carbon::parse($row->clock_out_time)->format('g:m:s A') : 'NA';
             $result_array[$row->id]['clock_out_lat'] = $row->clock_out_lat ? $row->clock_out_lat : 'NA';
             $result_array[$row->id]['clock_out_long'] = $row->clock_out_long ? $row->clock_out_long : 'NA';
             $result_array[$row->id]['clock_out_address'] = $row->clock_out_address ? $row->clock_out_address : 'NA';
-            $result_array[$row->id]['clock_out_status'] = $row->clock_out_status ? $row->clock_out_status : 'NA';
+            $result_array[$row->id]['clock_out_status'] = $row->clock_out_status ? ucwords($row->clock_out_status) : 'NA';
             $result_array[$row->id]['clock_out_reason'] = $row->clock_out_reason ? $row->clock_out_reason : 'NA';
 
             $media_in = Media::where('id', $row->clock_in_image_media_id)->first();
