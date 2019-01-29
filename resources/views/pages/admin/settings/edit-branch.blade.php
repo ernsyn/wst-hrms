@@ -3,6 +3,8 @@
 <li>{{ $error }}</li>
 @endforeach --}}
 <div class="container pb-5">
+        <div id="alert-container">
+            </div>   
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.branches.edit.post', ['id' => $branch->id])  }}">
             <div class="card-body">
