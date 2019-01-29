@@ -227,27 +227,31 @@ class PayrollController extends Controller
                 $dedcution = self::calculateUpdateDeduction($payrollTrxId, $employee, $processedStartDate, $processedEndDate, $validated['year_month']);
                 
                 // update epf, eis, socso, pcb
-                $epfFilter = array();
-                $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
-                $epfFilter['nationality'] = $employee->nationality;
-                $epfFilter['salary'] = $remuneration + $contributionData['epf'];
-                $epf = $this->epfRepository->findByFilter($epfFilter);
+                if($employee->epf_category != null) {
+                    $epfFilter = array();
+    //                 $epfFilter['age'] = PayrollHelper::getAge($employee->dob);
+    //                 $epfFilter['nationality'] = $employee->nationality;
+                    $epfFilter['salary'] = $remuneration + $contributionData['epf'];
+                    $epfFilter['category'] = $employee->epf_category;
+                    $epf = $this->epfRepository->findByFilter($epfFilter);
+                }
                 
                 $eisCategory = PayrollHelper::getEisCategory($employee);//PayrollHelper::getAge($employee->dob), $employee->nationality);
                 if ($eisCategory > 0) {
                     $eis = $this->eisRepository->findByCategorySalary($eisCategory, $remuneration + $contributionData['eis']);
                 }
                 
-                $socsoCategory = PayrollHelper::getSocsoCategory($employee);
-                if ($socsoCategory > 0) {
-                    $socso = $this->socsoRepository->findByCategorySalary($socsoCategory, $remuneration + $contributionData['socso']);
+                if ($employee->socso_category != null) {
+                    $socso = $this->socsoRepository->findByCategorySalary($employee->socso_category, $remuneration + $contributionData['socso']);
                 }
                 
-                $pcbFilter = array();
-                $pcbFilter['salary'] = $remuneration + $contributionData['pcb'];
-                $pcbFilter['pcbGroup'] = $employee->pcb_group;
-                $pcbFilter['noOfChildren'] = $employee->total_children;
-                $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+                if($employee->tax_no != null && $employee->pcb_group != null){
+                    $pcbFilter = array();
+                    $pcbFilter['salary'] = $remuneration + $contributionData['pcb'];
+                    $pcbFilter['pcbGroup'] = $employee->pcb_group;
+                    $pcbFilter['noOfChildren'] = $employee->total_children;
+                    $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+                }
                 
                 $storeData = [];
                 $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
@@ -557,21 +561,31 @@ class PayrollController extends Controller
             $storeData['kpi'] = $request['kpi'];
             $storeData['bonus'] = $request['bonus'];
             $storeData['gross_pay'] = $info->gross_pay + ($request['bonus'] * $request['kpi']);
-            $epfFilter['age'] = PayrollHelper::getAge($info->dob);
-            $epfFilter['nationality'] = $info->nationality;
-            $epfFilter['salary'] = $storeData['gross_pay'] + $totalEpf;
-            $epf = $this->epfRepository->findByFilter($epfFilter);
+            
+            if($info->epf_category != null){
+//                 $epfFilter['age'] = PayrollHelper::getAge($info->dob);
+//                 $epfFilter['nationality'] = $info->nationality;
+                $epfFilter['salary'] = $storeData['gross_pay'] + $totalEpf;
+                $epfFilter['category'] = $info->epf_category;
+                $epf = $this->epfRepository->findByFilter($epfFilter);
+            }
             
             $eisCategory = PayrollHelper::getEisCategory($info);//PayrollHelper::getAge($info->dob), $info->nationality);
             if ($eisCategory > 0) {
                 $eis = $this->eisRepository->findByCategorySalary($eisCategory, $storeData['gross_pay'] + $totalEis);
             }
             
-            $socso = $this->socsoRepository->findByCategorySalary($storeData['gross_pay'] + $totalSocso);
-            $pcbFilter['salary'] = $storeData['gross_pay'] + $totalPcb;
-            $pcbFilter['pcbGroup'] = $info->pcb_group;
-            $pcbFilter['noOfChildren'] = $info->total_children;
-            $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+            if($info->socso_category != null){
+                $socso = $this->socsoRepository->findByCategorySalary($info->socso_category, $storeData['gross_pay'] + $totalSocso);
+            }
+            
+            if($info->tax_no != null && $info->pcb_group != null){
+                $pcbFilter['salary'] = $storeData['gross_pay'] + $totalPcb;
+                $pcbFilter['pcbGroup'] = $info->pcb_group;
+                $pcbFilter['noOfChildren'] = $info->total_children;
+                $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+            }
+            
             $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
             $storeData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
             $storeData['employee_socso'] = isset($socso->employee) ? $socso->employee : 0;
@@ -593,21 +607,30 @@ class PayrollController extends Controller
                 $totalAddition = DB::table("payroll_trx_addition")->where('payroll_trx_id',$id)->sum('amount');
                 $totalDeduction = DB::table("payroll_trx_deduction")->where('payroll_trx_id',$id)->sum('amount');
                 
-                $epfFilter['age'] = PayrollHelper::getAge($info->dob);
-                $epfFilter['nationality'] = $info->nationality;
-                $epfFilter['salary'] = $info->gross_pay + $totalEpf;
-                $epf = $this->epfRepository->findByFilter($epfFilter);
+                if($info->epf_category != null){
+//                     $epfFilter['age'] = PayrollHelper::getAge($info->dob);
+//                     $epfFilter['nationality'] = $info->nationality;
+                    $epfFilter['salary'] = $info->gross_pay + $totalEpf;
+                    $epfFilter['category'] = $info->epf_category;
+                    $epf = $this->epfRepository->findByFilter($epfFilter);
+                }
                 
                 $eisCategory = PayrollHelper::getEisCategory($info);//PayrollHelper::getAge($info->dob), $info->nationality);
                 if ($eisCategory > 0) {
                     $eis = $this->eisRepository->findByCategorySalary($eisCategory, $info->gross_pay + $totalEis);
                 }
                 
-                $socso = $this->socsoRepository->findByCategorySalary($info->gross_pay + $totalSocso);
-                $pcbFilter['salary'] = $info->gross_pay + $totalPcb;
-                $pcbFilter['pcbGroup'] = $info->pcb_group;
-                $pcbFilter['noOfChildren'] = $info->total_children;
-                $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+                if($info->socso_category != null){
+                    $socso = $this->socsoRepository->findByCategorySalary($info->socso_category, $info->gross_pay + $totalSocso);
+                }
+                
+                if($info->tax_no != null && $info->pcb_group != null){
+                    $pcbFilter['salary'] = $info->gross_pay + $totalPcb;
+                    $pcbFilter['pcbGroup'] = $info->pcb_group;
+                    $pcbFilter['noOfChildren'] = $info->total_children;
+                    $pcb = $this->pcbRepository->findByFilter($pcbFilter);
+                }
+                
                 $storeData['employee_epf'] = isset($epf->employee) ? $epf->employee : 0;
                 $storeData['employee_eis'] = isset($eis->employee) ? $eis->employee : 0;
                 $storeData['employee_socso'] = isset($socso->employee) ? $socso->employee : 0;

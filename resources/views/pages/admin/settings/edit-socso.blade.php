@@ -51,8 +51,8 @@
 						</div>
                     </div>
                     <div class="form-group row w-100">
-                    	<div class="col-md-4">
-                            <label class="col-md-12 col-form-label">Employee Contribution*</label>
+                        <label class="col-md-12 col-form-label">Employee Contribution*</label>
+                        <div class="col-md-4">
                             <input id="employee" type="text" class="form-control{{ $errors->has('employee') ? ' is-invalid' : '' }}"
                                 placeholder="0.00" name="employee" value="{{ $socso->employee }}" required>
                             @if ($errors->has('employee'))

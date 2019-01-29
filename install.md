@@ -27,7 +27,7 @@ For mobile app,
 php artisan db:seed --class=DatabaseSeeder
 
 # Import EPF schedule from csv #
-load data local infile '/data/www/wst-hrms/database/seeds/epf.csv' into table epfs fields terminated by ',';
+load data local infile '/data/www/wst-hrms/database/seeds/epf.csv' into table epfs fields terminated by ',' set created_at=now(), deleted_at=null;
 
 # Import EIS schedule from csv #
 load data local infile '/data/www/wst-hrms/database/seeds/eis.csv' into table eis fields terminated by ',' set created_at=now(), deleted_at=null;

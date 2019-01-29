@@ -24,7 +24,6 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Name</th>
                         <th>Category</th>
                         <th>Salary (RM)</th>
                         <th>Employer Contribution (RM)</th>
@@ -38,8 +37,7 @@
                     @foreach($epfs as $epf)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{$epf['name']}}</td>
-                        <td>{{$epf['category']}}</td>
+                        <td>{{ EpfCategoryEnum::getDescription($epf['category']) }}</td>
                         <td>{{$epf['salary']}}</td>
                         <td>{{$epf['employer']}}</td>
                         <td>{{$epf['employee']}}</td>
@@ -50,7 +48,7 @@
                             <button onclick="window.location='{{ route('admin.settings.epf.edit.post', ['id' => $epf->id]) }}';" 
                                 class="btn btn-success btn-smt fas fa-edit">
                                 </button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $epf->category }}' data-link='{{ route('admin.settings.epf.delete', ['id ' => $epf->id]) }}' 
+                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ EpfCategoryEnum::getDescription($epf["category"]) }} : {{ $epf["salary"] }}' data-link='{{ route('admin.settings.epf.delete', ['id ' => $epf->id]) }}' 
                                 class="btn btn-danger btn-smt fas fa-trash-alt">
                                 </button>
                         </td>

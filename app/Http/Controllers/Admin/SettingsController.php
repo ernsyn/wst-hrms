@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Enums\EpfCategoryEnum;
 use App\Enums\SocsoCategoryEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ use DB;
 use \Crypt;
 use Session;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Validation\Rule;
 use \DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -670,49 +672,77 @@ class SettingsController extends Controller
 
     public function addEpf()
     {
-        return view('pages.admin.settings.add-epf');
+        $category = EpfCategoryEnum::choices();
+        return view('pages.admin.settings.add-epf',['category' => $category]);
     }
     
     public function postAddEpf(Request $request)
     {
         $epfData = $request->validate([
-            'category' => 'required|unique:epfs,category',
+            'category' => 'required',//'required|unique:epfs,category', 
             'salary' => 'required|numeric',
             'employer' => 'required|numeric',
-            'employee' => 'required|numeric',
-            'name' => 'required'
+            'employee' => 'required|numeric'
         ]);
-
-        $epfData['created_by']= auth()->user()->name;
+        
+        $epf = EPF::where([
+            ['category', $request['category']],
+            ['salary', $request['salary']]
+        ])->whereNull('deleted_at')
+        ->get();
+        
+        if($epf->isEmpty()){
+            $epfData['created_by']= auth()->user()->name;
+            EPF::create($epfData);
+            return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been added.');
+        } else {
+            return redirect()->route('admin.settings.epf')->with('status', 'Data already exists.');
+        }
+        
+//         $epfData['created_by']= auth()->user()->name;
     
-        EPF::create($epfData);
+//         EPF::create($epfData);
     
-        return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been added.');
+//         return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been added.');
     }
 
     public function editEpf(Request $request, $id)
     {
         $epf = EPF::find($id);
+        $category = EpfCategoryEnum::choices();
 
         return view('pages.admin.settings.edit-epf', [
-            'epf' => $epf
+            'epf' => $epf,
+            'category' => $category
         ]);
     }
     	
     public function postEditEpf(Request $request, $id)
     {
         $epfData = $request->validate([
-            // 'category' => 'required|unique:epfs,category,'.$id.',id,deleted_at,NULL',
-            'category' =>  'unique:epfs,category,'.$id.',id,deleted_at,NULL',
+            'category' => 'required',//'unique:epfs,category,'.$id.',id,deleted_at,NULL',
             'salary' => 'required|numeric',
             'employer' => 'required|numeric',
             'employee' => 'required|numeric',
-                'name' => 'required'
         ]);
+        
+        $epf = EPF::where([
+            ['category', $request['category']],
+            ['salary', $request['salary']],
+            ['id', '!=', $id]
+        ])->whereNull('deleted_at')
+        ->get();
+        
+        if($epf->isEmpty()){
+            EPF::where('id', $id)->update($epfData);
+            return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been updated.');
+        }else{
+            return redirect()->route('admin.settings.epf')->with('status', 'Data already exists.');
+        }
     
-        EPF::where('id', $id)->update($epfData);
+//         EPF::where('id', $id)->update($epfData);
     
-        return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been updated.');
+//         return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been updated.');
     }
 
     public function addEis()
@@ -812,8 +842,8 @@ class SettingsController extends Controller
         $socso = Socso::find($id);
         $category = SocsoCategoryEnum::choices();
 
-        $socsoData['created_by']=auth()->user()->name;
-        Socso::create($socsoData);
+//         $socsoData['created_by']=auth()->user()->name;
+//         Socso::create($socsoData);
         return view('pages.admin.settings.edit-socso', ['socso' => $socso, 'category' => $category]);
     }
 
