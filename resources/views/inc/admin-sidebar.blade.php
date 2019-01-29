@@ -173,21 +173,6 @@
                 </li>
             </ul>
         </li>
-                {{-- SECTION: Audit --}}
-                <li class="menu-section {{ request()->is('admin/audit') ? 'active' : '' }}">
-                    <a class="info dropdown-toggle" href="#auditSubmenu" data-toggle="collapse" aria-expanded="false">
-                        <div class="row">
-                            <div class="col-1"><i class="far fa-clock"></i></div>
-                            <div class="col-10">Audit</div>
-                        </div>
-                    </a>
-                    <ul class="collapse list-unstyled {{ request()->is('admin/audit') ? 'show' : '' }}" id="auditSubmenu">
-                        {{-- OPTION: Current Day Attendance --}}
-                        <li class="menu-option {{ request()->is('admin.attendance') ? 'active' : '' }}">
-                            <a href="{{ route('admin.attendance.current-day') }}">Current Day</a>
-                        </li>
-                    </ul>
-                </li>
 
     </ul>
 </nav>
