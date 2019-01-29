@@ -67,7 +67,8 @@ class ELeaveController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
             'leave_type' => 'required',
-            'am_pm' => ''
+            'am_pm' => '',
+            'edit_leave_request_id' => 'integer'
         ]);
 
         $am_pm = null;
@@ -75,7 +76,12 @@ class ELeaveController extends Controller
             $am_pm = $requestData['am_pm'];
         }
 
-        $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm);
+        $edit_leave_request_id = null;
+        if(array_key_exists('edit_leave_request_id', $requestData)) {
+            $edit_leave_request_id = $requestData['edit_leave_request_id'];
+        }
+
+        $result = LeaveService::checkLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $edit_leave_request_id);
 
         return response()->json($result);
     }
