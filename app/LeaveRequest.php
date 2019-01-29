@@ -21,7 +21,8 @@ class LeaveRequest extends Model implements Auditable
         'am_pm', 
         'applied_days',
         'reason',
-        'status' 
+        'status' ,
+        'created_by',
     ];
 
     protected $casts = [

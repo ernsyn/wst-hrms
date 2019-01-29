@@ -1,7 +1,8 @@
 @extends('layouts.base')
 @section('content')
 <div class="container">
-    <div class="card">
+        <div id="alert-container">
+            </div>   <div class="card">
    
      
           
