@@ -3,10 +3,6 @@
 <div class="container">
         <div id="alert-container">
             </div>   <div class="card">
-   
-     
-          
-           
     <form method="POST" action="{{ route('employee.e-leave.add-leave-request.post', ['id' => $leaveRequest->id]) }}" id="form_validate"
             data-parsley-validate>
         <div class="card-body">

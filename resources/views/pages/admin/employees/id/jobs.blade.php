@@ -335,9 +335,9 @@
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="date-job-edit" class="form-control datetimepicker-input" data-target="#date-job-edit" autocomplete="off"/>
-                                <div class="input-group-append" data-target="#date-job-edit" data-toggle="datetimepicker">
-                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                <input type="text" id="date-job-edit" class="form-control datetimepicker-input" data-target="#date-job-edit" disabled autocomplete="off"/>
+                                <div class="input-group-append" data-target="#date-job-edit" data-toggle="datetimepicker" disabled>
+                                    
                                 </div>
                                 <div id="date-job-error" class="invalid-feedback">
                                 </div>
