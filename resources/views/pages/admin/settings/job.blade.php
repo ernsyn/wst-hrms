@@ -5,6 +5,8 @@
     <div class="card py-4">
         <div class="card-body">
             <div class="container-fluid">
+                    <div id="alert-container">
+                        </div>   
                 <form>
                     <div class="row">
                         <nav class="col-sm-12">

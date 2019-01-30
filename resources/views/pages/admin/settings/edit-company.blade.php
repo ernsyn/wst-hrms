@@ -1,6 +1,8 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="container pb-5">
+        <div id="alert-container">
+            </div>   
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.companies.edit.post', ['id' => $company->id]) }}" >
             <div class="card-body">

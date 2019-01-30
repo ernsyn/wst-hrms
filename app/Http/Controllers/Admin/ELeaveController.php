@@ -765,7 +765,8 @@ class ELeaveController extends Controller
         }
 
         $result = array();
-        $work_day = array('full', 'half');
+
+        $work_day = array('full', 'half', 'half_2');
 
         if (in_array($working_day->sunday, $work_day)) {
             array_push($result, 0);
