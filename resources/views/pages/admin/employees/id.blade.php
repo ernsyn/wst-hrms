@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <div id="alert-container">
-    </div>
+        </div>   
     <div id="employee-profile-card" class="card shadow-sm">
         <div id="employee-profile-details" class="card-body bg-primary text-white">
             <div class="d-flex align-items-stretch" id="reload-profile1">

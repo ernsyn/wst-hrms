@@ -35,7 +35,6 @@ use App\CompanyBank;
 use App\SecurityGroup;
 use App\Addition;
 use App\Deduction;
-use App\Bank;
 use App\EaForm;
 use App\LeaveRequestApproval;
 use App\LeaveAllocation;

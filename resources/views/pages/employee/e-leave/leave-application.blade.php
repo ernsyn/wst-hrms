@@ -1,7 +1,7 @@
 @extends('layouts.base') 
 @section('pageTitle', 'Leave Application') 
 @section('content')
-<div id="page-leave-application" class="conatiner p-4">
+<div id="page-leave-application" class="container p-4">
         <div id="alert-container">
             </div>
     <div class="row">
