@@ -78,7 +78,7 @@
                             </div>
                             <label class="col-md-12 col-form-label">Amount</label>
                             <div class="col-md-12">
-                                <input type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="0" readonly required>
+                                <input type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" required>
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
@@ -375,7 +375,7 @@
             $('#edit-company-addition-form input[name=name]').val(name);
             $('#edit-company-addition-form select[name=type]').val(type);
             $('#edit-company-addition-form input[name=amount]').val(amount);
-            if(type=="custom") $('#edit-company-addition-form input[name=amount]').attr('readonly',false);
+            if(type=="fixed") $('#edit-company-addition-form input[name=amount]').attr('readonly',false);
             else  $('#edit-company-addition-form input[name=amount]').attr('readonly',true);
 
             $('#edit-company-addition-form select[name=status]').val(status);
@@ -421,7 +421,7 @@
 
         // add
         $('#add-company-addition-form select[name=type]').change(function() {
-            if( $(this).val() == "custom") {
+            if( $(this).val() == "fixed") {
                 $('#add-company-addition-form input[name=amount]').prop("readonly", false );
                 $('#add-company-addition-form input[name=amount]').val("");
             } else {
@@ -448,7 +448,7 @@
 
         // edit
         $('#edit-company-addition-form select[name=type]').change(function() {
-            if( $(this).val() == "custom") {
+            if( $(this).val() == "fixed") {
                 $('#edit-company-addition-form input[name=amount]').prop("readonly", false );
                 $('#edit-company-addition-form input[name=amount]').val("");
             } else {
