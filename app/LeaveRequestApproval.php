@@ -15,6 +15,7 @@ class LeaveRequestApproval extends Model implements Auditable
     protected $fillable = [
         'approved_by_emp_id',
         'leave_request_id',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];

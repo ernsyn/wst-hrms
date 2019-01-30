@@ -35,7 +35,6 @@ use App\CompanyBank;
 use App\SecurityGroup;
 use App\Addition;
 use App\Deduction;
-use App\Bank;
 use App\EaForm;
 use App\LeaveRequestApproval;
 use App\LeaveAllocation;
@@ -121,7 +120,7 @@ class ELeaveController extends Controller
     public function displayLeaveApplication()
     {      
         $leavebalance = LeaveType::all();
-        return view('pages.employee.leave.leave-application', ['leavebalance'=>$leavebalance]);
+        return view('pages.employee.e-leave.apply', ['leavebalance'=>$leavebalance]);
     }
 
     public function ajaxGetLeaveTypes()

@@ -1,10 +1,7 @@
 @extends('layouts.admin-base')
-@section('content') {{-- @foreach ($errors->all() as $error)
-<li>{{ $error }}</li>
-@endforeach --}}
-<div class="container pb-5">
-        <div id="alert-container">
-            </div>   
+@section('content') 
+<div class="container">
+    <div id="alert-container"></div>     
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.branches.edit.post', ['id' => $branch->id])  }}">
             <div class="card-body">

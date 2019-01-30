@@ -1,8 +1,8 @@
 @extends('layouts.base')
 @section('content')
 <div class="container">
-        <div id="alert-container">
-            </div>   
+    <div id="alert-container">
+        </div>   
     @if (session('status'))
     <div class="alert alert-primary fade show" role="alert">
         {{ session('status') }}

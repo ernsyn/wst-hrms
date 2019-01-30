@@ -1,6 +1,8 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
+<div class="p-4">
+    <div id="alert-container"></div>
+
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.cost-centres.add.post') }}" id="form_validate" data-parsley-validate>
             <div class="card-body">
@@ -42,5 +44,6 @@
             </div>
         </form>
     </div>
+
 </div>
 @endsection

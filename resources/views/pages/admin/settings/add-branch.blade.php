@@ -1,9 +1,8 @@
 @extends('layouts.admin-base')
 @section('content')
-{{-- @foreach ($errors->all() as $error)
-<li>{{ $error }}</li>
-@endforeach --}}
 <div class="container">
+    <div id="alert-container">
+        </div>   
     <form method="POST" action="{{ route('admin.settings.branches.add.post') }}">
         <div class="card">
             <div class="card-body">

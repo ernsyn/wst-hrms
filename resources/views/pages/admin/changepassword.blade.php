@@ -1,6 +1,8 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="container">
+    <div id="alert-container">
+        </div>   
     <div class="card">
         <form method="POST" action="{{ route('admin.changepassword.post') }}" id="form_validate" data-parsley-validate>
             <div class="card-body">
