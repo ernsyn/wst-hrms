@@ -19,14 +19,7 @@ var AuditTrail = (function() {
                 'created_by': 'Created by'
             },
         },
-        'App\\Bank': {
-            name: 'Bank',
-            fields: {
-                'name': 'Name',
-                'status': 'Status',
-                'bank_code': 'Bank Code',
-            },
-        },
+
         'App\\BankCode': {
             name: 'Bank Code',
             fields: {
@@ -78,15 +71,6 @@ var AuditTrail = (function() {
                 'acc_name': 'Account Name',
                 'status': 'Status',
                 'created_by': 'Created by',
-            },
-        },
-        'App\\CompanyTravelAllowance': {
-            name: 'Company Travel Allowance',
-            fields: {
-                'company_id': 'Company ID',
-                'rate': 'Rate',
-                'country_id': 'Country ID',
-                'code': 'Code',
             },
         },
         'App\\CostCentre': {
@@ -212,39 +196,18 @@ var AuditTrail = (function() {
             },
         },
 
-        'App\\EmployeePosition': {
-            name: 'Employee Position',
-            fields: {
-                'name': 'Name',
-                'created_by': 'Created by',
-            },
-        },
-
-        'App\\EmployeeGrade': {
-            name: 'Employee Grade',
-            fields: {
-                'name': 'Name',
-                'created_by': 'Created by',
-            },
-        },
-
-        'App\\EPF': {
-            name: 'EPF',
-            fields: {
-                'name': 'Name',
-                'category': 'Category',
-                'employee': 'Employee',     
-                'employer': 'Employer',             
-                'created_by': 'Created by',
-            },
-        },
-
-        'App\\EmployeeSecurityGroup': {
-            name: 'EPF',
+        'App\\EmployeeEducation': {
+            name: 'Employee Education',
             fields: {
                 'emp_id': 'Emp ID',
-                'security_group_id': 'Security Group ID',
-                'payroll_access': 'Payroll Access',               
+                'institution': 'Institution',
+                'level': 'Level',               
+                'start_year': 'Start Year',
+                'end_year': 'End Year', 
+                'gpa': 'GPA', 
+                'description': 'Description',
+                'major':'Major',
+                'note':'Note',    
                 'created_by': 'Created by',
             },
         },
@@ -259,41 +222,35 @@ var AuditTrail = (function() {
             },
         },
 
-        'App\\Holiday': {
-            name: 'Holiday',
+        'App\\EmployeeExperience': {
+            name: 'Employee Experience',
             fields: {
-                'name': 'Emp ID',
+                'emp_id': 'Emp ID',
+                'company': 'Company',
+                'position': 'Position',               
                 'start_date': 'Start Date',
-                'end_date': 'End Date',
-                'total_days': 'Total Days',
-                'repeated_annually': 'Repeated Annually',
-                'status': 'Status',
-                'note': 'Note',
-                'state': 'State',             
+                'end_date': 'End Date', 
+                'note':'Note',    
                 'created_by': 'Created by',
             },
         },
-        'App\\LeaveType': {
-            name: 'Leave Type',
+        'App\\EmployeeGrade': {
+            name: 'Employee Grade',
             fields: {
-                'code': 'Code',
-                'description': 'Description',
                 'name': 'Name',
-                'is_custom': 'Is Custom',
-                'entitled_days': 'Entitled Days',
-                'active': 'Active',
                 'created_by': 'Created by',
             },
         },
-        'App\\Media': {
-            name: 'Media',
+        'App\\EmployeeImmigration': {
+            name: 'Employee Immigration',
             fields: {
-                'category': 'Category',
-                'mimetype': 'Mimetype',
-                'size': 'Size',
-                'filename': 'Filename',
-                'id': 'ID',
-                'data': 'Data',
+                'emp_id': 'emp_id',
+                'document_media_id': 'Document Media ID',
+                'passport_no': 'Passport No',
+                'expiry_date': 'Expiry Date',
+                'issued_by': 'Issued By',
+                'issued_date': 'Issued Date',
+                'created_by': 'Created By',
             },
         },
         'App\\EmployeeJob': {
@@ -310,6 +267,60 @@ var AuditTrail = (function() {
                 'basic_salary': 'Basic Salary',
                 'remarks': 'Remarks',
                 'status': 'Status',
+                'created_by': 'Created By',
+            },
+        },
+
+        'App\\EmployeePosition': {
+            name: 'Employee Position',
+            fields: {
+                'name': 'Name',
+                'created_by': 'Created by',
+            },
+        },
+        'App\\EmployeeReportTo': {
+            name: 'Employee Report To',
+            fields: {
+                'report_to_emp_id': 'Report To Employee ID',
+                'type': 'Type',
+                'report_to_level': 'Report To Level',
+                'kpi_proposer': 'KPI Proposer',
+                'notes': 'Notes',
+                'created_by': 'Created by',
+                'emp_id': 'Employee ID',
+                'id': 'ID',
+            },
+        },
+        'App\\EmployeeSecurityGroup': {
+            name: 'EPF',
+            fields: {
+                'emp_id': 'Emp ID',
+                'security_group_id': 'Security Group ID',
+                'payroll_access': 'Payroll Access',               
+                'created_by': 'Created by',
+            },
+        },
+        'App\\EmployeeSkill': {
+            name: 'Employee Skill',
+            fields: {
+                'emp_id': 'emp_id',
+                'name': 'Name',
+                'years_of_experience': 'Years Of Experience',
+                'competency': 'Competency',
+                'created_by': 'Created By',
+            },
+        },
+        'App\\EmployeeVisa': {
+            name: 'Employee Visa',
+            fields: {
+                'emp_id': 'emp_id',
+                'document_media_id': 'Document Media ID',
+                'type': 'Type',
+                'family_members':'Family Members',
+                'visa_number': 'Visa Number',
+                'expiry_date': 'Expiry Date',
+                'issued_by': 'Issued By',
+                'issued_date': 'Issued Date',
                 'created_by': 'Created By',
             },
         },
@@ -335,29 +346,32 @@ var AuditTrail = (function() {
                 'created_by': 'Created by',
             },
         },
-        'App\\User': {
-            name: 'User',
+        'App\\EPF': {
+            name: 'EPF',
             fields: {
-                'remember_token': 'Remember Token',
-                'name': 'Name', 
-                'email': 'Email', 
-                'password': 'Password',
-                'profile_media_id': 'Profile Media ID',
-            },
-        },
-        'App\\EmployeeReportTo': {
-            name: 'Employee Report To',
-            fields: {
-                'report_to_emp_id': 'Report To Employee ID',
-                'type': 'Type',
-                'report_to_level': 'Report To Level',
-                'kpi_proposer': 'KPI Proposer',
-                'notes': 'Notes',
+                'name': 'Name',
+                'category': 'Category',
+                'employee': 'Employee',     
+                'employer': 'Employer',             
                 'created_by': 'Created by',
-                'emp_id': 'Employee ID',
-                'id': 'ID',
             },
         },
+ 
+        'App\\Holiday': {
+            name: 'Holiday',
+            fields: {
+                'name': 'Name',
+                'start_date': 'Start Date',
+                'end_date': 'End Date',
+                'total_days': 'Total Days',
+                'repeated_annually': 'Repeated Annually',
+                'status': 'Status',
+                'note': 'Note',
+                'state': 'State',             
+                'created_by': 'Created by',
+            },
+        },
+
         'App\\LeaveRequest': {
             name: 'Leave Request',
             fields: {
@@ -464,8 +478,8 @@ var AuditTrail = (function() {
             },
         },
 
-        'App\\Task': {
-            name: 'Task',
+        'App\\TaskStatus': {
+            name: 'Task Statu',
             fields: {
                 'task': 'Task',
                 'status': 'Status',

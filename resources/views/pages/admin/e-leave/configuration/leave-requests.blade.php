@@ -1,6 +1,8 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="container">
+        <div id="alert-container">
+            </div>  
     @if (session('status'))
         <div class="alert alert-primary fade show" role="alert">
             {{ session('status') }}
@@ -18,7 +20,7 @@
                     <h5 class="modal-title" id="updateContactLabel">Approve Leave Request</h5>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('approve_leave')}} ">
+                    <form method="POST" action="{{ route('approve-leave')}} ">
                         @csrf
                         <div class="row pb-5">
                             <div class="col-xl-8">
@@ -65,7 +67,7 @@
                             <td>{{$leaveRequest['applied_days']}}</td>
                             <td>
                                 @if($leaveRequest['attachment_media_id'])
-                                    {{-- <img src="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" height="80px" width="80px"> --}}
+                                   
                                     <a href="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" download="{{$leaveRequest->attachment->filename}}">
                                         Download
                                     </a>

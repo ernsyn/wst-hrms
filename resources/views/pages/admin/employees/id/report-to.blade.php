@@ -212,7 +212,7 @@
         "bDeferRender": true,
         "serverSide": true,
         "bStateSave": true,
-        "ajax": "{{ route('admin.employees.dt.report-to', ['id' => $id]) }}",
+        "ajax": "{{ route('admin.employees.dt.report-tos', ['id' => $id]) }}",
         "columnDefs": [ {
             "targets": 5,
             "orderable": false
@@ -396,10 +396,6 @@
             console.log('Data: ', currentData)
 
             editReportToId = currentData.id;
-            // $('#edit-report-to-form select[name=report-to]').html(
-            //     '<option value="' + currentData.report_to_emp_id + '" selected="selected">' +
-            //     '(Insert Name)' + '</option>'
-            // );
             editReportToEmpSelectize.addOption({
                 id: currentData.report_to_emp_id,
                 name: currentData.employee_report_to.user.name,
