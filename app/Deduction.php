@@ -17,6 +17,7 @@ class Deduction extends Model implements Auditable
         'statutory',
         'status',
         'company_id',
+        'created_by',
         'ea_form_id',
         'confirmed_employee',
         'cost_centre',

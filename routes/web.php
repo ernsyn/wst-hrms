@@ -125,8 +125,6 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 // MODE: Admin
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin']], function() {
     Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
-
-
     // SECTION: EMPLOYEE
     // > View
     Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');

@@ -20,6 +20,7 @@ class LeaveType extends Model implements Auditable
         'is_custom',
         'entitled_days',
         'active',
+        'created_by',
     ];
 
     protected $dates = ['deleted_at'];

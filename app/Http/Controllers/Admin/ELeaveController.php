@@ -61,7 +61,7 @@ class ELeaveController extends Controller
             "entitled_days" => '',
         ]);
         $leaveTypeData['active'] = true;
-
+        $leaveTypeData['created_by'] = auth()->user()->name;
         $appliedRulesData =  $request->validate([
             "applied_rules" => '',
         ]);
@@ -192,7 +192,7 @@ class ELeaveController extends Controller
             'state'=>'nullable',
             'note' => 'nullable',
         ]);
-        $created_by = auth()->user()->id;
+        $publicHolidayData['created_by'] = auth()->user()->name;
 
         if($request->state != null) {
             $publicHolidayData['state'] = implode(",", $request->state);
@@ -424,6 +424,7 @@ class ELeaveController extends Controller
 
         $leaveRequestData['leave_request_id'] =$id;
         $leaveRequestData['approved_by_emp_id'] = 1;
+       
 
         $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
        // $employee = Employee::find($report_to_emp_id);
@@ -764,7 +765,8 @@ class ELeaveController extends Controller
         }
 
         $result = array();
-        $work_day = array('full', 'half');
+
+        $work_day = array('full', 'half', 'half_2');
 
         if (in_array($working_day->sunday, $work_day)) {
             array_push($result, 0);
@@ -891,7 +893,8 @@ class ELeaveController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
             'leave_type' => 'required',
-            'am_pm' => ''
+            'am_pm' => '',
+            'edit_leave_request_id' => 'integer'
         ]);
 
         $am_pm = null;
@@ -899,8 +902,13 @@ class ELeaveController extends Controller
             $am_pm = $requestData['am_pm'];
         }
 
+        $edit_leave_request_id = null;
+        if(array_key_exists('edit_leave_request_id', $requestData)) {
+            $edit_leave_request_id = $requestData['edit_leave_request_id'];
+        }
+
         $employee = Employee::where('id', $emp_id)->first();
-        $result = LeaveService::checkLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, true);
+        $result = LeaveService::checkLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $edit_leave_request_id, true);
 
         return response()->json($result);
     }

@@ -810,15 +810,19 @@ class EmployeeController extends Controller
     public function postWorkingDay(Request $request, $id)
     {
         $workingDayData = $request->validate([
-            'monday' => 'required|in:full,half,off,rest',
-            'tuesday' => 'required|in:full,half,off,rest',
-            'wednesday' => 'required|in:full,half,off,rest',
-            'thursday' => 'required|in:full,half,off,rest',
-            'friday' => 'required|in:full,half,off,rest',
-            'saturday' => 'required|in:full,half,off,rest',
-            'sunday' => 'required|in:full,half,off,rest',
+            'monday' => 'required|in:full,half,half_2,off,rest',
+            'tuesday' => 'required|in:full,half,half_2,off,rest',
+            'wednesday' => 'required|in:full,half,half_2,off,rest',
+            'thursday' => 'required|in:full,half,half_2,off,rest',
+            'friday' => 'required|in:full,half,half_2,off,rest',
+            'saturday' => 'required|in:full,half,half_2,off,rest',
+            'sunday' => 'required|in:full,half,half_2,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
+            'half_1_start_work_time' => 'required',
+            'half_1_end_work_time' => 'required',
+            'half_2_start_work_time' => 'required',
+            'half_2_end_work_time' => 'required',
         ]);
         $workingDaysData['is_template'] = false;
         $workingDaysData['created_by'] = auth()->user()->id;
@@ -833,18 +837,24 @@ class EmployeeController extends Controller
     public function postEditWorkingDay(Request $request, $id)
     {
         $workingDayUpdateData = $request->validate([
-            'monday' => 'required|in:full,half,off,rest',
-            'tuesday' => 'required|in:full,half,off,rest',
-            'wednesday' => 'required|in:full,half,off,rest',
-            'thursday' => 'required|in:full,half,off,rest',
-            'friday' => 'required|in:full,half,off,rest',
-            'saturday' => 'required|in:full,half,off,rest',
-            'sunday' => 'required|in:full,half,off,rest',
+            'monday' => 'required|in:full,half,half_2,off,rest',
+            'tuesday' => 'required|in:full,half,half_2,off,rest',
+            'wednesday' => 'required|in:full,half,half_2,off,rest',
+            'thursday' => 'required|in:full,half,half_2,off,rest',
+            'friday' => 'required|in:full,half,half_2,off,rest',
+            'saturday' => 'required|in:full,half,half_2,off,rest',
+            'sunday' => 'required|in:full,half,half_2,off,rest',
             'start_work_time' => 'required',
             'end_work_time' => 'required',
+            'half_1_start_work_time' => 'required',
+            'half_1_end_work_time' => 'required',
+            'half_2_start_work_time' => 'required',
+            'half_2_end_work_time' => 'required',
         ]);
+
         $workingDayUpdateData['is_template'] = false;
-        EmployeeWorkingDay::find($id)->update($workingDayUpdateData);
+        
+        EmployeeWorkingDay::find($request->leave_id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
     }

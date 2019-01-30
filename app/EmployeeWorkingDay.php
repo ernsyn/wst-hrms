@@ -27,6 +27,10 @@ class EmployeeWorkingDay extends Model implements Auditable
         'sunday',
         'start_work_time',
         'end_work_time',
+        'half_1_start_work_time',
+        'half_1_end_work_time',
+        'half_2_start_work_time',
+        'half_2_end_work_time',
         'created_by'
     ];
 

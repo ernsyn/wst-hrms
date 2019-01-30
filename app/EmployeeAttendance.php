@@ -15,4 +15,8 @@ class EmployeeAttendance extends Model
         'attendance',
     ];
     
+    public function clock_in_out_records()
+    {
+        return $this->hasMany('App\EmployeeClockInOutRecord', 'emp_attendance_id');
+    }
 }
