@@ -5,4 +5,18 @@
         }
 
     }
+
+    .modal-body {
+    	.audit-column {
+		    overflow-wrap: break-word;
+    	}
+    }
+}
+
+@media (min-width: 576px) {
+	#audit-details-modal {
+		.modal-dialog {
+		    max-width: 600px;
+		}
+	}
 }

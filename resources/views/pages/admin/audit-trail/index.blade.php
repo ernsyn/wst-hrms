@@ -57,7 +57,7 @@
                     oldHtmlString += '<b>' + AuditTrail.getModelFieldName(modelDisplayNamesSection, fieldName) + ':</b> ' + changes.old[fieldName] + '<br/>';
                 }
             }
-            htmlString += '<div class="col-6"><h5 class="text-primary">Old Values</h5><div>' + oldHtmlString + '</div></div>';
+            htmlString += '<div class="col-6 audit-column"><h5 class="text-primary">Old Values</h5><div>' + oldHtmlString + '</div></div>';
 
             // Column: New
             var newHtmlString = '';
@@ -66,7 +66,7 @@
                     newHtmlString += '<b>' + AuditTrail.getModelFieldName(modelDisplayNamesSection, fieldName) + ':</b> ' + changes.new[fieldName] + '<br/>';
                 }
             }
-            htmlString += '<div class="col-6"><h5 class="text-primary">New Values</h5><div>' + newHtmlString + '</div></div>';
+            htmlString += '<div class="col-6 audit-column"><h5 class="text-primary">New Values</h5><div>' + newHtmlString + '</div></div>';
         }
 
         return '<div class="row">' + htmlString + '</div>';

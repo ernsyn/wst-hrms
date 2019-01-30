@@ -18398,6 +18398,16 @@ select:-webkit-autofill:focus {
   color: #bebebe;
 }
 
+#audit-details-modal .modal-body .audit-column {
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 576px) {
+  #audit-details-modal .modal-dialog {
+    max-width: 600px;
+  }
+}
+
 #page-login {
   min-height: 100%;
   width: 100%;
