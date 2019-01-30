@@ -70,6 +70,8 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('employee/dt/security-groups', 'Employee\EmployeeController@getDataTableSecurityGroup')->name('employee.dt.security-groups');
     Route::get('employee/dt/report-to', 'Employee\EmployeeController@getDataTableReportTo')->name('employee.dt.report-to');
 
+    Route::get('employees/dt/audit-trail', 'Employee\EmployeeController@getDataTableAuditTrails')->name('employee.dt.audit-trail');
+
     Route::get('employee/attendances', 'Employee\EmployeeController@ajaxGetAttendances')->name('employee.attendances.get');
 
     // Route::post('employee/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
@@ -149,6 +151,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
     Route::get('employees/{id}/dt/main-security-groups', 'Admin\EmployeeController@getDataTableMainSecurityGroup')->name('admin.employees.dt.main-security-groups')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/security-groups', 'Admin\EmployeeController@getDataTableSecurityGroup')->name('admin.employees.dt.security-groups')->where('id', '[0-9]+');
+
+    Route::get('employees/{id}/dt/audit-trail', 'Admin\EmployeeController@getDataTableAuditTrails')->name('admin.employees.dt.audit-trail')->where('id', '[0-9]+');
 
     Route::get('employees/{id}/details/security-groups', 'Admin\EmployeeController@displaySecurityGroup')->name('admin.employees.id.security-groups')->where('id', '[0-9]+');
 
