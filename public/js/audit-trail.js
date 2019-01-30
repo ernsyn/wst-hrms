@@ -211,6 +211,68 @@ var AuditTrail = (function() {
                 'created_by': 'Created by',
             },
         },
+
+        'App\\EmployeePosition': {
+            name: 'Employee Position',
+            fields: {
+                'name': 'Name',
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\EmployeeGrade': {
+            name: 'Employee Grade',
+            fields: {
+                'name': 'Name',
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\EPF': {
+            name: 'EPF',
+            fields: {
+                'name': 'Name',
+                'category': 'Category',
+                'employee': 'Employee',     
+                'employer': 'Employer',             
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\EmployeeSecurityGroup': {
+            name: 'EPF',
+            fields: {
+                'emp_id': 'Emp ID',
+                'security_group_id': 'Security Group ID',
+                'payroll_access': 'Payroll Access',               
+                'created_by': 'Created by',
+            },
+        },
+        'App\\EmployeeEmergencyContact': {
+            name: 'Employee Emergency Contact',
+            fields: {
+                'emp_id': 'Emp ID',
+                'name': 'Name',
+                'relationship': 'Relationship',               
+                'contact_no': 'Contact No',   
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\Holiday': {
+            name: 'Holiday',
+            fields: {
+                'name': 'Emp ID',
+                'start_date': 'Start Date',
+                'end_date': 'End Date',
+                'total_days': 'Total Days',
+                'repeated_annually': 'Repeated Annually',
+                'status': 'Status',
+                'note': 'Note',
+                'state': 'State',             
+                'created_by': 'Created by',
+            },
+        },
         'App\\LeaveType': {
             name: 'Leave Type',
             fields: {
@@ -424,7 +486,7 @@ var AuditTrail = (function() {
                 'name': 'Name',
                 'email': 'Email',
                 'password': 'Password',
-
+      
             },
         },
     };
