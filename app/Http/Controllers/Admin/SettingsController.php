@@ -202,6 +202,7 @@ class SettingsController extends Controller
 
     public function editPosition(Request $request, $id)
     {
+       
         $position = EmployeePosition::find($id);
         return view('pages.admin.settings.edit-position', ['position' => $position]);
     }
@@ -236,6 +237,7 @@ class SettingsController extends Controller
 
     public function editGrade(Request $request, $id)
     {
+        
         $grade = EmployeeGrade::find($id);
         return view('pages.admin.settings.edit-grade', ['grade' => $grade]);
     }
@@ -282,10 +284,11 @@ class SettingsController extends Controller
         $teamData = $request->validate([
             'name' => 'required|unique:teams,name,' . $id . ',id,deleted_at,NULL'
         ]);
+
         Team::where('id', $id)->update($teamData);
         return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been updated.');
     }
-    
+
     public function addCostCentre()
     {
         return view('pages.admin.settings.add-cost-centre');
@@ -348,7 +351,6 @@ class SettingsController extends Controller
 
         ]);
 
-        $departmentData['created_by'] = auth()->user()->name;
         Department::create($departmentData);
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
     }
@@ -545,7 +547,6 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been updated.');
     }
-
 
     public function postEditBranch(Request $request, $id)
     {
@@ -767,8 +768,6 @@ class SettingsController extends Controller
             
         if($eis->isEmpty()){
             Eis::create($eisData);
-            $eisData['created_by'] =auth()->user()->name;
-            Eis::create($eisData);
             return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been added.');
         } else {
             return redirect()->route('admin.settings.eis')->with('status', 'Data already exists.');
@@ -788,7 +787,7 @@ class SettingsController extends Controller
     {
         $eisData = $request->validate([
         'category' => 'required',
-        'salary' => 'required|numeric',
+            'salary' => 'required|unique:eis,salary,'.$id.',id,deleted_at,NULL',
         'employer' => 'required|numeric',
         'employee' => 'required|numeric'
         ]);
@@ -808,6 +807,8 @@ class SettingsController extends Controller
         }
     }
 
+    // Contribution List
+
     public function addSocso()
     {
         $category = SocsoCategoryEnum::choices();
@@ -818,7 +819,7 @@ class SettingsController extends Controller
     {
         $socsoData = $request->validate([
             'category' => 'required',
-            'salary' => 'required|numeric',
+            'salary' => 'required|unique:socsos,salary,NULL,id,deleted_at,NULL',
             'employer' => 'required|numeric',
             'employee' => 'required|numeric'
         ]);
@@ -851,7 +852,7 @@ class SettingsController extends Controller
     {
         $socsoData = $request->validate([
             'category' => 'required',
-            'salary' => 'required|numeric',
+            'salary' => 'required|unique:socsos,salary,'.$id.',id,deleted_at,NULL',
             'employer' => 'required|numeric',
             'employee' => 'required|numeric'
         ]);
@@ -896,24 +897,10 @@ class SettingsController extends Controller
                 'total_children' => 'required|numeric'
         ]);
     
-        $pcb = Pcb::where('category','=',$request->category)->whereNull('deleted_at')->count();
-        $category = Pcb::where('salary','=',$request->salary)->whereNull('deleted_at')->count();
-    
-        if($pcb == 0){
-            	if($category ==0){
             Pcb::create($pcbData);
             return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
-            }
-            	else {
-            return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to added - Same Salary with Same Category');
-            }
-        }
-        	else {
-            return redirect()->route('admin.settings.pcb')->with('status', 'PCB has not successfully been added.');
-        }
     }
-
-    public function editPcb(Request $request, $id)
+    public function editPcb(Request $request, $id) 
     {
         $pcbs = Pcb::find($id);
 
@@ -931,19 +918,16 @@ class SettingsController extends Controller
                 'total_children' => 'required'
         ]);
     
-        $category = Pcb::where('salary','=',$request->salary)->where('id','!=',$id)
-        ->whereNull('deleted_at')
-        ->count();
-
-        if($category ==0) {
             Pcb::where('id', $id)->update($pcbData);
 
             return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
-        }
-        else {
-            return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to update - Same Salary with Same Category');
-        }
+        // }
+        // else
+        // {
+        // return redirect()->route('admin.settings.pcb')->with('status', 'PCB failed to update - Same Salary with Same Category');
+        // }
     }
+
 
     public function addCompanyDeduction()
     {
@@ -964,16 +948,23 @@ class SettingsController extends Controller
             'employee_grade' => 'nullable'
         ]);
 
-        if (! empty($validatedDeductionData['statutory'])) {
-            $validatedDeductionData['statutory'] = implode(",", $request->statutory);
-        }
-        else {
-            $validatedDeductionData['statutory'] = null;
-        }
+        if(!empty($validatedDeductionData['statutory'])) 
+        $validatedDeductionData['statutory'] = implode(",", $request->statutory);
+        else 
+        $validatedDeductionData['statutory'] = null;
 
         $validatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
-        $validatedDeductionData['cost_centre'] = empty($validatedDeductionData['cost_centre']) ? null : implode(",", $request->cost_centre);
-        $validatedDeductionData['employee_grade'] = empty($validatedDeductionData['employee_grade']) ? null : implode(",", $request->employee_grade);
+
+        if(!empty($validatedDeductionData['cost_centre'])) 
+        $validatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
+        else
+         $validatedDeductionData['cost_centre'] = null;
+
+        if(!empty($validatedDeductionData['employee_grade'])) 
+        $validatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
+        else 
+        $validatedDeductionData['employee_grade'] = null;
+
         $validatedDeductionData['company_id']=$id;
         $validatedDeductionData['created_by'] = auth()->user()->name;
         // dd($validatedAdditionData['employee_grade']);
@@ -1007,12 +998,26 @@ class SettingsController extends Controller
             'employee_grade' => 'nullable'
         ]);
 
-        $updateValidatedDeductionData['statutory'] = empty($updateValidatedDeductionData['statutory']) ? null : implode(",", $request->statutory);
+        if(!empty($updateValidatedDeductionData['statutory'])) 
+        $updateValidatedDeductionData['statutory'] = implode(",", $request->statutory);
+        else 
+        $updateValidatedDeductionData['statutory'] = null;
+
         $updateValidatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
-        $updateValidatedDeductionData['cost_centre'] = empty($updateValidatedDeductionData['cost_centre']) ? null : implode(",", $request->cost_centre);
-        $updateValidatedDeductionData['employee_grade'] = empty($updateValidatedDeductionData['employee_grade']) ? null : implode(",", $request->employee_grade);
+
+        if(!empty($updateValidatedDeductionData['cost_centre'])) 
+        $updateValidatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
+        else 
+        $updateValidatedDeductionData['cost_centre'] = null;
+
+        if(!empty($updateValidatedDeductionData['employee_grade'])) 
+        $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
+        else 
+        $updateValidatedDeductionData['employee_grade'] = null;
+
         $updateValidatedDeductionData['company_id']=$id;
-        Deduction::find($request->company_deduction_id)->update($updateValidatedDeductionData);
+
+        Deduction::where('id', $request->company_deduction_id)->update($updateValidatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
     }
 
@@ -1047,7 +1052,7 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been added.');
     }
 
-    public function editCompanyAddition(Request $request, $id)
+    public function editCompanyAddition(Request $request, $id) 
     {
         $addition = Addition::find($id);
         return view('pages.admin.settings.edit-addition', [
