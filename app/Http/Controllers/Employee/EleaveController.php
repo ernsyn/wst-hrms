@@ -119,7 +119,7 @@ class ELeaveController extends Controller
 
     public function displayLeaveApplication()
     {      
-        $leavebalance = LeaveType::all();
+        $leaveBalance = LeaveType::all();
         return view('pages.employee.e-leave.leave-application', ['leavebalance'=>$leavebalance]);
     }
 
