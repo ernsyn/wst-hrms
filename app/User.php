@@ -21,12 +21,11 @@ class User extends Authenticatable implements Auditable
      */
 
     protected $table = 'users';
-
-     protected $fillable = [
+    protected $fillable = [
         'name', 
         'email', 
         'password',
-        'profile_media_id'
+
     ];
 
     /**

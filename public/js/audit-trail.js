@@ -424,7 +424,7 @@ var AuditTrail = (function() {
                 'name': 'Name',
                 'email': 'Email',
                 'password': 'Password',
-                'profile_media_id': 'Provide Media ID,
+
             },
         },
     };
