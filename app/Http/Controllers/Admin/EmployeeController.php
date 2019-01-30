@@ -168,7 +168,7 @@ class EmployeeController extends Controller
             'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
             'pcb_group' => 'required_with:tax_no',
-            'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
+            'epf_no' => 'nullable|numeric|unique:employees,epf_no,'.$id.',id',
             'epf_category' => 'required_with:epf_no',
             'eis_no' => 'nullable|numeric|unique:employees,eis_no,'.$id.',id',
             'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',

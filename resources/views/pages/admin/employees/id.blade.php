@@ -435,7 +435,7 @@
     									@endif
     								@endforeach
                                     </select>
-                                    <div id="epf_category-error" class="invalid-feedback"></div>
+                                    <div id="epf-category-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="eis-no"><strong>EIS No</strong></label>

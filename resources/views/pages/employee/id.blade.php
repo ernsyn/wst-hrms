@@ -4,7 +4,7 @@
     <div id="alert-container">
     </div>
     <div id="employee-profile-card" class="card shadow-sm">
-        <div id="employee-profile-details" class="card-body bg-primary text-white">
+		<div id="employee-profile-details" class="card-body bg-primary text-white">
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->user}}" data-target="#edit-picture-popup">
@@ -40,7 +40,6 @@
                             <span class="field-name mr-2">Nationality</span>
                             <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
                             </span>
-                            {{-- <span class="field-value">{!! $employee->nationality ? $employee->nationality:'<strong>(not set)</strong>' !!}</span> --}}
                         </div>
                     </div>
                 </div>
@@ -51,10 +50,9 @@
                     </button>
                 </div>
             </div>
-
-        </div>
+		</div>
         <div class="card-body">
-            <div class="row">
+			<div class="row">
                 {{-- Tab List --}}
                 <nav class="col-sm-12">
                     <div class="nav nav-tabs font-weight-bold scrollable d-flex flex-nowrap tabbable text-nowrap" id="nav-tab" role="tablist">
@@ -89,121 +87,120 @@
                 <div class="tab-content col-sm-12 text-justify" id="nav-tabContent">
                     {{-- Profile --}}
                     <div class="tab-pane fade show active p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <div class="row" id="reload-profile2">
-                                <div class="col-md-11">
-                                    <div class="row p-3">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                            	<span class="col-lg-5 p-3">Contact No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->contact_no}}</span>
+                        <div class="row" id="reload-profile2">
+                            <div class="col-md-11">
+                                <div class="row p-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                        	<span class="col-lg-5 p-3">Contact No</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{{$employee->contact_no}}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Address</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="field pb-1">
+                                                    <span class="field-value">{{$employee->address}}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Address</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <div class="field pb-1">
-                                                        <span class="field-value">{{$employee->address}}</span>
-                                                    </div>
-                                                    <div class="field pb-1">
-                                                        <span class="field-value">{{$employee->address2}}</span>
-                                                    </div>
-                                                    <div class="field pb-1">
-                                                        <span class="field-value">{{$employee->address3}}</span>
-                                                    </div>
+                                                <div class="field pb-1">
+                                                    <span class="field-value">{{$employee->address2}}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Postcode</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <div class="field pb-1">
-                                                        <span class="field-value">{{$employee->postcode}}</span>
-                                                    </div>
-                                                </div>    
-                                                <span class="col-lg-5 p-3">Race</span>
-                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
-                                                    <span class="field-value">{{$employee->race}}</span>
-                                                </div>                            
-                                                <span class="col-lg-5 p-3">Marital Status</span>
-                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
-                                                    <span class="field-value">{{$employee->marital_status}}</span>
+                                                <div class="field pb-1">
+                                                    <span class="field-value">{{$employee->address3}}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Number of Children</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->total_children ? $employee->total_children:'<strong>(not set)</strong>' !!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Postcode</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <div class="field pb-1">
+                                                    <span class="field-value">{{$employee->postcode}}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Driver License No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!!$employee->driver_license_no ? $employee->driver_license_no : '<strong>(not set)</strong>'!!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">License Expiry Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!!$employee->driver_license_expiry_date ? $employee->driver_license_expiry_date->format('d/m/Y'): '<strong>(not set)</strong>'!!}</span>
-                                                </div>         
+                                            </div>    
+                                            <span class="col-lg-5 p-3">Race</span>
+                                            <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                <span class="field-value">{{$employee->race}}</span>
+                                            </div>                            
+                                            <span class="col-lg-5 p-3">Marital Status</span>
+                                            <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                <span class="field-value">{{$employee->marital_status}}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Number of Children</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!! $employee->total_children ? $employee->total_children:'<strong>(not set)</strong>' !!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Driver License No</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!!$employee->driver_license_no ? $employee->driver_license_no : '<strong>(not set)</strong>'!!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">License Expiry Date</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!!$employee->driver_license_expiry_date ? $employee->driver_license_expiry_date->format('d/m/Y'): '<strong>(not set)</strong>'!!}</span>
+                                            </div>         
+                                            <span class="col-lg-5 p-3">Tax No</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!!$employee->tax_no ? $employee->tax_no : '<strong>(not set)</strong>'!!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">PCB Group</span>
+                                            <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                <span class="field-value">{!!$employee->pcb_group ? PCBGroupEnum::getDescription($employee->pcb_group) : '<strong>(not set)</strong>'!!}</span>
+                                            </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <span class="col-lg-5 p-3">Tax No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!!$employee->tax_no ? $employee->tax_no : '<strong>(not set)</strong>'!!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">PCB Group</span>
-                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
-                                                    <span class="field-value">{!!$employee->pcb_group ? PCBGroupEnum::getDescription($employee->pcb_group) : '<strong>(not set)</strong>'!!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">EPF No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!!$employee->epf_no ? $employee->epf_no : '<strong>(not set)</strong>'!!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">EPF Category</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!!$employee->epf_category ? EpfCategoryEnum::getDescription($employee->epf_category) : '<strong>(not set)</strong>'!!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">EIS No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->eis_no ? $employee->eis_no:'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">SOCSO No</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">SOCSO Category</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!!$employee->socso_category ? SocsoCategoryEnum::getDescription($employee->socso_category) : '<strong>(not set)</strong>'!!}</span>
-                                                </div>
-                                                                       
-                                                <span class="col-lg-5 p-3">Employee ID</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{{$employee->code}}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Security Group</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Basic Salary</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                	<span class="field-value">{!! $employee->basic_salary ? $employee->basic_salary :'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Joined Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                	<span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? \Carbon\Carbon::parse($employee->employee_jobs()->first()->start_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Confirmation Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                	<span class="field-value">{!! isset($employee->confirmed_date) ?  \Carbon\Carbon::parse($employee->confirmed_date)->format('d/m/Y') :'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Resignation Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                	<span class="field-value">{!! isset($employee->resignation_date ) ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                </div>
+                                            <span class="col-lg-5 p-3">EPF No</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!!$employee->epf_no ? $employee->epf_no : '<strong>(not set)</strong>'!!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">EPF Category</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!!$employee->epf_category ? EpfCategoryEnum::getDescription($employee->epf_category) : '<strong>(not set)</strong>'!!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">EIS No</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!! $employee->eis_no ? $employee->eis_no:'<strong>(not set)</strong>' !!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">SOCSO No</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!! $employee->socso_no ? $employee->socso_no:'<strong>(not set)</strong>' !!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">SOCSO Category</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!!$employee->socso_category ? SocsoCategoryEnum::getDescription($employee->socso_category) : '<strong>(not set)</strong>'!!}</span>
+                                            </div>
+                                                                   
+                                            <span class="col-lg-5 p-3">Employee ID</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{{$employee->code}}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Security Group</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                                <span class="field-value">{!! isset($employee->main_security_groups) ? $employee->main_security_groups->name : '<strong>(not set)</strong>' !!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Basic Salary</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                            	<span class="field-value">{!! $employee->basic_salary ? $employee->basic_salary :'<strong>(not set)</strong>' !!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Joined Date</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                            	<span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? \Carbon\Carbon::parse($employee->employee_jobs()->first()->start_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Confirmation Date</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                            	<span class="field-value">{!! isset($employee->confirmed_date) ?  \Carbon\Carbon::parse($employee->confirmed_date)->format('d/m/Y') :'<strong>(not set)</strong>' !!}</span>
+                                            </div>
+                                            <span class="col-lg-5 p-3">Resignation Date</span>
+                                            <div class="col-lg-7 font-weight-bold p-3">
+                                            	<span class="field-value">{!! isset($employee->resignation_date ) ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                <button type="button" class="btn btn-primary rounded-circle" data-toggle="modal" data-current="{{$employee}}" data-target="#edit-profile-popup"><i class="fas fa-pen"></i>
+                                	<button type="button" class="btn btn-primary rounded-circle" data-toggle="modal" data-current="{{$employee}}" data-target="#edit-profile-popup"><i class="fas fa-pen"></i>
                                     </button>
                                 </div>
                             </div>
-                    </div>
+                        </div>
                     {{-- Emergency --}}
                     @include('pages.employee.id.emergency-contacts', ['id' => $employee->id])
                     {{-- Dependent --}}
@@ -230,9 +227,8 @@
                     @include('pages.employee.id.security-group', ['id' => $employee->id])
                     {{-- Attendance --}}
                     @include('pages.employee.id.attendance', ['id' => $employee->id])
-                </div>
-            </div>
-        </div>
+			</div>
+		</div>
     </div>
 </div>
 <!-- UPDATE -->

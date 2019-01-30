@@ -388,13 +388,13 @@ Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
 
 Breadcrumbs::for('admin.settings.cost-centres.add', function ($trail) {
     $trail->parent('admin.settings.cost-centres');
-    $trail->push('Add Cost-Centres', route('admin.settings.cost-centres.add'));
+    $trail->push('Add Cost Centre', route('admin.settings.cost-centres.add'));
 });
 
 // Home > Settings > Cost-Centre - Edit
 Breadcrumbs::for('admin.settings.cost-centres.edit', function ($trail, $id) {
     $trail->parent('admin.settings.cost-centres');
-    $trail->push('Edit Cost-Centres', route('admin.settings.cost-centres.edit', $id));
+    $trail->push('Edit Cost Centres', route('admin.settings.cost-centres.edit', $id));
 });
 
 // // Home > Settings > Department

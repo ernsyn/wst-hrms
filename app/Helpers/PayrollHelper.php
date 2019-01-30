@@ -224,5 +224,13 @@ class PayrollHelper
         return $category;
     }
     
+    public static function getSeniorityPay($companyId)
+    {
+        return PayrollSetup::where([
+            ['key', 'SENIORITY_PAY'],
+            ['company_id', $companyId],
+            ['status', 1]
+        ])->first()->value;
+    }
 }
 

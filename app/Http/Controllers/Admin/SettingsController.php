@@ -35,6 +35,8 @@ use Illuminate\Validation\Rule;
 use \DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\PayrollHelper;
+use App\Helpers\GenerateReportsHelper;
 
 class SettingsController extends Controller
 {
@@ -302,7 +304,13 @@ class SettingsController extends Controller
 
         ]);
 
-        $costCentreData['amount'] = '50.00';
+        $seniorityPay = 0;
+        if($request->seniority_pay == "Auto"){
+            $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+            $seniorityPay = PayrollHelper::getSeniorityPay($company->id);
+        }
+        
+        $costCentreData['amount'] = $seniorityPay;
         $costCentreData['created_by'] = auth()->user()->name;
 
         CostCentre::create($costCentreData);
@@ -333,6 +341,14 @@ class SettingsController extends Controller
             'name' => 'required|unique:cost_centres,name,'.$id.',id,deleted_at,NULL',
             'seniority_pay' => 'required'
         ]);
+        
+        $seniorityPay = 0;
+        if($request->seniority_pay == "Auto"){
+            $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+            $seniorityPay = PayrollHelper::getSeniorityPay($company->id);
+        }
+        
+        $costCentreData['amount'] = $seniorityPay;
 
         CostCentre::where('id', $id)->update($costCentreData);
 
@@ -819,7 +835,7 @@ class SettingsController extends Controller
     {
         $socsoData = $request->validate([
             'category' => 'required',
-            'salary' => 'required|unique:socsos,salary,NULL,id,deleted_at,NULL',
+            'salary' => 'required',//'required|unique:socsos,salary,NULL,id,deleted_at,NULL',
             'employer' => 'required|numeric',
             'employee' => 'required|numeric'
         ]);
@@ -852,7 +868,7 @@ class SettingsController extends Controller
     {
         $socsoData = $request->validate([
             'category' => 'required',
-            'salary' => 'required|unique:socsos,salary,'.$id.',id,deleted_at,NULL',
+            'salary' => 'required',//'required|unique:socsos,salary,'.$id.',id,deleted_at,NULL',
             'employer' => 'required|numeric',
             'employee' => 'required|numeric'
         ]);
