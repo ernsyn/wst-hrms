@@ -22,6 +22,25 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="audit-details-modal" tabindex="-1" role="dialog" aria-labelledby="audit-details-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="audit-details-modal-label">Audit Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            ...
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
 @endsection
  
 @section('scripts')
@@ -70,6 +89,26 @@
             },
         },
     };
+
+    function getModelFieldName(modelDisplayNames, field) {
+        if(modelDisplayNames.fields.hasOwnProperty(field)) {
+            return modelDisplayNames.fields[field];
+        }
+
+        return field;
+    }
+
+    $('#audit-details-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var id = button.attr('data-id');
+        var type = button.attr('data-type');
+        var changed = button.attr('data-changed');
+        var event = button.attr('data-event');
+
+        var modal = $(this);
+        modal.find('.modal-title').text('Audit: ' + event.toUpperCase() + ' ' + displayNamesMatrix[type].name + ' (' + id + ') ');
+        modal.find('.modal-body').text(decodeURI(changed));
+    })
 
     var auditTrailTable = $('#audit-trail-table').DataTable({
         "bInfo": true,
@@ -122,7 +161,24 @@
             {
                 "data": null, // can be null or undefined
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-eye"></i></button>`;
+                    // var newElement = $('<button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#edit-emergency-contact-popup"><i class="far fa-eye"></i></button>');
+                    // var newElement = document.createElement('button');
+                    // return newElement;
+
+                    if(type === 'display'){
+                        var element = $('<button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#audit-details-modal"><i class="far fa-eye"></i></button>');
+                        element.attr('data-type', row.auditable_type); 
+                        element.attr('data-id', row.auditable_id); 
+                        element.attr('data-event', row.event); 
+                        element.attr('data-changed', encodeURI(JSON.stringify({
+                            old: row.old_values,
+                            new: row.new_values
+                        }))); 
+                        console.log("Data: ", element.prop('outerHTML'));
+                        return element.prop('outerHTML');
+                    } else {
+                        return data;
+                    }
                 }
             }
         ]
