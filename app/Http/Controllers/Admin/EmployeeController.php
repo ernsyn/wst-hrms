@@ -672,7 +672,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer',
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|integer|between:0,4.00',
+            'gpa' => 'required|numeric|between:0,4.00',
             'description' => 'nullable'
         ]);
         $educationData['created_by'] = auth()->user()->id;
@@ -1020,7 +1020,7 @@ class EmployeeController extends Controller
             'end_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'level' => 'required',
             'major' => 'required',
-            'gpa' => 'required|between:0,99.99',
+            'gpa' => 'required|numeric|between:0,4.00',
             'description' => ''
         ]);
 
