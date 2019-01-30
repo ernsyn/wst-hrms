@@ -313,6 +313,23 @@ var AuditTrail = (function() {
                 'created_by': 'Created by',
             },
         },
+        'App\\LeaveRequestApproval': {
+            name: 'Leave Request',
+            fields: {
+                'emp_id': 'Employee ID',
+                'leave_type_id': 'Leave Type ID',
+                'leave_allocation_id': 'Leave Allocation ID',
+                'start_date': 'Start Date',
+                'end_date': 'End Date',
+                'am_pm': 'AM/PM',
+                'applied_days': 'Applied Days',
+                'reason': 'Reason',
+                'status': 'Status',
+                'id': 'ID',
+                'attachment_media_id': 'Attachment Media ID',
+                'created_by': 'Created by',
+            },
+        },
     };
 
     return {
