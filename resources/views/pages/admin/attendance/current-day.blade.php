@@ -15,8 +15,8 @@
             <table class="hrms-data-table compact w-100 t-2" id="attendances-table">
                 <thead>
                     <tr>
-                        <th>Employee Code</th>
-                        <th>Employee Name</th>
+                        <th>Date</th>
+                        <th>Employee</th>
                         <th>Clock In Time</th>
                         <th>Clock In Status</th>
                         <th>Clock In Reason</th>
@@ -29,8 +29,8 @@
                 <tbody>
                     @foreach($attendances as $key => $value)
                         <tr>
-                            <td>{{ $value['code'] }}</td>
-                            <td>{{ $value['name'] }}</td>
+                            <td>{{ $value['date'] }}</td>
+                            <td><span class="badge badge-warning">{{ $value['code'] }}</span> <b class="text-primary">{{ $value['name'] }}</span></td>
                             <td>{{ $value['clock_in_time'] }}</td>
                             <td>{{ $value['clock_in_status'] }}</td>
                             <td>{{ $value['clock_in_reason'] }}</td>
@@ -103,14 +103,20 @@ $(function(){
                 text: '<i class="fas fa-table"></i>',
                 className: 'btn-segment',
                 titleAttr: 'Export Excel',
-                messageTop: $('#employee-detail').text()
+                messageTop: $('#employee-detail').text(),
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+                }
             },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print "></i>',
                 className: 'btn-segment',
                 titleAttr: 'Print',
-                messageTop: $('#employee-detail').text()
+                messageTop: $('#employee-detail').text(),
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+                }
             },
         ]
     });

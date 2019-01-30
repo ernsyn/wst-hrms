@@ -28,7 +28,7 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         if($user->hasRole('employee')) {
-            return redirect()->route('leaveapplication');
+            return redirect()->route('employee.e-leave.apply');
         } else if($user->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
         } else if($user->hasRole('super-admin')) {

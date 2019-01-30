@@ -22,6 +22,7 @@ use App\Constants\LeaveTypeRule;
 use App\EmployeeReportTo;
 use Auth;
 use App\User;
+use App\EmployeeWorkingDay;
 
 class LeaveService
 {
@@ -119,8 +120,8 @@ class LeaveService
         }
     }
 
-    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $is_admin = false) {
-        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm, $is_admin);
+    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $edit_leave_request_id = null, $is_admin = false) {
+        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm, $edit_leave_request_id, $is_admin);
         if(array_key_exists('error', $result)) {
             return $result;
         }
@@ -211,7 +212,7 @@ class LeaveService
         ->get();
     }
 
-    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $is_admin = false) {
+    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $edit_leave_request_id = null, $is_admin = false) {
         $startDate = Carbon::parse($start_date);
         $endDate = Carbon::parse($end_date);
         $now = Carbon::now();
@@ -463,6 +464,7 @@ class LeaveService
             ->where('status', 'active')->get();
 
             $cursorDate = $startDate->copy();
+            $dayText = '';
             
             while($cursorDate->lessThanOrEqualTo($endDate)) {
                 if(!self::isWorkingDay($working_day, $cursorDate)) {
@@ -477,14 +479,72 @@ class LeaveService
                     $totalDays--;
                 }
 
+                if($cursorDate->dayOfWeek == Carbon::SUNDAY) {
+                    $dayText = 'sunday';
+                } elseif($cursorDate->dayOfWeek == Carbon::MONDAY) {
+                    $dayText = 'monday';
+                } elseif($cursorDate->dayOfWeek == Carbon::TUESDAY) {
+                    $dayText = 'tuesday';
+                } elseif($cursorDate->dayOfWeek == Carbon::WEDNESDAY) {
+                    $dayText = 'wednesday';
+                } elseif($cursorDate->dayOfWeek == Carbon::THURSDAY) {
+                    $dayText = 'thursday';
+                } elseif($cursorDate->dayOfWeek == Carbon::FRIDAY) {
+                    $dayText = 'friday';
+                } elseif($cursorDate->dayOfWeek == Carbon::SATURDAY) {
+                    $dayText = 'saturday';
+                }
+
+                $isHalfDay = EmployeeWorkingDay::where('emp_id', $employee->id)
+                ->whereIn($dayText, array('half', 'half_2'))
+                ->count() > 0;
+
+                if($isHalfDay) {
+                    $totalDays -= 0.5;
+                }
+
                 $cursorDate->addDays(1);
             } 
         }
 
         // NEXT STAGE: Check leave days available
-        if($startDate->isSameDay($endDate) && $totalDays == 1) {
-            if(!empty($am_pm)) {
-                $totalDays -= 0.5;
+        if($startDate->isSameDay($endDate)) {
+            $dayText = '';
+
+            if($startDate->dayOfWeek == Carbon::SUNDAY) {
+                $dayText = 'sunday';
+            } elseif($startDate->dayOfWeek == Carbon::MONDAY) {
+                $dayText = 'monday';
+            } elseif($startDate->dayOfWeek == Carbon::TUESDAY) {
+                $dayText = 'tuesday';
+            } elseif($startDate->dayOfWeek == Carbon::WEDNESDAY) {
+                $dayText = 'wednesday';
+            } elseif($startDate->dayOfWeek == Carbon::THURSDAY) {
+                $dayText = 'thursday';
+            } elseif($startDate->dayOfWeek == Carbon::FRIDAY) {
+                $dayText = 'friday';
+            } elseif($startDate->dayOfWeek == Carbon::SATURDAY) {
+                $dayText = 'saturday';
+            }
+
+            if($totalDays == 1) {
+                if($am_pm) {
+                    $totalDays -= 0.5;
+                }
+            } elseif($totalDays == 0.5) {
+                $isHalfDayAm = EmployeeWorkingDay::where('emp_id', $employee->id)
+                ->where($dayText, 'half')
+                ->count() > 0;
+
+                $isHalfDayPm = EmployeeWorkingDay::where('emp_id', $employee->id)
+                ->where($dayText, 'half_2')
+                ->count() > 0;
+
+                if($isHalfDayAm) {
+                    $additionalResponseData['set_am_pm'] = 'am';
+                } elseif($isHalfDayPm) {
+                    $additionalResponseData['set_am_pm'] = 'pm';
+                }
             }
         }
 
@@ -495,6 +555,10 @@ class LeaveService
         }
 
         $availableDays = self::getLeaveAllocationsAvailableDays($employee->id, $leave_type_id, $now);
+        if($edit_leave_request_id != null) {
+            $existingLeaveRequest = LeaveRequest::find($edit_leave_request_id);
+            $availableDays += $existingLeaveRequest->applied_days;
+        }
 
         if(!$is_unpaid_leave) {
             if($availableDays < $totalDays) {
@@ -513,6 +577,8 @@ class LeaveService
     public static function getLeaveTypesForEmployee(Employee $employee, $is_admin = false) {
         $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
         $employee->gender;
+
+        $is_unpaid_leave = false;
 
         Carbon::THURSDAY;
         
@@ -577,6 +643,9 @@ class LeaveService
                         $configuration = json_decode($rule->configuration);
                         $additionalLeaveTypeDetails['max_days_per_application'] = $configuration->max_days_per_application;
                         break; 
+                    case LeaveTypeRule::UNPAID:
+                        $is_unpaid_leave = true;
+                        break;
                 }
 
                 if(!$includeLeaveType) {
@@ -585,12 +654,18 @@ class LeaveService
             }
             
             if($includeLeaveType) {
+                $availableDays = 0.0;
+
+                if(!$is_unpaid_leave) {
+                    $availableDays = self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id);
+                }
+
                 array_push($leaveTypesForUser, array_merge(
                     [
                         'id' => $leaveType->id,
                         'name' => $leaveType->name,
                         'description' => $leaveType->description,
-                        'available_days' => self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id),
+                        'available_days' => $availableDays,
                         'valid_until' => self::getValidUntilDate($employee->id, $leaveType->id)
                     ], 
                     $additionalLeaveTypeDetails)
@@ -744,7 +819,7 @@ class LeaveService
     }
 
     private static function isWorkingDay($workingDays, $time) {
-        $work_day = array('full', 'half');
+        $work_day = array('full', 'half', 'half_2');
 
         switch($time->dayOfWeek) {
             case Carbon::MONDAY;

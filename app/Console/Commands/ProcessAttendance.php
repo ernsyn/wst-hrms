@@ -145,11 +145,13 @@ class ProcessAttendance extends Command
                     if($isHoliday) {
                         if(!empty($clockInOutRecord)) {
                             // $this->info("OT Holiday!");
-                            EmployeeAttendance::create([
+                            $attendance = EmployeeAttendance::create([
                                'emp_id' => $id,
                                'date' => $currentDateProcessed,
                                'attendance' => AttendanceType::OT_HOLIDAY
                             ]);
+
+                            $attendance->clock_in_out_records()->save($clockInOutRecord);
                         } else {
                             EmployeeAttendance::create([
                                 'emp_id' => $id,
@@ -162,11 +164,13 @@ class ProcessAttendance extends Command
                             case "off":
                             if(!empty($clockInOutRecord)) {
                                 // $this->info("OT Off!");
-                                EmployeeAttendance::create([
+                                $attendance = EmployeeAttendance::create([
                                     'emp_id' => $id,
                                     'date' => $currentDateProcessed,
                                     'attendance' => AttendanceType::OT_OFF
                                 ]);
+
+                                $attendance->clock_in_out_records()->save($clockInOutRecord);
                             } else {
                                 EmployeeAttendance::create([
                                     'emp_id' => $id,
@@ -178,11 +182,13 @@ class ProcessAttendance extends Command
                             case "rest":
                             if(!empty($clockInOutRecord)) {
                                 // $this->info("OT Rest!");
-                                EmployeeAttendance::create([
+                                $attendance = EmployeeAttendance::create([
                                     'emp_id' => $id,
                                     'date' => $currentDateProcessed,
                                     'attendance' => AttendanceType::OT_REST
                                 ]);
+
+                                $attendance->clock_in_out_records()->save($clockInOutRecord);
                             } else {
                                 EmployeeAttendance::create([
                                     'emp_id' => $id,
@@ -208,16 +214,18 @@ class ProcessAttendance extends Command
                             } else {
                                 if(!empty($clockInOutRecord)) {
                                     // $this->info("Work!");
-                                    $attendance = AttendanceType::PRESENT;
+                                    $attendanceType = AttendanceType::PRESENT;
                                     if($clockInOutRecord->clock_in_status == 'late') {
-                                        $attendance = AttendanceType::LATE;
+                                        $attendanceType = AttendanceType::LATE;
                                     }
     
-                                    EmployeeAttendance::create([
+                                    $attendance = EmployeeAttendance::create([
                                         'emp_id' => $id,
                                         'date' => $currentDateProcessed,
-                                        'attendance' => $attendance
+                                        'attendance' => $attendanceType
                                     ]);
+
+                                    $attendance->clock_in_out_records()->save($clockInOutRecord);
                                 } else {
                                     // $this->info("Absent!");
                                     EmployeeAttendance::create([

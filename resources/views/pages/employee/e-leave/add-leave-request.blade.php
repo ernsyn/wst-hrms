@@ -1,12 +1,9 @@
 @extends('layouts.base')
 @section('content')
 <div class="container">
-    <div class="card">
-   
-     
-          
-           
-    <form method="POST" action="{{ route('employee.e-leave.add-leave-request-disapprove.post', ['id' => $leaveRequest->id]) }}" id="form_validate"
+        <div id="alert-container">
+            </div>   <div class="card">
+    <form method="POST" action="{{ route('employee.e-leave.add-leave-request.post', ['id' => $leaveRequest->id]) }}" id="form_validate"
             data-parsley-validate>
         <div class="card-body">
                 @csrf
@@ -35,15 +32,7 @@
             
                                     </div>
 
-                                    <div class="col-8">
-                                            <label class="col-md-12 col-form-label">Allocated Days*</label>
-                                            <div class="col-md-12">
-        
-                                                   <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
-                                                            name="name" value="{{$leaveRequest->leave_allocation->allocated_days}}" readonly> 
-                                                    </div>
-                
-                                        </div>
+                        
 
                         <div class="col-8">
                             <label class="col-md-12 col-form-label">Leave Type*</label>
@@ -52,12 +41,11 @@
                                     
                                     <input id="id" type="text" class="form-control{{ $errors->has('id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
                                     name="id" value="{{ $leaveRequest->id }}" hidden>
-
-                                    <input id="total_days" type="text" class="form-control{{ $errors->has('total_days') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
-                                    name="total_days" value="{{ $leaveRequest->applied_days }}" hidden>
-
                                     <input id="leave_type_id" type="text" class="form-control{{ $errors->has('leave_type_id') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
                                     name="leave_type_id" value="{{$leaveRequest->leave_type_id}}" hidden>
+                               
+                                    <input id="total_days" type="text" class="form-control{{ $errors->has('total_days') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
+                                    name="total_days" value="{{ $leaveRequest->applied_days }}" hidden>
                                         <input id="leave_type_name" type="text" class="form-control{{ $errors->has('leave_type_name') ? ' is-invalid' : '' }}" placeholder="Registration No. here"
                                             name="leave_type_name" value="{{$leaveRequest->leave_type->name}}" readonly>
                                        
