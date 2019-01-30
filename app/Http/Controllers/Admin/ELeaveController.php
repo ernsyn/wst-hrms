@@ -921,7 +921,8 @@ class ELeaveController extends Controller
             'leave_type' => 'required',
             'am_pm' => '',
             'reason' => 'required',
-            'attachment' => ''
+            'attachment' => '',
+            'edit_leave_request_id' => 'integer'
         ]);
 
         $am_pm = null;
@@ -934,8 +935,13 @@ class ELeaveController extends Controller
             $attachment_data_url = $requestData['attachment'];
         }
 
+        $edit_leave_request_id = null;
+        if(array_key_exists('edit_leave_request_id', $requestData)) {
+            $edit_leave_request_id = $requestData['edit_leave_request_id'];
+        }
+
         $employee = Employee::where('id', $emp_id)->first();
-        $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, true);
+        $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, $edit_leave_request_id, true);
 
         // dd($result);
 
@@ -961,7 +967,8 @@ class ELeaveController extends Controller
             'leave_type' => 'required',
             'am_pm' => '',
             'reason' => 'required',
-            'attachment' => ''
+            'attachment' => '',
+            'edit_leave_request_id' => 'integer'
         ]);
 
         // update leave allocations and remove previous leave request
@@ -993,7 +1000,12 @@ class ELeaveController extends Controller
             $attachment_data_url = $requestData['attachment'];
         }
 
-        $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, true);
+        $edit_leave_request_id = null;
+        if(array_key_exists('edit_leave_request_id', $requestData)) {
+            $edit_leave_request_id = $requestData['edit_leave_request_id'];
+        }
+
+        $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, $edit_leave_request_id, true);
         $leave_request = LeaveRequest::where('id', $result)->first();
 
         // send leave request email notification

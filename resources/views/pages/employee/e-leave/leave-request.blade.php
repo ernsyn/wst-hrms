@@ -20,7 +20,7 @@
               <h5 class="modal-title" id="updateContactLabel">Approve Leave Request</h5>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('approve_leave')}} ">
+                <form method="POST" action="{{ route('approve-leave')}} ">
                     @csrf
                     <div class="row pb-5">
                         <div class="col-xl-8">

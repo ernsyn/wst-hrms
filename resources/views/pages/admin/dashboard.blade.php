@@ -25,7 +25,7 @@
             </a>
         </div>
         <div class="p-2 col-xl-3 col-lg-6">
-        <a href="{{ route('admin.e-leave.configuration.leaverequests') }}" style="text-decoration: none">
+        <a href="{{ route('admin.e-leave.configuration.leave-requests') }}" style="text-decoration: none">
                 <div id="leave-requests-card" class="card border-0">
                     <div class="card-body">
                         <i class="fas fa-calendar-check fa-4x float-right text-white"></i>
@@ -75,47 +75,7 @@
             </a>
         </div>
     </div>
-    {{-- <div class="row">
-        <div class="p-2 col-lg-8">
-            <div class="card">
-                <div class="card-header">Monthly Leave Statistic</div>
-                <div class="card-body p-5">
-                    <canvas id="myChart" width="400" height="200"></canvas>
-                </div>
-            </div>
-        </div> --}}
-        {{-- <div class="p-2 col-lg-4">
-            <div class="card">
-                <div class="card-header">Recent Leave Request</div>
-                <div class="card-body bulletin p-4">
-                    <div class="card-body bulletin"> --}}
-                        {{-- @foreach($leaveRequests as $leaveRequest)
-                        <div class="row">
-                            <div class="col-auto">
-                                <div class="float-right">{{$loop->iteration}}.</div>
-                            </div>
-                            <div class="col">
-                                <div>{{$leaveRequest->user->name}}</div>
-                                <div>{{$leaveRequest['leave_type']}}</div>
-                                {{--
-                                <div>{{$row['start_date']}} - {{$row['end_date']}}</div> --}}
-                                {{-- <div>{{$leaveRequest['total_days']}} days</div>
-                                <div>{{$leaveRequest['status']}}</div>
-                                <div class="dropdown-divider"></div>
-                            </div>
-                        </div>
-                        @endforeach --}}
-                    {{-- </div>
-                </div>
-                <div class="card-footer">
-                    <a href="" type="button" class="btn btn-outline-primary btn-block">View All Request</a></div>
-            </div>
-        </div> --}}
-    {{-- </div> --}}
 </div>
-{{-- @else
-<div>I am not a super admin...</div>
-@endhasrole --}}
 @endsection
 
 @section('scripts')
@@ -141,8 +101,7 @@ $(function(){
             easing: "swing",
             step: function(p) {
                 $bar.css({
-                    transform: "rotate("+ (45+(p*1.8)) +"deg)", // 100%=180° so: ° = % * 1.8
-                    // 45 is to add the needed rotation to have the green borders at the bottom
+                    transform: "rotate("+ (45+(p*1.8)) +"deg)", 
                 });
                 $val.text(p|0);
             }

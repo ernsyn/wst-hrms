@@ -18,7 +18,7 @@
                                 </span>
                                 @endif
                             </div>
-                                <label class="col-md-12 col-form-label">Employer*</label>
+                                <label class="col-md-12 col-form-label">Employer Contribution*</label>
                                 <div class="col-md-12">
                                 <input id="employer" type="text" class="form-control{{ $errors->has('employer') ? ' is-invalid' : '' }}" placeholder="Name here"
                                     name="employer" value="{{ $eis->employer }}" required>
@@ -28,7 +28,7 @@
                                 </span>
 								@endif
                                 </div>
-                                <label class="col-md-12 col-form-label">Employee**</label>
+                                <label class="col-md-12 col-form-label">Employee Contribution*</label>
                                 <div class="col-md-12">
                                 <input id="employee" type="text" class="form-control{{ $errors->has('employee') ? ' is-invalid' : '' }}" placeholder="Name here"
                                     name="employee" value="{{ $eis->employee }}" required>
