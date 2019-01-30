@@ -18394,6 +18394,10 @@ select:-webkit-autofill:focus {
   font-weight: 600;
 }
 
+#audit-details-modal .modal-title .auditable-id {
+  color: #bebebe;
+}
+
 #page-login {
   min-height: 100%;
   width: 100%;

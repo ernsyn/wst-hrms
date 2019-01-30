@@ -44,58 +44,32 @@
 @endsection
  
 @section('scripts')
+<script src="{{ asset('js/audit-trail.js') }}"></script>
 <script>
-    var displayNamesMatrix = {
-        'App\\LeaveType': {
-            name: 'Leave Type',
-            fields: {
+    function getDisplayHtmlForAuditChanges(model, changes) {
+        var htmlString = '';
+        var modelDisplayNamesSection = AuditTrail.getModelDisplayNamesSection(model);
+        if(modelDisplayNamesSection) {
+            // Column: Old
+            var oldHtmlString = '';
+            for(const fieldName in changes.old) {
+                if (changes.old.hasOwnProperty(fieldName)) {
+                    oldHtmlString += '<b>' + AuditTrail.getModelFieldName(modelDisplayNamesSection, fieldName) + ':</b> ' + changes.old[fieldName] + '<br/>';
+                }
+            }
+            htmlString += '<div class="col-6"><h5 class="text-primary">Old Values</h5><div>' + oldHtmlString + '</div></div>';
 
-            },
-        },
-        'App\\Employee': {
-            name: 'Employee',
-            fields: {
-
-            },
-        },
-        'App\\Media': {
-            name: 'Media',
-            fields: {
-
-            },
-        },
-        'App\\Eis': {
-            name: 'EIS',
-            fields: {
-
-            },
-        },
-        'App\\EmployeeJob': {
-            name: 'Employee Job',
-            fields: {
-
-            },
-        },
-        'App\\EmployeeWorkingDay': {
-            name: 'Employee Working Days',
-            fields: {
-
-            },
-        },
-        'App\\EmployeeDependent': {
-            name: 'Employee Dependent',
-            fields: {
-
-            },
-        },
-    };
-
-    function getModelFieldName(modelDisplayNames, field) {
-        if(modelDisplayNames.fields.hasOwnProperty(field)) {
-            return modelDisplayNames.fields[field];
+            // Column: New
+            var newHtmlString = '';
+            for(const fieldName in changes.new) {
+                if (changes.new.hasOwnProperty(fieldName)) {
+                    newHtmlString += '<b>' + AuditTrail.getModelFieldName(modelDisplayNamesSection, fieldName) + ':</b> ' + changes.new[fieldName] + '<br/>';
+                }
+            }
+            htmlString += '<div class="col-6"><h5 class="text-primary">New Values</h5><div>' + newHtmlString + '</div></div>';
         }
 
-        return field;
+        return '<div class="row">' + htmlString + '</div>';
     }
 
     $('#audit-details-modal').on('show.bs.modal', function (event) {
@@ -106,8 +80,10 @@
         var event = button.attr('data-event');
 
         var modal = $(this);
-        modal.find('.modal-title').text('Audit: ' + event.toUpperCase() + ' ' + displayNamesMatrix[type].name + ' (' + id + ') ');
-        modal.find('.modal-body').text(decodeURI(changed));
+        modal.find('.modal-title').html('Audit: ' + event.toUpperCase() + ' ' + AuditTrail.getModelDisplayNamesSection(type).name + ' <span class="auditable-id">(' + id + ')</span>');
+        modal.find('.modal-body').html(getDisplayHtmlForAuditChanges(type, 
+            JSON.parse(decodeURI(changed))
+        ));
     })
 
     var auditTrailTable = $('#audit-trail-table').DataTable({
@@ -151,8 +127,9 @@
             {
                 "data": null, // can be null or undefined
                 render: function (data, type, row, meta) {
-                    if(displayNamesMatrix.hasOwnProperty(row.auditable_type)) {
-                        return '<span class="text-dark">' + displayNamesMatrix[row.auditable_type].name + '</span>';
+                    var modelDisplayNamesSection = AuditTrail.getModelDisplayNamesSection(row.auditable_type);
+                    if(modelDisplayNamesSection) {
+                        return '<span class="text-dark">' + modelDisplayNamesSection.name + '</span>';
                     } else {
                         return '<span class="text-dark">' + row.auditable_type + '</span>'; 
                     }
