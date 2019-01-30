@@ -212,7 +212,7 @@ class LeaveService
         ->get();
     }
 
-    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $is_admin = false) {
+    public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $edit_leave_request_id = null, $is_admin = false) {
         $startDate = Carbon::parse($start_date);
         $endDate = Carbon::parse($end_date);
         $now = Carbon::now();
@@ -555,6 +555,10 @@ class LeaveService
         }
 
         $availableDays = self::getLeaveAllocationsAvailableDays($employee->id, $leave_type_id, $now);
+        if($edit_leave_request_id != null) {
+            $existingLeaveRequest = LeaveRequest::find($edit_leave_request_id);
+            $availableDays += $existingLeaveRequest->applied_days;
+        }
 
         if(!$is_unpaid_leave) {
             if($availableDays < $totalDays) {

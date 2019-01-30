@@ -678,6 +678,12 @@
 
         // Validate Leave request
         function checkLeaveRequest($start_date, $end_date) {
+            var edit_leave_request_id;
+            var mode = $('#mode').val();
+            if(mode == 'edit') {
+                edit_leave_request_id = $("#leave-id").text()   
+            }
+
             $('#error-message').text('');
             
             if($start_date && $end_date) {
@@ -705,7 +711,8 @@
                         start_date: $('#add-leave-request-form #alt-start-date').val(),
                         end_date: $('#add-leave-request-form #alt-end-date').val(),
                         am_pm: $('#add-leave-request-form button.selected-day').data('value'),
-                        leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val()
+                        leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
+                        edit_leave_request_id: edit_leave_request_id,
                     },
                     success: function(data) {
                         if(data.error) {
