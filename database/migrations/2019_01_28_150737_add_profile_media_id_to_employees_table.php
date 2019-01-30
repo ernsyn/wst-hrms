@@ -15,11 +15,11 @@ class AddProfileMediaIdToEmployeesTable extends Migration
     {
         Schema::table('employees', function (Blueprint $table) {
             $table->unsignedInteger('profile_media_id', false)->nullable();
-            $table->foreign('profile_media_id')->references('id')->on('medias')->onDelete('cascade');
+            $table->foreign('profile_media_id')->references('id')->on('medias');
         });
-
         Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('profile_media_id', 'created_by');
+            $table->dropForeign(['profile_media_id']);
+            $table->dropColumn('profile_media_id');
         });
     }
 
@@ -31,12 +31,12 @@ class AddProfileMediaIdToEmployeesTable extends Migration
     public function down()
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->dropForeign('profile_media_id_foreign');
+            $table->dropForeign(['profile_media_id']);
             $table->dropColumn('profile_media_id');
         });
-
         Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('created_by', 'profile_media_id');
+            $table->unsignedInteger('profile_media_id', false)->nullable();
+            $table->foreign('profile_media_id')->references('id')->on('medias');
         });
     }
 }

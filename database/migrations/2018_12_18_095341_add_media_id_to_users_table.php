@@ -15,7 +15,7 @@ class AddMediaIdToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedInteger('profile_media_id', false)->nullable();
-            $table->foreign('profile_media_id')->references('id')->on('medias')->onDelete('cascade');
+            $table->foreign('profile_media_id')->references('id')->on('medias');
         });
     }
 
@@ -27,7 +27,7 @@ class AddMediaIdToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('profile_media_id_foreign');
+            $table->dropForeign(['profile_media_id']);
             $table->dropColumn('profile_media_id');
         });
     }
