@@ -360,12 +360,71 @@ var AuditTrail = (function() {
             },
         },
 
-        'App\\LTEntitlementGradeGroup': {
-            name: 'LT Entitlement Grade Group',
+        'App\\Media': {
+            name: 'Media',
             fields: {
-                'entitled_days': 'Entitled Days',
+                'category': 'Category',
                 'leave_type_id': 'Leave Type ID',
+                'mimetype': 'Mimetype',
+                'data': 'Data',
+                'size': 'Size',
+                'filename': 'File Name',
 
+            },
+        },
+        'App\\Pcb': {
+            name: 'Pcb',
+            fields: {
+                'category': 'Category',
+                'total_children': 'Total Children',
+                'salary': 'Salary',
+                'amount': 'Amount',
+                'created_by': 'Created by',
+            },
+        },
+        'App\\SecurityGroup': {
+            name: 'Security Group',
+            fields: {
+                'name': 'Name',
+                'description': 'Description',
+                'company_id': 'Company id',
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\Socso': {
+            name: 'Socso',
+            fields: {
+                'first_category_employer': 'First Category Employer',
+                'first_category_employee': 'First Category Employee',
+                'salary': 'Salary',
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\Task': {
+            name: 'Task',
+            fields: {
+                'task': 'Task',
+                'status': 'Status',
+            },
+        },
+
+        'App\\Team': {
+            name: 'Team',
+            fields: {
+                'name': 'Name',
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\User': {
+            name: 'User',
+            fields: {
+                'name': 'Name',
+                'email': 'Email',
+                'password': 'Password',
+                'profile_media_id': 'Provide Media ID,
             },
         },
     };

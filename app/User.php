@@ -23,7 +23,10 @@ class User extends Authenticatable implements Auditable
     protected $table = 'users';
 
      protected $fillable = [
-        'name', 'email', 'password','profile_media_id'
+        'name', 
+        'email', 
+        'password',
+        'profile_media_id'
     ];
 
     /**
