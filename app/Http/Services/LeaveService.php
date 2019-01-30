@@ -120,8 +120,8 @@ class LeaveService
         }
     }
 
-    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $is_admin = false) {
-        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm, $is_admin);
+    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $edit_leave_request_id = null, $is_admin = false) {
+        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm, $edit_leave_request_id, $is_admin);
         if(array_key_exists('error', $result)) {
             return $result;
         }
