@@ -45,8 +45,8 @@ class User extends Authenticatable implements Auditable
         return $this->hasOne('App\Employee');
     }
 
-    public function profile_media()
-    {
-        return $this->belongsTo('App\Media', 'profile_media_id');
-    }
+    // public function profile_media()
+    // {
+    //     return $this->belongsTo('App\Media', 'profile_media_id');
+    // }
 }

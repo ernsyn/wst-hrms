@@ -52,21 +52,21 @@ class EmployeeController extends Controller
         $this->middleware(['role:super-admin|admin']);
     }
 
+    //Employee List
     public function index()
     {
-        // $userlist = User::orderBy('id', 'Desc')->get();
-        // $employee_users = User::whereHas("roles", function($q){ $q->where("name", "employee"); })->get();
-        // dd($employee_users[0]->employee->id);
-
         $employees = Employee::all();
 
         return view('pages.admin.employees.index', ['employees'=> $employees]);
     }
 
-    public function dsplaySecurityGroup($id)
+    //Add Employee
+    public function add()
     {
-        $employees = Employee::all();
-        return view('pages.admin.employees.id.security-group', ['employees'=> $employees]);
+        $countries = Country::orderBy('citizenship')->get();
+        $roles = Roles::all();
+
+        return view('pages.admin.employees.add', compact('countries','roles'));
     }
 
     public function display($id)
@@ -79,9 +79,8 @@ class EmployeeController extends Controller
         }])
         ->find($id);
 
-        $userMedia = DB::table('users')
-        ->join('medias', 'users.profile_media_id', '=', 'medias.id')
-        ->join('employees', 'employees.user_id', '=', 'users.id')
+        $userMedia = DB::table('employees')
+        ->join('medias', 'employees.profile_media_id', '=', 'medias.id')
         ->select('medias.*')
         ->where('employees.id', $id)
         ->first();
@@ -89,13 +88,37 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia]);
     }
 
-    public function postEditProfilePicture(Request $request, $emp_id) 
+    public function postToggleRoleAdmin(Request $request, $id)
+    {
+        $data = $request->validate([
+            // 'current_password' => 'required',
+            'assign_remove' => 'required',
+        ]);
+
+        $employee = Employee::where('id', $id)->first();
+        switch ($data['assign_remove']) {
+            case "assign":
+                $employee->user->assignRole('admin');
+                break;
+            case "remove":
+                $employee->user->removeRole('admin');
+                break;
+        }
+
+        return response()->json(['success'=>'Employee roles were successfully updated.']);
+    }
+
+    public function postEditProfilePicture(Request $request, $emp_id)
     {
         $pictureData = $request->validate([
-            'attachment' => 'required|max:2000000|regex:/^data:image/'
+            'attachment' => 'required|regex:/^data:image/'
+        ]);
+
+        $attach = $request->validate([
+            'size' => 'nullable|max:2000000'
         ],
         [
-            'attachment.max' => 'The file size may not be greater than 2MB.'
+            'size.max' => 'The file size may not be greater than 2MB.'
         ]);
 
         $picture_data_url = $pictureData['attachment'];
@@ -105,22 +128,23 @@ class EmployeeController extends Controller
         $updatepictureData['data']= $attach['data'];
         $updatepictureData['size']= $attach['size'];
         $updatepictureData['filename']= 'employee_'.($emp_id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
-        
+
+
 
         DB::transaction(function() use ($emp_id, $updatepictureData) {
-            $user = Employee::find($emp_id)->user;
-
+            $user = Employee::find($emp_id);
+            // dd($user);
             $oldProfileMedia = $user->profile_media;
-    
+
             if(!empty($oldProfileMedia)) {
                 $user->profile_media()->dissociate();
                 $user->save();
-        
+
                 $oldProfileMedia->delete();
             }
-            
+
             $user->profile_media()->associate(Media::create($updatepictureData));
-            $user->save();    
+            $user->save();
         });
 
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
@@ -166,20 +190,12 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Profile was successfully updated.']);
     }
 
-    public function add()
-    {
-        $countries = Country::orderBy('citizenship')->get();
-        $roles = Roles::all();
-
-        return view('pages.admin.employees.add', compact('countries','roles'));
-    }
-
     public function changepassword()
     {
         return view('pages.admin.changepassword');
     }
 
-    public function postChangePassword(Request $request, $id) 
+    public function postChangePassword(Request $request, $id)
     {
         $data = $request->validate([
             'current_password' => 'required',
@@ -204,7 +220,7 @@ class EmployeeController extends Controller
         }
     }
 
-    public function postResetPassword(Request $request, $id) 
+    public function postResetPassword(Request $request, $id)
     {
         $data = $request->validate([
             'new_password' => 'required|min:5|required_with:confirm_new_password|same:confirm_new_password',
@@ -218,17 +234,7 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Password was successfully reset.']);
     }
 
-//     {
-//         $departmentData = $request->validate([
-//             'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
-
-//         ]);
-//         Department::create($departmentData);
-//         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
-//     }
-
-// }
-    public function postChangePasswordEmployee(Request $request) 
+    public function postChangePasswordEmployee(Request $request)
     {
         $data = $request->validate([
             // 'current_password' => 'required',
@@ -254,25 +260,7 @@ class EmployeeController extends Controller
         }
     }
 
-    public function postToggleRoleAdmin(Request $request, $id) 
-    {
-        $data = $request->validate([
-            // 'current_password' => 'required',
-            'assign_remove' => 'required',
-        ]);
 
-        $employee = Employee::where('id', $id)->first();
-        switch ($data['assign_remove']) {
-            case "assign":
-                $employee->user->assignRole('admin');
-                break;
-            case "remove":
-                $employee->user->removeRole('admin');
-                break;
-        }
-
-        return response()->json(['success'=>'Employee roles were successfully updated.']);
-    }
 
     // SECTION: Data Tables
 
@@ -450,9 +438,6 @@ class EmployeeController extends Controller
 
 
         DB::transaction(function () use ($attachment_data_url, $validated) {
-            // $validatedUserData['profile_media_id'] = $media_id;
-            // $validatedUserData['profile_media_id'] = $mediaData->id;
-
             $validatedUserData['name'] = $validated['name'];
             $validatedUserData['email'] = $validated['email'];
             $validatedUserData['password'] = Hash::make($validated['password']);
@@ -481,12 +466,12 @@ class EmployeeController extends Controller
             }
             $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
 
-            // $validatedEmployeeData = $request->validate([
-            // ]);
-            // dd($validatedEmployeeData);
-
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
+
+            $validatedEmployeeData['user_id'] = $user->id;
+            $validatedEmployeeData['created_by'] = auth()->user()->id;
+            $employee = Employee::create($validatedEmployeeData);
 
             if (!empty($attachment_data_url)) {
                 $attach = self::processBase64DataUrl($attachment_data_url);
@@ -498,14 +483,10 @@ class EmployeeController extends Controller
                     'size' => $attach['size'],
                     'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
                 ]);
- 
-                $user->profile_media()->associate($profileMedia);
-                $user->save();
-            }
 
-            $validatedEmployeeData['user_id'] = $user->id;
-            $validatedEmployeeData['created_by'] = auth()->user()->id;
-            $employee = Employee::create($validatedEmployeeData);
+                $employee->profile_media()->associate($profileMedia);
+                $employee->save();
+            }
         });
 
         return redirect()->route('admin.employees')->with('status', 'Employee was successfully added!');
@@ -587,7 +568,7 @@ class EmployeeController extends Controller
     }
 
     public function postJob(Request $request, $id)
-    {   
+    {
         // Add a new job
         $jobData = $request->validate([
             'basic_salary' => 'required|numeric',
@@ -611,8 +592,8 @@ class EmployeeController extends Controller
                     ->update(array('confirmed_date'=> ($jobData['start_date'])));
                     $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                     LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
-                    
-                    
+
+
                 } else {
                     $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
                     LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
@@ -622,7 +603,7 @@ class EmployeeController extends Controller
             }
 
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
-            Employee::where('id', $id)->update(array('resignation_date'=> null)); 
+            Employee::where('id', $id)->update(array('resignation_date'=> null));
             $employee = Employee::find($id);
             $employee->employee_jobs()->save(new EmployeeJob($jobData));
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
@@ -634,41 +615,18 @@ class EmployeeController extends Controller
     public function postResign(Request $request, $id) {
 
         $jobData = $request->validate([
-  
-            'resignation_date' => 'required',
+                'resignation_date' => 'required',
         ]);
 
-        $currentJob = EmployeeJob::where('emp_id', $id)
-            ->whereNull('end_date')->first();
+        $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
         $currentDate = date("Y-m-d");
         LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
         $jobData['resignation_date'] = implode("-", array_reverse(explode("/", $jobData['resignation_date'])));
 
-        Employee::where('id', $id)->update(array('resignation_date'=> ($jobData['resignation_date']))); 
-        $currentJob->update(array('end_date'=> ($jobData['resignation_date']))); 
-        $currentJob->update(array('status'=> 'Resigned')); 
+        Employee::where('id', $id)->update(array('resignation_date'=> ($jobData['resignation_date'])));
+        $currentJob->update(array('end_date'=> ($jobData['resignation_date'])));
+        $currentJob->update(array('status'=> 'Resigned'));
         return response()->json(['success'=>'Job was successfully added']);
-
-
-        // $currentJob = EmployeeJob::where('emp_id', $id)
-        //     ->whereNull('end_date')->first();
-
-        // $currentDate = date("Y-m-d");
-
-        // if(!empty($currentJob)) {
-
-        // $jobs = EmployeeJob::where('emp_id', $id)
-        // ->whereNull('end_date')->first();
-        // $newJobs = $jobs->replicate();
-        // $newJobs['status']  = 'Resigned';
-        // $newJobs-> save();
-
-        // $currentJob->update(['end_date'=> $currentDate ]);
-        // LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
-        // return response()->json(['success'=>'Employee Resignation Date updated']);
-        // }
-        
-
     }
 
     public function postBankAccount(Request $request, $id)
@@ -776,7 +734,7 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Attachment was successfully added']);
     }
 
-    private static function processBase64DataUrl($dataUrl) 
+    private static function processBase64DataUrl($dataUrl)
     {
         $parts = explode(',', $dataUrl);
 
@@ -841,7 +799,7 @@ class EmployeeController extends Controller
         ]);
 
         $workingDayUpdateData['is_template'] = false;
-        
+
         EmployeeWorkingDay::find($request->leave_id)->update($workingDayUpdateData);
 
         return response()->json(['success'=>'Working Day was successfully updated.']);
@@ -859,7 +817,7 @@ class EmployeeController extends Controller
         return response()->json($working_day);
     }
 
-    public function getReportToEmployeeList(Request $request, $id) 
+    public function getReportToEmployeeList(Request $request, $id)
     {
         $pageLimit = $request->get("page_limit");
         $nameQuery = $request->get("q");
@@ -918,74 +876,6 @@ class EmployeeController extends Controller
         } else {
             return response()->json(['fail'=>'KPI Proposer already exist']);
         }
-
-        // $reportTo = new EmployeeReportTo($reportToData);
-        // $employee = Employee::find($id);
-        // $employee->report_tos()->save($reportTo);
-        // return response()->json(['success'=>'Report To was successfully added']);
-
-        // $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
-        // ->where('report_to_level', 2)->count();
-
-        // $employee_report_to_level_one = EmployeeReportTo::where('emp_id','=',$id)
-        // ->where('report_to_level', 1)->count();
-
-
-        // if($request->report_to_level ==1 ) {
-
-        //     if ($employee_report_to_level_one == 0 ) {
-        //         if($request->kpi_proposer == 0){
-        //             $reportTo = new EmployeeReportTo($reportToData);
-        //             $employee = Employee::find($id);
-        //             $employee->report_tos()->save($reportTo);
-
-        //             return response()->json(['success'=>'Report To was successfully added']);
-        //         } else {
-        //             if ($employee_kpi_proposer >= 0) {
-        //                 return response()->json(['fail'=>'error kpi_proposer 1']);
-        //             } else {
-        //                 $reportTo = new EmployeeReportTo($reportToData);
-        //                 $employee = Employee::find($id);
-        //                 $employee->report_tos()->save($reportTo);
-
-        //                 return response()->json(['success'=>'Report To was successfully added']);
-        //             }
-        //         }
-        //     } else if ($employee_report_to_level_one == 1) {
-        //         return response()->json(['fail'=>'You already have Level 1']);
-        //     } else {
-        //         return "error";
-        //     }
-        // } else if($request->report_to_level == 2) {
-        //     $employee_report_to_level_two = EmployeeReportTo::where('emp_id','=',$id)
-        //     ->where('report_to_level', 2)->count();
-        //     $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
-        //     ->where('kpi_proposer', 1)->count();
-
-        //     if ($employee_report_to_level_two == 0 ) {
-        //         if($request->kpi_proposer == 0) {
-        //             $reportTo = new EmployeeReportTo($reportToData);
-        //             $employee = Employee::find($id);
-        //             $employee->report_tos()->save($reportTo);
-
-        //             return response()->json(['success'=>'Report To was successfully added']);
-        //         } else {
-        //             if ($employee_kpi_proposer >= 0) {
-        //                 return response()->json(['fail'=>'error kpi_proposer2']);
-        //             } else {
-        //                 $reportTo = new EmployeeReportTo($reportToData);
-        //                 $employee = Employee::find($id);
-        //                 $employee->report_tos()->save($reportTo);
-
-        //                 return response()->json(['fail'=>'Report To was successfully added']);
-        //             }
-        //         }
-        //     } else if($employee_report_to_level_two == 1) {
-        //         return response()->json(['fail'=>'You already have Level 2']);
-        //     } else {
-        //         return response()->json(['fail'=>'Error']);
-        //     }
-        // }
     }
 
     public function postSecurityGroup(Request $request, $id)
@@ -1263,31 +1153,9 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 
-    public function postDisapproved(Request $request)
-    {
-        $id = $request->input('id');
-        $emp_id = $request->input('emp_id');
-        $leave_type_id = $request->input('leave_type_id');
-        $total_days =$request->input('total_days');
 
-        $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
-        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
 
-        $leaveAllocationData = number_format($leaveAllocationData1,1);
-        $total_days =number_format($total_days,1);
-        $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
-
-        LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
-        $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-
-        $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-        ->where('leave_type_id',$leave_type_id)
-        ->update(array('spent_days'=>$leaveAllocationDataEntry));
-        
-        return redirect()->route('leaverequest');
-    }
-
-    public function ajaxGetAttendances(Request $request, $id) 
+    public function ajaxGetAttendances(Request $request, $id)
     {
         $now = Carbon::now();
         $startOfMonth = $now->copy()->startOfMonth();
@@ -1299,4 +1167,28 @@ class EmployeeController extends Controller
 
         return $attendances;
     }
+
+    // public function postDisapproved(Request $request)
+    // {
+    //     $id = $request->input('id');
+    //     $emp_id = $request->input('emp_id');
+    //     $leave_type_id = $request->input('leave_type_id');
+    //     $total_days =$request->input('total_days');
+
+    //     $leaveAllocationData1 = LeaveAllocation::select ('spent_days')->where('emp_id',$emp_id)
+    //     ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+
+    //     $leaveAllocationData = number_format($leaveAllocationData1,1);
+    //     $total_days =number_format($total_days,1);
+    //     $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+
+    //     LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
+    //     $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+
+    //     $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+    //     ->where('leave_type_id',$leave_type_id)
+    //     ->update(array('spent_days'=>$leaveAllocationDataEntry));
+
+    //     return redirect()->route('leaverequest');
+    // }
 }

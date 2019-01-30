@@ -64,14 +64,25 @@ class ELeaveController extends Controller
         $this->middleware(['role:employee']);
     }
     
-    //todo - change method name to displayLeaveApproval
-    public function displayLeaveRequestReportTo()
+    public function addLeaveApplication(Request $request)
+    {         
+        $leaveApllicationData =$request->validate([
+        ]);
+        return redirect()->route('employees');
+    }
+    
+    private static function error($message) 
+    {
+        return [
+            'error' => true,
+            'message' => $message
+        ];
+    }
+    
+    public function displayLeaveApproval()
     {
         $user = Auth::user();
         $report_to_emp_id = $user->employee->id;
-     //   $leave_request_approval = LeaveRequestApproval::where('approved_by_emp_id','=',$report_to_emp_id)->count();
-    
-     //select emp_id which have in the list
         $report_to = EmployeeReportTo::select('emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
         $report_to_employee = EmployeeReportTo::select('report_to_emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
 
@@ -82,7 +93,7 @@ class ELeaveController extends Controller
         $report_to = EmployeeReportTo::select('emp_id')->where('report_to_emp_id',$report_to_emp_id)->get()->toArray();
         $leaveRequests = LeaveRequest::with('leave_type','leave_request_approval')->whereIn('emp_id',$report_to)->get();
 
-        return view('pages.employee.leave.leave-request', ['leaveRequests' => $leaveRequests]);   
+        return view('pages.employee.e-leave.leave-request', ['leaveRequests' => $leaveRequests]);   
     }
 
     public function displayLeaveRequests()
@@ -90,7 +101,7 @@ class ELeaveController extends Controller
         $user = Auth::user();
         $emp_id = $user->employee->id;
         $leaveRequests =LeaveRequest::where('emp_id',$emp_id)->get();
-        return view('pages.employee.leave.leave-history', ['leaveRequests' => $leaveRequests]);   
+        return view('pages.employee.e-leave.leave-history', ['leaveRequests' => $leaveRequests]);   
     }
     
         //------ for features purposes ------------
@@ -132,16 +143,6 @@ class ELeaveController extends Controller
         foreach ($leaveRequest as $row) 
         {
             $leave = new stdClass();
-
-            // if($row->am_pm) 
-            // {
-            //     $leave->allDay = false;
-            // }
-            // else
-            // {
-            //     $leave->allDay = true;
-            // }
-
             $leaveType = LeaveType::where('id', $row->leave_type_id)->first();
 
             $leave->id = $row->id;
@@ -557,7 +558,7 @@ class ELeaveController extends Controller
             ->where ('report_to_level','=','1')
             ->count();  // "5"
 
-        //why is this code repeated at line 557?
+       
         $leave_request_approval_by_emp_id = LeaveRequestApproval::where('leave_request_id','=',$id)  //check leave_request id in leave request approval
             ->count();
 
@@ -664,19 +665,6 @@ class ELeaveController extends Controller
         return response()->json(['success'=>'Record is successfully added']);
     }
     
-    public function addLeaveApplication(Request $request)
-    {         
-        $leaveApllicationData =$request->validate([
-        ]);
-        return redirect()->route('employees');
-    }
-    
-    private static function error($message) 
-    {
-        return [
-            'error' => true,
-            'message' => $message
-        ];
-    }
+
 }    
     

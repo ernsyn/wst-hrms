@@ -22,7 +22,7 @@
                         <label class="col-md-5 col-form-label">Start Date*</label>
                         <div class="input-group col-md-7 date" data-target-input="nearest">
                             <input type="text" id="start-date" name="start_date" class="form-control{{ $errors->has('start_date') ? ' is-invalid' : '' }}"
-                                value="{{ \Carbon\Carbon::parse($holidays->start_date)->format('d/m/Y') }}" data-target="#start-date">
+                                value="{{ \Carbon\Carbon::parse($holidays->start_date)->format('d/m/Y') }}" data-target="#start-date" autocomplete="off" >
                             <div class="input-group-append" data-target="#start-date" data-toggle="datetimepicker">
                                 <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                             </div>
@@ -37,7 +37,7 @@
                         <label class="col-md-5 col-form-label">End Date*</label>
                         <div class="input-group col-md-7 date" data-target-input="nearest">
                             <input type="text" id="end-date" name="end_date" class="form-control{{ $errors->has('end_date') ? ' is-invalid' : '' }}"
-                                value="{{ \Carbon\Carbon::parse($holidays->end_date)->format('d/m/Y') }}" data-target="#end-date">
+                                value="{{ \Carbon\Carbon::parse($holidays->end_date)->format('d/m/Y') }}" data-target="#end-date" autocomplete="off" >
                             <div class="input-group-append" data-target="#end-date" data-toggle="datetimepicker">
                                 <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                             </div>
@@ -116,10 +116,15 @@
     $('#start-date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
+    $('#start-date').keydown(false);
+    $('#start-date').css('caret-color', 'transparent');
+
     $('#end-date').datetimepicker({
         format: 'DD/MM/YYYY',
         useCurrent: false
     });
+    $('#end-date').keydown(false);
+    $('#end-date').css('caret-color', 'transparent');
 
     $("#start-date").on("change.datetimepicker", function (e) {
         $('#end-date').datetimepicker('minDate', e.date);
