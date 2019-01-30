@@ -22,7 +22,13 @@ class AuditTrailController extends Controller
 
     public function getDataTableAuditTrails()
     {
-        $audits = \OwenIt\Auditing\Models\Audit::with('user.employee');
+        $audits = \OwenIt\Auditing\Models\Audit::with(
+            [
+                'user.employee' => function($query) {
+                    $query->select(['user_id','code']);
+                }
+            ]
+        );
 
         return DataTables::of($audits)->make(true);
     }
