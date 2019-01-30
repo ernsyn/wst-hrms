@@ -40,14 +40,16 @@ class EmployeeController extends Controller
             $employee = Employee::with('user', 'employee_jobs')->find($id);
 
 
-            $userMedia = DB::table('users')
-            ->join('medias', 'users.profile_media_id', '=', 'medias.id')
-            ->join('employees', 'employees.user_id', '=', 'users.id')
-            ->select('medias.*')
-            ->where('employees.id', $id)
-            ->first();
+            // $userMedia = DB::table('users')
+            // ->join('medias', 'users.profile_media_id', '=', 'medias.id')
+            // ->join('employees', 'employees.user_id', '=', 'users.id')
+            // ->select('medias.*')
+            // ->where('employees.id', $id)
+            // ->first();
 
-            return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia]);
+            $profileMedia = $employee->profile_media;
+
+            return view('pages.employee.id', ['employee' => $employee,'userMedia' => $profileMedia]);
 
         } catch (\Throwable $th) {
             return redirect()->back()->with('alert', 'You have no profile!');

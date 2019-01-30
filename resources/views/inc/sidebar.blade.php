@@ -71,7 +71,7 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('e-leave*','') ? 'show' : '' }}" id="leave-submenu">
                 <li class="menu-option {{ request()->is('leave-apply') ? 'active' : '' }}">
-                    <a href="{{ route('employee.e-leave.apply') }}">Leave Application</a>
+                    <a href="{{ route('employee.e-leave.leave-application') }}">Leave Application</a>
                 </li>
                 <li class="menu-option {{ request()->is('leave-request') ? 'active' : '' }}">
                     <a href="{{ route('employee.e-leave.request') }}">Leave Approval</a>
