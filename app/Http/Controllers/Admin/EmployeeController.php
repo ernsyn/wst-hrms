@@ -688,7 +688,7 @@ class EmployeeController extends Controller
     {
         $skillData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required',
+            'years_of_experience' => 'required|numeric',
             'competency' => 'required'
         ]);
         $skillData['created_by'] = auth()->user()->id;
@@ -1033,7 +1033,7 @@ class EmployeeController extends Controller
     {
         $skillUpdatedData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required',
+            'years_of_experience' => 'required|numeric',
             'competency' => 'required',
         ]);
 
