@@ -35,7 +35,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
     
     //employee leave
-    Route::get('employee/e-leave','Employee\ELeaveController@displayLeaveApplication')->name('employee.e-leave.apply');
+    Route::get('employee/e-leave','Employee\ELeaveController@displayLeaveApplication')->name('employee.e-leave.leave-application');
     Route::get('employee/e-leave/approve-leave/{id}/add','Employee\ELeaveController@addLeaveApproval')->name('employee.e-leave.add-leave-request')->where('id', '[0-9]+');
     Route::post('employee/e-leave/approve-leaves/{id}/add','Employee\ELeaveController@postAddApproval')->name('employee.e-leave.add-leave-request.post')->where('id', '[0-9]+');
     Route::post('employee/e-leave/approve-leave','Employee\ELeaveController@approvedLeaveRequest')->name('approve-leave');
