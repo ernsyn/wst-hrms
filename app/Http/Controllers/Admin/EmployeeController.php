@@ -86,18 +86,6 @@ class EmployeeController extends Controller
         ->where('employees.id', $id)
         ->first();
 
-        // dd($userMedia);
-
-        // $bank_list = Bank::all();
-        // $cost_centre = CostCentre::all();
-        // $department = Department::all();
-        // $team = Team::all();
-        // $position = EmployeePosition::all();
-        // $grade = EmployeeGrade::all();
-        // $branch = Branch::all();
-        // $countries = Country::all();
-        // $companies = Company::all();
-
         return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia]);
     }
 
@@ -743,7 +731,7 @@ class EmployeeController extends Controller
     {
         $skillData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required',
+            'years_of_experience' => 'required|numeric',
             'competency' => 'required'
         ]);
         $skillData['created_by'] = auth()->user()->id;
@@ -1156,7 +1144,7 @@ class EmployeeController extends Controller
     {
         $skillUpdatedData = $request->validate([
             'name' => 'required',
-            'years_of_experience' => 'required',
+            'years_of_experience' => 'required|numeric',
             'competency' => 'required',
         ]);
 
