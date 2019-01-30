@@ -483,7 +483,7 @@ class ELeaveController extends Controller
     // Leave Application Calendar View and Form
     public function displayLeaveApplication()
     {
-        $leavebalance = LeaveType::all();
+        $leaveBalance = LeaveType::all();
         return view('pages.admin.e-leave.configuration.leave-application');
     }
 

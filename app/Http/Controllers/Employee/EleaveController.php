@@ -120,7 +120,7 @@ class ELeaveController extends Controller
     public function displayLeaveApplication()
     {      
         $leaveBalance = LeaveType::all();
-        return view('pages.employee.e-leave.leave-application', ['leavebalance'=>$leavebalance]);
+        return view('pages.employee.e-leave.leave-application', ['leaveBalance'=>$leaveBalance]);
     }
 
     public function ajaxGetLeaveTypes()
@@ -515,7 +515,7 @@ class ELeaveController extends Controller
 
     public function displayLeaveBalance()
     {
-        $leavebalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
+        $leaveBalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
             ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
             ->join('users','users.id','=','employees.user_id')
             ->select(
