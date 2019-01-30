@@ -578,6 +578,8 @@ class LeaveService
         $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
         $employee->gender;
 
+        $is_unpaid_leave = false;
+
         Carbon::THURSDAY;
         
         $leaveTypesForUser = array();
@@ -641,6 +643,9 @@ class LeaveService
                         $configuration = json_decode($rule->configuration);
                         $additionalLeaveTypeDetails['max_days_per_application'] = $configuration->max_days_per_application;
                         break; 
+                    case LeaveTypeRule::UNPAID:
+                        $is_unpaid_leave = true;
+                        break;
                 }
 
                 if(!$includeLeaveType) {
@@ -649,12 +654,18 @@ class LeaveService
             }
             
             if($includeLeaveType) {
+                $availableDays = 0.0;
+
+                if(!$is_unpaid_leave) {
+                    $availableDays = self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id);
+                }
+
                 array_push($leaveTypesForUser, array_merge(
                     [
                         'id' => $leaveType->id,
                         'name' => $leaveType->name,
                         'description' => $leaveType->description,
-                        'available_days' => self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id),
+                        'available_days' => $availableDays,
                         'valid_until' => self::getValidUntilDate($employee->id, $leaveType->id)
                     ], 
                     $additionalLeaveTypeDetails)
