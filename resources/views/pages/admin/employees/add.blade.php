@@ -389,17 +389,17 @@
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             console.log("input files size",input.files[0].size);
-            if(input.files[0].size<=2000000) {
-                reader.onload = function(e) {
-                    $('#profile-img-tag').attr('src', e.target.result);
-                    reader.result;
-                    $('#attach').val(reader.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            } else {
+            reader.onload = function(e) {
+                $('#profile-img-tag').attr('src', e.target.result);
+                reader.result;
+                $('#attach').val(reader.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+            if(input.files[0].size>2000000) {
                 $('#add-profile-form input[name=attach]').addClass('is-invalid');
                 $('#add-profile-form #picture-error').html('<strong>The file size may not be greater than 2MB.</strong>');
             }
+
         }
     }
 
