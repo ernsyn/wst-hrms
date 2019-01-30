@@ -119,8 +119,8 @@ class ELeaveController extends Controller
 
     public function displayLeaveApplication()
     {      
-        $leavebalance = LeaveType::all();
-        return view('pages.employee.e-leave.apply', ['leavebalance'=>$leavebalance]);
+        $leaveBalance = LeaveType::all();
+        return view('pages.employee.e-leave.leave-application', ['leavebalance'=>$leavebalance]);
     }
 
     public function ajaxGetLeaveTypes()
@@ -530,13 +530,13 @@ class ELeaveController extends Controller
     public function addLeaveApproval(Request $request, $id) 
     {
         $leaveRequest = LeaveRequest::find($id);
-        return view('pages.employee.leave.add-leave-request', ['leaveRequest' => $leaveRequest]);
+        return view('pages.employee.e-leave.add-leave-request', ['leaveRequest' => $leaveRequest]);
     }        
     
     public function rejectLeaveApproval(Request $request, $id) 
     {
         $leaveRequest = LeaveRequest::find($id);
-        return view('pages.employee.leave.reject-leave-request', ['leaveRequest' => $leaveRequest]);
+        return view('pages.employee.e-leave.reject-leave-request', ['leaveRequest' => $leaveRequest]);
     }
 
     public function postAddApproval(Request $request)
