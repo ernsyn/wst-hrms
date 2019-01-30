@@ -314,20 +314,58 @@ var AuditTrail = (function() {
             },
         },
         'App\\LeaveRequestApproval': {
-            name: 'Leave Request',
+            name: 'Leave Request Approval',
             fields: {
-                'emp_id': 'Employee ID',
-                'leave_type_id': 'Leave Type ID',
-                'leave_allocation_id': 'Leave Allocation ID',
-                'start_date': 'Start Date',
-                'end_date': 'End Date',
-                'am_pm': 'AM/PM',
-                'applied_days': 'Applied Days',
-                'reason': 'Reason',
-                'status': 'Status',
-                'id': 'ID',
-                'attachment_media_id': 'Attachment Media ID',
+                'approved_by_emp_id': 'Approved By Emp ID',
+                'leave_request_id': 'Leave Request ID',
                 'created_by': 'Created by',
+            },
+        },
+        'App\\LeaveType': {
+            name: 'Leave Type',
+            fields: {
+                'code': 'Code',
+                'name': 'Name',
+                'description': 'Description',
+                'is_custom': 'Is Custom',
+                'entitled_days': 'Entitled Date',
+                'active': 'Active',
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\LTAppliedRule': {
+            name: 'LT Applied Rule',
+            fields: {
+                'rule': 'Rule',
+                'configuration': 'Description',
+                'created_by': 'Created by',
+            },
+        },
+
+        'App\\LTConditionalEntitlement': {
+            name: 'LT Condition Entitlement',
+            fields: {
+                'min_years': 'Min Years',
+                'entitled_days': 'Entitled Days',
+            },
+        },
+
+        'App\\LTEntitlementGradeGroup': {
+            name: 'LT Entitlement Grade Group',
+            fields: {
+                'entitled_days': 'Entitled Days',
+                'leave_type_id': 'Leave Type ID',
+
+            },
+        },
+
+        'App\\LTEntitlementGradeGroup': {
+            name: 'LT Entitlement Grade Group',
+            fields: {
+                'entitled_days': 'Entitled Days',
+                'leave_type_id': 'Leave Type ID',
+
             },
         },
     };
