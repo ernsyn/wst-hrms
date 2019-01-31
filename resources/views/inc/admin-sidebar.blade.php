@@ -201,5 +201,15 @@
                 </ul>
             </li>
 			@endhasanyrole        
+        {{-- SECTION: Audit Trail --}}
+        <li class="menu-section {{ request()->is('admin/audit-trail*') ? 'active' : '' }}">
+            <a class="info" href="{{ route('admin.audit-trail') }}">
+                <div class="row">
+                    <div class="col-1"><i class="fa fa-history"></i></div>
+                    <div class="col-10">Audit Trail</div>
+                </div>
+            </a>
+        </li>
+
 	</ul>
 </nav>

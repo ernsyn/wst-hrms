@@ -21,9 +21,11 @@ class User extends Authenticatable implements Auditable
      */
 
     protected $table = 'users';
+    protected $fillable = [
+        'name', 
+        'email', 
+        'password',
 
-     protected $fillable = [
-        'name', 'email', 'password','profile_media_id'
     ];
 
     /**
@@ -34,6 +36,7 @@ class User extends Authenticatable implements Auditable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
 
     public function getId()
     {
@@ -45,8 +48,39 @@ class User extends Authenticatable implements Auditable
         return $this->hasOne('App\Employee');
     }
 
-    // public function profile_media()
-    // {
-    //     return $this->belongsTo('App\Media', 'profile_media_id');
-    // }
+
+    // SECTION: Auditing
+    protected $auditExclude = ['remember_token'];
+
+    protected $auditEvents = [
+        'created',
+        'updated' => 'customUpdatedEventAttributes',
+        'deleted',
+        'restored'
+    ];
+
+    //this is to prevent changes to remember_token field from creating an audit entry in the db.
+    protected function customUpdatedEventAttributes()
+    {
+        $old = [];
+        $new = [];
+
+        foreach ($this->getDirty() as $attribute => $value) {
+            if ($this->isAttributeAuditable($attribute)) {
+                $old[$attribute] = array_get($this->original, $attribute);
+                $new[$attribute] = array_get($this->attributes, $attribute);
+            }
+        }
+
+        // Ignore if no changed values
+        if(empty($old) && empty($new)) {
+            return;
+        }
+
+        return [
+            $old,
+            $new,
+        ];
+    }
+
 }

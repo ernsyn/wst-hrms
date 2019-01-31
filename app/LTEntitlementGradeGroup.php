@@ -12,6 +12,7 @@ class LTEntitlementGradeGroup extends Model
 
     protected $fillable = [
         'entitled_days',
+        'leave_type_id'
     ];
 
     protected $dates = ['deleted_at'];

@@ -130,7 +130,6 @@ class EmployeeController extends Controller
 
         DB::transaction(function() use ($emp_id, $updatepictureData) {
             $user = Employee::find($emp_id);
-            // dd($user);
             $oldProfileMedia = $user->profile_media;
 
             if(!empty($oldProfileMedia)) {
@@ -245,7 +244,6 @@ class EmployeeController extends Controller
         ]);
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         $id = auth()->user()->id;
-      //  dd($id);
         $current_password = Auth::user()->password;
         $current_password = bcrypt($data['current_password']);
 
@@ -394,6 +392,15 @@ class EmployeeController extends Controller
     {
         $security_groups = EmployeeSecurityGroup::with('security_groups')->where('emp_id', $id)->get();
         return DataTables::of($security_groups)->make(true);
+    }
+
+    public function getDataTableAuditTrails($id)
+    {
+        $user = Employee::find($id)->user;
+
+        $audits = \OwenIt\Auditing\Models\Audit::where('auditable_id', $user->id);
+
+        return DataTables::of($audits)->make(true);
     }
 
     protected function postAdd(Request $request)
