@@ -1,17 +1,20 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="container">
+        <div id="alert-container">
+            </div>  
     <div class="row">
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-10">
                     Date: <strong>{{ \Carbon\Carbon::parse($selected_date)->format('d/m/Y') }}</strong>
                 </div>
-                <div class="col-md-2 text-right">
-                    <input type="text" class="form-control" id="select-date" readonly required placeholder="Select a Date">
-                    <input type="text" class="form-control" name="alt-select-date" id="alt-select-date" hidden>
-                    <p></p>
-                </div>          
+                <div class="col-md-2 text-right input-group date" data-target-input="nearest">
+                    <input type="text" id="select-date" class="form-control datetimepicker-input" data-target="#select-date" autocomplete="off"/>
+                    <div class="input-group-append" data-target="#select-date" data-toggle="datetimepicker">
+                        <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                    </div>
+                </div>
             </div>
             <div class="float-right tableTools-container"></div>
             <table class="hrms-data-table compact w-100 t-2" id="attendances-table">
@@ -131,16 +134,17 @@ $(function(){
         ]
     });
 
-    $("#select-date").datepicker({
-        altField: "#alt-select-date",
-        altFormat: 'yy-mm-dd',
-        dateFormat: 'dd-mm-yy',
-        onSelect: function onSelect(selectedDate) {
-            window.location.href = '{{ route('admin.attendance.report') }}/' + $('#alt-select-date').val();
-        },
-        onClose: function onClose() {
-            $(this).parsley().validate();
-        }
+    $('#select-date').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+
+    // disable keyboard input & hide caret
+    $('#select-date').keydown(false);
+    $('#select-date').css('caret-color', 'transparent');
+    
+    // assign value of datetimepicker to the page
+    $('#select-date').on("hide.datetimepicker", function(e) {
+        window.location.href = '{{ route('admin.attendance.report') }}/' + $('#select-date').datetimepicker('viewDate').format('YYYY-MM-DD')
     });
 })
 </script>

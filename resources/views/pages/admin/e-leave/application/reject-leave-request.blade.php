@@ -1,6 +1,8 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="container">
+        <div id="alert-container">
+            </div>  
     <div class="card">
    
      

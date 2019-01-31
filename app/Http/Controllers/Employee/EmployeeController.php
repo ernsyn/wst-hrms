@@ -35,32 +35,35 @@ class EmployeeController extends Controller
 
     public function displayProfile()
     {
-        try {
-            $id = Auth::user()->employee->id;
-            $employee = Employee::with('user', 'employee_jobs')->find($id);
+        $id = Auth::user()->employee->id;
+        $employee = Employee::with('user')
+        ->with(['employee_confirmed' => function($query) use ($id)
+        {
+            $query->where('status','=','confirmed-employment')
+            ->where ('emp_id','=',$id);
+        }])
+        ->find($id);
 
+        $userMedia = DB::table('employees')
+        ->join('medias', 'employees.profile_media_id', '=', 'medias.id')
+        ->select('medias.*')
+        ->where('employees.id', $id)
+        ->first();
 
-            $userMedia = DB::table('users')
-            ->join('medias', 'users.profile_media_id', '=', 'medias.id')
-            ->join('employees', 'employees.user_id', '=', 'users.id')
-            ->select('medias.*')
-            ->where('employees.id', $id)
-            ->first();
-
-            return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia]);
-
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('alert', 'You have no profile!');
-        }
+        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia]);
     }
 
     public function postEditProfilePicture(Request $request) 
     {
         $pictureData = $request->validate([
-            'attachment' => 'required|max:2000000|regex:/^data:image/'
+            'attachment' => 'required|regex:/^data:image/'
+        ]);
+
+        $attach = $request->validate([
+            'size' => 'nullable|max:2000000'
         ],
         [
-            'attachment.max' => 'The file size may not be greater than 2MB.'
+            'size.max' => 'The file size may not be greater than 2MB.'
         ]);
 
         $emp_id = Auth::user()->employee->id;
@@ -75,7 +78,7 @@ class EmployeeController extends Controller
         
 
         DB::transaction(function() use ($emp_id, $updatepictureData) {
-            $user = Employee::find($emp_id)->user;
+            $user = Employee::find($emp_id);
 
             $oldProfileMedia = $user->profile_media;
     

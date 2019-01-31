@@ -30,8 +30,8 @@ Breadcrumbs::for('super-admin.dashboard', function ($trail) {
     $trail->push('Super Admin Dashboard', route('super-admin.dashboard'));
 });
 
-Breadcrumbs::for('employee.e-leave.apply', function ($trail) {
-    $trail->push('Leave Application', route('employee.e-leave.apply', ''));
+Breadcrumbs::for('employee.e-leave.leave-application', function ($trail) {
+    $trail->push('Leave Application', route('employee.e-leave.leave-application', ''));
 });
 
 Breadcrumbs::for('employee.e-leave.add-leave-request', function ($trail, $id) {

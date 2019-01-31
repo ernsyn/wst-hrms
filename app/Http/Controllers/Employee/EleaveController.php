@@ -35,7 +35,6 @@ use App\CompanyBank;
 use App\SecurityGroup;
 use App\Addition;
 use App\Deduction;
-use App\Bank;
 use App\EaForm;
 use App\LeaveRequestApproval;
 use App\LeaveAllocation;
@@ -120,8 +119,8 @@ class ELeaveController extends Controller
 
     public function displayLeaveApplication()
     {      
-        $leavebalance = LeaveType::all();
-        return view('pages.employee.leave.leave-application', ['leavebalance'=>$leavebalance]);
+        $leaveBalance = LeaveType::all();
+        return view('pages.employee.e-leave.leave-application', ['leaveBalance'=>$leaveBalance]);
     }
 
     public function ajaxGetLeaveTypes()
@@ -516,7 +515,7 @@ class ELeaveController extends Controller
 
     public function displayLeaveBalance()
     {
-        $leavebalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
+        $leaveBalance = LeaveBalance::join('employees','employees.id','=','leave_balance.user_id')
             ->join('leave_types','leave_types.id','=','leave_balance.id_leave_type')
             ->join('users','users.id','=','employees.user_id')
             ->select(
@@ -531,13 +530,13 @@ class ELeaveController extends Controller
     public function addLeaveApproval(Request $request, $id) 
     {
         $leaveRequest = LeaveRequest::find($id);
-        return view('pages.employee.leave.add-leave-request', ['leaveRequest' => $leaveRequest]);
+        return view('pages.employee.e-leave.add-leave-request', ['leaveRequest' => $leaveRequest]);
     }        
     
     public function rejectLeaveApproval(Request $request, $id) 
     {
         $leaveRequest = LeaveRequest::find($id);
-        return view('pages.employee.leave.reject-leave-request', ['leaveRequest' => $leaveRequest]);
+        return view('pages.employee.e-leave.reject-leave-request', ['leaveRequest' => $leaveRequest]);
     }
 
     public function postAddApproval(Request $request)

@@ -5,7 +5,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Addition;
-use App\Bank;
 use App\Branch;
 use App\Company;
 use App\Country;
@@ -58,12 +57,11 @@ class SettingsController extends Controller
         $addition = Addition::where('company_id', $id)->get();
         $deduction = Deduction::where('company_id', $id)->get();
 
-        $bank_list = Bank::all();
         $ea_form = EaForm::all();
         $cost_centre = CostCentre::all();
         $grade = EmployeeGrade::all();
 
-        return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'bank_list'=>$bank_list, 'grade'=>$grade,
+        return view('pages.admin.settings.company.company-details', ['bank'=>$bank, 'grade'=>$grade,
         'security'=>$security, 'addition'=>$addition,'deduction'=>$deduction, 'ea_form'=>$ea_form, 'cost_centre'=>$cost_centre,'company'=>$company]);
     }
     public function displayCostCentres()
