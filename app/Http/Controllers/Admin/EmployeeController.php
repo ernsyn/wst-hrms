@@ -3,24 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Enums\EpfCategoryEnum;
+use App\Enums\PCBGroupEnum;
+use App\Enums\SocsoCategoryEnum;
+use App\Helpers\AccessControllHelper;
 use App\Http\Controllers\Controller;
 use Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use App\Country;
 use App\Roles;
-use App\CostCentre;
-use App\Department;
-use App\Branch;
-use App\Team;
-use App\EmployeePosition;
-use App\Company;
-use App\Holiday;
-use App\LeaveRequest;
 use App\User;
 use App\Employee;
 use App\EmployeeDependent;
@@ -33,29 +28,27 @@ use App\EmployeeJob;
 use App\EmployeeSkill;
 use App\EmployeeVisa;
 use App\EmployeeEmergencyContact;
-use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
 use App\Media;
-use App\EmployeeClockInOutRecord;
 use App\Http\Services\LeaveService;
-use App\Http\Requests\Admin\AddEmployee;
+use App\Imports\UserImport;
+use App\Mail\NewUserMail;
 
 class EmployeeController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:super-admin|admin']);
+        $this->middleware(['role:super-admin|admin|hr-exec']);
     }
 
     //Employee List
     public function index()
     {
         $employees = Employee::all();
-
         return view('pages.admin.employees.index', ['employees'=> $employees]);
     }
 
@@ -64,8 +57,11 @@ class EmployeeController extends Controller
     {
         $countries = Country::orderBy('citizenship')->get();
         $roles = Roles::all();
-
-        return view('pages.admin.employees.add', compact('countries','roles'));
+        $epfCategory = EpfCategoryEnum::choices();
+        $pcbGroup = PCBGroupEnum::choices();
+        $socsoCategory = SocsoCategoryEnum::choices();
+        
+        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory'));
     }
 
     public function display($id)
@@ -84,7 +80,11 @@ class EmployeeController extends Controller
         ->where('employees.id', $id)
         ->first();
 
-        return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia]);
+        $roles = AccessControllHelper::getRoles();
+        $epfCategory = EpfCategoryEnum::choices();
+        $pcbGroup = PCBGroupEnum::choices();
+        $socsoCategory = SocsoCategoryEnum::choices();
+        return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	
     }
 
     public function postToggleRoleAdmin(Request $request, $id)
@@ -128,8 +128,6 @@ class EmployeeController extends Controller
         $updatepictureData['size']= $attach['size'];
         $updatepictureData['filename']= 'employee_'.($emp_id).'_'.date('Y-m-d_H:i:s').".".$attach['extension'];
 
-
-
         DB::transaction(function() use ($emp_id, $updatepictureData) {
             $user = Employee::find($emp_id);
             // dd($user);
@@ -151,27 +149,33 @@ class EmployeeController extends Controller
 
     public function postEditProfile(Request $request, $id)
     {
+        $employee = Employee::find($id);
         $profileUpdatedData = $request->validate([
+            'name' => 'required|min:5',
+            'email' => 'required|email|unique:users,email,'.$employee->user_id.',id',
             'ic_no' => 'required|numeric|unique:employees,ic_no,'.$id.',id',
             'code'=>'required|unique:employees,code,'.$id.',id',
             'dob' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'gender' => 'required',
             'marital_status' => 'required',
             'race' => 'required|alpha',
-            'total_children' => 'nullable|numeric',
+            'total_children' => 'required|numeric',
             'address' => 'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
+            'postcode' => 'required|numeric',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
-            'epf_no' => 'required|numeric|unique:employees,epf_no,'.$id.',id',
-            'eis_no' => 'required|numeric|unique:employees,eis_no,'.$id.',id',
+            'pcb_group' => 'required_with:tax_no',
+            'epf_no' => 'nullable|numeric|unique:employees,epf_no,'.$id.',id',
+            'epf_category' => 'required_with:epf_no',
+            'eis_no' => 'nullable|numeric|unique:employees,eis_no,'.$id.',id',
             'socso_no' => 'required|numeric|unique:employees,socso_no,'.$id.',id',
-            'main_security_group_id'=>'',
+            'socso_category' => 'required',
+            'main_security_group_id'=>'required',
             'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'nationality' => 'required',
-            // 'contact_no' => 'required|regex:/^[0-9]+-/',
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
@@ -204,7 +208,6 @@ class EmployeeController extends Controller
         $employee = Employee::where('id', $id)->first();
         $current_password = $employee->user->password;
         $current_password = bcrypt($data['current_password']);
-
 
         if (!(Hash::check($data['current_password'],  $employee->user->password))) {
             response()->json(['errors'=> [
@@ -259,10 +262,7 @@ class EmployeeController extends Controller
         }
     }
 
-
-
     // SECTION: Data Tables
-
     public function getDataTableDependents($id)
     {
         $dependents = EmployeeDependent::where('emp_id', $id)->get();
@@ -334,7 +334,6 @@ class EmployeeController extends Controller
         $banks = EmployeeBankAccount::where('emp_id', $id)->get();
         return DataTables::of($banks)->make(true);
     }
-
 
     public function getDataTableExperiences($id)
     {
@@ -412,25 +411,36 @@ class EmployeeController extends Controller
             'address' => 'required',
             'address2' => 'required_with:address3',
             'address3' => 'nullable',
+            'postcode' => 'required|numeric',
             'company_id' => 'required',
             'dob' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'gender' => 'required',
             'race' => 'required|alpha',
             'nationality' => 'required',
             'marital_status' => 'required',
-            'total_children' => 'nullable|numeric',
+            'total_children' => 'required|numeric',
             'ic_no' => 'required|unique:employees,ic_no|numeric',
-            'tax_no' => 'required|unique:employees,tax_no',
-            'epf_no' => 'required|unique:employees,epf_no|numeric',
-            'eis_no' => 'required|unique:employees,eis_no|numeric',
+            'epf_no' => 'nullable|unique:employees,epf_no|numeric',
+            'epf_category' => 'required_with:epf_no',
+            'tax_no' => 'nullable|unique:employees,tax_no',
+            'pcb_group' => 'required_with:tax_no',
+            'eis_no' => 'nullable|unique:employees,eis_no|numeric',
             'socso_no' => 'required|unique:employees,socso_no|numeric',
+            'socso_category' => 'required',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'main_security_group_id'=>'nullable'
+            'main_security_group_id'=>'required',
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
             'attach.max' => 'The file size may not be greater than 2MB.'
+        ],
+        [
+            'code' => 'employee id',
+            'dob' => 'date of birth',
+            'total_children' => 'number of children',
+            'company_id' => 'company',
+            'main_security_group' => 'security group'
         ]);
 
         $attachment_data_url = $validated['attach'];
@@ -446,18 +456,22 @@ class EmployeeController extends Controller
             $validatedEmployeeData['address'] = $validated['address'];
             $validatedEmployeeData['address2'] = $validated['address2'];
             $validatedEmployeeData['address3'] = $validated['address3'];
+            $validatedEmployeeData['postcode'] = $validated['postcode'];
             $validatedEmployeeData['company_id'] = $validated['company_id'];
             $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
             $validatedEmployeeData['gender'] = $validated['gender'];
             $validatedEmployeeData['race'] = $validated['race'];
             $validatedEmployeeData['nationality'] = $validated['nationality'];
             $validatedEmployeeData['marital_status'] = $validated['marital_status'];
+            $validatedEmployeeData['pcb_group'] = $validated['pcb_group'];
             $validatedEmployeeData['total_children'] = $validated['total_children'];
             $validatedEmployeeData['ic_no'] = $validated['ic_no'];
             $validatedEmployeeData['tax_no'] = $validated['tax_no'];
             $validatedEmployeeData['epf_no'] = $validated['epf_no'];
+            $validatedEmployeeData['epf_category'] = $validated['epf_category'];
             $validatedEmployeeData['eis_no'] = $validated['eis_no'];
             $validatedEmployeeData['socso_no'] = $validated['socso_no'];
+            $validatedEmployeeData['socso_category'] = $validated['socso_category'];
             $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
             $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
             if ($validatedEmployeeData['driver_license_expiry_date'] ==='') {
@@ -611,9 +625,10 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Job was successfully added']);
     }
 
-    public function postResign(Request $request, $id) {
-
+    public function postResign(Request $request, $id) 
+    {
         $jobData = $request->validate([
+
                 'resignation_date' => 'required',
         ]);
 
@@ -879,6 +894,7 @@ class EmployeeController extends Controller
 
     public function postSecurityGroup(Request $request, $id)
     {
+        AccessControllHelper::hasAnyRoles('admin');
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
@@ -1148,6 +1164,7 @@ class EmployeeController extends Controller
 
     public function deleteSecurityGroup(Request $request, $emp_id, $id)
     {
+        AccessControllHelper::hasAnyRoles('admin');
         EmployeeSecurityGroup::find($id)->delete();
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
@@ -1190,4 +1207,86 @@ class EmployeeController extends Controller
 
     //     return redirect()->route('leaverequest');
     // }
+    
+    public function postEditRoles(Request $request, $id)
+    {
+        $employee = Employee::where('id', $id)->first();
+        
+        foreach($request['assignRoles'] as $r){
+            if($r['assign'] == 1){
+                $employee->user->assignRole($r['role']);
+            }else{
+                $employee->user->removeRole($r['role']);
+            }
+        }
+        
+        return response()->json(['success'=>'Employee roles were successfully updated.']);
+    }
+    
+    public function importUser($fileName, $companyId)
+    {
+        $collection = (new UserImport)->toCollection($fileName);
+        //         dd($collection);
+        
+        $passwordString = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        
+        foreach ($collection[0] as $row)
+        {
+            $password = substr(str_shuffle($passwordString), 0, 12);
+            
+            $user = User::create([
+                'name' => $row['name'],
+                'password' => bcrypt($password),
+                'email' => $row['email'],
+            ]);
+            
+            $user->assignRole('employee');
+            
+            if($row['role'] != null){
+                $user->assignRole($row['role']);
+            }
+            
+            $nationality = Country::where('citizenship',$row['nationality'])->first();
+            $pcbGroup = 1;
+            
+            if($row['marital_status'] == 'MARRIED'){
+                $pcbGroup = 2;
+            }
+            
+            $dob = substr($row['date_of_birth'],6,4).'-'.substr($row['date_of_birth'],3,2).'-'.substr($row['date_of_birth'],0,2);
+            
+            Employee::create([
+                'user_id' => $user->id,
+                'code' => $row['employee_id'],
+                'contact_no' => $row['contact_no'],
+                'address' => $row['address'],
+                'postcode' => $row['postcode'],
+                'company_id' => $companyId,
+                'dob' => $dob,
+                'gender' => $row['gender'],
+                'race' => $row['race'],
+                'nationality' => $nationality->id,
+                'marital_status' => $row['marital_status'],
+                'total_children' => 0,
+                'ic_no' => $row['ic'],
+                'tax_no' => $row['tax_no'],
+                'epf_no' => $row['epf_no'],
+                'socso_no' => $row['socso_no'],
+                'eis_no' => $row['eis_no'],
+                'pcb_group' => $pcbGroup,
+                'main_security_group_id' => 1,
+                
+            ]);
+            $emailData = array();
+            $emailData['name'] = $row['name'];
+            $emailData['email'] = $row['email'];
+            $emailData['password'] = $password;
+            
+            //send email
+            Mail::to($row['email'])
+            ->bcc(env('BCC_EMAIL'))
+            ->send(new NewUserMail($emailData));
+        }
+        return "Total ".count($collection[0])." records";
+    }
 }
