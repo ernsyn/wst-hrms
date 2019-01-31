@@ -83,9 +83,6 @@
             </ul>
         </li>
 
-            </ul>
-
-        </li> --}}
         @if(AccessControllHelper::isKpiProposer())
         <li class="menu-section {{ request()->is('payroll*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">

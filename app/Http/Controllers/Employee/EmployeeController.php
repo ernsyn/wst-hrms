@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Employee;
 
 use Illuminate\Http\Request;
+use App\Enums\EpfCategoryEnum;
+use App\Enums\PCBGroupEnum;
+use App\Enums\SocsoCategoryEnum;
 use App\Http\Controllers\Controller;
 use Hash;
 
@@ -49,8 +52,11 @@ class EmployeeController extends Controller
         ->select('medias.*')
         ->where('employees.id', $id)
         ->first();
-
-        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia]);
+        
+        $epfCategory = EpfCategoryEnum::choices();
+        $pcbGroup = PCBGroupEnum::choices();
+        $socsoCategory = SocsoCategoryEnum::choices();
+        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	
     }
 
     public function postEditProfilePicture(Request $request) 
