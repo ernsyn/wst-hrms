@@ -132,7 +132,6 @@ class EmployeeController extends Controller
 
         DB::transaction(function() use ($emp_id, $updatepictureData) {
             $user = Employee::find($emp_id);
-            // dd($user);
             $oldProfileMedia = $user->profile_media;
 
             if(!empty($oldProfileMedia)) {
@@ -242,7 +241,6 @@ class EmployeeController extends Controller
         ]);
         return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         $id = auth()->user()->id;
-      //  dd($id);
         $current_password = Auth::user()->password;
         $current_password = bcrypt($data['current_password']);
 

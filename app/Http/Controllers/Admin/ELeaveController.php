@@ -307,7 +307,7 @@ class ELeaveController extends Controller
 
     public function postEditLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::find($id)->first();
+        $leaveType = LeaveType::find($id);
 
         if ($leaveType->is_custom) {
             $leaveTypeData = $request->validate([
@@ -323,7 +323,7 @@ class ELeaveController extends Controller
         }
 
         $appliedRulesData =  $request->validate([
-            "applied_rules" => '',
+            "applied_rules" => '',  
         ]);
 
         $gradeGroupsData =  $request->validate([
@@ -357,7 +357,6 @@ class ELeaveController extends Controller
                     }
                     $leaveType->applied_rules()->whereNotIn('id', $appliedRuleIds)->delete();
                 }
-                
                 foreach ($appliedRulesData['applied_rules'] as $key => $ruleData)  {
                     $leaveType->applied_rules()->updateOrCreate(['rule' => $ruleData['rule']], $ruleData);
                 }

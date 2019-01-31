@@ -1116,7 +1116,7 @@
                 data: data,
                 success: function(response) {
                     // console.log("SUCCESS", response);
-                    // window.location = '{{ route("admin.e-leave.configuration") }}'
+                    window.location = '{{ route("admin.e-leave.configuration") }}'
                     // showAlert(data.success);
                     // emergencyContactsTable.ajax.reload();
                     // $('#confirm-delete-modal').modal('toggle');
