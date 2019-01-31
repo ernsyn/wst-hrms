@@ -937,6 +937,15 @@
                     // $('#confirm-delete-modal').modal('toggle');
                     // // clearEmergencyContactModal('#edit-emergency-contact-form');
                 },
+
+                
+                error: function(x) {
+                    if(x.status == 500) {
+                        var errors = x.responseJSON.errors;
+                        alert('Internel Server Error.');
+                    }
+                    console.log("Error: ", x);
+                },
                 error: function(xhr) {
                     if(xhr.status == 422) {
                         var errors = xhr.responseJSON.errors;
