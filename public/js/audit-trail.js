@@ -199,7 +199,7 @@ var AuditTrail = (function() {
         'App\\EmployeeEducation': {
             name: 'Employee Education',
             fields: {
-                'emp_id': 'Emp ID',
+                'emp_id': 'Employee ID',
                 'institution': 'Institution',
                 'level': 'Level',               
                 'start_year': 'Start Year',
@@ -214,7 +214,7 @@ var AuditTrail = (function() {
         'App\\EmployeeEmergencyContact': {
             name: 'Employee Emergency Contact',
             fields: {
-                'emp_id': 'Emp ID',
+                'emp_id': 'Employee ID',
                 'name': 'Name',
                 'relationship': 'Relationship',               
                 'contact_no': 'Contact No',   
@@ -225,7 +225,7 @@ var AuditTrail = (function() {
         'App\\EmployeeExperience': {
             name: 'Employee Experience',
             fields: {
-                'emp_id': 'Emp ID',
+                'emp_id': 'Employee ID',
                 'company': 'Company',
                 'position': 'Position',               
                 'start_date': 'Start Date',
@@ -294,7 +294,7 @@ var AuditTrail = (function() {
         'App\\EmployeeSecurityGroup': {
             name: 'EPF',
             fields: {
-                'emp_id': 'Emp ID',
+                'emp_id': 'Employee ID',
                 'security_group_id': 'Security Group ID',
                 'payroll_access': 'Payroll Access',               
                 'created_by': 'Created by',
@@ -392,7 +392,7 @@ var AuditTrail = (function() {
         'App\\LeaveRequestApproval': {
             name: 'Leave Request Approval',
             fields: {
-                'approved_by_emp_id': 'Approved By Emp ID',
+                'approved_by_emp_id': 'Approved By Employee ID',
                 'leave_request_id': 'Leave Request ID',
                 'created_by': 'Created by',
             },
@@ -448,7 +448,7 @@ var AuditTrail = (function() {
             },
         },
         'App\\Pcb': {
-            name: 'Pcb',
+            name: 'PCB',
             fields: {
                 'category': 'Category',
                 'total_children': 'Total Children',

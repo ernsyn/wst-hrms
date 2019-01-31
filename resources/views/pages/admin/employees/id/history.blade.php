@@ -84,10 +84,32 @@
         "serverSide": true,
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.audit-trail', ['id' => $id]) }}",
-        "columnDefs": [ {
-            "targets": 4,
-            "orderable": false
-        } ],
+        "order": [[ 1, "desc" ]],
+        "columnDefs": [ 
+            {
+                "targets": 0,
+                "searchable": false,
+                "orderable": false
+            },
+            {
+                "targets": 1,
+                "orderable": true
+            },
+            {
+                "targets": 2,
+                "orderable": false
+            },
+            {
+                "targets": 3, 
+                "orderable": true
+            },
+            {
+                "targets": 4,
+                "orderable": false,
+                "searchable":false,
+
+            },
+         ],
         "columns": [
             {
                 render: function (data, type, row, meta) {
@@ -112,12 +134,14 @@
             // },
             {
                 "data": null, // can be null or undefined
+                "name":"event",
                 render: function (data, type, row, meta) {
                     return '<b class="text-dark">' + row.event.toUpperCase() + '</b>'; 
                 }
             },
             {
                 "data": null, // can be null or undefined
+                "name":"auditable_type",
                 render: function (data, type, row, meta) {
                     var modelDisplayNamesSection = AuditTrail.getModelDisplayNamesSection(row.auditable_type);
                     if(modelDisplayNamesSection) {
