@@ -9,32 +9,33 @@
                 Mode
             </div>
             <div id="value" class="col-8 text-center" data-toggle="collapse" href="#mode-options">
-                    <div class="row py-0">
-                        <div class="col-9 pl-2 pr-0 py-0 text-center">
-                            Admin
-                        </div>
-                        <div class="col-3 px-0 py-0">
-                            <i class="fas fa-angle-down"></i>
-                        </div>
+                <div class="row py-0">
+                    <div class="col-9 pl-2 pr-0 py-0 text-center">
+                        Admin
                     </div>
+                    <div class="col-3 px-0 py-0">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="mode-options" class="collapse">
-            @hasrole('super-admin')
-            <div class="option row col mx-0">
-                <a href="{{ route('super-admin.dashboard') }}">
-                    Super Admin
-                </a>
-                    </li>
-            @endhasrole
-            @hasrole('employee')
-            <div class="option row col mx-0">
-                <a href="{{ route('employee.dashboard') }}">
-                    Employee
-                </a>
-                    </li>
-            @endhasrole
+    </div>
+    @endhasanyrole 
+    <div id="mode-options" class="collapse">
+        @hasrole('super-admin')
+        <div class="option row col mx-0">
+            <a href="{{ route('super-admin.dashboard') }}">
+                Super Admin
+            </a>
         </div>
+        @endhasrole
+        @hasrole('employee')
+        <div class="option row col mx-0">
+            <a href="{{ route('employee.dashboard') }}">
+                Employee
+            </a>
+        </div>
+        @endhasrole
     </div>
 
     <ul id="menu-container" class="list-unstyled">
@@ -200,7 +201,7 @@
                     </li>
                 </ul>
             </li>
-			@endhasanyrole        
+			       
         {{-- SECTION: Audit Trail --}}
         
         <li class="menu-section {{ request()->is('admin/audit-trail*') ? 'active' : '' }}">
