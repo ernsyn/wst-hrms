@@ -92,9 +92,11 @@ class ELeaveController extends Controller
                 foreach ($gradeGroupsData["grade_groups"] as $gradeGroupData) {
                     $gradeGroup = $leaveType->lt_entitlements_grade_groups()->create($gradeGroupData);
                     $gradeGroup->grades()->sync($gradeGroupData["grades"]);
-                    $gradeGroup->lt_conditional_entitlements()->createMany(
-                        $gradeGroupData["conditional_entitlements"]
-                    );
+                    if(array_key_exists('conditional_entitlements', $gradeGroupData)) {
+                        $gradeGroup->lt_conditional_entitlements()->createMany(
+                            $gradeGroupData["conditional_entitlements"]
+                        );
+                    }
                 }
             } else if(array_key_exists("conditional_entitlements", $conditionalEntitlementsData)) {
                 $leaveType->lt_conditional_entitlements()->createMany(
