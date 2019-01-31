@@ -17,7 +17,8 @@ class EmployeeExperience extends Model implements Auditable
         'start_date',
         'end_date',
         'notes',
-        'created_by'
+        'created_by',
+        'emp_id'
     ];
 
     protected $dates = ['deleted_at'];

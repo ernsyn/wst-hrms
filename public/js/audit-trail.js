@@ -230,7 +230,7 @@ var AuditTrail = (function() {
                 'position': 'Position',               
                 'start_date': 'Start Date',
                 'end_date': 'End Date', 
-                'note':'Note',    
+                'notes':'Note',    
                 'created_by': 'Created by',
             },
         },
@@ -288,7 +288,7 @@ var AuditTrail = (function() {
                 'notes': 'Notes',
                 'created_by': 'Created by',
                 'emp_id': 'Employee ID',
-                'id': 'ID',
+        
             },
         },
         'App\\EmployeeSecurityGroup': {
@@ -354,6 +354,7 @@ var AuditTrail = (function() {
                 'employee': 'Employee',     
                 'employer': 'Employer',             
                 'created_by': 'Created by',
+                'salary' :'Salary',
             },
         },
  
@@ -384,7 +385,6 @@ var AuditTrail = (function() {
                 'applied_days': 'Applied Days',
                 'reason': 'Reason',
                 'status': 'Status',
-                'id': 'ID',
                 'attachment_media_id': 'Attachment Media ID',
                 'created_by': 'Created by',
             },
@@ -440,7 +440,6 @@ var AuditTrail = (function() {
             name: 'Media',
             fields: {
                 'category': 'Category',
-                'leave_type_id': 'Leave Type ID',
                 'mimetype': 'Mimetype',
                 'data': 'Data',
                 'size': 'Size',

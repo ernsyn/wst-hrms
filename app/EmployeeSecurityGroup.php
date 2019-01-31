@@ -15,6 +15,8 @@ class EmployeeSecurityGroup extends Model implements Auditable
     protected $fillable = [
 
         'security_group_id',
+        'created_by',
+        'emp_id',
         'created_by'
     ];
 

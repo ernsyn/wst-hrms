@@ -17,7 +17,8 @@ class EmployeeEmergencyContact extends Model implements Auditable
         'name',
         'relationship',
         'contact_no',
-        'created_by'
+        'created_by',
+        'emp_id'
 ];
     protected $dates = ['deleted_at'];
 }
