@@ -68,6 +68,18 @@ class LeaveService
                 $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
             }
 
+            //get current job for employee
+            $emp_job_id = null;
+
+            $employee_job = EmployeeJob::where('emp_id', $emp_id)
+            ->whereNull('end_date')
+            ->whereNull('deleted_at')
+            ->first();
+
+            if($employee_job) {
+                $emp_job_id = $employee_job->id;
+            }
+
             // dd($validFromDate);
             $created_by = auth()->user()->name;
             $leaveAllocation = LeaveAllocation::create([
@@ -77,6 +89,7 @@ class LeaveService
                 'valid_until_date' => $validUntilDate,
                 'allocated_days' => $allocatedDays,
                 'created_by' => $created_by,
+                'emp_job_id' => $emp_job_id,
             ]);
             
         }

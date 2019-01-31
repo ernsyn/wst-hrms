@@ -13,9 +13,11 @@ class AddJobIdToLeaveAllocationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('leave_allocations', function (Blueprint $table) {
-            $table->integer('job_id')->unsigned()->nullable();
-        });
+        if(!Schema::hasColumn('leave_allocations', 'emp_job_id')) {
+            Schema::table('leave_allocations', function (Blueprint $table) {
+                $table->integer('emp_job_id')->unsigned()->nullable();
+            });
+        }
     }
 
     /**
@@ -26,7 +28,7 @@ class AddJobIdToLeaveAllocationsTable extends Migration
     public function down()
     {
         Schema::table('leave_allocations', function (Blueprint $table) {
-            $table->dropColumn('job_id');
+            $table->dropColumn('emp_job_id');
         });
     }
 }
