@@ -1,11 +1,7 @@
 @extends('layouts.admin-base')
 @section('content')
-{{-- @foreach ($errors->all() as $error)
-<li>{{ $error }}</li>
-@endforeach --}}
 <div class="container">
-        <div id="alert-container">
-            </div>   
+    <div id="alert-container"></div>     
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.socso.add.post') }}" id="form_validate" data-parsley-validate>
             <div class="card-body">

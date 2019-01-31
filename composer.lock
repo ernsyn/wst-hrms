@@ -1270,16 +1270,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.7.22",
+            "version": "v5.7.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "64a7749bd9e8df68addce1d01a54bcf606141f29"
+                "reference": "2ede55db4b8201ed0450fa7e7a4d7220aa29bc34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/64a7749bd9e8df68addce1d01a54bcf606141f29",
-                "reference": "64a7749bd9e8df68addce1d01a54bcf606141f29",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/2ede55db4b8201ed0450fa7e7a4d7220aa29bc34",
+                "reference": "2ede55db4b8201ed0450fa7e7a4d7220aa29bc34",
                 "shasum": ""
             },
             "require": {
@@ -1412,7 +1412,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2019-01-22T15:08:35+00:00"
+            "time": "2019-01-29T22:13:46+00:00"
         },
         {
             "name": "laravel/nexmo-notification-channel",
@@ -3673,20 +3673,20 @@
         },
         {
             "name": "spatie/laravel-cors",
-            "version": "1.3.1",
+            "version": "1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-cors.git",
-                "reference": "c95a7a100332630d8ff443386171d21343987162"
+                "reference": "965284ec197853eb3d66ecae567af5403d640418"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-cors/zipball/c95a7a100332630d8ff443386171d21343987162",
-                "reference": "c95a7a100332630d8ff443386171d21343987162",
+                "url": "https://api.github.com/repos/spatie/laravel-cors/zipball/965284ec197853eb3d66ecae567af5403d640418",
+                "reference": "965284ec197853eb3d66ecae567af5403d640418",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "5.5.*|5.6.*|5.7.*",
+                "illuminate/support": "5.5.*|5.6.*|5.7.*",
                 "php": "^7.0"
             },
             "require-dev": {
@@ -3728,20 +3728,20 @@
                 "request",
                 "spatie"
             ],
-            "time": "2018-08-31T06:36:45+00:00"
+            "time": "2019-01-28T08:51:09+00:00"
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "2.29.0",
+            "version": "2.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "7f308806ca051fca42685e4a97a282139a6a7982"
+                "reference": "60744813f22535415b8a716fb9252ba063ba056c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/7f308806ca051fca42685e4a97a282139a6a7982",
-                "reference": "7f308806ca051fca42685e4a97a282139a6a7982",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/60744813f22535415b8a716fb9252ba063ba056c",
+                "reference": "60744813f22535415b8a716fb9252ba063ba056c",
                 "shasum": ""
             },
             "require": {
@@ -3793,7 +3793,7 @@
                 "security",
                 "spatie"
             ],
-            "time": "2018-12-16T00:49:22+00:00"
+            "time": "2019-01-28T23:50:25+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -4913,20 +4913,21 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v2.5.2",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "cfd5dc225767ca154853752abc93aeec040fcf36"
+                "reference": "2a7dcf7e3e02dc5e701004e51a6f304b713107d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/cfd5dc225767ca154853752abc93aeec040fcf36",
-                "reference": "cfd5dc225767ca154853752abc93aeec040fcf36",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/2a7dcf7e3e02dc5e701004e51a6f304b713107d5",
+                "reference": "2a7dcf7e3e02dc5e701004e51a6f304b713107d5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.3.9",
+                "symfony/polyfill-ctype": "^1.9"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8.35 || ^5.0"
@@ -4934,7 +4935,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -4959,7 +4960,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2018-10-30T17:29:25+00:00"
+            "time": "2019-01-29T11:11:52+00:00"
         },
         {
             "name": "yajra/laravel-datatables",
@@ -5253,16 +5254,16 @@
         },
         {
             "name": "yajra/laravel-datatables-oracle",
-            "version": "v8.13.3",
+            "version": "v8.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables.git",
-                "reference": "387512371d3688f3fe1bf75e3e9e53b3d1426736"
+                "reference": "8aedd88a02599d5d0a4a1a2bb5aac849397dd594"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/387512371d3688f3fe1bf75e3e9e53b3d1426736",
-                "reference": "387512371d3688f3fe1bf75e3e9e53b3d1426736",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/8aedd88a02599d5d0a4a1a2bb5aac849397dd594",
+                "reference": "8aedd88a02599d5d0a4a1a2bb5aac849397dd594",
                 "shasum": ""
             },
             "require": {
@@ -5320,7 +5321,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-01-05T02:12:47+00:00"
+            "time": "2019-01-29T03:12:37+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",
@@ -6611,16 +6612,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "febd209a219cea7b56ad799b30ebbea34b71eb8f"
+                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/febd209a219cea7b56ad799b30ebbea34b71eb8f",
-                "reference": "febd209a219cea7b56ad799b30ebbea34b71eb8f",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/4a43e9af57b4afa663077b9bc85255dbc6e8a2bd",
+                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd",
                 "shasum": ""
             },
             "require": {
@@ -6657,7 +6658,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2018-11-25T09:31:21+00:00"
+            "time": "2019-01-28T15:26:03+00:00"
         },
         {
             "name": "sebastian/exporter",

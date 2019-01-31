@@ -70,39 +70,19 @@
                 </div>
             </a>
             <ul class="collapse list-unstyled {{ request()->is('e-leave*','') ? 'show' : '' }}" id="leave-submenu">
-                <li class="menu-option {{ request()->is('leaveapplication') ? 'active' : '' }}">
-                    <a href="{{ route('leaveapplication') }}">Leave Application</a>
+                <li class="menu-option {{ request()->is('leave-apply') ? 'active' : '' }}">
+                    <a href="{{ route('employee.e-leave.leave-application') }}">Leave Application</a>
                 </li>
-                <li class="menu-option {{ request()->is('leaverequest') ? 'active' : '' }}">
-                    <a href="{{ route('leaverequest') }}">Leave Approval</a>
+                <li class="menu-option {{ request()->is('leave-request') ? 'active' : '' }}">
+                    <a href="{{ route('employee.e-leave.request') }}">Leave Approval</a>
                 </li>
 
-                <li class="menu-option {{ request()->is('leavehistory') ? 'active' : '' }}">
-                    <a href="{{ route('leavehistory') }}">Leave Requests</a>
+                <li class="menu-option {{ request()->is('leave-history') ? 'active' : '' }}">
+                    <a href="{{ route('employee.e-leave.history') }}">Leave Requests</a>
                 </li>
             </ul>
         </li>
 
-
-       
-        {{-- <li class="menu-section {{ request()->is('leave*') ? 'active' : '' }}">
-            <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
-                <div class="row">
-                    <div class="col-1">
-                        <i class="far fa-calendar-alt"></i>
-                    </div>
-                    <div class="col-10">
-                        E-Leave
-                    </div>
-                </div>
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('leave*','') ? 'show' : '' }}" id="leaveSubmenu">
-                <li class="menu-option {{ request()->is('employee/leaveapplication') ? 'active' : '' }}">
-                    <a href="{{ route('employee/leaveapplication') }}">Leave Application</a>
-                </li>
-                <li class="menu-option {{ request()->is('') ? 'active' : '' }}">
-                    <a href="{{ route('employee/leaverequest') }}">Leave History</a>
-                </li>
             </ul>
 
         </li> --}}

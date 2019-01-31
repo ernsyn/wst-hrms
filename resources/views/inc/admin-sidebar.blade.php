@@ -141,8 +141,8 @@
             </ul>
         </li>
 
-            {{-- SECTION: Settings --}}
-            <li class="menu-section {{ request()->is('admin/settings*') ? 'active' : '' }}">
+        {{-- SECTION: Audit --}}
+        <li class="menu-section {{ request()->is('admin/audit') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#setupSubmenu" data-toggle="collapse" aria-expanded="false">
                     <div class="row">
                         <div class="col-1"><i class="fas fa-cog"></i></div>

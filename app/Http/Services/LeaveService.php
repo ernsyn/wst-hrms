@@ -120,8 +120,8 @@ class LeaveService
         }
     }
 
-    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $is_admin = false) {
-        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm, $is_admin);
+    public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $edit_leave_request_id = null, $is_admin = false) {
+        $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm, $edit_leave_request_id, $is_admin);
         if(array_key_exists('error', $result)) {
             return $result;
         }
@@ -578,6 +578,8 @@ class LeaveService
         $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
         $employee->gender;
 
+        $is_unpaid_leave = false;
+
         Carbon::THURSDAY;
         
         $leaveTypesForUser = array();
@@ -641,6 +643,9 @@ class LeaveService
                         $configuration = json_decode($rule->configuration);
                         $additionalLeaveTypeDetails['max_days_per_application'] = $configuration->max_days_per_application;
                         break; 
+                    case LeaveTypeRule::UNPAID:
+                        $is_unpaid_leave = true;
+                        break;
                 }
 
                 if(!$includeLeaveType) {
@@ -649,12 +654,18 @@ class LeaveService
             }
             
             if($includeLeaveType) {
+                $availableDays = 0.0;
+
+                if(!$is_unpaid_leave) {
+                    $availableDays = self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id);
+                }
+
                 array_push($leaveTypesForUser, array_merge(
                     [
                         'id' => $leaveType->id,
                         'name' => $leaveType->name,
                         'description' => $leaveType->description,
-                        'available_days' => self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id),
+                        'available_days' => $availableDays,
                         'valid_until' => self::getValidUntilDate($employee->id, $leaveType->id)
                     ], 
                     $additionalLeaveTypeDetails)

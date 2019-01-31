@@ -51,14 +51,21 @@ class Employee extends Model implements Auditable
         return $this->belongsTo('App\User');
     }
 
+    public function profile_media()
+    {
+        return $this->belongsTo('App\Media', 'profile_media_id');
+    }
+
     public function main_security_groups()
     {
         return $this->belongsTo('App\SecurityGroup', 'main_security_group_id');
     }
+
     public function report_to_emp_id()
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');
     }
+
     public function employee_confirmed()
     {
         return $this->hasMany('App\EmployeeJob', 'emp_id');
@@ -68,7 +75,7 @@ class Employee extends Model implements Auditable
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','emp_id');
     }
-    
+
     public function report_to()
     {
         return $this->belongsTo('App\EmployeeReportTo', 'user_id','report_to_emp_id');

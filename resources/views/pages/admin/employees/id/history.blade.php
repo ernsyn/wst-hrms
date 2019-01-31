@@ -2,12 +2,10 @@
     <table class="hrms-primary-data-table table w-100" id="employeeHistoryTable">
         <thead>
             <tr>
-                <th>No</th>
-                <th>Type</th>
-                <th>Note</th>
-                <th>Created By</th>
-                <th>Created On</th>
-                <th>Action</th>
+                <th>Date</th>
+                <th>Model</th>
+                <th>PIC</th>
+                <th>View Details</th>
             </tr>
         </thead>
         {{--
