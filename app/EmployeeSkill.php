@@ -15,7 +15,8 @@ class EmployeeSkill extends Model implements Auditable
         'name',
         'years_of_experience',
         'competency',
-        'created_by'
+        'created_by',
+        'emp_id'
     ];
 
     protected $dates = ['deleted_at'];

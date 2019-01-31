@@ -1,20 +1,27 @@
-<div class="tab-pane fade show p-3" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
-    <table class="hrms-primary-data-table table w-100" id="audit-trail-table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Time</th>
-                <th>Action</th>
-                <th>Data Type</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-        </tbody>
-    </table>
-</div>
+@extends('layouts.admin-base') 
+@section('content')
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right tableTools-container"></div>
+            <table class="hrms-data-table compact w-100 t-2" id="audit-trail-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Time</th>
+                        <th>Employee</th>
+                        <th>Action</th>
+                        <th>Data Type</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
 
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="audit-details-modal" tabindex="-1" role="dialog" aria-labelledby="audit-details-modal-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -34,7 +41,8 @@
         </div>
     </div>
 </div>
-
+@endsection
+ 
 @section('scripts')
 <script src="{{ asset('js/audit-trail.js') }}"></script>
 <script>
@@ -83,9 +91,9 @@
         "bDeferRender": true,
         "serverSide": true,
         "bStateSave": true,
-        "ajax": "{{ route('admin.employees.dt.audit-trail', ['id' => $id]) }}",
+        "ajax": "{{ route('admin.audit-trail.dt') }}",
         "order": [[ 1, "desc" ]],
-        "columnDefs": [ 
+        "columnDefs": [
             {
                 "targets": 0,
                 "searchable": false,
@@ -97,19 +105,23 @@
             },
             {
                 "targets": 2,
+                "searchable": false,
                 "orderable": false
             },
             {
-                "targets": 3, 
-                "orderable": true
+                "targets": 3,
+                "orderable": false
             },
             {
                 "targets": 4,
-                "orderable": false,
-                "searchable":false,
-
+                "orderable": true
             },
-         ],
+            {
+                "targets": 5,
+                "searchable": false,
+                "orderable": false
+            }
+        ],
         "columns": [
             {
                 render: function (data, type, row, meta) {
@@ -119,19 +131,19 @@
             {
                 "data": "created_at",
             },
-            // {
-            //     "data": null, // can be null or undefined
-            //     render: function (data, type, row, meta) {
-            //         var displayedData = '';
-            //         if(row.user.employee != null) {
-            //             displayedData = '<span class="badge badge-warning">' + row.user.employee.code + '</span>&nbsp;&nbsp;<b class="text-primary">' + row.user.name + '</b>';
-            //         } else {
-            //             displayedData = '<b class="text-secondary">' + row.user.name + '</b>';
-            //         }
+            {
+                "data": null, // can be null or undefined
+                render: function (data, type, row, meta) {
+                    var displayedData = '';
+                    if(row.user.employee != null) {
+                        displayedData = '<span class="badge badge-warning">' + row.user.employee.code + '</span>&nbsp;&nbsp;<b class="text-primary">' + row.user.name + '</b>';
+                    } else {
+                        displayedData = '<b class="text-secondary">' + row.user.name + '</b>';
+                    }
                     
-            //         return displayedData; 
-            //     }
-            // },
+                    return displayedData; 
+                }
+            },
             {
                 "data": null, // can be null or undefined
                 "name":"event",

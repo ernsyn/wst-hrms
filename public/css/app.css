@@ -18394,6 +18394,21 @@ select:-webkit-autofill:focus {
   font-weight: 600;
 }
 
+#audit-details-modal .modal-title .auditable-id {
+  color: #bebebe;
+}
+
+#audit-details-modal .modal-body .audit-column {
+  overflow-wrap: break-word;
+  text-align: left;
+}
+
+@media (min-width: 576px) {
+  #audit-details-modal .modal-dialog {
+    max-width: 600px;
+  }
+}
+
 #page-login {
   min-height: 100%;
   width: 100%;

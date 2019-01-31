@@ -17,7 +17,9 @@ class EmployeeImmigration extends Model implements Auditable
         'expiry_date',
         'issued_by',
         'issued_date',
-        'created_by'
+        'created_by',
+        'emp_id',
+        'document_media_id'
     ];
     protected $dates = ['deleted_at'];
 }
