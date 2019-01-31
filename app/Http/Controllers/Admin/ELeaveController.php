@@ -92,9 +92,11 @@ class ELeaveController extends Controller
                 foreach ($gradeGroupsData["grade_groups"] as $gradeGroupData) {
                     $gradeGroup = $leaveType->lt_entitlements_grade_groups()->create($gradeGroupData);
                     $gradeGroup->grades()->sync($gradeGroupData["grades"]);
-                    $gradeGroup->lt_conditional_entitlements()->createMany(
-                        $gradeGroupData["conditional_entitlements"]
-                    );
+                    if(array_key_exists('conditional_entitlements', $gradeGroupData)) {
+                        $gradeGroup->lt_conditional_entitlements()->createMany(
+                            $gradeGroupData["conditional_entitlements"]
+                        );
+                    }
                 }
             } else if(array_key_exists("conditional_entitlements", $conditionalEntitlementsData)) {
                 $leaveType->lt_conditional_entitlements()->createMany(
@@ -305,7 +307,7 @@ class ELeaveController extends Controller
 
     public function postEditLeaveType(Request $request, $id)
     {
-        $leaveType = LeaveType::find($id)->first();
+        $leaveType = LeaveType::find($id);
 
         if ($leaveType->is_custom) {
             $leaveTypeData = $request->validate([
@@ -321,7 +323,7 @@ class ELeaveController extends Controller
         }
 
         $appliedRulesData =  $request->validate([
-            "applied_rules" => '',
+            "applied_rules" => '',  
         ]);
 
         $gradeGroupsData =  $request->validate([
@@ -355,7 +357,6 @@ class ELeaveController extends Controller
                     }
                     $leaveType->applied_rules()->whereNotIn('id', $appliedRuleIds)->delete();
                 }
-                
                 foreach ($appliedRulesData['applied_rules'] as $key => $ruleData)  {
                     $leaveType->applied_rules()->updateOrCreate(['rule' => $ruleData['rule']], $ruleData);
                 }
