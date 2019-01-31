@@ -91,7 +91,7 @@
                     @endhasanyrole
                 </ul>
             </li>
-           
+           @hasanyrole('super-admin|admin')
             {{-- SECTION: E-Leave --}}
             <li class="menu-section {{ request()->is('admin/e-leave*') ? 'active' : '' }}">
                 <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
@@ -202,6 +202,7 @@
             </li>
 			@endhasanyrole        
         {{-- SECTION: Audit Trail --}}
+        
         <li class="menu-section {{ request()->is('admin/audit-trail*') ? 'active' : '' }}">
             <a class="info" href="{{ route('admin.audit-trail') }}">
                 <div class="row">
@@ -210,6 +211,6 @@
                 </div>
             </a>
         </li>
-
+		@endhasanyrole 
 	</ul>
 </nav>
