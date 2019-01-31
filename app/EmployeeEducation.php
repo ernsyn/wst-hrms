@@ -18,8 +18,10 @@ class EmployeeEducation extends Model implements Auditable
         'level',
         'major',
         'gpa',
+        'note',
         'description',
-        'created_by'
+        'created_by',
+        'emp_id',
     ];
 
     protected $dates = ['deleted_at'];

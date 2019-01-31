@@ -19,7 +19,8 @@ class EmployeeVisa extends Model implements Auditable
         'issued_by',
         'issued_date',
         'family_members',
-        'created_by'
+        'created_by',
+        'emp_id'
     ];
     protected $dates = ['deleted_at'];
 }

@@ -22,6 +22,7 @@ class LeaveRequest extends Model implements Auditable
         'applied_days',
         'reason',
         'status' ,
+        'attachment_media_id',
         'created_by',
     ];
 

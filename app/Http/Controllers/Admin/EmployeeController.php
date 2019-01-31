@@ -397,6 +397,15 @@ class EmployeeController extends Controller
         return DataTables::of($security_groups)->make(true);
     }
 
+    public function getDataTableAuditTrails($id)
+    {
+        $user = Employee::find($id)->user;
+
+        $audits = \OwenIt\Auditing\Models\Audit::where('auditable_id', $user->id);
+
+        return DataTables::of($audits)->make(true);
+    }
+
     protected function postAdd(Request $request)
     {
         $validated = $request->validate([
