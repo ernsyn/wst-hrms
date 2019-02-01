@@ -19,8 +19,8 @@ class LeaveAllocation extends Model
         'is_carry_forward',
         'valid_from_date',
         'valid_until_date',
-        'created_by'
-        
+        'created_by',
+        'emp_job_id'
     ];
 
     protected $dates = ['deleted_at'];
