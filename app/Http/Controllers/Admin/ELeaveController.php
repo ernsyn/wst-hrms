@@ -105,7 +105,10 @@ class ELeaveController extends Controller
             }
         });
 
-        return response()->json(['success'=>'Record is successfully added']);
+        return redirect()->route('admin.e-leave.configuration')->with('status', 'Leave Type has successfully been added.');
+        
+        
+    
     }
 
     public function editLeaveType(Request $request, $id)
@@ -394,8 +397,9 @@ class ELeaveController extends Controller
                 $leaveType->lt_conditional_entitlements()->delete();
             }
         });
-
-        return response()->json(['success'=>'Leave Type has successfully been edited']);
+        
+        return redirect()->route('admin.e-leave.configuration')->with('status', 'Leave Type has successfully been edited.');
+    
     }
 
     public function addLeaveApproval(Request $request, $id)
@@ -478,7 +482,8 @@ class ELeaveController extends Controller
     public function deleteLeaveType(Request $request, $id)
     {
         $leaveType = LeaveType::find($id)->delete();
-        return response()->json(['success'=>'Leave type has been deleted.']);
+       // return response()->json(['success'=>'Leave type has been deleted.']);
+        return redirect()->route('admin.e-leave.configuration')->with('status', 'Leave type has been deleted.');
     }
 
     // Leave Application Calendar View and Form
