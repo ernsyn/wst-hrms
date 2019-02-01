@@ -628,14 +628,15 @@ class EmployeeController extends Controller
         ]);
 
         $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
-        $currentDate = date("Y-m-d");
-        LeaveService::onJobEnd($id, $currentDate, $currentJob->id, true);
         $jobData['resignation_date'] = implode("-", array_reverse(explode("/", $jobData['resignation_date'])));
+        LeaveService::onJobEnd($id, $jobData['resignation_date'], $currentJob->id, true);
 
         Employee::where('id', $id)->update(array('resignation_date'=> ($jobData['resignation_date'])));
-        $currentJob->update(array('end_date'=> ($jobData['resignation_date'])));
-        $currentJob->update(array('status'=> 'Resigned'));
-        return response()->json(['success'=>'Job was successfully added']);
+        $currentJob->update(array(
+            'end_date'=> ($jobData['resignation_date']),
+            'status'=> 'Resigned'
+        ));
+        return response()->json(['success'=>'Employee and job status has successfully been updated']);
     }
 
     public function postBankAccount(Request $request, $id)
