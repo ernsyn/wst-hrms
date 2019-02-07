@@ -209,7 +209,7 @@
 
     // GENERAL FUNCTIONS
     function clearSecurityGroupModal(htmlId) {
-        $(htmlId + ' #security-group-id').val('');
+        $(htmlId + ' #security-group-id')[0].selectize.clear();
         $(htmlId + ' #security-group-id').removeClass('is-invalid');
     }
     function clearSecurityGroupError(htmlId) {
