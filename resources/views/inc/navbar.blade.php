@@ -10,8 +10,8 @@
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false" v-pre>
                         {{-- <i class="default-user-logo-light fas fa-user-circle fa-2x px-3 align-middle"></i> --}}
-                        @if (Auth::user()->profile_media_id != null )
-                            <img class="rounded-circle mx-3" src="data:{{Auth::user()->profile_media->mimetype}};base64, {{Auth::user()->profile_media->data}}"  style="object-fit:cover; width:28px; height:28px">
+                        @if (Auth::user()->employee->profile_media != null )
+                            <img class="rounded-circle mx-3" src="data:{{Auth::user()->employee->profile_media->mimetype}};base64, {{Auth::user()->employee->profile_media->data}}"  style="object-fit:cover; width:28px; height:28px">
                         @else
                             <i class="default-user-logo-light fas fa-user-circle fa-2x px-3 align-middle"></i>
                         @endif
