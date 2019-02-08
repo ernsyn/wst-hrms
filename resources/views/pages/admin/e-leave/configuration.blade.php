@@ -3,14 +3,14 @@
 <div class="container">
         <div id="alert-container">
             </div>   
-    @if (session('status'))
-    <div class="alert alert-primary fade show" role="alert">
-        {{ session('status') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-    </div>
-    @endif
+            @if (session('status'))
+            <div class="alert alert-primary fade show" role="alert">
+                {{ session('status') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+            </div>
+            @endif
     <div id="leave-types-card" class="card mb-4">
         <div class="card-header bg-primary text-white">
             <strong>Leave Types</strong>
@@ -98,7 +98,8 @@
                                 @else
                                 <button type="button" class="activate-btn action-btn ml-1 btn btn-secondary btn-sm" data-action="{{ route('admin.e-leave.configuration.leave-types.activate.post', ['id' => $leaveType->id]) }}">Activate</button>                                
                                 @endif
-                                <button type="button" class="delete-btn ml-1 btn btn-danger btn-sm" data-action="{{ route('admin.e-leave.configuration.leave-types.delete', ['id' => $leaveType->id]) }}">Delete</button>
+                                <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-link="{{ route('admin.e-leave.configuration.leave-types.delete', ['id ' => $leaveType->id]) }}" data-entry-title='{{ $leaveType->id }}' class="btn btn-danger btn-smt fas fa-trash-alt">
+                                    </button>
                             </div>
                         </div>
                     </div>
@@ -140,6 +141,25 @@
         </div> --}}
     </div>
 </div>
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure want to delete?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
  
 @section('scripts')
@@ -167,29 +187,42 @@
             });
         });
 
-        $(".delete-btn").click(function(e) {
-            e.preventDefault();
+    //     $(".delete-btn").click(function(e) {
+    //         e.preventDefault();
 
-            let action = $(e.currentTarget).data('action');
-            console.log("data ", action);
+    //         let action = $(e.currentTarget).data('action');
+    //         console.log("data ", action);
 
-            $.ajax({
-                url: action,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    _method: 'DELETE'
-                },
-                success: function(data) {
-                    console.log("Success: ", data);
-                    location.reload();
-                },
-                error: function(xhr) {
-                    console.log("Error: ", xhr);
-                }
-            });
+    //         $.ajax({
+    //             url: action,
+    //             type: 'POST',
+    //             data: {
+    //                 _token: '{{ csrf_token() }}',
+    //                 _method: 'DELETE'
+    //             },
+    //             success: function(data) {
+    //                 console.log("Success: ", data);
+    //                 location.reload();
+    //             },
+    //             error: function(xhr) {
+    //                 console.log("Error: ", xhr);
+    //             }
+    //         });
+    //     });
+    //  });
+     $('#confirm-delete-modal').on('show.bs.modal', function (e) {
+            var entryTitle = $(e.relatedTarget).data('entry-title');
+            var link = $(e.relatedTarget).data('link');
+            $(this).find('.modal-body p').text('Are you sure you want to delete - ' + entryTitle + '?');
+
+            // Pass form reference to modal for submission on yes/ok
+            var form = $(e.relatedTarget).closest('form');
+            $(this).find('.modal-footer #confirm').data('form', link);
         });
-     });
 
+        $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
+            window.location = $(this).data('form');
+        });
+    });
 </script>
 @append

@@ -22,7 +22,8 @@ class EmployeeJob extends Model implements Auditable
         'basic_salary',
         'remarks',
         'status',
-        'created_by'
+        'created_by',
+        'emp_job_id',
     ];
 
     public function main_position()

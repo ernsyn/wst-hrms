@@ -1114,14 +1114,22 @@
                 url: "{{ route('admin.e-leave.configuration.leave-types.edit.post', ['id' => $leave_type->id ]) }}",
                 type: 'POST',
                 data: data,
-                success: function(response) {
+                success: function(response) { 
                     // console.log("SUCCESS", response);
                     window.location = '{{ route("admin.e-leave.configuration") }}'
-                    // showAlert(data.success);
+                    showAlert(data.success);
                     // emergencyContactsTable.ajax.reload();
                     // $('#confirm-delete-modal').modal('toggle');
                     // // clearEmergencyContactModal('#edit-emergency-contact-form');
                 },
+                error: function(x) {
+                    if(x.status == 500) {
+                        var errors = x.responseJSON.errors;
+                        alert('Internel Server Error.');
+                    }
+                    console.log("Error: ", x);
+                },
+
                 error: function(xhr) {
                     if(xhr.status == 422) {
                         var errors = xhr.responseJSON.errors;
@@ -1142,14 +1150,6 @@
                                         $('#add-leave-type-form input[name=description]').addClass('is-invalid');
                                         $('#add-leave-type-form #description-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    // case 'relationship':
-                                    //     $('#add-leave-type-form #relationship').addClass('is-invalid');
-                                    //     $('#add-leave-type-form #relationship-error').html('<strong>' + errors[errorField][0] + "</strong>");
-                                    // break;
-                                    // case 'contact_no':
-                                    //     $('#add-leave-type-form #contact-no').addClass('is-invalid');
-                                    //     $('#add-leave-type-form #contact-no-error').html('<strong>' + errors[errorField][0] + '</strong>');
-                                    // break;
                                 }
                             }
                         }
@@ -1159,6 +1159,5 @@
             });
         })
     })
-
 </script>
 @append
