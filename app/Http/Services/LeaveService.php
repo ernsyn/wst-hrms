@@ -26,7 +26,7 @@ use App\EmployeeWorkingDay;
 
 class LeaveService
 {
-    public static function onJobStart($emp_id, $start_date, $grade_id) {
+    public static function onJobStart($emp_id, $start_date, $grade_id, $emp_job_id) {
         $now = Carbon::now();
         $startDate = Carbon::parse($start_date);
         if($now->year != $startDate->year && $startDate->month == 12) {
@@ -77,12 +77,13 @@ class LeaveService
                 'valid_until_date' => $validUntilDate,
                 'allocated_days' => $allocatedDays,
                 'created_by' => $created_by,
+                'emp_job_id' => $emp_job_id,
             ]);
             
         }
     }
 
-    public static function onJobEnd($emp_id, $end_date) {
+    public static function onJobEnd($emp_id, $end_date, $emp_job_id, $is_resigning = false) {
         $now = Carbon::now();
         $endDate = Carbon::parse($end_date);
         if($now->year != $endDate->year && $endDate->month == 12) {
@@ -96,6 +97,7 @@ class LeaveService
         // $endCalcDate->subDay();
 
         $leaveAllocations = LeaveAllocation::with('leave_type.applied_rules')->where('emp_id', $emp_id)
+        ->where('emp_job_id', $emp_job_id)
         ->where('valid_from_date', '<=', $endDate)
         ->where('valid_until_date', '>=', $endDate)
         ->get();
@@ -112,10 +114,15 @@ class LeaveService
                 $updatedAllocatedDays = $leaveAllocation->allocated_days * $totalActualDays / $totalAllocationDays;
                 $updatedAllocatedDays = floor($updatedAllocatedDays * 2)/2; // Round to closest .5 low
 
-                $leaveAllocation->update([
+                $leaveAllocationUpdate = [
                     'allocated_days' => $updatedAllocatedDays,
-                    'valid_until_date' => $endDate,
-                ]);
+                    // 'valid_until_date' => $endDate,
+                ];
+                if($is_resigning) {
+                    $leaveAllocationUpdate['valid_until_date'] = $endDate;
+                }
+
+                $leaveAllocation->update($leaveAllocationUpdate);
             }
         }
     }

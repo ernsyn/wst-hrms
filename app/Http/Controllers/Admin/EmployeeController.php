@@ -597,22 +597,23 @@ class EmployeeController extends Controller
                     Employee::where('id', $id)
                     ->update(array('confirmed_date'=> ($jobData['start_date'])));
                     $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
-                    LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
-
-
                 } else {
                     $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
-                    LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->emp_grade_id);
-                     }
+                }
+                LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->id);
             } else {
                 $jobData['status']  = "probationer";
             }
 
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
             Employee::where('id', $id)->update(array('resignation_date'=> null));
+
+            $newJob = new EmployeeJob($jobData);
+
             $employee = Employee::find($id);
-            $employee->employee_jobs()->save(new EmployeeJob($jobData));
-            LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id']);
+            $employee->employee_jobs()->save($newJob);
+
+            LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id'], $newJob->id);
         });
 
         return response()->json(['success'=>'Job was successfully added']);
@@ -625,14 +626,15 @@ class EmployeeController extends Controller
         ]);
 
         $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
-        $currentDate = date("Y-m-d");
-        LeaveService::onJobEnd($id, $currentDate, $currentJob->emp_grade_id);
         $jobData['resignation_date'] = implode("-", array_reverse(explode("/", $jobData['resignation_date'])));
+        LeaveService::onJobEnd($id, $jobData['resignation_date'], $currentJob->id, true);
 
         Employee::where('id', $id)->update(array('resignation_date'=> ($jobData['resignation_date'])));
-        $currentJob->update(array('end_date'=> ($jobData['resignation_date'])));
-        $currentJob->update(array('status'=> 'Resigned'));
-        return response()->json(['success'=>'Job was successfully added']);
+        $currentJob->update(array(
+            'end_date'=> ($jobData['resignation_date']),
+            'status'=> 'Resigned'
+        ));
+        return response()->json(['success'=>'Employee and job status has successfully been updated']);
     }
 
     public function postBankAccount(Request $request, $id)
