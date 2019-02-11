@@ -363,9 +363,9 @@
 
     // GENERAL FUNCTIONS
     function clearBankAccountModal(htmlId) {
-        $(htmlId + ' select[name=bank-code]').val('');
+        $(htmlId + ' select[name=bank-code]')[0].selectize.clear();
         $(htmlId + ' input[name=acc-no]').val('');
-        $(htmlId + ' select[name=acc-status]').val('');
+        $(htmlId + ' select[name=acc-status]')[0].selectize.clear();
 
         $(htmlId + ' select[name=bank-code]').removeClass('is-invalid');
         $(htmlId + ' input[name=acc-no]').removeClass('is-invalid');

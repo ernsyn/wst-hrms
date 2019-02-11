@@ -771,15 +771,15 @@
     // GENERAL FUNCTIONS
     function clearJobModal(htmlId) {
         $(htmlId + ' input[name=basic-salary]').val('');
-        $(htmlId + ' select[name=cost-centre]').val('');
-        $(htmlId + ' select[name=department]').val('');
-        $(htmlId + ' select[name=team]').val('');
-        $(htmlId + ' select[name=main-position]').val('');
-        $(htmlId + ' select[name=grade]').val('');
-        $(htmlId + ' select[name=branch]').val('');
+        $(htmlId + ' select[name=cost-centre]')[0].selectize.clear();
+        $(htmlId + ' select[name=department]')[0].selectize.clear();
+        $(htmlId + ' select[name=team]')[0].selectize.clear();
+        $(htmlId + ' select[name=main-position]')[0].selectize.clear();
+        $(htmlId + ' select[name=grade]')[0].selectize.clear();
+        $(htmlId + ' select[name=branch]')[0].selectize.clear();
         $(htmlId + ' #date-job').val('');
         $(htmlId + ' #date-job-edit').val('');
-        $(htmlId + ' select[name=employment-status]').val('');
+        $(htmlId + ' select[name=employment-status]')[0].selectize.clear();
         $(htmlId + ' textarea[name=remarks]').val('');
 
         $(htmlId + ' input[name=basic-salary]').removeClass('is-invalid');
