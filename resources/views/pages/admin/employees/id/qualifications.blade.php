@@ -1398,7 +1398,7 @@
     function clearSkillsModal(htmlId) {
         $(htmlId + ' input[name=name]').val('');
         $(htmlId + ' input[name=years-of-experience]').val('');
-        $(htmlId + ' select[name=competency]').val('');
+        $(htmlId + ' select[name=competency]')[0].selectize.clear();
 
         $(htmlId + ' input[name=name]').removeClass('is-invalid');
         $(htmlId + ' input[name=years-of-experience]').removeClass('is-invalid');

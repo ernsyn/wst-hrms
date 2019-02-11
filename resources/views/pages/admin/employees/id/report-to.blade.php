@@ -503,11 +503,11 @@
 
     // GENERAL FUNCTIONS
     function clearReportToModal(htmlId) {
-        $(htmlId + ' select[name=report-to]').val('');
-        $(htmlId + ' select[name=type]').val('');
-        $(htmlId + ' select[name=kpi-proposer]').val();
+        $(htmlId + ' select[name=report-to]')[0].selectize.clear();
+        $(htmlId + ' select[name=type]')[0].selectize.clear();
+        $(htmlId + ' select[name=kpi-proposer]')[0].selectize.clear();
         $(htmlId + ' input[name=notes]').val('');
-        $(htmlId + ' select[name=report-to-level]').val('');
+        $(htmlId + ' select[name=report-to-level]')[0].selectize.clear();
 
         $(htmlId + ' select[name=report-to]').removeClass('is-invalid');
         $(htmlId + ' select[name=type]').removeClass('is-invalid');

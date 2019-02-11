@@ -711,6 +711,7 @@
                     $('#edit-profile-popup').modal('toggle');
                     $('#employee-profile-details').load(' #reload-profile1');
                     $('#nav-profile').load(' #reload-profile2');
+                    // $('#navbarDropdown').load(' #reload-profile2');
                     clearProfilesModal('#edit-profile-form');
                 },
                 error: function(xhr) {
@@ -1068,6 +1069,7 @@
                     $('#edit-picture-popup').modal('toggle');
                     $('#employee-profile-details').load(' #reload-profile1');
                     $('#nav-profile').load(' #reload-profile2');
+                    // $('#navbarDropdown').load(' #reload-profile2');
                     clearPicturesModal('#edit-picture-form');
                 },
                 error: function(xhr) {
