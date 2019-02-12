@@ -1,6 +1,10 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\EpfCategoryEnum;
+use App\Enums\SocsoCategoryEnum;
+use App\Helpers\GenerateReportsHelper;
+use App\Helpers\PayrollHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Addition;
@@ -8,7 +12,6 @@ use App\EmployeeGrade;
 use App\EmployeeWorkingDay;
 use App\Branch;
 use App\Company;
-use App\Country;
 use App\CompanyBank;
 use App\CostCentre;
 use App\Department;
@@ -17,7 +20,6 @@ use App\EaForm;
 use App\EPF;
 use App\Eis;
 use App\Employee;
-use App\EmployeeInfo;
 use App\EmployeePosition;
 use App\LeaveRequest;
 use App\LeaveType;
@@ -48,6 +50,7 @@ use Illuminate\Support\Facades\Input;
 use DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\AccessControllHelper;
 
 class SettingsController extends Controller
 {
@@ -291,9 +294,11 @@ class SettingsController extends Controller
         ]);
 
         $seniorityPay = 0;
-        if ($request->seniority_pay == "Auto") {
-            $company = GenerateReportsHelper::getUserLogonCompanyInformation();
-            $seniorityPay = PayrollHelper::getSeniorityPay($company->id);
+        if(!AccessControllHelper::hasSuperadminRole()) {
+            if ($request->seniority_pay == "Auto") {
+                $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+                $seniorityPay = PayrollHelper::getSeniorityPay($company->id);
+            }
         }
 
         $costCentreData['amount'] = $seniorityPay;
@@ -810,7 +815,7 @@ class SettingsController extends Controller
             'name' => 'required|unique:teams,name,' . $id . ',id,deleted_at,NULL'
         ]);
 
-        Team::where('id', $id)->update($teamData);
+        Team::find($id)->update($teamData);
         return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been updated.');
     }
 
@@ -822,14 +827,16 @@ class SettingsController extends Controller
         ]);
 
         $seniorityPay = 0;
-        if ($request->seniority_pay == "Auto") {
-            $company = GenerateReportsHelper::getUserLogonCompanyInformation();
-            $seniorityPay = PayrollHelper::getSeniorityPay($company->id);
+        if(!AccessControllHelper::hasSuperadminRole()) {
+            if ($request->seniority_pay == "Auto") {
+                $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+                $seniorityPay = PayrollHelper::getSeniorityPay($company->id);
+            }
         }
 
         $costCentreData['amount'] = $seniorityPay;
 
-        CostCentre::where('id', $id)->update($costCentreData);
+        CostCentre::find($id)->update($costCentreData);
 
         return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been updated.');
     }
@@ -939,7 +946,7 @@ class SettingsController extends Controller
         ])->whereNull('deleted_at')->get();
 
         if ($epf->isEmpty()) {
-            EPF::where('id', $id)->update($epfData);
+            EPF::find($id)->update($epfData);
             return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been updated.');
         } else {
             return redirect()->route('admin.settings.epf')->with('status', 'Data already exists.');
@@ -972,7 +979,7 @@ class SettingsController extends Controller
         ])->whereNull('deleted_at')->get();
 
         if ($eis->isEmpty()) {
-            Eis::where('id', $id)->update($eisData);
+            Eis::find($id)->update($eisData);
             return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been updated.');
         } else {
             return redirect()->route('admin.settings.eis')->with('status', 'Data already exists.');
@@ -1005,7 +1012,7 @@ class SettingsController extends Controller
         ])->whereNull('deleted_at')->get();
 
         if ($socso->isEmpty()) {
-            Socso::where('id', $id)->update($socsoData);
+            Socso::find($id)->update($socsoData);
             return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been updated.');
         } else {
             return redirect()->route('admin.settings.socso')->with('status', 'Data already exists.');
@@ -1021,7 +1028,7 @@ class SettingsController extends Controller
             'total_children' => 'required'
         ]);
 
-        Pcb::where('id', $id)->update($pcbData);
+        Pcb::find($id)->update($pcbData);
 
         return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
     }
@@ -1060,7 +1067,7 @@ class SettingsController extends Controller
 
         $updateValidatedDeductionData['company_id'] = $id;
 
-        Deduction::where('id', $request->company_deduction_id)->update($updateValidatedDeductionData);
+        Deduction::find($request->company_deduction_id)->update($updateValidatedDeductionData);
         return redirect()->route('admin.settings.company.company-details', [
             'id' => $id
         ])->with('status', 'Deduction Group has successfully been updated.');
@@ -1077,7 +1084,7 @@ class SettingsController extends Controller
 
         $updateCompanyBankData['company_id'] = $id;
         $updateCompanyBankData['updated_by'] = auth()->user()->name;
-        CompanyBank::where('id', $request->company_bank_id)->update($updateCompanyBankData);
+        CompanyBank::find($request->company_bank_id)->update($updateCompanyBankData);
 
         return redirect()->route('admin.settings.company.company-details', [
             'id' => $id
@@ -1121,7 +1128,7 @@ class SettingsController extends Controller
         $updateSecurityGroupData['company_id'] = $id;
         $updateSecurityGroupData['created_by'] = auth()->user()->name;
 
-        SecurityGroup::where('id', $request->security_group_id)->update($updateSecurityGroupData);
+        SecurityGroup::find($request->security_group_id)->update($updateSecurityGroupData);
 
         return redirect()->route('admin.settings.company.company-details', [
             'id' => $id
