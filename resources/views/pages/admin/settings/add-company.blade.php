@@ -50,7 +50,7 @@
                         <div class="col-8">
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-12">
-                            	<textarea name="description" id="description" row="5" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" required>{{ old('description') }}</textarea>
+                            	<textarea name="description" id="description" row="5" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}">{{ old('description') }}</textarea>
                                 <!-- <input id="description" type="text" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" placeholder="Description"
                                     name="description" value="{{ old('description') }}" required> -->
                                     @if ($errors->has('description'))
@@ -114,7 +114,7 @@
                             <label class="col-md-12 col-form-label">Postcode *</label>
                             <div class="col-md-12">
                                 <input id="postcode" type="text" class="form-control{{ $errors->has('postcode') ? ' is-invalid' : '' }}"
-                                    name="postcode" value="{{ old('postcode') }}" required>
+                                    name="postcode" value="{{ old('postcode') }}">
                                     @if ($errors->has('postcode'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('postcode') }}</strong>
@@ -153,7 +153,7 @@
                         <div class="col-4">
                             <label class="col-md-12 col-form-label">EPF No*</label>
                             <div class="col-md-12">
-                                <input id="epf_no" type="text" class="form-control{{ $errors->has('epf_no') ? ' is-invalid' : '' }}" placeholder="Epf No"
+                                <input id="epf_no" type="text" class="form-control{{ $errors->has('epf_no') ? ' is-invalid' : '' }}" placeholder="EPF No"
                                     name="epf_no" value="{{ old('epf_no') }}" >
                                     @if ($errors->has('epf_no'))
                                     <span class="invalid-feedback" role="alert">

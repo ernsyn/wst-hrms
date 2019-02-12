@@ -18484,6 +18484,7 @@ select:-webkit-autofill:focus {
   position: absolute;
   top: 0;
   right: 0;
+  margin-bottom: 20px;
 }
 
 ::-webkit-scrollbar {

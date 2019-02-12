@@ -44,7 +44,7 @@
                         <div class="col-8">
                             <label class="col-md-12 col-form-label">Description*</label>
                             <div class="col-md-12">
-                            	<textarea name="description" id="description" row="5" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" required>{{ $company->description }}</textarea>
+                            	<textarea name="description" id="description" row="5" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}">{{ $company->description }}</textarea>
                                 <!-- <input id="description" type="text" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" placeholder="Description"
                                     name="description" value="{{ $company->description }}" required> -->                          
                                 @if ($errors->has('description'))
@@ -102,7 +102,7 @@
                             <label class="col-md-12 col-form-label">Postcode *</label>
                             <div class="col-md-12">
                                 <input id="postcode" type="text" class="form-control{{ $errors->has('postcode') ? ' is-invalid' : '' }}"
-                                    name="postcode" value="{{ $company->postcode }}" required>
+                                    name="postcode" value="{{ $company->postcode }}">
                                     @if ($errors->has('postcode'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('postcode') }}</strong>
@@ -168,11 +168,11 @@
                         <div class="col-4">
                             <label class="col-md-12 col-form-label">Status</label>
                             <div class="col-md-12">
-                                    <select class="form-control" id="status" name="status" value="{{ $company->status}}">
-                                        <option value="">Please Select</option>
-                                            <option value="Active"  {{ $company->status == 'Active' ? 'selected' : ''}}>Active</option>
-                                            <option value="Inactive"{{ $company->status == 'Inactive' ? 'selected' : ''}}>Inactive</option>
-                                        </select>
+                                <select class="form-control" id="status" name="status" value="{{ $company->status}}">
+                                    <option value="">Please Select</option>
+                                    <option value="Active"  {{ $company->status == 'Active' ? 'selected' : ''}}>Active</option>
+                                    <option value="Inactive"{{ $company->status == 'Inactive' ? 'selected' : ''}}>Inactive</option>
+                                </select>
                             </div>
                         </div>
                     </div>

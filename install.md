@@ -24,7 +24,10 @@ For mobile app,
 - php artisan passport:client --personal - to create personal access token
 
 # Seeder #
-php artisan db:seed --class=DatabaseSeeder
+Seed after create company
+- php artisan db:seed --class=PayrollSetupTableSeeder
+- php artisan db:seed --class=AdditionTableSeeder
+- php artisan db:seed --class=DeductionTableSeeder
 
 # Import EPF schedule from csv #
 load data local infile '/data/www/wst-hrms/database/seeds/epf.csv' into table epfs fields terminated by ',' set created_at=now(), deleted_at=null;
