@@ -190,7 +190,7 @@ class ELeaveController extends Controller
     public function postAddPublicHoliday(Request $request)
     {
         $publicHolidayData = $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:holidays,name',
             'start_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'end_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'repeat_annually'=>'required',
