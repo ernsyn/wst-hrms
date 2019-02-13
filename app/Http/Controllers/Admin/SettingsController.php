@@ -203,7 +203,8 @@ class SettingsController extends Controller
             'epf_no' => 'required|numeric',
             'socso_no' => 'required|numeric',
             'eis_no' => 'required|numeric',
-            'code' => 'required|unique:companies',
+            'code' => 'required|unique:companies,code,NULL,id,deleted_at,NULL',
+            
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
@@ -813,26 +814,32 @@ class SettingsController extends Controller
             'employee_grade' => 'nullable'
         ]);
 
-        if(!empty($updateValidatedDeductionData['statutory'])) 
-        $updateValidatedDeductionData['statutory'] = implode(",", $request->statutory);
-        else 
-        $updateValidatedDeductionData['statutory'] = null;
-
+        $updateValidatedDeductionData['statutory'] = empty($updateValidatedDeductionData['statutory']) ? null : implode(",", $request->statutory);
         $updateValidatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
-
-        if(!empty($updateValidatedDeductionData['cost_centre'])) 
-        $updateValidatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
-        else 
-        $updateValidatedDeductionData['cost_centre'] = null;
-
-        if(!empty($updateValidatedDeductionData['employee_grade'])) 
-        $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
-        else 
-        $updateValidatedDeductionData['employee_grade'] = null;
-
+        $updateValidatedDeductionData['cost_centre'] = empty($updateValidatedDeductionData['cost_centre']) ? null : implode(",", $request->cost_centre);
+        $updateValidatedDeductionData['employee_grade'] = empty($updateValidatedDeductionData['employee_grade']) ? null : implode(",", $request->employee_grade);
         $updateValidatedDeductionData['company_id']=$id;
 
-        Deduction::where('id', $request->company_deduction_id)->update($updateValidatedDeductionData);
+        // if(!empty($updateValidatedDeductionData['statutory'])) 
+        // $updateValidatedDeductionData['statutory'] = implode(",", $request->statutory);
+        // else 
+        // $updateValidatedDeductionData['statutory'] = null;
+
+        // $updateValidatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
+
+        // if(!empty($updateValidatedDeductionData['cost_centre'])) 
+        // $updateValidatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
+        // else 
+        // $updateValidatedDeductionData['cost_centre'] = null;
+
+        // if(!empty($updateValidatedDeductionData['employee_grade'])) 
+        // $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
+        // else 
+        // $updateValidatedDeductionData['employee_grade'] = null;
+
+        // $updateValidatedDeductionData['company_id']=$id;
+        Deduction::find($request->company_deduction_id)->update($updateValidatedDeductionData);
+      //  Deduction::where('id', $request->company_deduction_id)->update($updateValidatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
     }
 
@@ -880,7 +887,7 @@ class SettingsController extends Controller
     {
         $id = $request->id;
         $updateSecurityGroupData = $request->validate([
-                'name' => 'required',
+                'name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
                 'description' => 'required'
 
             ]);
@@ -897,52 +904,113 @@ class SettingsController extends Controller
     // Section: DELETE
     public function deleteCostCentre(Request $request, $id)
     {
-        CostCentre::find($id)->delete();
+        $employee_job_cost_centre = EmployeeJob::where('cost_centre_id','=',$id)->count();
 
+        if ($employee_job_cost_centre == 0)
+        {
+        CostCentre::find($id)->delete();
         return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been deleted.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.cost-centres')->with('status', 'You Cannot Delete This Record');
+        }
     }
 
     public function deleteDepartment(Request $request, $id)
     {
+        $employee_job_department= EmployeeJob::where('department_id','=',$id)->count();
+
+        if ($employee_job_department == 0)
+        {
         Department::find($id)->delete();
 
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been deleted.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.departments')->with('status', 'You Cannot Delete This Record');
+        }
     }
 
     public function deleteGrade(Request $request, $id)
     {
+        $employee_job_grade= EmployeeJob::where('emp_grade_id','=',$id)->count();
+
+        if ($employee_job_grade == 0)
+        {
         EmployeeGrade::find($id)->delete();
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been deleted.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.grades')->with('status', 'You Cannot Delete This Record');
+        }
     }
 
     public function deleteCompany(Request $request, $id)
     {
+        $employee_company= Employee::where('company_id','=',$id)->count();
+
+        if ($employee_company == 0)
+        {
         Company::find($id)->delete();
 
         return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been deleted.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.companies')->with('status', 'You Cannot Delete This Record');
+        }
     }
 
     public function deleteTeam(Request $request, $id)
     {
+        $employee_job_team= EmployeeJob::where('team_id','=',$id)->count();
+
+        if ($employee_job_team == 0)
+        {
         Team::find($id)->delete();
 
         return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been deleted.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.teams')->with('status', 'You Cannot Delete This Record');
+        }
     }
 
     public function deleteBranch(Request $request, $id)
     {
-        Branch::find($id)->delete();
+        $company_branch= EmployeeJob::where('branch_id','=',$id)->count();
 
+        if ($company_branch == 0)
+        {
+        Branch::find($id)->delete();
         return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been deleted.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.branches')->with('status', 'You Cannot Delete This Record');
+        }
     }
 
     public function deletePosition(Request $request, $id)
     {
+        $employee_position= EmployeeJob::where('emp_mainposition_id','=',$id)->count();
+
+        if ($employee_position == 0)
+        {
         EmployeePosition::find($id)->delete();
 
         return redirect()->route('admin.settings.positions')->with('status', 'Position has successfully been deleted.');
-    }
+        }
+        else
+        {
+        return redirect()->route('admin.settings.positions')->with('status', 'You Cannot Delete This Record');
+        }
+    }   
 
     public function deleteWorkingDay(Request $request, $id)
     {
@@ -967,6 +1035,7 @@ class SettingsController extends Controller
 
     public function deleteSocso(Request $request, $id)
     {
+        
         Socso::find($id)->delete();
 
         return redirect()->route('admin.settings.socso')->with('status', 'Socso has successfully been deleted.');
@@ -974,12 +1043,18 @@ class SettingsController extends Controller
 
     public function deletePcb(Request $request, $id)
     {
+        $employee_pcb_group = Employee::where('pcb_group','=',$id)->count();
+
+        if ($employee_pcb_group == 0) {
         Pcb::find($id)->delete();
 
         return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been deleted.');
+        }
+        else
+        {
+        return redirect()->route('admin.settings.pcb')->with('status', 'You Cannot Delete This Record');
+        }
+
     }
-    
-
-
-
+  
 }
