@@ -864,10 +864,10 @@ class EmployeeController extends Controller
     public function postReportTo(Request $request, $id)
     {
         $reportToData = $request->validate([
-            'report_to_emp_id' => 'required',
+            'report_to_emp_id' => 'required|unique:employee_report_to,report_to_emp_id,NULL,id,deleted_at,NULL,emp_id,'.$id,
             'type' => 'required',
             'report_to_level' =>'required|unique:employee_report_to,report_to_level,NULL,id,deleted_at,NULL,emp_id,'.$id,
-            'kpi_proposer' => 'nullable',
+            'kpi_proposer' => 'required',
             'notes' => 'nullable',
         ]);
 
@@ -876,28 +876,57 @@ class EmployeeController extends Controller
         } else {
             $reportToData['kpi_proposer'] = request('kpi_proposer');
         }
-
+    
+        
         $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
-        if ($request->kpi_proposer == 0) {
+        $report_to_emp_id = Employee::find($id);
+
+     
+        $employee_report_to = EmployeeReportTo::where('report_to_emp_id','=',$id)
+        ->where('deleted_at','=',null)->count();
+
+
+
+        if ($employee_kpi_proposer ==0){
+
             $reportToData['created_by'] = auth()->user()->id;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
 
             return response()->json(['success'=>'Report To was successfully added']);
-        } else if($employee_kpi_proposer == 0){
-            $reportToData['created_by'] = auth()->user()->id;
-            $reportTo = new EmployeeReportTo($reportToData);
-            $employee = Employee::find($id);
-            $employee->report_tos()->save($reportTo);
+        }
 
-            return response()->json(['success'=>'Report To was successfully added']);
-        } else {
+        else {
+
             return response()->json(['fail'=>'KPI Proposer already exist']);
         }
+
     }
+
+
+
+
+        // if ($request->kpi_proposer == 0) {
+        //     $reportToData['created_by'] = auth()->user()->id;
+        //     $reportTo = new EmployeeReportTo($reportToData);
+        //     $employee = Employee::find($id);
+        //     $employee->report_tos()->save($reportTo);
+
+        //     return response()->json(['success'=>'Report To was successfully added']);
+        // } else if($employee_kpi_proposer == 0){
+        //     $reportToData['created_by'] = auth()->user()->id;
+        //     $reportTo = new EmployeeReportTo($reportToData);
+        //     $employee = Employee::find($id);
+        //     $employee->report_tos()->save($reportTo);
+
+        //     return response()->json(['success'=>'Report To was successfully added']);
+        // } else {
+        //     return response()->json(['fail'=>'KPI Proposer already exist']);
+        // }
+    
 
     public function postSecurityGroup(Request $request, $id)
     {
