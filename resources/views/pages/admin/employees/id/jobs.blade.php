@@ -1,6 +1,6 @@
 {{-- Table --}}
 <div class="tab-pane fade show p-3" id="nav-job" role="tabpanel" aria-labelledby="nav-job-tab">
-    <div class="row pb-3">
+    <div class="row pb-3" id="employee-job">
             {{-- <div class="col-auto mr-auto"></div>
             <div class="col-auto" id="show-resign-button">
                 <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
@@ -203,6 +203,17 @@
                             </div>
                         </div>
                     </div>
+                    @if(App\EmployeeJob::where('emp_id',$id)->whereNull('deleted_at')->count()==0)
+                    <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="employment-status"><strong>Employment Status*</strong></label>
+                                <select class="form-control" name="employment-status" >
+                                    <option value="probationer">Probationer</option>
+                                </select>
+                                <div id="employment-status-error" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    @else
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="employment-status"><strong>Employment Status*</strong></label>
@@ -216,6 +227,7 @@
                             <div id="employment-status-error" class="invalid-feedback"></div>
                         </div>
                     </div>
+                    @endif
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="remarks"><strong>Remarks</strong></label>
@@ -548,6 +560,10 @@
                     showAlert(data.success);
                     $("#show-job-button").load(" #show-job-button");
                     jobsTable.ajax.reload();
+                    $('#employee-profile-details').load(' #reload-profile1');
+                    $('#nav-profile').load(' #reload-profile2');
+                    // $('#nav-job').load(' #employee-job');
+                    // $('#nav-job').load(' #employee-jobs-table');
                     $('#add-job-popup').modal('toggle');
                     clearJobModal('#add-job-form');
                 },
