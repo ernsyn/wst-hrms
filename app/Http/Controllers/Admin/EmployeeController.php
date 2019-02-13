@@ -39,6 +39,7 @@ use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
 use App\Media;
+use App\SecurityGroup;
 use App\EmployeeClockInOutRecord;
 use App\Http\Services\LeaveService;
 use App\Http\Requests\Admin\AddEmployee;
@@ -64,6 +65,8 @@ class EmployeeController extends Controller
     {
         $countries = Country::orderBy('citizenship')->get();
         $roles = Roles::all();
+        $security_groups = SecurityGroup::where('company_id','=',$id);
+        
 
         return view('pages.admin.employees.add', compact('countries','roles'));
     }
@@ -183,10 +186,20 @@ class EmployeeController extends Controller
             $profileUpdatedData['driver_license_expiry_date'] = null;
         }
 
+        $security = SecurityGroup::select('company_id')->where('id','=',$request->main_security_group_id)->get();
+        $company_id =Employee::select('company_id')->where('id','=',$security)->get();    
+        if ($security == $company_id)
+        {
         Employee::find($id)->update($profileUpdatedData);
 
         return response()->json(['success'=>'Profile was successfully updated.']);
-    }
+         }
+         
+        else 
+        {
+        return response()->json(['success'=>'Security Group Cannot Be Added.Please Select Security Group With Same Company ID']);
+        }
+}
 
     public function changepassword()
     {
@@ -891,6 +904,11 @@ class EmployeeController extends Controller
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
+
+        $security = SecurityGroup::select('company_id')->where('id','=',$request->security_group_id)->get();
+        $company_id =Employee::select('company_id')->where('id','=',$security)->get();    
+        if ($security == $company_id)
+        {
         $securityGroupData['created_by'] = auth()->user()->id;
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
 
@@ -898,7 +916,13 @@ class EmployeeController extends Controller
         $employee->employee_security_groups()->save($securityGroup);
 
         return response()->json(['success'=>'Security Group was successfully updated.']);
-    }
+        }
+        else 
+        {
+        return response()->json(['success'=>'Security Group Cannot Be Added.Please Select Security Group With Same Company ID']);
+        }
+}
+
 
     public function postMainSecurityGroup(Request $request, $id)
     {
