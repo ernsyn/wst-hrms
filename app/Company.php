@@ -40,6 +40,11 @@ class Company extends Model implements Auditable
     }
 
 
+    public function company()
+    {
+        return $this->belongsTo('App\Employee', 'company_id');
+    }
+
  
 
     protected $dates = ['deleted_at'];
