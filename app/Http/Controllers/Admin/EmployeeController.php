@@ -65,7 +65,7 @@ class EmployeeController extends Controller
     {
         $countries = Country::orderBy('citizenship')->get();
         $roles = Roles::all();
-        $security_groups = SecurityGroup::where('company_id','=',$id);
+      
         
 
         return view('pages.admin.employees.add', compact('countries','roles'));
