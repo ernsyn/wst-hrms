@@ -925,44 +925,6 @@ class EmployeeController extends Controller
 
         }
     
-            // if ($employee_kpi_proposer = 0){
-    
-            //     $reportToData['created_by'] = auth()->user()->id;
-            //     $reportTo = new EmployeeReportTo($reportToData);
-            //     $employee = Employee::find($id);
-            //     $employee->report_tos()->save($reportTo);
-    
-            //     return response()->json(['success'=>'Report To was successfully added']);
-            // }
-    
-            // else {
-    
-            //     return response()->json(['fail'=>'KPI Proposer already exist']);
-            // }
-    
-        
-    
-    
-    
-    
-            // if ($request->kpi_proposer == 0) {
-            //     $reportToData['created_by'] = auth()->user()->id;
-            //     $reportTo = new EmployeeReportTo($reportToData);
-            //     $employee = Employee::find($id);
-            //     $employee->report_tos()->save($reportTo);
-    
-            //     return response()->json(['success'=>'Report To was successfully added']);
-            // } else if($employee_kpi_proposer == 0){
-            //     $reportToData['created_by'] = auth()->user()->id;
-            //     $reportTo = new EmployeeReportTo($reportToData);
-            //     $employee = Employee::find($id);
-            //     $employee->report_tos()->save($reportTo);
-    
-            //     return response()->json(['success'=>'Report To was successfully added']);
-            // } else {
-            //     return response()->json(['fail'=>'KPI Proposer already exist']);
-            // }
-    
 
     public function postSecurityGroup(Request $request, $id)
     {
