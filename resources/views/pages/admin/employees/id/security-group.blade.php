@@ -17,7 +17,7 @@
                             <label for="name"><strong>Name*</strong></label>
                             <select class="form-control{{ $errors->has('security-group-id') ? ' is-invalid' : '' }}" name="security-group-id" id="security-group-id">
                                 <option value="">Select Security Group</option>
-                                @foreach(App\SecurityGroup::all() as $company)
+                                @foreach($securityGroup as $company)
                                 <option value="{{ $company->id }}">{{ $company->name }}</option>
                                 @endforeach
                             </select>

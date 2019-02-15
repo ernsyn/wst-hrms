@@ -190,7 +190,7 @@ class ELeaveController extends Controller
     public function postAddPublicHoliday(Request $request)
     {
         $publicHolidayData = $request->validate([
-            'name' => 'required|unique:holidays,name',
+            'name' => 'required',
             'start_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'end_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'repeat_annually'=>'required',
@@ -674,6 +674,7 @@ class ELeaveController extends Controller
             ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
             ->select('leave_requests.*', 'leave_types.name')
             ->where('leave_types.code', '!=', 'UNPAID')
+            ->whereIn('leave_requests.status',['rejected','approved'])
             ->whereYear('leave_requests.start_date', '=', $year)
             ->get();
 
@@ -720,6 +721,7 @@ class ELeaveController extends Controller
             ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
             ->select('leave_requests.*', 'leave_types.code', 'leave_types.name')
             ->where('leave_types.code', 'UNPAID')
+            ->whereIn('leave_requests.status',['rejected','approved'])
             ->whereYear('leave_requests.start_date', '=', $year)
             ->get();
 

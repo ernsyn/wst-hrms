@@ -413,7 +413,7 @@ class SettingsController extends Controller
             'code' => 'required',
             'name' => 'required',
             'type' => 'required',
-            'amount' => 'required',
+            'amount' => 'required|integer',
             'statutory'=> 'nullable',
             'status'=>'required',
             'ea_form_id' =>'required',
@@ -450,7 +450,7 @@ class SettingsController extends Controller
             'code' => 'required',
             'name' => 'required',
             'type' => 'required',
-            'amount' => 'required',
+            'amount' => 'required|integer',
             'statutory'=> 'nullable',
             'status'=>'required',
             'ea_form_id' =>'required',
@@ -473,15 +473,25 @@ class SettingsController extends Controller
     public function postAddCompanySecurityGroup(Request $request,$id)
     {
         $securityGroupData = $request->validate([
-            'name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
+            'name' => 'required',
             'description' => 'required',
         ]);
+  
+        $security_group= SecurityGroup::where('name','=',$request->name)->where('company_id','=',$id)->count();
+     
+        if ($security_group == 0){
 
         $securityGroupData['company_id']=$id;
         $securityGroupData['created_by'] = auth()->user()->name;
         SecurityGroup::create($securityGroupData);
 
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been added.');
+        }
+
+        else 
+        {
+            return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group Name Already Taken.');
+        }
     }
 
     public function postAddCompanyBank(Request $request,$id)
@@ -806,7 +816,7 @@ class SettingsController extends Controller
             'code' => 'required',
             'name' => 'required',
             'type' => 'required',
-            'amount' => 'required',
+            'amount' => 'required|integer',
             'statutory'=> 'nullable',
             'status'=>'required',
             'ea_form_id' =>'required',
@@ -820,24 +830,6 @@ class SettingsController extends Controller
         $updateValidatedDeductionData['employee_grade'] = empty($updateValidatedDeductionData['employee_grade']) ? null : implode(",", $request->employee_grade);
         $updateValidatedDeductionData['company_id']=$id;
 
-        // if(!empty($updateValidatedDeductionData['statutory'])) 
-        // $updateValidatedDeductionData['statutory'] = implode(",", $request->statutory);
-        // else 
-        // $updateValidatedDeductionData['statutory'] = null;
-
-        // $updateValidatedDeductionData['confirmed_employee'] = $request->input('confirmed_employee');
-
-        // if(!empty($updateValidatedDeductionData['cost_centre'])) 
-        // $updateValidatedDeductionData['cost_centre'] = implode(",", $request->cost_centre);
-        // else 
-        // $updateValidatedDeductionData['cost_centre'] = null;
-
-        // if(!empty($updateValidatedDeductionData['employee_grade'])) 
-        // $updateValidatedDeductionData['employee_grade'] = implode(",", $request->employee_grade);
-        // else 
-        // $updateValidatedDeductionData['employee_grade'] = null;
-
-        // $updateValidatedDeductionData['company_id']=$id;
         Deduction::find($request->company_deduction_id)->update($updateValidatedDeductionData);
       //  Deduction::where('id', $request->company_deduction_id)->update($updateValidatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Deduction Group has successfully been updated.');
@@ -866,7 +858,7 @@ class SettingsController extends Controller
             'code' => 'required',
             'name' => 'required',
             'type' => 'required',
-            'amount' => 'required',
+            'amount' => 'required|integer',
             'statutory'=> 'nullable',
             'status'=>'required',
             'ea_form_id' =>'required',
@@ -887,17 +879,28 @@ class SettingsController extends Controller
     {
         $id = $request->id;
         $updateSecurityGroupData = $request->validate([
-                'name' => 'required|unique:security_groups,name,NULL,id,deleted_at,NULL',
+                'name' => 'required',
                 'description' => 'required'
 
             ]);
-            $updateSecurityGroupData['company_id']= $id;
-            $updateSecurityGroupData['created_by'] = auth()->user()->name;
 
+            $security_group= SecurityGroup::where('name','=',$request->name)->where('company_id','=',$id)->count();
+     
+            if ($security_group == 0){
+    
+                $updateSecurityGroupData['company_id']= $id;
+                $updateSecurityGroupData['created_by'] = auth()->user()->name;
+                SecurityGroup::where('id',  $request->security_group_id)->update($updateSecurityGroupData);
+    
+                return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been updated.');
+            }
+    
+            else 
+            {
+                return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group Name Already Taken.');
+            }
 
-        SecurityGroup::where('id',  $request->security_group_id)->update($updateSecurityGroupData);
-
-        return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group has successfully been updated.');
+       
     }
 
 
@@ -905,8 +908,13 @@ class SettingsController extends Controller
     public function deleteCostCentre(Request $request, $id)
     {
         $employee_job_cost_centre = EmployeeJob::where('cost_centre_id','=',$id)->count();
+        $addition_cost_centre = Addition::where('cost_centre', 'like', '%' . $id . '%')->count();
+        $deduction_cost_centre = Deduction::where('cost_centre', 'like', '%' . $id . '%')->count();
 
-        if ($employee_job_cost_centre == 0)
+
+
+        
+        if ($addition_cost_centre == 0 && $employee_job_cost_centre == 0 && $deduction_cost_centre == 0)
         {
         CostCentre::find($id)->delete();
         return redirect()->route('admin.settings.cost-centres')->with('status', 'Cost Centre has successfully been deleted.');
@@ -936,8 +944,10 @@ class SettingsController extends Controller
     public function deleteGrade(Request $request, $id)
     {
         $employee_job_grade= EmployeeJob::where('emp_grade_id','=',$id)->count();
+        $addition_grade = Addition::where('employee_grade', 'like', '%' . $id . '%')->count();
+        $deduction_grade = Deduction::where('employee_grade', 'like', '%' . $id . '%')->count();
 
-        if ($employee_job_grade == 0)
+        if ($employee_job_grade == 0 && $addition_grade == 0 && $deduction_grade == 0)
         {
         EmployeeGrade::find($id)->delete();
 

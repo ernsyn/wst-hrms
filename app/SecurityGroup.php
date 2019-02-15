@@ -23,5 +23,6 @@ class SecurityGroup extends Model implements Auditable
         return $this->belongsTo('App\Company', 'company_id');
     }
 
+    
 
 }
