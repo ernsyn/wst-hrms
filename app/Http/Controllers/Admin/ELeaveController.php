@@ -674,6 +674,7 @@ class ELeaveController extends Controller
             ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
             ->select('leave_requests.*', 'leave_types.name')
             ->where('leave_types.code', '!=', 'UNPAID')
+            ->whereIn('leave_requests.status',['rejected','approved'])
             ->whereYear('leave_requests.start_date', '=', $year)
             ->get();
 
@@ -720,6 +721,7 @@ class ELeaveController extends Controller
             ->join('leave_types', 'leave_requests.leave_type_id', '=', 'leave_types.id')
             ->select('leave_requests.*', 'leave_types.code', 'leave_types.name')
             ->where('leave_types.code', 'UNPAID')
+            ->whereIn('leave_requests.status',['rejected','approved'])
             ->whereYear('leave_requests.start_date', '=', $year)
             ->get();
 
