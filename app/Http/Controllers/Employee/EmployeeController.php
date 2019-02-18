@@ -323,6 +323,38 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Dependent is successfully added']);
     }
+    
+    public function postAttachment(Request $request, $id)
+    {
+        $attachmentData = $request->validate([
+            'name' => 'required',
+            'notes' => 'required',
+            'media_id' => '',
+            'attachment' => 'required'
+        ]);
+        
+        $attachment_data_url = null;
+        if (array_key_exists('attachment', $attachmentData)) {
+            $attachment_data_url = $attachmentData['attachment'];
+            $attach = self::processBase64DataUrl($attachment_data_url);
+            $mediaData = Media::create([
+                'category' => 'employee-attachment',
+                'mimetype' => $attach['mime_type'],
+                'data' => $attach['data'],
+                'size' => $attach['size'],
+                'filename' => 'employee_'.($id).'_'.date('Y-m-d_H:i:s').".".$attach['extension']
+            ]);
+            $attachmentData['media_id'] = $mediaData->id;
+        }
+        
+        $attachmentData['created_by'] = auth()->user()->id;
+        $attachment = new EmployeeAttachment($attachmentData);
+        
+        $employee = Employee::find($id);
+        $employee->employee_attachments()->save($attachment);
+        
+        return response()->json(['success'=>'Attachment was successfully added']);
+    }
 
     private static function processBase64DataUrl($dataUrl) {
         $parts = explode(',', $dataUrl);
@@ -341,7 +373,6 @@ class EmployeeController extends Controller
         ];
     }
 
-
     public function getWorkingDay($id)
     {
         $working_day = EmployeeWorkingDay::templates()->where('id', $id)->get();
@@ -355,9 +386,6 @@ class EmployeeController extends Controller
 
         return response()->json($working_day);
     }
-
-
-
 
     // SECTION: Edit
     public function postEditEmergencyContact(Request $request, $id)
@@ -385,6 +413,18 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Dependent was successfully updated.']);
     }
+    
+    public function postEditAttachment(Request $request, $emp_id, $id)
+    {
+        $attachmentUpdatedData = $request->validate([
+            'name' => 'required',
+            'notes' => 'required'
+        ]);
+        
+        EmployeeAttachment::find($id)->update($attachmentUpdatedData);
+        
+        return response()->json(['success'=>'Attachment was successfully updated.']);
+    }
 
     //delete function
     public function deleteEmergencyContact(Request $request, $id)
@@ -397,5 +437,11 @@ class EmployeeController extends Controller
     {
         EmployeeDependent::find($id)->delete();
         return response()->json(['success'=>'Dependent was successfully deleted.']);
+    }
+    
+    public function deleteAttachment(Request $request, $emp_id, $id)
+    {
+        EmployeeAttachment::find($id)->delete();
+        return response()->json(['success'=>'Attachment was successfully deleted.']);
     }
 }

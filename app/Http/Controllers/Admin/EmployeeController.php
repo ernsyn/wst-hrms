@@ -63,7 +63,8 @@ class EmployeeController extends Controller
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
         
-        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory'));    }
+        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory'));    
+    }
 
     public function display($id)
     {
@@ -89,11 +90,12 @@ class EmployeeController extends Controller
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
-        return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia, 'securityGroup' => $securityGroup], 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	    }
-
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	    
+    }
     
     public function securityGroupDisplay($id)
-    {           $securityGroup = DB::table('security_groups')
+    {           
+        $securityGroup = DB::table('security_groups')
         ->join('employees','security_groups.company_id','=','employees.company_id')
         ->select('security_groups.*')
         ->where('employees.id',$id)
@@ -180,7 +182,7 @@ class EmployeeController extends Controller
             'postcode' => 'required|numeric',
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'tax_no' => 'required|unique:employees,tax_no,'.$id.',id',
+            'tax_no' => 'nullable|unique:employees,tax_no,'.$id.',id',
             'pcb_group' => 'required_with:tax_no',
             'epf_no' => 'nullable|numeric|unique:employees,epf_no,'.$id.',id',
             'epf_category' => 'required_with:epf_no',
@@ -1154,7 +1156,6 @@ class EmployeeController extends Controller
 
         return response()->json(['success'=>'Attachment was successfully updated.']);
     }
-
 
     //delete function
     public function deleteEmergencyContact(Request $request, $emp_id, $id)

@@ -46,7 +46,6 @@ class Company extends Model implements Auditable
     {
         return $this->hasOne('App\SecurityGroup');
     }
-    
 
     public function company()
     {

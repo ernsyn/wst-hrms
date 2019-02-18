@@ -17,11 +17,9 @@ Route::group(['middleware' => ['guest']], function () {
     })->name('/');
 });
 
-
 Auth::routes();
 
 Route::get('', 'HomeController@index')->name('employee.dashboard');
-
 
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
@@ -76,12 +74,14 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
     Route::post('employee/dependents/{id}/edit','Employee\EmployeeController@postEditDependent')->name('employee.dependents.edit.post');
     Route::post('employee/profile/edit','Employee\EmployeeController@postEditProfile')->name('employee.profile.edit.post');
 
-
     Route::post('employee/emergency-contacts','Employee\EmployeeController@postEmergencyContact')->name('employee.emergency-contacts.post');
     Route::post('employee/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');
     Route::post('employee/immigrations','Employee\EmployeeController@postImmigration')->name('employee.immigrations.post');
     Route::post('employee/visas','Employee\EmployeeController@postVisa')->name('employee.visas.post');
-
+    Route::post('employees/{emp_id}/attachments','Employee\EmployeeController@postAttachment')->name('employee.attachments.post')->where('id', '[0-9]+');
+    Route::post('employees/{emp_id}/attachments/{id}/edit','Employee\EmployeeController@postEditAttachment')->name('employee.attachments.edit.post')->where('id', '[0-9]+');
+    Route::get('employees/{emp_id}/attachments/{id}/delete','Employee\EmployeeController@deleteAttachment')->name('employee.attachments.delete')->where('id', '[0-9]+');
+    
     Route::post('e-leave/working-day','Employee\ELeaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
     Route::get('e-leave/types', 'Employee\ELeaveController@ajaxGetLeaveTypes')->name('employee.e-leave.ajax.types');
     Route::post('e-leave/request/check', 'Employee\ELeaveController@ajaxPostCheckLeaveRequest')->name('employee.e-leave.ajax.request.check');
@@ -107,9 +107,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     // > View
     Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
     Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
-    Route::get('employees/{id}','Admin\EmployeeController@securityGroupDisplay')->name('admin.employees.id.security-group')->where('id', '[0-9]+');
-
-
+    Route::get('employees/{id}/security-groups','Admin\EmployeeController@securityGroupDisplay')->name('admin.employees.id.security-group')->where('id', '[0-9]+');
+    
     Route::post('employees/{id}/reset-password','Admin\EmployeeController@postResetPassword')->name('admin.employees.reset-password.post')->where('id', '[0-9]+');
     Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
@@ -158,8 +157,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{emp_id}/working-day','Admin\EmployeeController@postWorkingDay')->name('admin.employees.working-days.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/attachments','Admin\EmployeeController@postAttachment')->name('admin.employees.attachments.post')->where('id', '[0-9]+');
 
-    
-
     //admin edit
     Route::post('employees/{id}/edit','Admin\EmployeeController@postEditProfile')->name('admin.employees.profile.edit.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/profile-pic/edit','Admin\EmployeeController@postEditProfilePicture')->name('admin.employees.profile-pic.edit.post')->where('emp_id', '[0-9]+');
@@ -183,7 +180,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::post('employees/{emp_id}/working-day/edit','Admin\EmployeeController@postEditWorkingDay')->name('admin.employees.working-day.edit.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/jobs/{id}/edit','Admin\EmployeeController@postEditJob')->name('admin.employees.jobs.edit.post')->where('id', '[0-9]+');
 
-
     //admin/employee/delete
     Route::get('employees/{emp_id}/emergency-contacts/{id}/delete','Admin\EmployeeController@deleteEmergencyContact')->name('admin.settings.emergency-contacts.delete')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/dependents/{id}/delete','Admin\EmployeeController@deleteDependent')->name('admin.settings.dependents.delete')->where('id', '[0-9]+');
@@ -196,8 +192,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('employees/{emp_id}/attachments/{id}/delete','Admin\EmployeeController@deleteAttachment')->name('admin.settings.attachments.delete')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/report-tos/{id}/delete','Admin\EmployeeController@deleteReportTo')->name('admin.settings.report-tos.delete')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/security-groups/{id}/delete','Admin\EmployeeController@deleteSecurityGroup')->name('admin.settings.security-groups.delete')->where('id', '[0-9]+');
-
-
 
     // SECTION: SETTINGS
 

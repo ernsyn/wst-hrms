@@ -413,8 +413,8 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Security Group</label>
                             <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('main_security_group_id') ? 'is-invalid' : '' }}" name="main_security_group_id" id="main_security_group_id">
-                                    <option value=""></option>
+                                <select class="form-control{{ $errors->has('main_security_group_id') ? ' is-invalid' : '' }}" name="main_security_group_id" id="main_security_group_id">
+                                    <option value="">Select Security Group</option>
                                     @foreach(App\SecurityGroup::all() as $main_security_group)
                                         @if (old('main_security_group_id') == $main_security_group->id)
                                         	<option value="{{ $main_security_group->id }}" selected>{{ $main_security_group->name }}</option>
