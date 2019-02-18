@@ -33,6 +33,8 @@ use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
 use App\Media;
+use App\SecurityGroup;
+use App\EmployeeClockInOutRecord;
 use App\Http\Services\LeaveService;
 use App\Imports\UserImport;
 use App\Mail\NewUserMail;
@@ -61,8 +63,7 @@ class EmployeeController extends Controller
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
         
-        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory'));
-    }
+        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory'));    }
 
     public function display($id)
     {
@@ -80,11 +81,25 @@ class EmployeeController extends Controller
         ->where('employees.id', $id)
         ->first();
 
-        $roles = AccessControllHelper::getRoles();
+		$securityGroup = DB::table('security_groups')
+        ->join('employees','security_groups.company_id','=','employees.company_id')
+        ->select('security_groups.*')
+        ->where('employees.id',$id)
+        ->get();		$roles = AccessControllHelper::getRoles();
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
-        return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	
+        return view('pages.admin.employees.id', ['employee' => $employee,'userMedia' => $userMedia, 'securityGroup' => $securityGroup], 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	    }
+
+    
+    public function securityGroupDisplay($id)
+    {           $securityGroup = DB::table('security_groups')
+        ->join('employees','security_groups.company_id','=','employees.company_id')
+        ->select('security_groups.*')
+        ->where('employees.id',$id)
+        ->get();
+
+        return view('pages.admin.employees.id.security-group', ['securityGroup' => $securityGroup]);
     }
 
     public function postToggleRoleAdmin(Request $request, $id)
@@ -187,9 +202,19 @@ class EmployeeController extends Controller
             $profileUpdatedData['driver_license_expiry_date'] = null;
         }
 
+        // $security = SecurityGroup::select('company_id')->where('id','=',$request->main_security_group_id)->get();
+        // $company_id =Employee::select('company_id')->where('id','=',$security)->get();    
+        // if ($security == $company_id)
+        // {
         Employee::find($id)->update($profileUpdatedData);
 
         return response()->json(['success'=>'Profile was successfully updated.']);
+        //  }
+         
+        // else 
+        // {
+        // return response()->json(['success'=>'Security Group Cannot Be Added.Please Select Security Group With Same Company ID']);
+        // }
     }
 
     public function changepassword()
@@ -866,10 +891,10 @@ class EmployeeController extends Controller
     public function postReportTo(Request $request, $id)
     {
         $reportToData = $request->validate([
-            'report_to_emp_id' => 'required',
+                'report_to_emp_id' => 'required|unique:employee_report_to,report_to_emp_id,NULL,id,deleted_at,NULL,emp_id,'.$id,
             'type' => 'required',
             'report_to_level' =>'required|unique:employee_report_to,report_to_level,NULL,id,deleted_at,NULL,emp_id,'.$id,
-            'kpi_proposer' => 'nullable',
+                'kpi_proposer' => 'required',
             'notes' => 'nullable',
         ]);
 
@@ -879,27 +904,37 @@ class EmployeeController extends Controller
             $reportToData['kpi_proposer'] = request('kpi_proposer');
         }
 
+    
         $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
+            $report_to_emp_id = Employee::find($id);
+    
+            $employee_report_to = EmployeeReportTo::where('report_to_emp_id','=',$id)
+            ->where('deleted_at','=',null)->count();
+    
+    
         if ($request->kpi_proposer == 0) {
+    
             $reportToData['created_by'] = auth()->user()->id;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
+                return response()->json(['success'=>'Report To was successfully updated.']);
 
-            return response()->json(['success'=>'Report To was successfully added']);
         } else if($employee_kpi_proposer == 0){
             $reportToData['created_by'] = auth()->user()->id;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
+                return response()->json(['success'=>'Report To was successfully updated.']);
 
-            return response()->json(['success'=>'Report To was successfully added']);
         } else {
             return response()->json(['fail'=>'KPI Proposer already exist']);
         }
+
     }
+
 
     public function postSecurityGroup(Request $request, $id)
     {
@@ -907,6 +942,11 @@ class EmployeeController extends Controller
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
+
+        // $security = SecurityGroup::select('company_id')->where('id','=',$request->security_group_id)->get();
+        // $company_id =Employee::select('company_id')->where('id','=',$security)->get();    
+        // if ($security == $company_id)
+        // {
         $securityGroupData['created_by'] = auth()->user()->id;
         $securityGroup = new EmployeeSecurityGroup($securityGroupData);
 
@@ -914,7 +954,13 @@ class EmployeeController extends Controller
         $employee->employee_security_groups()->save($securityGroup);
 
         return response()->json(['success'=>'Security Group was successfully updated.']);
+        
+        // else 
+        // {
+        // return response()->json(['success'=>'Security Group Cannot Be Added.Please Select Security Group With Same Company ID']);
+        // }
     }
+
 
     public function postMainSecurityGroup(Request $request, $id)
     {

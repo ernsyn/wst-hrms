@@ -47,6 +47,12 @@ class Company extends Model implements Auditable
         return $this->hasOne('App\SecurityGroup');
     }
     
+
+    public function company()
+    {
+        return $this->belongsTo('App\Employee', 'company_id');
+    }
+
     public function payrollSetup()
     {
         return $this->hasOne('App\PayrollSetup');

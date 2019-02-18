@@ -108,14 +108,15 @@
                                     <input type="checkbox" class="form-check-input" name="statutory[]" value="SOCSO">
                                     <label class="form-check-label">SOCSO</label>
                                 </div>
-                                <div class="form-check">
+                                <div class="form-check"> 
                                     <input type="checkbox" class="form-check-input" name="statutory[]" value="EIS">
                                     <label class="form-check-label">EIS</label>
                                 </div>
                             </div>
                             <label class="col-md-12 col-form-label">EA Form*</label>
                             <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id">
+                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id" required> 
+                                <option value="">Please Select</option>
                                 @foreach($ea_form as $item)
                                 <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
                                 @endforeach
