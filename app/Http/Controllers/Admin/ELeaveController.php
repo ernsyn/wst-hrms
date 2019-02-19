@@ -240,7 +240,7 @@ class ELeaveController extends Controller
     public function postEditHoliday(Request $request, $id)
     {
         $holidayUpdatedData = $request->validate([
-            'name' => 'required|unique:holidays,name,deleted_at,NULL',
+            'name' => 'required',
             'start_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'end_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'repeat_annually' => 'required',
@@ -257,7 +257,12 @@ class ELeaveController extends Controller
 
         $holidayUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['start_date'])));
         $holidayUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['end_date'])));
+        $startdate = Holiday::where('name','=',$holidayUpdatedData['name'] )
+        ->where('start_date','=', $holidayUpdatedData['start_date'] )
+        ->count();
 
+        if ($startdate ==0)
+        {
         $startTimeStamp  = strtotime($holidayUpdatedData['start_date']);
         $endTimeStamp  = strtotime($holidayUpdatedData['end_date']);
         $timeDiff = $endTimeStamp - $startTimeStamp;
@@ -266,6 +271,12 @@ class ELeaveController extends Controller
         Holiday::find($id)->update($holidayUpdatedData);
 
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
+       
+        }
+        else 
+        {
+        return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday is already added.');
+        }
     }
 
     public function generatePublicHolidays()
