@@ -345,7 +345,7 @@
                                 <select class="form-control{{ $errors->has('main_security_group_id') ? 'is-invalid' : '' }}" name="main_security_group_id" id="main_security_group_id">
                                     <option value=""></option>
                                     @foreach(App\SecurityGroup::all() as $main_security_group)
-                                    <option value="{{ $main_security_group->id }}">{{ $main_security_group->name }}</option>
+                                    <option value="{{ $main_security_group->id }}">{{ $main_security_group->company->name }} - {{ $main_security_group->name }}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('main_security_group_id'))

@@ -16,6 +16,7 @@
                     </div>
                 </div>
             </div>
+            <p></p>
             <div class="float-right tableTools-container"></div>
             <table class="hrms-data-table compact w-100 t-2" id="attendances-table">
                 <thead>

@@ -78,7 +78,8 @@
                             </div>
                             <label class="col-md-12 col-form-label">Amount</label>
                             <div class="col-md-12">
-                                <input type="text" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" required>
+                                    <input class="form-control" name="amount"
+                                    type="number" step="0.01" min="0" />
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
@@ -210,7 +211,8 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Amount</label>
                                 <div class="col-md-12">
-                                    <input type="number" class="form-control{{ $errors->has('amount') ? ' is-invalid' : '' }}" name="amount" value="{{ old('amount') }}" required>
+                                        <input class="form-control" name="amount"
+                                        type="number" step="0.01" min="0" />
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
@@ -474,4 +476,6 @@
         });
     });
 </script>
+
 @append
+
