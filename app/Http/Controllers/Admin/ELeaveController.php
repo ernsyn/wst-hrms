@@ -194,7 +194,7 @@ class ELeaveController extends Controller
             'start_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'end_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'repeat_annually'=>'required',
-            'state'=>'nullable',
+            'state'=>'required',
             'note' => 'nullable',
         ]);
         $publicHolidayData['created_by'] = auth()->user()->name;

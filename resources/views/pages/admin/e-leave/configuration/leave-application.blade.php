@@ -47,24 +47,18 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-sm-6">
-                                    <label class="col-sm-12  px-0 col-form-label">Start Date</label>
-                                    <div class="input-group date" data-target-input="nearest">
-                                        <input type="text" id="start-date" class="form-control datetimepicker-input" data-target="#start-date" autocomplete="off"/>
-                                        <div class="input-group-append" data-target="#start-date" data-toggle="datetimepicker">
-                                            <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
-                                        </div>
-                                        <div id="start-date-error" class="invalid-feedback"></div>
+                                <div class="col-sm-6 px-0">
+                                    <label class="col-sm-12 col-form-label">Start Date</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" id="start-date" readonly required data-parsley-error-message="Please choose Start Date">
+                                        <input type="text" class="form-control" name="alt-start-date" id="alt-start-date" hidden>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-12 px-0 col-form-label">End Date</label>
-                                    <div class="input-group date" data-target-input="nearest">
-                                        <input type="text" id="end-date" class="form-control datetimepicker-input" data-target="#end-date" autocomplete="off"/>
-                                        <div class="input-group-append" data-target="#end-date" data-toggle="datetimepicker">
-                                            <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
-                                        </div>
-                                        <div id="end-date-error" class="invalid-feedback"></div>
+                                <div class="col-sm-6 px-0">
+                                    <label class="col-sm-12 col-form-label">End Date</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" id="end-date" readonly required>
+                                        <input type="text" class="form-control" name="alt-end-date" id="alt-end-date" hidden>
                                     </div>
                                 </div>
                             </div>
@@ -301,29 +295,78 @@
                     });
                 }
             });
-        }  
+        }        
 
-        // datepicker add exp
-        $('#start-date').datetimepicker({
-            format: 'DD/MM/YYYY'
-        });
-        $("#start-date").on("change.datetimepicker", function (e) {
-            $('#end-date').datetimepicker('minDate', e.date);
-        });
-        //disable keyboard input & hide caret
-        $("#start-date").keydown(false);
-        $("#start-date").css('caret-color', 'transparent');
+        function initCalendar() {
+            var employee_id = $('#select-employee').find('option:selected').val();
 
-        $('#end-date').datetimepicker({
-            format: 'DD/MM/YYYY',
-            useCurrent: false
-        });
-        $("#end-date").on("change.datetimepicker", function (e) {
-            $('#start-date').datetimepicker('maxDate', e.date);
-        });
-        //disable keyboard input & hide caret
-        $("#end-date").keydown(false);
-        $("#end-date").css('caret-color', 'transparent');
+            let getLeaveRequestsTemplate = '{{ route('admin.e-leave.ajax.employees.leave-requests', ['emp_id' => '<<emp_id>>']) }}';
+            let getHolidaysTemplate = '{{ route('admin.e-leave.ajax.employee.holidays', ['emp_id' => '<<emp_id>>']) }}';
+
+            var getLeaveRequests = getLeaveRequestsTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
+            var getHolidays = getHolidaysTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
+
+            $('#calendar-leave').fullCalendar({
+                themeSystem: 'bootstrap4',
+                header: {
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'month,agendaWeek,agendaDay,listMonth'
+                },
+                weekNumbers: false,
+                eventLimit: true, // allow "more" link when too many events
+                eventSources: [{
+                    url: getLeaveRequests + '?status=new',
+                    color: '#CCCCCC',
+                    textColor: 'black'
+                },
+                {
+                    url: getLeaveRequests + '?status=approved',
+                    textColor: 'white',
+                    color: '#18b775'
+                },
+                {
+                    url: getLeaveRequests + '?status=rejected',
+                    color: '#e23f3f',
+                    textColor: 'white'
+                },
+                {
+                    url: getHolidays,
+                    color: '#4286f4',
+                    textColor: 'white'
+                }],
+                businessHours: {  
+                    dow: workingDays
+                },
+                eventRender: function (event, element) {
+                    element.attr('href', 'javascript:void(0);');
+                    element.click(function() {
+                        event_start = new Date(event.start);
+                        event_end = new Date(event.end);
+                        event_end.setDate(event_end.getDate() - 1); // fix for end date showing a day later
+
+                        if(event.status == "new") {
+                            $("#can-edit-delete").show();
+                        }
+                        else {
+                            $("#can-edit-delete").hide();
+                        }
+
+                        $("#leave-info").text(event.reason);
+                        $("#start-time").text(event_start.toDateString());
+                        $("#end-time").text(event_end.toDateString());
+                        $("#am-pm").text(event.am_pm);
+                        $("#leave-type-info").text(event.title);
+                        $("#leave-id").text(event.id);                    
+                        $("#leave-details").modal('toggle');
+                    });
+                }, 
+                eventAfterAllRender: function (view) {
+                    $('#calendar-leave .progress').attr('hidden', true);
+                    $('#must-select-employee').attr('hidden', true);
+                }
+            });
+        }       
 
         // Full day, AM, PM toggle
         $("button.leave-day").on('click', function() {
@@ -418,7 +461,41 @@
                 }
             }); 
         });
-        
+
+        $("#start-date").datepicker({
+            altField: "#alt-start-date",
+            altFormat: 'yy-mm-dd',
+            dateFormat: 'dd-mm-yy',
+            minDate: 0,
+            onSelect: function onSelect(selectedDate) {
+                $("#end-date").datepicker("option", "minDate", selectedDate);
+                $('#error-message').text('');
+                $('#total-days b').text('0.0');
+
+                checkLeaveRequest($('#start-date').val(), $('#end-date').val())    
+            },
+            onClose: function onClose() {
+                $(this).parsley().validate();
+            }
+        });
+
+        $('#end-date').datepicker({
+            altField: "#alt-end-date",
+            altFormat: 'yy-mm-dd',
+            dateFormat: 'dd-mm-yy',
+            minDate: 0,
+            onSelect: function onSelect(selectedDate) {
+                $("#start-date").datepicker("option", "maxDate", selectedDate);
+                $('#error-message').text('');
+                $('#total-days b').text('0.0');
+
+                checkLeaveRequest($('#start-date').val(), $('#end-date').val()); 
+            },
+            onClose: function onClose() {
+                $(this).parsley().validate();
+            }
+        });
+
         // change day according to selected value
         $("#leave-half-day-am").click(function(){  
             $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
@@ -462,7 +539,7 @@
             console.log(leave_type_data);
         });
 
-        // submit leave request (add/edit mode)
+        // submit leave request ) (add/edit mode)
         $('#add-leave-request-form #add-leave-request-submit').click(function(e) {
             e.preventDefault();
             $('#error-message').prop('hidden', true);

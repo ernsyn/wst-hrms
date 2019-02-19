@@ -4,26 +4,25 @@
 
 <head>
 	
-	<title>Holidays Generated for the New Year!</title>
+	<title>Visas Expired Date!</title>
 
 </head>
 
 <body>
 
-	<h3>Holidays Generated for the New Year!</h3>
+	<h3>Visas Expired Date!</h3>
 
 	<p>Hi Admin,</p>
 
-	<p>The following annually repeated holidays have been generated for the following year:</p>
+	<p>The following employee's visa going to expired(less than 6 months):</p>
 
 	<table cellpadding="3" cellspacing="0" border="1">
 		<tr>
 			<th align="left">Name</th>
+			<th align="left">Employee</th>
 			<th align="left">Star Date</th>
-			<th align="left">End Date</th>
-			<th align="left">Note</th>
-			<th align="left">Total Days</th>
-			<th align="left">State(s)</th>
+
+
 		</tr>
 		@foreach($emailContent as $row)
 			<tr>

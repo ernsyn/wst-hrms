@@ -52,15 +52,15 @@ class GenerateEmailExceededVisaExpiredDate extends Command
         $emailData = array();
 
         foreach ($visas as $row) {
-            $start = new Carbon($row->start_date);
-            $end = new Carbon($row->end_date);
+            $start = new Carbon($row->expiry_date);
+            $end = new Carbon($row->issued_date);
             $start_next = $start->addYear();
             $end_next = $end->addYear();
 
             // check if holiday has already been duplicated
             $check_exist = EmployeeVisa::where('name', $row->name)
-            ->where('start_date', $start_next)
-            ->where('end_date', $end_next)
+            ->where('issued_date', $start_next)
+            ->where('expiry_date', $end_next)
             ->count() > 0;
 
             // duplicate holidays for next year
