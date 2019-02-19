@@ -416,10 +416,7 @@
                                 <select class="form-control{{ $errors->has('main_security_group_id') ? ' is-invalid' : '' }}" name="main_security_group_id" id="main_security_group_id">
                                     <option value="">Select Security Group</option>
                                     @foreach(App\SecurityGroup::all() as $main_security_group)
-                                        @if (old('main_security_group_id') == $main_security_group->id)
-                                        	<option value="{{ $main_security_group->id }}" selected>{{ $main_security_group->name }}</option>
-    									@else
-    										<option value="{{ $main_security_group->id }}">{{ $main_security_group->name }}</option>
+                                    <option value="{{ $main_security_group->id }}">{{ $main_security_group->company->name }} - {{ $main_security_group->name }}</option>
     									@endif
                                     @endforeach
                                 </select>
