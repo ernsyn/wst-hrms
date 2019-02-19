@@ -417,7 +417,6 @@
                                     <option value="">Select Security Group</option>
                                     @foreach(App\SecurityGroup::all() as $main_security_group)
                                     <option value="{{ $main_security_group->id }}">{{ $main_security_group->company->name }} - {{ $main_security_group->name }}</option>
-    									@endif
                                     @endforeach
                                 </select>
                                 @if ($errors->has('main_security_group_id'))
