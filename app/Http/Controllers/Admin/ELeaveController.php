@@ -209,12 +209,12 @@ class ELeaveController extends Controller
 
         $publicHolidayData['start_date'] = implode("-", array_reverse(explode("/", $publicHolidayData['start_date'])));
         $publicHolidayData['end_date'] = implode("-", array_reverse(explode("/", $publicHolidayData['end_date'])));
-        $startdate = Holiday::where('name','=',$publicHolidayData['name'] )
+        $startDate = Holiday::where('name','=',$publicHolidayData['name'] )
         ->where('start_date','=', $publicHolidayData['start_date'] )
         ->count();
 
 
-        if ($startdate ==0)
+        if ($startDate ==0)
         {
         $startTimeStamp  = strtotime($publicHolidayData['start_date']);
         $endTimeStamp  = strtotime($publicHolidayData['end_date']);
@@ -258,18 +258,18 @@ class ELeaveController extends Controller
 
         $holidayUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['start_date'])));
         $holidayUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['end_date'])));
-        $startdate = Holiday::where('name','=',$holidayUpdatedData['name'] )
+        $startDate = Holiday::where('name','=',$holidayUpdatedData['name'] )
         ->where('start_date','=', $holidayUpdatedData['start_date'] )
         ->count();
 
-        $editname = Holiday::where('name','=',$holidayUpdatedData['name'] )
+        $editName = Holiday::where('name','=',$holidayUpdatedData['name'] )
         ->where('start_date','=', $holidayUpdatedData['start_date'] )
         ->where('id','=',$id)
         ->count();
 
 
  
-        if ($startdate ==0)
+        if ($startDate ==0)
         {
         $startTimeStamp  = strtotime($holidayUpdatedData['start_date']);
         $endTimeStamp  = strtotime($holidayUpdatedData['end_date']);
@@ -283,7 +283,7 @@ class ELeaveController extends Controller
         }
         else 
         {
-            if ($editname ==1)
+            if ($editName ==1)
             {
                 $startTimeStamp  = strtotime($holidayUpdatedData['start_date']);
                 $endTimeStamp  = strtotime($holidayUpdatedData['end_date']);
