@@ -87,6 +87,10 @@ class LeaveTypesTableSeeder extends Seeder
                     'attachment_type' => 'Birth Certificate',
                 ])
             ]),
+
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
+            ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::CONSECUTIVE,
             ]),
@@ -140,6 +144,10 @@ class LeaveTypesTableSeeder extends Seeder
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::NON_PRORATED,
             ]),
+
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
+            ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::GENDER,
                 'configuration' => json_encode([
@@ -170,6 +178,9 @@ class LeaveTypesTableSeeder extends Seeder
                 ])
             ]),
             new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
+            ]),
+            new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::EMPLOYEE_CANNOT_APPLY,
             ])
         ]);
@@ -188,6 +199,10 @@ class LeaveTypesTableSeeder extends Seeder
         $leaveType->applied_rules()->saveMany([
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::NO_LIMIT,
+            ]),
+
+        new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
             ]),
         ]);
 
@@ -211,6 +226,9 @@ class LeaveTypesTableSeeder extends Seeder
             ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::INC_OFF_DAYS,
+            ]),
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
             ]),
         ]);
 
@@ -241,6 +259,9 @@ class LeaveTypesTableSeeder extends Seeder
                     'max_after_applied_days' => 1,
                 ])
             ]),
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
+            ]),
         ]);
 
         // Leave Type: Marriage Leave
@@ -263,6 +284,9 @@ class LeaveTypesTableSeeder extends Seeder
             ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::CONSECUTIVE,
+            ]),
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
             ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::NON_PRORATED,
@@ -289,6 +313,9 @@ class LeaveTypesTableSeeder extends Seeder
                 'configuration' => json_encode([
                     'attachment_type' => 'Relevant Document',
                 ])
+            ]),
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
             ]),
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::MAX_DAYS_PER_APPLICATION,
