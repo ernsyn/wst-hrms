@@ -37,7 +37,7 @@
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Status*</strong></label>
                             <select name="acc-status" class="form-control">
-                                <option value="">Select Type</option>
+                                <option value="">Select Status</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
@@ -96,7 +96,7 @@
                         <div class="col-md-12 mb-3">
                             <label><strong>Account Status*</strong></label>
                             <select name="acc-status" type="text" class="form-control" placeholder="" value="" >
-                                <option value="">Select Type</option>
+                                <option value="">Select Status</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>

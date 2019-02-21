@@ -213,6 +213,7 @@ class ELeaveController extends Controller
         ->where('start_date','=', $publicHolidayData['start_date'] )
         ->count();
 
+
         if ($startdate ==0)
         {
         $startTimeStamp  = strtotime($publicHolidayData['start_date']);
@@ -261,6 +262,13 @@ class ELeaveController extends Controller
         ->where('start_date','=', $holidayUpdatedData['start_date'] )
         ->count();
 
+        $editname = Holiday::where('name','=',$holidayUpdatedData['name'] )
+        ->where('start_date','=', $holidayUpdatedData['start_date'] )
+        ->where('id','=',$id)
+        ->count();
+
+
+ 
         if ($startdate ==0)
         {
         $startTimeStamp  = strtotime($holidayUpdatedData['start_date']);
@@ -275,7 +283,23 @@ class ELeaveController extends Controller
         }
         else 
         {
+            if ($editname ==1)
+            {
+                $startTimeStamp  = strtotime($holidayUpdatedData['start_date']);
+                $endTimeStamp  = strtotime($holidayUpdatedData['end_date']);
+                $timeDiff = $endTimeStamp - $startTimeStamp;
+                $holidayUpdatedData['total_days'] = $timeDiff/86400 + 1;
+        
+                Holiday::find($id)->update($holidayUpdatedData);
+        
+                return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
+               
+            }
+            else
+            {
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday is already added.');
+            }
+    
         }
     }
 
@@ -480,11 +504,11 @@ class ELeaveController extends Controller
         $total_days = number_format($total_days,1);
         $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
-        LeaveRequest::find($id)->update(array('status' => 'rejected'));
+        LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
 
-        $spent_days_allocation = LeaveAllocation::find($emp_id)
-            ->where('leave_type_id',$leave_type_id)
+        $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+            ->where('leave_type_id','=',$leave_type_id)
             ->update(array('spent_days'=>$leaveAllocationDataEntry));
 
         return redirect()->route('admin.e-leave.configuration.leave-requests');
