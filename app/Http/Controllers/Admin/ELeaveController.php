@@ -205,9 +205,16 @@ class ELeaveController extends Controller
             $publicHolidayData['state'] = null;
         }
 
+
+
         $publicHolidayData['start_date'] = implode("-", array_reverse(explode("/", $publicHolidayData['start_date'])));
         $publicHolidayData['end_date'] = implode("-", array_reverse(explode("/", $publicHolidayData['end_date'])));
+        $startdate = Holiday::where('name','=',$publicHolidayData['name'] )
+        ->where('start_date','=', $publicHolidayData['start_date'] )
+        ->count();
 
+        if ($startdate ==0)
+        {
         $startTimeStamp  = strtotime($publicHolidayData['start_date']);
         $endTimeStamp  = strtotime($publicHolidayData['end_date']);
         $timeDiff = $endTimeStamp - $startTimeStamp;
@@ -217,6 +224,11 @@ class ELeaveController extends Controller
         Holiday::create($publicHolidayData);
 
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been added.');
+        }
+        else 
+        {
+        return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday is already added.');
+        }
     }
 
     public function editHoliday(Request $request, $id)
@@ -234,7 +246,7 @@ class ELeaveController extends Controller
             'repeat_annually' => 'required',
             'status' =>'required',
             'note'=>'nullable',
-            'state'=>'nullable'
+            'state'=>'required'
         ]);
 
         if ($request->state != null) {
@@ -245,7 +257,12 @@ class ELeaveController extends Controller
 
         $holidayUpdatedData['start_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['start_date'])));
         $holidayUpdatedData['end_date'] = implode("-", array_reverse(explode("/", $holidayUpdatedData['end_date'])));
+        $startdate = Holiday::where('name','=',$holidayUpdatedData['name'] )
+        ->where('start_date','=', $holidayUpdatedData['start_date'] )
+        ->count();
 
+        if ($startdate ==0)
+        {
         $startTimeStamp  = strtotime($holidayUpdatedData['start_date']);
         $endTimeStamp  = strtotime($holidayUpdatedData['end_date']);
         $timeDiff = $endTimeStamp - $startTimeStamp;
@@ -254,6 +271,12 @@ class ELeaveController extends Controller
         Holiday::find($id)->update($holidayUpdatedData);
 
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been updated.');
+       
+        }
+        else 
+        {
+        return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday is already added.');
+        }
     }
 
     public function generatePublicHolidays()
