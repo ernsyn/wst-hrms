@@ -9,6 +9,7 @@ use App\Enums\SocsoCategoryEnum;
 use App\Helpers\AccessControllHelper;
 use App\Http\Controllers\Controller;
 use Hash;
+use Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -478,8 +479,11 @@ class EmployeeController extends Controller
         ]);
 
         $attachment_data_url = $validated['attach'];
+        $securitygroup = SecurityGroup::where('company_id','=' ,$request->company_id)
+        ->where('id','=',$request->main_security_group_id)->count();
 
-
+        if($request->main_security_group_id && $securitygroup ==1)
+        {
         DB::transaction(function () use ($attachment_data_url, $validated) {
             $validatedUserData['name'] = $validated['name'];
             $validatedUserData['email'] = $validated['email'];
@@ -537,6 +541,16 @@ class EmployeeController extends Controller
         });
 
         return redirect()->route('admin.employees')->with('status', 'Employee was successfully added!');
+    }
+
+else {
+         // return redirect()->route('admin.employees.add')->with('status', ' was successfully added!'); 
+         Session::flash('message', "You have select wrong company security group ID");
+         return Redirect::back();
+
+    }
+
+
     }
 
 

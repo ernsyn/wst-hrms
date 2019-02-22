@@ -3,6 +3,9 @@
 <div class="container pb-5">
     <div id="alert-container">
     </div>   
+    @if (Session::has('message'))
+    <div class="alert alert-info">{{ Session::get('message') }}</div>
+ @endif
     <div class="card">
         <form method="POST" action="{{ route('admin.employees.add') }}" id="add-profile-form">
             <div class="card-body">

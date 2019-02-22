@@ -64,7 +64,7 @@
                     </div>
 
                     <div class="form-group row w-100">
-                        <label class="col-md-5 col-form-label">State</label>
+                        <label class="col-md-5 col-form-label">State*</label>
                         <div class="col-md-7">
                             <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]">
                                 <option value="">Please Select</option>
