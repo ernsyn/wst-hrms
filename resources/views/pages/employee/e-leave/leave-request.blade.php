@@ -54,6 +54,7 @@
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Total Days</th>
+                        <th>Attachment</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
