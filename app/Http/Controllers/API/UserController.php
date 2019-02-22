@@ -37,6 +37,8 @@ class UserController extends Controller
     public function info() 
     { 
         $user = Auth::user(); 
+        
+     
         return response()->json(new UserResource($user), $this->successStatus); 
     } 
 }
