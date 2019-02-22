@@ -439,7 +439,7 @@ class LeaveService
             if(!empty($leaveAllocation)) {
                 $calcEndDate = $startDate->copy()->addDays($leaveAllocation->allocated_days-1);
                 if(!$calcEndDate->equalTo($endDate)) {
-                    $additionalResponseData['end_date'] = $calcEndDate->toDateString();
+                    $additionalResponseData['end_date'] = $calcEndDate->format('d-m-Y');
                     $endDate = $calcEndDate;
                 }   
             }
