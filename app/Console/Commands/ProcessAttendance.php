@@ -204,6 +204,7 @@ class ProcessAttendance extends Command
                                 LeaveRequest::where('emp_id', $id)
                                 ->whereDate('start_date', '<=', $currentDateProcessed)
                                 ->whereDate('end_date', '>=', $currentDateProcessed)
+                                ->where('status','approved')
                                 ->count() > 0
                             ) {
                                 EmployeeAttendance::create([
