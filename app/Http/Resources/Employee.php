@@ -31,6 +31,7 @@ class Employee extends JsonResource
             'driver_license_no' => $this->driver_license_no,
             'driver_license_expiry_date' => $this->driver_license_expiry_date,
             'basic_salary' => $this->basic_salary,
+            'profile_media_id' => $this->profile_media_id,
         ];
     }
 }
