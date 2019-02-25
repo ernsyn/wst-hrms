@@ -79,7 +79,7 @@
                             <label class="col-md-12 col-form-label">Amount</label>
                             <div class="col-md-12">
                                     <input class="form-control" name="amount"
-                                    type="number" step="0.01" min="0" />
+                                    type="number" step="0.01" min="0" required/>
                             </div>
                             <label class="col-md-12 col-form-label">Status*</label>
                             <div class="col-md-12">
@@ -212,7 +212,7 @@
                                 <label class="col-md-12 col-form-label">Amount</label>
                                 <div class="col-md-12">
                                         <input class="form-control" name="amount"
-                                        type="number" step="0.01" min="0" />
+                                        type="number" step="0.01" min="0" required/>
                                 </div>
                                 <label class="col-md-12 col-form-label">Status*</label>
                                 <div class="col-md-12">
