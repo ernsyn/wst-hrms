@@ -75,7 +75,21 @@
                                     <span class="fas fa-ban"></span>
                                 @endif
                             </td>                           
-                            <td>{{$leaveRequest['status']}}</td>
+                            {{-- <td>{{$leaveRequest['status']}}</td> --}}
+                            <td>
+                                    {{-- {{$leaveRequest['status']}} --}}
+                                @if($leaveRequest->leave_request_approval->count() ==2)
+                                    {{$leaveRequest['status']}}
+                                @elseif($leaveRequest->leave_request_approval->count() ==1 && $leaveRequest['status']=='new')
+                                    Pending Second Approver
+                                @elseif($leaveRequest['status']=='rejected')
+                                    Rejected
+                                @else
+                                    New
+                                @endif
+                                
+                                
+                                </td>
                             <td>@if ($leaveRequest['status'] == 'new')
                                     <button class="btn btn-outline-primary waves-effect" data-toggle="modal" data-leaverequest-id="{{$leaveRequest['id']}}" onclick="window.location='{{ route('admin.e-leave.add-leave-request', ['id' => $leaveRequest->id]) }}';">
                                         <span class="fas fa-check-circle"></span>

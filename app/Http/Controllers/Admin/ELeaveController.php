@@ -510,6 +510,8 @@ class ELeaveController extends Controller
         $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
             ->where('leave_type_id','=',$leave_type_id)
             ->update(array('spent_days'=>$leaveAllocationDataEntry));
+            $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
+            self::sendLeaveRequestApprovalNotification($leave_request_approval, $emp_id);
 
         return redirect()->route('admin.e-leave.configuration.leave-requests');
     }
