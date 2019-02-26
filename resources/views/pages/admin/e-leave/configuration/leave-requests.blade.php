@@ -85,7 +85,7 @@
                                 @elseif($leaveRequest['status']=='rejected')
                                     Rejected
                                 @else
-                                    New
+                                {{$leaveRequest['status']}}
                                 @endif
                                 
                                 

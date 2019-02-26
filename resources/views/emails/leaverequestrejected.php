@@ -4,17 +4,17 @@
 
 <head>
 	
-	<title>Leave Approval!</title>
+	<title>Leave Rejected!</title>
 
 </head>
 
 <body>
 
-	<h3>Leave Approval (HRMS)</h3>
+	<h3>Leave Rejected (HRMS)</h3>
 
-	<p><strong>Hi {{ $leaveRequestApproval->approved_by->user->name}},</strong></p>
+	<p><strong>Hi,</strong></p>
 
-	<p>Leave request by {{ $leaveRequestApproval->leave_request_approval_id->employee->user->name}}  have been approved by approver</p>
+	<p>New leave request have been Rejected by approver</p>
 	<p>Please login into the Admin Portal to check and/or approve the leave request.</p>
 
 	<p>--------------------------------------------------------------</p>
