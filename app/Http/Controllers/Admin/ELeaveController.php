@@ -19,6 +19,7 @@ use \stdClass;
 use App\Http\Services\LeaveService;
 use App\Mail\LeaveRequestMail;
 use App\Mail\LeaveApprovalMail;
+use App\Mail\LeaveRejectedMail;
 use App\Employee;
 use Carbon\Carbon;
 use App\User;
@@ -510,8 +511,9 @@ class ELeaveController extends Controller
         $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
             ->where('leave_type_id','=',$leave_type_id)
             ->update(array('spent_days'=>$leaveAllocationDataEntry));
-            $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
-            self::sendLeaveRequestApprovalNotification($leave_request_approval, $emp_id);
+
+            $leave_request_rejected = LeaveRequest::where('id', $id)->first();
+            self::sendLeaveRequestRejectedNotification($leave_request_rejected, $emp_id);
 
         return redirect()->route('admin.e-leave.configuration.leave-requests');
     }
@@ -1162,6 +1164,64 @@ class ELeaveController extends Controller
             ->cc(Auth::user()->email)
             ->bcc($bcc_recepients)
             ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
+    }
+
+    public function sendLeaveRequestRejectedNotification(LeaveRequest $leave_request_rejected, $emp_id) 
+    {
+        $cc_recepients = array();
+        $bcc_recepients = array();
+        $to = array();
+
+        // get report to users
+         $report_to = EmployeeReportTo::select('emp_id')
+            ->where('report_to_emp_id', $emp_id)
+            ->get();
+
+            $report_tos = EmployeeReportTo::select('emp_id')
+            ->where('report_to_emp_id', $emp_id)
+            ->first();
+        
+            $employee_report_to_id = EmployeeReportTo::select('report_to_emp_id')
+            ->where('emp_id', $report_tos->emp_id)
+            ->get();
+
+           $reports= EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where('emp_id', $report_tos->emp_id)
+            ->where('employee_report_to.deleted_at',null)
+            ->get();
+    
+        
+        foreach ($reports as $row) {
+    
+            array_push($to, $row->email);
+                }
+
+        foreach ($report_to as $row) {
+            $employee = DB::table('employees')
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->emp_id)
+                ->first();
+               
+            array_push($cc_recepients, $employee->email);
+        }
+
+        // get admin users
+        $admin_users = User::whereHas("roles", function($q){
+            $q->where("name", "admin");
+        })->get();
+        
+       
+        foreach ($admin_users as $row) {
+          
+            array_push($bcc_recepients, $row->email);
+        }
+
+        \Mail::to($to)
+            ->cc(Auth::user()->email)
+            ->bcc($bcc_recepients,$cc_recepients)
+            ->send(new LeaveRejectedMail(Auth::user(), $leave_request_rejected));
     }
 
     private static function error($message) 

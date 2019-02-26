@@ -78,19 +78,19 @@ class EmployeeController extends Controller
         
 
         DB::transaction(function() use ($emp_id, $updatepictureData) {
-            $user = Employee::find($emp_id);
+            $employee = Employee::find($emp_id);
 
-            $oldProfileMedia = $user->profile_media;
+            $oldProfileMedia = $employee->profile_media;
     
             if(!empty($oldProfileMedia)) {
-                $user->profile_media()->dissociate();
-                $user->save();
+                $employee->profile_media()->dissociate();
+                $employee->save();
         
                 $oldProfileMedia->delete();
             }
             
-            $user->profile_media()->associate(Media::create($updatepictureData));
-            $user->save();    
+            $employee->profile_media()->associate(Media::create($updatepictureData));
+            $employee->save();    
         });
 
         return response()->json(['success'=>'Profile Picture was successfully updated.']);
