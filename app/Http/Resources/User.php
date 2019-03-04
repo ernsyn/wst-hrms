@@ -24,7 +24,7 @@ class User extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'employee' => new EmployeeResource($this->employee),
-            'media' => new MediaResource($this->medias),
+            'media' => new MediaResource($this->employee->profile_media),
             'country' => new CountryResource($this->employee->employee_countries),
         ];
     }

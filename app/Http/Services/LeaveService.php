@@ -419,7 +419,7 @@ class LeaveService
         ->whereNull('end_date')
         ->first();
 
-        if($probation) {
+        if(!$is_admin && $probation) {
             $invalid = true;
             $invalidErrorMessage = "Employee is not eligable for leave application while on probation.";
         }
@@ -439,7 +439,7 @@ class LeaveService
             if(!empty($leaveAllocation)) {
                 $calcEndDate = $startDate->copy()->addDays($leaveAllocation->allocated_days-1);
                 if(!$calcEndDate->equalTo($endDate)) {
-                    $additionalResponseData['end_date'] = $calcEndDate->toDateString();
+                    $additionalResponseData['end_date'] = $calcEndDate->format('d-m-Y');
                     $endDate = $calcEndDate;
                 }   
             }
@@ -585,12 +585,12 @@ class LeaveService
         $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
         $employee->gender;
 
-        $is_unpaid_leave = false;
-
+        
         Carbon::THURSDAY;
         
         $leaveTypesForUser = array();
         foreach($leaveTypes as $leaveType) {
+            $is_unpaid_leave = false;
             $additionalLeaveTypeDetails = array();
             $includeLeaveType = true;
             foreach($leaveType->applied_rules as $rule) {
