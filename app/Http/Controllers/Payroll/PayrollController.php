@@ -1619,88 +1619,181 @@ class PayrollController extends Controller
     // Download payslip form
     public function showPayslip()
     {
-        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
-        $period = GenerateReportsHelper::getPeriod($company->id);
-        return view('pages.payroll.payslip', ['period' => $period]);
+        $user = AccessControllHelper::getCurrentUserLogon();
+        
+        $payslips = PayrollTrx::leftJoin('payroll_master', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->where([
+                ['payroll_trx.employee_id', $user->id],
+                ['payroll_master.status', PayrollStatus::LOCKED]
+            ])
+            ->select('payroll_master.*','payroll_trx.*')
+            ->get();
+
+        return view('pages.payroll.payslip', ['payslips' => $payslips]);
     }
     
-    public function downloadPayslip(PayslipRequest $request)
+    public function downloadPayslip(Request $request, $id)
     {
-//         dd($request);
-        $currentUser = auth()->user()->id;
-        $employee = Employee::where('user_id', $currentUser)->first();
-        $companyId = $employee->company_id;
-        $validated = $request->validated();
-        $data = array(
-            'year_month' => substr($validated['payrollMonth'],0,4).'-'.substr($validated['payrollMonth'],4,2).'-01',
-            'companyId' => $companyId
-        );
+        $currentUser = AccessControllHelper::getCurrentUserLogon();
         
-        $payroll = $this->payrollService->findByPayrollMonth($data);
-        if (count($payroll) > 0) {
-            $payrollMasterId = $payroll->first()->id;
-            $info = $this->payrollTrx->findByEmployee($payrollMasterId, $employee->id);
-            if(isset($info)){
-                $addition = $this->payrollTrxAdditionRepository->findByPayrollTrxId($info->id);
-                $deduction = $this->payrollTrxDeductionRepository->findByPayrollTrxId($info->id);
-                
-                $info->extra_count = (count($addition) > count($deduction))? count($addition) : count($deduction);
-            }else{
-                $msg = 'Payslip ' . substr($validated['payrollMonthPeriod'],0,4).'-'.substr($validated['payrollMonthPeriod'],4,2) . ' is not ready.';
-                return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
+        $payslip = PayrollTrx::leftJoin('payroll_master', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->join('companies', 'companies.id', '=', 'payroll_master.company_id')
+            ->join('employees', 'employees.id', '=', 'payroll_trx.employee_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where([
+                ['payroll_trx.employee_id', $currentUser->id],
+                ['payroll_trx.id', $id],
+            ])
+            ->select('payroll_master.*','payroll_trx.*', 'companies.name as company_name', 'employees.*', 'users.name',
+                DB::raw('sum(payroll_trx.employee_epf) as employee_epf '),
+                DB::raw('sum(payroll_trx.employee_eis) as employee_eis'),
+                DB::raw('sum(payroll_trx.employee_socso) as employee_socso'),
+                DB::raw('sum(payroll_trx.employee_pcb) as employee_pcb'),
+                DB::raw('sum(payroll_trx.employer_epf) as employer_epf '),
+                DB::raw('sum(payroll_trx.employer_eis) as employer_eis'),
+                DB::raw('sum(payroll_trx.employer_socso) as employer_socso')
+            )
+            ->groupBy(DB::raw("payroll_trx.employee_id"))
+            ->first();
+            
+        if (count($payslip) > 0) {
+            $employeeBranch = PayrollHelper::getEmployeeBranch($currentUser, $payslip->year_month);
+            $payslip->employeeBranch = $employeeBranch;
+            $employeeBankAcc = PayrollHelper::getEmployeeBankAcc($currentUser);
+            $payslip->employeeBank = @$employeeBankAcc->bank_code;
+            $payslip->employeeBankAccNo = @$employeeBankAcc->acc_no;
+            $employeeContributions = PayrollHelper::getEmployeeContributionYTD($currentUser, $payslip->year_month);
+            $addition = $this->payrollTrxAdditionRepository->findByPayrollTrxId($payslip->id); 
+            $deduction = $this->payrollTrxDeductionRepository->findByPayrollTrxId($payslip->id);
+            $earnings = [];
+            $earnings[] = [
+                'name' => 'BASIC PAY',
+                'amount' => number_format($payslip->basic_salary, 2),
+                'amount_numeric' => $payslip->basic_salary
+            ];
+            
+            $earnings[] = [
+                'name' => 'SENIORITY PAY',
+                'amount' => number_format($payslip->seniority_pay, 2),
+                'amount_numeric' => $payslip->seniority_pay
+            ];
+            
+            $earnings[] = [
+                'name' => 'BONUS',
+                'amount' => number_format($payslip->bonus * $payslip->kpi, 2),
+                'amount_numeric' => $payslip->bonus * $payslip->kpi
+            ];
+            
+            foreach($addition as $a){
+                $earnings[] = [
+                    'name' => $a->name,
+                    'amount' => number_format($a->amount, 2),
+                    'amount_numeric' => $a->amount
+                ];
             }
-
+            
+            $deductions = [];
+            $deductions[] = [
+                'name' => 'EMPLOYEE EPF (KWSP)',
+                'amount' => number_format($payslip->employee_epf, 2),
+                'amount_numeric' => $payslip->employee_epf
+            ];
+            
+            $deductions[] = [
+                'name' => 'EMPLOYEE SOCSO (PERKESO)',
+                'amount' => number_format($payslip->employee_socso, 2),
+                'amount_numeric' => $payslip->employee_socso
+            ];
+            
+            $deductions[] = [
+                'name' => 'EMPLOYEE EIS',
+                'amount' => number_format($payslip->employee_eis),
+                'amount_numeric' => $payslip->employee_eis
+            ];
+            
+            $deductions[] = [
+                'name' => 'INCOME TAX PCB',
+                'amount' => number_format($payslip->employee_pcb),
+                'amount_numeric' => $payslip->employee_pcb
+            ];
+            
+            foreach($deduction as $d){
+                $deductions[] = [
+                    'name' => $d->name,
+                    'amount' => number_format($d->amount, 2),
+                    'amount_numeric' => $d->amount
+                ];
+            }
+            
+            $payslip->extra_count = (count($earnings) > count($deductions))? count($earnings) : count($deductions);
+            
+            $totalEarnings = array_sum(array_column($earnings, 'amount_numeric'));
+            $totalDeductions = array_sum(array_column($deductions, 'amount_numeric'));
+            $nettPay = $totalEarnings - $totalDeductions;
+            
             $annualLeaves = LeaveAllocation::where([
                 ['leave_type_id', 1],
-                ['emp_id', $employee->id],
-                ['valid_until_date', '<=', $payroll->first()->end_date]
-            ])->whereYear('valid_until_date', substr($validated['payrollMonthPeriod'],0,4))
+                ['emp_id', $currentUser->id],
+                ['valid_until_date', '<=', $payslip->end_date]
+            ])->whereYear('valid_until_date', substr($payslip->year_month,0,4))
             ->get();
             
             $sickLeaves = LeaveAllocation::where([
                 ['leave_type_id', 7],
-                ['emp_id', $employee->id],
-                ['valid_until_date', '<=', $payroll->first()->end_date]
-            ])->whereYear('valid_until_date', substr($validated['payrollMonthPeriod'],0,4))
+                ['emp_id', $currentUser->id],
+                ['valid_until_date', '<=', $payslip->end_date]
+            ])->whereYear('valid_until_date', substr($payslip->year_month,0,4))
             ->get();
             
             $leavesArray = [];
+            $alTaken = 0;
+            $alBalance = 0;
             if(count($annualLeaves) > 0){
-                $leave = [
-                    'name' => 'ANNUAL LEAVE',
-                    'taken' => $annualLeaves['spent_days'],
-                    'balance' => $annualLeaves['allocated_days'] - $annualLeaves['spent_days']
-                ];
-                $leavesArray[] = $leave;
+                $alTaken = $annualLeaves['spent_days'];
+                $alBalance = $annualLeaves['allocated_days'] - $annualLeaves['spent_days'];
             }
             
+            $leave = [
+                'name' => 'ANNUAL LEAVE',
+                'taken' => $alTaken,
+                'balance' => $alBalance
+            ];
+            $leavesArray[] = $leave;
+            
+            $slTaken = 0;
+            $slBalance = 0;
             if(count($sickLeaves) > 0){
-                $leave = [
-                    'name' => 'SICK LEAVE',
-                    'taken' => $sickLeaves['spent_days'],
-                    'balance' => $sickLeaves['allocated_days'] - $sickLeaves['spent_days']
-                ];
-                $leavesArray[] = $leave;
+                $slTaken = $sickLeaves['spent_days'];
+                $slBalance = $sickLeaves['allocated_days'] - $sickLeaves['spent_days'];
             }
+            $leave = [
+                'name' => 'SICK LEAVE',
+                'taken' => $slTaken,
+                'balance' => $slBalance
+            ];
+            $leavesArray[] = $leave;
             
-            $info->leave = $leavesArray;
+            $payslip->leave = $leavesArray;
+//             dd($employeeContributions);
+            $pdf = PDF::loadView('pages/payroll/payslip/payslip',
+                [
+                    'info' => $payslip,
+                    'addition' => $earnings,
+                    'deduction' => $deductions,
+                    'totalEarnings' => number_format($totalEarnings ,2),
+                    'totalDeductions' => number_format($totalDeductions, 2),
+                    'nettPay' => number_format($nettPay, 2),
+                    'employeeContributions' => $employeeContributions->first()
+                ])->setOrientation('landscape');
+                
+            $pdf->setTemporaryFolder(storage_path("temp"));
+            // download pdf
+            return $pdf->download('payslip.pdf');
+            
         } else {
-            $msg = 'Payslip ' . substr($validated['payrollMonthPeriod'],0,4).'-'.substr($validated['payrollMonthPeriod'],4,2) . ' is not ready.';
+            $msg = 'Payslip is not ready.';
             return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
         }
-        
-        //TODO: leave summary, year to date
-//         dd($addition,$info);
-        $pdf = PDF::loadView('pages/payroll/payslip/payslip',
-            [
-                'info' => $info,
-                'addition' => $addition,
-                'deduction' => $deduction
-            ])->setOrientation('landscape');
-            
-        $pdf->setTemporaryFolder(storage_path("temp"));
-        // download pdf
-        return $pdf->download('payslip.pdf');
     }
     
     private function storeAdditionDeduction($company, $employee, $payrollMonth, $payrollTrxId)

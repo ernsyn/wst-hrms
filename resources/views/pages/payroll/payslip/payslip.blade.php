@@ -1,186 +1,216 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payslip</title>
-    <style type="text/css">
-        .table{
-            border-spacing: 0;
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 100%;
-            margin-bottom: 20px;
-            border-color: black;
-        }
-        td{
-            border-top-style: solid;
-            border-right-style: solid;
-            border-bottom-style: solid;
-            border-left-style: solid;
-            padding: 10px;
-        }
-        .bl0{
-            border-left-style: none;
-        }
-        .br0{
-            border-right-style: none;
-        }
-        .bb0{
-            border-bottom-style: none;
-        }
-        .bb1{
-            border-bottom-style: solid;
-        }
-        .bt0{
-            border-top-style: none;
-        }
-        .line{
-            text-decoration: underline;
-        }
-        .text-right, .text-right-all td{
-            text-align: right;
-        }
-        .text-center{
-            text-align: center;
-        }
-    </style>
+<title>Payslip</title>
+<style type="text/css">
+body {
+	text-transform: uppercase;
+}
+
+.table {
+	border-spacing: 0;
+	border-collapse: collapse;
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 20px;
+	border-color: black;
+}
+
+td {
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	padding: 10px;
+}
+
+.bl0 {
+	border-left-style: none;
+}
+
+.br0 {
+	border-right-style: none;
+}
+
+.bb0 {
+	border-bottom-style: none;
+}
+
+.bb1 {
+	border-bottom-style: solid;
+}
+
+.bt0 {
+	border-top-style: none;
+}
+
+.line {
+	text-decoration: underline;
+}
+
+.text-right, .text-right-all td {
+	text-align: right;
+}
+
+.text-center{
+	text-align: center;
+}
+
+.text-left td {
+	text-align: left;
+}
+</style>
 </head>
 <body>
-    <table class="table">
-        <tbody>
-            <tr>
-                <td colspan="2" class="br0" width="50%">
-                    <p>COMP: {{ @$info->company_name }}</p>
-                    <p>NAME: {{ @$info->name }}</p>
-                    <p>I/C #: {{ @$info->ic_no }}</p>
-                    <p>GENDER: {{ strtoupper(@$info->gender) }}</p>
-                </td>
-                <td colspan="2" class="bl0" valign="top" width="50%">
-                    <p>{{ strtoupper(str_replace(' Month', '', PayrollPeriodEnum::getDescription($info->period)).'-'.DateHelper::dateWithFormat($info->year_month, 'M-Y')) }}</p>
-                    <p>EMPL#: {{ @$info->employee_code }}</p>
-                    <p>DEPT#: {{ @$info->branch }}</p>
-                </td>
-            </tr>
-            <tr>
-                <td class="line bt0" style="border-bottom-style:none;">EARNINGS DESCRIPTION</td>
-                <td class="line text-right" style="border:none;border-bottom-style:none;">RM</td>
-                <td class="line" style="border-bottom-style:none;">DEDUCTION DESCRIPTION</td>
-                <td class="line text-right" style="border-bottom-style:none;">RM</td>
-            </tr>
+	<table class="table">
+		<tbody>
+			<tr>
+				<td colspan="2" class="br0" width="50%">
+					<p>COMP: {{ strtoupper(@$info->company_name) }}</p>
+					<p>NAME: {{ strtoupper(@$info->name) }}</p>
+					<p>I/C #: {{ @$info->ic_no }}</p>
+					<p>GENDER: {{ strtoupper(@$info->gender) }}</p>
+				</td>
+				<td colspan="2" class="bl0" valign="top" width="50%">
+					<p>{{ strtoupper(str_replace(' Month', '', PayrollPeriodEnum::getDescription($info->period)).'-'.DateHelper::dateWithFormat($info->year_month, 'M-Y')) }}</p>
+					<p>EMPL#: {{ @$info->code }}</p>
+					<p>DEPT#: {{ @$info->employeeBranch }}</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="line bt0 bb0">EARNINGS DESCRIPTION</td>
+				<td class="line text-right bb0">RM</td>
+				<td class="line bb0">DEDUCTIONS DESCRIPTION</td>
+				<td class="line text-right bb0">RM</td>
+			</tr>
 
-            @for($i = 0; $i < $info->extra_count; $i++)
-            <tr>
-                @if(@$info->addition[$i])
-                    <td class="br0 bt0" style="border:none;"> {!! $info->addition[$i]->name !!} </td>
-                    <td class="text-right" style="border:none;"> {!! number_format($info->addition[$i]->amount, 2) !!} </td>
-                @else
-                    <td class="br0 bt0" style="border:none;"></td>
-                    <td style="border:none;"></td>
-                @endif
-                @if(@$info->deduction[$i])
-                    <td class="br0 bt0" style="border:none;"> {!! $info->deduction[$i]->name !!} </td>
-                    <td class="text-right" style="border:none;"> {!! number_format($info->deduction[$i]->amount, 2) !!}</td>
-                @else
-                    <td class="br0 bt0" style="border:none;"></td>
-                    <td style="border:none;"></td>
-                @endif
-            </tr>
-            @endfor
+			@for($i = 0; $i < $info->extra_count; $i++)
+			<tr>
+				@if(@$addition[$i])
+				<td class="bt0 bb0">{!! $addition[$i]['name'] !!}</td>
+				<td class="text-right bt0 bb0">{!! $addition[$i]['amount'] !!}</td> 
+				@else
+				<td class="bt0 bb0"></td>
+				<td class="bt0 bb0"></td> 
+				@endif
+				
+				@if(@$deduction[$i])
+				<td class="bt0 bb0">{!! $deduction[$i]['name'] !!}</td>
+				<td class="text-right bt0 bb0">{!! $deduction[$i]['amount'] !!}</td> 
+				@else
+				<td class="bt0 bb0"></td>
+				<td class="bt0 bb0"></td> 
+				@endif
+			</tr>
+			@endfor
 
-            <tr class="bt0">
-                <td class="text-right">TOTAL:</td>
-                <td class="text-right">{!! number_format(@$info->salary->contract_base+@$info->salary->total_bonus+@$info->salary->total_addition,2) !!}</td>
-                <td class="text-right">TOTAL:</td>
-                <td class="text-right">{!! number_format(@$info->salary->total_deduction+@$info->salary->employee_epf+@$info->salary->employee_socso+@$info->salary->employee_eis+@$info->salary->employee_pcb,2) !!}</td>
-            </tr>
-            @for($y = 0; $y < $info->leave_count; $y++)
-                @php $class = ($y+1 == $info->leave_count)? 'bb1' : 'bb0'; @endphp
-                <tr class="bt0 {{$class}}">
-                    @if(@$info->leave[$y])
-                        <td class="br0">{!! strtoupper($info->leave[$y]->name) !!} TAKEN: {!! $info->leave[$y]->taken !!}</td>
-                        <td class="bl0">BALANCE: {!! $info->leave[$y]->balance !!}</td>
-                    @else
-                        <td class="br0"></td>
-                        <td class="bl0"></td>
-                    @endif
-
-                    @if($y == 0)
-                        <td class="text-right">NETT PAY:</td>
-                        <td class="text-right" style="border-bottom: 1px solid">{!! (@$info->salary->final_payment > 0)? number_format(@$info->salary->final_payment,2) : number_format(@$info->salary->contract_base+@$info->salary->total_bonus+@$info->salary->total_addition-(@$info->salary->total_deduction+@$info->salary->employee_epf+@$info->salary->employee_socso+@$info->salary->employee_eis+@$info->salary->employee_pcb),2) !!}</td>
-                    @elseif($y == 1)
-                        <td colspan="2">
-                            <p>EPF#: {{ @$info->employee->epf_no }}</p>
-                            <p>SOCSO#: {{ @$info->employee->socso_no }}</p>
-                            <p>TAX#: {{ @$info->employee->tax_no }}</p>
-                            <p>BANK A/C: {!! @$info->salary->account_number !!}</p>
-                        </td>
-                    @else
-                        <td colspan="2"></td>
-                    @endif
-                </tr>
-            @endfor
-        </tbody>
-    </table>
-    <table class="table">
-        <tbody>
-            <tr class="bt0">
-                <td colspan="5" class="text-center bl0 br0 bt0">Current Month</td>
-                <td colspan="5" class="text-center bl0 br0 bt0">Year-to-Date</td>
-            </tr>
-            <tr class="bt0 bb0 text-right-all">
-                <td></td>
-                <td class="line">E.P.F</td>
-                <td class="line">SOCSO</td>
-                <td class="line">EIS</td>
-                <td class="line">TAX</td>
-                <td></td>
-                <td class="line">E.P.F</td>
-                <td class="line">SOCSO</td>
-                <td class="line">EIS</td>
-                <td class="line">TAX</td>
-            </tr>
-            <tr class="bt0 bb0 text-right-all"  style="border-bottom: 0px solid;">
-                <td align="left">Employee:</td>
-                <td>{!! number_format(@$info->salary->employee_epf,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_socso,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_eis,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_pcb,2) !!}</td>
-                <td align="left">Employee:</td>
-                <td>{!! number_format(@$info->salary->employee_epf,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_socso,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_eis,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_pcb,2) !!}</td>
-            </tr>
-            <tr class="bt0 bb0 text-right-all"  style="border-bottom: 0px solid;">
-                <td align="left">Employer:</td>
-                <td>{!! number_format(@$info->salary->employer_epf,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employer_socso,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employer_eis,2) !!}</td>
-                <td></td>
-                <td align="left">Employer:</td>
-                <td>{!! number_format(@$info->salary->employer_epf,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employer_socso,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employer_eis,2) !!}</td>
-                <td></td>
-            </tr>
-            <tr class="bt0 text-right-all" style="border-bottom: 0px solid;">
-                <td align="left">Total:</td>
-                <td>{!! number_format(@$info->salary->employee_epf+@$info->salary->employer_epf,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_socso+@$info->salary->employer_socso,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_eis+@$info->salary->employer_eis,2) !!}</td>
-                <td></td>
-                <td align="left">Total:</td>
-                <td>{!! number_format(@$info->salary->employee_epf+@$info->salary->employer_epf,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_socso+@$info->salary->employer_socso,2) !!}</td>
-                <td>{!! number_format(@$info->salary->employee_eis+@$info->salary->employer_eis,2) !!}</td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-    <table width="100%" cellspacing="0" cellpadding="0" style="border: none;">
-    	<tr>
-            <td width="50%" style="border: none;">APPROVED BY: ___________________________</td>
-            <td width="50%" style="border: none;">RECEIVED BY: ___________________________</td>
-        </tr>
-    </table>
+			<tr class="bt0">
+				<td class="text-right">TOTAL:</td>
+				<td class="text-right">{!! $totalEarnings !!}</td>
+				<td class="text-right">TOTAL:</td>
+				<td class="text-right">{!! $totalDeductions !!}</td>
+			</tr>
+			<tr>
+				<td class="text-right br0"></td>
+				<td class="text-right br0 bl0"></td>
+				<td class="text-right bl0">NETT PAY:</td>
+				<td class="text-right">{!! $nettPay !!}</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="table">
+		<tbody>
+			<tr>
+				<td width="20%" valign="top" class="br0">
+					<p>ANNL LEAVE TAKEN:</p>
+					<p>SICK LEAVE TAKEN:</p>
+				</td>
+				<td width="5%" valign="top" class="text-right br0 bl0">
+					<p>{{ $info->leave[0]['taken'] }}</p>
+					<p>{{ $info->leave[1]['taken'] }}</p>
+				</td>
+				<td width="10%" class="text-right br0 bl0"></td>
+				<td width="10%" valign="top" class="br0 bl0">
+					<p>BALANCE:</p>
+					<p>BALANCE:</p>
+				</td>
+				<td width="5%" valign="top" class="text-right br0 bl0">
+					<p>{{ $info->leave[0]['balance'] }}</p>
+					<p>{{ $info->leave[1]['balance'] }}</p>
+				</td>
+				<td width="50%">
+					<p>EPF#: {{ @$info->epf_no }}</p>
+					<p>SOCSO#: {{ @$info->socso_no }}</p>
+					<p>TAX#: {{ @$info->tax_no }}</p>
+					<p>BANK A/C: {!! @$info->employeeBank !!} {!!
+						@$info->employeeBankAccNo !!}</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<br />
+	<table class="table">
+		<tbody>
+			<tr>
+				<td colspan="5" class="text-center">Current Month</td>
+				<td colspan="5" class="text-center">Year-to-Date</td>
+			</tr>
+			<tr class="text-right-all">
+				<td class="br0 bb0"></td>
+				<td class="line text-center br0 bl0 bb0">E.P.F</td>
+				<td class="line text-center br0 bl0 bb0">SOCSO</td>
+				<td class="line text-center br0 bl0 bb0">EIS</td>
+				<td class="line text-center br0 bl0 bb0">TAX</td>
+				<td class="br0 bb0"></td>
+				<td class="line text-center br0 bl0 bb0">E.P.F</td>
+				<td class="line text-center br0 bl0 bb0">SOCSO</td>
+				<td class="line text-center br0 bl0 bb0">EIS</td>
+				<td class="line text-center bl0 bb0">TAX</td>
+			</tr>
+			<tr>
+				<td class="text-left br0 bt0 bb0">EMP'EE:</td>
+				<td class="text-right br0 bl0 bt0 bb0">{!! number_format(@$info->employee_epf,2) !!}</td>
+				<td class="text-right br0 bl0 bt0 bb0">{!! number_format(@$info->employee_socso,2) !!}</td>
+				<td class="text-right br0 bl0 bt0 bb0">{!! number_format(@$info->employee_eis,2) !!}</td>
+				<td class="text-right bl0 bt0 bb0">{!! number_format(@$info->employee_pcb,2) !!}</td>
+				<td class="text-left br0 bt0 bb0">EMP'EE:</td>
+				<td class="text-right br0 bl0 bt0 bb0">{!! number_format(@$employeeContributions->employee_epf_contribution,2) !!}</td>
+				<td class="text-right br0 bl0 bt0 bb0">{!! number_format(@$employeeContributions->employee_socso_contribution,2) !!}</td>
+				<td class="text-right br0 bl0 bt0 bb0">{!! number_format(@$employeeContributions->employee_eis_contribution,2) !!}</td>
+				<td class="text-right bl0 bt0 bb0">{!! number_format(@$employeeContributions->employee_pcb,2) !!}</td>
+			</tr>
+			<tr>
+				<td class="text-left br0 bb0 bt0">EMP'ER:</td>
+				<td class="text-right br0 bl0 bb0 bt0">{!! number_format(@$info->employer_epf,2) !!}</td>
+				<td class="text-right br0 bl0 bb0 bt0">{!! number_format(@$info->employer_socso,2) !!}</td>
+				<td class="text-right br0 bl0 bb0 bt0">{!! number_format(@$info->employer_eis,2) !!}</td>
+				<td class="text-right br0 bl0 bb0 bt0"></td>
+				<td class="text-left br0 bb0 bt0">EMP'ER:</td>
+				<td class="text-right br0 bl0 bb0 bt0">{!! number_format(@$employeeContributions->employer_epf_contribution,2) !!}</td>
+				<td class="text-right br0 bl0 bb0 bt0">{!! number_format(@$employeeContributions->employer_socso_contribution,2) !!}</td>
+				<td class="text-right br0 bl0 bb0 bt0">{!! number_format(@$employeeContributions->employer_eis_contribution,2) !!}</td>
+				<td class="text-right bl0 bt0 bb0"></td>
+			</tr>
+			<tr>
+				<td class="text-left br0 bt0">TOTAL:</td>
+				<td class="text-right br0 bl0 bt0">{!! number_format(@$info->employee_epf+@$info->employer_epf,2) !!}</td>
+				<td class="text-right br0 bl0 bt0">{!! number_format(@$info->employee_socso+@$info->employer_socso,2) !!}</td>
+				<td class="text-right br0 bl0 bt0">{!! number_format(@$info->employee_eis+@$info->employer_eis,2) !!}</td>
+				<td class="text-right br0 bl0 bt0"></td>
+				<td class="text-left br0 bt0">TOTAL:</td>
+				<td class="text-right br0 bl0 bt0">{!! number_format(@$employeeContributions->employee_epf_contribution+@$employeeContributions->employer_epf_contribution,2) !!}</td>
+				<td class="text-right br0 bl0 bt0">{!! number_format(@$employeeContributions->employee_socso_contribution+@$employeeContributions->employer_socso_contribution,2) !!}</td>
+				<td class="text-right br0 bl0 bt0">{!! number_format(@$employeeContributions->employee_eis_contribution+@$employeeContributions->employer_eis_contribution,2) !!}</td>
+				<td class="text-right bl0 bt0"></td>
+			</tr>
+		</tbody>
+	</table>
+	<br/>
+	<table width="100%" cellspacing="0" cellpadding="0" style="border: none;">
+		<tr>
+			<td width="50%" style="border: none;">APPROVED BY: ___________________________</td>
+			<td width="50%" style="border: none;">RECEIVED BY: ___________________________</td>
+		</tr>
+	</table>
 </body>
 </html>

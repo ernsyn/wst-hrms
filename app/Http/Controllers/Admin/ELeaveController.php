@@ -727,6 +727,7 @@ class ELeaveController extends Controller
             ->where('leave_types.code', '!=', 'UNPAID')
             ->whereIn('leave_requests.status',['rejected','approved'])
             ->whereYear('leave_requests.start_date', '=', $year)
+            ->where('leave_requests.emp_id', $emp_id)
             ->get();
 
         foreach ($leaves as $row) {

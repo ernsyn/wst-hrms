@@ -4,6 +4,7 @@ namespace App\Helpers;
 use App\Employee;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use App\SecurityGroup;
@@ -83,6 +84,11 @@ class AccessControllHelper
             $roles = array('admin', 'hr-exec', 'kip-proposer');
             throw UnauthorizedException::forRoles($roles);
         }
+    }
+    
+    public static function getCurrentUserLogon(){
+        $id = Auth::id();
+        return User::find($id)->employee->first();
     }
 }
 

@@ -7,6 +7,8 @@ use App\PayrollSetup;
 use App\EmployeeJob;
 use App\Enums\EisCategoryEnum;
 use App\Enums\SocsoCategoryEnum;
+use App\EmployeeBankAccount;
+use DB;
 
 class PayrollHelper
 {
@@ -231,6 +233,50 @@ class PayrollHelper
             ['company_id', $companyId],
             ['status', 1]
         ])->first()->value;
+    }
+    
+    public static function getEmployeeBranch($employee, $date)
+    {
+        $employeeJob = EmployeeJob::where([
+            ['emp_id', $employee->id],
+            ['start_date', '<=', $date]
+        ])->orderby('start_date', 'DESC')
+        ->first();
+        
+        $employeeBranch = EmployeeJob::find($employeeJob->id)->branch->first();
+        return @$employeeBranch->name ? $employeeBranch->name : '' ;
+    }
+    
+    public static function getEmployeeBankAcc($employee)
+    {
+        $employeeBankAcc = EmployeeBankAccount::where([
+            ['emp_id', $employee->id],
+            ['acc_status', 'Active']
+        ])
+        ->whereNull('deleted_at')
+        ->first();
+        
+        return $employeeBankAcc;
+    }
+    
+    public static function getEmployeeContributionYTD($employee, $date)
+    {
+        $result = DB::table('payroll_master')
+            ->join('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
+            ->whereYear('payroll_master.year_month', substr($date,0,4))
+            ->where([['payroll_trx.employee_id', $employee->id]])
+            ->select(
+                DB::raw('sum(payroll_trx.employee_epf) as employee_epf_contribution'),
+                DB::raw('sum(payroll_trx.employee_eis) as employee_eis_contribution'),
+                DB::raw('sum(payroll_trx.employee_socso) as employee_socso_contribution'),
+                DB::raw('sum(payroll_trx.employee_pcb) as employee_pcb'),
+                DB::raw('sum(payroll_trx.employer_epf) as employer_epf_contribution'),
+                DB::raw('sum(payroll_trx.employer_eis) as employer_eis_contribution'),
+                DB::raw('sum(payroll_trx.employer_socso) as employer_socso_contribution')
+            )
+            ->get();
+        
+        return $result;
     }
 }
 

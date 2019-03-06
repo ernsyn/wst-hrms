@@ -420,7 +420,7 @@ Route::get('payroll-report', 'Payroll\PayrollReportController@showReport')->name
 Route::post('/payroll/generate-report', 'Payroll\PayrollController@generateReport')->name('payroll.generate-report');
 Route::post('/report/generate', 'Payroll\PayrollReportController@exportReport')->name('report.generate');
 Route::get('/payslip/show', 'Payroll\PayrollController@showPayslip')->name('payslip.show');
-Route::post('/payslip/download', 'Payroll\PayrollController@downloadPayslip')->name('payslip.download');
+Route::get('/payslip/download/{id}', 'Payroll\PayrollController@downloadPayslip')->name('payslip.download');
 
 Route::get('government_report', 'Payroll\GovernmentReportController@viewGovernmentReport')->name('payroll/government_report');
 Route::post('generate_report', 'Payroll\GovernmentReportController@generateReport')->name('generate_report');
