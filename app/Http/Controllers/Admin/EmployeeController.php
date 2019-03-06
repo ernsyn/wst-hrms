@@ -212,13 +212,12 @@ class EmployeeController extends Controller
         Employee::find($id)->update($profileUpdatedData);
 
         return response()->json(['success'=>'Profile was successfully updated.']);
-        //  }
+        }
          
         // else 
         // {
         // return response()->json(['success'=>'Security Group Cannot Be Added.Please Select Security Group With Same Company ID']);
         // }
-}
 
     public function changepassword()
     {
@@ -288,11 +287,7 @@ class EmployeeController extends Controller
             return redirect()->route('admin.employees')->with('status', 'Employee successfully added!');
         }
     }
-
-
-
     // SECTION: Data Tables
-
     public function getDataTableDependents($id)
     {
         $dependents = EmployeeDependent::where('emp_id', $id)->get();
@@ -365,7 +360,6 @@ class EmployeeController extends Controller
         return DataTables::of($banks)->make(true);
     }
 
-
     public function getDataTableExperiences($id)
     {
         $experiences = EmployeeExperience::where('emp_id', $id)->get();
@@ -415,11 +409,6 @@ class EmployeeController extends Controller
         return DataTables::of($reportTos)->make(true);
     }
 
-    public function getDataTableMainSecurityGroup($id)
-    {
-        $employee = Employee::with('security_groups')->where('emp_id', $id)->get();
-        return DataTables::of($employee)->make(true);
-    }
 
     public function getDataTableSecurityGroup($id)
     {
@@ -436,114 +425,99 @@ class EmployeeController extends Controller
         return DataTables::of($audits)->make(true);
     }
 
-    protected function postAdd(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|min:5',
-            'email' => 'required|unique:users|email',
-            'password' => 'required|required_with:confirm_password|same:confirm_password',
-            'media_id' => '',
-            'attachment' => '',
-            'attach' => 'nullable|max:2000000|regex:/^data:image/',
+	protected function postAdd(Request $request)
+	{
+		$validated = $request->validate([
+			'name' => 'required|min:5',
+			'email' => 'required|unique:users|email',
+			'password' => 'required|required_with:confirm_password|same:confirm_password',
+			'media_id' => '',
+			'attachment' => '',
+			'attach' => 'nullable|max:2000000|regex:/^data:image/',
 
-            'code'=>'required|unique:employees',
-            'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
-            'address' => 'required',
-            'address2' => 'required_with:address3',
-            'address3' => 'nullable',
-            'company_id' => 'required',
-            'dob' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'gender' => 'required',
-            'race' => 'required|alpha',
-            'nationality' => 'required',
-            'marital_status' => 'required',
-            'total_children' => 'nullable|numeric',
-            'ic_no' => 'required|unique:employees,ic_no|numeric',
-            'tax_no' => 'required|unique:employees,tax_no',
-            'epf_no' => 'required|unique:employees,epf_no|numeric',
-            'eis_no' => 'required|unique:employees,eis_no|numeric',
-            'socso_no' => 'required|unique:employees,socso_no|numeric',
-            'driver_license_no' => 'nullable',
-            'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'main_security_group_id'=>'nullable'
-        ],
-        [
-            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
-            'attach.max' => 'The file size may not be greater than 2MB.'
-        ]);
+			'code'=>'required|unique:employees',
+			'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
+			'address' => 'required',
+			'address2' => 'required_with:address3',
+			'address3' => 'nullable',
+			'company_id' => 'required',
+			'dob' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+			'gender' => 'required',
+			'race' => 'required|alpha',
+			'nationality' => 'required',
+			'marital_status' => 'required',
+			'total_children' => 'nullable|numeric',
+			'ic_no' => 'required|unique:employees,ic_no|numeric',
+			'tax_no' => 'required|unique:employees,tax_no',
+			'epf_no' => 'required|unique:employees,epf_no|numeric',
+			'eis_no' => 'required|unique:employees,eis_no|numeric',
+			'socso_no' => 'required|unique:employees,socso_no|numeric',
+			'driver_license_no' => 'nullable',
+			'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+			'main_security_group_id'=>'nullable'
+		],
+		[
+			'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
+			'attach.max' => 'The file size may not be greater than 2MB.'
+		]);
 
-        $attachment_data_url = $validated['attach'];
-        $securitygroup = SecurityGroup::where('company_id','=' ,$request->company_id)
-        ->where('id','=',$request->main_security_group_id)->count();
-        
-        if($request->main_security_group_id && $securitygroup ==1)
-        {
-        DB::transaction(function () use ($attachment_data_url, $validated) {
-            $validatedUserData['name'] = $validated['name'];
-            $validatedUserData['email'] = $validated['email'];
-            $validatedUserData['password'] = Hash::make($validated['password']);
-
-            $validatedEmployeeData['code'] = $validated['code'];
-            $validatedEmployeeData['contact_no'] = $validated['contact_no'];
-            $validatedEmployeeData['address'] = $validated['address'];
-            $validatedEmployeeData['address2'] = $validated['address2'];
-            $validatedEmployeeData['address3'] = $validated['address3'];
-            $validatedEmployeeData['company_id'] = $validated['company_id'];
-            $validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
-            $validatedEmployeeData['gender'] = $validated['gender'];
-            $validatedEmployeeData['race'] = $validated['race'];
-            $validatedEmployeeData['nationality'] = $validated['nationality'];
-            $validatedEmployeeData['marital_status'] = $validated['marital_status'];
-            $validatedEmployeeData['total_children'] = $validated['total_children'];
-            $validatedEmployeeData['ic_no'] = $validated['ic_no'];
-            $validatedEmployeeData['tax_no'] = $validated['tax_no'];
-            $validatedEmployeeData['epf_no'] = $validated['epf_no'];
-            $validatedEmployeeData['eis_no'] = $validated['eis_no'];
-            $validatedEmployeeData['socso_no'] = $validated['socso_no'];
-            $validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
-            $validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
-            if ($validatedEmployeeData['driver_license_expiry_date'] ==='') {
-                $validatedEmployeeData['driver_license_expiry_date'] = null;
-            }
-            $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
-
-            $user = User::create($validatedUserData);
-            $user->assignRole('employee');
-
-            $validatedEmployeeData['user_id'] = $user->id;
-            $validatedEmployeeData['created_by'] = auth()->user()->id;
-            $employee = Employee::create($validatedEmployeeData);
-
-            if (!empty($attachment_data_url)) {
-                $attach = self::processBase64DataUrl($attachment_data_url);
-
-                $profileMedia = Media::create([
-                    'category' => 'employee-profile',
-                    'mimetype' => $attach['mime_type'],
-                    'data' => $attach['data'],
-                    'size' => $attach['size'],
-                    'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
-                ]);
-
-                $employee->profile_media()->associate($profileMedia);
-                $employee->save();
-            }
-        });
-
-        return redirect()->route('admin.employees')->with('status', 'Employee was successfully added!');
-    } 
-
-else {
-         // return redirect()->route('admin.employees.add')->with('status', ' was successfully added!'); 
-         Session::flash('message', "You have select wrong company security group ID");
-         return Redirect::back();
-
-    }
-
-
-    }
-
-
+		$attachment_data_url = $validated['attach'];
+		$securitygroup = SecurityGroup::where('company_id','=' ,$request->company_id)
+		->where('id','=',$request->main_security_group_id)->count();
+		if($request->main_security_group_id && $securitygroup ==1){
+		DB::transaction(function () use ($attachment_data_url, $validated) {
+			$validatedUserData['name'] = $validated['name'];
+			$validatedUserData['email'] = $validated['email'];
+			$validatedUserData['password'] = Hash::make($validated['password']);
+			$validatedEmployeeData['code'] = $validated['code'];
+			$validatedEmployeeData['contact_no'] = $validated['contact_no'];
+			$validatedEmployeeData['address'] = $validated['address'];
+			$validatedEmployeeData['address2'] = $validated['address2'];
+			$validatedEmployeeData['address3'] = $validated['address3'];
+			$validatedEmployeeData['company_id'] = $validated['company_id'];
+			$validatedEmployeeData['dob'] = implode("-", array_reverse(explode("/", $validated['dob'])));
+			$validatedEmployeeData['gender'] = $validated['gender'];
+			$validatedEmployeeData['race'] = $validated['race'];
+			$validatedEmployeeData['nationality'] = $validated['nationality'];
+			$validatedEmployeeData['marital_status'] = $validated['marital_status'];
+			$validatedEmployeeData['total_children'] = $validated['total_children'];
+			$validatedEmployeeData['ic_no'] = $validated['ic_no'];
+			$validatedEmployeeData['tax_no'] = $validated['tax_no'];
+			$validatedEmployeeData['epf_no'] = $validated['epf_no'];
+			$validatedEmployeeData['eis_no'] = $validated['eis_no'];
+			$validatedEmployeeData['socso_no'] = $validated['socso_no'];
+			$validatedEmployeeData['driver_license_no'] = $validated['driver_license_no'];
+			$validatedEmployeeData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $validated['driver_license_expiry_date'])));
+			if ($validatedEmployeeData['driver_license_expiry_date'] ==='') {
+				$validatedEmployeeData['driver_license_expiry_date'] = null;
+			}
+			$validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
+			$user = User::create($validatedUserData);
+			$user->assignRole('employee');
+			$validatedEmployeeData['user_id'] = $user->id;
+			$validatedEmployeeData['created_by'] = auth()->user()->id;
+			$employee = Employee::create($validatedEmployeeData);
+			if (!empty($attachment_data_url)) {
+				$attach = self::processBase64DataUrl($attachment_data_url);
+				$profileMedia = Media::create([
+					'category' => 'employee-profile',
+					'mimetype' => $attach['mime_type'],
+					'data' => $attach['data'],
+					'size' => $attach['size'],
+					'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
+				]);
+				$employee->profile_media()->associate($profileMedia);
+				$employee->save();
+			}
+		});
+		return redirect()->route('admin.employees')->with('status', 'Employee was successfully added!');
+	    }
+        else {
+		 // return redirect()->route('admin.employees.add')->with('status', ' was successfully added!');
+		 Session::flash('message', "You have select wrong company security group ID");
+		 return Redirect::back();
+	    }
+	}
     // SECTION: Add
     public function postEmergencyContact(Request $request, $id)
     {
@@ -698,7 +672,7 @@ else {
         return response()->json(['success'=>'Bank Account was successfully added']);
     }
 
-    public function postCompany(Request $request, $id)
+    public function postExperience(Request $request, $id)
     {
         $experienceData = $request->validate([
             'company' => 'required',
@@ -753,7 +727,6 @@ else {
 
         return response()->json(['success'=>'Skill was successfully added']);
     }
-
 
     public function postAttachment(Request $request, $id)
     {
@@ -938,9 +911,8 @@ else {
                 return response()->json(['fail'=>'KPI Proposer already exist']);
             }
 
-        }
+    }
     
-
     public function postSecurityGroup(Request $request, $id)
     {
         $securityGroupData = $request->validate([
@@ -963,17 +935,6 @@ else {
         // {
         // return response()->json(['success'=>'Security Group Cannot Be Added.Please Select Security Group With Same Company ID']);
         // }
-}
-
-
-    public function postMainSecurityGroup(Request $request, $id)
-    {
-        $mainSecurityGroupData = $request->validate([
-            'main_security_group_id' => 'required'
-        ]);
-
-        Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
-        return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
     // SECTION: Edit
@@ -1070,7 +1031,7 @@ else {
         return response()->json(['success'=>'Bank Account was successfully updated.']);
     }
 
-    public function postEditCompany(Request $request, $emp_id, $id)
+    public function postEditExperience(Request $request, $emp_id, $id)
     {
         $experienceUpdatedData = $request->validate([
             'company' => 'required',
@@ -1158,8 +1119,6 @@ else {
 
         return response()->json(['success'=>'Attachment was successfully updated.']);
     }
-
-
     //delete function
     public function deleteEmergencyContact(Request $request, $emp_id, $id)
     {
@@ -1227,8 +1186,6 @@ else {
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 
-
-
     public function ajaxGetAttendances(Request $request, $id)
     {
         $now = Carbon::now();
@@ -1242,6 +1199,7 @@ else {
         return $attendances;
     }
 
+}
     // public function postDisapproved(Request $request)
     // {
     //     $id = $request->input('id');
@@ -1265,4 +1223,4 @@ else {
 
     //     return redirect()->route('leaverequest');
     // }
-}
+

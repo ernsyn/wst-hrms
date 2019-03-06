@@ -20,8 +20,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // $leaveRequests = array();
-
         return view('pages.admin.dashboard');
     }
 

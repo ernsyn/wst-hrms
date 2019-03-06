@@ -91,8 +91,6 @@ class AttendanceController extends Controller
         ->where('employee_attendances.date', $date)
         ->get();
 
-        // dd($attendances);
-
         $result_array = array();
 
         foreach ($attendances as $row) {

@@ -727,6 +727,7 @@ class ELeaveController extends Controller
             ->where('leave_types.code', '!=', 'UNPAID')
             ->whereIn('leave_requests.status',['rejected','approved'])
             ->whereYear('leave_requests.start_date', '=', $year)
+            ->where('leave_requests.emp_id',$emp_id)
             ->get();
 
         foreach ($leaves as $row) {
@@ -1169,14 +1170,13 @@ class ELeaveController extends Controller
     public function sendLeaveRequestRejectedNotification(LeaveRequest $leave_request_rejected, $emp_id) 
     {
         $cc_recepients = array();
-        $bcc_recepients = array();
-        $to = array();
 
         // get report to users
          $report_to = EmployeeReportTo::select('emp_id')
             ->where('report_to_emp_id', $emp_id)
             ->get();
 
+            
             $report_tos = EmployeeReportTo::select('emp_id')
             ->where('report_to_emp_id', $emp_id)
             ->first();
@@ -1185,19 +1185,8 @@ class ELeaveController extends Controller
             ->where('emp_id', $report_tos->emp_id)
             ->get();
 
-           $reports= EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
-            ->join('users', 'users.id', '=', 'employees.user_id')
-            ->where('emp_id', $report_tos->emp_id)
-            ->where('employee_report_to.deleted_at',null)
-            ->get();
-    
-        
-        foreach ($reports as $row) {
-    
-            array_push($to, $row->email);
-                }
-
         foreach ($report_to as $row) {
+            dd($row->email);
             $employee = DB::table('employees')
                 ->join('users', 'users.id', '=', 'employees.user_id')
                 ->select('users.name','users.email')
@@ -1207,23 +1196,11 @@ class ELeaveController extends Controller
             array_push($cc_recepients, $employee->email);
         }
 
-        // get admin users
-        $admin_users = User::whereHas("roles", function($q){
-            $q->where("name", "admin");
-        })->get();
-        
-       
-        foreach ($admin_users as $row) {
-          
-            array_push($bcc_recepients, $row->email);
-        }
-
-        \Mail::to($to)
-            ->cc(Auth::user()->email)
-            ->bcc($bcc_recepients,$cc_recepients)
+        \Mail::to($cc_recepients)
             ->send(new LeaveRejectedMail(Auth::user(), $leave_request_rejected));
     }
 
+    //error message
     private static function error($message) 
     {
         return [

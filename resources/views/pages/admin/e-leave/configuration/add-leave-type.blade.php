@@ -40,7 +40,7 @@
                         <a role="button" id="add-rule-btn" class="float-right btn btn-primary btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-plus"></i>
                         </a>
-                        <div id="add-rule-dropdown" class="dropdown-menu" aria-labelledby="add-rule-btn">
+                        <div id="add-rule-dropdown " class="dropdown-menu" aria-labelledby="add-rule-btn">
                                 {{-- <a id="rule-select-min-apply-days-before" class="dropdown-item" href="#">Minimum Apply Days Before</a> --}}
                                 <a id="rule-select-multiple-approval-levels-needed" class="dropdown-item" href="#"> Multiple Approval Levels Needed</a>
                                 <a id="rule-select-can-carry-forward" class="dropdown-item" href="#">Can Carry Forward</a>
