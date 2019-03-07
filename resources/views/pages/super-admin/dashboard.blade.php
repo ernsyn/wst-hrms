@@ -1,7 +1,6 @@
 @extends('layouts.super-admin-base') 
 @section('content')
 <div id="page-super-admin-dashboard" class="container-fluid">
-    {{-- {!! dd($initCheck) !!} --}}
     @if(!$initCheck["ok"])
     <div id="init-warning-prompt" class="card bg-danger">
         <div class="card-header text-white">

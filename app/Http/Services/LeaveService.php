@@ -68,7 +68,6 @@ class LeaveService
                 $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
             }
 
-            // dd($validFromDate);
             $created_by = auth()->user()->name;
             $leaveAllocation = LeaveAllocation::create([
                 'emp_id' => $emp_id,

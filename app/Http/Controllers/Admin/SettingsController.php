@@ -402,7 +402,6 @@ class SettingsController extends Controller
 
         $validatedDeductionData['company_id']=$id;
         $validatedDeductionData['created_by'] = auth()->user()->name;
-        // dd($validatedAdditionData['employee_grade']);
         $deduction = Deduction::create($validatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been added.');
     } 
@@ -425,8 +424,6 @@ class SettingsController extends Controller
             $validatedAdditionData['cost_centre'] = empty($validatedAdditionData['cost_centre']) ? null : implode(",", $request->cost_centre);
             $validatedAdditionData['employee_grade'] = empty($validatedAdditionData['employee_grade']) ? null : implode(",", $request->employee_grade);
             $validatedAdditionData['company_id']=$id;
-
-            // dd($validatedAdditionData['employee_grade']);
             $validatedAdditionData['created_by'] = auth()->user()->name;
             $addition = Addition::create($validatedAdditionData);
             return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been added.');
