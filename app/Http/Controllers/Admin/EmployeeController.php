@@ -39,6 +39,7 @@ use App\EmployeeClockInOutRecord;
 use App\Http\Services\LeaveService;
 use App\Imports\UserImport;
 use App\Mail\NewUserMail;
+use App\EmployeePosition;
 
 class EmployeeController extends Controller
 {
@@ -659,8 +660,10 @@ else {
             } else {
                 $jobData['status']  = "probationer";
             }
-
+            
+            $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
+            Employee::where('id', $id)->update(array('position'=> @$position ? $position : ''));
             Employee::where('id', $id)->update(array('resignation_date'=> null));
 
             $newJob = new EmployeeJob($jobData);
@@ -1065,6 +1068,8 @@ else {
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
 
         EmployeeJob::find($id)->update($jobData);
+        $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
+        Employee::where('id', $id)->update(array('position'=> @$position ? $position : ''));
 
         return response()->json(['success'=>'Job was successfully updated.']);
     }

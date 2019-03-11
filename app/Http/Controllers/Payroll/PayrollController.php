@@ -1862,7 +1862,7 @@ class PayrollController extends Controller
             
             if($payrollTrxAddition['type'] == 'Custom'){
                 if(in_array($payrollTrxAddition['code'], PayrollAdditionDeductionEnum::consts())) {
-                    $processedAttendances = PayrollProcessedLeaveAttendance::all();
+                    $processedAttendances = PayrollProcessedLeaveAttendance::where([['employee_id',$employee->id]])->get();
                     
                     switch ($payrollTrxAddition['code']) {
                         case "ALP":
@@ -1890,7 +1890,8 @@ class PayrollController extends Controller
                                     if(count($processedAttendances) == 0 || !in_array($leave->id, $processedId)){
                                         $processedData[] = [
                                             'payroll_trx_addition_id' => $payrollTrxAddition['id'],
-                                            'leave_request_id' => $leave->id
+                                            'leave_request_id' => $leave->id,
+                                            'employee_id' => $employee->id
                                         ];
                                         
                                         $totalDays += $leave->allocated_days - $leave->spent_days;
@@ -1918,7 +1919,7 @@ class PayrollController extends Controller
                              */
                             
                             $attendances = PayrollHelper::getAttendance(AttendanceEnum::PRESENT, $employee, $processedStartDate, $processedEndDate);
-                            $endWorkTime = EmployeeWorkingDay::where('emp_id',$employee->id)->select('end_work_time')->get();
+                            $endWorkTime = EmployeeWorkingDay::where('emp_id',$employee->id)->select('end_work_time')->first();
                             
 //                             $processedAttendances = PayrollProcessedLeaveAttendance::where([
 //                                 ['payroll_trx_addition_id', $payrollTrxAddition['id']]
@@ -1937,13 +1938,14 @@ class PayrollController extends Controller
                             foreach($attendances as $a){
                                 $employeeClockInOut = EmployeeClockInOutRecord::where('emp_id',$employee->id)
                                 ->whereDate('clock_in_time', $a->date)->first();
-                                $endWorkDate = DateHelper::dateWithFormat($a->date, "Y-m-d")." ".$endWorkTime;
+                                $endWorkDate = DateHelper::dateWithFormat($a->date, "Y-m-d")." ".$endWorkTime->end_work_time;
                                 $diffHour = date_diff(date_create($endWorkDate), date_create($employeeClockInOut->clock_out_time));
                                 
                                 if(count($processedAttendances) == 0 || !in_array($a->id, $processedId)){
                                     $processedData[] = [
                                         'payroll_trx_addition_id' => $payrollTrxAddition['id'],
-                                        'employee_attendance_id' => $a->id
+                                        'employee_attendance_id' => $a->id,
+                                        'employee_id' => $employee->id
                                     ];
                                     
                                     if($diffHour->format('%h') >=  $minOtHour){
@@ -1997,7 +1999,8 @@ class PayrollController extends Controller
                                 if(count($processedAttendances) == 0 || !in_array($a->id, $processedId)){
                                     $processedData[] = [
                                         'payroll_trx_addition_id' => $payrollTrxAddition['id'],
-                                        'employee_attendance_id' => $a->id
+                                        'employee_attendance_id' => $a->id,
+                                        'employee_id' => $employee->id
                                     ];
                                     
                                     $totalDays++;
@@ -2041,7 +2044,8 @@ class PayrollController extends Controller
                                 if(count($processedAttendances) == 0 || !in_array($a->id, $processedId)){
                                     $processedData[] = [
                                         'payroll_trx_addition_id' => $payrollTrxAddition['id'],
-                                        'employee_attendance_id' => $a->id
+                                        'employee_attendance_id' => $a->id,
+                                        'employee_id' => $employee->id
                                     ];
                                     
                                     $totalDays++;
@@ -2093,7 +2097,8 @@ class PayrollController extends Controller
                                 if(count($processedAttendances) == 0 || !in_array($leave->id, $processedId)){
                                     $processedData[] = [
                                         'payroll_trx_addition_id' => $payrollTrxAddition['id'],
-                                        'leave_request_id' => $leave->id
+                                        'leave_request_id' => $leave->id,
+                                        'employee_id' => $employee->id
                                     ];
                                     $totalDays += $leave->allocated_days - $leave->spent_days;
                                 } else {
@@ -2181,7 +2186,7 @@ class PayrollController extends Controller
             $updateData['hours'] = $payrollTrxDeduction['hours'];
             
             if($payrollTrxDeduction['type'] == 'Custom'){
-                $processedAttendances = PayrollProcessedLeaveAttendance::all();
+                $processedAttendances = PayrollProcessedLeaveAttendance::where([['employee_id',$employee->id]])->get();
                 
                 if($payrollTrxDeduction['code'] == 'UL') {
                     $attendances = PayrollHelper::getAttendance(AttendanceEnum::ABSENT, $employee, $processedStartDate, $processedEndDate);
@@ -2223,7 +2228,8 @@ class PayrollController extends Controller
                         if(count($processedAttendances) == 0 || !in_array($a->id, $processedAttendanceId)){
                             $processedData[] = [
                                 'payroll_trx_deduction_id' => $payrollTrxDeduction['id'],
-                                'employee_attendance_id' => $a->id
+                                'employee_attendance_id' => $a->id,
+                                'employee_id' => $employee->id
                             ];
                             
                             $totalDays++;
@@ -2248,7 +2254,8 @@ class PayrollController extends Controller
                         if(count($processedLeavesId) == 0 || !in_array($leave->id, $processedLeavesId)){
                             $processedData[] = [
                                 'payroll_trx_deduction_id' => $payrollTrxDeduction['id'],
-                                'leave_request_id' => $leave->id
+                                'leave_request_id' => $leave->id,
+                                'employee_id' => $employee->id
                             ];
                             
                             $totalDays += $leave->applied_days;
