@@ -9,6 +9,8 @@ Memory: 64GB DDR3 (1600MHz)
 3. Install PHP 7.2 and above and all its required modules. You will know the required modules when you deploy the HRMS System for the first time.
 4. Clone or download this repository's contents to your preferred location. For this server, it's in /data/www. (/data/www is a new path. To use a new path, you will need to perform various other steps in order for httpd be be able to access it. Among them are SELinux permissions)
     * chcon -R -t httpd_sys_rw_content_t wst-hrms/bootstrap/cache/ (Give read+write access)
+    * chcon -R -t httpd_sys_rw_content_t wst-hrms/storage/logs/
+    * chcon -R -t httpd_sys_rw_content_t wst-hrms/storage/framework/
     * chcon -Rt httpd_sys_content_t /data/www (Give read access)
 5. Go into the cloned/downloaded directory (for this installation, it's /data/www/wst-hrms), and perform the following steps.
     * Run 'composer install" 
@@ -17,6 +19,9 @@ Memory: 64GB DDR3 (1600MHz)
     * Update .env with the correct database details
     * run "php artisan key:generate"
 6. To perform database migration and adding seed data, run "php artisan migrate:refresh --seed"
+7. Install wkhtmltopdf
+    * wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+    * rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 
 # Others #
 For mobile app,
