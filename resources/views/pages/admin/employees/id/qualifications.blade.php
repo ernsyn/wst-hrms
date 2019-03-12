@@ -792,7 +792,7 @@
             clearExperiencesError('#add-experience-form');
             e.preventDefault();
             $.ajax({
-                url: "{{ route('admin.employees.companies.post', ['id' => $id]) }}",
+                url: "{{ route('admin.employees.experiences.post', ['id' => $id]) }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -863,7 +863,7 @@
             $('#edit-experience-form input[name=notes]').val(currentData.notes);
         });
 
-        var editExperienceRouteTemplate = "{{ route('admin.employees.companies.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        var editExperienceRouteTemplate = "{{ route('admin.employees.experiences.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-experience-submit').click(function(e){
             var editExperienceRoute = editExperienceRouteTemplate.replace(encodeURI('<<id>>'), editExperienceId);
             clearExperiencesError('#edit-experience-form');
