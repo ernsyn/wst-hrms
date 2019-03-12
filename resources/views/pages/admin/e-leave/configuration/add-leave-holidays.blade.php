@@ -99,11 +99,14 @@
 
 @section('scripts')
 <script>
+
+
     $('#start-date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
     $('#start-date').keydown(false);
     $('#start-date').css('caret-color', 'transparent');
+
 
     $('#end-date').datetimepicker({
         format: 'DD/MM/YYYY',

@@ -134,8 +134,6 @@ class SettingsController extends Controller
         $pcbs = Pcb::all();
         return view('pages.admin.settings.pcb', ['pcbs' => $pcbs]);
     }
-
-
     // SECTION: Add
     public function addCompany()
     {
@@ -185,8 +183,6 @@ class SettingsController extends Controller
     {
         return view('pages.admin.settings.add-pcb');
     }
-
-
     // SECTION: POST ADD
     public function postAddCompany(Request $request)
     {
@@ -272,7 +268,6 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been added.');
     }
-
     public function postAddPcb(Request $request)
     {
         $pcbData = $request->validate([
@@ -304,39 +299,6 @@ class SettingsController extends Controller
         
         EmployeeWorkingDay::create($workingDaysData);
         return redirect()->route('admin.settings.working-days')->with('status', 'Working Days has successfully been added.');
-    }
-    public function postAddJob(Request $request)
-    {
-        $user_id = Session::get('user_id');
-        $user = Employee::where('user_id', $user_id)->first();
-
-        $basic_salary = $request->input('basic_salary');
-        $cost_centre = Input::get('cost_centre');
-        $department = Input::get('department');
-        $team = Input::get('team');
-        $position = Input::get('position');
-        $grade = Input::get('grade');
-        $branch = Input::get('branch');
-        $start_date = $request->input('jobDate');
-        $emp_status = Input::get('emp_status');
-        $created_by = auth()->user()->name;
-
-        DB::insert('insert into employee_jobs
-        (emp_id, branch_id, remarks,
-        emp_mainposition_id, department_id, team_id,
-        cost_centre_id, emp_grade_id,start_date,
-        basic_salary, status, created_by)
-        values
-        (?,?,?,
-        ?,?,?,
-        ?,?,?,
-        ?,?,?)',
-        [$user->id, $branch, 'auto',
-        $position, $department, $team,
-        $cost_centre, $grade, $start_date,
-        $basic_salary, $emp_status, $created_by]);
-
-        return redirect()->route('admin/profile-employee/{id}',['id'=>$user_id]);
     }
     public function postAddBranch(Request $request)
     {
@@ -440,7 +402,6 @@ class SettingsController extends Controller
 
         $validatedDeductionData['company_id']=$id;
         $validatedDeductionData['created_by'] = auth()->user()->name;
-        // dd($validatedAdditionData['employee_grade']);
         $deduction = Deduction::create($validatedDeductionData);
         return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Deduction has successfully been added.');
     } 
@@ -463,8 +424,6 @@ class SettingsController extends Controller
             $validatedAdditionData['cost_centre'] = empty($validatedAdditionData['cost_centre']) ? null : implode(",", $request->cost_centre);
             $validatedAdditionData['employee_grade'] = empty($validatedAdditionData['employee_grade']) ? null : implode(",", $request->employee_grade);
             $validatedAdditionData['company_id']=$id;
-
-            // dd($validatedAdditionData['employee_grade']);
             $validatedAdditionData['created_by'] = auth()->user()->name;
             $addition = Addition::create($validatedAdditionData);
             return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Company Addition has successfully been added.');
@@ -566,10 +525,6 @@ class SettingsController extends Controller
 
         return view('pages.admin.settings.edit-department', ['department' => $department]);
     }
-
-
-
-
     public function editWorkingDay(Request $request, $id) 
     {
         $working_day = EmployeeWorkingDay::templates()->find($id);
@@ -902,7 +857,6 @@ class SettingsController extends Controller
 
        
     }
-
 
     // Section: DELETE
     public function deleteCostCentre(Request $request, $id)
