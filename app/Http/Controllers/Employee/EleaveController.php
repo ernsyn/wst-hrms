@@ -53,6 +53,7 @@ use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Auth;
 use App\Http\Services\LeaveService;
+use App\Mail\LeaveApprovalMail;
 use App\Mail\LeaveRequestMail;
 use App\Mail\LeaveApprovalFirstApproverMail;
 use App\Mail\LeaveRejectedMail;
@@ -211,7 +212,6 @@ class ELeaveController extends Controller
     public function ajaxGetLeaveRequestSingle($id)
     {
         $leaveRequest = LeaveRequest::where('id', $id)->first();
-        // dd($leaveRequest);
         return response()->json($leaveRequest);
     }
 
@@ -286,7 +286,8 @@ class ELeaveController extends Controller
         }
 
         $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
-        $leave_request = LeaveRequest::find($result)->first();
+
+        $leave_request = LeaveRequest::where('id', $result)->first();
 
         // send leave request email notification
         self::sendLeaveRequestNotification($leave_request);
@@ -342,8 +343,8 @@ class ELeaveController extends Controller
 
     public function sendLeaveRequestNotification(LeaveRequest $leave_request) 
     {
-        $cc_recepients = array();
-        $bcc_recepients = array();
+        $cc_recipients = array();
+        $bcc_recipients = array();
     
         
         // get report to users
@@ -357,7 +358,7 @@ class ELeaveController extends Controller
                 ->select('users.name','users.email')
                 ->where('employees.id', $row->report_to_emp_id)
                 ->first();
-            array_push($cc_recepients, $employee->email);
+            array_push($cc_recipients, $employee->email);
         }
 
         // get admin users
@@ -366,12 +367,12 @@ class ELeaveController extends Controller
         })->get();
 
         foreach ($admin_users as $row) {
-            array_push($bcc_recepients, $row->email);
+            array_push($bcc_recipients, $row->email);
         }
 
-        \Mail::to($cc_recepients)
+        \Mail::to($cc_recipients)
             ->cc(Auth::user()->email)
-            ->bcc($bcc_recepients)
+            ->bcc($bcc_recipients)
             ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
 
@@ -541,23 +542,6 @@ class ELeaveController extends Controller
     {
         $leaveRequest = LeaveRequest::find($id);
         return view('pages.employee.e-leave.reject-leave-request', ['leaveRequest' => $leaveRequest]);
-    }
-    
-    public function postReportTo(Request $request, $id) 
-    {
-        $reportToData = $request->validate([
-            'report_to_emp_id' => 'required',
-            'type' => 'required',
-            'kpi_proposer' => 'required',
-            'notes' => 'required',
-        ]);
-
-        $reportTo = new EmployeeReportTo($reportToData);
-
-        $employee = Employee::find($id);
-        $employee->report_tos()->save($reportTo);
-
-        return response()->json(['success'=>'Record is successfully added']);
     }
    
     public function postAddApproval(Request $request)
@@ -808,8 +792,8 @@ class ELeaveController extends Controller
 
     public function sendLeaveRequestApprovalFirstApproverNotification(LeaveRequestApproval $leave_request_approval) 
     {
-        $cc_recepients = array();
-        $bcc_recepients = array();
+        $cc_recipients = array();
+        $bcc_recipients = array();
         $to = array();
 
         // get report to users
@@ -844,7 +828,7 @@ class ELeaveController extends Controller
                 ->where('employees.id', $row->emp_id)
                 ->first();
                
-            array_push($cc_recepients, $employee->email);
+            array_push($cc_recipients, $employee->email);
         }
 
         // get admin users
@@ -855,20 +839,18 @@ class ELeaveController extends Controller
        
         foreach ($admin_users as $row) {
           
-            array_push($bcc_recepients, $row->email);
+            array_push($bcc_recipients, $row->email);
         }
 
         \Mail::to($to)
             ->cc(Auth::user()->email)
-            ->bcc($bcc_recepients,$cc_recepients)
+            ->bcc($bcc_recipients,$cc_recipients)
             ->send(new LeaveApprovalFirstApproverMail(Auth::user(), $leave_request_approval));
     }
 
     public function sendLeaveRequestRejectedNotification(LeaveRequest $leave_request_rejected) 
     {
-        $cc_recepients = array();
-        $bcc_recepients = array();
-        $to = array();
+        $cc_recipients = array();
 
         // get report to users
         $report_to = EmployeeReportTo::select('emp_id')
@@ -883,18 +865,6 @@ class ELeaveController extends Controller
             ->where('emp_id', $report_tos->emp_id)
             ->get();
 
-           $reports= EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
-            ->join('users', 'users.id', '=', 'employees.user_id')
-            ->where('emp_id', $report_tos->emp_id)
-            ->where('employee_report_to.deleted_at',null)
-            ->get();
-    
-        
-        foreach ($reports as $row) {
-    
-            array_push($to, $row->email);
-                }
-
         foreach ($report_to as $row) {
             $employee = DB::table('employees')
                 ->join('users', 'users.id', '=', 'employees.user_id')
@@ -902,30 +872,15 @@ class ELeaveController extends Controller
                 ->where('employees.id', $row->emp_id)
                 ->first();
                
-            array_push($cc_recepients, $employee->email);
+            array_push($cc_recipients, $employee->email);
         }
 
-        // get admin users
-        $admin_users = User::whereHas("roles", function($q){
-            $q->where("name", "admin");
-        })->get();
-        
-       
-        foreach ($admin_users as $row) {
-          
-            array_push($bcc_recepients, $row->email);
-        }
-
-        \Mail::to($to)
-            ->cc(Auth::user()->email)
-            ->bcc($bcc_recepients,$cc_recepients)
+        \Mail::to($cc_recipients)
             ->send(new LeaveRejectedMail(Auth::user(), $leave_request_rejected));
     }
     public function sendLeaveRequestRejectedByFirstApproverNotification(LeaveRequest $leave_request_rejected) 
     {
-        $cc_recepients = array();
-        $bcc_recepients = array();
-        $to = array();
+        $cc_recipients = array();
 
         // get report to users
         $report_to = EmployeeReportTo::select('emp_id')
@@ -940,30 +895,17 @@ class ELeaveController extends Controller
                 ->where('employees.id', $row->emp_id)
                 ->first();
                
-            array_push($cc_recepients, $employee->email);
+            array_push($cc_recipients, $employee->email);
         }
 
-        // get admin users
-        $admin_users = User::whereHas("roles", function($q){
-            $q->where("name", "admin");
-        })->get();
-        
-       
-        foreach ($admin_users as $row) {
-          
-            array_push($bcc_recepients, $row->email);
-        }
-
-        \Mail::to($cc_recepients)
-            ->cc(Auth::user()->email)
-            ->bcc($bcc_recepients)
+        \Mail::to($cc_recipients)
             ->send(new LeaveRejectedFirstApproverMail(Auth::user(), $leave_request_rejected));
     }
 
     public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval) 
     {
-        $cc_recepients = array();
-        $bcc_recepients = array();
+        $cc_recipients = array();
+        $bcc_recipients = array();
         $to = array();
 
         // get report to users
@@ -971,24 +913,22 @@ class ELeaveController extends Controller
             ->where('report_to_emp_id', Auth::user()->employee->id)
             ->get();
 
-            $report_tos = EmployeeReportTo::select('emp_id')
+        $report_tos = EmployeeReportTo::select('emp_id')
             ->where('report_to_emp_id', Auth::user()->employee->id)
             ->first();
         
-            $employee_report_to_id = EmployeeReportTo::select('report_to_emp_id')
+        $employee_report_to_id = EmployeeReportTo::select('report_to_emp_id')
             ->where('emp_id', $report_tos->emp_id)
             ->get();
 
-           $reports= EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
+        $reports = EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
             ->join('users', 'users.id', '=', 'employees.user_id')
             ->where('emp_id', $report_tos->emp_id)
             ->where('employee_report_to.deleted_at',null)
             ->get();
-    
-        
+            
         foreach ($reports as $row) {
-    
-            array_push($to, $row->email);
+                array_push($to, $row->email);
                 }
 
         foreach ($report_to as $row) {
@@ -998,7 +938,7 @@ class ELeaveController extends Controller
                 ->where('employees.id', $row->emp_id)
                 ->first();
                
-            array_push($cc_recepients, $employee->email);
+            array_push($cc_recipients, $employee->email);
         }
 
         // get admin users
@@ -1009,12 +949,12 @@ class ELeaveController extends Controller
        
         foreach ($admin_users as $row) {
           
-            array_push($bcc_recepients, $row->email);
+            array_push($bcc_recipients, $row->email);
         }
 
         \Mail::to($to)
             ->cc(Auth::user()->email)
-            ->bcc($bcc_recepients,$cc_recepients)
+            ->bcc($bcc_recipients,$cc_recipients)
             ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
     }
 }

@@ -158,7 +158,6 @@ class EmployeeController extends Controller
         }
     }
 
-
     // SECTION: Data Tables
     public function getDataTableEmergencyContacts()
     {
@@ -203,7 +202,6 @@ class EmployeeController extends Controller
         })
         ->make(true);
     }
-
 
     public function getDataTableJobs()
     {
@@ -256,12 +254,6 @@ class EmployeeController extends Controller
     {
         $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($reportTos)->make(true);
-    }
-
-    public function getDataTableMainSecurityGroup()
-    {
-        $employee = Employee::with('security_groups')->where('emp_id', Auth::user()->employee->id)->get();
-        return DataTables::of($employee)->make(true);
     }
 
     public function getDataTableSecurityGroup()

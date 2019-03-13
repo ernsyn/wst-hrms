@@ -20,7 +20,6 @@ class DashboardController extends Controller
         $this->middleware('auth');
         $this->middleware(['role:super-admin']);
     }
-
     /**
      * Show the application dashboard.
      *

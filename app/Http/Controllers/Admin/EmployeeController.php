@@ -213,13 +213,12 @@ class EmployeeController extends Controller
         Employee::find($id)->update($profileUpdatedData);
 
         return response()->json(['success'=>'Profile was successfully updated.']);
-        //  }
+        }
          
         // else 
         // {
         // return response()->json(['success'=>'Security Group Cannot Be Added.Please Select Security Group With Same Company ID']);
         // }
-    }
 
     public function changepassword()
     {
@@ -411,11 +410,6 @@ class EmployeeController extends Controller
         return DataTables::of($reportTos)->make(true);
     }
 
-    public function getDataTableMainSecurityGroup($id)
-    {
-        $employee = Employee::with('security_groups')->where('emp_id', $id)->get();
-        return DataTables::of($employee)->make(true);
-    }
 
     public function getDataTableSecurityGroup($id)
     {
@@ -482,14 +476,11 @@ class EmployeeController extends Controller
         $attachment_data_url = $validated['attach'];
         $securitygroup = SecurityGroup::where('company_id','=' ,$request->company_id)
         ->where('id','=',$request->main_security_group_id)->count();
-
-        if($request->main_security_group_id && $securitygroup ==1)
-        {
+		if($request->main_security_group_id && $securitygroup ==1){
         DB::transaction(function () use ($attachment_data_url, $validated) {
             $validatedUserData['name'] = $validated['name'];
             $validatedUserData['email'] = $validated['email'];
             $validatedUserData['password'] = Hash::make($validated['password']);
-
             $validatedEmployeeData['code'] = $validated['code'];
             $validatedEmployeeData['contact_no'] = $validated['contact_no'];
             $validatedEmployeeData['address'] = $validated['address'];
@@ -517,17 +508,13 @@ class EmployeeController extends Controller
                 $validatedEmployeeData['driver_license_expiry_date'] = null;
             }
             $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
-
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
-
             $validatedEmployeeData['user_id'] = $user->id;
             $validatedEmployeeData['created_by'] = auth()->user()->id;
             $employee = Employee::create($validatedEmployeeData);
-
             if (!empty($attachment_data_url)) {
                 $attach = self::processBase64DataUrl($attachment_data_url);
-
                 $profileMedia = Media::create([
                     'category' => 'employee-profile',
                     'mimetype' => $attach['mime_type'],
@@ -535,26 +522,18 @@ class EmployeeController extends Controller
                     'size' => $attach['size'],
                     'filename' => 'employee__'.date('Y-m-d_H:i:s').".".$attach['extension']
                 ]);
-
                 $employee->profile_media()->associate($profileMedia);
                 $employee->save();
             }
         });
-
         return redirect()->route('admin.employees')->with('status', 'Employee was successfully added!');
     }
-
 else {
          // return redirect()->route('admin.employees.add')->with('status', ' was successfully added!'); 
          Session::flash('message', "You have select wrong company security group ID");
          return Redirect::back();
-
     }
-
-
     }
-
-
     // SECTION: Add
     public function postEmergencyContact(Request $request, $id)
     {
@@ -712,7 +691,7 @@ else {
         return response()->json(['success'=>'Bank Account was successfully added']);
     }
 
-    public function postCompany(Request $request, $id)
+    public function postExperience(Request $request, $id)
     {
         $experienceData = $request->validate([
             'company' => 'required',
@@ -767,7 +746,6 @@ else {
 
         return response()->json(['success'=>'Skill was successfully added']);
     }
-
 
     public function postAttachment(Request $request, $id)
     {
@@ -954,7 +932,6 @@ else {
 
     }
 
-
     public function postSecurityGroup(Request $request, $id)
     {
         AccessControllHelper::hasAnyRoles('admin');
@@ -978,17 +955,6 @@ else {
         // {
         // return response()->json(['success'=>'Security Group Cannot Be Added.Please Select Security Group With Same Company ID']);
         // }
-    }
-
-
-    public function postMainSecurityGroup(Request $request, $id)
-    {
-        $mainSecurityGroupData = $request->validate([
-            'main_security_group_id' => 'required'
-        ]);
-
-        Employee::update(array('main_security_group_id' => $mainSecurityGroupData));
-        return response()->json(['success'=>'Security Group was successfully updated.']);
     }
 
     // SECTION: Edit
@@ -1087,7 +1053,7 @@ else {
         return response()->json(['success'=>'Bank Account was successfully updated.']);
     }
 
-    public function postEditCompany(Request $request, $emp_id, $id)
+    public function postEditExperience(Request $request, $emp_id, $id)
     {
         $experienceUpdatedData = $request->validate([
             'company' => 'required',
@@ -1244,8 +1210,6 @@ else {
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
 
-
-
     public function ajaxGetAttendances(Request $request, $id)
     {
         $now = Carbon::now();
@@ -1259,6 +1223,7 @@ else {
         return $attendances;
     }
 
+}
     // public function postDisapproved(Request $request)
     // {
     //     $id = $request->input('id');

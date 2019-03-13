@@ -36,6 +36,6 @@ class LeaveRejectedFirstApproverMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Leave Request Rejected By First Approver!')->view('emails.leaverequestrejectedbyfirstapprover');
+        return $this->subject('Leave Request Rejected By First Approver!')->view('emails.leave-request-rejected-by-first-approver');
     }
 }

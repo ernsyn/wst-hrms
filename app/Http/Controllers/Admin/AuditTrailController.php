@@ -24,7 +24,8 @@ class AuditTrailController extends Controller
     {
         $audits = \OwenIt\Auditing\Models\Audit::with(
             [
-                'user.employee' => function($query) {
+                'user.employee' => function($query) 
+                {
                     $query->select(['user_id','code']);
                 }
             ]
