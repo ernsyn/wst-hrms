@@ -1223,7 +1223,6 @@ else {
         return $attendances;
     }
 
-}
     // public function postDisapproved(Request $request)
     // {
     //     $id = $request->input('id');
