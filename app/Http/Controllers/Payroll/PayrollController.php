@@ -107,8 +107,10 @@ class PayrollController extends Controller
         $payroll = [];
         if($company != null){
             $payroll = PayrollMaster::leftJoin('companies', 'companies.id', '=', 'payroll_master.company_id')
+            ->join('users', 'users.id', '=', 'payroll_master.created_by')
             ->where('company_id', $company->id)
-            ->select('payroll_master.*','companies.name')->get();
+            ->orderBy('year_month','desc')
+            ->select('payroll_master.*','companies.name','users.name')->get();
         }
 
         $period = PayrollPeriodEnum::choices();
@@ -139,8 +141,8 @@ class PayrollController extends Controller
 
         $payrollPeriodExists = $this->payrollService->isPayrollExists($data);
         if ($payrollPeriodExists) {
-            $msg = 'Payroll '.PayrollPeriodEnum::getDescription($validated['period']).' '.DateHelper::dateWithFormat($validated['year_month'], 'M-Y'). ' has already been created.';
-            return redirect($request->server('HTTP_REFERER'))->withErrors([$msg]);
+            $msg = 'Payroll '.DateHelper::dateWithFormat($validated['year_month'], 'Y-m').' '.PayrollPeriodEnum::getDescription($validated['period']).'  has already been created.';
+            return redirect($request->server('HTTP_REFERER'))->with(['customMsg'=> $msg]);//withErrors([$msg]);
         }
 
         // Process

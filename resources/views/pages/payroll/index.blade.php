@@ -38,6 +38,8 @@
 						<th>No</th>
 						<th>Payroll Month</th>
 						<th>Period</th>
+						<th>Payroll Period</th>
+						<th>Created By</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -47,6 +49,8 @@
 						<td>{{ $loop->iteration }}</td>
 						<td>{{ DateHelper::dateWithFormat($row->year_month, 'Y-m') }}</td>
 						<td>{{ PayrollPeriodEnum::getDescription($row->period)}}</td>
+						<td>{{ $row->start_date }} to {{ $row->end_date}}</td>
+						<td>{{ $row->name }}</td>
 						<td>
 							<button onclick="window.location='{{ route('payroll.show',$row->id) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
 							@hasanyrole('super-admin|admin')

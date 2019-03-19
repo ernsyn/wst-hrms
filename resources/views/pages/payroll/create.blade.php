@@ -12,6 +12,15 @@
 		</div>
 		@endif
 		
+		@if(session()->get('customMsg')) 
+    	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    		{{ session()->get('customMsg') }}
+    		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    			<span aria-hidden="true">&times;</span>
+    		</button>
+    	</div>
+    	@endif
+		
 		<form method="POST" action="{{ route('payroll.store') }}" id="add_payroll">
 			<div class="card-body">
 				@csrf
@@ -52,7 +61,7 @@
 			</div>
 			<div class="card-footer">
 				<button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
-				<a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
+				<a role="button" class="btn btn-secondary" href="{{ route('payroll') }}">Cancel</a>
 			</div>
 		</form>
 	</div>
@@ -63,7 +72,8 @@
 
     $('#year_month').datetimepicker({
         format: 'YYYY-MM',
-        useCurrent: false
+        useCurrent: false,
+        maxDate: new Date()
     });
     $('#year_month').val($('#old-payroll-month').text());
     
