@@ -411,7 +411,15 @@
                 "data": "start_date"
             },
             {
-                "data": "end_date"
+                "data": "end_date",
+                render: function (data, type, row, meta) {
+                    switch (data) {
+                        case 'transferred':
+                            return "{!! App\Constants\EmploymentStatusNaming::get('transferred') !!}";
+                    }
+
+                    return data;
+                }
             },
             {
                 "data": "main_position.name"

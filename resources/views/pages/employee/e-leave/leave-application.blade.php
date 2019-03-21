@@ -414,15 +414,15 @@
         });
 
         // change day according to selected value
-        $("#leave-half-day-am").click(function(){  
-            $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
-            $("#totalLeave").val(0.5);
-        });
+        // $("#leave-half-day-am").click(function(){  
+        //     $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
+        //     $("#totalLeave").val(0.5);
+        // });
 
-        $("#leave-half-day-pm").click(function(){  
-            $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
-            $("#totalLeave").val(0.5);
-        });
+        // $("#leave-half-day-pm").click(function(){  
+        //     $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
+        //     $("#totalLeave").val(0.5);
+        // });
 
         $("#leave-full-day").click(function(){  
             $("span.total-days").replaceWith("<span class='total-days'><b>1.0</b> days</span>");
@@ -462,9 +462,17 @@
             $('#error-message').prop('hidden', true);
 
             var file = document.querySelector('input[name=required-attachment]').files[0];
-
+            var reason = $('#reason').val();
+            
             if(attachmentRequired && !file) {
                 $('#error-message').text('Attachment is required!');
+                $('#error-message').prop('hidden', false);
+
+                return false;
+            }
+
+            if(reason =="") {
+                $('#error-message').text('Reason is required!');
                 $('#error-message').prop('hidden', false);
 
                 return false;
@@ -479,7 +487,7 @@
                     end_date: $('#add-leave-request-form #alt-end-date').val(),
                     leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                     am_pm: $('#add-leave-request-form button.selected-day').data('value'),
-                    reason: $('#add-leave-request-form #reason').val() ? $('#add-leave-request-form #reason').val() : 'none',
+                    reason: $('#add-leave-request-form #reason').val(),
                 };
 
                 if(attachmentRequired) {
@@ -497,7 +505,7 @@
                     end_date: $('#add-leave-request-form #alt-end-date').val(),
                     leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                     am_pm: $('#add-leave-request-form button.selected-day').data('value'),
-                    reason: $('#add-leave-request-form #reason').val() ? $('#add-leave-request-form #reason').val() : 'none',
+                    reason: $('#add-leave-request-form #reason').val(),
                 };
 
                 if(attachmentRequired) {
@@ -597,10 +605,12 @@
                 var start = $("#start-date").datepicker("getDate");
                 var end = $("#end-date").datepicker("getDate");
                 var days = (end - start) / (1000 * 60 * 60 * 24) + 1;
+                var am_pm = null;
 
                 if (days > 1) {
                     $("#select-period").hide();
                 } else {
+                    am_pm = $('#add-leave-request-form button.selected-day').data('value');
                     $("#select-period").show();
                 }                
 
@@ -611,7 +621,7 @@
                         _token: '{{ csrf_token() }}',
                         start_date: $('#add-leave-request-form #alt-start-date').val(),
                         end_date: $('#add-leave-request-form #alt-end-date').val(),
-                        am_pm: $('#add-leave-request-form button.selected-day').data('value'),
+                        am_pm: am_pm,
                         leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                         edit_leave_request_id: edit_leave_request_id,
                     },
@@ -633,7 +643,7 @@
 
                         if(data.end_date) {
                             $("#end-date").val(data.end_date);
-                            $("#alt-end-date").val(data.end_date);
+                            $("#alt-end-date").val(data.alt_end_date);
                         }
 
                         if(data.set_am_pm) {
@@ -674,6 +684,10 @@
             $("span.total-days").replaceWith("<span class='total-days'><b>0.0</b> days</span>");
 
             $('#mode').val('add');
+            $("#start-date").datepicker("option", "minDate", 0);
+            $("#start-date").datepicker("option", "maxDate", null);
+            $("#end-date").datepicker("option", "minDate", 0);
+            $("#end-date").datepicker("option", "maxDate", null);
         }
     });
 </script>

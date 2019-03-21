@@ -12,14 +12,11 @@
 
 	<h3>Leave Rejected (HRMS)</h3>
 
-	<p><strong>Hi {{ $leaveRequest->employee->user->name }},</strong></p>
+	<p><strong>Hi {{ $leaveRequest->employee->user->name}},</strong></p>
 
-	<p>Your leave request on the {{ $leaveRequest->start_date }} to {{ $leaveRequest->end_date }} has been rejected by the first/second level approver</p>
-	<p>Please login into the HRMS Portal to check and/or approve the leave request.</p>
-
-	<p>--------------------------------------------------------------</p>
-
-	<p>This is an auto-generated leave request notification</p>
+	<p>	Your leave application for the following date(s) - {{ $leaveRequest->start_date}} to {{ $leaveRequest->end_date}} have been rejected</p>
+	
+	<p>This is a system generated message.</p>
 
 </body>
 

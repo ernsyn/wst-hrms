@@ -76,7 +76,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-12 col-form-label">Reason</label>
                                 <div class="col-sm-12">
-                                    <textarea class="form-control" name="reason" id="reason" rows="5" placeholder="Please input your reason here..." required></textarea>
+                                    <textarea class="form-control" name="reason" id="reason" rows="5" placeholder="Please input your reason here..." required ></textarea>
                                 </div>
                             </div>
                             <div class="dropdown-divider pb-3"></div>
@@ -412,6 +412,8 @@
                 $("#available_days").text(leave_type_data.available_days.toFixed(1));
                 $("#leave-description").text(leave_type_data.description);
 
+
+
                 if(leave_type_data.available_days == 0) {
                     $("#add-leave-request-submit").prop('disabled', true);
                 }
@@ -517,10 +519,13 @@
             
             $("#available_days").text(leave_type_data.available_days.toFixed(1));
             $("#leave-description").text(leave_type_data.description);
+            // $("#reason").text(leave_type_data.reason);
 
             if(leave_type_data.available_days == 0) {
                 $("#add-leave-request-submit").prop('disabled', true);
             }
+
+            
             else {
                 checkLeaveRequest($('#start-date').val(), $('#end-date').val())
             }
@@ -536,6 +541,13 @@
                 $("#required-attachment-box").hide();
             }
 
+            //click leave type then error reason  appear 
+            // if(leave_type_data.reason == null) {
+            //     $('#error-message').text('Attachment is required!');
+            //     $('#error-message').prop('hidden', false);
+
+            //     return false;
+            // }
             console.log(leave_type_data);
         });
 
@@ -545,9 +557,18 @@
             $('#error-message').prop('hidden', true);
 
             var file = document.querySelector('input[name=required-attachment]').files[0];
+            // console.log("File: ", file);
+            // var reason = leave_type_data.reason;
+            var reason = $('#reason').val();
 
             if(attachmentRequired && !file) {
                 $('#error-message').text('Attachment is required!');
+                $('#error-message').prop('hidden', false);
+
+                return false;
+            }
+            if(reason =="") {
+                $('#error-message').text('Reason is required!');
                 $('#error-message').prop('hidden', false);
 
                 return false;
@@ -562,8 +583,10 @@
                     end_date: $('#add-leave-request-form #alt-end-date').val(),
                     leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                     am_pm: $('#add-leave-request-form button.selected-day').data('value'),
-                    reason: $('#add-leave-request-form #reason').val() ? $('#add-leave-request-form #reason').val() : 'none',
+                    reason: $('#add-leave-request-form #reason').val(),
                 };
+
+
 
                 if(attachmentRequired) {
                     getBase64(file, function(attachmentDataUrl) {
@@ -580,7 +603,7 @@
                     end_date: $('#add-leave-request-form #alt-end-date').val(),
                     leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                     am_pm: $('#add-leave-request-form button.selected-day').data('value'),
-                    reason: $('#add-leave-request-form #reason').val() ? $('#add-leave-request-form #reason').val() : 'none',
+                    reason: $('#add-leave-request-form #reason').val(),
                 };
 
                 if(attachmentRequired) {
@@ -714,6 +737,7 @@
                         end_date: $('#add-leave-request-form #alt-end-date').val(),
                         am_pm: $('#add-leave-request-form button.selected-day').data('value'),
                         leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
+                        reason: $('#add-leave-request-form #reason').val(),
                         edit_leave_request_id: edit_leave_request_id,
                     },
                     success: function(data) {
@@ -775,6 +799,11 @@
             $("span.total-days").replaceWith("<span class='total-days'><b>0.0</b> days</span>");
 
             $('#mode').val('add');
+
+            $("#start-date").datepicker("option", "minDate", 0);
+            $("#start-date").datepicker("option", "maxDate", null);
+            $("#end-date").datepicker("option", "minDate", 0);
+            $("#end-date").datepicker("option", "maxDate", null);
         }
     });
 </script>
