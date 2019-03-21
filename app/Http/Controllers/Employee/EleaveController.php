@@ -993,28 +993,47 @@ else{
         $cc_recipients = array();
         $bcc_recipients = array();
     
-        
-        $report_to = EmployeeReportTo::select('emp_id')
-            ->where('emp_id', Auth::user()->employee->id)
-            ->get();
+   
+        $report_to_level_one = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
+        ->where('report_to_level',1)
+        ->where('employee_report_to.deleted_at',null)
+        ->get();
 
-            $report_tos = EmployeeReportTo::select('emp_id')
-            ->where('emp_id', Auth::user()->employee->id)
+
+    foreach ($report_to_level_one as $row) {
+        $employee = DB::table('employees')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->select('users.name','users.email')
+            ->where('employees.id', $row->report_to_emp_id)
             ->first();
-        
-            $employee_report_to_id = EmployeeReportTo::select('report_to_emp_id')
-            ->where('emp_id', $report_tos->emp_id)
-            ->get();
+           
+        array_push($cc_recipients, $employee->email);
+    }
 
-        foreach ($report_to as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->emp_id)
-                ->first();
+             $admin_users = User::whereHas("roles", function($q){
+             $q->where("name", "admin");
+            })->get();
+    
+   
+            foreach ($admin_users as $row) {
+      
+            array_push($bcc_recipients, $row->email);
+             }
+
+        // $report_to = EmployeeReportTo::select('emp_id')
+        //     ->where('emp_id', Auth::user()->employee->id)
+        //     ->get();
+
+
+        // foreach ($report_to as $row) {
+        //     $employee = DB::table('employees')
+        //         ->join('users', 'users.id', '=', 'employees.user_id')
+        //         ->select('users.name','users.email')
+        //         ->where('employees.id', $row->emp_id)
+        //         ->first();
                
-            array_push($cc_recipients, $employee->email);
-        }
+        //     array_push($cc_recipients, $employee->email);
+        // }
 
 
         \Mail::to($cc_recipients)
@@ -1026,35 +1045,53 @@ else{
     {
         $cc_recipients = array();
         $bcc_recipients = array();
+        $cc_recipients_report_to =array();
     
         
         $report_to = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
-            ->where('report_to_level',1)
+            ->where('report_to_level',2)
             ->where('employee_report_to.deleted_at',null)
             ->get();
-
-            $report_tos = EmployeeReportTo::select('emp_id')
-            ->where('emp_id', Auth::user()->employee->id)
-            ->first();
-        
-            $employee_report_to_id = EmployeeReportTo::select('report_to_emp_id')
-            ->where('emp_id', $report_tos->emp_id)
-            ->get();
+    
 
         foreach ($report_to as $row) {
             $employee = DB::table('employees')
                 ->join('users', 'users.id', '=', 'employees.user_id')
                 ->select('users.name','users.email')
-                ->where('employees.id', $row->emp_id)
+                ->where('employees.id', $row->report_to_emp_id)
                 ->first();
                
             array_push($cc_recipients, $employee->email);
         }
 
+        $report_tos = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
+        ->where('report_to_level',1)
+        ->where('employee_report_to.deleted_at',null)
+        ->get();
 
+        foreach ($report_tos as $row) {
+            $employee = DB::table('employees')
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->report_to_emp_id)
+                ->first();
+               
+            array_push($cc_recipients_report_to, $employee->email);
+        }
+
+                //  // get admin users
+         $admin_users = User::whereHas("roles", function($q){
+             $q->where("name", "admin");
+         })->get();
+         
+        
+         foreach ($admin_users as $row) {
+           
+             array_push($bcc_recipients, $row->email);
+         }
         \Mail::to($cc_recipients)
-            ->cc(Auth::user()->email)
-            ->bcc($bcc_recipients)
+            ->cc($cc_recipients_report_to)
+            ->bcc($bcc_recipients,Auth::user()->email)
             ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
         // $cc_recipients = array();
