@@ -205,11 +205,12 @@ class EmployeeController extends Controller
         if($profileUpdatedData['driver_license_expiry_date']==='') {
             $profileUpdatedData['driver_license_expiry_date'] = null;
         }
-
+        
         // $security = SecurityGroup::select('company_id')->where('id','=',$request->main_security_group_id)->get();
         // $company_id =Employee::select('company_id')->where('id','=',$security)->get();    
         // if ($security == $company_id)
         // {
+        User::find($employee->user_id)->update($profileUpdatedData);
         Employee::find($id)->update($profileUpdatedData);
 
         return response()->json(['success'=>'Profile was successfully updated.']);
