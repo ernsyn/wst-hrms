@@ -9,6 +9,7 @@ use App\Company;
 use App\CostCentre;
 use App\Department;
 use App\Branch;
+use App\SecurityGroup;
 use App\Team;
 use App\EmployeePosition;
 use App\EmployeeGrade;
@@ -35,6 +36,7 @@ class DashboardController extends Controller
             "teamsCount" => Team::count(),
             "employeePositionsCount" => EmployeePosition::count(),
             "employeeGradesCount" => EmployeeGrade::count(),
+            "securityGroupCount" => SecurityGroup::count(),
         );
 
         $initOk = true;

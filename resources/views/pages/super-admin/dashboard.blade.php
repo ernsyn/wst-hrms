@@ -28,6 +28,9 @@
             @if($initCheck["employeeGradesCount"] <= 0)
                 <li class="init-warning list-group-item"><span>There should be at least one <b>Employee Grade</b> created</span><a href="{{ route('admin.settings.grades') }}"  class="btn btn-sm btn-primary float-right">Add Grade</a></li>
             @endif
+            @if($initCheck["securityGroupCount"] <= 0)
+                <li class="init-warning list-group-item"><span>There should be at least one <b>Security Group</b> created</span><a href="{{ route('admin.settings.companies') }}"  class="btn btn-sm btn-primary float-right">Add Security Group</a></li>
+            @endif
         </ul>
     </div>
     @endif
