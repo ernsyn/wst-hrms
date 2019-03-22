@@ -4,22 +4,26 @@
 
 <head>
 	
-	<title>Leave Approval!</title>
+	<title>Leave Request!</title>
 
 </head>
 
 <body>
 
-	<h3>Leave Approval (HRMS)</h3>
+		<h3>New Leave Request Submission!</h3>
 
-	<p><strong>Hi {{ $leaveRequestApproval->leave_request_approval_id->employee->user->name}},</strong></p>
-
-	<p>Leave request by {{ $leaveRequestApproval->leave_request_approval_id->employee->user->name}} on the {{ $leaveRequestApproval->leave_request_approval_id->start_date}} to {{ $leaveRequestApproval->leave_request_approval_id->end_date}} have been approved by first approver ({{ $leaveRequestApproval->approved_by->user->name}})</p>
-	<p>Please login into the HRMS Portal to check and/or approve the leave request.</p>
-
-	<p>--------------------------------------------------------------</p>
-
-	<p>This is an auto-generated leave request notification</p>
+		<p>Hi,</p>
+	
+		<p><strong>{{ $leaveRequestApproval->leave_request_approval_id->employee->user->name }}</strong> has applied for <strong>{{ $leaveRequestApproval->leave_request_approval_id->applied_days }} {{ $leaveRequestApproval->leave_request_approval_id->am_pm }}</strong> day(s) of leave, from <strong>{{ \Carbon\Carbon::parse($leaveRequestApproval->leave_request_approval_id->start_date)->format('d/m/Y') }}</strong> to <strong>{{ \Carbon\Carbon::parse($leaveRequestApproval->leave_request_approval_id->end_date)->format('d/m/Y') }}</strong>.</p>
+	
+		<p>The reason for the leave request is:</p>
+	
+		<p>{{ $leaveRequestApproval->leave_request_approval_id->reason }}</p>
+	
+		<p>Please login into HRMS Portal to approve/reject the leave request.</p>
+	
+		<p>This is a system generated message.</p>
+	
 
 </body>
 

@@ -36,6 +36,6 @@ class LeaveApprovalFirstApproverMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Leave Request Approved By First Approver!')->view('emails.leave-request-approval-by-first-approver');
+        return $this->subject('Leave Request Approved!')->view('emails.leave-request-approval-by-first-approver');
     }
 }
