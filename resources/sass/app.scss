@@ -61,4 +61,10 @@ $fa-font-path: "../webfonts" !default;
 @import 'admin/e-leave';
 @import 'admin/employee';
 @import 'employee/e-leave';
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+  }
   

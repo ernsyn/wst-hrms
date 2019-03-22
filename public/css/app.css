@@ -5369,7 +5369,17 @@ input[type="button"].btn-block {
   border-radius: 0.25rem;
 }
 
+.dropdown-menu-right {
+  right: 0;
+  left: auto;
+}
 
+.dropup .dropdown-menu {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 0.125rem;
+}
 
 .dropup .dropdown-toggle::after {
   display: inline-block;
@@ -18679,5 +18689,11 @@ button.dropdown-toggle::after {
 
 #page-leave-application .fc-time {
   display: none;
+}
+
+.scrollable-menu {
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
 }
 

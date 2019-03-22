@@ -36,6 +36,6 @@ class LeaveRejectedMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Leave Request Rejected By Approver!')->view('emails.leave-request-rejected');
+        return $this->subject('Leave Request Rejected!')->view('emails.leave-request-rejected');
     }
 }
