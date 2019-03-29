@@ -293,10 +293,10 @@ class ELeaveController extends Controller
     
     public function getLeaveRequestAttachment($id) {
 
-        $user = Auth::user();
-        $emp_id = $user->employee->id;
-        $leaveRequests =LeaveRequest::where('emp_id',$emp_id)->get();
-        $leaveRequest =  $leaveRequests::find($id);
+        // $user = Auth::user();
+        // $emp_id = $user->employee->id;
+        // $leaveRequests =LeaveRequest::where('emp_id',$emp_id)->get();
+        $leaveRequest =  LeaveRequest::find($id);
 
         if(!empty($leaveRequest) && $leaveRequest['attachment_media_id']) {
             $attachment = $leaveRequest->attachment;
