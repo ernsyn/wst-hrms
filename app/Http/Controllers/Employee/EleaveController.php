@@ -884,7 +884,12 @@ else{
 
         $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id) //check leave_request id in leave request approval
         ->count(); 
+
+        $leave_status =LeaveRequest::where('id',$id)   //to get leave request status
+        ->whereIn('status', ['approved', 'rejected'])
+        ->count();
         
+        if ($leave_status == 0){
         if ($multiple_approval_levels_required == false) {
 	        
 	        if ($employee_report_to_level ==1) 
@@ -985,6 +990,11 @@ else{
                 self::sendLeaveRequestRejectedNotification($leave_request_rejected);
                 
             return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected');
+        }
+        }
+        else 
+        {
+        return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Reject.');
         }
     }
 

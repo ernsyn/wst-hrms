@@ -528,7 +528,12 @@ class ELeaveController extends Controller
         $total_days = number_format($total_days,1);
        
         $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+
+        $leave_status =LeaveRequest::where('id',$id)   //to get leave request status
+        ->whereIn('status', ['approved', 'rejected'])
+        ->count();
  
+        if ($leave_status == 0){
         LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
 
@@ -540,6 +545,11 @@ class ELeaveController extends Controller
             self::sendLeaveRequestRejectedNotification($leave_request_rejected, $emp_id);
 
         return redirect()->route('admin.e-leave.configuration.leave-requests');
+        }
+        else
+        {
+        return redirect()->route('admin.e-leave.configuration.leave-requests')->with('status', 'Leave Request Cant Be Reject.');
+        }
     }
 
     public function postDeactivateLeaveType(Request $request, $id)
