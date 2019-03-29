@@ -61,8 +61,9 @@
                             @else
                                 <span class="fas fa-ban"></span>
                             @endif
-                           
-                            <td>             @if($leaveRequest->leave_request_approval->count() ==2 && ($leaveRequest['status']=='approved'))
+                            </td>
+                            <td>             
+                            @if($leaveRequest->leave_request_approval->count() ==2 && ($leaveRequest['status']=='approved'))
                                 Approved   
                             @elseif($leaveRequest->leave_request_approval->count() ==1 && $leaveRequest['status']=='new')
                                 Pending Second Approver
