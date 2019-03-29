@@ -710,6 +710,7 @@
 
             $('#error-message').text('');
             
+            //to display am , pm 
             if($start_date && $end_date) {
                 var start = $("#start-date").datepicker("getDate");
                 var end = $("#end-date").datepicker("getDate");

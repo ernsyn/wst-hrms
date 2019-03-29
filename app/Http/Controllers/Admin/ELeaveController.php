@@ -491,6 +491,11 @@ class ELeaveController extends Controller
         $leave_type_id = $request->input('leave_type_id');
         $total_days =$request->input('total_days');
 
+        $leave_status =LeaveRequest::where('id',$id)   //to get leave request status
+        ->whereIn('status', ['approved', 'rejected'])
+        ->count();
+        if ($leave_status == 0)
+        {
         LeaveRequest::find($id)->update(array('status' => 'approved'));
         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
         $leaveRequestData = $request->validate([
@@ -501,17 +506,25 @@ class ELeaveController extends Controller
         $leaveRequestData['approved_by_emp_id'] = Auth::user()->employee->id;
        
 
+
+ 
+
         $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
-       // $employee = Employee::find($report_to_emp_id);
-
         $leaveRequestData->save();
-
         $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
         ->orderby('created_at', 'desc')->first();
 
         // send leave request email notification
         self::sendLeaveRequestApprovalNotification($leave_request_approval, $emp_id);
         return redirect()->route('admin.e-leave.configuration.leave-requests');
+        
+        }
+
+        else
+        {
+        return redirect()->route('admin.e-leave.configuration.leave-requests')->with('status', 'Leave Request Cant Be Approve.');
+        }
+
     }
 
     public function postDisapproved(Request $request)
@@ -534,21 +547,21 @@ class ELeaveController extends Controller
         ->count();
  
         if ($leave_status == 0){
-        LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
-        $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+            LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
+            $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
 
-        $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+            $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
             ->where('leave_type_id','=',$leave_type_id)
             ->update(array('spent_days'=>$leaveAllocationDataEntry));
 
-        $leave_request_rejected = LeaveRequest::where('id', $id)->first();
+            $leave_request_rejected = LeaveRequest::where('id', $id)->first();
             self::sendLeaveRequestRejectedNotification($leave_request_rejected, $emp_id);
 
-        return redirect()->route('admin.e-leave.configuration.leave-requests');
-        }
-        else
-        {
-        return redirect()->route('admin.e-leave.configuration.leave-requests')->with('status', 'Leave Request Cant Be Reject.');
+            return redirect()->route('admin.e-leave.configuration.leave-requests');
+            }
+            else
+            {
+            return redirect()->route('admin.e-leave.configuration.leave-requests')->with('status', 'Leave Request Cant Be Reject.');
         }
     }
 
