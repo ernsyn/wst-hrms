@@ -605,12 +605,12 @@
                 var start = $("#start-date").datepicker("getDate");
                 var end = $("#end-date").datepicker("getDate");
                 var days = (end - start) / (1000 * 60 * 60 * 24) + 1;
-                var am_pm = null;
+                // var am_pm = null;
 
                 if (days > 1) {
                     $("#select-period").hide();
                 } else {
-                    am_pm = $('#add-leave-request-form button.selected-day').data('value');
+                    // am_pm = $('#add-leave-request-form button.selected-day').data('value');
                     $("#select-period").show();
                 }                
 
@@ -621,7 +621,8 @@
                         _token: '{{ csrf_token() }}',
                         start_date: $('#add-leave-request-form #alt-start-date').val(),
                         end_date: $('#add-leave-request-form #alt-end-date').val(),
-                        am_pm: am_pm,
+                        // am_pm: am_pm,
+                        am_pm: $('#add-leave-request-form button.selected-day').data('value'),
                         leave_type: $('#add-leave-request-form #leave-types').find('option:selected').val(),
                         edit_leave_request_id: edit_leave_request_id,
                     },

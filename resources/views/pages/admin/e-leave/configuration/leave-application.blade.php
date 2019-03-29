@@ -519,7 +519,6 @@
             
             $("#available_days").text(leave_type_data.available_days.toFixed(1));
             $("#leave-description").text(leave_type_data.description);
-            // $("#reason").text(leave_type_data.reason);
 
             if(leave_type_data.available_days == 0) {
                 $("#add-leave-request-submit").prop('disabled', true);
