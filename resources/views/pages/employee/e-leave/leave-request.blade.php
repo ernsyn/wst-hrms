@@ -97,7 +97,9 @@
                                 @elseif($leaveRequest['status']=='rejected')
                                     Rejected
                                 @elseif($leaveRequest['status']=='new')
-                                    New                                                                  
+                                    New         
+                                @elseif($leaveRequest['status']=='approved')
+                                    Approved                                                            
                                 @else
                                 {{$leaveRequest['status']}}
                                 @endif
