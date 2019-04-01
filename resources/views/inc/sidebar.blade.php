@@ -58,7 +58,7 @@
             
 
         </li>
-        <li class="menu-section {{ request()->is('profile*') ? 'active' : '' }}">
+        <li class="menu-section {{ request()->is('employee/e-leave*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leave-submenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
                     <div class="col-1">
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('e-leave*','') ? 'show' : '' }}" id="leave-submenu">
+            <ul class="collapse list-unstyled {{ request()->is('employee/e-leave*') ? 'show' : '' }}" id="leave-submenu">
                 <li class="menu-option {{ request()->is('leave-apply') ? 'active' : '' }}">
                     <a href="{{ route('employee.e-leave.leave-application') }}">Leave Application</a>
                 </li>
