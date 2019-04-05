@@ -609,6 +609,7 @@
 
                 if (days > 1) {
                     $("#select-period").hide();
+                    
                 } else {
                     // am_pm = $('#add-leave-request-form button.selected-day').data('value');
                     $("#select-period").show();

@@ -343,18 +343,23 @@ class EmployeeController extends Controller
 
     public function getDataTableJobs($id)
     {
-        $jobs = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', $id)->get();
+        $jobs = EmployeeJob::with('main_position','department', 'team', 
+        'cost_centre', 'grade', 'branch')->where('emp_id', $id)->get();
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
+            if ($job->start_date !== null)
             return date('d/m/Y', strtotime($job->start_date) );
         })
         ->editColumn('alt_start_date', function ($job) {
+            if ($job->start_date !== null)
             return date('Y-m-d', strtotime($job->start_date) );
         })
         ->editColumn('end_date', function ($job) {
+            if ($job->end_date !== null)
             return date('d/m/Y', strtotime($job->end_date) );
         })
         ->editColumn('alt_end_date', function ($job) {
+            if ($job->end_date !== null)
             return date('Y-m-d', strtotime($job->end_date) );
         })
         ->make(true);

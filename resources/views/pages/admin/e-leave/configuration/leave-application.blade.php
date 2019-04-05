@@ -716,9 +716,12 @@
                 var end = $("#end-date").datepicker("getDate");
                 var days = (end - start) / (1000 * 60 * 60 * 24) + 1;
 
-                if (days > 1) {
+                if (days > 1) 
+                {
                     $("#select-period").hide();
-                } else {
+                    $(".leave-day").removeClass('selected-day');
+                } else 
+                {
                     $("#select-period").show();
                 }
 
