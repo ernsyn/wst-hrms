@@ -609,10 +609,12 @@
 
                 if (days > 1) {
                     $("#select-period").hide();
-                    
+                    $(".pb-3").hide();
+                    $(".leave-day").removeClass("selected-day");
                 } else {
                     // am_pm = $('#add-leave-request-form button.selected-day').data('value');
                     $("#select-period").show();
+                    $(".pb-3").show();
                 }                
 
                 $.ajax({
