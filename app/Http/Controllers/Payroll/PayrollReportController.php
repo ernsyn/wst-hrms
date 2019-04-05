@@ -757,6 +757,11 @@ class PayrollReportController extends Controller
                 ';
                 
                 $body = $sub_header.$content.$sub_footer;
+                $pdf_format = [
+                    'format'        => 'A4-L', // L: Landscape, Default: Portrait
+                    'margin_top'    => 40,
+                    'tempDir' => storage_path("temp"),
+                ];
                 break;
             case '4':
             case 4:
@@ -1116,7 +1121,11 @@ class PayrollReportController extends Controller
                         </tbody>
                     </table>
                 ';
-                
+                $pdf_format = [
+                    'format'        => 'A4-L', // L: Landscape, Default: Portrait
+                    'margin_top'    => 40,
+                    'tempDir' => storage_path("temp"),
+                ];
                 break;
             case '8':
             case 8:
