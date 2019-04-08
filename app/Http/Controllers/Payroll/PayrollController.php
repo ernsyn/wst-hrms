@@ -322,7 +322,7 @@ class PayrollController extends Controller
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
             ->leftjoin('employee_report_to as ert', 'ert.emp_id', '=', 'e.id')
             ->select('payroll_trx.*', 'pm.company_id as company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
-                    (SELECT start_date FROM employee_jobs WHERE emp_id = ej.id ORDER BY id ASC LIMIT 1) as joined_date,
+                    (SELECT start_date FROM employee_jobs WHERE emp_id = ej.emp_id ORDER BY id ASC LIMIT 1) as joined_date,
                     (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
                     (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
                     payroll_trx.take_home_pay as thp,

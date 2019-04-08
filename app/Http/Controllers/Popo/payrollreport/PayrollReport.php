@@ -191,7 +191,7 @@ class PayrollReport
         array_push($slider,new PayrollReport(['reportName' => 'Supplier Payment Form', 'reportDescription' => '', 'reportGroup' => '', 'reportTarget' => 'report3', 'reportCss' => 'm-bg-brand']));
         array_push($slider,new PayrollReport(['reportName' => 'Cash Transfer Document', 'reportDescription' => '', 'reportGroup' => '', 'reportTarget' => 'report4', 'reportCss' => 'm-bg-brand']));
         
-        array_push($slider1,new PayrollReport(['reportName' => 'Bank Crediting Report', 'reportDescription' => '', 'reportGroup' => '', 'reportTarget' => 'report5', 'reportCss' => 'm-bg-brand']));
+//         array_push($slider1,new PayrollReport(['reportName' => 'Bank Crediting Report', 'reportDescription' => '', 'reportGroup' => '', 'reportTarget' => 'report5', 'reportCss' => 'm-bg-brand']));
         array_push($slider1,new PayrollReport(['reportName' => 'Bank Credit Detail', 'reportDescription' => '', 'reportGroup' => '', 'reportTarget' => 'report6', 'reportCss' => 'm-bg-brand']));
         array_push($slider1,new PayrollReport(['reportName' => 'Payroll Detail', 'reportDescription' => '', 'reportGroup' => '', 'reportTarget' => 'report8', 'reportCss' => 'm-bg-brand']));
         array_push($slider1,new PayrollReport(['reportName' => 'Payroll Summary', 'reportDescription' => '', 'reportGroup' => '', 'reportTarget' => 'report7', 'reportCss' => 'm-bg-brand']));
@@ -213,7 +213,7 @@ class PayrollReport
         array_push($form,new PayrollReport(['reportName' => 'Supplier Payment Form', 'value' => '3', 'reportGroup' => '', 'reportTarget' => 'report3', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
         array_push($form,new PayrollReport(['reportName' => 'Cash Transfer Document', 'value' => '4', 'reportGroup' => '', 'reportTarget' => 'report4', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
         
-        array_push($form1,new PayrollReport(['reportName' => 'Bank Crediting Report', 'value' => '5', 'reportGroup' => '', 'reportTarget' => 'report5', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
+//         array_push($form1,new PayrollReport(['reportName' => 'Bank Crediting Report', 'value' => '5', 'reportGroup' => '', 'reportTarget' => 'report5', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
         array_push($form1,new PayrollReport(['reportName' => 'Bank Credit Detail', 'value' => '6', 'reportGroup' => '', 'reportTarget' => 'report6', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
         array_push($form1,new PayrollReport(['reportName' => 'Payroll Detail', 'value' => '8', 'reportGroup' => '', 'reportTarget' => 'report8', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
         array_push($form1,new PayrollReport(['reportName' => 'Payroll Summary', 'value' => '7', 'reportGroup' => '', 'reportTarget' => 'report7', 'reportCss' => 'm-bg-brand', 'showOfficer' => false, 'showPeriod' => true, 'showFilter' => true]));
