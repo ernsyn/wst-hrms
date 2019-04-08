@@ -1940,8 +1940,17 @@ class PayrollController extends Controller
                             foreach($attendances as $a){
                                 $employeeClockInOut = EmployeeClockInOutRecord::where('emp_id',$employee->id)
                                 ->whereDate('clock_in_time', $a->date)->first();
-                                $endWorkDate = DateHelper::dateWithFormat($a->date, "Y-m-d")." ".$endWorkTime->end_work_time;
-                                $diffHour = date_diff(date_create($endWorkDate), date_create($employeeClockInOut->clock_out_time));
+                                
+                                if($endWorkTime == null){
+                                    $endWorkDate = null;
+                                } else {
+                                    $endWorkDate = DateHelper::dateWithFormat($a->date, "Y-m-d")." ".$endWorkTime->end_work_time;
+                                }
+                                
+                                $diffHour = 0;
+                                if($endWorkDate != null && $employeeClockInOut != null){
+                                    $diffHour = date_diff(date_create($endWorkDate), date_create($employeeClockInOut->clock_out_time));
+                                }
                                 
                                 if(count($processedAttendances) == 0 || !in_array($a->id, $processedId)){
                                     $processedData[] = [
