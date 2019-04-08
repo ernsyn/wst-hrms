@@ -765,14 +765,17 @@ else{
         
         $report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
             ->where('report_to_emp_id','=',$report_to_emp_id)
-            ->where('emp_id','=',$emp_id)  
-            ->get(); 
+            ->where('emp_id','=',$emp_id) 
+            ->where('report_to_level','1') 
+            ->count(); 
+
+      
         
         if ($leave_status == 1){
             
             if ($multiple_approval_levels_required == 1) {
 	        
-	            if ($report_to_level == '1') 
+	            if ($report_to_level == 1) 
 	            {
 		            if($leave_request_approval == 0)
 		            {
@@ -901,16 +904,17 @@ else{
        ->where('status','new')
        ->count();
         
-        $report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
-            ->where('report_to_emp_id','=',$report_to_emp_id)
-            ->where('emp_id','=',$emp_id)  
-            ->get(); 
+       $report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
+       ->where('report_to_emp_id','=',$report_to_emp_id)
+       ->where('emp_id','=',$emp_id) 
+       ->where('report_to_level','1') 
+       ->count(); 
         
         if ($leave_status == 1){
             
             if ($multiple_approval_levels_required == 1) {
 	        
-	            if ($report_to_level == '1') 
+	            if ($report_to_level == 1) 
 	            {
 		            if($leave_request_approval == 0)
 		            {
