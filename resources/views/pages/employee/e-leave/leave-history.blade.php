@@ -55,7 +55,7 @@
                                 @endif                            --}} 
 
                                 @if($leaveRequest['attachment_media_id'])
-                                <a href="{{ route('admin.e-leave.attachment', ['id' => $leaveRequest->id]) }}"">
+                                <a href="{{ route('employee.e-leave.attachment', ['id' => $leaveRequest->id]) }}"">
                                     Download
                                 </a>
                             @else

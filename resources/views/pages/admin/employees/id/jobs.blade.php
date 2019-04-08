@@ -412,6 +412,10 @@
             },
             {
                 "data": "end_date",
+                render: function(data) {
+                    return data ? data : null;
+                }
+
             },
             {
                 "data": "main_position.name"
