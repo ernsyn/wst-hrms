@@ -345,13 +345,24 @@ class EmployeeController extends Controller
 
     public function getDataTableJobs($id)
     {
-        $jobs = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', $id)->get();
+        $jobs = EmployeeJob::with('main_position','department', 'team', 
+        'cost_centre', 'grade', 'branch')->where('emp_id', $id)->get();
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
+            if ($job->start_date !== null)
             return date('d/m/Y', strtotime($job->start_date) );
         })
         ->editColumn('alt_start_date', function ($job) {
+            if ($job->start_date !== null)
             return date('Y-m-d', strtotime($job->start_date) );
+        })
+        ->editColumn('end_date', function ($job) {
+            if ($job->end_date !== null)
+            return date('d/m/Y', strtotime($job->end_date) );
+        })
+        ->editColumn('alt_end_date', function ($job) {
+            if ($job->end_date !== null)
+            return date('Y-m-d', strtotime($job->end_date) );
         })
         ->make(true);
     }
@@ -1033,12 +1044,23 @@ else {
             'status' => 'required'
         ]);
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
+    
 
+        if ($jobData['status']  == "confirmed-employment") {
+        
+
+            Employee::where('id', $emp_id)->update(array('confirmed_date'=> ($jobData['start_date'])));
+            EmployeeJob::find($id)->update($jobData);
+
+            return response()->json(['success'=>'Job was successfully updated.']);
+        }
+        else{
         EmployeeJob::find($id)->update($jobData);
         $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
         Employee::where('id', $id)->update(array('position'=> @$position ? $position : ''));
 
         return response()->json(['success'=>'Job was successfully updated.']);
+        }
     }
 
     public function postEditBankAccount(Request $request, $emp_id, $id)

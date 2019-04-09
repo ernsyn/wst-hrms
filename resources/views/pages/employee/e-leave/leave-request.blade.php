@@ -68,24 +68,38 @@
                             <td>{{$leaveRequest['start_date']}}</td>
                             <td>{{$leaveRequest['end_date']}}</td>
                             <td>{{$leaveRequest['applied_days']}}</td>
+                            {{-- <td>
+                                @if($leaveRequest['attachment_media_id']) --}}
+                                    {{-- <img src="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" height="80px" width="80px"> --}}
+                                    {{-- <a href="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" download="{{$leaveRequest->attachment->filename}}">
+                                        Download
+                                    </a>
+                                @else
+                                    <span class="fas fa-ban"></span>
+                                @endif --}}
+                            {{-- </td> --}}
+
                             <td>
                                 @if($leaveRequest['attachment_media_id'])
-                                    {{-- <img src="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" height="80px" width="80px"> --}}
-                                    <a href="data:{{$leaveRequest->attachment->mimetype}};base64,{{$leaveRequest->attachment->data}}" download="{{$leaveRequest->attachment->filename}}">
+                                    <a href="{{ route('employee.e-leave.attachment', ['id' => $leaveRequest->id]) }}"">
                                         Download
                                     </a>
                                 @else
                                     <span class="fas fa-ban"></span>
                                 @endif
-                            </td>
+                            </td>   
                             <td>
                                     {{-- {{$leaveRequest['status']}} --}}
-                                @if($leaveRequest->leave_request_approval->count() ==2)
-                                    {{$leaveRequest['status']}}
+                                @if($leaveRequest->leave_request_approval->count() ==2 && ($leaveRequest['status']=='approved'))
+                                    Approved   
                                 @elseif($leaveRequest->leave_request_approval->count() ==1 && $leaveRequest['status']=='new')
                                     Pending Second Approver
                                 @elseif($leaveRequest['status']=='rejected')
                                     Rejected
+                                @elseif($leaveRequest['status']=='new')
+                                    New         
+                                @elseif($leaveRequest['status']=='approved')
+                                    Approved                                                            
                                 @else
                                 {{$leaveRequest['status']}}
                                 @endif

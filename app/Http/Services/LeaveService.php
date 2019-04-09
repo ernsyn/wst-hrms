@@ -146,6 +146,10 @@ class LeaveService
             }
         }
 
+        // if (empty($result['reason'] )){
+        //     return self::error("Reason required.");
+        // }
+
         $now = Carbon::now();
         $leaveAllocation = LeaveAllocation::where('emp_id', $employee->id)
         ->where('leave_type_id', $leave_type_id)
@@ -180,7 +184,7 @@ class LeaveService
                     'mimetype' => $attachmentData['mime_type'],
                     'data' => $attachmentData['data'],
                     'size' => $attachmentData['size'],
-                    'filename' => 'lr_attachmment_'.($employee->id).'_'.date('Y-m-d_H:i:s').".".$attachmentData['extension']
+                    'filename' => 'lr_attachmment_'.($employee->id).'_'.date('Y-m-d_H:i:s')
                 ]);
 
                 $leaveRequest->attachment()->associate($attachmentMedia);
@@ -440,6 +444,7 @@ class LeaveService
                 $calcEndDate = $startDate->copy()->addDays($leaveAllocation->allocated_days-1);
                 if(!$calcEndDate->equalTo($endDate)) {
                     $additionalResponseData['end_date'] = $calcEndDate->format('d-m-Y');
+                    $additionalResponseData['alt_end_date'] = $calcEndDate->format('Y-m-d');
                     $endDate = $calcEndDate;
                 }   
             }
@@ -895,7 +900,7 @@ class LeaveService
         return [
             'data' => $data,
             'mime_type' => $mimeType,
-            'size' => mb_strlen($data),
+            'size' => strlen($data),
             'extension' => $extension
         ];
     }

@@ -106,7 +106,217 @@ class ELeaveController extends Controller
         $leaveRequests =LeaveRequest::where('emp_id',$emp_id)->get();
         return view('pages.employee.e-leave.leave-history', ['leaveRequests' => $leaveRequests]);   
     }
+    private static function mime2ext($mime) {
+        $mime_map = [
+            'video/3gpp2'                                                               => '3g2',
+            'video/3gp'                                                                 => '3gp',
+            'video/3gpp'                                                                => '3gp',
+            'application/x-compressed'                                                  => '7zip',
+            'audio/x-acc'                                                               => 'aac',
+            'audio/ac3'                                                                 => 'ac3',
+            'application/postscript'                                                    => 'ai',
+            'audio/x-aiff'                                                              => 'aif',
+            'audio/aiff'                                                                => 'aif',
+            'audio/x-au'                                                                => 'au',
+            'video/x-msvideo'                                                           => 'avi',
+            'video/msvideo'                                                             => 'avi',
+            'video/avi'                                                                 => 'avi',
+            'application/x-troff-msvideo'                                               => 'avi',
+            'application/macbinary'                                                     => 'bin',
+            'application/mac-binary'                                                    => 'bin',
+            'application/x-binary'                                                      => 'bin',
+            'application/x-macbinary'                                                   => 'bin',
+            'image/bmp'                                                                 => 'bmp',
+            'image/x-bmp'                                                               => 'bmp',
+            'image/x-bitmap'                                                            => 'bmp',
+            'image/x-xbitmap'                                                           => 'bmp',
+            'image/x-win-bitmap'                                                        => 'bmp',
+            'image/x-windows-bmp'                                                       => 'bmp',
+            'image/ms-bmp'                                                              => 'bmp',
+            'image/x-ms-bmp'                                                            => 'bmp',
+            'application/bmp'                                                           => 'bmp',
+            'application/x-bmp'                                                         => 'bmp',
+            'application/x-win-bitmap'                                                  => 'bmp',
+            'application/cdr'                                                           => 'cdr',
+            'application/coreldraw'                                                     => 'cdr',
+            'application/x-cdr'                                                         => 'cdr',
+            'application/x-coreldraw'                                                   => 'cdr',
+            'image/cdr'                                                                 => 'cdr',
+            'image/x-cdr'                                                               => 'cdr',
+            'zz-application/zz-winassoc-cdr'                                            => 'cdr',
+            'application/mac-compactpro'                                                => 'cpt',
+            'application/pkix-crl'                                                      => 'crl',
+            'application/pkcs-crl'                                                      => 'crl',
+            'application/x-x509-ca-cert'                                                => 'crt',
+            'application/pkix-cert'                                                     => 'crt',
+            'text/css'                                                                  => 'css',
+            'text/x-comma-separated-values'                                             => 'csv',
+            'text/comma-separated-values'                                               => 'csv',
+            'application/vnd.msexcel'                                                   => 'csv',
+            'application/x-director'                                                    => 'dcr',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'   => 'docx',
+            'application/x-dvi'                                                         => 'dvi',
+            'message/rfc822'                                                            => 'eml',
+            'application/x-msdownload'                                                  => 'exe',
+            'video/x-f4v'                                                               => 'f4v',
+            'audio/x-flac'                                                              => 'flac',
+            'video/x-flv'                                                               => 'flv',
+            'image/gif'                                                                 => 'gif',
+            'application/gpg-keys'                                                      => 'gpg',
+            'application/x-gtar'                                                        => 'gtar',
+            'application/x-gzip'                                                        => 'gzip',
+            'application/mac-binhex40'                                                  => 'hqx',
+            'application/mac-binhex'                                                    => 'hqx',
+            'application/x-binhex40'                                                    => 'hqx',
+            'application/x-mac-binhex40'                                                => 'hqx',
+            'text/html'                                                                 => 'html',
+            'image/x-icon'                                                              => 'ico',
+            'image/x-ico'                                                               => 'ico',
+            'image/vnd.microsoft.icon'                                                  => 'ico',
+            'text/calendar'                                                             => 'ics',
+            'application/java-archive'                                                  => 'jar',
+            'application/x-java-application'                                            => 'jar',
+            'application/x-jar'                                                         => 'jar',
+            'image/jp2'                                                                 => 'jp2',
+            'video/mj2'                                                                 => 'jp2',
+            'image/jpx'                                                                 => 'jp2',
+            'image/jpm'                                                                 => 'jp2',
+            'image/jpeg'                                                                => 'jpeg',
+            'image/pjpeg'                                                               => 'jpeg',
+            'application/x-javascript'                                                  => 'js',
+            'application/json'                                                          => 'json',
+            'text/json'                                                                 => 'json',
+            'application/vnd.google-earth.kml+xml'                                      => 'kml',
+            'application/vnd.google-earth.kmz'                                          => 'kmz',
+            'text/x-log'                                                                => 'log',
+            'audio/x-m4a'                                                               => 'm4a',
+            'application/vnd.mpegurl'                                                   => 'm4u',
+            'audio/midi'                                                                => 'mid',
+            'application/vnd.mif'                                                       => 'mif',
+            'video/quicktime'                                                           => 'mov',
+            'video/x-sgi-movie'                                                         => 'movie',
+            'audio/mpeg'                                                                => 'mp3',
+            'audio/mpg'                                                                 => 'mp3',
+            'audio/mpeg3'                                                               => 'mp3',
+            'audio/mp3'                                                                 => 'mp3',
+            'video/mp4'                                                                 => 'mp4',
+            'video/mpeg'                                                                => 'mpeg',
+            'application/oda'                                                           => 'oda',
+            'audio/ogg'                                                                 => 'ogg',
+            'video/ogg'                                                                 => 'ogg',
+            'application/ogg'                                                           => 'ogg',
+            'application/x-pkcs10'                                                      => 'p10',
+            'application/pkcs10'                                                        => 'p10',
+            'application/x-pkcs12'                                                      => 'p12',
+            'application/x-pkcs7-signature'                                             => 'p7a',
+            'application/pkcs7-mime'                                                    => 'p7c',
+            'application/x-pkcs7-mime'                                                  => 'p7c',
+            'application/x-pkcs7-certreqresp'                                           => 'p7r',
+            'application/pkcs7-signature'                                               => 'p7s',
+            'application/pdf'                                                           => 'pdf',
+            'application/octet-stream'                                                  => 'pdf',
+            'application/x-x509-user-cert'                                              => 'pem',
+            'application/x-pem-file'                                                    => 'pem',
+            'application/pgp'                                                           => 'pgp',
+            'application/x-httpd-php'                                                   => 'php',
+            'application/php'                                                           => 'php',
+            'application/x-php'                                                         => 'php',
+            'text/php'                                                                  => 'php',
+            'text/x-php'                                                                => 'php',
+            'application/x-httpd-php-source'                                            => 'php',
+            'image/png'                                                                 => 'png',
+            'image/x-png'                                                               => 'png',
+            'application/powerpoint'                                                    => 'ppt',
+            'application/vnd.ms-powerpoint'                                             => 'ppt',
+            'application/vnd.ms-office'                                                 => 'ppt',
+            'application/msword'                                                        => 'ppt',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+            'application/x-photoshop'                                                   => 'psd',
+            'image/vnd.adobe.photoshop'                                                 => 'psd',
+            'audio/x-realaudio'                                                         => 'ra',
+            'audio/x-pn-realaudio'                                                      => 'ram',
+            'application/x-rar'                                                         => 'rar',
+            'application/rar'                                                           => 'rar',
+            'application/x-rar-compressed'                                              => 'rar',
+            'audio/x-pn-realaudio-plugin'                                               => 'rpm',
+            'application/x-pkcs7'                                                       => 'rsa',
+            'text/rtf'                                                                  => 'rtf',
+            'text/richtext'                                                             => 'rtx',
+            'video/vnd.rn-realvideo'                                                    => 'rv',
+            'application/x-stuffit'                                                     => 'sit',
+            'application/smil'                                                          => 'smil',
+            'text/srt'                                                                  => 'srt',
+            'image/svg+xml'                                                             => 'svg',
+            'application/x-shockwave-flash'                                             => 'swf',
+            'application/x-tar'                                                         => 'tar',
+            'application/x-gzip-compressed'                                             => 'tgz',
+            'image/tiff'                                                                => 'tiff',
+            'text/plain'                                                                => 'txt',
+            'text/x-vcard'                                                              => 'vcf',
+            'application/videolan'                                                      => 'vlc',
+            'text/vtt'                                                                  => 'vtt',
+            'audio/x-wav'                                                               => 'wav',
+            'audio/wave'                                                                => 'wav',
+            'audio/wav'                                                                 => 'wav',
+            'application/wbxml'                                                         => 'wbxml',
+            'video/webm'                                                                => 'webm',
+            'audio/x-ms-wma'                                                            => 'wma',
+            'application/wmlc'                                                          => 'wmlc',
+            'video/x-ms-wmv'                                                            => 'wmv',
+            'video/x-ms-asf'                                                            => 'wmv',
+            'application/xhtml+xml'                                                     => 'xhtml',
+            'application/excel'                                                         => 'xl',
+            'application/msexcel'                                                       => 'xls',
+            'application/x-msexcel'                                                     => 'xls',
+            'application/x-ms-excel'                                                    => 'xls',
+            'application/x-excel'                                                       => 'xls',
+            'application/x-dos_ms_excel'                                                => 'xls',
+            'application/xls'                                                           => 'xls',
+            'application/x-xls'                                                         => 'xls',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'         => 'xlsx',
+            'application/vnd.ms-excel'                                                  => 'xlsx',
+            'application/xml'                                                           => 'xml',
+            'text/xml'                                                                  => 'xml',
+            'text/xsl'                                                                  => 'xsl',
+            'application/xspf+xml'                                                      => 'xspf',
+            'application/x-compress'                                                    => 'z',
+            'application/x-zip'                                                         => 'zip',
+            'application/zip'                                                           => 'zip',
+            'application/x-zip-compressed'                                              => 'zip',
+            'application/s-compressed'                                                  => 'zip',
+            'multipart/x-zip'                                                           => 'zip',
+            'text/x-scriptzsh'                                                          => 'zsh',
+        ];
     
+        return isset($mime_map[$mime]) ? $mime_map[$mime] : false;
+    }
+    
+    public function getLeaveRequestAttachment($id) {
+
+        // $user = Auth::user();
+        // $emp_id = $user->employee->id;
+        // $leaveRequests =LeaveRequest::where('emp_id',$emp_id)->get();
+        $leaveRequest =  LeaveRequest::find($id);
+
+        if(!empty($leaveRequest) && $leaveRequest['attachment_media_id']) {
+            $attachment = $leaveRequest->attachment;
+
+            // return response()->json([
+            //     "size" => $attachment->size,
+            //     "data" => base64_encode($attachment->data)
+            // ]);
+            // dd($attachment->size);
+            return response($attachment->data)
+                ->header('Cache-Control', 'no-cache private')
+                ->header('Content-Description', 'File Transfer')
+                ->header('Content-Type', $attachment->mime_type)
+                ->header('Content-Length', strlen($attachment->data))
+                ->header('Content-Disposition', 'attachment; filename='.$attachment->filename.".".$this::mime2ext($attachment->mimetype))
+                ->header('Content-Transfer-Encoding', 'base64');
+        }
+
+        return response(null, 204);
+    }
         //------ for features purposes ------------
     public function find($emp_id)
     {
@@ -275,6 +485,8 @@ class ELeaveController extends Controller
             'attachment' => ''
         ]);
 
+
+
         $am_pm = null;
         if(array_key_exists('am_pm', $requestData)) {
             $am_pm = $requestData['am_pm'];
@@ -288,10 +500,25 @@ class ELeaveController extends Controller
         $result = LeaveService::createLeaveRequest(Auth::user()->employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url);
 
         $leave_request = LeaveRequest::where('id', $result)->first();
+        
+        $leave_type_id = $request->input('leave_type');   
+        
+        $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
+        ->where('leave_type_id',$leave_type_id)
+        ->count() == 0;
 
+        if ($multiple_approval_levels_required == false) {
         // send leave request email notification
         self::sendLeaveRequestNotification($leave_request);
         return response()->json($result);
+
+        }
+
+else{
+        // send leave request email notification
+        self::sendLeaveRequestNonMultipleNotification($leave_request);
+        return response()->json($result);
+    }
     }
 
     //todo - problematic (it deletes the old entry and replace it with a newly created entry)
@@ -339,41 +566,6 @@ class ELeaveController extends Controller
         // send leave request email notification
         self::sendLeaveRequestNotification($leave_request);
         return response()->json($result);
-    }
-
-    public function sendLeaveRequestNotification(LeaveRequest $leave_request) 
-    {
-        $cc_recipients = array();
-        $bcc_recipients = array();
-    
-        
-        // get report to users
-        $report_to = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
-            ->where('report_to_level', '1')
-            ->get();
-
-        foreach ($report_to as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->report_to_emp_id)
-                ->first();
-            array_push($cc_recipients, $employee->email);
-        }
-
-        // get admin users
-        $admin_users = User::whereHas("roles", function($q){ 
-            $q->where("name", "admin");
-        })->get();
-
-        foreach ($admin_users as $row) {
-            array_push($bcc_recipients, $row->email);
-        }
-
-        \Mail::to($cc_recipients)
-            ->cc(Auth::user()->email)
-            ->bcc($bcc_recipients)
-            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
     }
 
     public function ajaxCancelLeaveRequest($id)
@@ -555,114 +747,134 @@ class ELeaveController extends Controller
 
         $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
             ->where('leave_type_id',$leave_type_id)
-            ->count() == 0;
+            ->count();
 
         $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
             ->where('report_to_emp_id','=',$report_to_emp_id)
             ->where('emp_id','=',$emp_id)  
             ->where ('report_to_level','=','1')
-            ->count();  
-
-        $leave_request_approval_by_emp_id = LeaveRequestApproval::where('leave_request_id','=',$id)  //check leave_request id in leave request approval
-            ->count();
+            ->get();  
 
         $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id) //check leave_request id in leave request approval
         ->count(); 
-        
-        if ($multiple_approval_levels_required == false) {
-	        
-	        if ($employee_report_to_level ==1) 
-	        {
-		        if($leave_request_approval == 0)
-		        	{
-			       	LeaveRequest::find($id)->update(array('status' => 'new'));      //then update leave request status = new
-                    $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
-                    $leaveRequestData = $request->validate([
-                        ]);
-        
-                    $user = Auth::user();
-                    $report_to_emp_id = $user->employee->id;
-                    $leaveRequestData['leave_request_id'] = $request->id;
-                    $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
-                    $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
-                    $employee = Employee::find($report_to_emp_id);
-                    // $employee->leave_request_approvals()->save($leaveRequestData);
-                    // $leave_request_approval = LeaveRequestApproval::where('id', $employee)->first();
 
-                    // // send leave request email notification
-                    // self::sendLeaveRequestApprovalFirstApproverNotification($leave_request_approval);
-                    $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
-           
-                    $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
-                    
-                    // send leave request email notification
-                    self::sendLeaveRequestApprovalFirstApproverNotification($leave_request_approval);
-                    
-                    return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved Level One');
-	        	}
-	        	else 
-	        	{
-		            return redirect()->route('employee.e-leave.request')->with('status','You Already Approved This Leave');
-	        	}
-        	}
-        	else
-        	{
-	        	if($leave_request_approval ==0)
-	        	{
-		        	return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
-	        	}
-	        	else 
-	        	{
-	        		LeaveRequest::find($id)->update(array('status' => 'approved'));      //then update leave request status = new
-                    $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
-                    $leaveRequestData = $request->validate([
+       $leave_status =LeaveRequest::select('status')
+       ->where('id',$id)   //to get leave request status
+       ->where('status','new')
+       ->count();
+        
+        $report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
+            ->where('report_to_emp_id','=',$report_to_emp_id)
+            ->where('emp_id','=',$emp_id) 
+            ->where('report_to_level','1') 
+            ->count(); 
+
+      
+        
+        if ($leave_status == 1){
+            
+            if ($multiple_approval_levels_required == 1) {
+	        
+	            if ($report_to_level == 1) 
+	            {
+		            if($leave_request_approval == 0)
+		            {
+			       	    LeaveRequest::find($id)->update(array('status' => 'new'));      //then update leave request status = new
+                        $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
+                        $leaveRequestData = $request->validate([
                         ]);
         
-                    $user = Auth::user();
-                    $report_to_emp_id = $user->employee->id;
-                    $leaveRequestData['leave_request_id'] = $request->id;
-                    $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
-                    $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
-                    $employee = Employee::find($report_to_emp_id);
-                    $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
-           
-                    $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
+                        $user = Auth::user();
+                        $report_to_emp_id = $user->employee->id;
+                        $leaveRequestData['leave_request_id'] = $request->id;
+                        $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
+                        $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
+                        $employee = Employee::find($report_to_emp_id);
+                        $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
+                        $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
+                        ->orderby('created_at', 'desc')->first();
+                        
+                        // send leave request email notification
+                        self::sendLeaveRequestApprovalFirstApproverNotification($leave_request_approval, $emp_id);                      
+                        return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved Level One');
+                    }
+	        	    else 
+	        	    {
+		               return redirect()->route('employee.e-leave.request')->with('status','You Already Approved This Leave');
+	        	    }
+                }
+
+                else
+                {
+                    if($leave_request_approval == 0)
+		            {
                     
-                    // send leave request email notification
-                    self::sendLeaveRequestApprovalNotification($leave_request_approval);
+                    return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
+                    }
+                    else 
+                    {
+	        		    LeaveRequest::find($id)->update(array('status' => 'approved'));      //then update leave request status = new
+                        $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
+                        $leaveRequestData = $request->validate([
+                        ]);
         
-                    return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved By Approver Level Two');
-		        }
-	        }	
-	    } 
+                        $user = Auth::user();
+                        $report_to_emp_id = $user->employee->id;
+                        $leaveRequestData['leave_request_id'] = $request->id;
+                        $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
+                        $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
+                        $employee = Employee::find($report_to_emp_id);
+                        $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
+            
+                        // $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
+                        $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
+                        ->orderby('created_at', 'desc')->first();
+                        
+                        // send leave request email notification
+                        self::sendLeaveRequestApprovalNotification($leave_request_approval,$emp_id);
+            
+                        return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved By Approver Level Two');
+                    
+
+                    }
+
+                }
+            }
+            else
+            {
+                       
+                LeaveRequest::find($id)->update(array('status' => 'approved'));
+                $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+                $leaveRquestData = $request->validate([
+                ]);
+        
+                $user = Auth::user();
+                $report_to_emp_id = $user->employee->id;
+                $leaveRequestData['leave_request_id'] =$request->id;
+                $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
+
+                $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
+                $employee = Employee::find($report_to_emp_id);
+                $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
+                $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
+                ->orderby('created_at', 'desc')->first();
+                
+                // send leave request email notification
+                self::sendLeaveRequestApprovalNotification($leave_request_approval);
+                return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved');
+         
+            } 
+        }
+        else if ($leave_status == '2')
+        {
+         return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Approve.');
+        }
         else 
         {
-            LeaveRequest::find($id)->update(array('status' => 'approved'));
-            $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-            $leaveRquestData = $request->validate([
-                    ]);
-    
-            $user = Auth::user();
-            $report_to_emp_id = $user->employee->id;
-            $leaveRequestData['leave_request_id'] =$request->id;
-            $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
-
-            $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
-            $employee = Employee::find($report_to_emp_id);
-            //$employee->leave_request_approvals()->save($leaveRequestData);
-            $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
-           
-            $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
-            
-            // send leave request email notification
-            self::sendLeaveRequestApprovalNotification($leave_request_approval);
-            return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved');
-            // $leave_request_approval = LeaveRequestApproval::where('id', $employee)->first();
-
-            // // send leave request email notification
-            // self::sendLeaveRequestApprovalFirstApproverNotification($leave_request_approval);
-            // return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved');
+         return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Approve.');
         }
+    
+
     }
 
     public function postDisapproved(Request $request) 
@@ -676,63 +888,112 @@ class ELeaveController extends Controller
 
         $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
             ->where('leave_type_id',$leave_type_id)
-            ->count() == 0;
+            ->count();
 
         $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
             ->where('report_to_emp_id','=',$report_to_emp_id)
             ->where('emp_id','=',$emp_id)  
             ->where ('report_to_level','=','1')
-            ->count();  
+            ->get();  
 
         $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id) //check leave_request id in leave request approval
         ->count(); 
+
+       $leave_status =LeaveRequest::select('status')
+       ->where('id',$id)   //to get leave request status
+       ->where('status','new')
+       ->count();
         
-        if ($multiple_approval_levels_required == false) {
+       $report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
+       ->where('report_to_emp_id','=',$report_to_emp_id)
+       ->where('emp_id','=',$emp_id) 
+       ->where('report_to_level','1') 
+       ->count(); 
+        
+        if ($leave_status == 1){
+            
+            if ($multiple_approval_levels_required == 1) {
 	        
-	        if ($employee_report_to_level ==1) 
-	        {
-		        if($leave_request_approval == 0)
-		        {
-				 $leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
-                ->where('emp_id',$emp_id)
-                ->where('leave_type_id',$leave_type_id)->first()->spent_days;
-    
-                $leaveAllocationData = number_format($leaveAllocationApprovalData,1);
-                $total_days =number_format($total_days,1);
-                $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+	            if ($report_to_level == 1) 
+	            {
+		            if($leave_request_approval == 0)
+		            {
+                        $leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
+                        ->where('emp_id',$emp_id)
+                        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+            
+                        $leaveAllocationData = number_format($leaveAllocationApprovalData,1);
+                        $total_days =number_format($total_days,1);
+                        $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
-                LeaveRequest::where('id',$id)
-                ->update(array('status' => 'rejected'));
-                
-                $leaveTotalDays = LeaveRequest::select('applied_days')
-                ->where('id', $id )
-                ->get();
+                        LeaveRequest::where('id',$id)
+                        ->update(array('status' => 'rejected'));
+                        
+                        $leaveTotalDays = LeaveRequest::select('applied_days')
+                        ->where('id', $id )
+                        ->get();
 
-                $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-                ->where('leave_type_id',$leave_type_id)
-                ->update(array('spent_days'=>$leaveAllocationDataEntry));
-       
-                $leave_request_rejected = LeaveRequest::where('id', $id)->first();
+                        $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+                        ->where('leave_type_id',$leave_type_id)
+                        ->update(array('spent_days'=>$leaveAllocationDataEntry));
+            
+                        $leave_request_rejected = LeaveRequest::where('id', $id)->first();
+                        
+                        // send leave request email notification
+                        self::sendLeaveRequestRejectedByFirstApproverNotification($leave_request_rejected);
                 
-                // send leave request email notification
-                self::sendLeaveRequestRejectedByFirstApproverNotification($leave_request_rejected);
-        
-                return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected By First Approver');
-	        	}
-	        	else 
-	        	{
+                        return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected By First Approver');
+                    }
+	        	    else 
+	        	    {
 		            return redirect()->route('employee.e-leave.request')->with('status','You Already Approved This Leave');
-	        	}
-        	}
-        	else
-        	{
-	        	if($leave_request_approval ==0)
-	        	{
-		        	return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
-	        	}	        	
-	        	else 
-	        	{				 
-	        	$leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
+	        	    }
+                }
+
+                else
+                {
+                    if($leave_request_approval == 0)
+		            {
+                    
+                    return redirect()->route('employee.e-leave.request')->with('status','You Are Not First Approver');  
+                    }
+                    else 
+                    {
+                        $leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
+                        ->where('emp_id',$emp_id)
+                        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+            
+                        $leaveAllocationData = number_format($leaveAllocationApprovalData,1);
+                        $total_days =number_format($total_days,1);
+                        $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
+
+                        LeaveRequest::where('id',$id)
+                        ->update(array('status' => 'rejected'));
+                        
+                        $leaveTotalDays = LeaveRequest::select('applied_days')
+                        ->where('id', $id )
+                        ->get();
+
+                        $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
+                        ->where('leave_type_id',$leave_type_id)
+                        ->update(array('spent_days'=>$leaveAllocationDataEntry));
+            
+                        $leave_request_rejected = LeaveRequest::where('id', $id)->first();
+                        
+                        // send leave request email notification
+                        self::sendLeaveRequestRejectedByFirstApproverNotification($leave_request_rejected);
+                
+                        return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected By Second Approver');
+                    
+
+                    }
+
+                }
+            }
+            else
+            {
+                       
+            	$leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
                 ->where('emp_id',$emp_id)
                 ->where('leave_type_id',$leave_type_id)->first()->spent_days;
     
@@ -755,82 +1016,142 @@ class ELeaveController extends Controller
                 
                 // send leave request email notification
                 self::sendLeaveRequestRejectedNotification($leave_request_rejected);
-        
-                return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected By Second Approver');
-		        }	        	
-        	}	        
-        } 
+                
+                return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected');
+         
+            } 
+        }
+        else if ($leave_status == '2')
+        {
+        return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Reject.');
+        }
         else 
         {
-	        	$leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
-                ->where('emp_id',$emp_id)
-                ->where('leave_type_id',$leave_type_id)->first()->spent_days;
-    
-                $leaveAllocationData = number_format($leaveAllocationApprovalData,1);
-                $total_days =number_format($total_days,1);
-                $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
-
-                LeaveRequest::where('id',$id)
-                ->update(array('status' => 'rejected'));
-                
-                $leaveTotalDays = LeaveRequest::select('applied_days')
-                ->where('id', $id )
-                ->get();
-
-                $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-                ->where('leave_type_id',$leave_type_id)
-                ->update(array('spent_days'=>$leaveAllocationDataEntry));
-
-                $leave_request_rejected = LeaveRequest::where('id', $id)->first();
-                
-                // send leave request email notification
-                self::sendLeaveRequestRejectedNotification($leave_request_rejected);
-                
-            return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected');
+            return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Reject');
         }
+    
+
     }
 
-    public function sendLeaveRequestApprovalFirstApproverNotification(LeaveRequestApproval $leave_request_approval) 
+    public function sendLeaveRequestNotification(LeaveRequest $leave_request) 
     {
         $cc_recipients = array();
         $bcc_recipients = array();
-        $to = array();
+    
+   
+        $report_to_level_one = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
+        ->where('report_to_level',1)
+        ->where('employee_report_to.deleted_at',null)
+        ->get();
 
-        // get report to users
-        $report_to = EmployeeReportTo::select('emp_id')
-            ->where('report_to_emp_id', Auth::user()->employee->id)
-            ->get();
 
-            $report_tos = EmployeeReportTo::select('emp_id')
-            ->where('report_to_emp_id', Auth::user()->employee->id)
-            ->first();
-        
-            $employee_report_to_id = EmployeeReportTo::select('report_to_emp_id')
-            ->where('emp_id', $report_tos->emp_id)
-            ->get();
-
-           $reports= EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
+    foreach ($report_to_level_one as $row) {
+        $employee = DB::table('employees')
             ->join('users', 'users.id', '=', 'employees.user_id')
-            ->where('emp_id', $report_tos->emp_id)
+            ->select('users.name','users.email')
+            ->where('employees.id', $row->report_to_emp_id)
+            ->first();
+           
+        array_push($cc_recipients, $employee->email);
+    }
+
+             $admin_users = User::whereHas("roles", function($q){
+             $q->where("name", "admin");
+            })->get();
+    
+   
+            foreach ($admin_users as $row) {
+      
+            array_push($bcc_recipients, $row->email);
+             }
+
+
+
+        \Mail::to($cc_recipients)
+            ->cc(Auth::user()->email)
+            ->bcc($bcc_recipients)
+            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+    }
+    public function sendLeaveRequestNonMultipleNotification(LeaveRequest $leave_request) 
+    {
+        $cc_recipients = array();
+        $bcc_recipients = array();
+        $cc_recipients_report_to =array();
+    
+        
+        $report_to = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
+            ->where('report_to_level',2)
             ->where('employee_report_to.deleted_at',null)
             ->get();
     
-        
-        foreach ($reports as $row) {
-    
-            array_push($to, $row->email);
-                }
 
         foreach ($report_to as $row) {
             $employee = DB::table('employees')
                 ->join('users', 'users.id', '=', 'employees.user_id')
                 ->select('users.name','users.email')
-                ->where('employees.id', $row->emp_id)
+                ->where('employees.id', $row->report_to_emp_id)
                 ->first();
                
             array_push($cc_recipients, $employee->email);
         }
 
+        $report_tos = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
+        ->where('report_to_level',1)
+        ->where('employee_report_to.deleted_at',null)
+        ->get();
+
+        foreach ($report_tos as $row) {
+            $employee = DB::table('employees')
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->report_to_emp_id)
+                ->first();
+               
+            array_push($cc_recipients_report_to, $employee->email);
+        }
+
+                //  // get admin users
+         $admin_users = User::whereHas("roles", function($q){
+             $q->where("name", "admin");
+         })->get();
+         
+        
+         foreach ($admin_users as $row) {
+           
+             array_push($bcc_recipients, $row->email);
+         }
+        \Mail::to($cc_recipients)
+            ->cc($cc_recipients_report_to)
+            ->bcc($bcc_recipients,Auth::user()->email)
+            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+    }
+
+
+
+    public function sendLeaveRequestApprovalFirstApproverNotification(LeaveRequestApproval $leave_request_approval, $emp_id) 
+    {
+        $cc_recipients = array();
+        $bcc_recipients = array();
+        $to = array();
+
+
+        //send email to second approver 
+        $report_to = EmployeeReportTo::where('emp_id', $emp_id)
+        ->where('report_to_level', '2')
+        ->where('employee_report_to.deleted_at',null)
+        ->get();
+
+        foreach ($report_to as $row) {
+            $employee = DB::table('employees')
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $row->report_to_emp_id)
+                ->first();
+
+            array_push($to, $employee->email);
+        }
+
+        
         // get admin users
         $admin_users = User::whereHas("roles", function($q){
             $q->where("name", "admin");
@@ -842,9 +1163,25 @@ class ELeaveController extends Controller
             array_push($bcc_recipients, $row->email);
         }
 
+        //find employee
+            $employees = EmployeeReportTo::select('emp_id')
+            ->where('emp_id', $emp_id)
+            ->first();
+
+        foreach ($employees as $row) {
+            $employee = DB::table('employees')
+                ->join('users', 'users.id', '=', 'employees.user_id')
+                ->select('users.name','users.email')
+                ->where('employees.id', $emp_id)
+                ->first();
+               
+            array_push($cc_recipients, $employee->email);
+        }
+
+
         \Mail::to($to)
-            ->cc(Auth::user()->email)
-            ->bcc($bcc_recipients,$cc_recipients)
+            ->cc($cc_recipients)
+            ->bcc($bcc_recipients)
             ->send(new LeaveApprovalFirstApproverMail(Auth::user(), $leave_request_approval));
     }
 
@@ -904,32 +1241,14 @@ class ELeaveController extends Controller
 
     public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval) 
     {
+
         $cc_recipients = array();
-        $bcc_recipients = array();
-        $to = array();
 
         // get report to users
         $report_to = EmployeeReportTo::select('emp_id')
             ->where('report_to_emp_id', Auth::user()->employee->id)
             ->get();
 
-        $report_tos = EmployeeReportTo::select('emp_id')
-            ->where('report_to_emp_id', Auth::user()->employee->id)
-            ->first();
-        
-        $employee_report_to_id = EmployeeReportTo::select('report_to_emp_id')
-            ->where('emp_id', $report_tos->emp_id)
-            ->get();
-
-        $reports = EmployeeReportTo::join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
-            ->join('users', 'users.id', '=', 'employees.user_id')
-            ->where('emp_id', $report_tos->emp_id)
-            ->where('employee_report_to.deleted_at',null)
-            ->get();
-            
-        foreach ($reports as $row) {
-                array_push($to, $row->email);
-                }
 
         foreach ($report_to as $row) {
             $employee = DB::table('employees')
@@ -941,228 +1260,11 @@ class ELeaveController extends Controller
             array_push($cc_recipients, $employee->email);
         }
 
-        // get admin users
-        $admin_users = User::whereHas("roles", function($q){
-            $q->where("name", "admin");
-        })->get();
-        
-       
-        foreach ($admin_users as $row) {
-          
-            array_push($bcc_recipients, $row->email);
-        }
-
-        \Mail::to($to)
-            ->cc(Auth::user()->email)
-            ->bcc($bcc_recipients,$cc_recipients)
+        \Mail::to($cc_recipients)
             ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
     }
+
+
 }
-    // public function postAddApproval(Request $request)
-    // {          
-    //     $id = $request->input('id');     
-    //     $emp_id = $request->input('emp_id');    
-    //     $leave_type_id = $request->input('leave_type_id');   
-    //     $total_days =$request->input('total_days');
-    //     $user = Auth::user();
-    //     $report_to_emp_id = $user->employee->id;
-
-    //     $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
-    //         ->where('leave_type_id',$leave_type_id)
-    //         ->count() == 0;
-
-    //     $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
-    //         ->where('report_to_emp_id','=',$report_to_emp_id)
-    //         ->where('emp_id','=',$emp_id)  
-    //         ->where ('report_to_level','=','1')
-    //         ->count();  
-
-    //     $leave_request_approval_by_emp_id = LeaveRequestApproval::where('leave_request_id','=',$id)  //check leave_request id in leave request approval
-    //         ->count();
-
-    //     $employee_report_to = EmployeeReportTo::where('emp_id','=',$emp_id)->count();
-    //     $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id)->count(); //check leave_request id in leave request approval
-        
-    //     if ($multiple_approval_levels_required == false) {
-    //         if ($leave_request_approval == 0) {    //if leave request approval = 0 then 
-
-    //             if ($employee_report_to_level == 1) {     // if report to level = 1 
-    //                 LeaveRequest::find($id)->update(array('status' => 'new'));      //then update leave request status = new
-    //                 $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
-    //                 $leaveRequestData = $request->validate([
-    //                     ]);
-        
-    //                 $user = Auth::user();
-    //                 $report_to_emp_id = $user->employee->id;
-    //                 $leaveRequestData['leave_request_id'] = $request->id;
-    //                 $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
-    //                 $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
-    //                 $employee = Employee::find($report_to_emp_id);
-    //                 $employee->leave_request_approvals()->save($leaveRequestData);
-        
-    //                 return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved Level One');
-    //             } else {
-    //                 return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
-    //             }
-    //         } 
-    //         else if ($employee_report_to_level == 1) 
-    //         {     
-    //             return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
-    //         } else 
-    //         {   LeaveRequest::find($id)->update(array('status' => 'approved'));
-    //             $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-    //             $leaveRequestData = $request->validate([
-    //                     ]);
-        
-    //             $user = Auth::user();
-    //             $report_to_emp_id = $user->employee->id;
-    //             $leaveRequestData['leave_request_id'] =$request->id;
-    //             $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
-
-    //             $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
-    //             $employee = Employee::find($report_to_emp_id);
-            
-    //             $employee->leave_request_approvals()->save($leaveRequestData);
-        
-    //             return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved');
-    //         }
-    //     } else {
-    //         LeaveRequest::find($id)->update(array('status' => 'approved'));
-    //         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-    //         $leaveRquestData = $request->validate([
-    //                 ]);
     
-    //         $user = Auth::user();
-    //         $report_to_emp_id = $user->employee->id;
-    //         $leaveRequestData['leave_request_id'] =$request->id;
-    //         $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
 
-    //         $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
-    //         $employee = Employee::find($report_to_emp_id);
-    //         $employee->leave_request_approvals()->save($leaveRequestData);
-    //         return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved');
-    //     }
-    // }
-
-    // public function postDisapproved(Request $request) 
-    // {          
-    //     $id = $request->input('id');     
-    //     $emp_id = $request->input('emp_id');    
-    //     $leave_type_id = $request->input('leave_type_id');   
-    //     $total_days =$request->input('total_days');
-    //     $user = Auth::user();
-    //     $report_to_emp_id = $user->employee->id;
-
-    //     $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
-    //         ->where('leave_type_id',$leave_type_id)
-    //         ->count() == 0;
-
-    //     $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
-    //         ->where('report_to_emp_id','=',$report_to_emp_id)
-    //         ->where('emp_id','=',$emp_id)  
-    //         ->where ('report_to_level','=','1')
-    //         ->count();  
-
-    //     $leave_request_approval_by_emp_id = LeaveRequestApproval::where('leave_request_id','=',$id)  //check leave_request id in leave request approval
-    //         ->count();
-
-    //     $employee_report_to = EmployeeReportTo::where('emp_id','=',$emp_id)->count();
-    //     $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id)->count(); //check leave_request id in leave request approval
-    //     $checkLeaveStatus = LeaveRequest::where('id',$id)->where('status','new')->count();
-
-    //     if ($multiple_approval_levels_required == false) {
-    //         if ($leave_request_approval == 0) {    //if leave request approval = 0 then 
-
-    //             if ($employee_report_to_level == 1) {     // if report to level = 1 
-    //            //then update leave request status = new
-    //                 if ($checkLeaveStatus ==1 && $leave_request_approval==0){
-    //             $leaveAllocationData1 = LeaveAllocation::select ('spent_days')
-    //             ->where('emp_id',$emp_id)
-    //             ->where('leave_type_id',$leave_type_id)->first()->spent_days;
-    
-    //             $leaveAllocationData = number_format($leaveAllocationData1,1);
-    //             $total_days =number_format($total_days,1);
-    //             $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
-
-    //             LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
-    //             $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-
-    //             $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-    //             ->where('leave_type_id',$leave_type_id)
-    //             >update(array('spent_days'=>$leaveAllocationDataEntry));
-        
-    //             return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected Level One');
-    //                 }
-    //                 else
-    //                 {
-    //             return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected Cannot Sent');
-    //                 }
-    //             } 
-    //             else 
-    //             {
-    //                 return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
-    //             }
-           
-    //         } else if ($employee_report_to_level == 1) {     
-    //             return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
-    //         } 
-    //         else 
-    //         {
-    //             $leaveAllocationData1 = LeaveAllocation::select ('spent_days')
-    //             ->where('emp_id',$emp_id)
-    //             ->where('leave_type_id',$leave_type_id)->first()->spent_days;
-    
-    //             $leaveAllocationData = number_format($leaveAllocationData1,1);
-    //             $total_days =number_format($total_days,1);
-    //             $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
-
-    //             LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
-    //             $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-
-    //             $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-    //             ->where('leave_type_id',$leave_type_id)
-    //             >update(array('spent_days'=>$leaveAllocationDataEntry));
-        
-    //             return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected Level One');
-    //         }
-    //     } 
-    //     else 
-    //     {
-    //         LeaveRequest::find($id)->update(array('status' => 'Rejected'));
-    //         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-    //         $leaveRquestData = $request->validate([
-    //                 ]);
-    
-    //         $user = Auth::user();
-    //         $report_to_emp_id = $user->employee->id;
-    //         $leaveRequestData['leave_request_id'] =$request->id;
-    //         $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
-
-    //         $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
-    //         $employee = Employee::find($report_to_emp_id);
-    //         $employee->leave_request_approvals()->save($leaveRequestData);
-    //         return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected');
-    //     }      
-    //     // $id = $request->input('id');     
-    //     // $emp_id = $request->input('emp_id');    
-    //     // $leave_type_id = $request->input('leave_type_id');   
-    //     // $total_days =$request->input('total_days');  
-
-    //     // $leaveAllocationData1 = LeaveAllocation::select ('spent_days')
-    //     //     ->where('emp_id',$emp_id)
-    //     //     ->where('leave_type_id',$leave_type_id)->first()->spent_days;
-    
-    //     // $leaveAllocationData = number_format($leaveAllocationData1,1);
-    //     // $total_days =number_format($total_days,1);
-    //     // $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
-
-    //     // LeaveRequest::where('id',$id)->update(array('status' => 'rejected'));
-    //     // $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-
-    //     // $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-    //     //     ->where('leave_type_id',$leave_type_id)
-    //     //     ->update(array('spent_days'=>$leaveAllocationDataEntry));
-    //     // return redirect()->route('employee.e-leave.request');
-    // }
-
- 

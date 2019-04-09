@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 
     Route::post('profile/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
-
+    Route::get('employee/e-leave/{id}/attachment', 'Employee\EleaveController@getLeaveRequestAttachment')->name('employee.e-leave.attachment')->where('id', '[0-9]+');;
     //employee leave
     Route::get('employee/e-leave','Employee\ELeaveController@displayLeaveApplication')->name('employee.e-leave.leave-application');
     Route::get('employee/e-leave/approve-leave/{id}/add','Employee\ELeaveController@addLeaveApproval')->name('employee.e-leave.add-leave-request')->where('id', '[0-9]+');
@@ -378,6 +378,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
     Route::get('e-leave/configuration/leave-holidays/generate', 'Admin\ELeaveController@generatePublicHolidays')->name('admin.e-leave.configuration.leave-holidays.generate');
 
     Route::get('e-leave/configuration/leave-requests', 'Admin\ELeaveController@displayLeaveRequests')->name('admin.e-leave.configuration.leave-requests');
+    Route::get('e-leave/{id}/attachment', 'Admin\ELeaveController@getLeaveRequestAttachment')->name('admin.e-leave.attachment')->where('id', '[0-9]+');;
+
     Route::get('e-leave/leave-application', 'Admin\ELeaveController@displayLeaveApplication')->name('admin.e-leave.leave-application');
     Route::get('e-leave/leave-report', 'Admin\ELeaveController@displayLeaveReports')->name('admin.e-leave.leave-report');
     Route::get('e-leave/leave-report/total-balanced-report/{emp_id}','Admin\ELeaveController@getTotalBalancedReport')->name('admin.e-leave.total-balanced-report')->where('emp_id', '[A-Za-z0-9\-\/]+');

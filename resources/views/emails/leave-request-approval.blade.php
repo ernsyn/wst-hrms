@@ -13,13 +13,10 @@
 	<h3>Leave Approval (HRMS)</h3>
 
 	<p><strong>Hi {{ $leaveRequestApproval->leave_request_approval_id->employee->user->name}},</strong></p>
-
-	<p>Leave request by {{ $leaveRequestApproval->leave_request_approval_id->employee->user->name}} on the {{ $leaveRequestApproval->leave_request_approval_id->start_date}} to {{ $leaveRequestApproval->leave_request_approval_id->end_date}} have been approved by {{ $leaveRequestApproval->approved_by->user->name}}</p>
-	<p>Please login into the HRMS Portal to check and/or approve the leave request.</p>
-
-	<p>--------------------------------------------------------------</p>
-
-	<p>This is an auto-generated leave request notification</p>
+	
+	<p>Your leave application for the following date(s) from <strong>{{ \Carbon\Carbon::parse($leaveRequestApproval->leave_request_approval_id->start_date)->format('d/m/Y') }}</strong> to <strong>{{ \Carbon\Carbon::parse($leaveRequestApproval->leave_request_approval_id->end_date)->format('d/m/Y') }}</strong> have been approved</p>
+	
+	<p>This is a system generated message.</p>
 
 </body>
 
