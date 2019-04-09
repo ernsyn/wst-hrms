@@ -89,16 +89,19 @@ class PayrollSetupController extends Controller
             'status' => 'required'
         ]);
         
-        $payrollSetup = PayrollSetup::find($id);
-        $payrollSetup->value = $request->get('value');
-        $payrollSetup->remark = $request->get('remark');
+//         $payrollSetup = PayrollSetup::find($id);
+        $payrollSetup['value'] = $request->get('value');
+        $payrollSetup['remark'] = $request->get('remark');
         if(AccessControllHelper::hasSuperadminRole()) {
-            $payrollSetup->key = $request->get('key');
-            $payrollSetup->company_id = $request->get('company');
-            $payrollSetup->status = $request->get('status');
+            $payrollSetup['key'] = $request->get('key');
+            $payrollSetup['company_id'] = $request->get('company');
+            $payrollSetup['status'] = $request->get('status');
         }
-        $payrollSetup->updated_by = $currentUser;
-        $payrollSetup->save();
+        $payrollSetup['updated_by'] = $currentUser;
+        
+        PayrollSetup::find($id)->update($payrollSetup);
+        
+//         $payrollSetup->save();
         
         return redirect('/payroll-setup')->with('success', 'Payroll Setup has been updated');
     }

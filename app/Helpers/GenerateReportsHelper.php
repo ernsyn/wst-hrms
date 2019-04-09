@@ -95,7 +95,8 @@ class GenerateReportsHelper
                         //'reportLHDNM' => 1,
                         'officerName' => $officerInformation->name,
                         'officerIC' => $officerInformation->ic_no,
-                        'officerPosition' => $officerInformation->position
+                        'officerPosition' => $officerInformation->position,
+                        'email' => $officerInformation->email
                     ]);
 
                     //example
@@ -937,6 +938,8 @@ class GenerateReportsHelper
             case "PTPTN_monthly":
                 //TODO :PTPTN currently not in used.
                 //set popo
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
+                
                 $data = new PtptnP04Bean([
                     'employerReferenceNo' => '',
                     'companyName' => 'OPPO ELECTRONICS SDN BHD',
@@ -946,10 +949,11 @@ class GenerateReportsHelper
                     'companyPostcode' => 46200,
                     'companyBusinessRegistrationNo' => '1075187-D',
 
-                    'officerName' => 'CHONG HWEE MIN',
-                    'officerPosition' => 'HUMAN RESOURCES OFFICER',
-                    'officerNoTel' => '03-7931 3550',
-                    'officerEmail' => 'oppo.amandachong@gmail.com',
+                    'officerName' => $officerInformation->name,
+                    'officerIC' => $officerInformation->ic_no,
+                    'officerPosition' => $officerInformation->position,
+                    'officerEmail' => $officerInformation->email,
+                    'officerNoTel' => $officerInformation->contact_no,
 
                     'transferDate' => '',
                     'transferReferenceNo' => '',
@@ -984,6 +988,7 @@ class GenerateReportsHelper
             case "ZAKAT_monthly":
                 //TODO :ZAKAT currently not in used.
                 //set popo
+                $officerInformation = self::getEmployeeInformation($officerId,$companyInformation->id);
                 $empData = array();
                 $totalAmount = 0;
                 //example
@@ -1014,11 +1019,11 @@ class GenerateReportsHelper
                     'checkNo' => '',
                     'totalAmount' => $totalAmount,
 
-                    'officerName' => 'CHONG HWEE MIN',
-                    'officerIcNo' => '8171817181711',
-                    'officerPosition' => 'HUMAN RESOURCES OFFICER',
-                    'officerNoTel' => '03-7931 3550',
-                    'officerEmail' => 'oppo.amandachong@gmail.com',
+                    'officerName' => $officerInformation->name,
+                    'officerIcNo' => $officerInformation->ic_no,
+                    'officerPosition' => $officerInformation->position,
+                    'officerEmail' => $officerInformation->email,
+                    'officerNoTel' => $officerInformation->contact_no,
                 ]);
 
                 $arr = array("data" => $data, "empData" => $empData);
@@ -1496,7 +1501,7 @@ class GenerateReportsHelper
         $query = DB::table('payroll_master')
             ->select(
                 DB::raw('count(DISTINCT payroll_trx.employee_id) as total_employee'),
-                DB::raw('SUM(CASE WHEN YEAR(employee_jobs.start_date) = 2018 THEN 1 ELSE 0 END) AS total_new_employee'),
+                DB::raw('SUM(CASE WHEN YEAR(employee_jobs.start_date) = '.$year.' THEN 1 ELSE 0 END) AS total_new_employee'),
                 DB::raw('SUM(CASE WHEN employee_jobs.end_date IS NOT NULL OR employee_jobs.end_date != "" THEN 1 ELSE 0 END) AS total_employee_resigned'),
                 DB::raw('SUM(CASE WHEN employees.pcb_group IS NOT NULL OR employee_jobs.end_date != "" THEN 1 ELSE 0 END) AS total_employee_have_pcb')
             )

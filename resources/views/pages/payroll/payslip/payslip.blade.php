@@ -5,6 +5,7 @@
 <style type="text/css">
 body {
 	text-transform: uppercase;
+	font-size: 12px;
 }
 
 .table {

@@ -502,6 +502,71 @@ var AuditTrail = (function() {
       
             },
         },
+        
+        'App\\PayrollSetup': {
+            name: 'Payroll Setup',
+            fields: {
+                'key': 'Key',
+                'value': 'Value',
+                'remark': 'Remark',
+                'status': 'Status',
+                'created_by': 'Created by',
+                'updated_by': 'Updated by'
+      
+            },
+        },
+        
+        'App\\PayrollMaster': {
+            name: 'Payroll',
+            fields: {
+                'year_month': 'Payroll Month',
+                'period': 'Payroll Period',
+                'start_date': 'Start Date',
+                'end_date': 'End Date',
+                'status': 'Status',
+                'created_by': 'Created by',
+                'updated_by': 'Updated by'
+            },
+        },
+        
+        'App\\PayrollTrx': {
+            name: 'Payroll Trx',
+            fields: {
+                'key': 'Key',
+                'value': 'Value',
+                'remark': 'Remark',
+                'status': 'Status',
+                'created_by': 'Created by',
+                'updated_by': 'Updated by'
+      
+            },
+        },
+        
+        'App\\PayrollTrxAddition': {
+            name: 'Payroll Addition',
+            fields: {
+                'key': 'Key',
+                'value': 'Value',
+                'remark': 'Remark',
+                'status': 'Status',
+                'created_by': 'Created by',
+                'updated_by': 'Updated by'
+      
+            },
+        },
+        
+        'App\\PayrollTrxDeduction': {
+            name: 'Payroll Deduction',
+            fields: {
+                'key': 'Key',
+                'value': 'Value',
+                'remark': 'Remark',
+                'status': 'Status',
+                'created_by': 'Created by',
+                'updated_by': 'Updated by'
+      
+            },
+        },
     };
 
     return {

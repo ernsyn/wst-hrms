@@ -317,14 +317,14 @@
         </tr>
         <tr>
             <td class="tg-s268">Nama </td>
-            <td class="tg-s268 border_bottom">CHONG HWEE MIN</td>
+            <td class="tg-s268 border_bottom">{{$data->getOfficerName()}}</td>
             <td class="tg-s268"></td>
             <td class="tg-s268"> [   ] Tunai</td>
             <td class="tg-s268"> [   ] Kiriman Wang</td>
         </tr>
         <tr>
             <td class="tg-s268">No Telefon </td>
-            <td class="tg-s268 border_bottom">03-7931 3550</td>
+            <td class="tg-s268 border_bottom">{{$data->getPhoneNo()}}</td>
             <td class="tg-s268"></td>
             <td class="tg-s268"> [X  ] Cek  .......</td>
             <td class="tg-s268"> [   ] Lain-lain  ................</td>

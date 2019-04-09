@@ -165,23 +165,23 @@ class PayrollController extends Controller
 
         // Step 3. Find all employees under this company, generate all employees' payroll trx.
         $payrollId = $payroll->id;
-        $firstDayOfMonth = date('Y-m-d', strtotime($validated['year_month'] . '-01'));
+        $lastDayOfMonth = DateHelper::getLastDayOfDate($payroll->year_month);//date('Y-m-d', strtotime($validated['year_month'] . '-01'));
             
         $employeeList = Employee::leftJoin('employee_jobs', 'employee_jobs.emp_id', '=', 'employees.id')->where([
             ['company_id', $company->id]
         ])
-        ->where(function ($query) use ($firstDayOfMonth) {
+        ->where(function ($query) use ($lastDayOfMonth) {
             // Either default or month/year greater or same
-            $query->whereNull('employees.resignation_date')->orWhere('employees.resignation_date', '>=', $firstDayOfMonth);
+            $query->whereNull('employees.resignation_date')->orWhere('employees.resignation_date', '>=', $lastDayOfMonth);
         })
-        ->where(function ($query) use ($firstDayOfMonth) {
+        ->where(function ($query) use ($lastDayOfMonth) {
             // Either default or month/year greater or same
-            $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
+            $query->where('employee_jobs.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = employees.id AND start_date <= "' . $lastDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
         })
         ->select('employees.*', 'employee_jobs.id as ejId')
         ->orderby('employees.code', 'ASC')
         ->get();
-//      dd($employeeList);
+//         dd($lastDayOfMonth,$employeeList);
         foreach ($employeeList as $employee) {
             // Step 4. Find employee's payroll's required info.
             $employeeJob = EmployeeJob::find($employee->ejId);
@@ -311,7 +311,7 @@ class PayrollController extends Controller
         $currentUser = Employee::where('user_id',Auth::id())->first();
         $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
         $payroll = PayrollMaster::where('id', $id)->first();
-        $firstDayOfMonth = date('Y-m-d', strtotime($payroll->year_month. '-01'));
+        $lastDayOfMonth = DateHelper::getLastDayOfDate($payroll->year_month);//date('Y-m-d', strtotime($validated['year_month'] . '-01'));
             
         $list = PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employees as e', 'e.id', '=', 'payroll_trx.employee_id')
@@ -334,9 +334,9 @@ class PayrollController extends Controller
                     $query->where('payroll_trx.payroll_master_id', $id);
                 }
             })
-            ->where(function ($query) use ($firstDayOfMonth) {
+            ->where(function ($query) use ($lastDayOfMonth) {
                 // Either default or month/year greater or same
-                $query->where('ej.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = e.id AND start_date <= "' . $firstDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
+                $query->where('ej.id', DB::raw('(SELECT id FROM employee_jobs WHERE emp_id = e.id AND start_date <= "' . $lastDayOfMonth . '" ORDER BY start_date DESC LIMIT 1)'));
             })
             ->where(function($query) use($currentUser, $securityGroupAccess, $isHrAdmin){
                 if(!$isHrAdmin) {
@@ -436,7 +436,6 @@ class PayrollController extends Controller
         $rd = array();
         $od = array();
         $ot = array();
-        $unpaidLeaves = array();
         
         if(strtotime($joined_date) > strtotime($start_date)) {
             $different_of_dates = date_diff(date_create($start_date), date_create($joined_date));
@@ -492,19 +491,23 @@ class PayrollController extends Controller
         foreach($payrollTrxDeductionList as $payrollTrxDeduction){
             if($payrollTrxDeduction['code'] == 'UL') {
                 $unpaid = PayrollProcessedLeaveAttendance::join('leave_requests as lr', 'lr.id', '=', 'payroll_processed_leave_attendance.leave_request_id')
-                    ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
+                    ->where('payroll_trx_deduction_id', $payrollTrxDeduction['id'])
                     ->select('payroll_processed_leave_attendance.*', 'lr.*')
                     ->get();
                 
                 $absent = PayrollProcessedLeaveAttendance::join('employee_attendances as ea', 'ea.id', '=', 'payroll_processed_leave_attendance.employee_attendance_id')
-                    ->where('payroll_trx_addition_id', $payrollTrxAddition['id'])
-                    ->select('payroll_processed_leave_attendance.*', 'ea.*')
+                    ->where('payroll_trx_deduction_id', $payrollTrxDeduction['id'])
+                    ->select('payroll_processed_leave_attendance.*', 'ea.*', 'ea.date as start_date', 'ea.date as end_date')
                     ->get();
+
+                foreach($absent as $a){
+                    $a->applied_days = 1;
+                }
                 
                 $unpaidLeaves = $unpaid->merge($absent);
             }
         }
-       
+//         dd($unpaidLeaves);
 //         dd($employee);
 //         dd($payrollTrxAdditionList);
         return view('pages.payroll.show-payroll-trx', compact('id', 'payrollId', 'title', 'additions', 'deductions', 'payrollTrxAdditionList', 
@@ -1657,8 +1660,8 @@ class PayrollController extends Controller
             )
             ->groupBy(DB::raw("payroll_trx.employee_id"))
             ->first();
-            
-        if (count($payslip) > 0) {
+
+        if ($payslip != null && count($payslip->get()) > 0) {
             $employeeBranch = PayrollHelper::getEmployeeBranch($currentUser, $payslip->year_month);
             $payslip->employeeBranch = $employeeBranch;
             $employeeBankAcc = PayrollHelper::getEmployeeBankAcc($currentUser);
