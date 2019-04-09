@@ -499,27 +499,26 @@
         });
 
         // change day according to selected value
-        $("#leave-half-day-am").click(function(){  
-            $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
-            $("#totalLeave").val(0.5);
-        });
+        // $("#leave-half-day-am").click(function(){  
+        //     $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
+        //     $("#totalLeave").val(0.5);
+        // });
 
-        $("#leave-half-day-pm").click(function(){  
-            $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
-            $("#totalLeave").val(0.5);
-        });
+        // $("#leave-half-day-pm").click(function(){  
+        //     $("span.total-days").replaceWith("<span class='total-days'><b>0.5</b> days</span>");
+        //     $("#totalLeave").val(0.5);
+        // });
 
-        $("#leave-full-day").click(function(){  
-            $("span.total-days").replaceWith("<span class='total-days'><b>1.0</b> days</span>");
-            $("#totalLeave").val(1);
-        });
+        // $("#leave-full-day").click(function(){  
+        //     $("span.total-days").replaceWith("<span class='total-days'><b>1.0</b> days</span>");
+        //     $("#totalLeave").val(1);
+        // });
         
         $('#leave-types').on('change', function() {
             var leave_type_data = $(this).find('option:selected').data('leave-type');
             
             $("#available_days").text(leave_type_data.available_days.toFixed(1));
             $("#leave-description").text(leave_type_data.description);
-            // $("#reason").text(leave_type_data.reason);
 
             if(leave_type_data.available_days == 0) {
                 $("#add-leave-request-submit").prop('disabled', true);
@@ -711,15 +710,20 @@
 
             $('#error-message').text('');
             
+            //to display am , pm 
             if($start_date && $end_date) {
                 var start = $("#start-date").datepicker("getDate");
                 var end = $("#end-date").datepicker("getDate");
                 var days = (end - start) / (1000 * 60 * 60 * 24) + 1;
 
-                if (days > 1) {
+                if (days > 1) 
+                {
                     $("#select-period").hide();
+                    $(".pb-3").hide();
+                    $(".leave-day").removeClass("selected-day");
                 } else {
                     $("#select-period").show();
+                    $(".pb-3").show();
                 }
 
                 var employee_id = $('#select-employee').find('option:selected').val();

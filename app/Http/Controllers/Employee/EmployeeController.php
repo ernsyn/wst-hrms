@@ -202,6 +202,7 @@ class EmployeeController extends Controller
         $jobs = EmployeeJob::with('main_position','department', 'team', 'cost_centre', 'grade', 'branch')->where('emp_id', Auth::user()->employee->id)->get();
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
+            if ($job->start_date !== null)
             return date('d/m/Y', strtotime($job->start_date) );
         })
         ->make(true);

@@ -4,7 +4,7 @@
 
 <head>
 	
-	<title>Leave Request!</title>
+	<title>New Leave Request Submission!</title>
 
 </head>
 

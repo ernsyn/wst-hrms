@@ -33,7 +33,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 
     Route::post('profile/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
-    Route::get('employee/e-leave/{id}/attachment', 'Employee\ELeaveController@getLeaveRequestAttachment')->name('employee.e-leave.attachment')->where('id', '[0-9]+');;
+    Route::get('employee/e-leave/{id}/attachment', 'Employee\EleaveController@getLeaveRequestAttachment')->name('employee.e-leave.attachment')->where('id', '[0-9]+');;
     //employee leave
     Route::get('employee/e-leave','Employee\ELeaveController@displayLeaveApplication')->name('employee.e-leave.leave-application');
     Route::get('employee/e-leave/approve-leave/{id}/add','Employee\ELeaveController@addLeaveApproval')->name('employee.e-leave.add-leave-request')->where('id', '[0-9]+');
