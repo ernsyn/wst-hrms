@@ -1340,7 +1340,8 @@ class GenerateReportsHelper
             }
 
         $query->where('payroll_master.company_id', $companyId)
-            ->groupBy(DB::raw("payroll_trx.employee_id,payroll_trx_addition.payroll_trx_id,additions.ea_form_id"));
+//             ->groupBy(DB::raw("payroll_trx.employee_id,payroll_trx_addition.payroll_trx_id,additions.ea_form_id"));
+        ->groupBy(DB::raw("payroll_trx.employee_id"));
 
         $result= $query->get();
 
@@ -1501,9 +1502,9 @@ class GenerateReportsHelper
         $query = DB::table('payroll_master')
             ->select(
                 DB::raw('count(DISTINCT payroll_trx.employee_id) as total_employee'),
-                DB::raw('SUM(CASE WHEN YEAR(employee_jobs.start_date) = '.$year.' THEN 1 ELSE 0 END) AS total_new_employee'),
-                DB::raw('SUM(CASE WHEN employee_jobs.end_date IS NOT NULL OR employee_jobs.end_date != "" THEN 1 ELSE 0 END) AS total_employee_resigned'),
-                DB::raw('SUM(CASE WHEN employees.pcb_group IS NOT NULL OR employee_jobs.end_date != "" THEN 1 ELSE 0 END) AS total_employee_have_pcb')
+                DB::raw('(select count(DISTINCT(emp_id)) from employee_jobs where YEAR(employee_jobs.start_date) = '.$year.') AS total_new_employee'),
+                DB::raw('(select count(DISTINCT(emp_id)) from employee_jobs where (employee_jobs.end_date IS NOT NULL OR employee_jobs.end_date != "") and YEAR(employee_jobs.end_date) = '.$year.') AS total_employee_resigned'),
+                DB::raw('(select count(DISTINCT(employees.id)) from employees, employee_jobs where employees.id=employee_jobs.emp_id and employees.pcb_group IS NOT NULL) AS total_employee_have_pcb')
             )
             ->leftjoin('payroll_trx', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
             ->leftjoin('employee_jobs', 'payroll_trx.employee_id', '=', 'employee_jobs.emp_id')
@@ -1533,7 +1534,7 @@ class GenerateReportsHelper
         $query->where('payroll_master.company_id', $companyId);
 
         $result= $query->first(['total_employee,total_new_employee,total_employee_resigned,total_employee_have_pcb']);
-
+       
         return $result;
     }
 

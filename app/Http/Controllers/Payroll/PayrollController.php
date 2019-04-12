@@ -1754,8 +1754,8 @@ class PayrollController extends Controller
             $alTaken = 0;
             $alBalance = 0;
             if(count($annualLeaves) > 0){
-                $alTaken = $annualLeaves['spent_days'];
-                $alBalance = $annualLeaves['allocated_days'] - $annualLeaves['spent_days'];
+                $alTaken = $annualLeaves[0]['spent_days'];
+                $alBalance = $annualLeaves[0]['allocated_days'] - $annualLeaves[0]['spent_days'];
             }
             
             $leave = [
@@ -1768,8 +1768,8 @@ class PayrollController extends Controller
             $slTaken = 0;
             $slBalance = 0;
             if(count($sickLeaves) > 0){
-                $slTaken = $sickLeaves['spent_days'];
-                $slBalance = $sickLeaves['allocated_days'] - $sickLeaves['spent_days'];
+                $slTaken = $sickLeaves[0]['spent_days'];
+                $slBalance = $sickLeaves[0]['allocated_days'] - $sickLeaves[0]['spent_days'];
             }
             $leave = [
                 'name' => 'SICK LEAVE',
