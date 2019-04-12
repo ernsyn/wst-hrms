@@ -605,8 +605,10 @@ class PayrollController extends Controller
             PayrollTrx::find($id)->update($storeData);
         }else{
             $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
+            $storeData['gross_pay'] = $info->gross_pay + ($request['bonus'] * $request['kpi']);
             
-            if (in_array($info->main_security_group_id, $securityGroupAccess)){
+            if (AccessControllHelper::hasHrAdminRole() || in_array($info->main_security_group_id, $securityGroupAccess)){
+                
                 $this->payrollTrxAdditionRepository->updateMulitpleData($request->input());
                 $this->payrollTrxDeductionRepository->updateMulitpleData($request->input());
                 $totalAddition = DB::table("payroll_trx_addition")->where('payroll_trx_id',$id)->sum('amount');
@@ -1950,7 +1952,7 @@ class PayrollController extends Controller
                                     $endWorkDate = DateHelper::dateWithFormat($a->date, "Y-m-d")." ".$endWorkTime->end_work_time;
                                 }
                                 
-                                $diffHour = 0;
+                                $diffHour = null;
                                 if($endWorkDate != null && $employeeClockInOut != null){
                                     $diffHour = date_diff(date_create($endWorkDate), date_create($employeeClockInOut->clock_out_time));
                                 }
@@ -1962,7 +1964,7 @@ class PayrollController extends Controller
                                         'employee_id' => $employee->id
                                     ];
                                     
-                                    if($diffHour->format('%h') >=  $minOtHour){
+                                    if($diffHour != null && $diffHour->format('%h') >=  $minOtHour){
                                         $totalHours += $diffHour->format('%h');
                                         $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $endWorkDate);
                                         $totalAmount += $basicSalary / 26 / 8 * 1.5 * $diffHour->format('%h');
@@ -1970,7 +1972,7 @@ class PayrollController extends Controller
                                 } else {
                                     foreach($processedAttendances as $p) {
                                         if($p->payroll_trx_addition_id == $payrollTrxAddition->id) {
-                                            if($diffHour->format('%h') >=  $minOtHour){
+                                            if($diffHour != null && $diffHour->format('%h') >=  $minOtHour){
                                                 $totalHours += $diffHour->format('%h');
                                                 $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $endWorkDate);
                                                 $totalAmount += $basicSalary / 26 / 8 * 1.5 * $diffHour->format('%h');

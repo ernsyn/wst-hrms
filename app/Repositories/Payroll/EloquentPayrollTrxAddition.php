@@ -48,9 +48,10 @@ class EloquentPayrollTrxAddition implements PayrollTrxAdditionRepository
             }
             
             if(strpos($key, 'payrolltrxaddition_id_') === 0){
-                $id = substr($key, 22);
+//                 $id = substr($key, 22);
+                $id = preg_replace("/[^0-9]/", '', $key);
                 $payrollTrxAddition = $this->query()->where('payroll_trx_addition.id', $id)->first();
-                //                 dd($payrollTrxAddition);
+//                                 dd($payrollTrxAddition);
                 if(!in_array($payrollTrxAddition['code'],PayrollAdditionDeductionEnum::consts()) && $payrollTrxAddition['type'] == 'Custom'){
                     PayrollTrxAddition::where('id', $id)->update(['amount'=>$request]);
                 }
