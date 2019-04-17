@@ -215,13 +215,15 @@ class PayrollHelper
         
     }
     
-    public static function getEisCategory($employee)
+    public static function getEisCategory($age, $nationality)
     {
         $category=0;
         
-        if ($employee->nationality == 132 && self::getAge($employee->dob) < 60 && $employee->eis_no != null) {
+        if ($nationality == 132 && $age < 60) {
             $category = EisCategoryEnum::FIRST_CATEGORY;
-        } 
+        } else if ($nationality != 132) {
+            $category = EisCategoryEnum::SECOND_CATEGORY;
+        }
         
         return $category;
     }

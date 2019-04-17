@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\EisCategoryEnum;
 use App\Enums\EpfCategoryEnum;
 use App\Enums\SocsoCategoryEnum;
 use App\Helpers\GenerateReportsHelper;
@@ -243,7 +244,8 @@ class SettingsController extends Controller
 
     public function addEis()
     {
-        return view('pages.admin.settings.add-eis');
+        $category = EisCategoryEnum::choices();
+        return view('pages.admin.settings.add-eis', ['category' => $category]);
     }
 
     public function addSocso()
@@ -353,18 +355,42 @@ class SettingsController extends Controller
 
         return redirect()->route('admin.settings.teams')->with('status', 'Team has successfully been added.');
     }
+    
     public function postAddPcb(Request $request)
     {
         $pcbData = $request->validate([
-            'category' => 'required|unique:pcbs,category,NULL,id,deleted_at,NULL',
+            'category' => 'required',//|unique:pcbs,category,NULL,id,deleted_at,NULL',
             'salary' => 'required|numeric',
             'amount' => 'required|numeric',
             'total_children' => 'required|numeric'
         ]);
 
-        Pcb::create($pcbData);
+//         Pcb::save($pcbData);
+        
+        $pcb = Pcb::where([
+            [
+                'category',
+                $request['category']
+            ],
+            [
+                'salary',
+                $request['salary']
+            ],
+            [
+                'total_children',
+                $request['total_children']
+            ]
+        ])->whereNull('deleted_at')->get();
+        
+        if ($pcb->isEmpty()) {
+            $pcb = new Pcb($pcbData);
+            $pcb->save();
+            return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
+        } else {
+            return redirect()->route('admin.settings.pcb')->with('status', 'Data already exists.');
+        }
 
-        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been added.');
+        
     }
 
     public function postAddWorkingDay(Request $request)
@@ -476,7 +502,8 @@ class SettingsController extends Controller
 
         if ($epf->isEmpty()) {
             $epfData['created_by'] = auth()->user()->name;
-            EPF::create($epfData);
+            $epf = new EPF($epfData);
+            $epf->save();
             return redirect()->route('admin.settings.epf')->with('status', 'EPF has successfully been added.');
         } else {
             return redirect()->route('admin.settings.epf')->with('status', 'Data already exists.');
@@ -504,7 +531,8 @@ class SettingsController extends Controller
         ])->whereNull('deleted_at')->get();
 
         if ($eis->isEmpty()) {
-            Eis::create($eisData);
+            $eis = new EIS($eisData);
+            $eis->save();
             return redirect()->route('admin.settings.eis')->with('status', 'EIS has successfully been added.');
         } else {
             return redirect()->route('admin.settings.eis')->with('status', 'Data already exists.');
@@ -532,7 +560,8 @@ class SettingsController extends Controller
         ])->whereNull('deleted_at')->get();
 
         if ($socso->isEmpty()) {
-            Socso::create($socsoData);
+            $socso = new SOCSO($socsoData);
+            $socso->save();
             return redirect()->route('admin.settings.socso')->with('status', 'SOCSO has successfully been added.');
         } else {
             return redirect()->route('admin.settings.socso')->with('status', 'Data already exists.');
@@ -753,9 +782,11 @@ class SettingsController extends Controller
     public function editEis(Request $request, $id)
     {
         $eis = Eis::find($id);
+        $category = EisCategoryEnum::choices();
 
         return view('pages.admin.settings.edit-eis', [
-            'eis' => $eis
+            'eis' => $eis,
+            'category' => $category
         ]);
     }
 
@@ -964,7 +995,7 @@ class SettingsController extends Controller
     {
         $eisData = $request->validate([
             'category' => 'required',
-            'salary' => 'required|unique:eis,salary,' . $id . ',id,deleted_at,NULL',
+            'salary' => 'required|numeric',
             'employer' => 'required|numeric',
             'employee' => 'required|numeric'
         ]);
@@ -1029,15 +1060,38 @@ class SettingsController extends Controller
     public function postEditPcb(Request $request, $id)
     {
         $pcbData = $request->validate([
-            'category' => 'required|unique:pcbs,category,' . $id . ',id,deleted_at,NULL',
+            'category' => 'required',//|unique:pcbs,category,' . $id . ',id,deleted_at,NULL',
             'salary' => 'required',
             'amount' => 'required',
             'total_children' => 'required'
         ]);
-
-        Pcb::find($id)->update($pcbData);
-
-        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
+        
+        $pcb = Pcb::where([
+            [
+                'category',
+                $request['category']
+            ],
+            [
+                'salary',
+                $request['salary']
+            ],
+            [
+                'total_children',
+                $request['total_children']
+            ],
+            [
+                'id',
+                '!=',
+                $id
+            ]
+        ])->whereNull('deleted_at')->get();
+        
+        if ($pcb->isEmpty()) {
+            Pcb::find($id)->update($pcbData);
+            return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been updated.');
+        } else {
+            return redirect()->route('admin.settings.pcb')->with('status', 'Data already exists.');
+        }
     }
 
     public function postEditCompanyDeduction(Request $request)

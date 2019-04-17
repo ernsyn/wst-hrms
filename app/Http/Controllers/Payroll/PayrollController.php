@@ -238,7 +238,7 @@ class PayrollController extends Controller
                     $epf = $this->epfRepository->findByFilter($epfFilter);
                 }
                 
-                $eisCategory = PayrollHelper::getEisCategory($employee);//PayrollHelper::getAge($employee->dob), $employee->nationality);
+                $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($employee->dob), $employee->nationality);
                 if ($eisCategory > 0) {
                     $eis = $this->eisRepository->findByCategorySalary($eisCategory, $remuneration + $contributionData['eis']);
                 }
@@ -575,7 +575,7 @@ class PayrollController extends Controller
                 $epf = $this->epfRepository->findByFilter($epfFilter);
             }
             
-            $eisCategory = PayrollHelper::getEisCategory($info);//PayrollHelper::getAge($info->dob), $info->nationality);
+            $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($info->dob), $info->nationality);
             if ($eisCategory > 0) {
                 $eis = $this->eisRepository->findByCategorySalary($eisCategory, $storeData['gross_pay'] + $totalEis);
             }
@@ -622,7 +622,7 @@ class PayrollController extends Controller
                     $epf = $this->epfRepository->findByFilter($epfFilter);
                 }
                 
-                $eisCategory = PayrollHelper::getEisCategory($info);//PayrollHelper::getAge($info->dob), $info->nationality);
+                $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($info->dob), $info->nationality);
                 if ($eisCategory > 0) {
                     $eis = $this->eisRepository->findByCategorySalary($eisCategory, $info->gross_pay + $totalEis);
                 }

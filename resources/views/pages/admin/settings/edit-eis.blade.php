@@ -1,13 +1,32 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="container">
-    <div id="alert-container">
-        </div>   
+    <div id="alert-container"></div>   
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.eis.edit.post', ['id' => $eis->id]) }}" id="form_validate" data-parsley-validate>
             <div class="card-body">
                 @csrf
                 <div class="row p-3">
+                	<div class="form-group row w-100">
+                        <label class="col-md-12 col-form-label">Category*</label>
+                        <div class="col-md-4">
+                        	<select class="form-control {{ $errors->has('category') ? ' is-invalid' : '' }} " id="category" name="category" required> 
+								<option value="">Please Select</option>
+								@foreach ($category as $k=>$v )
+									@if ($eis->category == $k)
+										<option value="{{ $k }}" selected>{{ $v }}</option>
+									@else
+										<option value="{{ $k }}">{{ $v }}</option>
+									@endif
+								@endforeach
+							</select>
+							@if ($errors->has('category'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('category') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="form-group row w-100">
                         <label class="col-md-12 col-form-label">Salary*</label>
                         <div class="col-md-4">
@@ -44,12 +63,11 @@
     						@endif
                         </div>
                     </div>
-                    <input type="hidden" name="category" value="{{ $eis->category }}">
                 </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
-                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
+                <a role="button" class="btn btn-secondary" href="{{ route('admin.settings.eis') }}">Cancel</a>
             </div>
         </form>
     </div>

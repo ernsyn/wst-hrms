@@ -12,6 +12,7 @@ class Eis extends Model implements Auditable
     protected $table = 'eis';
 
     protected $fillable = [
+        'category',
         'employer',
         'employee',
         'salary',
