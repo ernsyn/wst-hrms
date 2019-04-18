@@ -1714,13 +1714,13 @@ class PayrollController extends Controller
             
             $deductions[] = [
                 'name' => 'EMPLOYEE EIS',
-                'amount' => number_format($payslip->employee_eis),
+                'amount' => number_format($payslip->employee_eis, 2),
                 'amount_numeric' => $payslip->employee_eis
             ];
             
             $deductions[] = [
                 'name' => 'INCOME TAX PCB',
-                'amount' => number_format($payslip->employee_pcb),
+                'amount' => number_format($payslip->employee_pcb, 2),
                 'amount_numeric' => $payslip->employee_pcb
             ];
             
