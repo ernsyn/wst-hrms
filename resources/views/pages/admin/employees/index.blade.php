@@ -22,6 +22,7 @@
                     <tr>
                         <th>No</th>
                         <th>Name</th>
+                        <th>Employee ID</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Action</th>
@@ -32,6 +33,7 @@
                     <tr>
                         <td class="id">{{$loop->iteration}}</td>
                         <td class="name">{{$employee->user->name}}</td>
+                        <td class="name">{{$employee->code}}</td>
                         <td class="email">{{$employee->user->email}}</td>
                         <td class="contact_no">{{$employee->contact_no}}</td>
                         <td>
@@ -48,6 +50,9 @@
 @section('scripts')
 <script>
     $('#employees-table').DataTable({
+    	columnDefs: [
+    	    { "orderable": false, "searchable": false, "targets": [5] }
+    	],
         responsive: true,
         stateSave: true,
         dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
