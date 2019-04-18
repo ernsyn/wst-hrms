@@ -1626,7 +1626,7 @@ class PayrollController extends Controller
     // Download payslip form
     public function showPayslip()
     {
-        $user = AccessControllHelper::getCurrentUserLogon();
+        $user = AccessControllHelper::getCurrentUserLogon()->employee;
         
         $payslips = PayrollTrx::leftJoin('payroll_master', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
             ->where([
@@ -1641,7 +1641,7 @@ class PayrollController extends Controller
     
     public function downloadPayslip(Request $request, $id)
     {
-        $currentUser = AccessControllHelper::getCurrentUserLogon();
+        $currentUser = AccessControllHelper::getCurrentUserLogon()->employee;
         
         $payslip = PayrollTrx::leftJoin('payroll_master', 'payroll_master.id', '=', 'payroll_trx.payroll_master_id')
             ->join('companies', 'companies.id', '=', 'payroll_master.company_id')

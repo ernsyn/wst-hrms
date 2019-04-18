@@ -88,7 +88,7 @@ class AccessControllHelper
     
     public static function getCurrentUserLogon(){
         $id = Auth::id();
-        return User::find($id)->employee->first();
+        return User::find($id);
     }
 }
 
