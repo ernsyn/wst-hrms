@@ -239,14 +239,22 @@ class PayrollHelper
     
     public static function getEmployeeBranch($employee, $date)
     {
+        $branchName = '';
         $employeeJob = EmployeeJob::where([
             ['emp_id', $employee->id],
             ['start_date', '<=', $date]
         ])->orderby('start_date', 'DESC')
         ->first();
         
-        $employeeBranch = EmployeeJob::find($employeeJob->id)->branch->first();
-        return @$employeeBranch->name ? $employeeBranch->name : '' ;
+        if($employeeJob != null){
+            $employeeBranch = EmployeeJob::find($employeeJob->id)->branch->first();
+            
+            if($employeeBranch != null){
+                $branchName = $employeeBranch->name;
+            }
+        }
+        
+        return $branchName;
     }
     
     public static function getEmployeeBankAcc($employee)
