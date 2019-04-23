@@ -43,7 +43,7 @@
 					<div class="row p-2">
 						<div class="col-sm-4 mb15">Confirmation Date</div>
 						<div class="col-sm-8 mb15">
-							<strong>{!! (@$info->confirmation_date)? : '-' !!}</strong>
+							<strong>{!! (@$info->confirmed_date)? : '-' !!}</strong>
 						</div>
 					</div>
 				</div>

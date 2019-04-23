@@ -160,7 +160,7 @@ class PayrollController extends Controller
         $payroll->updated_by = $currentUser; 
         $payroll->start_date = $this->payrollService->getPayrollStartDate($data);
         $payroll->end_date = date('Y-m-d', strtotime('-1 days'));
-        $payroll->status = 0;
+        $payroll->status = PayrollStatus::UNLOCK;
         $payroll->save();
 
         // Step 3. Find all employees under this company, generate all employees' payroll trx.

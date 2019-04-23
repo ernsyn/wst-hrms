@@ -98,7 +98,7 @@ class EloquentPayrollTrx implements PayrollTrxRepository
             ->join('employee_jobs as ej', 'ej.emp_id', '=', 'e.id') 
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
             ->select('payroll_trx.*', 'pm.company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', 
-                'e.main_security_group_id', 'e.dob', 'e.nationality', 'e.pcb_group', 'e.total_children',
+                'e.main_security_group_id', 'e.dob', 'e.nationality', 'e.pcb_group', 'e.total_children', 'e.confirmed_date',
                 DB::raw('
                 (SELECT start_date FROM employee_jobs WHERE emp_id = e.id ORDER BY id ASC LIMIT 1) as joined_date,
                 (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
