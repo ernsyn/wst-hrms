@@ -364,9 +364,9 @@
             var id = button.data('deduction-id');
             var code = button.data('deduction-code');
             var name = button.data('deduction-name');
-            var type = button.data('deduction-type');
+            var type = button.data('deduction-type').toLowerCase();
             var amount = button.data('deduction-amount');
-            var status = button.data('deduction-status');
+            var status = button.data('deduction-status').toLowerCase();
             var confirmed_employee = button.data('deduction-confirmed_employee');
             var statutory = button.data('deduction-statutory');
             var eaform = button.data('deduction-eaform');

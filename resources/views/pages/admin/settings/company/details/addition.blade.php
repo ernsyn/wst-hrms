@@ -204,7 +204,7 @@
                                 </div>
                                 <label class="col-md-12 col-form-label">Type*</label>
                                 <div class="col-md-12">
-                                    <select class="form-control" name="type">
+                                    <select class="form-control" name="type" value="{{ old('type') }}">
                                             <option value="fixed">Fixed</option>
                                             <option value="custom">Custom</option>
                                 </select>
@@ -364,9 +364,9 @@
             var id = button.data('addition-id');
             var code = button.data('addition-code');
             var name = button.data('addition-name');
-            var type = button.data('addition-type');
+            var type = button.data('addition-type').toLowerCase();
             var amount = button.data('addition-amount');
-            var status = button.data('addition-status');
+            var status = button.data('addition-status').toLowerCase();
             var confirmed_employee = button.data('addition-confirmed_employee');
             var statutory = button.data('addition-statutory');
             var eaform = button.data('addition-eaform');
