@@ -643,9 +643,9 @@ else {
                 if ($jobData['status']  == "confirmed-employment") {
                     Employee::where('id', $id)
                     ->update(array('confirmed_date'=> ($jobData['start_date'])));
-                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date'].' -1days'))]);
                 } else {
-                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date']))]);
+                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date'].' -1days'))]);
                 }
                 LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->id);
             } else {

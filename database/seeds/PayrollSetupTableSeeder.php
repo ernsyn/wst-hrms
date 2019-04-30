@@ -48,5 +48,13 @@ class PayrollSetupTableSeeder extends Seeder
             'created_by' => 1
         ]);
         
+        PayrollSetup::create([
+            'key' => 'PAYROLL_PERIOD',
+            'value' => '25-24',
+            'remark' => 'eg. start date-end date',
+            'company_id' => 1,
+            'status' => 1,
+            'created_by' => 1
+        ]);
     }
 }

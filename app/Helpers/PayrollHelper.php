@@ -6,14 +6,13 @@ use App\LeaveAllocation;
 use App\PayrollSetup;
 use App\EmployeeJob;
 use App\Enums\EisCategoryEnum;
-use App\Enums\SocsoCategoryEnum;
 use App\EmployeeBankAccount;
 use Illuminate\Support\Facades\Log;
 use DB;
 
 class PayrollHelper
 {
-    public static function calculateSalary($employee, $payrollMonth)
+    public static function calculateSalary($employee, $payroll)
     {
         /*
          * If worked for full month, use full basic salary.
@@ -22,19 +21,92 @@ class PayrollHelper
          */
         Log::debug("Calculate Employee Salary");
         Log::debug($employee);
-        Log::debug($payrollMonth);
+        Log::debug($payroll);
         $basicSalary = $employee->basic_salary;
-        $payrollStartDate = date_create($payrollMonth.'-01');//var_dump($payrollStartDate);
-        $employeeJoinedDate = date_create($employee->start_date);//var_dump($employeeJoinedDate);
-        $dateDiff = date_diff($payrollStartDate, $employeeJoinedDate)->format('%R%a');
-        //var_dump($dateDiff);
-        if($dateDiff >= 0) {
-            $payrollMonth = explode('-', $payrollMonth);
-            $calendarDays = cal_days_in_month(CAL_GREGORIAN, $payrollMonth[1], $payrollMonth[0]);
-            $numOfDaysWorked = $calendarDays - $dateDiff;
-            $basicSalary = $basicSalary / $calendarDays * $numOfDaysWorked;
+        Log::debug("Employee ID: ".$employee->emp_id);
+        Log::debug("Basic: ".$basicSalary);
+        
+        if($employee->end_date != null){
+            Log::debug("Job end date not null");
+            Log::debug("payroll period: ".$payroll->start_date.' '.$payroll->end_date);
+            
+            if($employee->start_date < $payroll->start_date){
+                $dateDiff = date_diff(date_create($payroll->start_date), date_create($employee->end_date))->format('%R%a');
+            }else{
+                $dateDiff = date_diff(date_create($employee->start_date), date_create($employee->end_date))->format('%R%a');
+            }
+            Log::debug("date diff: ".$dateDiff);
+            
+            if($dateDiff >= 0) {
+                $calendarDays = cal_days_in_month(CAL_GREGORIAN, substr($payroll->start_date,5,2), substr($payroll->start_date,0,4));
+                Log::debug("calendarDays: ".$calendarDays);
+                $basicSalary = $basicSalary / $calendarDays * ($dateDiff+1);
+            }
+        } else {
+            Log::debug("Job end date null");
+            Log::debug("Employee Start Date: ".$employee->start_date.', payroll end date: '.$payroll->end_date.', payroll start date: '.$payroll->start_date);
+            // 1. full month - employee start <= payroll start date
+            if($employee->start_date <= $payroll->start_date){
+                Log::debug("Full month");
+                $basicSalary = $basicSalary;
+            } else {
+                // 2. NEWLY JOINED
+                $dateDiff = date_diff(date_create($employee->start_date), date_create($payroll->end_date))->format('%R%a');
+                $payrollPeriodDiff = date_diff(date_create($payroll->start_date), date_create($payroll->end_date))->format('%R%a');
+                Log::debug("date diff: ".$dateDiff);
+                Log::debug("payrollPeriodDiff diff: ".$payrollPeriodDiff);
+                
+                if($dateDiff >= 0) {
+                    $basicSalary = $basicSalary / ($payrollPeriodDiff+1) * ($dateDiff+1);
+                }
+            }
+            
+            
+            /* $dateDiff = date_diff(date_create($payroll->start_date), date_create($payroll->end_date))->format('%R%a');
+            Log::debug("date diff: ".$dateDiff);
+            if($dateDiff >= 0) {
+                
+            }
+            
+            $firstDatePayrollEndDate = substr($payroll->end_date,0,8).'01';
+            Log::debug("Employee Start Date: ".$employee->start_date.', payroll end date: '.$payroll->end_date.', payroll start date: '.$payroll->start_date.', $firstDatePayrollEndDate: '.$firstDatePayrollEndDate);
+            if($firstDatePayrollEndDate <= $payroll->start_date) {
+                Log::debug("firstDatePayrollEndDate <= payroll->start_date");
+                $dateDiff = date_diff(date_create($firstDatePayrollEndDate), date_create($payroll->end_date))->format('%R%a');
+                Log::debug("date diff: ".$dateDiff);
+                
+                if($dateDiff >= 0) {
+                    $calendarDays = cal_days_in_month(CAL_GREGORIAN, substr($payroll->end_date,5,2), substr($payroll->end_date,0,4));
+                    Log::debug("calendarDays: ".$calendarDays);
+                    $basicSalary = $basicSalary / $calendarDays * ($dateDiff+1);
+                }
+            } else {
+                Log::debug("firstDatePayrollEndDate > payroll->start_date");
+                $dateDiff = date_diff(date_create($employee->start_date), date_create($payroll->end_date))->format('%R%a');
+                Log::debug("date diff: ".$dateDiff);
+                
+                if($dateDiff >= 0) {
+                    $calendarDays = cal_days_in_month(CAL_GREGORIAN, substr($payroll->end_date,5,2), substr($payroll->end_date,0,4));
+                    Log::debug("calendarDays: ".$calendarDays);
+                    $basicSalary = $basicSalary / $calendarDays * ($dateDiff+1);
+                }
+            } */
         }
         
+        
+//         $payrollStartDate = date_create($payrollMonth.'-01');//var_dump($payrollStartDate);
+//         $employeeJoinedDate = date_create($employee->start_date);//var_dump($employeeJoinedDate);
+//         $dateDiff = date_diff($payrollStartDate, $employeeJoinedDate)->format('%R%a');
+        //var_dump($dateDiff);
+//         if($dateDiff >= 0) {
+//             $payrollMonth = explode('-', $payrollMonth);
+//             $calendarDays = cal_days_in_month(CAL_GREGORIAN, $payrollMonth[1], $payrollMonth[0]);
+//             $numOfDaysWorked = $calendarDays - $dateDiff;
+//             $basicSalary = $basicSalary / $calendarDays * $numOfDaysWorked;
+//         }
+        
+        
+        Log::debug("Calculated Salary: ".$basicSalary);
         return $basicSalary;
     }
     
@@ -80,7 +152,7 @@ class PayrollHelper
         return $seniorityPay;
     }
     
-    public static function getALPayback($employee, $payrollMonth, $leaveBalance)
+    public static function getALPayback($employee, $payroll, $leaveBalance)
     {
         /*
          * If status is Resigned_date not null, check AL balance
@@ -93,7 +165,7 @@ class PayrollHelper
 //             $leaveBalance = self::getALBalance($employee, $payrollMonth);
             
             if($basicSalary >= 2000){
-                $days = DateHelper::getNumberDaysInMonth($payrollMonth);
+                $days = self::getNumberOfDayPayrollPeriod($payroll->start_date, $payroll->end_date);//DateHelper::getNumberDaysInMonth($payrollMonth);
                 $payback = $basicSalary / $days * $leaveBalance;
             } else {
                 $payback = $basicSalary / 26 * $leaveBalance;
@@ -143,9 +215,9 @@ class PayrollHelper
     }
     
     //check if is confirmed employee for that payroll month
-    public static function isConfirmedEmployee($employee, $payrollMonth) 
+    public static function isConfirmedEmployee($employee, $payroll) 
     {
-        if($employee->confirmed_date == null || $employee->confirmed_date > DateHelper::getLastDayOfDate($payrollMonth)){
+        if($employee->confirmed_date == null || $employee->confirmed_date > $payroll->end_date){
             return false;
         } else {
             return true;
@@ -154,10 +226,10 @@ class PayrollHelper
     }
     
     //check if resigned for that payroll month
-    public static function isResigned($employee, $payrollMonth) 
+    public static function isResigned($employee, $payroll) 
     {
         //         dd($employee->resignation_date);
-        if($employee->resignation_date == null || $employee->resignation_date > DateHelper::getLastDayOfDate($payrollMonth)){
+        if($employee->resignation_date == null || $employee->resignation_date > $payroll->end_date){
             return false;
         } else {
             return true;
@@ -168,6 +240,7 @@ class PayrollHelper
     //get AL balance for a payroll month
     public static function getALBalance($employee, $payrollMonth)
     {
+        //not inused
         $payrollBackDatePeriod = PayrollHelper::getPayrollBackDatePeriod($employee);
         $processedStartDate = DateHelper::getPastNMonthDate($payroll->end_date, $payrollBackDatePeriod) ." 00:00:00";
         $payrollBackDatePeriod = PayrollHelper::getPayrollBackDatePeriod($employee);
@@ -237,6 +310,7 @@ class PayrollHelper
     
     public static function getEisCategory($age, $nationality)
     {
+        //not in used
         $category=0;
         
         if ($nationality == 132 && $age < 60) {
@@ -307,6 +381,72 @@ class PayrollHelper
             ->get();
         
         return $result;
+    }
+    
+    public static function getPayrollPeriod($company, $payrollMonth)
+    {
+        Log::debug("Get Payroll Period");
+        Log::debug("Company");
+        Log::debug($company);
+        Log::debug("Payroll Month: ".$payrollMonth);
+        $startDate = null;
+        $endDate = null;
+        $startDDMMYYYY = null;
+        $endDDMMYYYY = null;
+        $payrollPeriodArr = array();
+        
+        $payrollPeriod = PayrollSetup::where([
+            ['key', 'PAYROLL_PERIOD'],
+            ['company_id', $company->id],
+            ['status', 1]
+        ])->first();
+        Log::debug("Payroll Setup - Payroll Period ");
+        Log::debug($payrollPeriod);
+        
+        if($payrollPeriod != null && $payrollPeriod->value != null) {
+            $payrollPeriodValue = explode("-",$payrollPeriod->value);
+            $startDate = $payrollPeriodValue[0];
+            $endDate = $payrollPeriodValue[1];
+            
+            if($startDate < 1 || $startDate > 31 || $endDate < 1 || $endDate > 31){
+                Log::error("Invalid payroll period: ".$payrollPeriod.", company id: ".$company->id);
+            } else {
+                $lastDate = date("t", strtotime(DateHelper::getLastDayOfDate($payrollMonth.'-01')));
+                Log::debug("Last date of the month; ".$lastDate);
+                $endDDMMYYYY = $payrollMonth.'-'.$endDate;
+                
+                if($endDate > $lastDate){
+                    $endDDMMYYYY = $payrollMonth.'-'.$lastDate;
+                }
+                
+                if($startDate < $endDate) {
+                    Log::debug("start date < end date");
+                    $startDDMMYYYY = $payrollMonth.'-'.$startDate;
+                    if($startDate > $lastDate){
+                        $startDDMMYYYY = $payrollMonth.'-'.$lastDate;
+                    }
+                    
+                } else {
+                    Log::debug("start date > end date");
+                    $prevMonth = date('Y-m-d', strtotime($payrollMonth.'-01 -1 month'));
+                    $startDDMMYYYY = date("Y-m", strtotime($prevMonth)).'-'.$startDate;
+                    $lastDateStartDate = date("t", strtotime(DateHelper::getLastDayOfDate($prevMonth)));
+                    if($startDate > $lastDateStartDate){
+                        $startDDMMYYYY = date("Y-m", strtotime($prevMonth)).'-'.$lastDateStartDate;
+                    }
+                }
+                array_push($payrollPeriodArr,$startDDMMYYYY,$endDDMMYYYY);
+            }
+        }
+        
+        Log::debug("Payroll Period - Start Date: ".$startDDMMYYYY.", End Date: ".$endDDMMYYYY);
+        
+        return $payrollPeriodArr;
+    }
+    
+    public static function getNumberOfDayPayrollPeriod($startDate, $endDate)
+    {
+        return date_diff(date_create($startDate), date_create($endDate))->format('%R%a');
     }
 }
 

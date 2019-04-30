@@ -31,7 +31,7 @@
     						<th class="col-border-right">Total</th>
     						<th class="col-border-right">Total</th>
     						<th class="col-border-right">THP</th>
-    						<th class="col-border-right">Remark</th>
+    						<!-- <th class="col-border-right">Remark</th> -->
     						<th>Action</th>
     					</tr>
     				</thead>
@@ -50,7 +50,6 @@
 							<td class="col-border-right">{!! $info->total_addition !!}</td>
 							<td class="col-border-right">{!! $info->total_deduction !!}</td>
 							<td class="col-border-right">{!! $info->thp !!}</td>
-							<td class="col-border-right">{!! (@$info->remark)? : '-' !!}</td>
 							<td>
 								<button onclick="window.location='{{ route('payroll.trx.show', ['id'=>$info->id]) }}';"
                                     class="round-btn btn btn-default fas fa-edit btn-segment">

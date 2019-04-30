@@ -55,12 +55,13 @@
 							<button onclick="window.location='{{ route('payroll.show',$row->id) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
 							@hasanyrole('super-admin|admin')
 							<form action="{{ route('payroll.status.update', ['id'=>$row->id]) }}" method="POST" style="display: inline;">
+								<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
 								@if ($row->status === 0) 
-									<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
 									<input type="hidden" name="status" value="1">
-									<button type="submit" class="round-btn btn btn-default fas fa-unlock btn-segment" title="Lock"></button>
+									<button type="submit" class="round-btn btn btn-default fas fa-unlock btn-segment" title="Unlock"></button>
 								@else
-									<button type="text" class="round-btn btn btn-default fas fa-lock btn-segment" disabled></button>
+									<input type="hidden" name="status" value="0">
+									<button type="submit" class="round-btn btn btn-default fas fa-lock btn-segment" title="Lock"></button>
 								@endif
 							</form> 
 							@endhasanyrole

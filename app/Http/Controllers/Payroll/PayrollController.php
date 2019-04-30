@@ -53,6 +53,8 @@ use Exception;
 
 class PayrollController extends Controller
 {
+    const EIS_CATEGORY = 1;
+    
     protected $payrollMaster;
     protected $payrollService;
     protected $epfRepository;
@@ -150,7 +152,13 @@ class PayrollController extends Controller
         
         // Step 1. get company
         $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        $payrollPeriod = PayrollHelper::getPayrollPeriod($company, $validated['year_month']);
         
+        if ($payrollPeriod == null) {
+            $msg = 'Unable add payroll. Invalid payroll period.';
+            return redirect($request->server('HTTP_REFERER'))->with(['customMsg'=> $msg]);
+        }
+
         // Step 2. Create payroll.
         $payroll = new PayrollMaster();
         $payroll->company_id = $company->id;
@@ -158,21 +166,21 @@ class PayrollController extends Controller
         $payroll->period = $validated['period'];
         $payroll->created_by = $currentUser; 
         $payroll->updated_by = $currentUser; 
-        $payroll->start_date = $this->payrollService->getPayrollStartDate($data);
-        $payroll->end_date = date('Y-m-d', strtotime('-1 days'));
+        $payroll->start_date = $payrollPeriod[0];
+        $payroll->end_date = $payrollPeriod[1];
         $payroll->status = PayrollStatus::UNLOCK;
         $payroll->save();
 
         // Step 3. Find all employees under this company, generate all employees' payroll trx.
         $payrollId = $payroll->id;
-        $lastDayOfMonth = DateHelper::getLastDayOfDate($payroll->year_month);//date('Y-m-d', strtotime($validated['year_month'] . '-01'));
+        $lastDayOfMonth = $payroll->end_date;//DateHelper::getLastDayOfDate($payroll->year_month);//date('Y-m-d', strtotime($validated['year_month'] . '-01'));
             
         $employeeList = Employee::leftJoin('employee_jobs', 'employee_jobs.emp_id', '=', 'employees.id')->where([
             ['company_id', $company->id]
         ])
         ->where(function ($query) use ($lastDayOfMonth) {
             // Either default or month/year greater or same
-            $query->whereNull('employees.resignation_date')->orWhere('employees.resignation_date', '>=', $lastDayOfMonth);
+            $query->whereNull('employees.resignation_date')->orWhere('employees.resignation_date', '<=', $lastDayOfMonth);
         })
         ->where(function ($query) use ($lastDayOfMonth) {
             // Either default or month/year greater or same
@@ -184,16 +192,47 @@ class PayrollController extends Controller
 //         dd($lastDayOfMonth,$employeeList);
         foreach ($employeeList as $employee) {
             // Step 4. Find employee's payroll's required info.
-            $employeeJob = EmployeeJob::find($employee->ejId);
-            $costCentre = CostCentre::where('id', $employeeJob->cost_centre_id)->get();
+            //check if got salary adjustment, resign, etc
+//             dd($employee);
+            $employeeJobs = EmployeeJob::where([
+                ['emp_id', $employee->id],
+                ['end_date','>=',$payroll->start_date]
+//                 ['start_date','<=',$payroll->start_date],
+            ])
+            ->orWhere(function ($employeeJobs) use ($employee) {
+                $employeeJobs->where('emp_id', $employee->id)
+                ->whereNull('end_date');
+            })
+            ->get();
+            
             $basicSalary = 0;
             $seniorityPay = 0;
             $remuneration = 0;
-            if($payroll->period == PayrollPeriodEnum::END_MONTH) {
-                $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
-                $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
-                $remuneration = $basicSalary + $seniorityPay;
+            foreach($employeeJobs as $job){
+                $costCentre = CostCentre::where('id', $job->cost_centre_id)->get();
+
+                if($payroll->period == PayrollPeriodEnum::END_MONTH) {
+                    $basicSalary += PayrollHelper::calculateSalary($job, $payroll);
+                    if($seniorityPay == 0){
+                        $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
+                    }
+                    $remuneration += $basicSalary + $seniorityPay;
+                }
             }
+//             if($employee->id == 10){
+//                 dd($employeeJobs);
+//             }
+            
+//             $employeeJob = EmployeeJob::find($employee->ejId);
+//             $costCentre = CostCentre::where('id', $employeeJob->cost_centre_id)->get();
+//             $basicSalary = 0;
+//             $seniorityPay = 0;
+//             $remuneration = 0;
+//             if($payroll->period == PayrollPeriodEnum::END_MONTH) {
+//                 $basicSalary = PayrollHelper::calculateSalary($employeeJob, $validated['year_month']);
+//                 $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
+//                 $remuneration = $basicSalary + $seniorityPay;
+//             }
 
             // Step 5. Create payroll trx.
             $payrollTrxData = array();
@@ -219,14 +258,14 @@ class PayrollController extends Controller
             //Addition and deduction are for end month
             // Step 6. Insert addition & deduction.
             if($payroll->period == PayrollPeriodEnum::END_MONTH) {
-                self::storeAdditionDeduction($company, $employee, $validated['year_month'], $payrollTrxId);
+                self::storeAdditionDeduction($company, $employee, $payroll, $payrollTrxId);
                 
                 $minOtHour = PayrollHelper::getMinOtHour($employee);
                 $payrollBackDatePeriod = PayrollHelper::getPayrollBackDatePeriod($employee);
                 $processedStartDate = DateHelper::getPastNMonthDate($payroll->end_date, $payrollBackDatePeriod) ." 00:00:00";
                 $processedEndDate = $payroll->end_date." 23:59:59";
                 $contributionData = self::calculateUpdateAddition($employee, $payroll, $payrollTrxId, $validated['year_month'], $minOtHour, $processedStartDate, $processedEndDate);
-                $dedcution = self::calculateUpdateDeduction($payrollTrxId, $employee, $processedStartDate, $processedEndDate, $validated['year_month']);
+                $dedcution = self::calculateUpdateDeduction($payrollTrxId, $employee, $processedStartDate, $processedEndDate, $payroll);
                 
                 // update epf, eis, socso, pcb
                 if($employee->epf_category != null) {
@@ -238,10 +277,7 @@ class PayrollController extends Controller
                     $epf = $this->epfRepository->findByFilter($epfFilter);
                 }
                 
-                $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($employee->dob), $employee->nationality);
-                if ($eisCategory > 0) {
-                    $eis = $this->eisRepository->findByCategorySalary($eisCategory, $remuneration + $contributionData['eis']);
-                }
+                $eis = $this->eisRepository->findByCategorySalary(self::EIS_CATEGORY, $remuneration + $contributionData['eis']);
                 
                 if ($employee->socso_category != null) {
                     $socso = $this->socsoRepository->findByCategorySalary($employee->socso_category, $remuneration + $contributionData['socso']);
@@ -311,7 +347,7 @@ class PayrollController extends Controller
         $currentUser = Employee::where('user_id',Auth::id())->first();
         $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
         $payroll = PayrollMaster::where('id', $id)->first();
-        $lastDayOfMonth = DateHelper::getLastDayOfDate($payroll->year_month);//date('Y-m-d', strtotime($validated['year_month'] . '-01'));
+        $lastDayOfMonth = $payroll->end_date;// DateHelper::getLastDayOfDate($payroll->year_month);//date('Y-m-d', strtotime($validated['year_month'] . '-01'));
             
         $list = PayrollTrx::join('payroll_master as pm', 'pm.id', '=', 'payroll_trx.payroll_master_id')
             ->join('employees as e', 'e.id', '=', 'payroll_trx.employee_id')
@@ -575,10 +611,7 @@ class PayrollController extends Controller
                 $epf = $this->epfRepository->findByFilter($epfFilter);
             }
             
-            $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($info->dob), $info->nationality);
-            if ($eisCategory > 0) {
-                $eis = $this->eisRepository->findByCategorySalary($eisCategory, $storeData['gross_pay'] + $totalEis);
-            }
+            $eis = $this->eisRepository->findByCategorySalary(self::EIS_CATEGORY, $storeData['gross_pay'] + $totalEis);
             
             if($info->socso_category != null){
                 $socso = $this->socsoRepository->findByCategorySalary($info->socso_category, $storeData['gross_pay'] + $totalSocso);
@@ -622,10 +655,7 @@ class PayrollController extends Controller
                     $epf = $this->epfRepository->findByFilter($epfFilter);
                 }
                 
-                $eisCategory = PayrollHelper::getEisCategory(PayrollHelper::getAge($info->dob), $info->nationality);
-                if ($eisCategory > 0) {
-                    $eis = $this->eisRepository->findByCategorySalary($eisCategory, $info->gross_pay + $totalEis);
-                }
+                $eis = $this->eisRepository->findByCategorySalary(self::EIS_CATEGORY, $info->gross_pay + $totalEis);
                 
                 if($info->socso_category != null){
                     $socso = $this->socsoRepository->findByCategorySalary($info->socso_category, $info->gross_pay + $totalSocso);
@@ -1803,11 +1833,11 @@ class PayrollController extends Controller
         }
     }
     
-    private function storeAdditionDeduction($company, $employee, $payrollMonth, $payrollTrxId)
+    private function storeAdditionDeduction($company, $employee, $payroll, $payrollTrxId)
     {
         $additionDeductionFilter = array();
         $additionDeductionFilter['companyId'] = $company->id;
-        $additionDeductionFilter['isConfirmedEmployee'] = PayrollHelper::isConfirmedEmployee($employee, $payrollMonth);
+        $additionDeductionFilter['isConfirmedEmployee'] = PayrollHelper::isConfirmedEmployee($employee, $payroll);
         $additionDeductionFilter['costCentreId'] = $employee->cost_centre_id;
         $additionDeductionFilter['jobGradeId'] = $employee->emp_grade_id;
         $additionList = $this->additionRepository->findByFilter($additionDeductionFilter)->toArray();
@@ -1877,12 +1907,12 @@ class PayrollController extends Controller
                              * 1. get payback
                              * 2. number of balance AL
                              */
-                            if(PayrollHelper::isResigned($employee, $payrollMonth)){
+                            if(PayrollHelper::isResigned($employee, $payroll)){
                                 $leaveAllocations = LeaveAllocation::where([
                                     ['leave_type_id', 1],
                                     ['emp_id', $employee->id],
                                     ['valid_until_date', '>=', $processedStartDate],
-                                    ['valid_until_date', '<=', DateHelper::getLastDayOfDate($payrollMonth)]
+                                    ['valid_until_date', '<=', $payroll->end_date]
                                 ])->get();
                                 
                                 $processedId = array();
@@ -1913,7 +1943,7 @@ class PayrollController extends Controller
                                 
                                 if(count($processedData) > 0) {
                                     $updateData['days'] = $totalDays; //PayrollHelper::getALBalance($employee, $payrollMonth);
-                                    $updateData['amount'] = PayrollHelper::getALPayback($employee, $payrollMonth, $totalDays);
+                                    $updateData['amount'] = PayrollHelper::getALPayback($employee, $payroll, $totalDays);
                                 }
                             }
                             break;
@@ -2092,7 +2122,7 @@ class PayrollController extends Controller
                             ['emp_id', $employee->id],
                             ['is_carry_forward', 1],
                             ['valid_until_date', '>=', $processedStartDate],
-                            ['valid_until_date', '<=', DateHelper::getLastDayOfDate($payrollMonth)]
+                            ['valid_until_date', '<=', $payroll->end_date]
                             ])->get();
                             
 //                             $processedAttendances = PayrollProcessedLeaveAttendance::where([
@@ -2137,7 +2167,7 @@ class PayrollController extends Controller
 //                                 $noOfLeave = $totalAllocated - $totalSpent;
                                 
                                 if($employee->basic_salary >= 2000){
-                                    $days = DateHelper::getNumberDaysInMonth($payrollMonth);
+                                    $days = PayrollHelper::getNumberOfDayPayrollPeriod($payroll->start_date, $payroll->end_date);//DateHelper::getNumberDaysInMonth($payrollMonth);
                                     $totalAmount = $employee->basic_salary / $days * $totalDays;
                                 } else {
                                     $totalAmount = $employee->basic_salary / 26 * $totalDays;
@@ -2182,7 +2212,7 @@ class PayrollController extends Controller
         return $data;
     }
     
-    private function calculateUpdateDeduction($payrollTrxId, $employee, $processedStartDate, $processedEndDate, $payrollMonth)
+    private function calculateUpdateDeduction($payrollTrxId, $employee, $processedStartDate, $processedEndDate, $payroll)
     {
         $totalDeduction = 0;
         $payrollTrxDeductionList = PayrollTrxDeduction::join('deductions', 'payroll_trx_deduction.deductions_id','=', 'deductions.id')
@@ -2212,7 +2242,7 @@ class PayrollController extends Controller
                         ['emp_id', $employee->id],
                         ['status', 'approved'],
                         ['start_date', '>=', $processedStartDate],
-                        ['start_date', '<=', DateHelper::getLastDayOfDate($payrollMonth)]
+                        ['start_date', '<=', $payroll->end_date]
                     ])->get();
                     
 //                     $processedAttendances = PayrollProcessedLeaveAttendance::where([
@@ -2249,7 +2279,7 @@ class PayrollController extends Controller
                             ];
                             
                             $totalDays++;
-                            $days = DateHelper::getNumberDaysInMonth($a->date);
+                            $days = PayrollHelper::getNumberOfDayPayrollPeriod($payroll->start_date, $payroll->end_date); //DateHelper::getNumberDaysInMonth($a->date);
                             $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $a->date);
                             //Basic salary / calendar days on that month * number of unpaid leave
                             $totalAmount += $basicSalary / $days;
@@ -2257,7 +2287,7 @@ class PayrollController extends Controller
                             foreach($processedAttendances as $p) {
                                 if($p->payroll_trx_deduction_id == $payrollTrxDeduction->id) {
                                     $totalDays++;
-                                    $days = DateHelper::getNumberDaysInMonth($a->date);
+                                    $days = PayrollHelper::getNumberOfDayPayrollPeriod($payroll->start_date, $payroll->end_date);//DateHelper::getNumberDaysInMonth($a->date);
                                     $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $a->date);
                                     //Basic salary / calendar days on that month * number of unpaid leave
                                     $totalAmount += $basicSalary / $days;
@@ -2275,7 +2305,7 @@ class PayrollController extends Controller
                             ];
                             
                             $totalDays += $leave->applied_days;
-                            $days = DateHelper::getNumberDaysInMonth($leave->start_date);
+                            $days = PayrollHelper::getNumberOfDayPayrollPeriod($payroll->start_date, $payroll->end_date);//DateHelper::getNumberDaysInMonth($leave->start_date);
                             $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $leave->start_date);
                             //Basic salary / calendar days on that month * number of unpaid leave
                             $totalAmount += $basicSalary / $days * $leave->applied_days;
@@ -2283,7 +2313,7 @@ class PayrollController extends Controller
                             foreach($processedAttendances as $p) {
                                 if($p->payroll_trx_deduction_id == $payrollTrxDeduction->id) {
                                     $totalDays += $leave->applied_days;
-                                    $days = DateHelper::getNumberDaysInMonth($leave->start_date);
+                                    $days = PayrollHelper::getNumberOfDayPayrollPeriod($payroll->start_date, $payroll->end_date);//DateHelper::getNumberDaysInMonth($leave->start_date);
                                     $basicSalary = PayrollHelper::getBasicSalaryByMonth($employee, $leave->start_date);
                                     //Basic salary / calendar days on that month * number of unpaid leave
                                     $totalAmount += $basicSalary / $days * $leave->applied_days;
