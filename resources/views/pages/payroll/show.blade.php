@@ -16,7 +16,6 @@
                             <th class="col-bg-color col-border-right th-color">{{ strtoupper('additions') }}</th>
                             <th class="col-bg-color col-border-right th-color">{{ strtoupper('deductions') }}</th>
         					<th class="col-bg-color col-border-right th-color"></th>
-        					<th class="col-bg-color col-border-right th-color"></th>
         					<th class="col-bg-color th-color"></th>
     					</tr>
     					<tr>
@@ -60,7 +59,7 @@
                     	@else
 						<tr>
 							<!-- **+2 is because of no. and action -->
-							<td colspan="13"><em>No record found</em></td>
+							<td colspan="12"><em>No record found</em></td>
 						</tr>
 						@endif
 				</tbody>
@@ -73,7 +72,7 @@
 <script>
 $('#payroll-trx').DataTable({
 	columnDefs: [
-	    { "orderable": false, "targets": [12] }
+	    { "orderable": false, "targets": [11] }
 	],
     responsive: true,
     stateSave: true,
