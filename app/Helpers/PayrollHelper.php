@@ -41,6 +41,9 @@ class PayrollHelper
                 $calendarDays = cal_days_in_month(CAL_GREGORIAN, substr($payroll->start_date,5,2), substr($payroll->start_date,0,4));
                 Log::debug("calendarDays: ".$calendarDays);
                 $basicSalary = $basicSalary / $calendarDays * ($dateDiff+1);
+            } else {
+                Log::debug("Date different negative.");
+                $basicSalary = 0;
             }
         } else {
             Log::debug("Job end date null");

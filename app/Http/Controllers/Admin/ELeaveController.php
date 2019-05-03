@@ -653,7 +653,9 @@ class ELeaveController extends Controller
                     'leave_allocations.carried_forward_days',
                     'leave_allocations.is_carry_forward'
                 )
-                ->where('leave_allocations.leave_type_id', $row->id)
+                ->where([['leave_allocations.leave_type_id', $row->id],
+                    ['leave_allocations.emp_id',$emp_id]
+                ])
                 ->whereYear('leave_allocations.valid_from_date', '=', $year)
                 ->whereYear('leave_allocations.valid_until_date', '=', $year)
                 ->whereNull('employee_jobs.end_date')
