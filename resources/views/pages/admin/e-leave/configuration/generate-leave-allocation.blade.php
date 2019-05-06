@@ -56,7 +56,6 @@ $(function(){
     $('#positions-table').DataTable({
         responsive: true,
         stateSave: true,
-        paging: false,
         info: false,
         dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
         <'row'<'col-md-6'><'col-md-6'>>

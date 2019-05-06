@@ -10,6 +10,7 @@ use App\Holiday;
 use App\LTAppliedRule;
 use App\LTEntitlementGradeGroup;
 use App\LeaveRequest;
+use App\TaskStatus;
 use Auth;
 use App\LeaveAllocation;
 use App\EmployeeReportTo;
@@ -45,7 +46,18 @@ class ELeaveController extends Controller
             ->whereYear('valid_from_date', '<', $currentYear)
             ->get();
 
-        return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes, 'leaveAllocation' => $leaveAllocation]);
+        $generated = false;
+        $taskStatus = TaskStatus::where('task', 'leave-allocation:generate')->first();
+        if(!empty($taskStatus)) {
+            $status = json_decode($taskStatus->status);
+            
+            $latestYearProcessed = (int) $status->latest_processed_year;
+            if($latestYearProcessed >= $currentYear) {
+                $generated = true;
+            } 
+        }
+        
+        return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes, 'leaveAllocation' => $leaveAllocation, 'generated' => $generated]);
     }
 
     public function addLeaveType()

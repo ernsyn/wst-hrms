@@ -14,7 +14,7 @@ class AddPositionToEmployeesTable extends Migration
     public function up()
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->string('position');
+            $table->string('position')->nullable();
         });
     }
 
