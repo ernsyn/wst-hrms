@@ -588,10 +588,11 @@ class LeaveService
 
     public static function getLeaveTypesForEmployee(Employee $employee, $is_admin = false) {
         $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
-        $employee->gender;
+        // $employee->gender;
 
         
-        Carbon::THURSDAY;
+        // Carbon::THURSDAY;
+        // dd($leaveTypes);
         
         $leaveTypesForUser = array();
         foreach($leaveTypes as $leaveType) {
@@ -631,7 +632,7 @@ class LeaveService
                     case LeaveTypeRule::MAX_APPLICATIONS:
                         $configuration = json_decode($rule->configuration);
                         $count = LeaveRequest::where('emp_id', $employee->id)
-                            ->where('leave_type_id', $leave_type_id)
+                            ->where('leave_type_id', $leaveType->id)
                             ->where('status', '!=', 'rejected')
                             ->count();
                         if($count >= $configuration->max_applications) {
