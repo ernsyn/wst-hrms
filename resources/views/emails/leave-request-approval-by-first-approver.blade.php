@@ -4,13 +4,13 @@
 
 <head>
 	
-	<title>New Leave Request Submission!</title>
+	<title>Leave Request Approval</title>
 
 </head>
 
 <body>
 
-		<h3>New Leave Request Submission!</h3>
+		<h3>Leave Request Approval</h3>
 
 		<p>Hi,</p>
 	

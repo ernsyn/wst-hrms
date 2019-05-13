@@ -676,7 +676,7 @@ class LeaveService
                         break;
                     case LeaveTypeRule::MAX_APPLICATIONS:
                         $configuration = json_decode($rule->configuration);
-                        $count = LeaveRequests::where('emp_id', $employee->id)
+                        $count = LeaveRequest::where('emp_id', $employee->id)
                             ->where('leave_type_id', $leave_type_id)
                             ->where('status', '!=', 'rejected')
                             ->count();
