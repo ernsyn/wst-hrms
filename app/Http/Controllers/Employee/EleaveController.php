@@ -802,21 +802,13 @@ else{
 	        	    {
 		               return redirect()->route('employee.e-leave.request')->with('status','You Already Approved This Leave');
 	        	    }
-                }
-
-                else
-                {
-                    if($leave_request_approval == 0)
-		            {
-                    
-                    return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
-                    }
-                    else 
-                    {
+                } else {
+                    if($leave_request_approval == 0) {
+                        return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
+                    } else {
 	        		    LeaveRequest::find($id)->update(array('status' => 'approved'));      //then update leave request status = new
                         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
-                        $leaveRequestData = $request->validate([
-                        ]);
+                        $leaveRequestData = $request->validate([]);
         
                         $user = Auth::user();
                         $report_to_emp_id = $user->employee->id;
@@ -1267,4 +1259,3 @@ else{
 
 }
     
-
