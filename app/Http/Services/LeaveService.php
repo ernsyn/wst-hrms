@@ -2,12 +2,10 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\LeaveAllocation;
 use App\LeaveRequest;
@@ -21,12 +19,16 @@ use App\Media;
 use App\Constants\LeaveTypeRule;
 use App\EmployeeReportTo;
 use Auth;
-use App\User;
 use App\EmployeeWorkingDay;
 
 class LeaveService
 {
     public static function onJobStart($emp_id, $start_date, $grade_id, $emp_job_id) {
+        Log::debug("On Job Start");
+        Log::debug("Employee ID: ".$emp_id);
+        Log::debug("Start Date: ".$start_date);
+        Log::debug("Grade ID: ".$grade_id);
+        Log::debug("Employee Job ID: ".$emp_job_id);
         $now = Carbon::now();
         $startDate = Carbon::parse($start_date);
         if($now->year != $startDate->year && $startDate->month == 12) {
@@ -36,11 +38,17 @@ class LeaveService
 
         // In order to calculate the leave allocations - we need to know how many years he has been working
         $yearsOfService = self::calculateEmployeeWorkingYears($emp_id);
+        Log::debug("Years of service: ".$yearsOfService);
 
         $leaveTypes = LeaveType::with('applied_rules', 'lt_conditional_entitlements', 'lt_entitlements_grade_groups.lt_conditional_entitlements', 'lt_entitlements_grade_groups.grades')->where('active', true)->get();
         foreach($leaveTypes as $leaveType) {
+            Log::debug("Leave Type");
+            Log::debug($leaveType);
+            
             $appliedRule = self::leaveTypeGetRule($leaveType, LeaveTypeRule::GENDER);
             if(!empty($appliedRule)) {
+                Log::debug("Applied Rule");
+                Log::debug($appliedRule);
                 $configuration = json_decode($appliedRule->configuration);
                 if(Employee::where('id', $emp_id)->where('gender', $configuration->gender)->count() == 0) {
                     continue;
@@ -48,6 +56,7 @@ class LeaveService
             }
 
             $allocatedDaysInAYear = self::calculateEntitledDays($leaveType, $yearsOfService, $grade_id);
+            Log::debug("allocatedDaysInAYear: ".$allocatedDaysInAYear);
             
             // Add leave allocation for employee
             // - beginning of next month till end of year
@@ -58,15 +67,27 @@ class LeaveService
             $validUntilDate = $startDate->copy();
             $validUntilDate->month = 12;
             $validUntilDate->day = 31;
-
+            Log::debug("Valid from date: ");
+            Log::debug($validFromDate);
+            Log::debug("Valid until date: ");
+            Log::debug($validUntilDate);
             $allocatedDays = 0;
             if(self::leaveTypeHasRule($leaveType, LeaveTypeRule::NON_PRORATED)) {
+                Log::debug("Non prorated");
                 $allocatedDays = $allocatedDaysInAYear;
             } else {
+                Log::debug("Prorated");
+                Log::debug("Different in days");
+                Log::debug($validFromDate->diffInDays($validUntilDate));
                 // $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
-                $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)) / 365;
+                $numberDaysInYear = 365 ;//+ $startDate->format('L');
+                Log::debug("Number of days in year: ".$numberDaysInYear);
+                $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)) / $numberDaysInYear;
+                Log::debug("Allocated days before round: ".$allocatedDays);
                 $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
+                Log::debug("Allocated days after round: ".$allocatedDays);
             }
+            Log::debug("Allocated days: ".$allocatedDays);
 
             $created_by = auth()->user()->name;
             $leaveAllocation = LeaveAllocation::create([
@@ -79,16 +100,29 @@ class LeaveService
                 'emp_job_id' => $emp_job_id,
             ]);
             
+            Log::debug("Allocated Days: ".$allocatedDays);
+            Log::debug("Valid from: ".$validFromDate);
+            Log::debug("Valid till: ".$validUntilDate);
+            Log::debug("Emp Job Id: ".$emp_job_id);
+            
         }
+        
+        Log::debug("End >> On Job Start");
     }
 
     public static function onJobEnd($emp_id, $end_date, $emp_job_id, $is_resigning = false) {
+        Log::debug("On Job End");
+        Log::debug("Employee ID: ".$emp_id);
+        Log::debug("End Date: ".$end_date);
+        Log::debug("Employee Job ID: ".$emp_job_id);
+        Log::debug("Is resign: ".$is_resigning);
         $now = Carbon::now();
         $endDate = Carbon::parse($end_date);
         if($now->year != $endDate->year && $endDate->month == 12) {
             // Skip
             return;
         }
+        Log::debug("End date: ".$endDate);
 
         // $endCalcDate = $endDate->copy();
         // $endCalcDate->month++;
@@ -100,8 +134,10 @@ class LeaveService
         ->where('valid_from_date', '<=', $endDate)
         ->where('valid_until_date', '>=', $endDate)
         ->get();
-
+        
         foreach($leaveAllocations as $leaveAllocation) {
+            Log::debug("Leave Allocation");
+            Log::debug($leaveAllocation);
             if(!self::leaveTypeHasRule($leaveAllocation->leave_type, LeaveTypeRule::NON_PRORATED)) {
                 $allocationValidFromDate = Carbon::parse($leaveAllocation->valid_from_date);
                 $allocationValidUntilDate = Carbon::parse($leaveAllocation->valid_until_date);
@@ -112,6 +148,14 @@ class LeaveService
 
                 $updatedAllocatedDays = $leaveAllocation->allocated_days * $totalActualDays / $totalAllocationDays;
                 $updatedAllocatedDays = floor($updatedAllocatedDays * 2)/2; // Round to closest .5 low
+                
+                Log::debug("allocationValidFromDate: ");
+                Log::debug($allocationValidFromDate);
+                Log::debug("allocationValidUntilDate: ");
+                Log::debug($allocationValidUntilDate);
+                Log::debug("totalAllocationDays: ".$totalAllocationDays);
+                Log::debug("totalActualDays: ".$totalActualDays);
+                Log::debug("updatedAllocatedDays: ".$updatedAllocatedDays);
 
                 $leaveAllocationUpdate = [
                     'allocated_days' => $updatedAllocatedDays,
@@ -120,10 +164,12 @@ class LeaveService
                 if($is_resigning) {
                     $leaveAllocationUpdate['valid_until_date'] = $endDate;
                 }
-
+                Log::debug("Leave Allocation Update");
+                Log::debug($leaveAllocationUpdate);
                 $leaveAllocation->update($leaveAllocationUpdate);
             }
         }
+        Log::debug("End >> On Job End");
     }
 
     public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $edit_leave_request_id = null, $is_admin = false) {
@@ -658,6 +704,9 @@ class LeaveService
                     case LeaveTypeRule::UNPAID:
                         $is_unpaid_leave = true;
                         break;
+                    case LeaveTypeRule::NON_PRORATED:
+                        $nonProrated = true;
+                        break;
                 }
 
                 if(!$includeLeaveType) {
@@ -707,12 +756,18 @@ class LeaveService
             ->where('valid_until_date', '>=', $today)
             // ->sum('allocated_days')
             // ->sum('spent_days')
+            ->orderBy('leave_allocations.id', 'desc')
             ->get();
 
         $totalAllocatedDays = 0;
         $totalSpentDays = 0;
         foreach($leaveAllocations as $leaveAllocation) {
-            $totalAllocatedDays += $leaveAllocation->allocated_days;
+            if(self::isProrated($leave_type_id)) {
+                $totalAllocatedDays += $leaveAllocation->allocated_days;
+            } else {
+                $totalAllocatedDays = $leaveAllocation->allocated_days;
+            }
+
             $totalSpentDays += $leaveAllocation->spent_days;
         }
 
@@ -738,7 +793,7 @@ class LeaveService
         return $result;
     }
 
-    private static function leaveTypeHasRule($leaveType, $rule) {
+    public static function leaveTypeHasRule($leaveType, $rule) {
         foreach($leaveType->applied_rules as $applied_rule) {
             if($applied_rule->rule == $rule) {
                 return true;
@@ -757,10 +812,19 @@ class LeaveService
     }
 
     public static function calculateEntitledDays($leaveType, $yearsOfService, $grade_id) {
+        Log::debug("Calculate Entitled Days");
+        Log::debug("Leave type: ");
+        Log::debug($leaveType);
+        Log::debug("Years of service: ".$yearsOfService);
+        Log::debug("Grade ID: ".$grade_id);
         $entitledDays = 0;
         if(empty($leaveType->entitled_days)) {
             // Entitlement By Grade
+            Log::debug("Entitlement By Grade");
+            
             foreach($leaveType->lt_entitlements_grade_groups as $gradeGroup) {
+                Log::debug("Grade Group");
+                Log::debug($gradeGroup);
                 $gradeInGroup = false;
                 foreach($gradeGroup->grades as $grade) {
                     if($grade_id == $grade->id) {
@@ -771,11 +835,13 @@ class LeaveService
 
                 if($gradeInGroup) {
                     $entitledDays = $gradeGroup->entitled_days;
+                    Log::debug("Grade Group entitled days: ".$gradeGroup->entitled_days);
                     foreach($gradeGroup->lt_conditional_entitlements as $conditionalEntitlement) {
                         if($conditionalEntitlement->min_years > $yearsOfService) {
                             break;
                         } else {
                             $entitledDays = $conditionalEntitlement->entitled_days;
+                            Log::debug("Conditional Entitlement: ".$conditionalEntitlement->entitled_days);
                         }
                     } 
 
@@ -784,16 +850,19 @@ class LeaveService
             }
         } else {
             // Entitlement By Years
+            Log::debug("Entitlement By Years");
             $entitledDays = $leaveType->entitled_days;
+            Log::debug("Leave Type entitled days: ".$leaveType->entitled_days);
             foreach($leaveType->lt_conditional_entitlements as $conditionalEntitlement) {
                 if($conditionalEntitlement->min_years > $yearsOfService) {
                     break;
                 } else {
                     $entitledDays = $conditionalEntitlement->entitled_days;
+                    Log::debug("Conditional Entitlement: ".$conditionalEntitlement->entitled_days);
                 }
             } 
         }
-
+        Log::debug("Entitled Days: ".$entitledDays);
         return $entitledDays;
     }
 
@@ -903,5 +972,19 @@ class LeaveService
             'size' => strlen($data),
             'extension' => $extension
         ];
+    }
+    
+    public static function isProrated($leaveTypeId) {
+        $leaveTypes = DB::table('leave_types')
+        ->join('lt_applied_rules', 'lt_applied_rules.leave_type_id', 'leave_types.id')
+        ->where('leave_types.id', $leaveTypeId)
+        ->where('rule',LeaveTypeRule::NON_PRORATED)
+        ->get();
+        
+        if(count($leaveTypes) > 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

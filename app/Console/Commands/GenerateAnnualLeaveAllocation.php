@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use DB;
 use Carbon\Carbon;
@@ -50,6 +51,7 @@ class GenerateAnnualLeaveAllocation extends Command
      */
     public function handle()
     {
+        Log::debug("Start Generate Leave Allocation");
         $year = (int) $this->argument('year');
         $now = Carbon::now();
 
@@ -59,26 +61,30 @@ class GenerateAnnualLeaveAllocation extends Command
             return;
         }
 
-        $taskStatus = TaskStatus::where('task', $this->task_name)->first();
-        if(!empty($taskStatus)) {
-            $status = json_decode($taskStatus->status);
+//         $taskStatus = TaskStatus::where('task', $this->task_name)->first();
+//         if(!empty($taskStatus)) {
+//             $status = json_decode($taskStatus->status);
             
-            $latestYearProcessed = (int) $status->latest_processed_year;
-             if($latestYearProcessed >= $year) {
-                $this->error("Leave already processed for this year! ");
-                return;
-            } else if($year - $latestYearProcessed > 1) {
-                $this->error("There are years where leave has not been generated in between the last generation ({$latestYearProcessed}) and year selected to generate ({$year})! ");
-                return;
-            }
-        }
+//             $latestYearProcessed = (int) $status->latest_processed_year;
+//              if($latestYearProcessed >= $year) {
+//                 $this->error("Leave already processed for this year! ");
+//                 return;
+//             } else if($year - $latestYearProcessed > 1) {
+//                 $this->error("There are years where leave has not been generated in between the last generation ({$latestYearProcessed}) and year selected to generate ({$year})! ");
+//                 return;
+//             }
+//         }
 
         DB::transaction(function() use ($year, $now) {
             // Get all employees (id) who have existing jobs
-            $employee_ids = Employee::whereHas('employee_jobs', function($query) {
-                $query->whereNull('end_date');
+            $employee_ids = Employee::whereHas('employee_jobs', function($query) use ($year) {
+                $query->where([
+                    ['status', '!=', 'Resigned']
+                ])
+                ->whereYear('end_date', '=', $year)
+                ->orWhereNull('end_date');
             })->pluck('id');
-
+                
             $leave_types_can_carry_forward = LeaveType::with('applied_rules')->whereHas('applied_rules', function($query) {
                 $query->where('rule', LeaveTypeRule::CAN_CARRY_FORWARD);
             })->get();
@@ -140,30 +146,48 @@ class GenerateAnnualLeaveAllocation extends Command
             $validUntilDate = Carbon::create($year, 12, 31);
             foreach($employee_ids as $emp_id) {
                 // $this->info("Employee ({$emp_id})");
-
-                $currentJob = EmployeeJob::where('emp_id', $emp_id)
-                    ->whereNull('end_date')->first();
-
-                // In order to calculate the leave allocations - we need to know how many years he has been working
-                $yearsOfService = self::calculateEmployeeWorkingYears($emp_id, $validFromDate);
-                foreach($leaveTypes as $leaveType) {
-                    $appliedRule = self::leaveTypeGetRule($leaveType, LeaveTypeRule::GENDER);
-                    if(!empty($appliedRule)) {
-                        $configuration = json_decode($appliedRule->configuration);
-                        if(Employee::where('id', $emp_id)->where('gender', $configuration->gender)->count() == 0) {
-                            continue;
-                        }
+                // get employee job by year
+                $jobs = EmployeeJob::where('emp_id', $emp_id)
+                    ->where('status', '!=', 'Resigned')
+                    ->whereYear('end_date', '=', $year)
+                    ->orWhereNull('end_date')
+                    ->get();
+                Log::debug("Employee Jobs Year: ".$year);
+                Log::debug($jobs);
+                
+                foreach($jobs as $job){
+                    if($job->start_date > $validFromDate){
+                        $validFromDate = date_create($job->start_date);
                     }
-
-                    $allocatedDays = LeaveService::calculateEntitledDays($leaveType, $yearsOfService, $currentJob->emp_grade_id);
-
-                    $leaveAllocation = LeaveAllocation::create([
-                        'emp_id' => $emp_id,
-                        'leave_type_id' => $leaveType->id,
-                        'valid_from_date' => $validFromDate,
-                        'valid_until_date' => $validUntilDate,
-                        'allocated_days' => $allocatedDays,
-                    ]);
+                    
+                    if($job->end_date !=null){
+                        $validUntilDate = date_create($job->end_date);
+                    }
+                
+//                     $currentJob = EmployeeJob::where('emp_id', $emp_id)
+//                         ->whereNull('end_date')->first();
+    
+                    // In order to calculate the leave allocations - we need to know how many years he has been working
+                    $yearsOfService = self::calculateEmployeeWorkingYears($emp_id, $validFromDate);
+                    foreach($leaveTypes as $leaveType) {
+                        $appliedRule = self::leaveTypeGetRule($leaveType, LeaveTypeRule::GENDER);
+                        if(!empty($appliedRule)) {
+                            $configuration = json_decode($appliedRule->configuration);
+                            if(Employee::where('id', $emp_id)->where('gender', $configuration->gender)->count() == 0) {
+                                continue;
+                            }
+                        }
+    
+                        $allocatedDays = LeaveService::calculateEntitledDays($leaveType, $yearsOfService, $job->emp_grade_id);
+    
+                        $leaveAllocation = LeaveAllocation::create([
+                            'emp_id' => $emp_id,
+                            'leave_type_id' => $leaveType->id,
+                            'valid_from_date' => $validFromDate,
+                            'valid_until_date' => $validUntilDate,
+                            'allocated_days' => $allocatedDays,
+                        ]);
+                    }
                 }
             }
 
@@ -177,17 +201,23 @@ class GenerateAnnualLeaveAllocation extends Command
 
             $this->info("Leave Allocation: Generate (Year: {$year}) -> COMPLETED");
         });
+        
+        Log::debug("End Generate Leave Allocation");
     }
 
     private static function calculateEmployeeWorkingYears($emp_id, $untilDateTime) {
+        Log::debug("Calculate Employee Working Years");
+        Log::debug("Employee ID: ".$emp_id);
+        Log::debug("Until Date Time: ".$untilDateTime->format("Y-m-d H:m:s"));
+        
         // Get start_date of first job
         $firstJob = EmployeeJob::where('emp_id', $emp_id)->orderBy('start_date')->first();
         if(empty($firstJob)) {
             return 0;
         } 
-
+        Log::debug($firstJob);
         $startDateTime = date_create($firstJob->start_date);
-        
+        Log::debug("Start Date Time: ".$startDateTime->format("Y-m-d H:m:s"));
         return date_diff($startDateTime, $untilDateTime)->y;
     }
 

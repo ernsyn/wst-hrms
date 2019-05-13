@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Constants\LeaveTypeRule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -46,17 +47,17 @@ class ELeaveController extends Controller
             ->whereYear('valid_from_date', '<', $currentYear)
             ->get();
 
-        $generated = false;
+        $generated = 0;
         $taskStatus = TaskStatus::where('task', 'leave-allocation:generate')->first();
         if(!empty($taskStatus)) {
             $status = json_decode($taskStatus->status);
             
             $latestYearProcessed = (int) $status->latest_processed_year;
             if($latestYearProcessed >= $currentYear) {
-                $generated = true;
+                $generated = 1;
             } 
         }
-        
+//         dd($generated);
         return view('pages.admin.e-leave.configuration', ['defaultLeaveTypes' => $defaultLeaveTypes, 'customLeaveTypes' => $customLeaveTypes, 'leaveAllocation' => $leaveAllocation, 'generated' => $generated]);
     }
 
@@ -637,27 +638,27 @@ class ELeaveController extends Controller
 
         // get employee leave allocations
         $leaves = DB::table('leave_types')
-            ->join('leave_allocations', 'leave_types.id', '=', 'leave_allocations.leave_type_id')
-            ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'employee_jobs.emp_id')
-            ->distinct()
-            ->select(
-                'leave_types.id',
-                'leave_types.code',
-                'leave_types.name',
-                'leave_allocations.allocated_days',
-                'leave_allocations.spent_days',
-                'leave_allocations.carried_forward_days'
-            )
+//             ->join('leave_allocations', 'leave_types.id', '=', 'leave_allocations.leave_type_id')
+//             ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'employee_jobs.emp_id')
+//             ->distinct()
+//             ->select(
+//                 'leave_types.id',
+//                 'leave_types.code',
+//                 'leave_types.name',
+//                 'leave_allocations.allocated_days',
+//                 'leave_allocations.spent_days',
+//                 'leave_allocations.carried_forward_days'
+//             )
             ->where('leave_types.active', 1)
-            ->where('leave_allocations.emp_id', $emp_id)
-            ->whereYear('leave_allocations.valid_from_date', '=', $year)
-            ->whereYear('leave_allocations.valid_until_date', '=', $year)
-            ->whereNull('employee_jobs.end_date')
+//             ->where('leave_allocations.emp_id', $emp_id)
+//             ->whereYear('leave_allocations.valid_from_date', '=', $year)
+//             ->whereYear('leave_allocations.valid_until_date', '=', $year)
+//             ->whereNull('employee_jobs.end_date')
             ->get();
-
+//             dd($leaves);
         foreach ($leaves as $row) {
             $leaveAllocations = DB::table('leave_allocations')
-                ->join('employee_jobs', 'leave_allocations.emp_id', '=', 'leave_allocations.emp_id')
+//                 ->join('employee_jobs', 'employee_jobs.emp_id', '=', 'leave_allocations.emp_id')
                 ->select(
                     'leave_allocations.id',
                     'leave_allocations.allocated_days',
@@ -670,20 +671,29 @@ class ELeaveController extends Controller
                 ])
                 ->whereYear('leave_allocations.valid_from_date', '=', $year)
                 ->whereYear('leave_allocations.valid_until_date', '=', $year)
-                ->whereNull('employee_jobs.end_date')
+//                 ->whereNull('employee_jobs.end_date')
                 ->orderBy('leave_allocations.id', 'desc')
-                ->limit(1)
+//                 ->limit(1)
                 ->get();
+//                 dd($leaveAllocations);
 
             $totalAllocatedDays = 0;
             $carried_forward_days = 0;
 
+//             $leaveTypes = DB::table('leave_types')
+//                 ->join('lt_applied_rules', 'lt_applied_rules.leave_type_id', 'leave_types.id')
+//                 ->where('leave_types.id', $row->id)
+//                 ->where('rule',LeaveTypeRule::NON_PRORATED)
+//                 ->get();
             if($leaveAllocations) {
                 foreach($leaveAllocations as $leaveAllocation) {
                     if($leaveAllocation->is_carry_forward == 1) {
                         $carried_forward_days += $leaveAllocation->allocated_days;
                     } else {
-                        $totalAllocatedDays = $leaveAllocation->allocated_days;
+                        $totalAllocatedDays += $leaveAllocation->allocated_days;
+                        if(!LeaveService::isProrated($row->id)) {
+                            break;
+                        }
                     }
                 }
             }
@@ -737,7 +747,7 @@ class ELeaveController extends Controller
             $report_array[$row->leave_type_id]['approved'] = $row->approved;
             $report_array[$row->leave_type_id]['rejected'] = $row->rejected;
         }
-
+//         dd($requests);
         // total columns
         foreach ($report_array as $key => $value) {
             $report_array[$key]['allowed_to_take'] = ($report_array[$key]['carried_forward_days'] + $report_array[$key]['allocated_days']) - ($report_array[$key]['pending'] + $report_array[$key]['approved']);

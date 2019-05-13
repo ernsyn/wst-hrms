@@ -126,13 +126,9 @@
                 <span class="code badge badge-primary">{{ \Carbon\Carbon::now()->year }}</span>
                 <span class="name">Leave Allocation</span>
                 <div class="float-right">
-                	@if($generated === 'true')
                     <a role="button" id="add-leave-type-btn" class="float-right btn btn-primary btn-sm" href={{ route('admin.e-leave.configuration.generate-leave-allocation') }}>
                         Generate
                     </a>
-                    @else
-                    <span class="text-success" style="font-weight:600">Generated</span>
-                    @endif
                 </div>
             </li>
         </ul>

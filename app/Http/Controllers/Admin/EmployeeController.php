@@ -647,11 +647,10 @@ else {
                 } else {
                     $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date'].' -1days'))]);
                 }
-                LeaveService::onJobEnd($id, $jobData['start_date'], $currentJob->id);
+                LeaveService::onJobEnd($id, date("Y-m-d", strtotime($jobData['start_date'].' -1days')), $currentJob->id);
             } else {
                 $jobData['status']  = "probationer";
             }
-            
             $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
             Employee::where('id', $id)->update(array('position'=> @$position ? $position : ''));
