@@ -231,6 +231,10 @@ class GenerateAnnualLeaveAllocation extends Command
                             Log::debug("Allocated days after round: ".$allocatedDays);
                         }
                         Log::debug("Allocated days: ".$allocatedDays);
+                        
+                        if($job->status != 'Resigned'){
+                            $validUntilDate = Carbon::create($year, 12, 31);
+                        }
     
                         $allocatedLeave = LeaveAllocation::where([
                             ['emp_id', $emp_id],
