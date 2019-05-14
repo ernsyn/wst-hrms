@@ -16,6 +16,7 @@ use App\EmployeeJob;
 use App\LeaveType;
 use App\LeaveAllocation;
 use App\TaskStatus;
+use App\Helpers\DateHelper;
 
 class GenerateAnnualLeaveAllocation extends Command
 {
@@ -81,8 +82,10 @@ class GenerateAnnualLeaveAllocation extends Command
                 $query->where([
                     ['status', '!=', 'Resigned']
                 ])
-                ->whereYear('end_date', '=', $year)
-                ->orWhereNull('end_date');
+                ->where(function($query) use ($year) {
+                    $query->whereYear('end_date', '=', $year)
+                    ->orWhereNull('end_date');
+                });
             })->pluck('id');
                 
             $leave_types_can_carry_forward = LeaveType::with('applied_rules')->whereHas('applied_rules', function($query) {
@@ -91,6 +94,7 @@ class GenerateAnnualLeaveAllocation extends Command
 
             $endOfPreviousYear = Carbon::create($year-1, 12, 31);
 
+            Log::debug("GENERATE: Carry Forward");
             foreach($leave_types_can_carry_forward as $lt) {
                 $maxCarryForwardDays = 0;
                 $validTillEndMonth = 1;
@@ -126,47 +130,78 @@ class GenerateAnnualLeaveAllocation extends Command
                             $leaveAllocation->carried_forward_days = $carryForwardDays;
                             $leaveAllocation->save();
 
-                            LeaveAllocation::create([
-                                'leave_type_id' => $lt->id,
-                                'emp_id' => $id,
-                                'allocated_days' => $carryForwardDays,
-                                'is_carry_forward' => true,
-                                'valid_from_date' => $carryForwardValidFromDate,
-                                'valid_until_date' => $carryForwardValidUntilDate
-                            ]);
+                            $allocatedLeave = LeaveAllocation::where([
+                                ['emp_id', $id],
+                                ['leave_type_id', $lt->id],
+                                ['is_carry_forward', true],
+                                ['valid_from_date', $carryForwardValidFromDate],
+                                ['valid_until_date', $carryForwardValidUntilDate],
+                            ])->first();
+                            
+                            if(empty($allocatedLeave)){
+                                LeaveAllocation::create([
+                                    'leave_type_id' => $lt->id,
+                                    'emp_id' => $id,
+                                    'allocated_days' => $carryForwardDays,
+                                    'is_carry_forward' => true,
+                                    'valid_from_date' => $carryForwardValidFromDate,
+                                    'valid_until_date' => $carryForwardValidUntilDate
+                                ]);
+                            }else{
+                                LeaveAllocation::find($allocatedLeave->id)->update(array(
+                                    'valid_from_date' => $carryForwardValidFromDate,
+                                    'valid_until_date' => $carryForwardValidUntilDate,
+                                    'allocated_days' => $carryForwardDays,
+                                ));
+                            }
                         }
                     }
-                    
                 }
             }
+            
+            Log::debug("End - GENERATE: Carry Forward");
 
+            Log::debug("GENERATE: Entitled Leave");
             // GENERATE: Entitled Leave
             $leaveTypes = LeaveType::with('applied_rules', 'lt_conditional_entitlements', 'lt_entitlements_grade_groups.lt_conditional_entitlements', 'lt_entitlements_grade_groups.grades')->where('active', true)->get();
-            $validFromDate = Carbon::create($year, 1, 1);
-            $validUntilDate = Carbon::create($year, 12, 31);
+//             $validFromDate = Carbon::create($year, 1, 1);
+//             $validUntilDate = Carbon::create($year, 12, 31);
             foreach($employee_ids as $emp_id) {
                 // $this->info("Employee ({$emp_id})");
                 // get employee job by year
-                $jobs = EmployeeJob::where('emp_id', $emp_id)
+                $jobs = EmployeeJob::where('emp_id', '=', $emp_id)
                     ->where('status', '!=', 'Resigned')
-                    ->whereYear('end_date', '=', $year)
-                    ->orWhereNull('end_date')
+                    ->where(function($query) use ($year) {
+                        $query->whereYear('end_date', '=', $year)
+                        ->orWhereNull('end_date');
+                    })
+                    ->orderby('start_date')
                     ->get();
+                Log::debug("Employee ID: ".$emp_id);
                 Log::debug("Employee Jobs Year: ".$year);
+                Log::debug("Total jobs: ".count($jobs));
                 Log::debug($jobs);
                 
                 foreach($jobs as $job){
+                    $validFromDate = Carbon::create($year, 1, 1);
+                    $validUntilDate = Carbon::create($year, 12, 31);
                     if($job->start_date > $validFromDate){
-                        $validFromDate = date_create($job->start_date);
+                        $validFromDate = $job->start_date;
                     }
                     
                     if($job->end_date !=null){
-                        $validUntilDate = date_create($job->end_date);
+                        $validUntilDate = $job->end_date;
                     }
-                
+                    if($emp_id == 10){
+                    Log::debug("Job start date: ".$job->start_date);
+                    Log::debug("Job end date: ".$job->end_date);
+                    Log::debug($validFromDate);
+                    Log::debug($validUntilDate);
+                    }
 //                     $currentJob = EmployeeJob::where('emp_id', $emp_id)
 //                         ->whereNull('end_date')->first();
-    
+                    $validFromDate = Carbon::parse($validFromDate)->copy();
+                    $validUntilDate = Carbon::parse($validUntilDate)->copy();
                     // In order to calculate the leave allocations - we need to know how many years he has been working
                     $yearsOfService = self::calculateEmployeeWorkingYears($emp_id, $validFromDate);
                     foreach($leaveTypes as $leaveType) {
@@ -178,19 +213,65 @@ class GenerateAnnualLeaveAllocation extends Command
                             }
                         }
     
-                        $allocatedDays = LeaveService::calculateEntitledDays($leaveType, $yearsOfService, $job->emp_grade_id);
+                        $allocatedDaysInAYear = LeaveService::calculateEntitledDays($leaveType, $yearsOfService, $job->emp_grade_id);
+                        $allocatedDays = 0;
+                        if(LeaveService::leaveTypeHasRule($leaveType, LeaveTypeRule::NON_PRORATED)) {
+                            Log::debug("Non prorated");
+                            $allocatedDays = $allocatedDaysInAYear;
+                        } else {
+                            Log::debug("Prorated");
+                            Log::debug("Different in days");
+                            Log::debug($validFromDate->diffInDays($validUntilDate));
+                            // $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
+                            $numberDaysInYear = 365 ;//+ $startDate->format('L');
+                            Log::debug("Number of days in year: ".$numberDaysInYear);
+                            $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)) / $numberDaysInYear;
+                            Log::debug("Allocated days before round: ".$allocatedDays);
+                            $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
+                            Log::debug("Allocated days after round: ".$allocatedDays);
+                        }
+                        Log::debug("Allocated days: ".$allocatedDays);
     
-                        $leaveAllocation = LeaveAllocation::create([
-                            'emp_id' => $emp_id,
-                            'leave_type_id' => $leaveType->id,
-                            'valid_from_date' => $validFromDate,
-                            'valid_until_date' => $validUntilDate,
-                            'allocated_days' => $allocatedDays,
-                        ]);
+                        $allocatedLeave = LeaveAllocation::where([
+                            ['emp_id', $emp_id],
+                            ['leave_type_id', $leaveType->id],
+                            ['valid_from_date', DateHelper::dateWithFormat($validFromDate, 'Y-m-d')],
+                            ['valid_until_date', DateHelper::dateWithFormat($validUntilDate, 'Y-m-d')],
+                        ])->first();
+                        Log::debug("Allocated Leave");
+                        Log::debug($allocatedLeave);
+                        
+                        if(empty($allocatedLeave)){
+                            $leaveAllocation = LeaveAllocation::create([
+                                'emp_id' => $emp_id,
+                                'leave_type_id' => $leaveType->id,
+                                'valid_from_date' => $validFromDate,
+                                'valid_until_date' => $validUntilDate,
+                                'allocated_days' => $allocatedDays,
+                            ]);
+                            
+                        }else{
+                            LeaveAllocation::find($allocatedLeave->id)->update(array(
+                                'valid_from_date' => $validFromDate,
+                                'valid_until_date' => $validUntilDate,
+                                'allocated_days' => $allocatedDays,
+                            ));
+                        }
+                        
+//                         $leaveAllocation = LeaveAllocation::updateOrCreate([
+//                             'emp_id' => $emp_id,
+//                             'leave_type_id' => $leaveType->id,
+//                             'valid_from_date' => $validFromDate,
+//                             'valid_until_date' => $validUntilDate,
+//                             'allocated_days' => $allocatedDays,
+//                         ]);
+                        
+                        
                     }
                 }
             }
-
+            
+            Log::debug("End - GENERATE: Entitled Leave");
 
             TaskStatus::updateOrCreate(
                 ['task' => $this->task_name],
@@ -208,7 +289,7 @@ class GenerateAnnualLeaveAllocation extends Command
     private static function calculateEmployeeWorkingYears($emp_id, $untilDateTime) {
         Log::debug("Calculate Employee Working Years");
         Log::debug("Employee ID: ".$emp_id);
-        Log::debug("Until Date Time: ".$untilDateTime->format("Y-m-d H:m:s"));
+        Log::debug("Until Date Time: ".$untilDateTime);
         
         // Get start_date of first job
         $firstJob = EmployeeJob::where('emp_id', $emp_id)->orderBy('start_date')->first();
@@ -218,7 +299,7 @@ class GenerateAnnualLeaveAllocation extends Command
         Log::debug($firstJob);
         $startDateTime = date_create($firstJob->start_date);
         Log::debug("Start Date Time: ".$startDateTime->format("Y-m-d H:m:s"));
-        return date_diff($startDateTime, $untilDateTime)->y;
+        return date_diff($startDateTime, date_create($untilDateTime))->y;
     }
 
     private static function leaveTypeGetRule($leaveType, $rule) {

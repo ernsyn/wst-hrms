@@ -705,9 +705,6 @@ class LeaveService
                     case LeaveTypeRule::UNPAID:
                         $is_unpaid_leave = true;
                         break;
-                    case LeaveTypeRule::NON_PRORATED:
-                        $nonProrated = true;
-                        break;
                 }
 
                 if(!$includeLeaveType) {
@@ -750,16 +747,18 @@ class LeaveService
 
     // PRIVATE FUNCTIONS
     private static function calculateLeaveTypeAvailableDaysForEmployee($emp_id, $leave_type_id) {
+        Log::debug("calculateLeaveTypeAvailableDaysForEmployee");
         $today = Carbon::now();
         $leaveAllocations = LeaveAllocation::where('emp_id', $emp_id)
             ->where('leave_type_id', $leave_type_id)
             ->where('valid_from_date', '<=', $today)
             ->where('valid_until_date', '>=', $today)
+//             ->whereYear('valid_until_date', '=', $today)
             // ->sum('allocated_days')
             // ->sum('spent_days')
             ->orderBy('leave_allocations.id', 'desc')
             ->get();
-
+        Log::debug($leaveAllocations);
         $totalAllocatedDays = 0;
         $totalSpentDays = 0;
         foreach($leaveAllocations as $leaveAllocation) {
