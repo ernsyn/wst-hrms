@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use App\SecurityGroup;
 use App\Roles;
+use App\EmployeeJob;
 
 class AccessControllHelper
 {
@@ -89,6 +90,22 @@ class AccessControllHelper
     public static function getCurrentUserLogon(){
         $id = Auth::id();
         return User::find($id);
+    }
+    
+    public static function isResigned()
+    {
+        $isResigned = false;
+        $currentUser = Auth::id();
+        $job = EmployeeJob::join('employees', 'employees.id', '=', 'employee_jobs.emp_id')
+            ->where([['employees.user_id', $currentUser], ['employee_jobs.status','Resigned']])
+            ->orderBy('employee_jobs.id', 'desc')
+            ->first();
+        
+        //         dd($currentUser);
+        if(!empty($job)){
+            $isResigned = true;
+        }
+        return $isResigned;
     }
 }
 

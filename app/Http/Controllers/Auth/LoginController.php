@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\UnauthorizedException;
+use App\Helpers\AccessControllHelper;
 
 class LoginController extends Controller
 {
@@ -58,6 +60,12 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
+        
+        if(AccessControllHelper::isResigned()) {
+            \Auth::logout();
+            abort(403, 'Unauthorized.');
+        }
+        
         if(\Auth::user()->hasRole('super-admin')) {
             return redirect()->route("super-admin.dashboard");
         }
