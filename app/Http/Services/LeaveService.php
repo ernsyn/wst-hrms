@@ -78,13 +78,13 @@ class LeaveService
             } else {
                 Log::debug("Prorated");
                 Log::debug("Different in days");
-                Log::debug($validFromDate->diffInDays($validUntilDate));
+                Log::debug($validFromDate->diffInDays($validUntilDate)+2); //+2-> include start date and end date
                 // $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
                 $numberDaysInYear = 365 ;//+ $startDate->format('L');
                 Log::debug("Number of days in year: ".$numberDaysInYear);
-                $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)) / $numberDaysInYear;
+                $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)+2) / $numberDaysInYear;
                 Log::debug("Allocated days before round: ".$allocatedDays);
-                $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
+                $allocatedDays = round($allocatedDays * 2)/2; // Round to closest .5 
                 Log::debug("Allocated days after round: ".$allocatedDays);
             }
             Log::debug("Allocated days: ".$allocatedDays);
@@ -141,13 +141,13 @@ class LeaveService
             if(!self::leaveTypeHasRule($leaveAllocation->leave_type, LeaveTypeRule::NON_PRORATED)) {
                 $allocationValidFromDate = Carbon::parse($leaveAllocation->valid_from_date);
                 $allocationValidUntilDate = Carbon::parse($leaveAllocation->valid_until_date);
-                $totalAllocationDays = $allocationValidFromDate->diffInDays($allocationValidUntilDate);
-                $totalActualDays = $allocationValidFromDate->diffInDays($endDate);
+                $totalAllocationDays = $allocationValidFromDate->diffInDays($allocationValidUntilDate)+2; //+2 to include start date and end date
+                $totalActualDays = $allocationValidFromDate->diffInDays($endDate)+2;
                 // $totalAllocationMonths = $allocationValidUntilDate->month - $allocationValidFromDate->month + 1;
                 // $totalActualMonths = $allocationValidUntilDate->month - $endCalcDate->month + 1;
 
                 $updatedAllocatedDays = $leaveAllocation->allocated_days * $totalActualDays / $totalAllocationDays;
-                $updatedAllocatedDays = floor($updatedAllocatedDays * 2)/2; // Round to closest .5 low
+                $updatedAllocatedDays = round($updatedAllocatedDays * 2)/2; // Round to closest .5
                 
                 Log::debug("allocationValidFromDate: ");
                 Log::debug($allocationValidFromDate);

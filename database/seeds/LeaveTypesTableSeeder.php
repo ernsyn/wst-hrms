@@ -230,6 +230,9 @@ class LeaveTypesTableSeeder extends Seeder
             new App\LTAppliedRule([
                 'rule' => LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED,
             ]),
+            new App\LTAppliedRule([
+                'rule' => LeaveTypeRule::NON_PRORATED,
+            ]),
         ]);
 
         $hospitalizationLeaveType = $leaveType;

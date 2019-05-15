@@ -180,31 +180,40 @@ class GenerateAnnualLeaveAllocation extends Command
                 Log::debug("Employee ID: ".$emp_id);
                 Log::debug("Employee Jobs Year: ".$year);
                 Log::debug("Total jobs: ".count($jobs));
-                Log::debug($jobs);
                 
                 foreach($jobs as $job){
-                    $validFromDate = Carbon::create($year, 1, 1);
-                    $validUntilDate = Carbon::create($year, 12, 31);
-                    if($job->start_date > $validFromDate){
-                        $validFromDate = $job->start_date;
-                    }
-                    
-                    if($job->end_date !=null){
-                        $validUntilDate = $job->end_date;
-                    }
-                    if($emp_id == 10){
+                    Log::debug("Job ID: ".$job->id);
                     Log::debug("Job start date: ".$job->start_date);
                     Log::debug("Job end date: ".$job->end_date);
+                    $validFromDate = Carbon::create($year, 1, 1);
+                    $validUntilDate = Carbon::create($year, 12, 31);
                     Log::debug($validFromDate);
                     Log::debug($validUntilDate);
-                    }
+                    
 //                     $currentJob = EmployeeJob::where('emp_id', $emp_id)
 //                         ->whereNull('end_date')->first();
-                    $validFromDate = Carbon::parse($validFromDate)->copy();
-                    $validUntilDate = Carbon::parse($validUntilDate)->copy();
+//                     $validFromDate = Carbon::parse($validFromDate)->copy();
+//                     $validUntilDate = Carbon::parse($validUntilDate)->copy();
+
                     // In order to calculate the leave allocations - we need to know how many years he has been working
                     $yearsOfService = self::calculateEmployeeWorkingYears($emp_id, $validFromDate);
                     foreach($leaveTypes as $leaveType) {
+                        Log::debug("Leave Type ID: ".$leaveType->id);
+                        if($job->start_date > $validFromDate){
+                            Log::debug("Job start date > valid from date");
+                            $validFromDate = $job->start_date;
+                        }
+                        
+                        if($job->end_date !=null){
+                            Log::debug("Job end date not null");
+                            $validUntilDate = $job->end_date;
+                        }
+                        
+                        $validFromDate = Carbon::parse($validFromDate)->copy();
+                        $validUntilDate = Carbon::parse($validUntilDate)->copy();
+                        Log::debug($validFromDate);
+                        Log::debug($validUntilDate);
+                        
                         $appliedRule = self::leaveTypeGetRule($leaveType, LeaveTypeRule::GENDER);
                         if(!empty($appliedRule)) {
                             $configuration = json_decode($appliedRule->configuration);
@@ -215,19 +224,21 @@ class GenerateAnnualLeaveAllocation extends Command
     
                         $allocatedDaysInAYear = LeaveService::calculateEntitledDays($leaveType, $yearsOfService, $job->emp_grade_id);
                         $allocatedDays = 0;
+                        
+                        Log::debug("Allocated days in year: ".$allocatedDaysInAYear);
                         if(LeaveService::leaveTypeHasRule($leaveType, LeaveTypeRule::NON_PRORATED)) {
                             Log::debug("Non prorated");
                             $allocatedDays = $allocatedDaysInAYear;
                         } else {
                             Log::debug("Prorated");
                             Log::debug("Different in days");
-                            Log::debug($validFromDate->diffInDays($validUntilDate));
+                            Log::debug($validFromDate->diffInDays($validUntilDate)+2); // +2 -> include start date and end date
                             // $allocatedDays = $allocatedDaysInAYear * (12-$validFromDate->month+1) / 12;
                             $numberDaysInYear = 365 ;//+ $startDate->format('L');
                             Log::debug("Number of days in year: ".$numberDaysInYear);
-                            $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)) / $numberDaysInYear;
+                            $allocatedDays = $allocatedDaysInAYear * ($validFromDate->diffInDays($validUntilDate)+2) / $numberDaysInYear;
                             Log::debug("Allocated days before round: ".$allocatedDays);
-                            $allocatedDays = floor($allocatedDays * 2)/2; // Round to closest .5 low
+                            $allocatedDays = round($allocatedDays * 2)/2; // Round to closest .5 
                             Log::debug("Allocated days after round: ".$allocatedDays);
                         }
                         Log::debug("Allocated days: ".$allocatedDays);
@@ -246,6 +257,7 @@ class GenerateAnnualLeaveAllocation extends Command
                         Log::debug($allocatedLeave);
                         
                         if(empty($allocatedLeave)){
+                            Log::debug("Add new leave allocation");
                             $leaveAllocation = LeaveAllocation::create([
                                 'emp_id' => $emp_id,
                                 'leave_type_id' => $leaveType->id,
@@ -255,6 +267,7 @@ class GenerateAnnualLeaveAllocation extends Command
                             ]);
                             
                         }else{
+                            Log::debug("Update leave allocation, ID: ".$allocatedLeave->id);
                             LeaveAllocation::find($allocatedLeave->id)->update(array(
                                 'valid_from_date' => $validFromDate,
                                 'valid_until_date' => $validUntilDate,
@@ -269,8 +282,6 @@ class GenerateAnnualLeaveAllocation extends Command
 //                             'valid_until_date' => $validUntilDate,
 //                             'allocated_days' => $allocatedDays,
 //                         ]);
-                        
-                        
                     }
                 }
             }
