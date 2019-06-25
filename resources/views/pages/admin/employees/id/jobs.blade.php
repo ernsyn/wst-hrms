@@ -8,7 +8,7 @@
                 </button>
                 @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
                 <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#add-resign-popup">
-                    Add Resign
+                    Resign
                 </button>
                 @else
                 <h5><span class="badge badge-danger">Resigned / Job Not Assigned</span></h5>
@@ -22,7 +22,7 @@
                 Add Job
             </button>
             <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#add-resign-popup">
-                    Add Resign
+                    Resign
                 </button>
             @else
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
@@ -55,7 +55,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="nav-job-tab">Add Resignation Date</h5>
+                <h5 class="modal-title" id="nav-job-tab">Resignation Date</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
