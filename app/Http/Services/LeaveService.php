@@ -270,9 +270,13 @@ class LeaveService
     }
 
     public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $edit_leave_request_id = null, $is_admin = false) {
+        Log::debug($start_date);
+        Log::debug($end_date);
         $startDate = Carbon::parse($start_date);
         $endDate = Carbon::parse($end_date);
         $now = Carbon::now();
+        Log::debug($startDate);
+        Log::debug($endDate);
         
         if($startDate->greaterThan($endDate)) {
             return self::error("Start date is after end date.");
@@ -309,16 +313,16 @@ class LeaveService
             
         }
 
-        if(!self::isWorkingDay($working_day, $endDate)) {
-            return self::error("End date cannot be a non-working day.");
-        } else {
-            $count = Holiday::where('start_date', '<=', $endDate)
-            ->where('end_date', '>=', $endDate)
-            ->where('status', 'active')->count();
-            if($count > 0) {
-                return self::error("End date cannot fall on a holiday.");
-            }
-        }
+//         if(!self::isWorkingDay($working_day, $endDate)) {
+//             return self::error("End date cannot be a non-working day.");
+//         } else {
+//             $count = Holiday::where('start_date', '<=', $endDate)
+//             ->where('end_date', '>=', $endDate)
+//             ->where('status', 'active')->count();
+//             if($count > 0) {
+//                 return self::error("End date cannot fall on a holiday.");
+//             }
+//         }
 
         // check if applied dates are within validity period
         $validity = LeaveAllocation::where('leave_type_id', $leave_type_id)
@@ -334,7 +338,7 @@ class LeaveService
         $leaveType = LeaveType::with('applied_rules')->where('id', $leave_type_id)->first();
         
         $invalid = false;
-        $invalidErrorMessage;
+        $invalidErrorMessage = '';
         // Related To: Leave Calculation
         $inc_off_days = false;
         $no_limit = false;
@@ -347,6 +351,10 @@ class LeaveService
         $inc_off_days_based_on_applied_days_config;
         
         foreach($leaveType->applied_rules as $rule) {
+            Log::debug('************');
+            Log::debug($rule->rule);
+            Log::debug($invalid);
+            Log::debug($invalidErrorMessage);
             switch ($rule->rule) {
                 case LeaveTypeRule::GENDER:
                     $configuration = json_decode($rule->configuration);
@@ -459,6 +467,7 @@ class LeaveService
             }
 
             if($invalid) {
+                Log::debug(">>>>>>>>>> invalid");
                 break;
             }
         }
@@ -505,7 +514,8 @@ class LeaveService
                 $inc_off_days = true;
             }
         }
-
+Log::debug("########");
+Log::debug($inc_off_days);
         if(!$inc_off_days) {
             $nextDayIsHoliday = false;  
             if($startDate->dayOfWeek == Carbon::MONDAY) {
@@ -563,6 +573,17 @@ class LeaveService
 
                 $cursorDate->addDays(1);
             } 
+        }
+        
+        if(!self::isWorkingDay($working_day, $endDate) && !$inc_off_days) {
+            return self::error("End date cannot be a non-working day.");
+        } else {
+            $count = Holiday::where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $endDate)
+            ->where('status', 'active')->count();
+            if($count > 0) {
+                return self::error("End date cannot fall on a holiday.");
+            }
         }
 
         // NEXT STAGE: Check leave days available

@@ -428,7 +428,10 @@
             let leaveRulesList = $('#leave-rules-list');
             let leaveRulesTemplates = $('#leave-type-rule-templates');
             if(leaveType.applied_rules) {
+                console.log('********* leave type ***********');
+                console.log(leaveType.applied_rules);
                 for(let rule of leaveType.applied_rules) {
+                    console.log(rule.rule);
                     let configuration;
                     if(rule.configuration) {
                         configuration = JSON.parse(rule.configuration)
@@ -543,12 +546,14 @@
                             maxDaysPerApplication.appendTo('#leave-rules-list');
                             break;
                         case 'non_prorated':
+                            console.log('***** non prorated*********');
                             let nonProrated = leaveRulesTemplates.find('#rule-non-prorated');
                             nonProrated.find('input[name=id]').val(rule.id);
 
                             nonProrated.appendTo('#leave-rules-list');
                             break;
                         case 'min_apply_days_before':
+                        	console.log('***** min_apply_days_before*********');
                             let minApplyDaysBefore = leaveRulesTemplates.find('#rule-min-apply-days-before');
                             minApplyDaysBefore.find('input[name=id]').val(rule.id);
                             
@@ -847,6 +852,7 @@
             let leaveRulesListData = [];
             let leaveRulesList = $('#leave-rules-list');
             console.log("Leave Rules List: ", leaveRulesList);
+            console.log(leaveRulesList);
             leaveRulesList.children('.rule-entry').each(function (index, leaveRuleEl) {
                 let leaveRule = $(leaveRuleEl);
                 console.log('Leave Rule: ', leaveRuleEl.id);
@@ -941,6 +947,8 @@
                     break;
                     case 'rule-non-prorated':
                         ruleData.rule = 'non_prorated';
+                        console.log(ruleData.rule);
+                        break;
                     case 'rule-min-apply-days-before':
                         ruleData.rule = 'min_apply_days_before';
 
@@ -969,14 +977,16 @@
 
                         //         entryEl.appendTo(minApplyDaysBeforeEntryList);
                         //     }
+                        console.log(ruleData.rule);
                     break;
                 }
-
+console.log(ruleData);
                 leaveRulesListData.push(ruleData);
             })
             data.applied_rules = leaveRulesListData;
 
             console.log("Data: ", data);
+            console.log(data);
             data._token = '{{ csrf_token() }}';
             $.ajax({
                 url: "{{ route('admin.e-leave.configuration.leave-types.edit.post', ['id' => $leave_type->id ]) }}",
