@@ -790,7 +790,7 @@ console.log('start_date: '+$('#add-leave-request-form #alt-start-date').val());
 
                         if(data.end_date) {
                             $("#end-date").val(data.end_date);
-                            $("#alt-end-date").val(data.end_date);
+                            $("#alt-end-date").val(data.alt_end_date);
                         }
 
                         if(data.set_am_pm) {
