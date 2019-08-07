@@ -781,7 +781,7 @@ console.log('start_date: '+$('#add-leave-request-form #alt-start-date').val());
 
                             if(data.total_days == 1) {
                                 $("#leave-full-day").addClass("selected-day");
-                            } else {
+                            } else if(data.total_days > 1) {
                             	$("#select-period").hide();
                                 $(".pb-3").hide();
                                 $(".leave-day").removeClass("selected-day");
