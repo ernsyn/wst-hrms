@@ -278,6 +278,17 @@ class LeaveService
         Log::debug($startDate);
         Log::debug($endDate);
         
+        // Check if apply any leave after resigned date
+        if(EmployeeJob::where('emp_id', $employee->id)
+            ->where('status', 'Resigned')
+            ->where(function($q) use ($startDate, $endDate) {
+                $q->where('end_date', '<', $startDate);
+                $q->orWhere('end_date', '<', $endDate);
+            })
+            ->count() > 0) {
+                return self::error("You are not allowed to apply leave after resigned date.");
+            }
+        
         if($startDate->greaterThan($endDate)) {
             return self::error("Start date is after end date.");
         }
@@ -285,10 +296,10 @@ class LeaveService
         // Check if already has a leave on that day
         if(LeaveRequest::where('emp_id', $employee->id)
         ->where('status', '!=', 'rejected')
-        ->where(function($q) use ($start_date, $end_date) {
-            $q->whereBetween('start_date', array($start_date, $end_date));
-            $q->orWhere(function($r) use ($start_date, $end_date) {
-                $r->whereBetween('end_date', array($start_date, $end_date));
+            ->where(function($q) use ($startDate, $endDate) {
+                $q->whereBetween('start_date', array($startDate, $endDate));
+                $q->orWhere(function($r) use ($startDate, $endDate) {
+                    $r->whereBetween('end_date', array($startDate, $endDate));
             });
         })
         ->count() > 0) {
