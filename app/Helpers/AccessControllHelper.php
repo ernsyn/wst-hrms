@@ -97,12 +97,12 @@ class AccessControllHelper
         $isResigned = false;
         $currentUser = Auth::id();
         $job = EmployeeJob::join('employees', 'employees.id', '=', 'employee_jobs.emp_id')
-            ->where([['employees.user_id', $currentUser], ['employee_jobs.status','Resigned']])
+            ->where('employees.user_id', $currentUser)
             ->orderBy('employee_jobs.id', 'desc')
             ->first();
         
         //         dd($currentUser);
-        if(!empty($job)){
+        if(!empty($job) && $job->status == 'Resigned'){
             $isResigned = true;
         }
         return $isResigned;
