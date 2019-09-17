@@ -114,9 +114,9 @@
                                     <label class="form-check-label">EIS</label>
                                 </div>
                             </div>
-                            <label class="col-md-12 col-form-label">EA Form*</label>
+                            <label class="col-md-12 col-form-label">EA Form</label>
                             <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id" required> 
+                                <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" id="ea_form_id"> 
                                 <option value="">Please Select</option>
                                 @foreach($ea_form as $item)
                                 <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
@@ -247,9 +247,10 @@
                                         <label class="form-check-label">EIS</label>
                                     </div>
                                 </div>
-                                <label class="col-md-12 col-form-label">EA Form*</label>
+                                <label class="col-md-12 col-form-label">EA Form</label>
                                 <div class="col-md-12">
                                     <select class="form-control{{ $errors->has('ea_form_id') ? ' is-invalid' : '' }}" name="ea_form_id" value="">
+                                    	<option value="">Please Select</option>
                                         @foreach($ea_form as $item)
                                         <option value="{{ $item->id }}">{{ $item->code }}: {{ $item->name }}</option>
                                         @endforeach

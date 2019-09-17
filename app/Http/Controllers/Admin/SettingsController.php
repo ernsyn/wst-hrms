@@ -577,7 +577,7 @@ class SettingsController extends Controller
             'amount' => 'required',
             'statutory' => 'nullable',
             'status' => 'required',
-            'ea_form_id' => 'required',
+            'ea_form_id' => 'nullable',
             'cost_centre' => 'nullable',
             'employee_grade' => 'nullable'
         ]);
@@ -616,7 +616,7 @@ class SettingsController extends Controller
             'amount' => 'required',
             'statutory' => 'nullable',
             'status' => 'required',
-            'ea_form_id' => 'required',
+            'ea_form_id' => 'nullable',
             'cost_centre' => 'nullable',
             'employee_grade' => 'nullable'
         ]);
@@ -1104,7 +1104,7 @@ class SettingsController extends Controller
             'amount' => 'required',
             'statutory' => 'nullable',
             'status' => 'required',
-            'ea_form_id' => 'required',
+            'ea_form_id' => 'nullable',
             'cost_centre' => 'nullable',
             'employee_grade' => 'nullable'
         ]);
@@ -1149,7 +1149,7 @@ class SettingsController extends Controller
             'amount' => 'required',
             'statutory' => 'nullable',
             'status' => 'required',
-            'ea_form_id' => 'required',
+            'ea_form_id' => 'nullable',
             'cost_centre' => 'nullable',
             'employee_grade' => 'nullable'
         ]);
