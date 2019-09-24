@@ -22,10 +22,10 @@ class LeaveRequestMail extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, LeaveRequest $leaveRequest)
+    public function __construct(LeaveRequest $leaveRequest)
     {
         //
-        $this->user = $user;
+//         $this->user = $user;
         $this->leaveRequest = $leaveRequest;
     }
 

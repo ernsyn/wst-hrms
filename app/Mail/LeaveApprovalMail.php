@@ -22,10 +22,9 @@ class LeaveApprovalMail extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, LeaveRequestApproval $leaveRequestApproval)
+    public function __construct(LeaveRequestApproval $leaveRequestApproval)
     {
         //
-        $this->user = $user;
         $this->leaveRequestApproval = $leaveRequestApproval;
     }
 

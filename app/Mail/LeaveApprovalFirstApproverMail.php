@@ -22,10 +22,9 @@ class LeaveApprovalFirstApproverMail extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, LeaveRequestApproval $leave_request_approval)
+    public function __construct(LeaveRequestApproval $leave_request_approval)
     {
         //
-        $this->user = $user;
         $this->leaveRequestApproval = $leave_request_approval;
     }
 

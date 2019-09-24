@@ -78,4 +78,5 @@ return [
         ],
     ],
 
+    'developer' => env('DEVELOPER_EMAIL', 'chennee.lim@wisetech.com.my'),
 ];

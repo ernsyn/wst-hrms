@@ -22,10 +22,9 @@ class LeaveRejectedMail extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, LeaveRequest $leave_request_rejected)
+    public function __construct(LeaveRequest $leave_request_rejected)
     {
         //
-        $this->user = $user;
         $this->leaveRequest = $leave_request_rejected;
     }
 

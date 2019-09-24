@@ -48,6 +48,7 @@ use App\EmployeeInfo;
 use \Crypt;
 use Session;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 use \DateTime;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -485,8 +486,6 @@ class ELeaveController extends Controller
             'attachment' => ''
         ]);
 
-
-
         $am_pm = null;
         if(array_key_exists('am_pm', $requestData)) {
             $am_pm = $requestData['am_pm'];
@@ -503,22 +502,20 @@ class ELeaveController extends Controller
         
         $leave_type_id = $request->input('leave_type');   
         
-        $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
-        ->where('leave_type_id',$leave_type_id)
-        ->count() == 0;
-
+        $multiple_approval_levels_required = LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
+            ->where('leave_type_id',$leave_type_id)
+            ->count() == 0;
+        
         if ($multiple_approval_levels_required == false) {
-        // send leave request email notification
-        self::sendLeaveRequestNotification($leave_request);
-        return response()->json($result);
-
+            // send leave request email notification
+            self::sendLeaveRequestNotification($leave_request);
+            return response()->json($result);
         }
-
-else{
-        // send leave request email notification
-        self::sendLeaveRequestNonMultipleNotification($leave_request);
-        return response()->json($result);
-    }
+        else{
+            // send leave request email notification
+            self::sendLeaveRequestNonMultipleNotification($leave_request);
+            return response()->json($result);
+        }
     }
 
     //todo - problematic (it deletes the old entry and replace it with a newly created entry)
@@ -737,7 +734,8 @@ else{
     }
    
     public function postAddApproval(Request $request)
-    {          
+    {        
+        Log::debug('Approve Leave');
         $id = $request->input('id');     
         $emp_id = $request->input('emp_id');    
         $leave_type_id = $request->input('leave_type_id');   
@@ -745,132 +743,137 @@ else{
         $user = Auth::user();
         $report_to_emp_id = $user->employee->id;
 
-        $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
+        $multiple_approval_levels_required = LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
             ->where('leave_type_id',$leave_type_id)
             ->count();
 
-        $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
-            ->where('report_to_emp_id','=',$report_to_emp_id)
-            ->where('emp_id','=',$emp_id)  
-            ->where ('report_to_level','=','1')
-            ->get();  
+//         $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
+//             ->where('report_to_emp_id','=',$report_to_emp_id)
+//             ->where('emp_id','=',$emp_id)  
+//             ->where ('report_to_level','=','1')
+//             ->get();  
 
         $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id) //check leave_request id in leave request approval
-        ->count(); 
+            ->count(); 
 
-       $leave_status =LeaveRequest::select('status')
-       ->where('id',$id)   //to get leave request status
-       ->where('status','new')
-       ->count();
+        $leave_status =LeaveRequest::select('status')
+           ->where('id',$id)   //to get leave request status
+           ->where('status','new')
+           ->count();
         
         $report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
             ->where('report_to_emp_id','=',$report_to_emp_id)
             ->where('emp_id','=',$emp_id) 
             ->where('report_to_level','1') 
             ->count(); 
-
-      
         
-        if ($leave_status == 1){
+        Log::debug('Leave Request ID: '.$id);
+        Log::debug('Employee ID: '.$emp_id);
+        Log::debug('Report To ID: '.$report_to_emp_id);
+        Log::debug('Multiple approval levels required: '.$multiple_approval_levels_required);
+        Log::debug('Leave request approval: '.$leave_request_approval);
+        Log::debug('Leave Status: '.$leave_status);
+        Log::debug('Report To Level: '.$report_to_level);
+        
+        if ($leave_status == 1) {
+            Log::debug('Leave Status == 1');
             
             if ($multiple_approval_levels_required == 1) {
-	        
+                Log::debug('Multiple approval levels required == 1');
 	            if ($report_to_level == 1) 
 	            {
+	                Log::debug('Report To Level == 1');
 		            if($leave_request_approval == 0)
 		            {
+		                Log::debug('Leave request approval == 0');
 			       	    LeaveRequest::find($id)->update(array('status' => 'new'));      //then update leave request status = new
                         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
                         $leaveRequestData = $request->validate([
                         ]);
         
-                        $user = Auth::user();
-                        $report_to_emp_id = $user->employee->id;
                         $leaveRequestData['leave_request_id'] = $request->id;
                         $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
                         $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
+                        Log::debug('leaveRequestData');
+                        Log::debug($leaveRequestData);
                         $employee = Employee::find($report_to_emp_id);
                         $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
                         $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
-                        ->orderby('created_at', 'desc')->first();
+                            ->orderby('created_at', 'desc')->first();
                         
                         // send leave request email notification
-                        self::sendLeaveRequestApprovalFirstApproverNotification($leave_request_approval, $emp_id);                      
-                        return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved Level One');
+                        self::sendLeaveRequestApprovalFirstApproverNotification($leave_request_approval, $emp_id); 
+                        Log::debug('Leave request is approved by level one report to');
+                        return redirect()->route('employee.e-leave.request')->with('status','Leave request is approved');
                     }
 	        	    else 
 	        	    {
-		               return redirect()->route('employee.e-leave.request')->with('status','You Already Approved This Leave');
+		               return redirect()->route('employee.e-leave.request')->with('status','You already approved this leave');
 	        	    }
                 } else {
+                    Log::debug('Report To Level != 1'); // admin?
                     if($leave_request_approval == 0) {
-                        return redirect()->route('employee.e-leave.request')->with('status','You are not first approver');
+                        Log::debug('Leave request approval == 0');
+                        return redirect()->route('employee.e-leave.request')->with('status','You are not level one report to');
                     } else {
+                        Log::debug('Leave request approval != 0');
 	        		    LeaveRequest::find($id)->update(array('status' => 'approved'));      //then update leave request status = new
                         $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();                       
                         $leaveRequestData = $request->validate([]);
         
-                        $user = Auth::user();
-                        $report_to_emp_id = $user->employee->id;
                         $leaveRequestData['leave_request_id'] = $request->id;
                         $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
                         $leaveRequestData = new LeaveRequestApproval($leaveRequestData);  
+                        Log::debug('leaveRequestData');
+                        Log::debug($leaveRequestData);
                         $employee = Employee::find($report_to_emp_id);
                         $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
             
                         // $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)->first();
                         $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
-                        ->orderby('created_at', 'desc')->first();
+                            ->orderby('created_at', 'desc')->first();
                         
                         // send leave request email notification
                         self::sendLeaveRequestApprovalNotification($leave_request_approval,$emp_id);
-            
-                        return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved By Approver Level Two');
-                    
-
+                        Log::debug('Leave request is approved');
+                        return redirect()->route('employee.e-leave.request')->with('status','Leave request is approved');
                     }
-
                 }
             }
             else
             {
-                       
+                Log::debug('Multiple approval levels required != 1');
                 LeaveRequest::find($id)->update(array('status' => 'approved'));
                 $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
                 $leaveRquestData = $request->validate([
                 ]);
         
-                $user = Auth::user();
-                $report_to_emp_id = $user->employee->id;
                 $leaveRequestData['leave_request_id'] =$request->id;
                 $leaveRequestData['approved_by_emp_id'] = $report_to_emp_id;
 
                 $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
+                Log::debug('leaveRequestData');
+                Log::debug($leaveRequestData);
                 $employee = Employee::find($report_to_emp_id);
                 $leave_approval = $employee->leave_request_approvals()->save($leaveRequestData);
                 $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
-                ->orderby('created_at', 'desc')->first();
+                    ->orderby('created_at', 'desc')->first();
                 
                 // send leave request email notification
-                self::sendLeaveRequestApprovalNotification($leave_request_approval);
-                return redirect()->route('employee.e-leave.request')->with('status','Leave Request Approved');
-         
+                self::sendLeaveRequestApprovalNotification($leave_request_approval, $emp_id);
+                Log::debug('Leave request is approved');
+                return redirect()->route('employee.e-leave.request')->with('status','Leave request is approved');
             } 
-        }
-        else if ($leave_status == '2')
-        {
-         return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Approve.');
         }
         else 
         {
-         return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Approve.');
+            return redirect()->route('employee.e-leave.request')->with('status', 'Unable to approve leave request.');
         }
-    
-
     }
 
     public function postDisapproved(Request $request) 
-    {          
+    {    
+        Log::debug('Reject Leave');
         $id = $request->input('id');     
         $emp_id = $request->input('emp_id');    
         $leave_type_id = $request->input('leave_type_id');   
@@ -882,380 +885,332 @@ else{
             ->where('leave_type_id',$leave_type_id)
             ->count();
 
-        $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
-            ->where('report_to_emp_id','=',$report_to_emp_id)
-            ->where('emp_id','=',$emp_id)  
-            ->where ('report_to_level','=','1')
-            ->get();  
+//         $employee_report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
+//             ->where('report_to_emp_id','=',$report_to_emp_id)
+//             ->where('emp_id','=',$emp_id)  
+//             ->where ('report_to_level','=','1')
+//             ->get();  
 
         $leave_request_approval = LeaveRequestApproval::where('leave_request_id','=',$id) //check leave_request id in leave request approval
-        ->count(); 
+            ->count(); 
 
-       $leave_status =LeaveRequest::select('status')
-       ->where('id',$id)   //to get leave request status
-       ->where('status','new')
-       ->count();
+        $leave_status =LeaveRequest::select('status')
+           ->where('id',$id)   //to get leave request status
+           ->where('status','new')
+           ->count();
         
-       $report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
-       ->where('report_to_emp_id','=',$report_to_emp_id)
-       ->where('emp_id','=',$emp_id) 
-       ->where('report_to_level','1') 
-       ->count(); 
+        $report_to_level = EmployeeReportTo::select('report_to_level')  //to check employee report to level = 1 
+           ->where('report_to_emp_id','=',$report_to_emp_id)
+           ->where('emp_id','=',$emp_id) 
+           ->where('report_to_level','1') 
+           ->count(); 
+       
+        Log::debug('Leave Request ID: '.$id);
+        Log::debug('Employee ID: '.$emp_id);
+        Log::debug('Report To ID: '.$report_to_emp_id);
+        Log::debug('Multiple approval levels required: '.$multiple_approval_levels_required);
+        Log::debug('Leave request approval: '.$leave_request_approval);
+        Log::debug('Leave Status: '.$leave_status);
+        Log::debug('Report To Level: '.$report_to_level);
         
-        if ($leave_status == 1){
+        if ($leave_status == 1) {
+            Log::debug('Leave Status == 1');
             
             if ($multiple_approval_levels_required == 1) {
-	        
-	            if ($report_to_level == 1) 
-	            {
-		            if($leave_request_approval == 0)
-		            {
+                Log::debug('Multiple approval levels required == 1');
+	            
+	            if ($report_to_level == 1) {
+	                Log::debug('Report To Level == 1');
+	                
+		            if($leave_request_approval == 0) {
+		                Log::debug('Leave request approval == 0');
+		                
                         $leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
-                        ->where('emp_id',$emp_id)
-                        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+                            ->where('emp_id',$emp_id)
+                            ->where('leave_type_id',$leave_type_id)->first()->spent_days;
             
                         $leaveAllocationData = number_format($leaveAllocationApprovalData,1);
                         $total_days =number_format($total_days,1);
                         $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
                         LeaveRequest::where('id',$id)
-                        ->update(array('status' => 'rejected'));
+                            ->update(array('status' => 'rejected'));
                         
                         $leaveTotalDays = LeaveRequest::select('applied_days')
-                        ->where('id', $id )
-                        ->get();
+                            ->where('id', $id )
+                            ->get();
 
                         $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-                        ->where('leave_type_id',$leave_type_id)
-                        ->update(array('spent_days'=>$leaveAllocationDataEntry));
+                            ->where('leave_type_id',$leave_type_id)
+                            ->update(array('spent_days'=>$leaveAllocationDataEntry));
             
                         $leave_request_rejected = LeaveRequest::where('id', $id)->first();
                         
                         // send leave request email notification
-                        self::sendLeaveRequestRejectedByFirstApproverNotification($leave_request_rejected);
-                
-                        return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected By First Approver');
+                        self::sendLeaveRequestRejectedNotification($leave_request_rejected, $emp_id);
+                        Log::debug('Leave request is rejected by level one report to.');
+                        
+                        return redirect()->route('employee.e-leave.request')->with('status','Leave request is rejected.');
                     }
 	        	    else 
 	        	    {
-		            return redirect()->route('employee.e-leave.request')->with('status','You Already Approved This Leave');
+                        return redirect()->route('employee.e-leave.request')->with('status','You already rejected this request');
 	        	    }
                 }
-
-                else
-                {
-                    if($leave_request_approval == 0)
-		            {
+                else {
+                    Log::debug('Report To Level != 1');
                     
-                    return redirect()->route('employee.e-leave.request')->with('status','You Are Not First Approver');  
+                    if($leave_request_approval == 0) {
+		                Log::debug('Leave request approval == 0');
+                    
+                        return redirect()->route('employee.e-leave.request')->with('status','You are not level one report to.');  
                     }
-                    else 
-                    {
+                    else {
+                        Log::debug('Leave request approval != 0');
+                        
                         $leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
-                        ->where('emp_id',$emp_id)
-                        ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+                            ->where('emp_id',$emp_id)
+                            ->where('leave_type_id',$leave_type_id)->first()->spent_days;
             
                         $leaveAllocationData = number_format($leaveAllocationApprovalData,1);
                         $total_days =number_format($total_days,1);
                         $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
                         LeaveRequest::where('id',$id)
-                        ->update(array('status' => 'rejected'));
+                            ->update(array('status' => 'rejected'));
                         
                         $leaveTotalDays = LeaveRequest::select('applied_days')
-                        ->where('id', $id )
-                        ->get();
+                            ->where('id', $id )
+                            ->get();
 
                         $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-                        ->where('leave_type_id',$leave_type_id)
-                        ->update(array('spent_days'=>$leaveAllocationDataEntry));
+                            ->where('leave_type_id',$leave_type_id)
+                            ->update(array('spent_days'=>$leaveAllocationDataEntry));
             
                         $leave_request_rejected = LeaveRequest::where('id', $id)->first();
                         
                         // send leave request email notification
-                        self::sendLeaveRequestRejectedByFirstApproverNotification($leave_request_rejected);
+                        self::sendLeaveRequestRejectedNotification($leave_request_rejected, $emp_id);
+                        Log::debug('Leave request id rejected by level two report to.');
                 
-                        return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected By Second Approver');
-                    
-
+                        return redirect()->route('employee.e-leave.request')->with('status','Leave request is rejected');
                     }
-
                 }
             }
-            else
-            {
-                       
+            else {
+                Log::debug('Multiple approval levels required != 1');
+                
             	$leaveAllocationApprovalData = LeaveAllocation::select ('spent_days')
-                ->where('emp_id',$emp_id)
-                ->where('leave_type_id',$leave_type_id)->first()->spent_days;
+                    ->where('emp_id',$emp_id)
+                    ->where('leave_type_id',$leave_type_id)->first()->spent_days;
     
                 $leaveAllocationData = number_format($leaveAllocationApprovalData,1);
                 $total_days =number_format($total_days,1);
                 $leaveAllocationDataEntry = $leaveAllocationData - $total_days;
 
                 LeaveRequest::where('id',$id)
-                ->update(array('status' => 'rejected'));
+                    ->update(array('status' => 'rejected'));
                 
                 $leaveTotalDays = LeaveRequest::select('applied_days')
-                ->where('id', $id )
-                ->get();
+                    ->where('id', $id )
+                    ->get();
 
                 $spent_days_allocation = LeaveAllocation::where('emp_id',$emp_id)
-                ->where('leave_type_id',$leave_type_id)
-                ->update(array('spent_days'=>$leaveAllocationDataEntry));
+                    ->where('leave_type_id',$leave_type_id)
+                    ->update(array('spent_days'=>$leaveAllocationDataEntry));
 
                 $leave_request_rejected = LeaveRequest::where('id', $id)->first();
                 
                 // send leave request email notification
-                self::sendLeaveRequestRejectedNotification($leave_request_rejected);
+                self::sendLeaveRequestRejectedNotification($leave_request_rejected, $emp_id);
+                Log::debug('Leave request is rejected.');
                 
-                return redirect()->route('employee.e-leave.request')->with('status','Leave Request Rejected');
-         
+                return redirect()->route('employee.e-leave.request')->with('status','Leave request is rejected');
             } 
-        }
-        else if ($leave_status == '2')
-        {
-        return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Reject.');
         }
         else 
         {
             return redirect()->route('employee.e-leave.request')->with('status', 'Leave Request Cant Be Reject');
         }
-    
-
     }
 
     public function sendLeaveRequestNotification(LeaveRequest $leave_request) 
     {
+        $user = Auth::user();
+        $to_recipients = array();
         $cc_recipients = array();
         $bcc_recipients = array();
-    
-   
-        $report_to_level_one = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
-        ->where('report_to_level',1)
-        ->where('employee_report_to.deleted_at',null)
-        ->get();
-
-
-    foreach ($report_to_level_one as $row) {
-        $employee = DB::table('employees')
+        array_push($cc_recipients, $user->email);
+        array_push($bcc_recipients, config('logging.developer'));
+        
+        Log::debug('Multi Approval: Employee apply leave, send email notification to level one report to');
+        Log::debug('Employee ID: '.$user->employee->id);
+        $report_to_level_one = EmployeeReportTo::where('emp_id', $user->employee->id)
+            ->join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
             ->join('users', 'users.id', '=', 'employees.user_id')
-            ->select('users.name','users.email')
-            ->where('employees.id', $row->report_to_emp_id)
+            ->where('employee_report_to.report_to_level', '1')
+            ->where('employee_report_to.deleted_at', null)
+            ->select('users.email')
             ->first();
-           
-        array_push($cc_recipients, $employee->email);
-    }
-
-             $admin_users = User::whereHas("roles", function($q){
-             $q->where("name", "admin");
-            })->get();
-    
-   
-            foreach ($admin_users as $row) {
-      
-            array_push($bcc_recipients, $row->email);
-             }
-
-
-
-        \Mail::to($cc_recipients)
-            ->cc(Auth::user()->email)
+        
+        Log::debug($report_to_level_one->email);
+        Log::debug($user->email);
+        Log::debug(config('logging.developer'));
+        
+        if($report_to_level_one != null) {
+            array_push($to_recipients, $report_to_level_one->email);
+            
+            Log::debug($to_recipients);
+            Log::debug($cc_recipients);
+            Log::debug($bcc_recipients);
+            
+            \Mail::to($to_recipients) //($report_to_level_one->email)
+            ->cc($cc_recipients)
             ->bcc($bcc_recipients)
-            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+            ->send(new LeaveRequestMail($leave_request));
+        }
     }
+    
     public function sendLeaveRequestNonMultipleNotification(LeaveRequest $leave_request) 
     {
+        Log::debug('Employee apply leave, send email notification to level one report to');
+        Log::debug('Employee ID: '.Auth::user()->employee->id);
+        
+        $to_recipients = array();
         $cc_recipients = array();
         $bcc_recipients = array();
-        $cc_recipients_report_to =array();
-    
+        array_push($cc_recipients, Auth::user()->email);
+        array_push($bcc_recipients, config('logging.developer'));
         
         $report_to = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
-            ->where('report_to_level',2)
-            ->where('employee_report_to.deleted_at',null)
+            ->join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where('employee_report_to.deleted_at', null)
+            ->select('users.email')
             ->get();
-    
-
-        foreach ($report_to as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->report_to_emp_id)
-                ->first();
-               
-            array_push($cc_recipients, $employee->email);
-        }
-
-        $report_tos = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
-        ->where('report_to_level',1)
-        ->where('employee_report_to.deleted_at',null)
-        ->get();
-
-        foreach ($report_tos as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->report_to_emp_id)
-                ->first();
-               
-            array_push($cc_recipients_report_to, $employee->email);
-        }
-
-                //  // get admin users
-         $admin_users = User::whereHas("roles", function($q){
-             $q->where("name", "admin");
-         })->get();
-         
+        Log::debug($report_to);
         
-         foreach ($admin_users as $row) {
-           
-             array_push($bcc_recipients, $row->email);
-         }
-        \Mail::to($cc_recipients)
-            ->cc($cc_recipients_report_to)
-            ->bcc($bcc_recipients,Auth::user()->email)
-            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+        if ($report_to != null) {
+            array_push($to_recipients, $report_to->email);
+        }
+        
+        Log::debug($to_recipients);
+        Log::debug($cc_recipients);
+        Log::debug($bcc_recipients);
+        
+        \Mail::to($to_recipients)
+            ->cc($cc_recipients)
+            ->bcc($bcc_recipients)
+            ->send(new LeaveRequestMail($leave_request));
     }
-
-
 
     public function sendLeaveRequestApprovalFirstApproverNotification(LeaveRequestApproval $leave_request_approval, $emp_id) 
     {
+        $to_recipients = array();
         $cc_recipients = array();
         $bcc_recipients = array();
-        $to = array();
-
-
+        array_push($bcc_recipients, config('logging.developer'));
+        
         //send email to second approver 
         $report_to = EmployeeReportTo::where('emp_id', $emp_id)
-        ->where('report_to_level', '2')
-        ->where('employee_report_to.deleted_at',null)
-        ->get();
-
-        foreach ($report_to as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->report_to_emp_id)
-                ->first();
-
-            array_push($to, $employee->email);
+            ->join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where('report_to_level', '2')
+            ->where('employee_report_to.deleted_at', null)
+            ->select('users.email')
+            ->first();
+        Log::debug($report_to);
+        
+        if ($report_to != null) {
+            array_push($to_recipients, $report_to->email);
         }
 
-        
-        // get admin users
-        $admin_users = User::whereHas("roles", function($q){
-            $q->where("name", "admin");
-        })->get();
-        
-       
-        foreach ($admin_users as $row) {
-          
-            array_push($bcc_recipients, $row->email);
-        }
-
+        Log::debug('>>>>>>>>>>>> ');
         //find employee
-            $employees = EmployeeReportTo::select('emp_id')
+        $employees = EmployeeReportTo::select('users.email')
+            ->join('employees', 'employees.id', '=', 'employee_report_to.emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
             ->where('emp_id', $emp_id)
             ->first();
-
-        foreach ($employees as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $emp_id)
-                ->first();
-               
-            array_push($cc_recipients, $employee->email);
+            Log::debug('******* ');
+        if ($employees != null) {
+            array_push($cc_recipients, $employees->email);
         }
 
-
-        \Mail::to($to)
+        Log::debug($to_recipients);
+        Log::debug($cc_recipients);
+        Log::debug($bcc_recipients);
+        
+        \Mail::to($to_recipients)
             ->cc($cc_recipients)
             ->bcc($bcc_recipients)
-            ->send(new LeaveApprovalFirstApproverMail(Auth::user(), $leave_request_approval));
+            ->send(new LeaveApprovalFirstApproverMail($leave_request_approval));
     }
 
-    public function sendLeaveRequestRejectedNotification(LeaveRequest $leave_request_rejected) 
+    public function sendLeaveRequestRejectedNotification(LeaveRequest $leave_request_rejected, $emp_id) 
     {
-        $cc_recipients = array();
-
-        // get report to users
-        $report_to = EmployeeReportTo::select('emp_id')
-            ->where('report_to_emp_id', Auth::user()->employee->id)
-            ->get();
-
-            $report_tos = EmployeeReportTo::select('emp_id')
-            ->where('report_to_emp_id', Auth::user()->employee->id)
+        $to_recipients = array();
+        $bcc_recipients = array();
+        array_push($bcc_recipients, config('logging.developer'));
+        
+        //find employee
+        $employees = EmployeeReportTo::select('users.email')
+            ->join('employees', 'employees.id', '=', 'employee_report_to.emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where('emp_id', $emp_id)
             ->first();
         
-            $employee_report_to_id = EmployeeReportTo::select('report_to_emp_id')
-            ->where('emp_id', $report_tos->emp_id)
-            ->get();
-
-        foreach ($report_to as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->emp_id)
-                ->first();
-               
-            array_push($cc_recipients, $employee->email);
+        if ($employees != null) {
+            array_push($to_recipients, $employees->email);
+            
+            \Mail::to($to_recipients)
+                ->bcc($bcc_recipients)
+                ->send(new LeaveRejectedMail($leave_request_rejected));
         }
-
-        \Mail::to($cc_recipients)
-            ->send(new LeaveRejectedMail(Auth::user(), $leave_request_rejected));
     }
-    public function sendLeaveRequestRejectedByFirstApproverNotification(LeaveRequest $leave_request_rejected) 
+    
+    public function sendLeaveRequestRejectedByFirstApproverNotification(LeaveRequest $leave_request_rejected, $emp_id) 
     {
-        $cc_recipients = array();
+        $to_recipients = array();
+        $bcc_recipients = array();
+        array_push($bcc_recipients, config('logging.developer'));
 
-        // get report to users
-        $report_to = EmployeeReportTo::select('emp_id')
-            ->where('report_to_emp_id', Auth::user()->employee->id)
-            ->get();
-
-
-        foreach ($report_to as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->emp_id)
-                ->first();
-               
-            array_push($cc_recipients, $employee->email);
+        //find employee
+        $employees = EmployeeReportTo::select('users.email')
+            ->join('employees', 'employees.id', '=', 'employee_report_to.emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where('emp_id', $emp_id)
+            ->first();
+        
+        if ($employees != null) {
+            array_push($to_recipients, $employees->email);
+            
+            \Mail::to($to_recipients)
+                ->bcc($bcc_recipients)
+                ->send(new LeaveRejectedFirstApproverMail($leave_request_rejected));
         }
-
-        \Mail::to($cc_recipients)
-            ->send(new LeaveRejectedFirstApproverMail(Auth::user(), $leave_request_rejected));
     }
 
-    public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval) 
+    public function sendLeaveRequestApprovalNotification(LeaveRequestApproval $leave_request_approval, $emp_id) 
     {
+        $to_recipients = array();
+        $bcc_recipients = array();
+        array_push($bcc_recipients, config('logging.developer'));
 
-        $cc_recipients = array();
-
-        // get report to users
-        $report_to = EmployeeReportTo::select('emp_id')
-            ->where('report_to_emp_id', Auth::user()->employee->id)
-            ->get();
-
-
-        foreach ($report_to as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->emp_id)
-                ->first();
-               
-            array_push($cc_recipients, $employee->email);
+        //find employee
+        $employees = EmployeeReportTo::select('users.email')
+            ->join('employees', 'employees.id', '=', 'employee_report_to.emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where('emp_id', $emp_id)
+            ->first();
+        
+        if ($employees != null) {
+            array_push($to_recipients, $employees->email);
+            
+            \Mail::to($to_recipients)
+                ->bcc($bcc_recipients)
+                ->send(new LeaveApprovalMail($leave_request_approval));
         }
-
-        \Mail::to($cc_recipients)
-            ->send(new LeaveApprovalMail(Auth::user(), $leave_request_approval));
     }
-
-
 }
     

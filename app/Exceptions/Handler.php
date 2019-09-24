@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
             
             $html = $handler->getHtml($e);
             
-            Mail::to(env('DEVELOPER_EMAIL'))->send(new ExceptionOccured($html));
+            Mail::to(config('logging.developer'))->send(new ExceptionOccured($html));
         } catch (Exception $ex) {
             Log::error($ex);
         }
