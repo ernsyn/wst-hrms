@@ -1,4 +1,9 @@
-@extends(AccessControllHelper::isKpiProposer() ? 'layouts.base' : 'layouts.admin-base')
+@if(session('mode') == 'admin')
+	@extends('layouts.admin-base')
+@else
+	@extends('layouts.base')
+@endif
+
 @section('pageTitle', 'Payroll')
 @section('content')
 

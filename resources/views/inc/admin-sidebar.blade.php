@@ -1,3 +1,5 @@
+{{ session(['mode' => 'admin']) }}
+{{ session('mode') }}
 <nav id="sidebar">
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">

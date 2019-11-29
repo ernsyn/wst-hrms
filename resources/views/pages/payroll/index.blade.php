@@ -1,4 +1,10 @@
-@extends((AccessControllHelper::isKpiProposer() && !AccessControllHelper::hasHrAdminRole()) ? 'layouts.base' : 'layouts.admin-base')
+@if(session('mode') == 'admin')
+	ADMIN
+	@extends('layouts.admin-base')
+@else
+	EMP
+	@extends('layouts.base')
+@endif
 @section('content')
 
 <!-- todo: pigination, search -->

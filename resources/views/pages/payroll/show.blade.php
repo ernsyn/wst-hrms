@@ -1,4 +1,8 @@
-@extends((AccessControllHelper::isKpiProposer() && !(AccessControllHelper::hasHrAdminRole() || AccessControllHelper::hasHrExecRole())) ? 'layouts.base' : 'layouts.admin-base')
+@if(session('mode') == 'admin')
+	@extends('layouts.admin-base')
+@else
+	@extends('layouts.base')
+@endif
 @section('content')
 
 <div class="container">
