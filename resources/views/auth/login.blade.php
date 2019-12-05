@@ -50,7 +50,7 @@
                 </div>
             </div>
             <footer>
-                <span>{{ __('Copyright © - Oppo HRIS 2018') }}</span>
+                <span>Copyright &copy; OPPO HRMS {{ date('Y') }}</span>
             </footer>
         </div>
     </div>

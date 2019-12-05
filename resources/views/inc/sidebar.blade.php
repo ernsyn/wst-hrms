@@ -1,10 +1,9 @@
 {{ session(['mode' => 'employee']) }}
-{{ session('mode') }}
 <nav id="sidebar">
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
-    @hasanyrole('super-admin|admin|hr-exec')
+    @hasanyrole('Super Admin|HR Admin|HR Exec')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -22,7 +21,7 @@
             </div>
         </div>
         <div id="mode-options" class="collapse">
-            @hasrole('super-admin')
+            @hasrole('Super Admin')
             <div class="option row col mx-0">
                 <a href="{{ route('super-admin.dashboard') }}">
                     Super Admin
@@ -85,7 +84,6 @@
             </ul>
         </li>
 
-        @if(AccessControllHelper::isKpiProposer())
         <li class="menu-section {{ request()->is('payroll*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payrollSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
@@ -104,7 +102,6 @@
             </ul>
 
         </li>
-        @endif
         
         <li class="menu-section {{ request()->is('payslip.show') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#payslipSubmenu" data-toggle="collapse" aria-expanded="false">

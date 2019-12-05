@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 <div id="end-btn-group">
-                	@hasanyrole('super-admin|admin')
+                	@hasanyrole('Super Admin|HR Admin')
                     <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
                         {{-- <i class="fas fa-pen"></i> --}}
                         Roles
@@ -535,7 +535,7 @@
     </div>
 </div>
 
-@hasanyrole('super-admin|admin')
+@hasanyrole('Super Admin|HR Admin')
 {{-- Change Role --}}<div class="modal fade" id="roles-popup" tabindex="-1" role="dialog" aria-labelledby="roles-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

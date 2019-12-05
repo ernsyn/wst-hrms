@@ -16,7 +16,7 @@ class AttendanceController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:super-admin|admin']);
+        $this->middleware(['role:Super Admin|HR Admin']);
     }
 
     public function getCurrentDayAttendance()

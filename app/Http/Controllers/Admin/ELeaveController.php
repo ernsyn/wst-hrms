@@ -33,7 +33,7 @@ class ELeaveController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:super-admin|admin']);
+        $this->middleware(['role:Super Admin|HR Admin']);
     }
 
     public function displayConfiguration()
@@ -507,37 +507,30 @@ class ELeaveController extends Controller
         $leave_status =LeaveRequest::where('id',$id)   //to get leave request status
         ->whereIn('status', ['approved', 'rejected'])
         ->count();
+        
         if ($leave_status == 0)
         {
-        LeaveRequest::find($id)->update(array('status' => 'approved'));
-        $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
-        $leaveRequestData = $request->validate([
+            LeaveRequest::find($id)->update(array('status' => 'approved'));
+            $leaveTotalDays = LeaveRequest::select('applied_days')->where('id', $id )->get();
+            $leaveRequestData = $request->validate([
             ]);
 
+            $leaveRequestData['leave_request_id'] =$id;
+            $leaveRequestData['approved_by_emp_id'] = Auth::user()->employee->id;
 
-        $leaveRequestData['leave_request_id'] =$id;
-        $leaveRequestData['approved_by_emp_id'] = Auth::user()->employee->id;
-       
+            $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
+            $leaveRequestData->save();
+            $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
+                ->orderby('created_at', 'desc')->first();
 
-
- 
-
-        $leaveRequestData = new LeaveRequestApproval($leaveRequestData);
-        $leaveRequestData->save();
-        $leave_request_approval = LeaveRequestApproval::where('leave_request_id', $id)
-        ->orderby('created_at', 'desc')->first();
-
-        // send leave request email notification
-        self::sendLeaveRequestApprovalNotification($leave_request_approval, $emp_id);
-        return redirect()->route('admin.e-leave.configuration.leave-requests');
-        
+            // send leave request email notification
+            self::sendLeaveRequestApprovalNotification($leave_request_approval, $emp_id);
+            return redirect()->route('admin.e-leave.configuration.leave-requests');
         }
-
         else
         {
-        return redirect()->route('admin.e-leave.configuration.leave-requests')->with('status', 'Leave Request Cant Be Approve.');
+            return redirect()->route('admin.e-leave.configuration.leave-requests')->with('status', 'Leave Request Cant Be Approve.');
         }
-
     }
 
     public function postDisapproved(Request $request)
@@ -1216,53 +1209,45 @@ class ELeaveController extends Controller
 
     public function sendLeaveRequestNotification(LeaveRequest $leave_request, $emp_id) 
     {
-        $cc_recipients = array();
-        $bcc_recipients= array();
+//         $to_recipients = array();
+//         $bcc_recipients= array();
 
         $report_to = EmployeeReportTo::where('emp_id', $emp_id)
+            ->join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
+            ->join('users', 'users.id', '=', 'employees.user_id')
+            ->where('employee_report_to.report_to_level', '1')
+            ->select('users.email')
+            ->first();
+            dd($report_to);
             
-        ->where('report_to_level', '1')
-            ->get();
-
-        foreach ($report_to as $row) {
-            $employee = DB::table('employees')
-                ->join('users', 'users.id', '=', 'employees.user_id')
-                ->select('users.name','users.email')
-                ->where('employees.id', $row->report_to_emp_id)
-                ->first();
-
-            array_push($cc_recipients, $employee->email);
+        if($report_to != null) {
+//             array_push($to_recipients, $report_to);
+            \Mail::to($report_to)
+                ->cc(Auth::user()->email)
+                ->bcc(env('BCC_EMAIL'))
+                ->send(new LeaveRequestMail(Auth::user(), $leave_request));
         }
+        
+//         foreach ($report_to as $row) {
+//             $employee = DB::table('employees')
+//                 ->join('users', 'users.id', '=', 'employees.user_id')
+//                 ->select('users.name','users.email')
+//                 ->where('employees.id', $row->report_to_emp_id)
+//                 ->first();
 
-        // get report to users
-        // $report_to = EmployeeReportTo::where('emp_id', Auth::user()->employee->id)
-        //     ->where('report_to_level', '1')
-        //     ->get();
-
-        // foreach ($report_to as $row) {
-        //     $employee = DB::table('employees')
-        //         ->join('users', 'users.id', '=', 'employees.user_id')
-        //         ->select('users.name','users.email')
-        //         ->where('employees.id', $row->report_to_emp_id)
-        //         ->first();
-        //     array_push($cc_recipients, $employee->email);
-        // }
+//             array_push($cc_recipients, $employee->email);
+//         }
 
 
         // get admin users
-        $admin_users = User::whereHas("roles", function($q){
-            $q->where("name", "admin");
-        })->get();
+//         $admin_users = User::whereHas("roles", function($q){
+//             $q->where("name", "admin");
+//         })->get();
 
-        foreach ($admin_users as $row) {
-            array_push($bcc_recipients, $row->email);
-        }
-
-        \Mail::to($bcc_recipients)
-            ->cc(Auth::user()->email)
-            ->bcc($cc_recipients)
-            ->send(new LeaveRequestMail(Auth::user(), $leave_request));
-
+//         foreach ($admin_users as $row) {
+//             array_push($bcc_recipients, $row->email);
+//         }
+        
     }
 
     public function sendLeaveRequestNonMultipleNotification(LeaveRequest $leave_request, $emp_id) 

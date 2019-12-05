@@ -59,7 +59,7 @@
 
 {{-- TABLE --}}
 <div class="tab-pane fade show p-3" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
-	@hasrole('admin')
+	@hasrole('HR Admin')
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -108,7 +108,7 @@
             "data": null, // can be null or undefined
             render: function (data, type, row, meta) {
                 // return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-security-group-popup"><i class="far fa-edit"></i></button>` +
-                @hasrole('admin')
+                @hasrole('HR Admin')
                 return `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-security-group-modal"><i class="far fa-trash-alt"></i></button>`;
                 @endhasrole
                 return '';

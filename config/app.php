@@ -168,6 +168,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         App\Providers\MacroServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
 
     ],
 
@@ -232,6 +233,8 @@ return [
         'EisCategoryEnum' => App\Enums\EisCategoryEnum::class,
         'SocsoCategoryEnum' => App\Enums\SocsoCategoryEnum::class,
         'EpfCategoryEnum' => App\Enums\EpfCategoryEnum::class,
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
 
     ],
 

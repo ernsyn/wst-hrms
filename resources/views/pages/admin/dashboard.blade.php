@@ -1,5 +1,5 @@
 @extends('layouts.admin-base') 
-@section('content') {{-- @hasrole('super-admin') --}}
+@section('content') {{-- @hasrole('Super Admin') --}}
 <div id="page-admin-dashboard" class="p-4">
     <div class="row">
         <div class="p-2 col-xl-3 col-lg-6">

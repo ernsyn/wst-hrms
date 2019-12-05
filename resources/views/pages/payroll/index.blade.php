@@ -30,7 +30,7 @@
 			@endif
 		</div>
 		<div class="col-auto">
-			@hasrole('admin') 
+			@hasrole('HR Admin') 
 			<a role="button" class="btn btn-primary" href="{{ route('payroll.create') }}"> Add Payroll </a> 
 			@endhasrole
 		</div>
@@ -59,7 +59,7 @@
 						<td>{{ $row->name }}</td>
 						<td>
 							<button onclick="window.location='{{ route('payroll.show',$row->id) }}';" class="round-btn btn btn-default fas fa-eye btn-segment"></button>
-							@hasanyrole('super-admin|admin')
+							@hasanyrole('Super Admin|admin')
 							<form action="{{ route('payroll.status.update', ['id'=>$row->id]) }}" method="POST" style="display: inline;">
 								<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
 								@if ($row->status === 0) 

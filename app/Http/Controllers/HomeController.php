@@ -27,11 +27,11 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if($user->hasRole('employee')) {
+        if($user->hasRole('Employee')) {
             return redirect()->route('employee.e-leave.leave-application');
-        } else if($user->hasRole('admin')) {
+        } else if($user->hasRole('HR Admin')) {
             return redirect()->route('admin.dashboard');
-        } else if($user->hasRole('super-admin')) {
+        } else if($user->hasRole('Super Admin')) {
             return redirect()->route('super-admin.dashboard');
         }
 

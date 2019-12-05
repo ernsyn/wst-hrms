@@ -1,11 +1,10 @@
 {{ session(['mode' => 'admin']) }}
-{{ session('mode') }}
 <nav id="sidebar">
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
     <div id="hrms-mode-container">
-    	@hasanyrole('super-admin|admin|hr-exec')
+    	@hasanyrole('Super Admin|HR Admin|HR Eexec')
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
                 Mode
@@ -23,14 +22,14 @@
         </div>
     	@endhasanyrole 
         <div id="mode-options" class="collapse">
-            @hasrole('super-admin')
+            @hasrole('Super Admin')
             <div class="option row col mx-0">
                 <a href="{{ route('super-admin.dashboard') }}">
                     Super Admin
                 </a>
             </div>
             @endhasrole
-            @hasrole('employee')
+            @hasrole('Employee')
             <div class="option row col mx-0">
                 <a href="{{ route('employee.dashboard') }}">
                     Employee
@@ -81,7 +80,7 @@
                 <li class="menu-option {{ request()->is('payroll') ? 'active' : '' }}">
                     <a href="{{ route('payroll') }}">Payroll</a>
                 </li>
-                @hasanyrole('super-admin|admin')
+                @hasanyrole('Super Admin|HR Admin')
                 <li class="menu-option {{ request()->is('government_report') ? 'active' : '' }}">
                     <a href="{{ route('payroll/government_report') }}">Government Reports</a>
                 </li>
@@ -95,7 +94,7 @@
             </ul>
         </li>
            
-		@hasanyrole('super-admin|admin')
+		@hasanyrole('Super Admin|HR Admin')
         {{-- SECTION: E-Leave --}}
         <li class="menu-section {{ request()->is('admin/e-leave*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
@@ -205,6 +204,16 @@
             </ul>
         </li>
 			       
+        {{-- SECTION: Roles and Permissions --}}
+        <li class="menu-section {{ request()->is('admin/role-permission*') ? 'active' : '' }}">
+            <a class="info" href="{{ route('admin.role-permission') }}">
+                <div class="row">
+                    <div class="col-1"><i class="fas fa-user-shield"></i></div>
+                    <div class="col-10">Roles & Permissions</div>
+                </div>
+            </a>
+        </li>
+        
         {{-- SECTION: Audit Trail --}}
         <li class="menu-section {{ request()->is('admin/audit-trail*') ? 'active' : '' }}">
             <a class="info" href="{{ route('admin.audit-trail') }}">

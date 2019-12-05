@@ -17,12 +17,12 @@
 		</div>
 		
 		<div id="mode-options" class="collapse">
-			@hasrole('super-admin|admin')
+			@hasrole('Super Admin|HR Admin')
 			<div class="option row col mx-0">
 				<a href="{{ route('admin.dashboard') }}"> Admin </a>
 			</div>
 			@endhasrole 
-			@hasrole('employee')
+			@hasrole('Employee')
 			<div class="option row col mx-0">
 				<a href="{{ route('employee.dashboard') }}"> Employee </a>
 			</div>

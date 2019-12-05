@@ -60,7 +60,7 @@ class SettingsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware([
-            'role:super-admin|admin'
+            'role:Super Admin|HR Admin'
         ]);
     }
 

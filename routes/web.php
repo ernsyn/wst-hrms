@@ -27,7 +27,7 @@ Route::group(['middleware' => ['auth']], function() {
 });
 
 // MODE: Employee
-Route::group(['middleware' => ['auth', 'role:employee']], function() {
+Route::group(['middleware' => ['auth', 'role:Employee']], function() {
 
     Route::post('profile/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
@@ -104,7 +104,7 @@ Route::group(['middleware' => ['auth', 'role:employee']], function() {
 });
 
 // MODE: Admin
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|admin|hr-exec']], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:Super Admin|HR Admin|HR Exec']], function() {
     Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
     // SECTION: EMPLOYEE
     // > View
@@ -409,12 +409,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:super-admin|ad
 
     Route::get('edit-employee/{id}', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee/{id}');
     Route::get('edit-employee', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee');
-
-
+    
+    // Roles & Permissions
+    Route::get('role-permission', 'Admin\RolePermissionController@index')->name('admin.role-permission');
+    Route::get('role-permission/add','Admin\RolePermissionController@create')->name('admin.role-permission.add');
+    Route::post('role-permission/add','Admin\RolePermissionController@store')->name('admin.role-permission.add.post');
+    Route::get('role-permission/{id}', 'Admin\RolePermissionController@show')->name('admin.role-permission.show')->where('id', '[0-9]+');
+    Route::get('role-permission/{id}/edit', 'Admin\RolePermissionController@edit')->name('admin.role-permission.edit')->where('id', '[0-9]+');
+    Route::delete('role-permission/{id}','Payroll\PayrollSetupController@destroy')->name('admin.role-permission.destroy')->where('id', '[0-9]+');
+    Route::post('role-permission/{id}/update','Admin\RolePermissionController@update')->name('admin.role-permission.update')->where('id', '[0-9]+');
+    
 });
 
 // MODE: Super Admin
-Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:super-admin']], function() {
+Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:Super Admin']], function() {
     Route::get('', 'SuperAdmin\DashboardController@index')->name('super-admin.dashboard');
 });
 /**

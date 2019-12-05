@@ -40,7 +40,7 @@ class AccessControllHelper
     
     public static function hasSuperadminRole()
     {
-        return Auth::user()->hasRole('super-admin');
+        return Auth::user()->hasRole('Super Admin');
     }
     
     public static function getSecurityGroupAccess()
@@ -73,7 +73,7 @@ class AccessControllHelper
     
     public static function getRoles() 
     {
-        $excludedRoles = array("employee", "super-admin"); 
+        $excludedRoles = array("Employee", "Super Admin"); 
         $roles = Roles::whereNotIn('name',$excludedRoles)->orderBy('name')->get();
         
         return $roles;

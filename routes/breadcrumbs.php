@@ -499,12 +499,28 @@ Breadcrumbs::for('admin.settings.securities', function ($trail) {
     $trail->push('Leave Balance', route('admin.settings.securities'));
 });
 
+Breadcrumbs::for('admin.role-permission', function ($trail) {
+    $trail->push('Roles & Permissions', route('admin.role-permission'));
+});
 
+Breadcrumbs::for('admin.role-permission.add', function ($trail) {
+    $trail->parent('admin.role-permission');
+    $trail->push('Add Role & Permissions', route('admin.role-permission.add'));
+});
+
+Breadcrumbs::for('admin.role-permission.show', function ($trail, $id) {
+    $trail->parent('admin.role-permission');
+    $trail->push('Role & Permissions Details', route('admin.role-permission.show', $id));
+});
+
+Breadcrumbs::for('admin.role-permission.edit', function ($trail, $id) {
+    $trail->parent('admin.role-permission');
+    $trail->push('Edit Role & Permissions', route('admin.role-permission.edit', $id));
+});
 
 
 // SECTION: (Admin) Audit Trail
 Breadcrumbs::for('admin.audit-trail', function ($trail) {
-    $trail->parent('admin.dashboard');
     $trail->push('Audit Trail', route('admin.audit-trail'));
 });
 

@@ -23,7 +23,7 @@
 			@endif
 		</div>
 		<div class="col-auto">
-			@hasrole('super-admin') 
+			@hasrole('Super Admin') 
 			<a role="button" class="btn btn-primary" href="{{ route('payroll-setup.create') }}"> Add Payroll Setup </a> 
 			@endhasrole
 		</div>
@@ -35,13 +35,13 @@
 				<thead>
 					<tr>
 						<th>No</th>
-						@hasanyrole('super-admin')
+						@hasanyrole('Super Admin')
 						<td>Company</td>
 						@endhasrole
 						<th>Key</th>
 						<th>Value</th>
 						<th>Remark</th>
-						@hasanyrole('super-admin')
+						@hasanyrole('Super Admin')
 						<th>Status</th>
 						@endhasrole
 						<th>Action</th>
@@ -51,18 +51,18 @@
 					@foreach($payrollSetup as $row)
 					<tr>
 						<td>{{ $loop->iteration }}</td>
-						@hasanyrole('super-admin')
+						@hasanyrole('Super Admin')
 						<td>{{ $row->company->name }}</td>
 						@endhasrole
 						<td>{{ $row->key }}</td>
 						<td>{{ $row->value }}</td>
 						<td>{{ $row->remark }}</td>
-						@hasanyrole('super-admin')
+						@hasanyrole('Super Admin')
 						<td>{{ StatusEnum::getDescription($row->status) }}</td>
 						@endhasrole
 						<td>
 							<button onclick="window.location='{{ route('payroll-setup.edit',$row->id) }}';" class="round-btn btn btn-default fas fa-edit btn-segment"></button>
-							@hasanyrole('super-admin')
+							@hasanyrole('Super Admin')
 							<button data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $row->key }}' data-link='{{ route('payroll-setup.destroy', ['id ' => $row->id]) }}' class="round-btn btn btn-default fas fa-trash btn-segment" type="submit"></button>
 							@endhasanyrole
 						</td>

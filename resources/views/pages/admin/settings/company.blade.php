@@ -11,7 +11,7 @@
             </button>
     </div>
     @endif
-    @hasrole('super-admin') 
+    @hasrole('Super Admin') 
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -52,7 +52,7 @@
                         <td>
                         	<button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="btn btn-default fas fa-eye"></button>
                             <button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
-                            @hasrole('super-admin') 
+                            @hasrole('Super Admin') 
                             <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $company->name }}' data-link='{{ route('admin.settings.companies.delete', ['id ' => $company->id]) }}' class="btn btn-danger btn-smt far fa-trash-alt"></button>
                          	{{-- <button type='submit' data-toggle="modal" data-target="#confirm-status-modal" data-entry-title='{{ $company->status }}' data-link='{{ route('admin.settings.companies-status.update', ['id ' => $company->id]) }}' class="btn btn-danger btn-smt far fa-ban-alt">
                                 </button>

@@ -10,7 +10,7 @@
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false" v-pre>
                         {{-- <i class="default-user-logo-light fas fa-user-circle fa-2x px-3 align-middle"></i> --}}
-                        @if (Auth::user()->hasRole('super-admin'))
+                        @if (Auth::user()->hasRole('Super Admin'))
                         
                         <i class="default-user-logo-light fas fa-user-circle fa-2x px-3 align-middle"></i>
 

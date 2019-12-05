@@ -18006,6 +18006,10 @@ select:-webkit-autofill:focus {
   pointer-events: none;
 }
 
+.main-content {
+  padding: 2rem;
+}
+
 .default-user-logo-light {
   color: white;
 }
@@ -18484,7 +18488,6 @@ select:-webkit-autofill:focus {
   position: absolute;
   top: 0;
   right: 0;
-  margin-bottom: 20px;
 }
 
 ::-webkit-scrollbar {
@@ -18692,19 +18695,7 @@ button.dropdown-toggle::after {
   display: none;
 }
 
-.tooltip-inner {
-	min-width: 200px;
-	max-width: 450px; 
-	text-align: left;
-	font-size: 0.7em;
-}
-
-@media (max-width: 450px) {
-	.tooltip-inner {
-		min-width: initial;
-		max-width: 450px;
-	}
-} .scrollable-menu {
+.scrollable-menu {
   height: auto;
   max-height: 200px;
   overflow-x: hidden;

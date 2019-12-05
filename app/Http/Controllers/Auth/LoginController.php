@@ -34,7 +34,7 @@ class LoginController extends Controller
     // protected $redirectTo = '/home';
 
     protected function redirectTo() {
-        if(\Auth::user()->hasRole('super-admin')) {
+        if(\Auth::user()->hasRole('Super Admin')) {
             return route("super-admin.dashboard");
         }
 
@@ -66,7 +66,7 @@ class LoginController extends Controller
             abort(403, 'Unauthorized.');
         }
         
-        if(\Auth::user()->hasRole('super-admin')) {
+        if(\Auth::user()->hasRole('Super Admin')) {
             return redirect()->route("super-admin.dashboard");
         }
     }
