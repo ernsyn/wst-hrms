@@ -28,7 +28,7 @@
                 </a>
             </div>
             @endhasrole
-            @hasanyrole('admin|hr-exec')
+            @hasanyrole('HR Admin|HR Exec')
             <div class="option row col mx-0">
                 <a href="{{ route('admin.dashboard') }}">
                     Admin

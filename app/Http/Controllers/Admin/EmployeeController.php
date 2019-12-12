@@ -12,6 +12,7 @@ use Hash;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
@@ -88,7 +89,8 @@ class EmployeeController extends Controller
         ->join('employees','security_groups.company_id','=','employees.company_id')
         ->select('security_groups.*')
         ->where('employees.id',$id)
-        ->get();		$roles = AccessControllHelper::getRoles();
+        ->get();		
+		$roles = AccessControllHelper::getRoles();
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
@@ -1271,17 +1273,14 @@ else {
     
     public function postEditRoles(Request $request, $id)
     {
+        $request->validate([
+            'role' => 'required',
+        ]);
+        
         $employee = Employee::where('id', $id)->first();
+        $employee->user->syncRoles([$request['role']]);
         
-        foreach($request['assignRoles'] as $r){
-            if($r['assign'] == 1){
-                $employee->user->assignRole($r['role']);
-            }else{
-                $employee->user->removeRole($r['role']);
-            }
-        }
-        
-        return response()->json(['success'=>'Employee roles were successfully updated.']);
+        return response()->json(['success'=>'Employee\'s role is updated.']);
     }
     
     public function importUser($fileName, $companyId)

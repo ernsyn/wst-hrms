@@ -25,6 +25,8 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Delete Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         Permission::create(['name' => 'Duplicate Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         
+        Permission::create(['name' => 'Assign Role', 'mode' => 'admin', 'module' => 'Employees']);
+        
         Permission::create(['name' => 'View Employee Dashboard', 'mode' => 'employee', 'module' => 'Employee Dashboard']);
         
         $role = Role::where('name', 'Super Admin')->first();

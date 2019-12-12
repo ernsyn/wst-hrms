@@ -65,7 +65,7 @@ class ELeaveController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:employee']);
+//         $this->middleware(['role:employee']);
     }
     
     public function addLeaveApplication(Request $request)

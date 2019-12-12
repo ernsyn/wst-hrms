@@ -41,15 +41,20 @@
                                 <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
                                 </span>
                             </div>
+                            <div class="field pb-1">
+                                <span class="field-name mr-2">Role</span>
+                                <span class="field-value">{{ $employee->user->roles->pluck('name')->first() }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 <div id="end-btn-group">
-                	@hasanyrole('Super Admin|HR Admin')
+                	@can('Assign Role')
                     <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
-                        {{-- <i class="fas fa-pen"></i> --}}
-                        Roles
+                        Assign Role
                     </button>
-					@endhasanyrole					<button id="emp-reset-password-btn" data-toggle="modal" data-target="#reset-password-popup" type="button" class="btn btn-sm text-white rounded">                        {{-- <i class="fas fa-pen"></i> --}}
+					@endcan					
+					<button id="emp-reset-password-btn" data-toggle="modal" data-target="#reset-password-popup" type="button" class="btn btn-sm text-white rounded">                        {{-- <i class="fas fa-pen"></i> --}}
                         Reset Password
                     </button>
                 </div>
@@ -535,29 +540,45 @@
     </div>
 </div>
 
-@hasanyrole('Super Admin|HR Admin')
-{{-- Change Role --}}<div class="modal fade" id="roles-popup" tabindex="-1" role="dialog" aria-labelledby="roles-label" aria-hidden="true">
+@can('Assign Role')
+{{-- Change Role --}}
+<div class="modal fade" id="roles-popup" tabindex="-1" role="dialog" aria-labelledby="roles-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="roles-label">Roles</h5>
+                <h5 class="modal-title" id="roles-label">Assign Role</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-check">
-                	@foreach ($roles as $role)
-                        @if($employee->user->hasRole($role->name))
-                        <input class="form-check-input" type="checkbox" name="role-admin-checkbox[]" value="{{ $role->name }}" checked>
-                        @else
-                        <input class="form-check-input" type="checkbox" name="role-admin-checkbox[]" value="{{ $role->name }}">
-                        @endif
-                        <label class="form-check-label" for="role-admin-checkbox" style="text-transform: uppercase;">{{ $role->name }}</label><br/>
-                    @endforeach
-                    <div id="role-admin-error" class="invalid-feedback">
+            	<div class="form-group row">
+            		<div class="col-3">Employee ID</div>
+            		<div class="col-9">: {{$employee->code}}</div>
+            	</div>
+            	
+            	<div class="form-group row">
+            		<div class="col-3">Name</div>
+            		<div class="col-9">: {{$employee->user->name}}</div>
+            	</div>
+                   
+                <div class="form-group row">
+                	<div class="col-3">Role</div>
+                    <div class="col-9">
+                        <select class="form-control{{ $errors->has('role') ? ' is-invalid' : '' }}" name="role" id="role">
+                            <option value=""></option>  
+                        	@foreach ($roles as $role)
+                            	@if($employee->user->hasRole($role->name))
+                                	<option value="{{ $role->id }}" selected>{{ $role->name }}</option>
+                            	@else
+                            		<option value="{{ $role->id }}">{{ $role->name }}</option>
+                            	@endif
+                            @endforeach
+                        </select>
+                        <div id="role-admin-error" class="invalid-feedback">
+                        </div>
                     </div>
-                </div>
+            	</div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="save-role-changes-btn" class="btn btn-primary">Save Changes</button>
@@ -566,7 +587,9 @@
         </div>
     </div>
 </div>
-@endhasanyrole{{-- Update picture --}}
+@endcan
+
+{{-- Update picture --}}
 <div class="modal fade" id="edit-picture-popup" tabindex="-1" role="dialog" aria-labelledby="edit-picture-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -991,46 +1014,24 @@
         }
 
         $('#save-role-changes-btn').click(function () {
-            assignRemoveAdminRole($("input[name='role-admin-checkbox[]']"),
-            function (data) {
-                showAlert(data.success);
-                $('#roles-popup #role-admin-checkbox').removeClass('is-invalid');
-                $('#roles-popup').modal('toggle');
-            },
-            function () {
-                // $(e.target).button('toggle');
-                $('#roles-popup #role-admin-checkbox').addClass('is-invalid');
-                $('#roles-popup #role-admin-error').html('<strong>Failed to update roles</strong>');
-            });
-        });
-
-        function assignRemoveAdminRole(assign, onSuccess, onFail) {
-        	var assignRoles = new Array();
-        	$("input[name='role-admin-checkbox[]']").each(function (index, elem) {
-        		var role = $(this).val();
-        		var assign = 0;
-        		if(this.checked){
-        			assign = 1;
-                }else{
-                	assign = 0;
-                }
-        		assignRoles.push({'role': role,  'assign':  assign});
-        	});
-
-            $.ajax({
+        	$.ajax({
                 url: "{{ route('admin.employees.update-roles.admin.post', ['id' => $employee->id]) }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-					assign_remove: assign ? 'assign': 'remove',					assignRoles: assignRoles,                },
+					role: $('#role').val()				
+				},
                 success: function(data) {
-                    onSuccess(data);
+                	showAlert(data.success);
+                    $('#roles-popup #role').removeClass('is-invalid');
+                    $('#roles-popup').modal('toggle');
                 },
                 error: function(xhr) {
-                    onFail();
+                	$('#roles-popup #role').addClass('is-invalid');
+                    $('#roles-popup #role-admin-error').html('<strong>This is required field</strong>');
                 }
             });
-        }
+        });
 
         // EDIT Profile Picture
         $('#edit-picture-submit').click(function(e){

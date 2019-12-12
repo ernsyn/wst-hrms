@@ -30,12 +30,12 @@ class AccessControllHelper
     
     public static function hasHrExecRole() 
     {
-        return Auth::user()->hasRole('hr-exec');
+        return Auth::user()->hasRole('HR Exec');
     }
     
     public static function hasHrAdminRole() 
     {
-        return Auth::user()->hasRole('admin');
+        return Auth::user()->hasRole('HR Admin');
     }
     
     public static function hasSuperadminRole()
@@ -73,7 +73,7 @@ class AccessControllHelper
     
     public static function getRoles() 
     {
-        $excludedRoles = array("Employee", "Super Admin"); 
+        $excludedRoles = array("Super Admin"); 
         $roles = Roles::whereNotIn('name',$excludedRoles)->orderBy('name')->get();
         
         return $roles;

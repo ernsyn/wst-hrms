@@ -4,7 +4,7 @@
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
     <div id="hrms-mode-container">
-    	@hasanyrole('Super Admin|HR Admin|HR Eexec')
+    	@hasanyrole('Super Admin|HR Admin|HR Exec')
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
                 Mode
