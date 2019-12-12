@@ -1,5 +1,6 @@
 <?php
 
+use App\Role;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
@@ -25,5 +26,8 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Duplicate Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         
         Permission::create(['name' => 'View Employee Dashboard', 'mode' => 'employee', 'module' => 'Employee Dashboard']);
+        
+        $role = Role::where('name', 'Super Admin')->first();
+        $role->givePermissionTo(Permission::all());
     }
 }
