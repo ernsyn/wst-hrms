@@ -2,24 +2,30 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\AccessControllHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Permission;
 use App\Role;
+use Auth;
 
 class RolePermissionController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:Super Admin|HR Admin']);
+//         $this->middleware(['role:Super Admin|HR Admin']);
     }
 
     public function index()
     {
-        $roles = Role::all();
+        if(AccessControllHelper::hasSuperadminRole()){
+            $roles = Role::all();
+        } else {
+            $roles = Role::where('name', '!=', 'Super Admin')->get();
+        }
         
         return view('pages.admin.role-permission.index', [
             'roles' => $roles
@@ -66,7 +72,7 @@ class RolePermissionController extends Controller
         }
         DB::commit();
         
-        return redirect()->route('admin.role-permission')->with('success', 'Role '.$name.' added!');
+        return redirect()->route('admin.role-permission')->with('success', $name.' added!');
     }
     
     public function show($id)
@@ -126,43 +132,77 @@ class RolePermissionController extends Controller
         $role->guard_name = 'web';
         $role->save();
         
-        $role->load('permissions')->pluck('id');
-        $storedPermissions = array();
+//         $role->load('permissions')->pluck('id');
+//         $storedPermissions = array();
         
-        // remove permission from role
-        foreach($role->permissions as $permission) {
-            array_push($storedPermissions, $permission->id);
+//         // remove permission from role
+//         foreach($role->permissions as $permission) {
+//             array_push($storedPermissions, $permission->id);
             
-            if(!in_array($permission->id, $permissions)) {
-                $permission = Permission::find($permission->id);
-                $role->revokePermissionTo($permission);
-            } 
+//             if(!in_array($permission->id, $permissions)) {
+//                 $permission = Permission::find($permission->id);
+//                 $role->revokePermissionTo($permission);
+//             } 
+//         }
+        
+//         Log::debug("Update Role: ".$role);
+//         Log::debug("Permissions: ");
+//         Log::debug($permissions);
+        
+//         // add permission to role
+//         if(!empty($permissions)) {
+//             foreach ($permissions as $permissionId) {
+//                 if(!in_array($permissionId, $storedPermissions)) {
+//                     $permission = Permission::find($permissionId);
+//                     $role->givePermissionTo($permission);
+//                 } 
+//             }
+//         }
+        
+        
+        $allPermissions = Permission::all();
+        
+        foreach ($allPermissions as $p) {
+            $role->revokePermissionTo($p);
         }
-        
-        Log::debug("Update Role: ".$role);
-        Log::debug("Permissions: ");
-        Log::debug($permissions);
-        
-        // add permission to role
-        if(!empty($permissions)) {
+
+        if (!empty($permissions)) {
             foreach ($permissions as $permissionId) {
-                if(!in_array($permissionId, $storedPermissions)) {
-                    $permission = Permission::find($permissionId);
-                    $role->givePermissionTo($permission);
-                } 
+                $permission = Permission::find($permissionId);
+                $role->givePermissionTo($permission);
             }
         }
         
         DB::commit();
         
-        return redirect()->route('admin.role-permission')->with('success', 'Role '.$name.' has been updated!');
+        return redirect()->route('admin.role-permission')->with('success', $name.' has been updated!');
     }
     
-    public function destroy($id)
+    public function delete($id)
     {
         $role = Role::findById($id);
         $role->delete();
         
-        return redirect()->route('admin.role-permission')->with('success', 'Role '.$role->name.' has been deleted!');
+        return redirect()->route('admin.role-permission')->with('success', $role->name.' has been deleted!');
+    }
+    
+    public function duplicate($id)
+    {
+        $adminPermissions = Permission::where('mode', 'admin')->get();
+        $employeePermissions = Permission::where('mode', 'employee')->get();
+        $role = Role::findById($id);
+        $role->load('permissions')->pluck('id');
+        $permissions = array();
+        
+        foreach($role->permissions as $permission) {
+            array_push($permissions, $permission->id);
+        }
+        
+        return view('pages.admin.role-permission.create', [
+            'role' => $role,
+            'permissions' => $permissions,
+            'adminPermissions' => $adminPermissions,
+            'employeePermissions' => $employeePermissions
+        ]);
     }
 }

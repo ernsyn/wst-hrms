@@ -411,14 +411,28 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:Super Admin|HR
     Route::get('edit-employee', 'AdminController@displayAddEmployeeProfile')->name('admin/edit-employee');
     
     // Roles & Permissions
-    Route::get('role-permission', 'Admin\RolePermissionController@index')->name('admin.role-permission');
-    Route::get('role-permission/add','Admin\RolePermissionController@create')->name('admin.role-permission.add');
-    Route::post('role-permission/add','Admin\RolePermissionController@store')->name('admin.role-permission.add.post');
-    Route::get('role-permission/{id}', 'Admin\RolePermissionController@show')->name('admin.role-permission.show')->where('id', '[0-9]+');
-    Route::get('role-permission/{id}/edit', 'Admin\RolePermissionController@edit')->name('admin.role-permission.edit')->where('id', '[0-9]+');
-    Route::delete('role-permission/{id}','Payroll\PayrollSetupController@destroy')->name('admin.role-permission.destroy')->where('id', '[0-9]+');
-    Route::post('role-permission/{id}/update','Admin\RolePermissionController@update')->name('admin.role-permission.update')->where('id', '[0-9]+');
+    Route::group(['middleware' => ['permission:View Roles and Permissions']], function () {
+        Route::get('role-permission', 'Admin\RolePermissionController@index')->name('admin.role-permission');
+        Route::get('role-permission/{id}', 'Admin\RolePermissionController@show')->name('admin.role-permission.show')->where('id', '[0-9]+');
+    });
     
+    Route::group(['middleware' => ['permission:Add Role']], function () {
+        Route::get('role-permission/add','Admin\RolePermissionController@create')->name('admin.role-permission.add');
+        Route::post('role-permission/add','Admin\RolePermissionController@store')->name('admin.role-permission.add.post');
+    });
+    
+    Route::group(['middleware' => ['permission:Update Role']], function () {
+        Route::get('role-permission/{id}/edit', 'Admin\RolePermissionController@edit')->name('admin.role-permission.edit')->where('id', '[0-9]+');
+        Route::post('role-permission/{id}/update','Admin\RolePermissionController@update')->name('admin.role-permission.update')->where('id', '[0-9]+');
+    });
+    
+    Route::group(['middleware' => ['permission:Delete Role']], function () {
+        Route::get('role-permission/{id}/delete','Admin\RolePermissionController@delete')->name('admin.role-permission.delete')->where('id', '[0-9]+');
+    });
+    
+    Route::group(['middleware' => ['permission:Duplicate Role']], function () {
+        Route::get('role-permission/{id}/duplicate', 'Admin\RolePermissionController@duplicate')->name('admin.role-permission.duplicate');
+    });
 });
 
 // MODE: Super Admin

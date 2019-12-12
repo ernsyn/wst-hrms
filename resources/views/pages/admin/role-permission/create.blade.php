@@ -6,12 +6,21 @@
     <div class="card">
         <form method="POST" action="{{ route('admin.role-permission.add.post') }}" id="form_validate" data-parsley-validate>
             <div class="card-body">
+            	@if ($errors->any())
+            	<div class="alert alert-danger">
+                	<ul>
+                    	@foreach ($errors->all() as $error)
+                      	<li>{{ $error }}</li>
+                    	@endforeach
+                	</ul>
+              	</div><br />
+            	@endif
                 @csrf
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label class=" col-form-label">Role Name *</label>
                         <div class="">
-                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
+                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ isset($role->name) ? $role->name.' - Copy' : old('name') }}"
                                 required>
                             @if ($errors->has('name'))
                             <span class="invalid-feedback" role="alert">
@@ -47,6 +56,14 @@
     								@if($admin['module'] != end($modules))
 										</ul>
 									@endif
+									
+									@php
+        								if(isset($permissions) && in_array($admin->id, $permissions)) {
+        									$checked = 'checked';
+        								} else {
+        									$checked = '';
+        								}
+        							@endphp
 
 									@if(current($modules) != $admin['module'])
     								<ul class="list-unstyled">
@@ -59,7 +76,7 @@
 									@endif
     									<li style="padding-left: 1.2rem">
     										<div class="checkbox form-check">
-                                                <input id="item-{{$admin['module']}}" type="checkbox" class="form-check-input" name="permissions[]" value="{{$admin['id']}}">
+                                                <input id="item-{{$admin['module']}}" type="checkbox" class="form-check-input" name="permissions[]" value="{{$admin['id']}}" {{ $checked }}>
                                                 <label class="form-check-label">{{$admin['name']}}</label>
                                             </div>
     									</li>
@@ -83,6 +100,14 @@
 										</ul>
 									@endif
 									
+									@php
+    									if(isset($permissions) && in_array($employee->id, $permissions)) {
+    										$checked = 'checked';
+    									} else {
+    										$checked = '';
+    									}
+    								@endphp
+									
       								@if(current($modules) != $employee['module'])
     								<ul class="list-unstyled">
   										<li>
@@ -94,7 +119,7 @@
 									@endif
 										<li style="padding-left: 1.2rem">
   											<div class="checkbox form-check">
-                                                <input id="item-{{$employee['module']}}" type="checkbox" class="form-check-input" name="permissions[]" value="{{$employee['id']}}">
+                                                <input id="item-{{$employee['module']}}" type="checkbox" class="form-check-input" name="permissions[]" value="{{$employee['id']}}" {{ $checked }}>
                                                 <label class="form-check-label">{{$employee['name']}}</label>
                                             </div>
   										</li>
@@ -121,21 +146,12 @@
 @section('scripts')
 <script>
 $(document).ready(function() {
-// 	$('#all').change(function(e) {
-// 	  if (e.currentTarget.checked) {
-// 	  $('.rows').find('input[type="checkbox"]').prop('checked', true);
-// 	} else {
-// 	    $('.rows').find('input[type="checkbox"]').prop('checked', false);
-// 	  }
-// 	});
-
-
-		$('[id^="all-"]').on('click', function(e){
-			    $this = this;  
-			    $.each($(this).parents('ul').find('input'), function(i, item){
-			      $(item).prop('checked', $this.checked);
-			    });
-			  });
+	$('[id^="all-"]').on('click', function(e){
+    	$this = this;  
+    	$.each($(this).parents('ul').find('input'), function(i, item){
+      		$(item).prop('checked', $this.checked);
+    	});
+  	});
 });
 </script>
 @append

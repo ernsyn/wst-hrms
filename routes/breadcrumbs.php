@@ -518,6 +518,10 @@ Breadcrumbs::for('admin.role-permission.edit', function ($trail, $id) {
     $trail->push('Edit Role & Permissions', route('admin.role-permission.edit', $id));
 });
 
+Breadcrumbs::for('admin.role-permission.duplicate', function ($trail, $id) {
+    $trail->parent('admin.role-permission');
+    $trail->push('Add Role & Permissions', route('admin.role-permission.duplicate', $id));
+});
 
 // SECTION: (Admin) Audit Trail
 Breadcrumbs::for('admin.audit-trail', function ($trail) {

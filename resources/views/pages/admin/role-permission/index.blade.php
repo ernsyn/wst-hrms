@@ -11,6 +11,7 @@
 		</button>
 	</div>
 	@endif
+	@can('Add Role')
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -19,6 +20,7 @@
             </a>
         </div>
     </div>
+    @endcan
     <div class="row">
         <div class="col-md-12">
             <div class="float-right tableTools-container"></div>
@@ -32,21 +34,53 @@
                     </tr>
                 </thead>
                 <tbody>
+                	@can('View Roles and Permissions')
                     @foreach($roles as $role)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$role['name']}}</td>
                         <td>{{$role['description']}}</td>
                         <td>
-                        	<button onclick="window.location='{{ route('admin.role-permission.show', ['id' => $role->id]) }}';" class="btn btn-default btn-smt fas fa-eye"></button>
-                            <button onclick="window.location='{{ route('admin.role-permission.edit', $role->id) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $role->name }}' data-link='{{ route('admin.role-permission.destroy', ['id ' => $role->id]) }}' class="btn btn-danger btn-smt far fa-trash-alt"></button>
-                            <button onclick="window.location='{{ route('admin.employees.id', ['id' => $role->id]) }}';" class="btn btn-info btn-smt far fa-copy"></button>
+                        	@can('View Roles and Permissions')
+                        		<button onclick="window.location='{{ route('admin.role-permission.show', ['id' => $role->id]) }}';" class="btn btn-default btn-smt fas fa-eye"></button>
+                            @endcan
+                            @can('Update Role')
+                            	<button onclick="window.location='{{ route('admin.role-permission.edit', $role->id) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
+                            @endcan
+                            @can('Delete Role')
+                            	<button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="{{ $role->name }}" data-link="{{ route('admin.role-permission.delete', ['id ' => $role->id]) }}" class="btn btn-danger btn-smt far fa-trash-alt"></button>
+                            @endcan
+                            @can('Duplicate Role')
+                            	<button onclick="window.location='{{ route('admin.role-permission.duplicate', $role->id) }}';" class="btn btn-info btn-smt far fa-copy"></button>
+                        	@endcan
                         </td>
                     </tr>
                     @endforeach
+                    @endcan
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                @can('Delete Role')
+                <button type="button" class="btn btn-danger" id="confirm">Delete</button>
+                @endcan
+            </div>
         </div>
     </div>
 </div>
@@ -107,6 +141,20 @@ $(document).ready(function() {
             cell.innerHTML = i+1;
         } );
     } ).draw();
+
+	$('#confirm-delete-modal').on('show.bs.modal', function (e) {
+        var entryTitle = $(e.relatedTarget).data('entry-title');
+        var link = $(e.relatedTarget).data('link');
+        $(this).find('.modal-body p').text('Are you sure you want to delete - ' + entryTitle + '?');
+
+        // Pass form reference to modal for submission on yes/ok
+        var form = $(e.relatedTarget).closest('form');
+        $(this).find('.modal-footer #confirm').data('form', link);
+    });
+
+    $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
+        window.location = $(this).data('form');
+    });
 });
 </script>
 @append

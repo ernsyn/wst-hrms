@@ -18,7 +18,7 @@ class PermissionsTableSeeder extends Seeder
         // create permissions
         Permission::create(['name' => 'View Admin Dashboard', 'mode' => 'admin', 'module' => 'Admin Dashboard']);
         
-        Permission::create(['name' => 'View Roles & Permissions', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
+        Permission::create(['name' => 'View Roles and Permissions', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         Permission::create(['name' => 'Add Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         Permission::create(['name' => 'Update Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         Permission::create(['name' => 'Delete Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
