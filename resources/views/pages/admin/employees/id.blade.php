@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 <div id="end-btn-group">
-                	@can('Assign Role')
+                	@can(PermissionConstant::ASSIGN_ROLE)
                     <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
                         Assign Role
                     </button>
@@ -540,7 +540,7 @@
     </div>
 </div>
 
-@can('Assign Role')
+@can(PermissionConstant::ASSIGN_ROLE)
 {{-- Change Role --}}
 <div class="modal fade" id="roles-popup" tabindex="-1" role="dialog" aria-labelledby="roles-label" aria-hidden="true">
     <div class="modal-dialog" role="document">

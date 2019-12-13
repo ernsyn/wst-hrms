@@ -3,7 +3,6 @@
     <div id="header-logo" class="sidebar-header text-center">
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
-    @hasanyrole('Super Admin|HR Admin|HR Exec')
     <div id="hrms-mode-container">
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
@@ -28,16 +27,15 @@
                 </a>
             </div>
             @endhasrole
-            @hasanyrole('HR Admin|HR Exec')
+            @canany(AccessControllHelper::adminPermissions())
             <div class="option row col mx-0">
                 <a href="{{ route('admin.dashboard') }}">
                     Admin
                 </a>
             </div>
-            @endhasanyrole
+            @endcanany
         </div>
     </div>
-    @endhasanyrole
 
     <ul id="menu-container" class="list-unstyled">
         <li class="menu-section {{ request()->is('profile*') ? 'active' : '' }}">
@@ -56,8 +54,6 @@
                     <a href="{{ route('employee.profile') }}">View My Profile</a>
                 </li>
             </ul>
-            
-
         </li>
         <li class="menu-section {{ request()->is('employee/e-leave*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leave-submenu" data-toggle="collapse" aria-expanded="false">

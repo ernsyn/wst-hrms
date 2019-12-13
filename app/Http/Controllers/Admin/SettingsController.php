@@ -59,9 +59,6 @@ class SettingsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware([
-            'role:Super Admin|HR Admin'
-        ]);
     }
 
     // SECTION: Display
@@ -274,9 +271,9 @@ class SettingsController extends Controller
             'address3' => 'nullable',
             'phone' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'tax_no' => 'required',
-            'epf_no' => 'required|numeric',
-            'socso_no' => 'required|numeric',
-            'eis_no' => 'required|numeric',
+            'epf_no' => 'required',
+            'socso_no' => 'required',
+            'eis_no' => 'required',
             'code' => 'required|unique:companies,code,NULL,id,deleted_at,NULL',
             
             'postcode' => 'required|numeric'
@@ -943,9 +940,9 @@ class SettingsController extends Controller
             'address3' => 'nullable',
             'phone' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'tax_no' => 'required',
-            'epf_no' => 'required|numeric',
-            'socso_no' => 'required|numeric',
-            'eis_no' => 'required|numeric',
+            'epf_no' => 'required',
+            'socso_no' => 'required',
+            'eis_no' => 'required',
             'code' => 'required|unique:companies,code,' . $id,
             'status' => 'required',
             'postcode' => 'required|numeric'

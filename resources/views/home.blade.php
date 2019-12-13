@@ -1,5 +1,6 @@
 @extends('layouts.base') 
-@section('content') @hasrole('Super Admin')
+@section('content') 
+@hasrole('Super Admin')
 <div class="row">
     <div class="p-2 col-xl-3 col-lg-6">
         <a href="{{ route('admin.employees') }}">

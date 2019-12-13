@@ -17,16 +17,16 @@
 		</div>
 		
 		<div id="mode-options" class="collapse">
-			@hasrole('Super Admin|HR Admin')
+			@canany(AccessControllHelper::adminPermissions())
 			<div class="option row col mx-0">
 				<a href="{{ route('admin.dashboard') }}"> Admin </a>
 			</div>
-			@endhasrole 
-			@hasrole('Employee')
+			@endcanany 
+			@canany(AccessControllHelper::employeePermissions())
 			<div class="option row col mx-0">
 				<a href="{{ route('employee.dashboard') }}"> Employee </a>
 			</div>
-			@endhasrole
+			@endcanany
 		</div>
 	</div>
 	<ul id="menu-container" class="list-unstyled">

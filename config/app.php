@@ -235,6 +235,7 @@ return [
         'EpfCategoryEnum' => App\Enums\EpfCategoryEnum::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'PermissionConstant' => App\Constants\PermissionConstant::class,
 
     ],
 

@@ -22,11 +22,11 @@
                         {{ Auth::user()->name }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        @hasanyrole('employee|admin')
+                    	@if (!Auth::user()->hasRole('Super Admin'))
                         <a class="dropdown-item" href="{{ route('employee.profile') }}">
                             {{ __('Profile') }}
                         </a>
-                        @endhasanyrole
+                        @endif
                         <a href="" class="dropdown-item" data-toggle="modal" data-target="#navbar-change-password-popup">
                             {{ __('Change Password') }}
                         </a>

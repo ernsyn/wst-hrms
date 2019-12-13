@@ -4,7 +4,6 @@
         <img src="{{asset('img/logo-oppo-white.png')}}">
     </div>
     <div id="hrms-mode-container">
-    	@hasanyrole('Super Admin|HR Admin|HR Exec')
         <div id="hrms-mode" class="row mx-0">
             <div id="label" class="col-4 text-center">
                 Mode
@@ -20,7 +19,6 @@
                 </div>
             </div>
         </div>
-    	@endhasanyrole 
         <div id="mode-options" class="collapse">
             @hasrole('Super Admin')
             <div class="option row col mx-0">
@@ -29,17 +27,18 @@
                 </a>
             </div>
             @endhasrole
-            @hasrole('Employee')
+            @canany(AccessControllHelper::employeePermissions())
             <div class="option row col mx-0">
                 <a href="{{ route('employee.dashboard') }}">
                     Employee
                 </a>
             </div>
-            @endhasrole
+            @endcanany
         </div>
 	</div>
 	
     <ul id="menu-container" class="list-unstyled">
+    	@can(PermissionConstant::VIEW_ADMIN_DASHBOARD)
         <li id="dashboard-option" class="menu-section {{ request()->is('admin/dashboard') ? 'active' : '' }}">
             <a class="info" href="{{ route('admin.dashboard') }}">
                 <div class="row">
@@ -48,6 +47,8 @@
                 </div>
             </a>
         </li>
+        @endcan
+        
         {{-- SECTION: Employees --}}
         <li class="menu-section {{ request()->is('admin/employees*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#employee-setup" data-toggle="collapse" aria-expanded="false">
@@ -80,7 +81,6 @@
                 <li class="menu-option {{ request()->is('payroll') ? 'active' : '' }}">
                     <a href="{{ route('payroll') }}">Payroll</a>
                 </li>
-                @hasanyrole('Super Admin|HR Admin')
                 <li class="menu-option {{ request()->is('government_report') ? 'active' : '' }}">
                     <a href="{{ route('payroll/government_report') }}">Government Reports</a>
                 </li>
@@ -90,11 +90,9 @@
                 <li class="menu-option {{ request()->is('payroll-setup') ? 'active' : '' }}">
                     <a href="{{ route('payroll-setup.index') }}">Payroll Setup</a>
                 </li>
-                @endhasanyrole
             </ul>
         </li>
            
-		@hasanyrole('Super Admin|HR Admin')
         {{-- SECTION: E-Leave --}}
         <li class="menu-section {{ request()->is('admin/e-leave*') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#leaveSubmenu" data-toggle="collapse" aria-expanded="false">
@@ -205,6 +203,7 @@
         </li>
 			       
         {{-- SECTION: Roles and Permissions --}}
+        @canany([PermissionConstant::VIEW_ROLE_AND_PERMISSION, PermissionConstant::ADD_ROLE, PermissionConstant::UPDATE_ROLE, PermissionConstant::DELETE_ROLE, PermissionConstant::DUPLICATE_ROLE])
         <li class="menu-section {{ request()->is('admin/role-permission*') ? 'active' : '' }}">
             <a class="info" href="{{ route('admin.role-permission') }}">
                 <div class="row">
@@ -213,8 +212,10 @@
                 </div>
             </a>
         </li>
+        @endcanany
         
         {{-- SECTION: Audit Trail --}}
+        @can(PermissionConstant::VIEW_AUDIT_TRAIL)
         <li class="menu-section {{ request()->is('admin/audit-trail*') ? 'active' : '' }}">
             <a class="info" href="{{ route('admin.audit-trail') }}">
                 <div class="row">
@@ -223,6 +224,6 @@
                 </div>
             </a>
         </li>
-		@endhasanyrole 
+        @endcan
 	</ul>
 </nav>

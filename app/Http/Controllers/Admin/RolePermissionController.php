@@ -21,7 +21,7 @@ class RolePermissionController extends Controller
 
     public function index()
     {
-        if(AccessControllHelper::hasSuperadminRole()){
+        if(AccessControllHelper::hasSuperadminRole()) {
             $roles = Role::all();
         } else {
             $roles = Role::where('name', '!=', 'Super Admin')->get();
@@ -34,8 +34,13 @@ class RolePermissionController extends Controller
     
     public function create() 
     {
-        $adminPermissions = Permission::where('mode', 'admin')->get();
-        $employeePermissions = Permission::where('mode', 'employee')->get();
+        if(AccessControllHelper::hasSuperadminRole()) {
+            $adminPermissions = Permission::where('mode', 'admin')->get();
+            $employeePermissions = Permission::where('mode', 'employee')->get();
+        } else {
+            $adminPermissions = Permission::where([['mode', 'admin'], ['superadmin', 0]])->get();
+            $employeePermissions = Permission::where([['mode', 'employee'], ['superadmin', 0]])->get();
+        }
         
         return view('pages.admin.role-permission.create', [
             'adminPermissions' => $adminPermissions,
@@ -77,8 +82,14 @@ class RolePermissionController extends Controller
     
     public function show($id)
     {
-        $adminPermissions = Permission::where('mode', 'admin')->get();
-        $employeePermissions = Permission::where('mode', 'employee')->get();
+        if(AccessControllHelper::hasSuperadminRole()) {
+            $adminPermissions = Permission::where('mode', 'admin')->get();
+            $employeePermissions = Permission::where('mode', 'employee')->get();
+        } else {
+            $adminPermissions = Permission::where([['mode', 'admin'], ['superadmin', 0]])->get();
+            $employeePermissions = Permission::where([['mode', 'employee'], ['superadmin', 0]])->get();
+        }
+        
         $role = Role::findById($id);
         $role->load('permissions')->pluck('id');
         $permissions = array();
@@ -97,8 +108,14 @@ class RolePermissionController extends Controller
     
     public function edit($id)
     {
-        $adminPermissions = Permission::where('mode', 'admin')->get();
-        $employeePermissions = Permission::where('mode', 'employee')->get();
+        if(AccessControllHelper::hasSuperadminRole()) {
+            $adminPermissions = Permission::where('mode', 'admin')->get();
+            $employeePermissions = Permission::where('mode', 'employee')->get();
+        } else {
+            $adminPermissions = Permission::where([['mode', 'admin'], ['superadmin', 0]])->get();
+            $employeePermissions = Permission::where([['mode', 'employee'], ['superadmin', 0]])->get();
+        }
+        
         $role = Role::findById($id);
         $role->load('permissions')->pluck('id');
         $permissions = array();
@@ -131,34 +148,6 @@ class RolePermissionController extends Controller
         $role->description = $description;
         $role->guard_name = 'web';
         $role->save();
-        
-//         $role->load('permissions')->pluck('id');
-//         $storedPermissions = array();
-        
-//         // remove permission from role
-//         foreach($role->permissions as $permission) {
-//             array_push($storedPermissions, $permission->id);
-            
-//             if(!in_array($permission->id, $permissions)) {
-//                 $permission = Permission::find($permission->id);
-//                 $role->revokePermissionTo($permission);
-//             } 
-//         }
-        
-//         Log::debug("Update Role: ".$role);
-//         Log::debug("Permissions: ");
-//         Log::debug($permissions);
-        
-//         // add permission to role
-//         if(!empty($permissions)) {
-//             foreach ($permissions as $permissionId) {
-//                 if(!in_array($permissionId, $storedPermissions)) {
-//                     $permission = Permission::find($permissionId);
-//                     $role->givePermissionTo($permission);
-//                 } 
-//             }
-//         }
-        
         
         $allPermissions = Permission::all();
         

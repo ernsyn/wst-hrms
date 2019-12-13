@@ -4,6 +4,7 @@ namespace App\Helpers;
 use App\Employee;
 use App\EmployeeReportTo;
 use App\EmployeeSecurityGroup;
+use App\Permission;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -106,6 +107,16 @@ class AccessControllHelper
             $isResigned = true;
         }
         return $isResigned;
+    }
+    
+    public static function adminPermissions()
+    {
+        return Permission::where('mode', 'admin')->get()->pluck('name');
+    }
+    
+    public static function employeePermissions()
+    {
+        return Permission::where('mode', 'employee')->get()->pluck('name');
     }
 }
 

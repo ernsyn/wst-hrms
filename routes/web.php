@@ -27,7 +27,7 @@ Route::group(['middleware' => ['auth']], function() {
 });
 
 // MODE: Employee
-Route::group(['middleware' => ['auth', 'role:Employee']], function() {
+Route::group(['middleware' => ['auth']], function() {
 
     Route::post('profile/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
     Route::get('employees/id/working-days/{emp_id}', 'Employee\EmployeeController@getEmployeeWorkingDay')->name('employee.id.working-day.get')->where('id', '[0-9]+');
@@ -104,7 +104,7 @@ Route::group(['middleware' => ['auth', 'role:Employee']], function() {
 });
 
 // MODE: Admin
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:Super Admin|HR Admin|HR Exec']], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
     // SECTION: EMPLOYEE
     // > View
@@ -214,7 +214,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:Super Admin|HR
     // SECTION: SETTINGS
 
     // > View - List
-    Route::get('settings/companies', 'Admin\SettingsController@displayCompanies')->name('admin.settings.companies');
+    Route::group(['middleware' => ['permission:View Company']], function () {
+        Route::get('settings/companies', 'Admin\SettingsController@displayCompanies')->name('admin.settings.companies');
+    });
+    
     Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');
     Route::get('settings/cost-centres', 'Admin\SettingsController@displayCostCentres')->name('admin.settings.cost-centres');
     Route::get('settings/departments', 'Admin\SettingsController@displayDepartments')->name('admin.settings.departments');

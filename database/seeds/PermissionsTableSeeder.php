@@ -3,6 +3,7 @@
 use App\Role;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use App\Constants\PermissionConstant;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -17,17 +18,32 @@ class PermissionsTableSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         
         // create permissions
-        Permission::create(['name' => 'View Admin Dashboard', 'mode' => 'admin', 'module' => 'Admin Dashboard']);
+        //Admin mode
+        Permission::create(['name' => PermissionConstant::VIEW_ADMIN_DASHBOARD, 'mode' => 'admin', 'module' => 'Admin Dashboard']);
         
-        Permission::create(['name' => 'View Roles and Permissions', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
-        Permission::create(['name' => 'Add Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
-        Permission::create(['name' => 'Update Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
-        Permission::create(['name' => 'Delete Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
-        Permission::create(['name' => 'Duplicate Role', 'mode' => 'admin', 'module' => 'Roles & Permissions']);
+        Permission::create(['name' => PermissionConstant::VIEW_ROLE_AND_PERMISSION, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
+        Permission::create(['name' => PermissionConstant::ADD_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
+        Permission::create(['name' => PermissionConstant::UPDATE_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
+        Permission::create(['name' => PermissionConstant::DELETE_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
+        Permission::create(['name' => PermissionConstant::DUPLICATE_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         
-        Permission::create(['name' => 'Assign Role', 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::ASSIGN_ROLE, 'mode' => 'admin', 'module' => 'Employees']);
         
-        Permission::create(['name' => 'View Employee Dashboard', 'mode' => 'employee', 'module' => 'Employee Dashboard']);
+        Permission::create(['name' => PermissionConstant::VIEW_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);
+        Permission::create(['name' => PermissionConstant::ADD_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company', 'superadmin' => 1]);
+        Permission::create(['name' => PermissionConstant::UPDATE_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);
+        Permission::create(['name' => PermissionConstant::DELETE_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company', 'superadmin' => 1]);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
+        Permission::create(['name' => PermissionConstant::ADD_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
+        Permission::create(['name' => PermissionConstant::UPDATE_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
+        Permission::create(['name' => PermissionConstant::DELETE_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_AUDIT_TRAIL, 'mode' => 'admin', 'module' => 'Audit Trail']);
+        
+        //Employee mode
+        Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);
+        
         
         $role = Role::where('name', 'Super Admin')->first();
         $role->givePermissionTo(Permission::all());

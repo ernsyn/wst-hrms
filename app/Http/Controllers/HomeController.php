@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\LeaveRequest;
 
 use Auth;
+use App\Helpers\AccessControllHelper;
 
 class HomeController extends Controller
 {
@@ -27,14 +28,25 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if($user->hasRole('Employee')) {
+        
+        $adminPermissions = array();
+        $employeePermissions = array();
+        
+        foreach(AccessControllHelper::adminPermissions() as $p){
+            array_push($adminPermissions, $p);
+        }
+        
+        foreach(AccessControllHelper::employeePermissions() as $p){
+            array_push($employeePermissions, $p);
+        }
+        
+        if($user->hasAnyPermission($employeePermissions)) {
             return redirect()->route('employee.e-leave.leave-application');
-        } else if($user->hasRole('HR Admin')) {
+        } else if($user->hasAnyPermission($adminPermissions)) {
             return redirect()->route('admin.dashboard');
         } else if($user->hasRole('Super Admin')) {
             return redirect()->route('super-admin.dashboard');
         }
-
         abort(404);
     }
 }

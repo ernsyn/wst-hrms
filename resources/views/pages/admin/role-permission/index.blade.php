@@ -11,7 +11,7 @@
 		</button>
 	</div>
 	@endif
-	@can('Add Role')
+	@can(PermissionConstant::ADD_ROLE)
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -34,23 +34,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                	@can('View Roles and Permissions')
+                	@can(PermissionConstant::VIEW_ROLE_AND_PERMISSION)
                     @foreach($roles as $role)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$role['name']}}</td>
                         <td>{{$role['description']}}</td>
                         <td>
-                        	@can('View Roles and Permissions')
+                        	@can(PermissionConstant::VIEW_ROLE_AND_PERMISSION)
                         		<button onclick="window.location='{{ route('admin.role-permission.show', ['id' => $role->id]) }}';" class="btn btn-default btn-smt fas fa-eye"></button>
                             @endcan
-                            @can('Update Role')
+                            @can(PermissionConstant::UPDATE_ROLE)
                             	<button onclick="window.location='{{ route('admin.role-permission.edit', $role->id) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
                             @endcan
-                            @can('Delete Role')
+                            @can(PermissionConstant::DELETE_ROLE)
                             	<button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="{{ $role->name }}" data-link="{{ route('admin.role-permission.delete', ['id ' => $role->id]) }}" class="btn btn-danger btn-smt far fa-trash-alt"></button>
                             @endcan
-                            @can('Duplicate Role')
+                            @can(PermissionConstant::DUPLICATE_ROLE)
                             	<button onclick="window.location='{{ route('admin.role-permission.duplicate', $role->id) }}';" class="btn btn-info btn-smt far fa-copy"></button>
                         	@endcan
                         </td>
@@ -77,7 +77,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                @can('Delete Role')
+                @can(PermissionConstant::UPDATE_ROLE)
                 <button type="button" class="btn btn-danger" id="confirm">Delete</button>
                 @endcan
             </div>
