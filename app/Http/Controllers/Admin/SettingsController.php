@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Addition;
 use App\EmployeeGrade;
+use App\EmployeeJob;
 use App\EmployeeWorkingDay;
 use App\Branch;
 use App\Company;
@@ -22,26 +23,10 @@ use App\EPF;
 use App\Eis;
 use App\Employee;
 use App\EmployeePosition;
-use App\LeaveRequest;
-use App\LeaveType;
 use App\Pcb;
 use App\Socso;
 use App\SecurityGroup;
 use App\Team;
-use App\User;
-use App\EmployeeDependent;
-use App\EmployeeAttachment;
-use App\EmployeeBankAccount;
-use App\EmployeeEducation;
-use App\EmployeeExperience;
-use App\EmployeeImmigration;
-use App\EmployeeJob;
-use App\EmployeeSkill;
-use App\EmployeeVisa;
-use App\EmployeeEmergencyContact;
-use App\EmployeeReportTo;
-use App\EmployeeSecurityGroup;
-use App\EmployeeAttendance;
 use App\Imports\PcbImport;
 
 use DB;
@@ -49,7 +34,6 @@ use Crypt;
 use Session;
 use Illuminate\Support\Facades\Input;
 use DateTime;
-use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\AccessControllHelper;
 
@@ -75,22 +59,22 @@ class SettingsController extends Controller
         $id = $request->id;
         $bank = CompanyBank::where('company_id', $id)->get();
         $company = Company::where('id', $id)->get();
-        $security = SecurityGroup::where('company_id', $id)->get();
-        $addition = Addition::where('company_id', $id)->get();
-        $deduction = Deduction::where('company_id', $id)->get();
+//         $security = SecurityGroup::where('company_id', $id)->get();
+//         $addition = Addition::where('company_id', $id)->get();
+//         $deduction = Deduction::where('company_id', $id)->get();
 
-        $ea_form = EaForm::all();
-        $cost_centre = CostCentre::all();
-        $grade = EmployeeGrade::all();
+//         $ea_form = EaForm::all();
+//         $cost_centre = CostCentre::all();
+//         $grade = EmployeeGrade::all();
 
         return view('pages.admin.settings.company.company-details', [
             'bank' => $bank,
-            'grade' => $grade,
-            'security' => $security,
-            'addition' => $addition,
-            'deduction' => $deduction,
-            'ea_form' => $ea_form,
-            'cost_centre' => $cost_centre,
+//             'grade' => $grade,
+//             'security' => $security,
+//             'addition' => $addition,
+//             'deduction' => $deduction,
+//             'ea_form' => $ea_form,
+//             'cost_centre' => $cost_centre,
             'company' => $company
         ]);
     }
@@ -1249,16 +1233,24 @@ class SettingsController extends Controller
     {
         $employee_company= Employee::where('company_id','=',$id)->count();
 
-        if ($employee_company == 0)
-        {
-        Company::find($id)->delete();
-
-        return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been deleted.');
-    }
-        else
-        {
-        return redirect()->route('admin.settings.companies')->with('status', 'You Cannot Delete This Record');
+        if ($employee_company == 0) {
+            Company::find($id)->delete();
+    
+            return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been deleted.');
+        } else {
+            return redirect()->route('admin.settings.companies')->with('status', 'You Cannot Delete This Record');
         }
+    }
+    
+    public function deleteCompanyBank($id)
+    {
+        $bank = CompanyBank::find($id);
+        $companyId = $bank->company_id; 
+        $bank->delete();
+        
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $companyId
+        ])->with('status', 'Company Bank is deleted.');
     }
 
     public function deleteTeam(Request $request, $id)

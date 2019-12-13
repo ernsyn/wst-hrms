@@ -11,16 +11,16 @@
             </button>
     </div>
     @endif
-    @hasrole('Super Admin') 
+    @can(PermissionConstant::ADD_COMPANY) 
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
             <a role="button" class="btn btn-primary" href="{{ route('admin.settings.companies.add') }}">
-                        Add Company
-                    </a>
+            	Add Company
+            </a>
         </div>
     </div>
-    @endhasrole
+    @endcan
     <div class="row">
         <div class="col-md-12">
             <div class="float-right tableTools-container"></div>
@@ -50,14 +50,15 @@
                         <td>{{$company['status']}}</td>                        
                         <td>{{$company['updated_at']}}</td>
                         <td>
-                        	<button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="btn btn-default fas fa-eye"></button>
-                            <button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
-                            @hasrole('Super Admin') 
-                            <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $company->name }}' data-link='{{ route('admin.settings.companies.delete', ['id ' => $company->id]) }}' class="btn btn-danger btn-smt far fa-trash-alt"></button>
-                         	{{-- <button type='submit' data-toggle="modal" data-target="#confirm-status-modal" data-entry-title='{{ $company->status }}' data-link='{{ route('admin.settings.companies-status.update', ['id ' => $company->id]) }}' class="btn btn-danger btn-smt far fa-ban-alt">
-                                </button>
-                             --}}	
-                            @endhasrole
+                        	@can(PermissionConstant::VIEW_COMPANY)
+                        		<button onclick="window.location='{{ route('admin.settings.company.company-details', ['id' => $company->id]) }}';" class="btn btn-default fas fa-eye"></button>
+                            @endcan
+                            @can(PermissionConstant::UPDATE_COMPANY)
+                            	<button onclick="window.location='{{ route('admin.settings.companies.edit', ['id' => $company->id]) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
+                            @endcan
+                            @can(PermissionConstant::DELETE_COMPANY)
+                            	<button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $company->name }}' data-link='{{ route('admin.settings.companies.delete', ['id ' => $company->id]) }}' class="btn btn-danger btn-smt far fa-trash-alt"></button>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -66,6 +67,7 @@
         </div>
     </div>
 </div>
+@can(PermissionConstant::DELETE_COMPANY)
 <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -85,6 +87,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('scripts')

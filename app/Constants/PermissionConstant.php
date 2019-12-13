@@ -21,6 +21,10 @@ class PermissionConstant
     const DELETE_COMPANY_BANK = 'Delete Company Bank';
     const VIEW_EMPLOYEE_DASHBOARD = 'View Employee Dashboard';
     const VIEW_AUDIT_TRAIL = 'View Audit Trail';
+    const VIEW_JOB_COMPANY = 'View Job - Company';
+    const ADD_JOB_COMPANY = 'Add Job - Company';
+    const UPDATE_JOB_COMPANY = 'Update Job - Company';
+    const DELETE_JOB_COMPANY = 'Delete Job - Company';
 }
 
 

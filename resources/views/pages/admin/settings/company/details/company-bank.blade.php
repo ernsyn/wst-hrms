@@ -3,9 +3,11 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
+        	@can(PermissionConstant::ADD_COMPANY_BANK)
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCompanyBankPopup">
                 Add Company Bank
             </button>
+            @endcan
         </div>
     </div>
     <div class="row">
@@ -15,7 +17,6 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Company Name</th>
                         <th>Account Name</th>
                         <th>Bank Code</th>
                         <th>Created At</th>
@@ -27,15 +28,20 @@
                     @foreach($bank as $companybanks)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{$companybanks->company->name}}</td>
                         <td>{{$companybanks['acc_name']}}</td>
                         <td>{{$companybanks->bank->name}}</td>
                         <td>{{$companybanks['created_at']}}</td>
                         <td>{{$companybanks['status']}}</td>
-                        <td><button type="button" class="btn btn-success btn-smt " data-toggle="modal"
+                        <td>
+                        	@can(PermissionConstant::UPDATE_COMPANY_BANK)
+                        	<button type="button" class="btn btn-success btn-smt " data-toggle="modal"
                                 data-bank-id="{{$companybanks['id']}}" data-bank-bank-code="{{$companybanks['bank_code']}}"
                                 data-bank-account-name="{{$companybanks['acc_name']}}" data-bank-status="{{$companybanks['status']}}"
                                 data-target="#edit-company-bank-popup"><i class="fas fa-edit"></i></button>
+                            @endcan
+                            @can(PermissionConstant::DELETE_COMPANY_BANK)
+                        	<button type="submit" class="btn btn-danger btn-smt" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $companybanks->bank->name }}' data-link='{{ route('admin.settings.company-banks.delete', ['id ' => $companybanks['id']]) }}' ><i class=" far fa-trash-alt"></i></button>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -46,6 +52,7 @@
 </div>
 
 <!-- ADD COMPANY BANK -->
+@can(PermissionConstant::ADD_COMPANY_BANK)
 <div class="modal fade" id="addCompanyBankPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -106,8 +113,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- UPDATE COMPANY BANK -->
+@can(PermissionConstant::UPDATE_COMPANY_BANK)
 <div class="modal fade" id="edit-company-bank-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -155,6 +164,29 @@
         </div>
     </div>
 </div>
+@endcan
+
+@can(PermissionConstant::DELETE_COMPANY_BANK)
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endcan
 
 @section('scripts')
 <script>
@@ -221,9 +253,23 @@
     var status = button.data('bank-status')
 
     $('#edit-company-bank-form input[name=company_bank_id]').val(id)
-    editBankCode[0].selectize.setValue(bank_code);
+    	editBankCode[0].selectize.setValue(bank_code);
     $('#edit-company-bank-form input[name=acc_name]').val(account_name)
-    editStatus[0].selectize.setValue(status)
+    	editStatus[0].selectize.setValue(status)
     })
+    
+    $('#confirm-delete-modal').on('show.bs.modal', function (e) {
+        var entryTitle = $(e.relatedTarget).data('entry-title');
+        var link = $(e.relatedTarget).data('link');
+        $(this).find('.modal-body p').text('Are you sure you want to delete - ' + entryTitle + '?');
+
+        // Pass form reference to modal for submission on yes/ok
+        var form = $(e.relatedTarget).closest('form');
+        $(this).find('.modal-footer #confirm').data('form', link);
+    });
+
+    $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
+        window.location = $(this).data('form');
+    });
 </script>
 @append

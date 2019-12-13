@@ -39,11 +39,15 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         Permission::create(['name' => PermissionConstant::DELETE_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         
+        Permission::create(['name' => PermissionConstant::VIEW_JOB_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
+        Permission::create(['name' => PermissionConstant::ADD_JOB_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
+        Permission::create(['name' => PermissionConstant::UPDATE_JOB_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
+        Permission::create(['name' => PermissionConstant::DELETE_JOB_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
+        
         Permission::create(['name' => PermissionConstant::VIEW_AUDIT_TRAIL, 'mode' => 'admin', 'module' => 'Audit Trail']);
         
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);
-        
         
         $role = Role::where('name', 'Super Admin')->first();
         $role->givePermissionTo(Permission::all());
