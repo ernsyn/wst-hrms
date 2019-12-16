@@ -567,6 +567,20 @@ var AuditTrail = (function() {
       
             },
         },
+        
+        'App\\Role': {
+            name: 'Role',
+            fields: {
+                'name': 'Role Name',
+                'description': 'Description',
+            },
+        },
+        'App\\JobCompany': {
+            name: 'Role',
+            fields: {
+                'conmpany_name': 'Company Name',
+            },
+        },
     };
 
     return {

@@ -126,7 +126,7 @@ $(document).ready(function() {
             "orderable": false,
             "targets": [0, 3]
         } ],
-        "order": [[ 1, 'asc' ]],
+//         "order": [[ 1, 'asc' ]],
         "columns": [
             { "width": "3%" },
             { "width": "30%" },

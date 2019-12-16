@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Component\HttpFoundation\AcceptHeader;
 use App\Helpers\AccessControllHelper;
 use App\Constants\PermissionConstant;
 
@@ -121,7 +120,10 @@ Route::group(['middleware' => ['auth', 'permission:'.join("|",$employeePermissio
 
 // MODE: Admin
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("|",$adminPermissions)]], function() {
-    Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_ADMIN_DASHBOARD]], function () {
+        Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
+    });
+    
     // SECTION: EMPLOYEE
     // > View
     Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
@@ -250,10 +252,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
     });
     
     // Company Bank
-    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_COMPANY_BANK]], function () {
-        Route::get('settings/company-banks', 'Admin\SettingsController@displayCompanyBank')->name('admin.settings.company-banks');
-        Route::get('settings/company/{id}/dt/company-banks', 'Admin\SettingsController@getDataTableCompanyBank')->name('admin.companies.dt.company-banks')->where('id', '[0-9]+');
-    });
     Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_COMPANY_BANK]], function () {
         Route::post('settings/company-banks/{id}/add','Admin\SettingsController@postAddCompanyBank')->name('admin.settings.company-banks.add.post')->where('id', '[0-9]+');
     });
@@ -263,7 +261,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
     Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_COMPANY_BANK]], function () {
         Route::get('settings/company-banks/{id}/delete','Admin\SettingsController@deleteCompanyBank')->name('admin.settings.company-banks.delete')->where('id', '[0-9]+');
     });
-   
+    
+    // Job Company
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_JOB_COMPANY]], function () {
+        Route::post('settings/job-company/{id}/add','Admin\SettingsController@postAddJobCompany')->name('admin.settings.job-company.add.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_JOB_COMPANY]], function () {
+        Route::post('settings/job-company/edit','Admin\SettingsController@postEditJobCompany')->name('admin.settings.job-company.edit.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_JOB_COMPANY]], function () {
+        Route::get('settings/job-company/{id}/delete','Admin\SettingsController@deleteJobCompany')->name('admin.settings.job-company.delete')->where('id', '[0-9]+');
+    });
+
     
     Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');
     Route::get('settings/cost-centres', 'Admin\SettingsController@displayCostCentres')->name('admin.settings.cost-centres');
@@ -449,9 +458,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
     Route::get('attendance/current-day','Admin\AttendanceController@getCurrentDayAttendance')->name('admin.attendance.current-day');
 
     // SECTION: Audit Trail
-    Route::get('audit-trail', 'Admin\AuditTrailController@display')->name('admin.audit-trail');
-    Route::get('audit-trail/dt', 'Admin\AuditTrailController@getDataTableAuditTrails')->name('admin.audit-trail.dt');
-
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_AUDIT_TRAIL]], function () {
+        Route::get('audit-trail', 'Admin\AuditTrailController@display')->name('admin.audit-trail');
+        Route::get('audit-trail/dt', 'Admin\AuditTrailController@getDataTableAuditTrails')->name('admin.audit-trail.dt');
+    });
+    
     // Route::get('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@editPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit')->where('id', '[0-9]+');
     // Route::post('e-leave/configuration/leaveholidays/{id}/edit','Admin\ELeaveController@postEditPublicHoliday')->name('admin.e-leave.configuration.leave-holidays.edit.post')->where('id', '[0-9]+');
 

@@ -11,7 +11,6 @@ class DashboardController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:Super Admin|HR Admin|HR Exec']);
     }
     /**
      * Display a listing of the resource.

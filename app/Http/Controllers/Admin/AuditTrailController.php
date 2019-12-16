@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Yajra\DataTables\Facades\DataTables;
@@ -12,7 +11,6 @@ class AuditTrailController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:Super Admin|HR Admin']);
     }
 
     public function display()

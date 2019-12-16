@@ -1,5 +1,6 @@
 @extends('layouts.admin-base') 
-@section('content') {{-- @hasrole('Super Admin') --}}
+@section('content') 
+@can(PermissionConstant::VIEW_ADMIN_DASHBOARD)
 <div id="page-admin-dashboard" class="p-4">
     <div class="row">
         <div class="p-2 col-xl-3 col-lg-6">
@@ -76,6 +77,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('scripts')
