@@ -308,6 +308,24 @@ Breadcrumbs::for('admin.settings.grades.edit', function ($trail, $id) {
     $trail->push('Edit Grade', route('admin.settings.grades.edit', $id));
 });
 
+// // Home > Settings > Section
+Breadcrumbs::for('admin.settings.sections', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Sections', route('admin.settings.sections'));
+});
+    
+    // Home > Settings > Section - Add
+Breadcrumbs::for('admin.settings.sections.add', function ($trail) {
+    $trail->parent('admin.settings.sections');
+    $trail->push('Add Section', route('admin.settings.sections.add'));
+});
+        
+// Home > Settings > Section - Edit
+Breadcrumbs::for('admin.settings.sections.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.sections');
+    $trail->push('Edit Section', route('admin.settings.sections.edit', $id));
+});
+            
 // Home > Settings > Working Day
 Breadcrumbs::for('admin.settings.working-days', function ($trail) {
     $trail->parent('admin.dashboard');

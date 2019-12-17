@@ -575,10 +575,18 @@ var AuditTrail = (function() {
                 'description': 'Description',
             },
         },
+        
         'App\\JobCompany': {
             name: 'Job Company',
             fields: {
                 'company_name': 'Company Name',
+            },
+        },
+        
+        'App\\Section': {
+            name: 'Section',
+            fields: {
+                'name': 'Section Name',
             },
         },
     };

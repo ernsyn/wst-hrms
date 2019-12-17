@@ -36,6 +36,7 @@ use DateTime;
 use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\AccessControllHelper;
 use App\JobCompany;
+use App\Section;
 
 class SettingsController extends Controller
 {
@@ -128,6 +129,14 @@ class SettingsController extends Controller
             'grades' => $grades
         ]);
     }
+    
+    public function displaySections()
+    {
+        $sections = Section::all();
+        return view('pages.admin.settings.section', [
+            'sections' => $sections
+        ]);
+    }
 
     public function displayWorkingDays()
     {
@@ -210,6 +219,11 @@ class SettingsController extends Controller
     public function addGrade()
     {
         return view('pages.admin.settings.add-grade');
+    }
+    
+    public function addSection()
+    {
+        return view('pages.admin.settings.add-section');
     }
 
     public function addWorkingDay()
@@ -326,6 +340,22 @@ class SettingsController extends Controller
         EmployeeGrade::create($gradeData);
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been added.');
+    }
+
+    public function postAddSection(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:sections'
+        ]);
+        
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        
+        $section = new Section();
+        $section->name = $request['name'];
+        $section->company_id = $company->id;
+        $section->save();
+        
+        return redirect()->route('admin.settings.sections')->with('status', 'Section is added.');
     }
 
     public function postAddTeam(Request $request)
@@ -625,17 +655,16 @@ class SettingsController extends Controller
 
         $security_group= SecurityGroup::where('name','=',$request->name)->where('company_id','=',$id)->count();
      
-        if ($security_group == 0){
+        if ($security_group == 0) {
 
-        $securityGroupData['company_id'] = $id;
-        $securityGroupData['created_by'] = auth()->user()->name;
-        SecurityGroup::create($securityGroupData);
-
-        return redirect()->route('admin.settings.company.company-details', [
-            'id' => $id
-        ])->with('status', 'Security Group has successfully been added.');
-    }
-
+            $securityGroupData['company_id'] = $id;
+            $securityGroupData['created_by'] = auth()->user()->name;
+            SecurityGroup::create($securityGroupData);
+        
+            return redirect()->route('admin.settings.company.company-details', [
+                'id' => $id
+            ])->with('status', 'Security Group has successfully been added.');
+        }
         else 
         {
             return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group Name Already Taken.');
@@ -671,7 +700,7 @@ class SettingsController extends Controller
     public function postAddJobCompany(Request $request, $id)
     {
         $request->validate([
-            'company_name' => 'required'
+            'company_name' => 'required|unique:job_companies'
         ]);
         
         $jobCompany = new JobCompany();
@@ -726,6 +755,15 @@ class SettingsController extends Controller
 
         return view('pages.admin.settings.edit-grade', [
             'grade' => $grade
+        ]);
+    }
+    
+    public function editSection(Request $request, $id)
+    {
+        $section = Section::find($id);
+        
+        return view('pages.admin.settings.edit-section', [
+            'section' => $section
         ]);
     }
 
@@ -844,6 +882,19 @@ class SettingsController extends Controller
         EmployeeGrade::find($id)->update($gradeData);
 
         return redirect()->route('admin.settings.grades')->with('status', 'Grade has successfully been updated.');
+    }
+    
+    public function postEditSection(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|unique:sections,name,'.$id,
+        ]);
+        
+        $section = Section::find($id);
+        $section->name = $request['name'];
+        $section->save();
+        
+        return redirect()->route('admin.settings.sections')->with('status', 'Section is updated.');
     }
 
     public function postEditTeam(Request $request, $id)
@@ -1141,9 +1192,9 @@ class SettingsController extends Controller
     public function postEditJobCompany(Request $request, $id)
     {
         $request->validate([
-            'company_name' => 'required'
+            'company_name' => 'required|unique:job_companies,company_name,'.$id,
         ]);
-        
+
         $jobCompany = JobCompany::find($request->job_company_id);
         $jobCompany->company_name = $request['company_name'];
         $jobCompany->save();
@@ -1260,6 +1311,15 @@ class SettingsController extends Controller
         {
         return redirect()->route('admin.settings.grades')->with('status', 'You Cannot Delete This Record');
         }
+    }
+    
+    public function deleteSection($id)
+    {
+        $section = Section::find($id);
+        $name = $section->name;
+        $section->delete();
+        
+        return redirect()->route('admin.settings.sections')->with('status', $name.' is deleted.');
     }
 
     public function deleteCompany(Request $request, $id)

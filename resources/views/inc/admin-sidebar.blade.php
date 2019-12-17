@@ -142,7 +142,7 @@
             </ul>
         </li>
 
-        {{-- SECTION: Audit --}}
+        {{-- SECTION: Settings --}}
         <li class="menu-section {{ request()->is('admin/audit') ? 'active' : '' }}">
             <a class="info dropdown-toggle" href="#setupSubmenu" data-toggle="collapse" aria-expanded="false">
                 <div class="row">
@@ -152,9 +152,13 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/settings*') ? 'show' : '' }}" id="setupSubmenu">
                 {{-- OPTION: Companies --}}
+                @canany([PermissionConstant::VIEW_COMPANY, PermissionConstant::ADD_COMPANY, PermissionConstant::UPDATE_COMPANY, PermissionConstant::DELETE_COMPANY, 
+                	PermissionConstant::VIEW_COMPANY_BANK, PermissionConstant::ADD_COMPANY_BANK, PermissionConstant::UPDATE_COMPANY_BANK, PermissionConstant::DELETE_COMPANY_BANK, 
+                	PermissionConstant::VIEW_JOB_COMPANY, PermissionConstant::ADD_JOB_COMPANY, PermissionConstant::UPDATE_JOB_COMPANY, PermissionConstant::DELETE_JOB_COMPANY])
                 <li class="menu-option {{ request()->is('admin/settings/companies') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.companies')}}">Companies</a>
                 </li>
+                @endcan
                 {{-- OPTION: Cost Centres --}}
                 <li class="menu-option {{ request()->is('admin/settings/cost-centres') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.cost-centres')}}">Cost Centres</a>
@@ -179,6 +183,12 @@
                 <li class="menu-option {{ request()->is('admin/settings/grades') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.grades')}}">Grades</a>
                 </li>
+                {{-- Sections --}}
+                @canany([PermissionConstant::VIEW_SECTION, PermissionConstant::ADD_SECTION, PermissionConstant::UPDATE_SECTION, PermissionConstant::DELETE_SECTION])
+                <li class="menu-option {{ request()->is('admin/settings/sections') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.sections')}}">Sections</a>
+                </li>
+                @endcan
                 {{-- OPTION: Working Days --}}
                 <li class="menu-option {{ request()->is('admin/settings/working-days') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.working-days')}}">Working Days</a>

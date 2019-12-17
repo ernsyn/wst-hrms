@@ -25,6 +25,10 @@ class PermissionConstant
     const ADD_JOB_COMPANY = 'Add Job - Company';
     const UPDATE_JOB_COMPANY = 'Update Job - Company';
     const DELETE_JOB_COMPANY = 'Delete Job - Company';
+    const VIEW_SECTION = 'View Section';
+    const ADD_SECTION = 'Add Section';
+    const UPDATE_SECTION = 'Update Section';
+    const DELETE_SECTION = 'Delete Section';
 }
 
 
