@@ -62,9 +62,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @foreach($company as $banks)
-        	<form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $banks->id])}} " id="add-company-bank-form">
-            @endforeach
+        	<form method="POST" action="{{ route('admin.settings.company-banks.add.post', ['id' => $company->id])}} " id="add-company-bank-form">
             <div class="modal-body">
                 @csrf
                 <div class="row pb-5">
@@ -190,6 +188,7 @@
 
 @section('scripts')
 <script>
+$(document).ready(function() {
     $('#add-company-bank-form select[name=bank_code]').selectize({
         plugins: ['restore_on_backspace'],
         sortField: 'text'
@@ -210,7 +209,7 @@
     });
 
 
-    $('#company-banks-table').DataTable({
+    var t = $('#company-banks-table').DataTable({
         responsive: true,
         stateSave: true,
         dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
@@ -240,8 +239,19 @@
                 className: 'btn-segment',
                 titleAttr: 'Print'
             },
-        ]
+        ],
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": [0, 5]
+        } ]
     });
+    
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
 
 
     //update company
@@ -271,5 +281,6 @@
     $('#confirm-delete-modal').find('.modal-footer #confirm').on('click', function(){
         window.location = $(this).data('form');
     });
+});
 </script>
 @append

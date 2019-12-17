@@ -1,6 +1,6 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
+<div class="main-content">
     <div id="alert-container">
         </div>    
     @if (session('status'))
@@ -145,8 +145,15 @@
                     columns: ':visible'
                 }
             },
-        ]
+        ],
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": [0, 8]
+        } ],
+        "order": [[ 1, 'asc' ]],
     });
+    
     $('#confirm-delete-modal').on('show.bs.modal', function (e) {
         var entryTitle = $(e.relatedTarget).data('entry-title');
         var link = $(e.relatedTarget).data('link');

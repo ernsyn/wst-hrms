@@ -1,7 +1,6 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container company" style="display:none">
-    <div class="p-4">
+<div class="main-content company" style="display:none">
         <div id="alert-container"></div>
         @if (session('status'))
         <div class="alert alert-primary fade show" role="alert">
@@ -36,7 +35,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 @endsection
 

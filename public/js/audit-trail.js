@@ -576,9 +576,9 @@ var AuditTrail = (function() {
             },
         },
         'App\\JobCompany': {
-            name: 'Role',
+            name: 'Job Company',
             fields: {
-                'conmpany_name': 'Company Name',
+                'company_name': 'Company Name',
             },
         },
     };

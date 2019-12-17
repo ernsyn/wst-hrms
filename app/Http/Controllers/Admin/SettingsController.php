@@ -18,7 +18,6 @@ use App\CompanyBank;
 use App\CostCentre;
 use App\Department;
 use App\Deduction;
-use App\EaForm;
 use App\EPF;
 use App\Eis;
 use App\Employee;
@@ -36,6 +35,7 @@ use Illuminate\Support\Facades\Input;
 use DateTime;
 use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\AccessControllHelper;
+use App\JobCompany;
 
 class SettingsController extends Controller
 {
@@ -58,7 +58,8 @@ class SettingsController extends Controller
     {
         $id = $request->id;
         $bank = CompanyBank::where('company_id', $id)->get();
-        $company = Company::where('id', $id)->get();
+        $company = Company::where('id', $id)->first();
+        $jobCompny = JobCompany::where('company_id', $id)->get();
 //         $security = SecurityGroup::where('company_id', $id)->get();
 //         $addition = Addition::where('company_id', $id)->get();
 //         $deduction = Deduction::where('company_id', $id)->get();
@@ -75,7 +76,8 @@ class SettingsController extends Controller
 //             'deduction' => $deduction,
 //             'ea_form' => $ea_form,
 //             'cost_centre' => $cost_centre,
-            'company' => $company
+            'company' => $company,
+            'jobCompany' => $jobCompny,
         ]);
     }
 
@@ -665,6 +667,22 @@ class SettingsController extends Controller
             'id' => $id
         ])->with('status', 'Company Bank has successfully been added.');
     }
+    
+    public function postAddJobCompany(Request $request, $id)
+    {
+        $request->validate([
+            'company_name' => 'required'
+        ]);
+        
+        $jobCompany = new JobCompany();
+        $jobCompany->company_name = $request['company_name'];
+        $jobCompany->company_id = $id;
+        $jobCompany->save();
+        
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Job Company is added.');
+    }
 
     // SECTION: EDIT
     public function editCompany(Request $request, $id)
@@ -1119,7 +1137,22 @@ class SettingsController extends Controller
             'id' => $id
         ])->with('status', 'Company Bank has successfully been updated.');
     }
-
+    
+    public function postEditJobCompany(Request $request, $id)
+    {
+        $request->validate([
+            'company_name' => 'required'
+        ]);
+        
+        $jobCompany = JobCompany::find($request->job_company_id);
+        $jobCompany->company_name = $request['company_name'];
+        $jobCompany->save();
+        
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $id
+        ])->with('status', 'Job Company is updated.');
+    }
+    
     public function postEditCompanyAddition(Request $request)
     {
         $id = $request->id;
@@ -1251,6 +1284,18 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings.company.company-details', [
             'id' => $companyId
         ])->with('status', 'Company Bank is deleted.');
+    }
+    
+    public function deleteJobCompany($id)
+    {
+        $jobCompany = JobCompany::find($id);
+        $companyId = $jobCompany->company_id;
+        $companyName = $jobCompany->company_name;
+        $jobCompany->delete();
+        
+        return redirect()->route('admin.settings.company.company-details', [
+            'id' => $companyId
+        ])->with('status', $companyName.' is deleted.');
     }
 
     public function deleteTeam(Request $request, $id)

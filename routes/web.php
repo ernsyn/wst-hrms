@@ -267,7 +267,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
         Route::post('settings/job-company/{id}/add','Admin\SettingsController@postAddJobCompany')->name('admin.settings.job-company.add.post')->where('id', '[0-9]+');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_JOB_COMPANY]], function () {
-        Route::post('settings/job-company/edit','Admin\SettingsController@postEditJobCompany')->name('admin.settings.job-company.edit.post');
+        Route::post('settings/job-company/{id}/edit','Admin\SettingsController@postEditJobCompany')->name('admin.settings.job-company.edit.post')->where('id', '[0-9]+');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_JOB_COMPANY]], function () {
         Route::get('settings/job-company/{id}/delete','Admin\SettingsController@deleteJobCompany')->name('admin.settings.job-company.delete')->where('id', '[0-9]+');
