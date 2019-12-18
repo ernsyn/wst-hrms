@@ -9,6 +9,7 @@ use App\Helpers\PayrollHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Addition;
+use App\Area;
 use App\EmployeeGrade;
 use App\EmployeeJob;
 use App\EmployeeWorkingDay;
@@ -137,6 +138,14 @@ class SettingsController extends Controller
             'sections' => $sections
         ]);
     }
+    
+    public function displayAreas()
+    {
+        $areas = Area::all();
+        return view('pages.admin.settings.area', [
+            'areas' => $areas
+        ]);
+    }
 
     public function displayWorkingDays()
     {
@@ -224,6 +233,11 @@ class SettingsController extends Controller
     public function addSection()
     {
         return view('pages.admin.settings.add-section');
+    }
+    
+    public function addArea()
+    {
+        return view('pages.admin.settings.add-area');
     }
 
     public function addWorkingDay()
@@ -356,6 +370,22 @@ class SettingsController extends Controller
         $section->save();
         
         return redirect()->route('admin.settings.sections')->with('status', 'Section is added.');
+    }
+    
+    public function postAddArea(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:areas'
+        ]);
+        
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        
+        $area = new Area();
+        $area->name = $request['name'];
+        $area->company_id = $company->id;
+        $area->save();
+        
+        return redirect()->route('admin.settings.areas')->with('status', 'Area is added.');
     }
 
     public function postAddTeam(Request $request)
@@ -775,6 +805,15 @@ class SettingsController extends Controller
             'section' => $section
         ]);
     }
+    
+    public function editArea(Request $request, $id)
+    {
+        $area = Area::find($id);
+        
+        return view('pages.admin.settings.edit-area', [
+            'area' => $area
+        ]);
+    }
 
     public function editTeam(Request $request, $id)
     {
@@ -904,6 +943,19 @@ class SettingsController extends Controller
         $section->save();
         
         return redirect()->route('admin.settings.sections')->with('status', 'Section is updated.');
+    }
+    
+    public function postEditArea(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|unique:areas,name,'.$id,
+        ]);
+        
+        $area = Area::find($id);
+        $area->name = $request['name'];
+        $area->save();
+        
+        return redirect()->route('admin.settings.areas')->with('status', 'Area is updated.');
     }
 
     public function postEditTeam(Request $request, $id)
@@ -1338,6 +1390,15 @@ class SettingsController extends Controller
         $section->delete();
         
         return redirect()->route('admin.settings.sections')->with('status', $name.' is deleted.');
+    }
+    
+    public function deleteArea($id)
+    {
+        $area = Area::find($id);
+        $name = $area->name;
+        $area->delete();
+        
+        return redirect()->route('admin.settings.areas')->with('status', $name.' is deleted.');
     }
 
     public function deleteCompany(Request $request, $id)

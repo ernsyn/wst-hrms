@@ -308,13 +308,13 @@ Breadcrumbs::for('admin.settings.grades.edit', function ($trail, $id) {
     $trail->push('Edit Grade', route('admin.settings.grades.edit', $id));
 });
 
-// // Home > Settings > Section
+// Home > Settings > Section
 Breadcrumbs::for('admin.settings.sections', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Settings: Sections', route('admin.settings.sections'));
 });
     
-    // Home > Settings > Section - Add
+// Home > Settings > Section - Add
 Breadcrumbs::for('admin.settings.sections.add', function ($trail) {
     $trail->parent('admin.settings.sections');
     $trail->push('Add Section', route('admin.settings.sections.add'));
@@ -324,6 +324,24 @@ Breadcrumbs::for('admin.settings.sections.add', function ($trail) {
 Breadcrumbs::for('admin.settings.sections.edit', function ($trail, $id) {
     $trail->parent('admin.settings.sections');
     $trail->push('Edit Section', route('admin.settings.sections.edit', $id));
+});
+
+// Home > Settings > Area
+Breadcrumbs::for('admin.settings.areas', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Areas', route('admin.settings.areas'));
+});
+    
+// Home > Settings > Area - Add
+Breadcrumbs::for('admin.settings.areas.add', function ($trail) {
+    $trail->parent('admin.settings.areas');
+    $trail->push('Add Section', route('admin.settings.areas.add'));
+});
+    
+// Home > Settings > Area - Edit
+Breadcrumbs::for('admin.settings.areas.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.areas');
+    $trail->push('Edit Section', route('admin.settings.areas.edit', $id));
 });
             
 // Home > Settings > Working Day

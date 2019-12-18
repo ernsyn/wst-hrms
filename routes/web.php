@@ -288,6 +288,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
     Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_SECTION]], function () {
         Route::get('settings/sections/{id}/delete','Admin\SettingsController@deleteSection')->name('admin.settings.sections.delete')->where('id', '[0-9]+');
     });
+    
+    // Area
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_AREA]], function () {
+        Route::get('settings/areas', 'Admin\SettingsController@displayAreas')->name('admin.settings.areas');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_AREA]], function () {
+        Route::get('settings/areas/add','Admin\SettingsController@addArea')->name('admin.settings.areas.add');
+        Route::post('settings/areas/add','Admin\SettingsController@postAddArea')->name('admin.settings.areas.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_AREA]], function () {
+        Route::get('settings/areas/{id}/edit','Admin\SettingsController@editArea')->name('admin.settings.areas.edit')->where('id', '[0-9]+');
+        Route::post('settings/areas/{id}/edit','Admin\SettingsController@postEditArea')->name('admin.settings.areas.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_AREA]], function () {
+        Route::get('settings/areas/{id}/delete','Admin\SettingsController@deleteArea')->name('admin.settings.areas.delete')->where('id', '[0-9]+');
+    });
 
     
     Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');

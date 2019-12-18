@@ -183,12 +183,21 @@
                 <li class="menu-option {{ request()->is('admin/settings/grades') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.grades')}}">Grades</a>
                 </li>
+                
                 {{-- Sections --}}
                 @canany([PermissionConstant::VIEW_SECTION, PermissionConstant::ADD_SECTION, PermissionConstant::UPDATE_SECTION, PermissionConstant::DELETE_SECTION])
                 <li class="menu-option {{ request()->is('admin/settings/sections') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.sections')}}">Sections</a>
                 </li>
                 @endcan
+                
+                {{-- Area --}}
+                @canany([PermissionConstant::VIEW_AREA, PermissionConstant::ADD_AREA, PermissionConstant::UPDATE_AREA, PermissionConstant::DELETE_AREA])
+                <li class="menu-option {{ request()->is('admin/settings/areas') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.areas')}}">Area</a>
+                </li>
+                @endcan
+                
                 {{-- OPTION: Working Days --}}
                 <li class="menu-option {{ request()->is('admin/settings/working-days') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.working-days')}}">Working Days</a>

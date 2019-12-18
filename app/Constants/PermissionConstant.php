@@ -29,6 +29,10 @@ class PermissionConstant
     const ADD_SECTION = 'Add Section';
     const UPDATE_SECTION = 'Update Section';
     const DELETE_SECTION = 'Delete Section';
+    const VIEW_AREA = 'View Area';
+    const ADD_AREA = 'Add Area';
+    const UPDATE_AREA = 'Update Area';
+    const DELETE_AREA = 'Delete Area';
 }
 
 

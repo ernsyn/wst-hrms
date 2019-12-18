@@ -20,6 +20,7 @@ class PermissionsTableSeeder extends Seeder
         // create permissions
         //Admin mode
         Permission::create(['name' => PermissionConstant::VIEW_ADMIN_DASHBOARD, 'mode' => 'admin', 'module' => 'Admin Dashboard']);
+        Permission::create(['name' => PermissionConstant::VIEW_AUDIT_TRAIL, 'mode' => 'admin', 'module' => 'Audit Trail']);
         
         Permission::create(['name' => PermissionConstant::VIEW_ROLE_AND_PERMISSION, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         Permission::create(['name' => PermissionConstant::ADD_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
@@ -44,12 +45,15 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_JOB_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         Permission::create(['name' => PermissionConstant::DELETE_JOB_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         
-        Permission::create(['name' => PermissionConstant::VIEW_AUDIT_TRAIL, 'mode' => 'admin', 'module' => 'Audit Trail']);
-        
         Permission::create(['name' => PermissionConstant::VIEW_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);
         Permission::create(['name' => PermissionConstant::ADD_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);
         Permission::create(['name' => PermissionConstant::UPDATE_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);
         Permission::create(['name' => PermissionConstant::DELETE_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_AREA, 'mode' => 'admin', 'module' => 'Settings - Area']);
+        Permission::create(['name' => PermissionConstant::ADD_AREA, 'mode' => 'admin', 'module' => 'Settings - Area']);
+        Permission::create(['name' => PermissionConstant::UPDATE_AREA, 'mode' => 'admin', 'module' => 'Settings - Area']);
+        Permission::create(['name' => PermissionConstant::DELETE_AREA, 'mode' => 'admin', 'module' => 'Settings - Area']);
         
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);

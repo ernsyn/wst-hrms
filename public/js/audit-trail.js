@@ -589,6 +589,13 @@ var AuditTrail = (function() {
                 'name': 'Section Name',
             },
         },
+        
+        'App\\Area': {
+            name: 'Area',
+            fields: {
+                'name': 'Area Name',
+            },
+        },
     };
 
     return {
