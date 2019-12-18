@@ -700,17 +700,26 @@ class SettingsController extends Controller
     public function postAddJobCompany(Request $request, $id)
     {
         $request->validate([
-            'company_name' => 'required|unique:job_companies'
+            'company_name' => 'required'
         ]);
         
-        $jobCompany = new JobCompany();
-        $jobCompany->company_name = $request['company_name'];
-        $jobCompany->company_id = $id;
-        $jobCompany->save();
+        $jobCompany = JobCompany::where('company_name','=',$request->company_name)
+            ->where('company_id','=',$id)->count();
         
-        return redirect()->route('admin.settings.company.company-details', [
-            'id' => $id
-        ])->with('status', 'Job Company is added.');
+        if ($jobCompany == 0) {
+            $jobCompany = new JobCompany();
+            $jobCompany->company_name = $request['company_name'];
+            $jobCompany->company_id = $id;
+            $jobCompany->save();
+            
+            return redirect()->route('admin.settings.company.company-details', [
+                'id' => $id
+            ])->with('status', 'Job Company is added.');
+        } else {
+            return redirect()->route('admin.settings.company.company-details', [
+                'id' => $id
+            ])->with('status', 'The Company Name has already been taken.');
+        }
     }
 
     // SECTION: EDIT
@@ -1192,16 +1201,25 @@ class SettingsController extends Controller
     public function postEditJobCompany(Request $request, $id)
     {
         $request->validate([
-            'company_name' => 'required|unique:job_companies,company_name,'.$id,
+            'company_name' => 'required'
         ]);
-
-        $jobCompany = JobCompany::find($request->job_company_id);
-        $jobCompany->company_name = $request['company_name'];
-        $jobCompany->save();
+        $jobCompany = JobCompany::where('company_name','=',$request->company_name)
+            ->where('id','!=',$request->job_company_id)
+            ->where('company_id','=',$id)->count();
         
-        return redirect()->route('admin.settings.company.company-details', [
-            'id' => $id
-        ])->with('status', 'Job Company is updated.');
+        if ($jobCompany == 0) {
+            $jobCompany = JobCompany::find($request->job_company_id);
+            $jobCompany->company_name = $request['company_name'];
+            $jobCompany->save();
+            
+            return redirect()->route('admin.settings.company.company-details', [
+                'id' => $id
+            ])->with('status', 'Job Company is updated.');
+        } else {
+            return redirect()->route('admin.settings.company.company-details', [
+                'id' => $id
+            ])->with('status', 'The Company Name has already been taken.');
+        }
     }
     
     public function postEditCompanyAddition(Request $request)

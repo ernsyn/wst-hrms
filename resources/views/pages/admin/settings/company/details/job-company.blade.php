@@ -10,6 +10,7 @@
             @endcan
         </div>
     </div>
+    
     <div class="row">
         <div class="col-md-12">
             <div class="float-right tableTools-container"></div>
@@ -100,7 +101,7 @@
                         <div class="col-xl-8">
                             <label class="col-md-12 col-form-label">Company Name *</label>
                             <div class="col-md-12">
-                                <input type="text" class="form-control{{ $errors->has('company_name') ? ' is-invalid' : '' }}" id="company_name" name="company_name" required>
+                                <input type="text" class="form-control{{ $errors->has('company_name') ? ' is-invalid' : '' }}" id="edit_company_name" name="company_name" required>
                             </div>
                         </div>
                     </div>
@@ -190,7 +191,7 @@ $(document).ready(function() {
         var id = button.data('jc-id')
         var company_name = button.data('jc-company-name')
         $('#job_company_id').val(id);
-        $('#edit-job-company-popup #company_name').val(company_name);
+        $('#edit-job-company-popup #edit_company_name').val(company_name);
     });
 
     $('#confirm-delete-modal').on('show.bs.modal', function (e) {
