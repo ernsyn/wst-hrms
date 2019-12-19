@@ -38,6 +38,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\AccessControllHelper;
 use App\JobCompany;
 use App\Section;
+use App\Category;
 
 class SettingsController extends Controller
 {
@@ -146,6 +147,14 @@ class SettingsController extends Controller
             'areas' => $areas
         ]);
     }
+    
+    public function displayCategories()
+    {
+        $categories = Category::all();
+        return view('pages.admin.settings.category', [
+            'categories' => $categories
+        ]);
+    }
 
     public function displayWorkingDays()
     {
@@ -238,6 +247,11 @@ class SettingsController extends Controller
     public function addArea()
     {
         return view('pages.admin.settings.add-area');
+    }
+    
+    public function addCategory()
+    {
+        return view('pages.admin.settings.add-category');
     }
 
     public function addWorkingDay()
@@ -386,6 +400,22 @@ class SettingsController extends Controller
         $area->save();
         
         return redirect()->route('admin.settings.areas')->with('status', 'Area is added.');
+    }
+    
+    public function postAddCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:categories'
+        ]);
+        
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        
+        $category = new Category();
+        $category->name = $request['name'];
+        $category->company_id = $company->id;
+        $category->save();
+        
+        return redirect()->route('admin.settings.categories')->with('status', 'Category is added.');
     }
 
     public function postAddTeam(Request $request)
@@ -814,6 +844,15 @@ class SettingsController extends Controller
             'area' => $area
         ]);
     }
+    
+    public function editCategory(Request $request, $id)
+    {
+        $category = Category::find($id);
+        
+        return view('pages.admin.settings.edit-category', [
+            'category' => $category
+        ]);
+    }
 
     public function editTeam(Request $request, $id)
     {
@@ -956,6 +995,19 @@ class SettingsController extends Controller
         $area->save();
         
         return redirect()->route('admin.settings.areas')->with('status', 'Area is updated.');
+    }
+    
+    public function postEditCategory(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|unique:categories,name,'.$id,
+        ]);
+        
+        $category = Category::find($id);
+        $category->name = $request['name'];
+        $category->save();
+        
+        return redirect()->route('admin.settings.categories')->with('status', 'Category is updated.');
     }
 
     public function postEditTeam(Request $request, $id)
@@ -1399,6 +1451,15 @@ class SettingsController extends Controller
         $area->delete();
         
         return redirect()->route('admin.settings.areas')->with('status', $name.' is deleted.');
+    }
+    
+    public function deleteCategory($id)
+    {
+        $category = Category::find($id);
+        $name = $category->name;
+        $category->delete();
+        
+        return redirect()->route('admin.settings.categories')->with('status', $name.' is deleted.');
     }
 
     public function deleteCompany(Request $request, $id)

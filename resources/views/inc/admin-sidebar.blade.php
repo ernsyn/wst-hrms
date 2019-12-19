@@ -198,6 +198,13 @@
                 </li>
                 @endcan
                 
+                {{-- Category --}}
+                @canany([PermissionConstant::VIEW_CATEGORY, PermissionConstant::ADD_CATEGORY, PermissionConstant::UPDATE_CATEGORY, PermissionConstant::DELETE_CATEGORY])
+                <li class="menu-option {{ request()->is('admin/settings/categories') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.categories')}}">Category</a>
+                </li>
+                @endcan
+                
                 {{-- OPTION: Working Days --}}
                 <li class="menu-option {{ request()->is('admin/settings/working-days') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.working-days')}}">Working Days</a>

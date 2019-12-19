@@ -329,7 +329,7 @@ Breadcrumbs::for('admin.settings.sections.edit', function ($trail, $id) {
 // Home > Settings > Area
 Breadcrumbs::for('admin.settings.areas', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Settings: Areas', route('admin.settings.areas'));
+    $trail->push('Settings: Area', route('admin.settings.areas'));
 });
     
 // Home > Settings > Area - Add
@@ -342,6 +342,24 @@ Breadcrumbs::for('admin.settings.areas.add', function ($trail) {
 Breadcrumbs::for('admin.settings.areas.edit', function ($trail, $id) {
     $trail->parent('admin.settings.areas');
     $trail->push('Edit Section', route('admin.settings.areas.edit', $id));
+});
+
+// Home > Settings > Category
+Breadcrumbs::for('admin.settings.categories', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Category', route('admin.settings.categories'));
+});
+    
+// Home > Settings > Category - Add
+Breadcrumbs::for('admin.settings.categories.add', function ($trail) {
+    $trail->parent('admin.settings.categories');
+    $trail->push('Add Category', route('admin.settings.categories.add'));
+});
+    
+// Home > Settings > Category - Edit
+Breadcrumbs::for('admin.settings.categories.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.categories');
+    $trail->push('Edit Category', route('admin.settings.categories.edit', $id));
 });
             
 // Home > Settings > Working Day

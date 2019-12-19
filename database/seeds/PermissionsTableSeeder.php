@@ -55,6 +55,11 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_AREA, 'mode' => 'admin', 'module' => 'Settings - Area']);
         Permission::create(['name' => PermissionConstant::DELETE_AREA, 'mode' => 'admin', 'module' => 'Settings - Area']);
         
+        Permission::create(['name' => PermissionConstant::VIEW_CATEGORY, 'mode' => 'admin', 'module' => 'Settings - Category']);
+        Permission::create(['name' => PermissionConstant::ADD_CATEGORY, 'mode' => 'admin', 'module' => 'Settings - Category']);
+        Permission::create(['name' => PermissionConstant::UPDATE_CATEGORY, 'mode' => 'admin', 'module' => 'Settings - Category']);
+        Permission::create(['name' => PermissionConstant::DELETE_CATEGORY, 'mode' => 'admin', 'module' => 'Settings - Category']);
+        
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);
         
