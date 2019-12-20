@@ -37,6 +37,26 @@ class PermissionConstant
     const ADD_CATEGORY = 'Add Category';
     const UPDATE_CATEGORY = 'Update Category';
     const DELETE_CATEGORY = 'Delete Category';
+    const VIEW_BRANCH = 'View Branch';
+    const ADD_BRANCH = 'Add Branch';
+    const UPDATE_BRANCH = 'Update Branch';
+    const DELETE_BRANCH = 'Delete Branch';
+    const VIEW_EPF = 'View EPF';
+    const ADD_EPF = 'Add EPF';
+    const UPDATE_EPF = 'Update EPF';
+    const DELETE_EPF = 'Delete EPF';
+    const VIEW_EIS = 'View EIS';
+    const ADD_EIS = 'Add EIS';
+    const UPDATE_EIS = 'Update EIS';
+    const DELETE_EIS = 'Delete EIS';
+    const VIEW_SOCSO = 'View SOCSO';
+    const ADD_SOCSO = 'Add SOCSO';
+    const UPDATE_SOCSO = 'Update SOCSO';
+    const DELETE_SOCSO = 'Delete SOCSO';
+    const VIEW_PCB = 'View PCB';
+    const ADD_PCB = 'Add PCB';
+    const UPDATE_PCB = 'Update PCB';
+    const DELETE_PCB = 'Delete PCB';
 }
 
 

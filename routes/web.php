@@ -273,6 +273,23 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
         Route::get('settings/job-company/{id}/delete','Admin\SettingsController@deleteJobCompany')->name('admin.settings.job-company.delete')->where('id', '[0-9]+');
     });
     
+    // Branch
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_CATEGORY]], function () {
+        Route::get('settings/branches', 'Admin\SettingsController@displayBranches')->name('admin.settings.branches');
+        Route::get('settings/branches/{id}', 'Admin\SettingsController@showBranch')->name('admin.settings.branches.show')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_CATEGORY]], function () {
+        Route::get('settings/branches/add','Admin\SettingsController@addBranch')->name('admin.settings.branches.add');
+        Route::post('settings/branches/add','Admin\SettingsController@postAddBranch')->name('admin.settings.branches.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_CATEGORY]], function () {
+        Route::get('settings/branches/{id}/edit','Admin\SettingsController@editBranch')->name('admin.settings.branches.edit')->where('id', '[0-9]+');
+        Route::post('settings/branches/{id}/edit','Admin\SettingsController@postEditBranch')->name('admin.settings.branches.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_CATEGORY]], function () {
+        Route::get('settings/branches/{id}/delete','Admin\SettingsController@deleteBranch')->name('admin.settings.branches.delete')->where('id', '[0-9]+');
+    });
+    
     // Section
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_SECTION]], function () {
         Route::get('settings/sections', 'Admin\SettingsController@displaySections')->name('admin.settings.sections');
@@ -320,7 +337,70 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
     Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_CATEGORY]], function () {
         Route::get('settings/categories/{id}/delete','Admin\SettingsController@deleteCategory')->name('admin.settings.categories.delete')->where('id', '[0-9]+');
     });
+    
+    // EPF
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EPF]], function () {
+        Route::get('settings/epf', 'Admin\SettingsController@displayEpf')->name('admin.settings.epf');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_EPF]], function () {
+        Route::get('settings/epf/add','Admin\SettingsController@addEpf')->name('admin.settings.epf.add');
+        Route::post('settings/epf/add','Admin\SettingsController@postAddEpf')->name('admin.settings.epf.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_EPF]], function () {
+        Route::get('settings/epf/{id}/edit','Admin\SettingsController@editEpf')->name('admin.settings.epf.edit')->where('id', '[0-9]+');
+        Route::post('settings/epf/{id}/edit','Admin\SettingsController@postEditEpf')->name('admin.settings.epf.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_EPF]], function () {
+        Route::get('settings/epf/{id}/delete','Admin\SettingsController@deleteEpf')->name('admin.settings.epf.delete')->where('id', '[0-9]+');
+    });
 
+    // EIS
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EIS]], function () {
+        Route::get('settings/eis', 'Admin\SettingsController@displayEis')->name('admin.settings.eis');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_EIS]], function () {
+        Route::get('settings/eis/add','Admin\SettingsController@addEis')->name('admin.settings.eis.add');
+        Route::post('settings/eis/add','Admin\SettingsController@postAddEis')->name('admin.settings.eis.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_EIS]], function () {
+        Route::get('settings/eis/{id}/edit','Admin\SettingsController@editEis')->name('admin.settings.eis.edit')->where('id', '[0-9]+');
+        Route::post('settings/eis/{id}/edit','Admin\SettingsController@postEditEis')->name('admin.settings.eis.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_EIS]], function () {
+        Route::get('settings/eis/{id}/delete','Admin\SettingsController@deleteEis')->name('admin.settings.eis.delete')->where('id', '[0-9]+');
+    });
+    
+    // SOCSO
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_SOCSO]], function () {
+        Route::get('settings/socso', 'Admin\SettingsController@displaySocso')->name('admin.settings.socso');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_SOCSO]], function () {
+        Route::get('settings/socso/add','Admin\SettingsController@addSocso')->name('admin.settings.socso.add');
+        Route::post('settings/socso/add','Admin\SettingsController@postAddSocso')->name('admin.settings.socso.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_SOCSO]], function () {
+        Route::get('settings/socso/{id}/edit','Admin\SettingsController@editSocso')->name('admin.settings.socso.edit')->where('id', '[0-9]+');
+        Route::post('settings/socso/{id}/edit','Admin\SettingsController@postEditSocso')->name('admin.settings.socso.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_SOCSO]], function () {
+        Route::get('settings/socso/{id}/delete','Admin\SettingsController@deleteSocso')->name('admin.settings.socso.delete')->where('id', '[0-9]+');
+    });
+                
+    // PCB
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_PCB]], function () {
+        Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_PCB]], function () {
+        Route::get('settings/pcb/add','Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
+        Route::post('settings/pcb/add','Admin\SettingsController@postAddPcb')->name('admin.settings.pcb.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_PCB]], function () {
+        Route::get('settings/pcb/{id}/edit','Admin\SettingsController@editPcb')->name('admin.settings.pcb.edit')->where('id', '[0-9]+');
+        Route::post('settings/pcb/{id}/edit','Admin\SettingsController@postEditPcb')->name('admin.settings.pcb.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_PCB]], function () {
+        Route::get('settings/pcb/{id}/delete','Admin\SettingsController@deletePcb')->name('admin.settings.pcb.delete')->where('id', '[0-9]+');
+    });
     
     Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');
     Route::get('settings/cost-centres', 'Admin\SettingsController@displayCostCentres')->name('admin.settings.cost-centres');
@@ -328,11 +408,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
     Route::get('settings/teams', 'Admin\SettingsController@displayTeams')->name('admin.settings.teams');
     Route::get('settings/positions', 'Admin\SettingsController@displayPositions')->name('admin.settings.positions');
     Route::get('settings/grades', 'Admin\SettingsController@displayGrades')->name('admin.settings.grades');
-    Route::get('settings/branches', 'Admin\SettingsController@displayBranches')->name('admin.settings.branches');
-    Route::get('settings/epf', 'Admin\SettingsController@displayEpf')->name('admin.settings.epf');
-    Route::get('settings/eis', 'Admin\SettingsController@displayEis')->name('admin.settings.eis');
-    Route::get('settings/socso', 'Admin\SettingsController@displaySocso')->name('admin.settings.socso');
-    Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
     Route::get('settings/working-days', 'Admin\SettingsController@displayWorkingDays')->name('admin.settings.working-days');
 
     // > View - List Company Details
@@ -373,21 +448,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
     Route::get('settings/departments/add','Admin\SettingsController@addDepartment')->name('admin.settings.departments.add');
     Route::post('settings/departments/add','Admin\SettingsController@postAddDepartment')->name('admin.settings.departments.add.post');
     
-    Route::get('settings/branches/add','Admin\SettingsController@addBranch')->name('admin.settings.branches.add');
-    Route::post('settings/branches/add','Admin\SettingsController@postAddBranch')->name('admin.settings.branches.add.post');
-    
-    Route::get('settings/epf/add','Admin\SettingsController@addEpf')->name('admin.settings.epf.add');
-    Route::post('settings/epf/add','Admin\SettingsController@postAddEpf')->name('admin.settings.epf.add.post');
-    
-    Route::get('settings/eis/add','Admin\SettingsController@addEis')->name('admin.settings.eis.add');
-    Route::post('settings/eis/add','Admin\SettingsController@postAddEis')->name('admin.settings.eis.add.post');
-    
-    Route::get('settings/socso/add','Admin\SettingsController@addSocso')->name('admin.settings.socso.add');
-    Route::post('settings/socso/add','Admin\SettingsController@postAddSocso')->name('admin.settings.socso.add.post');
-    
-    Route::get('settings/pcb/add','Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
-    Route::post('settings/pcb/add','Admin\SettingsController@postAddPcb')->name('admin.settings.pcb.add.post');
-    
     Route::get('settings/working-days/add','Admin\SettingsController@addWorkingDay')->name('admin.settings.working-days.add');
     Route::post('settings/working-days/add','Admin\SettingsController@postAddWorkingDay')->name('admin.settings.working-days.add.post');
 
@@ -420,15 +480,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
 
 
     // > Edit
-
-    Route::get('settings/epf/{id}/edit','Admin\SettingsController@editEpf')->name('admin.settings.epf.edit')->where('id', '[0-9]+');
-    Route::post('settings/epf/{id}/edit','Admin\SettingsController@postEditEpf')->name('admin.settings.epf.edit.post')->where('id', '[0-9]+');
-    Route::get('settings/eis/{id}/edit','Admin\SettingsController@editEis')->name('admin.settings.eis.edit')->where('id', '[0-9]+');
-    Route::post('settings/eis/{id}/edit','Admin\SettingsController@postEditEis')->name('admin.settings.eis.edit.post')->where('id', '[0-9]+');
-    Route::get('settings/socso/{id}/edit','Admin\SettingsController@editSocso')->name('admin.settings.socso.edit')->where('id', '[0-9]+');
-    Route::post('settings/socso/{id}/edit','Admin\SettingsController@postEditSocso')->name('admin.settings.socso.edit.post')->where('id', '[0-9]+');
-    Route::get('settings/pcb/{id}/edit','Admin\SettingsController@editPcb')->name('admin.settings.pcb.edit')->where('id', '[0-9]+');
-    Route::post('settings/pcb/{id}/edit','Admin\SettingsController@postEditPcb')->name('admin.settings.pcb.edit.post')->where('id', '[0-9]+');
     Route::get('settings/positions/{id}/edit','Admin\SettingsController@editPosition')->name('admin.settings.positions.edit')->where('id', '[0-9]+');
     Route::post('settings/positions/{id}/edit','Admin\SettingsController@postEditPosition')->name('admin.settings.positions.edit.post')->where('id', '[0-9]+');
     Route::get('settings/grades/{id}/edit','Admin\SettingsController@editGrade')->name('admin.settings.grades.edit')->where('id', '[0-9]+');
@@ -439,8 +490,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
     Route::post('settings/cost-centres/{id}/edit','Admin\SettingsController@postEditCostCentre')->name('admin.settings.cost-centres.edit.post')->where('id', '[0-9]+');
     Route::get('settings/departments/{id}/edit','Admin\SettingsController@editDepartment')->name('admin.settings.departments.edit')->where('id', '[0-9]+');
     Route::post('settings/departments/{id}/edit','Admin\SettingsController@postEditDepartment')->name('admin.settings.departments.edit.post')->where('id', '[0-9]+');
-    Route::get('settings/branches/{id}/edit','Admin\SettingsController@editBranch')->name('admin.settings.branches.edit')->where('id', '[0-9]+');
-    Route::post('settings/branches/{id}/edit','Admin\SettingsController@postEditBranch')->name('admin.settings.branches.edit.post')->where('id', '[0-9]+');
     Route::get('settings/working-days/{id}/edit','Admin\SettingsController@editWorkingDay')->name('admin.settings.working-days.edit')->where('id', '[0-9]+');
     Route::post('settings/working-days/{id}/edit','Admin\SettingsController@postEditWorkingDay')->name('admin.settings.working-days.edit.post')->where('id', '[0-9]+');
     Route::post('settings/leave-balances/edit','Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balances.edit.post');
@@ -449,16 +498,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
 
 
     // > Delete
-    Route::get('settings/epf/{id}/delete','Admin\SettingsController@deleteEpf')->name('admin.settings.epf.delete')->where('id', '[0-9]+');
-    Route::get('settings/eis/{id}/delete','Admin\SettingsController@deleteEis')->name('admin.settings.eis.delete')->where('id', '[0-9]+');
-    Route::get('settings/socso/{id}/delete','Admin\SettingsController@deleteSocso')->name('admin.settings.socso.delete')->where('id', '[0-9]+');
-    Route::get('settings/pcb/{id}/delete','Admin\SettingsController@deletePcb')->name('admin.settings.pcb.delete')->where('id', '[0-9]+');
     Route::get('settings/positions/{id}/delete','Admin\SettingsController@deletePosition')->name('admin.settings.positions.delete')->where('id', '[0-9]+');
     Route::get('settings/grades/{id}/delete','Admin\SettingsController@deleteGrade')->name('admin.settings.grades.delete')->where('id', '[0-9]+');
     Route::get('settings/teams/{id}/delete','Admin\SettingsController@deleteTeam')->name('admin.settings.teams.delete')->where('id', '[0-9]+');
     Route::get('settings/cost-centres/{id}/delete','Admin\SettingsController@deleteCostCentre')->name('admin.settings.cost-centres.delete')->where('id', '[0-9]+');
     Route::get('settings/departments/{id}/delete','Admin\SettingsController@deleteDepartment')->name('admin.settings.departments.delete')->where('id', '[0-9]+');
-    Route::get('settings/branches/{id}/delete','Admin\SettingsController@deleteBranch')->name('admin.settings.branches.delete')->where('id', '[0-9]+');
     Route::get('settings/working-days/{id}/delete','Admin\SettingsController@deleteWorkingDay')->name('admin.settings.working-days.delete')->where('id', '[0-9]+');
 
     // SECTION: E-Leave

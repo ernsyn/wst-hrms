@@ -236,6 +236,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'PermissionConstant' => App\Constants\PermissionConstant::class,
+        'MalaysianStates' => App\Constants\MalaysianStates::class,
 
     ],
 

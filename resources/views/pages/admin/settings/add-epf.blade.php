@@ -1,6 +1,6 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
+<div class="main-content">
     <div id="alert-container"></div>   
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.epf.add.post') }}" id="form_validate" data-parsley-validate>
@@ -67,7 +67,7 @@
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
-                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
+                <a role="button" class="btn btn-secondary" href="{{ route('admin.settings.epf') }}">Cancel</a>
             </div>
         </form>
     </div>

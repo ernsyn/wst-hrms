@@ -1,8 +1,7 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
-    <div id="alert-container">
-        </div>   
+<div class="main-content">
+    <div id="alert-container"></div>   
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.socso.edit.post', ['id' => $socso->id]) }}" id="form_validate" data-parsley-validate>
             <div class="card-body">
@@ -68,7 +67,7 @@
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
-                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
+                <a role="button" class="btn btn-secondary" href="{{ route('admin.settings.socso') }}">Cancel</a>
             </div>
         </form>
     </div>

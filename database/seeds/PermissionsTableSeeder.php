@@ -45,6 +45,11 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_JOB_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         Permission::create(['name' => PermissionConstant::DELETE_JOB_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         
+        Permission::create(['name' => PermissionConstant::VIEW_BRANCH, 'mode' => 'admin', 'module' => 'Settings - Branch']);
+        Permission::create(['name' => PermissionConstant::ADD_BRANCH, 'mode' => 'admin', 'module' => 'Settings - Branch']);
+        Permission::create(['name' => PermissionConstant::UPDATE_BRANCH, 'mode' => 'admin', 'module' => 'Settings - Branch']);
+        Permission::create(['name' => PermissionConstant::DELETE_BRANCH, 'mode' => 'admin', 'module' => 'Settings - Branch']);
+        
         Permission::create(['name' => PermissionConstant::VIEW_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);
         Permission::create(['name' => PermissionConstant::ADD_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);
         Permission::create(['name' => PermissionConstant::UPDATE_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);
@@ -59,6 +64,26 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::ADD_CATEGORY, 'mode' => 'admin', 'module' => 'Settings - Category']);
         Permission::create(['name' => PermissionConstant::UPDATE_CATEGORY, 'mode' => 'admin', 'module' => 'Settings - Category']);
         Permission::create(['name' => PermissionConstant::DELETE_CATEGORY, 'mode' => 'admin', 'module' => 'Settings - Category']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_EPF, 'mode' => 'admin', 'module' => 'Settings - EPF']);
+        Permission::create(['name' => PermissionConstant::ADD_EPF, 'mode' => 'admin', 'module' => 'Settings - EPF']);
+        Permission::create(['name' => PermissionConstant::UPDATE_EPF, 'mode' => 'admin', 'module' => 'Settings - EPF']);
+        Permission::create(['name' => PermissionConstant::DELETE_EPF, 'mode' => 'admin', 'module' => 'Settings - EPF']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_EIS, 'mode' => 'admin', 'module' => 'Settings - EIS']);
+        Permission::create(['name' => PermissionConstant::ADD_EIS, 'mode' => 'admin', 'module' => 'Settings - EIS']);
+        Permission::create(['name' => PermissionConstant::UPDATE_EIS, 'mode' => 'admin', 'module' => 'Settings - EIS']);
+        Permission::create(['name' => PermissionConstant::DELETE_EIS, 'mode' => 'admin', 'module' => 'Settings - EIS']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_SOCSO, 'mode' => 'admin', 'module' => 'Settings - SOCSO']);
+        Permission::create(['name' => PermissionConstant::ADD_SOCSO, 'mode' => 'admin', 'module' => 'Settings - SOCSO']);
+        Permission::create(['name' => PermissionConstant::UPDATE_SOCSO, 'mode' => 'admin', 'module' => 'Settings - SOCSO']);
+        Permission::create(['name' => PermissionConstant::DELETE_SOCSO, 'mode' => 'admin', 'module' => 'Settings - SOCSO']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_PCB, 'mode' => 'admin', 'module' => 'Settings - PCB']);
+        Permission::create(['name' => PermissionConstant::ADD_PCB, 'mode' => 'admin', 'module' => 'Settings - PCB']);
+        Permission::create(['name' => PermissionConstant::UPDATE_PCB, 'mode' => 'admin', 'module' => 'Settings - PCB']);
+        Permission::create(['name' => PermissionConstant::DELETE_PCB, 'mode' => 'admin', 'module' => 'Settings - PCB']);
         
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);

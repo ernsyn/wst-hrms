@@ -167,10 +167,14 @@
                 <li class="menu-option {{ request()->is('admin/settings/departments') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.departments')}}">Departments</a>
                 </li>
+                
                 {{-- OPTION: Branches --}}
+                @canany([PermissionConstant::VIEW_BRANCH, PermissionConstant::ADD_BRANCH, PermissionConstant::UPDATE_BRANCH, PermissionConstant::DELETE_BRANCH])
                 <li class="menu-option {{ request()->is('admin/settings/branches') ? 'active' : '' }}">
-                    <a href="{{ route('admin.settings.branches')}}">Branches</a>
+                    <a href="{{ route('admin.settings.branches')}}">Branch</a>
                 </li>
+                @endcan
+                
                 {{-- OPTION: Teams --}}
                 <li class="menu-option {{ request()->is('admin/settings/teams') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.teams')}}">Teams</a>
@@ -209,22 +213,34 @@
                 <li class="menu-option {{ request()->is('admin/settings/working-days') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.working-days')}}">Working Days</a>
                 </li>
+                
                 {{-- OPTION: EPF --}}
+                @canany([PermissionConstant::VIEW_EPF, PermissionConstant::ADD_EPF, PermissionConstant::UPDATE_EPF, PermissionConstant::DELETE_EPF])
                 <li class="menu-option {{ request()->is('admin/settings/epf') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.epf')}}">EPF</a>
                 </li>
+                @endcan
+                
                 {{-- OPTION: Eis --}}
+                @canany([PermissionConstant::VIEW_EIS, PermissionConstant::ADD_EIS, PermissionConstant::UPDATE_EIS, PermissionConstant::DELETE_EIS])
                 <li class="menu-option {{ request()->is('admin/settings/eis') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.eis')}}">EIS</a>
                 </li>
+                @endcan
+                
                 {{-- OPTION: Socso --}}
+                @canany([PermissionConstant::VIEW_SOCSO, PermissionConstant::ADD_SOCSO, PermissionConstant::UPDATE_SOCSO, PermissionConstant::DELETE_SOCSO])
                 <li class="menu-option {{ request()->is('admin/settings/socso') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.socso')}}">Socso</a>
                 </li>
+                @endcan
+                
                 {{-- OPTION: Eis --}}
+                @canany([PermissionConstant::VIEW_PCB, PermissionConstant::ADD_PCB, PermissionConstant::UPDATE_PCB, PermissionConstant::DELETE_PCB])
                 <li class="menu-option {{ request()->is('admin/settings/pcb') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.pcb')}}">PCB</a>
                 </li>
+                @endcan
             </ul>
         </li>
 			       
