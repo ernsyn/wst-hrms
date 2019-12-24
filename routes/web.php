@@ -418,6 +418,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
         Route::get('settings/employment-status/{id}/delete','Admin\SettingsController@deleteEmploymentStatus')->name('admin.settings.employment-status.delete')->where('id', '[0-9]+');
     });
     
+    // Company Asset
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_COMPANY_ASSET]], function () {
+        Route::get('settings/company-asset', 'Admin\SettingsController@displayCompanyAsset')->name('admin.settings.company-asset');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_COMPANY_ASSET]], function () {
+        Route::get('settings/company-asset/add','Admin\SettingsController@addCompanyAsset')->name('admin.settings.company-asset.add');
+        Route::post('settings/company-asset/add','Admin\SettingsController@postAddCompanyAsset')->name('admin.settings.company-asset.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_COMPANY_ASSET]], function () {
+        Route::get('settings/company-asset/{id}/edit','Admin\SettingsController@editCompanyAsset')->name('admin.settings.company-asset.edit')->where('id', '[0-9]+');
+        Route::post('settings/company-asset/{id}/edit','Admin\SettingsController@postEditCompanyAsset')->name('admin.settings.company-asset.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_COMPANY_ASSET]], function () {
+        Route::get('settings/company-asset/{id}/delete','Admin\SettingsController@deleteCompanyAsset')->name('admin.settings.company-asset.delete')->where('id', '[0-9]+');
+    });
+    
     Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');
     Route::get('settings/cost-centres', 'Admin\SettingsController@displayCostCentres')->name('admin.settings.cost-centres');
     Route::get('settings/departments', 'Admin\SettingsController@displayDepartments')->name('admin.settings.departments');

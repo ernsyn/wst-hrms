@@ -90,6 +90,11 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_EMPLOYMENT_STATUS, 'mode' => 'admin', 'module' => 'Settings - Employment Status']);
         Permission::create(['name' => PermissionConstant::DELETE_EMPLOYMENT_STATUS, 'mode' => 'admin', 'module' => 'Settings - Employment Status']);
         
+        Permission::create(['name' => PermissionConstant::VIEW_COMPANY_ASSET, 'mode' => 'admin', 'module' => 'Settings - Company Asset']);
+        Permission::create(['name' => PermissionConstant::ADD_COMPANY_ASSET, 'mode' => 'admin', 'module' => 'Settings - Company Asset']);
+        Permission::create(['name' => PermissionConstant::UPDATE_COMPANY_ASSET, 'mode' => 'admin', 'module' => 'Settings - Company Asset']);
+        Permission::create(['name' => PermissionConstant::DELETE_COMPANY_ASSET, 'mode' => 'admin', 'module' => 'Settings - Company Asset']);
+        
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);
         

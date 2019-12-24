@@ -609,6 +609,14 @@ var AuditTrail = (function() {
             fields: {
             },
         },
+        
+        'App\\CompanyAsset': {
+            name: 'Company Asset',
+            fields: {
+            	'item_code': 'Item Code',
+            	'item_name': 'Item Name',
+            },
+        },
     };
 
     return {

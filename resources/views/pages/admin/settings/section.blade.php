@@ -78,7 +78,7 @@
 @section('scripts')
 <script>
 $(function(){
-    $('#section-table').DataTable({
+    var t = $('#section-table').DataTable({
         responsive: true,
         stateSave: true,
         dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
@@ -117,6 +117,12 @@ $(function(){
         } ],
 
     });
+
+	t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
     
     $('#confirm-delete-modal').on('show.bs.modal', function (e) {
         var entryTitle = $(e.relatedTarget).data('entry-title');

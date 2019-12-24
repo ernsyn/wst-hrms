@@ -42,6 +42,7 @@ use App\JobCompany;
 use App\Section;
 use App\Category;
 use App\EmploymentStatus;
+use App\CompanyAsset;
 
 class SettingsController extends Controller
 {
@@ -166,6 +167,14 @@ class SettingsController extends Controller
             'employmentStatus' => $employmentStatus
         ]);
     }
+    
+    public function displayCompanyAsset()
+    {
+        $companyAssets = CompanyAsset::all();
+        return view('pages.admin.settings.company-asset', [
+            'companyAssets' => $companyAssets
+        ]);
+    }
 
     public function displayWorkingDays()
     {
@@ -288,6 +297,11 @@ class SettingsController extends Controller
     public function addEmploymentStatus()
     {
         return view('pages.admin.settings.add-employment-status');
+    }
+    
+    public function addCompanyAsset()
+    {
+        return view('pages.admin.settings.add-company-asset');
     }
 
     public function addWorkingDay()
@@ -470,6 +484,24 @@ class SettingsController extends Controller
         $employmentStatus->save();
         
         return redirect()->route('admin.settings.employment-status')->with('status', 'Employment Status is added.');
+    }
+    
+    public function postAddCompanyAsset(Request $request)
+    {
+        $request->validate([
+            'item_code' => 'required|unique:company_assets',
+            'item_name' => 'required'
+        ]);
+        
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        
+        $companyAsset = new CompanyAsset();
+        $companyAsset->item_code = $request['item_code'];
+        $companyAsset->item_name = $request['item_name'];
+        $companyAsset->company_id = $company->id;
+        $companyAsset->save();
+        
+        return redirect()->route('admin.settings.company-asset')->with('status', 'Company asset is added.');
     }
 
     public function postAddTeam(Request $request)
@@ -921,6 +953,15 @@ class SettingsController extends Controller
             'employmentStatus' => $employmentStatus
         ]);
     }
+    
+    public function editCompanyAsset(Request $request, $id)
+    {
+        $companyAsset = CompanyAsset::find($id);
+        
+        return view('pages.admin.settings.edit-company-asset', [
+            'companyAsset' => $companyAsset
+        ]);
+    }
 
     public function editTeam(Request $request, $id)
     {
@@ -1093,6 +1134,21 @@ class SettingsController extends Controller
         $employmentStatus->save();
         
         return redirect()->route('admin.settings.employment-status')->with('status', 'Employment Status is updated.');
+    }
+    
+    public function postEditCompanyAsset(Request $request, $id)
+    {
+        $request->validate([
+            'item_code' => 'required|unique:company_assets,item_code,'.$id,
+            'item_name' => 'required'
+        ]);
+        
+        $companyAsset = CompanyAsset::find($id);
+        $companyAsset->item_code = $request['item_code'];
+        $companyAsset->item_name = $request['item_name'];
+        $companyAsset->save();
+        
+        return redirect()->route('admin.settings.company-asset')->with('status', 'Company asset is updated.');
     }
 
     public function postEditTeam(Request $request, $id)
@@ -1559,6 +1615,15 @@ class SettingsController extends Controller
         } else {
             return redirect()->route('admin.settings.employment-status')->with('status', 'Cannot delete '.$code);
         }
+    }
+    
+    public function deleteCompanyAsset($id)
+    {
+        $companyAsset = CompanyAsset::find($id);
+        $code = $companyAsset->item_code;
+        $companyAsset->delete();
+        
+        return redirect()->route('admin.settings.company-asset')->with('status', $code.' is deleted.');
     }
 
     public function deleteCompany(Request $request, $id)

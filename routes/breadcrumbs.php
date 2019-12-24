@@ -384,6 +384,24 @@ Breadcrumbs::for('admin.settings.employment-status.edit', function ($trail, $id)
     $trail->parent('admin.settings.employment-status');
     $trail->push('Edit Employment Status', route('admin.settings.employment-status.edit', $id));
 });
+
+// Home > Settings > Company Asset
+Breadcrumbs::for('admin.settings.company-asset', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Company Asset', route('admin.settings.company-asset'));
+});
+    
+// Home > Settings > Company Asset - Add
+Breadcrumbs::for('admin.settings.company-asset.add', function ($trail) {
+    $trail->parent('admin.settings.company-asset');
+    $trail->push('Add Company Asset', route('admin.settings.company-asset.add'));
+});
+        
+// Home > Settings > Company Asset - Edit
+Breadcrumbs::for('admin.settings.company-asset.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.company-asset');
+    $trail->push('Edit Company Asset', route('admin.settings.company-asset.edit', $id));
+});
             
 // Home > Settings > Working Day
 Breadcrumbs::for('admin.settings.working-days', function ($trail) {

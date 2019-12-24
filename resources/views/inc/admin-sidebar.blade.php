@@ -217,6 +217,13 @@
                 </li>
                 @endcan
                 
+                {{-- Company Asset --}}
+                @canany([PermissionConstant::VIEW_COMPANY_ASSET, PermissionConstant::ADD_COMPANY_ASSET, PermissionConstant::UPDATE_COMPANY_ASSET, PermissionConstant::DELETE_COMPANY_ASSET])
+                <li class="menu-option {{ request()->is('admin/settings/company-asset') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.company-asset')}}">Company Asset</a>
+                </li>
+                @endcan
+                
                 {{-- OPTION: Working Days --}}
                 <li class="menu-option {{ request()->is('admin/settings/working-days') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.working-days')}}">Working Days</a>

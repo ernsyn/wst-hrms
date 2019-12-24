@@ -61,6 +61,10 @@ class PermissionConstant
     const ADD_EMPLOYMENT_STATUS = 'Add Employment Status';
     const UPDATE_EMPLOYMENT_STATUS = 'Update Employment Status';
     const DELETE_EMPLOYMENT_STATUS = 'Delete Employment Status';
+    const VIEW_COMPANY_ASSET = 'View Company Asset';
+    const ADD_COMPANY_ASSET = 'Add Company Asset';
+    const UPDATE_COMPANY_ASSET = 'Update Company Asset';
+    const DELETE_COMPANY_ASSET = 'Delete Company Asset';
 }
 
 
