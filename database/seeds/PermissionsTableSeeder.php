@@ -85,6 +85,11 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_PCB, 'mode' => 'admin', 'module' => 'Settings - PCB']);
         Permission::create(['name' => PermissionConstant::DELETE_PCB, 'mode' => 'admin', 'module' => 'Settings - PCB']);
         
+        Permission::create(['name' => PermissionConstant::VIEW_EMPLOYMENT_STATUS, 'mode' => 'admin', 'module' => 'Settings - Employment Status']);
+        Permission::create(['name' => PermissionConstant::ADD_EMPLOYMENT_STATUS, 'mode' => 'admin', 'module' => 'Settings - Employment Status']);
+        Permission::create(['name' => PermissionConstant::UPDATE_EMPLOYMENT_STATUS, 'mode' => 'admin', 'module' => 'Settings - Employment Status']);
+        Permission::create(['name' => PermissionConstant::DELETE_EMPLOYMENT_STATUS, 'mode' => 'admin', 'module' => 'Settings - Employment Status']);
+        
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);
         

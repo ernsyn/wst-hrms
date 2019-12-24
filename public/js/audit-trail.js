@@ -603,6 +603,12 @@ var AuditTrail = (function() {
                 'name': 'Category Name',
             },
         },
+        
+        'App\\EmploymentStatus': {
+            name: 'Employment Status',
+            fields: {
+            },
+        },
     };
 
     return {

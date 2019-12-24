@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Constants\PermissionConstant;
 use App\Enums\EisCategoryEnum;
 use App\Enums\EpfCategoryEnum;
 use App\Enums\SocsoCategoryEnum;
@@ -32,6 +33,7 @@ use App\Imports\PcbImport;
 use DB;
 use Crypt;
 use Session;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use DateTime;
 use Yajra\DataTables\Facades\DataTables;
@@ -39,6 +41,7 @@ use App\Helpers\AccessControllHelper;
 use App\JobCompany;
 use App\Section;
 use App\Category;
+use App\EmploymentStatus;
 
 class SettingsController extends Controller
 {
@@ -155,6 +158,14 @@ class SettingsController extends Controller
             'categories' => $categories
         ]);
     }
+    
+    public function displayEmploymentStatus()
+    {
+        $employmentStatus = EmploymentStatus::all();
+        return view('pages.admin.settings.employment-status', [
+            'employmentStatus' => $employmentStatus
+        ]);
+    }
 
     public function displayWorkingDays()
     {
@@ -195,12 +206,27 @@ class SettingsController extends Controller
 
     public function getPcbData()
     {
+        $user = Auth::user();
         $pcbs = Pcb::query(); // Pcb::select(['id', 'category', 'salary', 'total_children', 'amount'])->get();
-
-        return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
-            return '<button onclick="window.location=\'' . url('/admin/settings/pcb/' . $pcbs->id . '/edit') . '\'" class="btn btn-success btn-smt fas fa-edit"></button>
+        
+        if($user->can(PermissionConstant::UPDATE_PCB) && $user->can(PermissionConstant::DELETE_PCB)) {
+            return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
+                return '<button onclick="window.location=\'' . url('/admin/settings/pcb/' . $pcbs->id . '/edit') . '\'" class="btn btn-success btn-smt fas fa-edit"></button>
                     <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="' . $pcbs->category . '" data-link="' . url('/admin/settings/pcb/' . $pcbs->id . '/delete') . '" class="btn btn-danger btn-smt fas fa-trash-alt"></button>';
-        })->make(true);
+            })->make(true);
+        } else if($user->can(PermissionConstant::UPDATE_PCB)) {
+            return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
+                return '<button onclick="window.location=\'' . url('/admin/settings/pcb/' . $pcbs->id . '/edit') . '\'" class="btn btn-success btn-smt fas fa-edit"></button>';
+            })->make(true);
+        } else if($user->can(PermissionConstant::DELETE_PCB)) {
+            return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
+                return '<button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="' . $pcbs->category . '" data-link="' . url('/admin/settings/pcb/' . $pcbs->id . '/delete') . '" class="btn btn-danger btn-smt fas fa-trash-alt"></button>';
+            })->make(true);
+        } else {
+            return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
+                return '';
+            })->make(true);
+        }
     }
 
     // SECTION: Add
@@ -221,7 +247,12 @@ class SettingsController extends Controller
 
     public function addBranch()
     {
-        return view('pages.admin.settings.add-branch');
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        $areas = Area::where('company_id', $company->id)->get();
+        
+        return view('pages.admin.settings.add-branch', [
+            'areas' => $areas
+        ]);
     }
 
     public function addTeam()
@@ -252,6 +283,11 @@ class SettingsController extends Controller
     public function addCategory()
     {
         return view('pages.admin.settings.add-category');
+    }
+    
+    public function addEmploymentStatus()
+    {
+        return view('pages.admin.settings.add-employment-status');
     }
 
     public function addWorkingDay()
@@ -417,6 +453,24 @@ class SettingsController extends Controller
         
         return redirect()->route('admin.settings.categories')->with('status', 'Category is added.');
     }
+    
+    public function postAddEmploymentStatus(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|unique:employment_statuses',
+            'name' => 'required'
+        ]);
+        
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        
+        $employmentStatus = new EmploymentStatus();
+        $employmentStatus->code = $request['code'];
+        $employmentStatus->name = $request['name'];
+        $employmentStatus->company_id = $company->id;
+        $employmentStatus->save();
+        
+        return redirect()->route('admin.settings.employment-status')->with('status', 'Employment Status is added.');
+    }
 
     public function postAddTeam(Request $request)
     {
@@ -544,10 +598,15 @@ class SettingsController extends Controller
             'country_code' => 'nullable|integer',
             'state' => 'required',
             'city' => 'required',
-            'zip_code' => 'required|numeric|digits:5'
+            'zip_code' => 'required|numeric|digits:5',
+            'area_id' => 'required',
+            'state_holiday' => 'required'
         ], [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
+        
+        $branchData['latitude'];
+        $branchData['longitude'];
 
         Branch::create($branchData);
         return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been added.');
@@ -853,6 +912,15 @@ class SettingsController extends Controller
             'category' => $category
         ]);
     }
+    
+    public function editEmploymentStatus(Request $request, $id)
+    {
+        $employmentStatus = EmploymentStatus::find($id);
+        
+        return view('pages.admin.settings.edit-employment-status', [
+            'employmentStatus' => $employmentStatus
+        ]);
+    }
 
     public function editTeam(Request $request, $id)
     {
@@ -1008,6 +1076,23 @@ class SettingsController extends Controller
         $category->save();
         
         return redirect()->route('admin.settings.categories')->with('status', 'Category is updated.');
+    }
+    
+    public function postEditEmploymentStatus(Request $request, $id)
+    {
+        
+        $request->validate([
+            'code' => 'required|unique:employment_statuses,code,'.$id,
+            'name' => 'required'
+        ]);
+        
+        
+        $employmentStatus = EmploymentStatus::find($id);
+        $employmentStatus->code = $request['code'];
+        $employmentStatus->name = $request['name'];
+        $employmentStatus->save();
+        
+        return redirect()->route('admin.settings.employment-status')->with('status', 'Employment Status is updated.');
     }
 
     public function postEditTeam(Request $request, $id)
@@ -1461,6 +1546,20 @@ class SettingsController extends Controller
         
         return redirect()->route('admin.settings.categories')->with('status', $name.' is deleted.');
     }
+    
+    public function deleteEmploymentStatus($id)
+    {
+        $employmentStatus = EmploymentStatus::find($id);
+        
+        if($employmentStatus->canDelete == 1) {
+            $code = $employmentStatus->code;
+            $employmentStatus->delete();
+            
+            return redirect()->route('admin.settings.employment-status')->with('status', $code.' is deleted.');
+        } else {
+            return redirect()->route('admin.settings.employment-status')->with('status', 'Cannot delete '.$code);
+        }
+    }
 
     public function deleteCompany(Request $request, $id)
     {
@@ -1589,6 +1688,16 @@ class SettingsController extends Controller
         }
 
     }
+    
+    public function showBranch($id)
+    {
+        $branch = Branch::find($id);
+        
+        return view('pages.admin.settings.show-branch', [
+            'branch' => $branch,
+        ]);
+    }
+    
     public function importPcb($fileName, $noOfCategory)
     {
         $collection = (new PcbImport())->toCollection($fileName); // ,'pcb\p02.xlsx');

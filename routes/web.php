@@ -402,6 +402,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("
         Route::get('settings/pcb/{id}/delete','Admin\SettingsController@deletePcb')->name('admin.settings.pcb.delete')->where('id', '[0-9]+');
     });
     
+    // Employment Status
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EMPLOYMENT_STATUS]], function () {
+        Route::get('settings/employment-status', 'Admin\SettingsController@displayEmploymentStatus')->name('admin.settings.employment-status');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_EMPLOYMENT_STATUS]], function () {
+        Route::get('settings/employment-status/add','Admin\SettingsController@addEmploymentStatus')->name('admin.settings.employment-status.add');
+        Route::post('settings/employment-status/add','Admin\SettingsController@postAddEmploymentStatus')->name('admin.settings.employment-status.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_EMPLOYMENT_STATUS]], function () {
+        Route::get('settings/employment-status/{id}/edit','Admin\SettingsController@editEmploymentStatus')->name('admin.settings.employment-status.edit')->where('id', '[0-9]+');
+        Route::post('settings/employment-status/{id}/edit','Admin\SettingsController@postEditEmploymentStatus')->name('admin.settings.employment-status.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_EMPLOYMENT_STATUS]], function () {
+        Route::get('settings/employment-status/{id}/delete','Admin\SettingsController@deleteEmploymentStatus')->name('admin.settings.employment-status.delete')->where('id', '[0-9]+');
+    });
+    
     Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');
     Route::get('settings/cost-centres', 'Admin\SettingsController@displayCostCentres')->name('admin.settings.cost-centres');
     Route::get('settings/departments', 'Admin\SettingsController@displayDepartments')->name('admin.settings.departments');

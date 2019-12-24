@@ -159,6 +159,7 @@
                     <a href="{{ route('admin.settings.companies')}}">Companies</a>
                 </li>
                 @endcan
+                
                 {{-- OPTION: Cost Centres --}}
                 <li class="menu-option {{ request()->is('admin/settings/cost-centres') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.cost-centres')}}">Cost Centres</a>
@@ -195,6 +196,13 @@
                 </li>
                 @endcan
                 
+                {{-- Category --}}
+                @canany([PermissionConstant::VIEW_CATEGORY, PermissionConstant::ADD_CATEGORY, PermissionConstant::UPDATE_CATEGORY, PermissionConstant::DELETE_CATEGORY])
+                <li class="menu-option {{ request()->is('admin/settings/categories') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.categories')}}">Category</a>
+                </li>
+                @endcan
+                
                 {{-- Area --}}
                 @canany([PermissionConstant::VIEW_AREA, PermissionConstant::ADD_AREA, PermissionConstant::UPDATE_AREA, PermissionConstant::DELETE_AREA])
                 <li class="menu-option {{ request()->is('admin/settings/areas') ? 'active' : '' }}">
@@ -202,10 +210,10 @@
                 </li>
                 @endcan
                 
-                {{-- Category --}}
-                @canany([PermissionConstant::VIEW_CATEGORY, PermissionConstant::ADD_CATEGORY, PermissionConstant::UPDATE_CATEGORY, PermissionConstant::DELETE_CATEGORY])
-                <li class="menu-option {{ request()->is('admin/settings/categories') ? 'active' : '' }}">
-                    <a href="{{ route('admin.settings.categories')}}">Category</a>
+                {{-- Employment Status --}}
+                @canany([PermissionConstant::VIEW_EMPLOYMENT_STATUS, PermissionConstant::ADD_EMPLOYMENT_STATUS, PermissionConstant::UPDATE_EMPLOYMENT_STATUS, PermissionConstant::DELETE_EMPLOYMENT_STATUS])
+                <li class="menu-option {{ request()->is('admin/settings/employment-status') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.employment-status')}}">Employment Status</a>
                 </li>
                 @endcan
                 
@@ -235,7 +243,7 @@
                 </li>
                 @endcan
                 
-                {{-- OPTION: Eis --}}
+                {{-- OPTION: PCB --}}
                 @canany([PermissionConstant::VIEW_PCB, PermissionConstant::ADD_PCB, PermissionConstant::UPDATE_PCB, PermissionConstant::DELETE_PCB])
                 <li class="menu-option {{ request()->is('admin/settings/pcb') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.pcb')}}">PCB</a>

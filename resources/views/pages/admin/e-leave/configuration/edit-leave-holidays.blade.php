@@ -79,7 +79,7 @@
                         <div class="col-md-7">
                             <select multiple class="tagsinput form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" id="state" name="state[]">
                                 <option value="">Please Select</option>
-                                @foreach(App\Constants\MalaysianStates::$all as $state)
+                                @foreach(MalaysianStates::$all as $state)
                                 <option value="{{ $state }}" {{ collect(explode(',',$holidays->state))->contains($state) ? "selected":"" }}>{{ $state }}</option>
                                 @endforeach
                             </select>

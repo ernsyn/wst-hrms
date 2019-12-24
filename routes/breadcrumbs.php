@@ -239,7 +239,12 @@ Breadcrumbs::for('admin.settings.departments.edit', function ($trail, $id) {
 // Home > Settings > Branch
 Breadcrumbs::for('admin.settings.branches', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Settings : Branches', route('admin.settings.branches'));
+    $trail->push('Settings : Branch', route('admin.settings.branches'));
+});
+
+Breadcrumbs::for('admin.settings.branches.show', function ($trail, $id) {
+    $trail->parent('admin.settings.branches');
+    $trail->push('Branch Details', route('admin.settings.branches.show', $id));
 });
 
 // Home > Settings > Branch - Add
@@ -360,6 +365,24 @@ Breadcrumbs::for('admin.settings.categories.add', function ($trail) {
 Breadcrumbs::for('admin.settings.categories.edit', function ($trail, $id) {
     $trail->parent('admin.settings.categories');
     $trail->push('Edit Category', route('admin.settings.categories.edit', $id));
+});
+
+// Home > Settings > Employment Status
+Breadcrumbs::for('admin.settings.employment-status', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Employment Status', route('admin.settings.employment-status'));
+});
+
+// Home > Settings > Employment Status - Add
+Breadcrumbs::for('admin.settings.employment-status.add', function ($trail) {
+    $trail->parent('admin.settings.employment-status');
+    $trail->push('Add Employment Status', route('admin.settings.employment-status.add'));
+});
+    
+// Home > Settings > Employment Status - Edit
+Breadcrumbs::for('admin.settings.employment-status.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.employment-status');
+    $trail->push('Edit Employment Status', route('admin.settings.employment-status.edit', $id));
 });
             
 // Home > Settings > Working Day

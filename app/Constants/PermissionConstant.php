@@ -57,6 +57,10 @@ class PermissionConstant
     const ADD_PCB = 'Add PCB';
     const UPDATE_PCB = 'Update PCB';
     const DELETE_PCB = 'Delete PCB';
+    const VIEW_EMPLOYMENT_STATUS = 'View Employment Status';
+    const ADD_EMPLOYMENT_STATUS = 'Add Employment Status';
+    const UPDATE_EMPLOYMENT_STATUS = 'Update Employment Status';
+    const DELETE_EMPLOYMENT_STATUS = 'Delete Employment Status';
 }
 
 
