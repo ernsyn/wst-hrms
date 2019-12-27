@@ -151,7 +151,7 @@
                 </div>
             </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/settings*') ? 'show' : '' }}" id="setupSubmenu">
-                {{-- OPTION: Companies --}}
+                {{-- Companies --}}
                 @canany([PermissionConstant::VIEW_COMPANY, PermissionConstant::ADD_COMPANY, PermissionConstant::UPDATE_COMPANY, PermissionConstant::DELETE_COMPANY, 
                 	PermissionConstant::VIEW_COMPANY_BANK, PermissionConstant::ADD_COMPANY_BANK, PermissionConstant::UPDATE_COMPANY_BANK, PermissionConstant::DELETE_COMPANY_BANK, 
                 	PermissionConstant::VIEW_JOB_COMPANY, PermissionConstant::ADD_JOB_COMPANY, PermissionConstant::UPDATE_JOB_COMPANY, PermissionConstant::DELETE_JOB_COMPANY])
@@ -160,14 +160,24 @@
                 </li>
                 @endcan
                 
+                {{-- Security Group --}}
+                @canany([PermissionConstant::VIEW_SECURITY_GROUP, PermissionConstant::ADD_SECURITY_GROUP, PermissionConstant::UPDATE_SECURITY_GROUP, PermissionConstant::DELETE_SECURITY_GROUP])
+                <li class="menu-option {{ request()->is('admin/settings/security-group') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.security-group')}}">Security Group</a>
+                </li>
+                @endcan
+                
                 {{-- OPTION: Cost Centres --}}
                 <li class="menu-option {{ request()->is('admin/settings/cost-centres') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.cost-centres')}}">Cost Centres</a>
                 </li>
-                {{-- OPTION: Departments --}}
+                
+                {{-- Departments --}}
+                @canany([PermissionConstant::VIEW_DEPARTMENT, PermissionConstant::ADD_DEPARTMENT, PermissionConstant::UPDATE_DEPARTMENT, PermissionConstant::DELETE_DEPARTMENT])
                 <li class="menu-option {{ request()->is('admin/settings/departments') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.departments')}}">Departments</a>
                 </li>
+                @endcan
                 
                 {{-- OPTION: Branches --}}
                 @canany([PermissionConstant::VIEW_BRANCH, PermissionConstant::ADD_BRANCH, PermissionConstant::UPDATE_BRANCH, PermissionConstant::DELETE_BRANCH])
@@ -207,6 +217,13 @@
                 @canany([PermissionConstant::VIEW_AREA, PermissionConstant::ADD_AREA, PermissionConstant::UPDATE_AREA, PermissionConstant::DELETE_AREA])
                 <li class="menu-option {{ request()->is('admin/settings/areas') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.areas')}}">Area</a>
+                </li>
+                @endcan
+                
+                {{-- Bank Code --}}
+                @canany([PermissionConstant::VIEW_BANK_CODE, PermissionConstant::ADD_BANK_CODE, PermissionConstant::UPDATE_BANK_CODE, PermissionConstant::DELETE_BANK_CODE])
+                <li class="menu-option {{ request()->is('admin/settings/bank-code') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.bank-code')}}">Bank Code</a>
                 </li>
                 @endcan
                 

@@ -43,6 +43,7 @@ use App\Section;
 use App\Category;
 use App\EmploymentStatus;
 use App\CompanyAsset;
+use App\BankCode;
 
 class SettingsController extends Controller
 {
@@ -85,6 +86,14 @@ class SettingsController extends Controller
 //             'cost_centre' => $cost_centre,
             'company' => $company,
             'jobCompany' => $jobCompny,
+        ]);
+    }
+    
+    public function displaySecurityGroups()
+    {
+        $securityGroups = SecurityGroup::all();
+        return view('pages.admin.settings.security-group', [
+            'securityGroups' => $securityGroups
         ]);
     }
 
@@ -149,6 +158,14 @@ class SettingsController extends Controller
         $areas = Area::all();
         return view('pages.admin.settings.area', [
             'areas' => $areas
+        ]);
+    }
+    
+    public function displayBankCode()
+    {
+        $bankCodes = BankCode::all();
+        return view('pages.admin.settings.bank-code', [
+            'bankCodes' => $bankCodes
         ]);
     }
     
@@ -243,6 +260,11 @@ class SettingsController extends Controller
     {
         return view('pages.admin.settings.add-company');
     }
+    
+    public function addSecurityGroup()
+    {
+        return view('pages.admin.settings.add-security-group');
+    }
 
     public function addCostCentre()
     {
@@ -287,6 +309,11 @@ class SettingsController extends Controller
     public function addArea()
     {
         return view('pages.admin.settings.add-area');
+    }
+    
+    public function addBankCode()
+    {
+        return view('pages.admin.settings.add-bank-code');
     }
     
     public function addCategory()
@@ -363,7 +390,34 @@ class SettingsController extends Controller
         Company::create($companyData);
         return redirect()->route('admin.settings.companies')->with('status', 'Company has successfully been added.');
     }
-
+    
+    public function postAddSecurityGroup(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required'
+        ]);
+        
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        
+        $securityGroup = SecurityGroup::where('name','=',$request->name)->where('company_id','=',$company->id)->count();
+        
+        if ($securityGroup == 0) {
+            $securityGroup = new SecurityGroup();
+            $securityGroup->name = $request->name;
+            $securityGroup->description = $request->description;
+            $securityGroup->company_id = $company->id;
+            $securityGroup->created_by = auth()->user()->name;
+            $securityGroup->save();
+            
+            return redirect()->route('admin.settings.security-group')->with('status', 'Security Group is added.');
+        }
+        else
+        {
+            return redirect()->route('admin.settings.security-group')->with('status', 'Security Group Name already taken.');
+        }
+    }
+    
     public function postAddCostCentre(Request $request)
     {
         $costCentreData = $request->validate([
@@ -450,6 +504,22 @@ class SettingsController extends Controller
         $area->save();
         
         return redirect()->route('admin.settings.areas')->with('status', 'Area is added.');
+    }
+    
+    public function postAddBankCode(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'bic_code' => 'required'
+        ]);
+        
+        $bankCode = new BankCode();
+        $bankCode->name = $request['name'];
+        $bankCode->bic_code = $request['bic_code'];
+        $bankCode->status = 'Active';
+        $bankCode->save();
+        
+        return redirect()->route('admin.settings.bank-code')->with('status', 'Bank code is added.');
     }
     
     public function postAddCategory(Request $request)
@@ -797,31 +867,6 @@ class SettingsController extends Controller
         ])->with('status', 'Company Addition has successfully been added.');
     }
 
-    public function postAddCompanySecurityGroup(Request $request, $id)
-    {
-        $securityGroupData = $request->validate([
-            'name' => 'required',
-            'description' => 'required'
-        ]);
-
-        $security_group= SecurityGroup::where('name','=',$request->name)->where('company_id','=',$id)->count();
-     
-        if ($security_group == 0) {
-
-            $securityGroupData['company_id'] = $id;
-            $securityGroupData['created_by'] = auth()->user()->name;
-            SecurityGroup::create($securityGroupData);
-        
-            return redirect()->route('admin.settings.company.company-details', [
-                'id' => $id
-            ])->with('status', 'Security Group has successfully been added.');
-        }
-        else 
-        {
-            return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group Name Already Taken.');
-        }
-    }
-
     public function postAddCompanyBank(Request $request, $id)
     {
         $companyBankData = $request->validate([
@@ -881,6 +926,15 @@ class SettingsController extends Controller
             'company' => $company
         ]);
     }
+    
+    public function editSecurityGroup(Request $request, $id)
+    {
+        $securityGroup = SecurityGroup::find($id);
+        
+        return view('pages.admin.settings.edit-security-group', [
+            'securityGroup' => $securityGroup
+        ]);
+    }
 
     public function editBranch(Request $request, $id)
     {
@@ -933,6 +987,15 @@ class SettingsController extends Controller
         
         return view('pages.admin.settings.edit-area', [
             'area' => $area
+        ]);
+    }
+    
+    public function editBankCode(Request $request, $id)
+    {
+        $bankCode = BankCode::find($id);
+        
+        return view('pages.admin.settings.edit-bank-code', [
+            'bankCode' => $bankCode
         ]);
     }
     
@@ -1104,6 +1167,21 @@ class SettingsController extends Controller
         $area->save();
         
         return redirect()->route('admin.settings.areas')->with('status', 'Area is updated.');
+    }
+    
+    public function postEditBankCode(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required',
+            'bic_code' => 'required'
+        ]);
+        
+        $bankCode = BankCode::find($id);
+        $bankCode->name = $request['name'];
+        $bankCode->bic_code = $request['bic_code'];
+        $bankCode->save();
+        
+        return redirect()->route('admin.settings.bank-code')->with('status', 'Bank code is updated.');
     }
     
     public function postEditCategory(Request $request, $id)
@@ -1494,42 +1572,48 @@ class SettingsController extends Controller
         ])->with('status', 'Addition Group has successfully been updated.');
     }
 
-    public function postEditSecurityGroup(Request $request)
+    public function postEditSecurityGroup(Request $request, $id)
     {
-        $id = $request->id;
-        $updateSecurityGroupData = $request->validate([
+        $request->validate([
             'name' => 'required',
             'description' => 'required'
         ]);
 
-            $security_group= SecurityGroup::where('name','=',$request->name)->where('company_id','=',$id)->count();
-     
-            if ($security_group == 0){   
-        		$updateSecurityGroupData['company_id'] = $id;
-        		$updateSecurityGroupData['created_by'] = auth()->user()->name;
-
-        		SecurityGroup::find($request->security_group_id)->update($updateSecurityGroupData);        		return redirect()->route('admin.settings.company.company-details', [
-            		'id' => $id
-        		])->with('status', 'Security Group has successfully been updated.');
-    		}
-
-            else 
-            {
-                return redirect()->route('admin.settings.company.company-details',['id'=>$id])->with('status', 'Security Group Name Already Taken.');
-            }
-
-       
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        $securityGroup = SecurityGroup::where('name','=',$request->name)
+            ->where('company_id','=',$company->id)
+            ->where('id','!=', $id)
+            ->count();
+        
+        if ($securityGroup == 0) {
+            $securityGroup = SecurityGroup::find($id);
+            $securityGroup->name = $request->name;
+            $securityGroup->description = $request->description;
+            $securityGroup->save();
+            
+            return redirect()->route('admin.settings.security-group')->with('status', 'Security Group is updated.');
+        }
+        else
+        {
+            return redirect()->route('admin.settings.security-group')->with('status', 'Security Group Name already taken.');
+        }
     }
 
     // Section: DELETE
+    public function deleteSecurityGroup($id)
+    {
+        $securityGroup = SecurityGroup::find($id);
+        $name = $securityGroup->name;
+        $securityGroup->delete();
+        
+        return redirect()->route('admin.settings.security-group')->with('status', $name.' is deleted.');
+    }
+    
     public function deleteCostCentre(Request $request, $id)
     {
         $employee_job_cost_centre = EmployeeJob::where('cost_centre_id','=',$id)->count();
         $addition_cost_centre = Addition::where('cost_centre', 'like', '%' . $id . '%')->count();
         $deduction_cost_centre = Deduction::where('cost_centre', 'like', '%' . $id . '%')->count();
-
-
-
         
         if ($addition_cost_centre == 0 && $employee_job_cost_centre == 0 && $deduction_cost_centre == 0)
         {
@@ -1592,6 +1676,15 @@ class SettingsController extends Controller
         $area->delete();
         
         return redirect()->route('admin.settings.areas')->with('status', $name.' is deleted.');
+    }
+    
+    public function deleteBankCode($id)
+    {
+        $bankCode = BankCode::find($id);
+        $name = $bankCode->name;
+        $bankCode->delete();
+        
+        return redirect()->route('admin.settings.bank-code')->with('status', $name.' is deleted.');
     }
     
     public function deleteCategory($id)

@@ -12,264 +12,249 @@ class BankCodeTableSeeder extends Seeder
     public function run()
     {
         App\BankCode::create( [
-            'id'=>1,
-            'name'=>'Affin Bank',
+            'name'=>'Affin Bank Berhad',
+            'bic_code'=>'PHBMMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'AFF'
         ] );
         
         App\BankCode::create( [
-            'id'=>2,
-            'name'=>'Alliance Bank',
+            'name'=>'Affin Islamic Bank Berhad',
+            'bic_code'=>'AIBBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'ALLC'
         ] );
         
         App\BankCode::create( [
-            'id'=>3,
-            'name'=>'AmBank',
+            'name'=>'Agrobank Berhad',
+            'bic_code'=>'AGOBMYK1',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'AMB'
         ] );
         
         App\BankCode::create( [
-            'id'=>4,
-            'name'=>'Bangkok Bank',
+            'name'=>'Alliance Bank Malaysia Berhad',
+            'bic_code'=>'MFBBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'BGKK'
         ] );
         
         App\BankCode::create( [
-            'id'=>5,
-            'name'=>'Bank Islam',
+            'name'=>'Alliance Islamic Bank Malaysia Berhad',
+            'bic_code'=>'ALSRMYK1',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'BI'
         ] );
         
         App\BankCode::create( [
-            'id'=>6,
-            'name'=>'Bank Muamalat',
+            'name'=>'Al-Rajhi Bank (Malaysia) Berhad',
+            'bic_code'=>'RJHIMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'MUA'
         ] );
         
         App\BankCode::create( [
-            'id'=>7,
-            'name'=>'Bank of America',
+            'name'=>'AmBank (M) Berhad',
+            'bic_code'=>'ARBKMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'BOA'
         ] );
         
         App\BankCode::create( [
-            'id'=>8,
-            'name'=>'Bank of China',
+            'name'=>'AmIslamic Bank (M) Berhad',
+            'bic_code'=>'AISLMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'BOA'
         ] );
         
         App\BankCode::create( [
-            'id'=>9,
-            'name'=>'Bank of Tokyo-Mitsubishi UFJ',
+            'name'=>'Bangkok Bank Berhad',
+            'bic_code'=>'BKKBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'BOTM'
         ] );
         
         App\BankCode::create( [
-            'id'=>10,
-            'name'=>'Bank Rakyat',
+            'name'=>'Bank Islam Malaysia Berhad',
+            'bic_code'=>'BIMBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'BRK'
         ] );
         
         App\BankCode::create( [
-            'id'=>11,
-            'name'=>'BNP Paribas',
+            'name'=>'Bank Kerjasama Rakyat Malaysia Berhad',
+            'bic_code'=>'BKRMMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'BNP'
         ] );
         
         App\BankCode::create( [
-            'id'=>12,
-            'name'=>'CIMB Bank',
+            'name'=>'Bank Muamalat (Malaysia) Berhad',
+            'bic_code'=>'BMMBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'CIMB'
         ] );
         
         App\BankCode::create( [
-            'id'=>13,
-            'name'=>'Citibank',
+            'name'=>'Bank of America (Malaysia) Berhad',
+            'bic_code'=>'BOFAMY2X',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'CTB'
         ] );
         
         App\BankCode::create( [
-            'id'=>14,
-            'name'=>'Deutsche Bank',
+            'name'=>'Bank of China (Malaysia) Berhad',
+            'bic_code'=>'BKCHMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'DEU'
         ] );
         
         App\BankCode::create( [
-            'id'=>15,
-            'name'=>'Hong Leong Bank',
+            'name'=>'MUFG Bank (Malaysia) Berhad',
+            'bic_code'=>'BOTKMYKX',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'HLB'
         ] );
         
         App\BankCode::create( [
-            'id'=>16,
-            'name'=>'HSBC Bank',
+            'name'=>'Bank Simpanan Nasional Berhad',
+            'bic_code'=>'BSNAMYK1',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'HSBC'
         ] );
         
         App\BankCode::create( [
-            'id'=>17,
-            'name'=>'India International Bank',
+            'name'=>'BNP Paribas Malaysia Berhad',
+            'bic_code'=>'BNPAMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'IIB'
         ] );
         
         App\BankCode::create( [
-            'id'=>18,
-            'name'=>'Industrial and Commercial Bank of China',
+            'name'=>'China Construction Bank (Malaysia) Berhad',
+            'bic_code'=>'PCBCMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'ICBC'
         ] );
         
         App\BankCode::create( [
-            'id'=>19,
-            'name'=>'J.P. Morgan Chase Bank',
+            'name'=>'CIMB Bank Berhad',
+            'bic_code'=>'CIBBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'JPM'
         ] );
         
         App\BankCode::create( [
-            'id'=>20,
-            'name'=>'Maybank',
+            'name'=>'CIMB Islamic Bank Berhad',
+            'bic_code'=>'CTBBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'MBB'
         ] );
         
         App\BankCode::create( [
-            'id'=>21,
-            'name'=>'Mizuho Bank',
+            'name'=>'Citibank Berhad',
+            'bic_code'=>'CITIMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'MZH'
         ] );
         
         App\BankCode::create( [
-            'id'=>22,
-            'name'=>'National Bank of Abu Dhabi',
+            'name'=>'Deutsche Bank (M) Berhad',
+            'bic_code'=>'DEUTMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'NBAD'
         ] );
         
         App\BankCode::create( [
-            'id'=>23,
-            'name'=>'OCBC Bank',
+            'name'=>'Hong Leong Bank Berhad',
+            'bic_code'=>'HLBBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'OCBC'
         ] );
         
         App\BankCode::create( [
-            'id'=>24,
-            'name'=>'Public Bank',
+            'name'=>'Hong Leong Islamic Bank Berhad',
+            'bic_code'=>'HLIBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'PBB'
         ] );
         
         App\BankCode::create( [
-            'id'=>25,
-            'name'=>'RHB Bank',
+            'name'=>'HSBC Bank Malaysia Berhad',
+            'bic_code'=>'HBMBMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'RHB'
         ] );
         
         App\BankCode::create( [
-            'id'=>26,
-            'name'=>'Standard Chartered Bank',
+            'name'=>'HSBC Amanah Malaysia Berhad',
+            'bic_code'=>'HMABMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'SCB'
         ] );
         
         App\BankCode::create( [
-            'id'=>27,
-            'name'=>'Sumitomo Mitsui Banking Corporation',
+            'name'=>'Industrial and Commercial Bank of China (Malaysia) Berhad',
+            'bic_code'=>'ICBKMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'SMBC'
         ] );
         
         App\BankCode::create( [
-            'id'=>28,
-            'name'=>'The Bank of Nova Scotia Berhad',
+            'name'=>'JP Morgan Chase Bank Berhad',
+            'bic_code'=>'CHASMYKX',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'NSB'
         ] );
         
         App\BankCode::create( [
-            'id'=>29,
-            'name'=>'United Overseas Bank',
+            'name'=>'Kuwait Finance House (Malaysia) Berhad',
+            'bic_code'=>'KFHOMYKL',
             'status'=>'Active',
-            'created_by'=>0,
-            'created_at'=>'2017-12-28 09:34:54',
-            'name'=>'UOB'
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'Malayan Banking Berhad',
+            'bic_code'=>'MBBEMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'Maybank Islamic Berhad',
+            'bic_code'=>'MBISMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'MBSB Bank Berhad',
+            'bic_code'=>'AFBQMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'Mizuho Corporate Bank (Malaysia) Berhad',
+            'bic_code'=>'MHCBMYKA',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'OCBC Bank (Malaysia) Berhad',
+            'bic_code'=>'OCBCMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'OCBC Al-Amin Bank Berhad',
+            'bic_code'=>'OABBMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'RHB Bank Berhad',
+            'bic_code'=>'RHBBMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'RHB Islamic Bank Berhad',
+            'bic_code'=>'RHBAMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'Standard Chartered Bank (Malaysia) Berhad',
+            'bic_code'=>'SCBLMYKX',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'Standard Chartered Saadiq (Malaysia) Berhad',
+            'bic_code'=>'SCSRMYK1',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'Sumitomo Mitsui Banking Corporation Malaysia Berhad',
+            'bic_code'=>'SMBCMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
+            'name'=>'United Overseas Bank (Malaysia) Berhad',
+            'bic_code'=>'UOVBMYKL',
+            'status'=>'Active',
         ] );
     }
 }

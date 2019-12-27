@@ -199,6 +199,23 @@ Breadcrumbs::for('admin.settings.company.company-details', function ($trail, $id
     $trail->push('Company Details', route('admin.settings.company.company-details', $id));
 });
 
+// Home > Settings > Security Group
+Breadcrumbs::for('admin.settings.security-group', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Security Group', route('admin.settings.security-group'));
+});
+        
+// Home > Settings > Security Group - Add
+Breadcrumbs::for('admin.settings.security-group.add', function ($trail) {
+    $trail->parent('admin.settings.security-group');
+    $trail->push('Add Security Group', route('admin.settings.security-group.add'));
+});
+    
+// Home > Settings > Security Group - Edit
+Breadcrumbs::for('admin.settings.security-group.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.security-group');
+    $trail->push('Edit Security Group', route('admin.settings.security-group.edit', $id));
+});
 
 // // Home > Settings > Cost-Centre
 Breadcrumbs::for('admin.settings.cost-centres', function ($trail) {
@@ -347,6 +364,24 @@ Breadcrumbs::for('admin.settings.areas.add', function ($trail) {
 Breadcrumbs::for('admin.settings.areas.edit', function ($trail, $id) {
     $trail->parent('admin.settings.areas');
     $trail->push('Edit Section', route('admin.settings.areas.edit', $id));
+});
+
+// Home > Settings > Bank Code
+Breadcrumbs::for('admin.settings.bank-code', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Settings: Bank Code', route('admin.settings.bank-code'));
+});
+        
+// Home > Settings > Bank Code - Add
+Breadcrumbs::for('admin.settings.bank-code.add', function ($trail) {
+    $trail->parent('admin.settings.bank-code');
+    $trail->push('Add Bank Code', route('admin.settings.bank-code.add'));
+});
+            
+// Home > Settings > Bank Code - Edit
+Breadcrumbs::for('admin.settings.bank-code.edit', function ($trail, $id) {
+    $trail->parent('admin.settings.bank-code');
+    $trail->push('Edit Bank Code', route('admin.settings.bank-code.edit', $id));
 });
 
 // Home > Settings > Category

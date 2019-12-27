@@ -95,6 +95,21 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_COMPANY_ASSET, 'mode' => 'admin', 'module' => 'Settings - Company Asset']);
         Permission::create(['name' => PermissionConstant::DELETE_COMPANY_ASSET, 'mode' => 'admin', 'module' => 'Settings - Company Asset']);
         
+        Permission::create(['name' => PermissionConstant::VIEW_SECURITY_GROUP, 'mode' => 'admin', 'module' => 'Settings - Security Group']);
+        Permission::create(['name' => PermissionConstant::ADD_SECURITY_GROUP, 'mode' => 'admin', 'module' => 'Settings - Security Group']);
+        Permission::create(['name' => PermissionConstant::UPDATE_SECURITY_GROUP, 'mode' => 'admin', 'module' => 'Settings - Security Group']);
+        Permission::create(['name' => PermissionConstant::DELETE_SECURITY_GROUP, 'mode' => 'admin', 'module' => 'Settings - Security Group']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_BANK_CODE, 'mode' => 'admin', 'module' => 'Settings - Bank Code']);
+        Permission::create(['name' => PermissionConstant::ADD_BANK_CODE, 'mode' => 'admin', 'module' => 'Settings - Bank Code']);
+        Permission::create(['name' => PermissionConstant::UPDATE_BANK_CODE, 'mode' => 'admin', 'module' => 'Settings - Bank Code']);
+        Permission::create(['name' => PermissionConstant::DELETE_BANK_CODE, 'mode' => 'admin', 'module' => 'Settings - Bank Code']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_DEPARTMENT, 'mode' => 'admin', 'module' => 'Settings - Department']);
+        Permission::create(['name' => PermissionConstant::ADD_DEPARTMENT, 'mode' => 'admin', 'module' => 'Settings - Department']);
+        Permission::create(['name' => PermissionConstant::UPDATE_DEPARTMENT, 'mode' => 'admin', 'module' => 'Settings - Department']);
+        Permission::create(['name' => PermissionConstant::DELETE_DEPARTMENT, 'mode' => 'admin', 'module' => 'Settings - Department']);
+        
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);
         
