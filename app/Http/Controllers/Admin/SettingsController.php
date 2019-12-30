@@ -44,6 +44,7 @@ use App\Category;
 use App\EmploymentStatus;
 use App\CompanyAsset;
 use App\BankCode;
+use App\DepartmentHod;
 
 class SettingsController extends Controller
 {
@@ -108,6 +109,7 @@ class SettingsController extends Controller
     public function displayDepartments()
     {
         $departments = Department::all();
+        $departments->load('hod');
         return view('pages.admin.settings.department', [
             'departments' => $departments
         ]);
@@ -442,11 +444,24 @@ class SettingsController extends Controller
 
     public function postAddDepartment(Request $request)
     {
-        $departmentData = $request->validate([
-            'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL'
+        $request->validate([
+            'name' => 'required|unique:departments,name,NULL,id,deleted_at,NULL',
+            'hod' => 'required'
         ]);
 
-        Department::create($departmentData);
+        DB::beginTransaction();
+        $department = new Department();
+        $department->name = $request->name;
+        $department->save();
+        
+        foreach($request->hod as $employeeId) {
+            $departmentHod = new DepartmentHod();
+            $departmentHod->department_id = $department->id;
+            $departmentHod->employee_id = $employeeId;
+            $departmentHod->save();
+        }
+        
+        DB::commit();
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been added.');
     }
 
@@ -1038,9 +1053,15 @@ class SettingsController extends Controller
     public function editDepartment(Request $request, $id)
     {
         $department = Department::find($id);
+        $hods = array();
+        
+        foreach($department->hod as $dh) {
+            array_push($hods, $dh->employee());
+        }
 
         return view('pages.admin.settings.edit-department', [
-            'department' => $department
+            'department' => $department,
+            'hods' => $hods
         ]);
     }
 
@@ -1263,13 +1284,28 @@ class SettingsController extends Controller
 
     public function postEditDepartment(Request $request, $id)
     {
-        $departmentData = $request->validate([
-            'name' => 'required|unique:departments,name,' . $id . ',id,deleted_at,NULL'
+        $request->validate([
+            'name' => 'required|unique:departments,name,' . $id . ',id,deleted_at,NULL',
+            'hod' => 'required'
         ]);
 
-        Department::find($id)->update($departmentData);
-
+        DB::beginTransaction();
+        $department = Department::find($id);
+        $department->name = $request->name;
+        $department->save();
+        
+        DepartmentHod::where('department_id', $id)->delete();
+        
+        foreach($request->hod as $employeeId) {
+            $departmentHod = new DepartmentHod();
+            $departmentHod->department_id = $department->id;
+            $departmentHod->employee_id = $employeeId;
+            $departmentHod->save();
+        }
+        
+        DB::commit();
         return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been updated.');
+        
     }
 
     public function postEditWorkingDay(Request $request, $id)
@@ -1632,13 +1668,14 @@ class SettingsController extends Controller
 
         if ($employee_job_department == 0)
         {
-        Department::find($id)->delete();
-
-        return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been deleted.');
-    }
+            Department::find($id)->delete();
+            DepartmentHod::where('department_id', $id)->delete();
+    
+            return redirect()->route('admin.settings.departments')->with('status', 'Department has successfully been deleted.');
+        }
         else
         {
-        return redirect()->route('admin.settings.departments')->with('status', 'You Cannot Delete This Record');
+            return redirect()->route('admin.settings.departments')->with('status', 'You are not allowed to delete this department. Reason: Already used in Employee Job');
         }
     }
 
