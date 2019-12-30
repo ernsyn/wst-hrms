@@ -1,6 +1,5 @@
 <?php
 
-use App\Helpers\AccessControllHelper;
 use App\Constants\PermissionConstant;
 
 /*
@@ -13,17 +12,6 @@ use App\Constants\PermissionConstant;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-$adminPermissions = array();
-$employeePermissions = array();
-
-foreach(AccessControllHelper::adminPermissions() as $p){
-    array_push($adminPermissions, $p);
-}
-
-foreach(AccessControllHelper::employeePermissions() as $p){
-    array_push($employeePermissions, $p);
-}
 
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/', function () {
@@ -41,7 +29,7 @@ Route::group(['middleware' => ['auth']], function() {
 });
 
 // MODE: Employee
-Route::group(['middleware' => ['auth', 'permission:'.join("|",$employeePermissions)]], function() {
+Route::group(['middleware' => ['auth']], function() {
     Route::get('', 'HomeController@index')->name('employee.dashboard');
 
     Route::post('profile/change-password','Employee\EmployeeController@postChangePassword')->name('employee.change-password.post')->where('id', '[0-9]+');
@@ -119,7 +107,7 @@ Route::group(['middleware' => ['auth', 'permission:'.join("|",$employeePermissio
 });
 
 // MODE: Admin
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'permission:'.join("|",$adminPermissions)]], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_ADMIN_DASHBOARD]], function () {
         Route::get('', 'Admin\DashboardController@index')->name('admin.dashboard');
     });
