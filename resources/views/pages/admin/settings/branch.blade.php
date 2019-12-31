@@ -45,7 +45,7 @@
                         <td>{{$branch['city']}}</td>
                         <td>{{$branch['state']}}</td>
                         <td>
-                        	@if($branch->area() != null)
+                        	@if($branch->area()->first() != null)
                         		{{ $branch->area()->first()->name }}
                         	@endif
                        	</td>
