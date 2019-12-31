@@ -117,7 +117,7 @@ class SettingsController extends Controller
 
     public function displayBranches()
     {
-        $branches = Branch::all();
+        $branches = Branch::all()->load('area');
         return view('pages.admin.settings.branch', [
             'branches' => $branches
         ]);
@@ -716,15 +716,14 @@ class SettingsController extends Controller
             'state' => 'required',
             'city' => 'required',
             'zip_code' => 'required|numeric|digits:5',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
             'area_id' => 'required',
             'state_holiday' => 'required'
         ], [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
-        
-        $branchData['latitude'];
-        $branchData['longitude'];
-
+//         dd($branchData);
         Branch::create($branchData);
         return redirect()->route('admin.settings.branches')->with('status', 'Branch has successfully been added.');
     }
@@ -954,9 +953,12 @@ class SettingsController extends Controller
     public function editBranch(Request $request, $id)
     {
         $branch = Branch::find($id);
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        $areas = Area::where('company_id', $company->id)->get();
 
         return view('pages.admin.settings.edit-branch', [
-            'branch' => $branch
+            'branch' => $branch,
+            'areas' => $areas
         ]);
     }
 
@@ -1339,7 +1341,11 @@ class SettingsController extends Controller
             'country_code' => 'nullable|integer',
             'state' => 'required',
             'city' => 'required',
-            'zip_code' => 'required|numeric|digits:5'
+            'zip_code' => 'required|numeric|digits:5',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'area_id' => 'required',
+            'state_holiday' => 'required'
         ], [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
         ]);
