@@ -44,7 +44,11 @@
                         <td>{{$branch['contact_no_primary']}}</td>
                         <td>{{$branch['city']}}</td>
                         <td>{{$branch['state']}}</td>
-                        <td>{{$branch->area()->first()->name}}</td>
+                        <td>
+                        	@if($branch->area() != null)
+                        		{{ $branch->area()->first()->name }}
+                        	@endif
+                       	</td>
                         <td>{{$branch['state_holiday']}}</td>
                         <td>
                         	@can(PermissionConstant::VIEW_BRANCH)
