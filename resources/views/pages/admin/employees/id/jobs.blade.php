@@ -111,7 +111,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="cost-centre"><strong>Cost Centre*</strong></label>
+                            <label for="cost-centre"><strong>Cost Centre</strong></label>
                             <select class="form-control" name="cost-centre" >
                                 <option value="">Please Select</option>
                                 @foreach(App\CostCentre::all() as $cost_centre)
@@ -124,7 +124,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="department"><strong>Department*</strong></label>
+                            <label for="department"><strong>Department</strong></label>
                             <select class="form-control" name="department" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Department::all() as $department)
@@ -151,7 +151,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="main-position"><strong>Position*</strong></label>
+                            <label for="main-position"><strong>Position</strong></label>
                             <select class="form-control" name="main-position" >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeePosition::all() as $position)
@@ -271,7 +271,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="cost-centre"><strong>Cost Centre*</strong></label>
+                            <label for="cost-centre"><strong>Cost Centre</strong></label>
                             <select class="form-control" name="cost-centre" disabled >
                                 <option value="">Please Select</option>
                                 @foreach(App\CostCentre::all() as $cost_centre)
@@ -283,7 +283,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="department"><strong>Department*</strong></label>
+                            <label for="department"><strong>Department</strong></label>
                             <select class="form-control" name="department" disabled >
                                 <option value="">Please Select</option>
                                 @foreach(App\Department::all() as $department)
@@ -307,7 +307,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="main-position"><strong>Main Position*</strong></label>
+                            <label for="main-position"><strong>Position</strong></label>
                             <select class="form-control" name="main-position" disabled >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeePosition::all() as $position)
@@ -390,6 +390,27 @@
     </div>
 </div>
 
+{{-- DELETE --}}
+<div class="modal fade" id="confirm-delete-job-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+            </div>
+            <div class="modal-body">
+                    <p>Are you sure want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-job-submit">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section('scripts')
 <script>
     var jobsTable = $('#employee-jobs-table').DataTable({
@@ -418,16 +439,25 @@
 
             },
             {
-                "data": "main_position.name"
+                "data": "main_position.name",
+                render: function(data) {
+                    return data ? data : null;
+                }
             },
             {
-                "data": "department.name"
+                "data": "department.name",
+                render: function(data) {
+                    return data ? data : null;
+                }
             },
             {
                 "data": "team.name"
             },
             {
-                "data": "cost_centre.name"
+                "data": "cost_centre.name",
+                render: function(data) {
+                    return data ? data : null;
+                }
             },
             {
                 "data": "grade.name"
@@ -453,7 +483,8 @@
             {
                 "data": null, // can be null or undefined
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-job-popup"><i class="far fa-edit"></i></button>`;
+                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-job-popup"><i class="far fa-edit"></i></button>` +
+                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>`;
                 }
             }
         ]
@@ -787,6 +818,39 @@
         });
 
          // DELETE
+        var deleteJobId = null;
+        $('#confirm-delete-job-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var currentData = JSON.parse(decodeURI(button.data('current')))
+            console.log('Data: ', currentData)
+            deleteJobId = currentData.id;
+        });
+
+ 		var deleteJobRouteTemplate = "{{ route('admin.settings.jobs.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+        $('#delete-job-submit').click(function(e){
+            var deleteJobRoute = deleteJobRouteTemplate.replace(encodeURI('<<id>>'), deleteJobId);
+            e.preventDefault();
+            $.ajax({
+                url: deleteJobRoute,
+                type: 'GET',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: deleteJobId
+                },
+                success: function(data) {
+                    showAlert(data.success);
+                    jobsTable.ajax.reload();
+                    $('#confirm-delete-job-modal').modal('toggle');
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error 422: ", xhr);
+                    }
+                    console.log("Error: ", xhr);
+                }
+            });
+        });
 
     // GENERAL FUNCTIONS
     function clearJobModal(htmlId) {

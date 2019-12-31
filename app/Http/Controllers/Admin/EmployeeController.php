@@ -627,16 +627,15 @@ else {
         // Add a new job
         $jobData = $request->validate([
             'basic_salary' => 'required|numeric',
-            'cost_centre_id' => 'required',
-            'department_id' => 'required',
+            'emp_mainposition_id' => '',
             'team_id' => 'required',
-            'emp_mainposition_id' => 'required',
             'emp_grade_id' => 'required',
-            'remarks' => '',
+            'remarks' => '',           
             'branch_id' => 'required',
             'start_date' => 'required',
             'status' => 'required',
         ]);
+        
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
         $jobData['created_by'] = auth()->user()->id;
         DB::transaction(function() use ($jobData, $id) {
@@ -653,7 +652,10 @@ else {
             } else {
                 $jobData['status']  = "probationer";
             }
-            $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
+            
+            if($jobData['emp_mainposition_id'] != '') {
+                $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
+            }
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
             Employee::where('id', $id)->update(array('position'=> @$position ? $position : ''));
             Employee::where('id', $id)->update(array('resignation_date'=> null));
@@ -1034,10 +1036,8 @@ else {
     {
         $jobData = $request->validate([
             'branch_id' => 'required',
-            'emp_mainposition_id' => 'required',
-            'department_id' => 'required',
+            'emp_mainposition_id' => '',
             'team_id' => 'required',
-            'cost_centre_id' => 'required',
             'emp_grade_id' => 'required',
             'start_date' => 'required',
             'basic_salary' => 'required',
@@ -1057,7 +1057,9 @@ else {
         }
         else{
         EmployeeJob::find($id)->update($jobData);
-        $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
+        if($jobData['emp_mainposition_id'] != '') {
+            $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
+        }
         Employee::where('id', $id)->update(array('position'=> @$position ? $position : ''));
 
         return response()->json(['success'=>'Job was successfully updated.']);
@@ -1190,7 +1192,13 @@ else {
         EmployeeVisa::find($id)->delete();
         return response()->json(['success'=>'Visa was successfully deleted.']);
     }
-
+    
+    public function deleteJob(Request $request, $emp_id, $id)
+    {
+        EmployeeJob::find($id)->delete();
+        return response()->json(['success'=>'Job was successfully deleted.']);
+    }
+    
     public function deleteBankAccount(Request $request, $emp_id, $id)
     {
         EmployeeBankAccount::find($id)->delete();

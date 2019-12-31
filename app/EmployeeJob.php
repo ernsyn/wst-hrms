@@ -55,4 +55,9 @@ class EmployeeJob extends Model implements Auditable
     {
         return $this->belongsTo('App\Branch', 'branch_id');
     }
+
+    public function status()
+    {
+        return $this->belongsTo('App\EmploymentStatus','EmploymentStatus_id');
+    }
 }
