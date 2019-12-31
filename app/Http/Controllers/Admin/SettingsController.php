@@ -1893,9 +1893,12 @@ class SettingsController extends Controller
     public function showBranch($id)
     {
         $branch = Branch::find($id);
+        $company = GenerateReportsHelper::getUserLogonCompanyInformation();
+        $areas = Area::where('company_id', $company->id)->get();
         
         return view('pages.admin.settings.show-branch', [
             'branch' => $branch,
+            'areas' => $areas,
         ]);
     }
     
