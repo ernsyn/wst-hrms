@@ -17,4 +17,9 @@ class Department extends Model implements Auditable
         'created_by'
     ];
     protected $dates = ['deleted_at'];
+    
+    public function hod()
+    {
+        return $this->hasMany('App\DepartmentHod', 'department_id');
+    }
 }
