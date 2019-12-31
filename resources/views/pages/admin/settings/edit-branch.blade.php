@@ -130,7 +130,7 @@
                         <div class="col-md-3">
                             <label class="col-md-12 col-form-label">Latitude*</label>
                             <div class="col-md-12">
-                                <input id="latitude" type="number" class="form-control{{ $errors->has('latitude') ? ' is-invalid' : '' }}" name="latitude"
+                                <input id="latitude" type="numeric" class="form-control{{ $errors->has('latitude') ? ' is-invalid' : '' }}" name="latitude"
                                     value="{{ $branch->latitude }}" >
                                     @if ($errors->has('latitude'))
                                     <span class="invalid-feedback" role="alert">
@@ -142,7 +142,7 @@
                         <div class="col-md-3">
                             <label class="col-md-12 col-form-label">Longitude*</label>
                             <div class="col-md-12">
-                                <input id="longitude" type="number" class="form-control{{ $errors->has('longitude') ? ' is-invalid' : '' }}" name="longitude"
+                                <input id="longitude" type="numeric" class="form-control{{ $errors->has('longitude') ? ' is-invalid' : '' }}" name="longitude"
                                     value="{{ $branch->longitude }}" >
                                     @if ($errors->has('longitude'))
                                     <span class="invalid-feedback" role="alert">
