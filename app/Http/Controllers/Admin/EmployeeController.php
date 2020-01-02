@@ -569,6 +569,8 @@ else {
     {
         $dependentData = $request->validate([
             'name' => 'required',
+            'ic_no' => 'nullable',
+            'occupation' => 'nullable',
             'relationship' => 'required',
             'dob' => 'required',
         ]);
@@ -989,6 +991,8 @@ else {
     {
         $dependentUpdatedData = $request->validate([
             'name' => 'required',
+            'ic_no' => 'nullable',
+            'occupation' => 'nullable',
             'relationship' => 'required',
             'dob' => 'required',
         ]);

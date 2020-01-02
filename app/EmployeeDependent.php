@@ -14,6 +14,8 @@ class EmployeeDependent extends Model implements Auditable
 
     protected $fillable = [
         'name',
+        'ic_no',
+        'occupation',
         'relationship',
         'dob',
         'created_by'
