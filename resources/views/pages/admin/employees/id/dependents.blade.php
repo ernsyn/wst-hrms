@@ -21,6 +21,22 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
+                            <label for="name"><strong>I/C No</strong></label>
+                            <input name="ic_no" type="text" class="form-control" placeholder="" value="">
+                            <div id="ic_no-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Occupation</strong></label>
+                            <input name="occupation" type="text" class="form-control" placeholder="" value="">
+                            <div id="occupation-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
                             <label for="name"><strong>Relationship*</strong></label>
                             <input name="relationship" type="text" class="form-control" placeholder="eg. Father, Son" value="" required>
                             <div id="relationship-error" class="invalid-feedback">
@@ -69,6 +85,22 @@
                             <label for="name"><strong>Name*</strong></label>
                             <input name="name" type="text" class="form-control" placeholder="" value="" required>
                             <div id="name-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>I/C No</strong></label>
+                            <input name="ic_no" type="text" class="form-control" placeholder="" value="">
+                            <div id="ic_no-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="name"><strong>Occupation</strong></label>
+                            <input name="occupation" type="text" class="form-control" placeholder="" value="">
+                            <div id="occupation-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -142,6 +174,8 @@
             <tr>
                 <th>No</th>
                 <th>Name</th>
+                <th>I/C No</th>
+                <th>Occupation</th>
                 <th>Relationship</th>
                 <th>Date Of Birth</th>
                 <th>Action</th>
@@ -160,7 +194,7 @@
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.dependents', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": 4,
+            "targets": 6,
             "orderable": false
         } ],
         "columns": [{
@@ -170,6 +204,12 @@
             },
             {
                 "data": "name"
+            },
+            {
+                "data": "ic_no"                    
+            },
+            {
+                "data": "occupation"
             },
             {
                 "data": "relationship"
@@ -219,6 +259,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     name: $('#add-dependent-form input[name=name]').val(),
+                    ic_no: $('#add-dependent-form input[name=ic_no]').val(),
+                    occupation: $('#add-dependent-form input[name=occupation]').val(),
                     relationship: $('#add-dependent-form input[name=relationship]').val(),
                     dob: $('#add-dependent-form #dob-dependent').val()
                 },
@@ -239,6 +281,14 @@
                                     case 'name':
                                         $('#add-dependent-form input[name=name]').addClass('is-invalid');
                                         $('#add-dependent-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'ic_no':
+                                        $('#add-dependent-form input[name=ic_no]').addClass('is-invalid');
+                                        $('#add-dependent-form #ic_no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'occupation':
+                                        $('#add-dependent-form input[name=occupation]').addClass('is-invalid');
+                                        $('#add-dependent-form #occupation-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'relationship':
                                         $('#add-dependent-form input[name=relationship]').addClass('is-invalid');
@@ -268,6 +318,8 @@
             editDependentId = currentData.id;
 
             $('#edit-dependent-form input[name=name]').val(currentData.name);
+            $('#edit-dependent-form input[name=ic_no]').val(currentData.ic_no);
+            $('#edit-dependent-form input[name=occupation]').val(currentData.occupation);
             $('#edit-dependent-form input[name=relationship]').val(currentData.relationship);
             $('#edit-dependent-form #dob-dependent-edit').val(currentData.dob);
         });
@@ -283,6 +335,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     name: $('#edit-dependent-form input[name=name]').val(),
+                    ic_no: $('#edit-dependent-form input[name=ic_no]').val(),
+                    occupation: $('#edit-dependent-form input[name=occupation]').val(),
                     relationship: $('#edit-dependent-form input[name=relationship]').val(),
                     dob: $('#edit-dependent-form #dob-dependent-edit').val()
                 },
@@ -303,6 +357,14 @@
                                     case 'name':
                                         $('#edit-dependent-form input[name=name]').addClass('is-invalid');
                                         $('#edit-dependent-form #name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'ic_no':
+                                        $('#edit-dependent-form input[name=ic_no]').addClass('is-invalid');
+                                        $('#edit-dependent-form #ic_no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'occupation':
+                                        $('#edit-dependent-form input[name=occupation]').addClass('is-invalid');
+                                        $('#edit-dependent-form #occupation-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'relationship':
                                         $('#edit-dependent-form input[name=relationship]').addClass('is-invalid');
@@ -360,11 +422,15 @@
     // GENERAL FUNCTIONS
     function clearDependentsModal(htmlId) {
         $(htmlId + ' input[name=name]').val('');
+        $(htmlId + ' input[name=ic_no]').val('');
+        $(htmlId + ' input[name=occupation]').val('');
         $(htmlId + ' input[name=relationship]').val('');
         $(htmlId + ' #dob-dependent').val('');
         $(htmlId + ' #dob-dependent-edit').val('');
 
         $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=ic_no]').removeClass('is-invalid');
+        $(htmlId + ' input[name=occupation]').removeClass('is-invalid');
         $(htmlId + ' input[name=relationship]').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');
@@ -372,6 +438,8 @@
 
     function clearDependentsError(htmlId) {
         $(htmlId + ' input[name=name]').removeClass('is-invalid');
+        $(htmlId + ' input[name=ic_no]').removeClass('is-invalid');
+        $(htmlId + ' input[name=occupation]').removeClass('is-invalid');
         $(htmlId + ' input[name=relationship]').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent').removeClass('is-invalid');
         $(htmlId + ' #dob-dependent-edit').removeClass('is-invalid');

@@ -17,6 +17,6 @@ class UsersTableSeeder extends Seeder
             'email' => 'superadmin@wisetech.com',
         ]);
 
-        $user->assignRole('super-admin');
+        $user->assignRole('Super Admin');
     }
 }

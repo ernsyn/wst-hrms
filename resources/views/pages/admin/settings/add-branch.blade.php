@@ -1,8 +1,7 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
-    <div id="alert-container">
-        </div>   
+<div class="main-content">
+    <div id="alert-container"></div>   
     <form method="POST" action="{{ route('admin.settings.branches.add.post') }}">
         <div class="card">
             <div class="card-body">
@@ -115,7 +114,7 @@
                                     @endif
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label class="col-md-12 col-form-label">City*</label>
                             <div class="col-md-12">
                                 <input id="city" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ old('city') }}"
@@ -127,12 +126,12 @@
                                     @endif
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <label class="col-md-12 col-form-label">State*</label>
                             <div class="col-md-12">
                                     <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" >
                                         <option value="{{ old('state') }}">{{ old('state') }}</option>
-                                        @foreach(App\Constants\MalaysianStates::$all as $state)
+                                        @foreach(MalaysianStates::$all as $state)
                                         <option value="{{ $state }}">{{ $state }}</option>
                                         @endforeach
                                     </select>
@@ -144,11 +143,69 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group row w-100">
+                    	<div class="col-md-3">
+                            <label class="col-md-12 col-form-label">Latitude*</label>
+                            <div class="col-md-12">
+                                <input id="latitude" type="numeric" class="form-control{{ $errors->has('latitude') ? ' is-invalid' : '' }}" name="latitude"
+                                    value="{{ old('latitude') }}" >
+                                    @if ($errors->has('latitude'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('latitude') }}</strong>
+                                    </span>
+                                    @endif
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-md-12 col-form-label">Longitude*</label>
+                            <div class="col-md-12">
+                                <input id="longitude" type="numeric" class="form-control{{ $errors->has('longitude') ? ' is-invalid' : '' }}" name="longitude"
+                                    value="{{ old('longitude') }}" >
+                                    @if ($errors->has('longitude'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('longitude') }}</strong>
+                                    </span>
+                                    @endif
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-md-12 col-form-label">Area*</label>
+                            <div class="col-md-12">
+                                <select class="form-control{{ $errors->has('area_id') ? ' is-invalid' : '' }}" name="area_id" id="area_id">
+                                    <option value="{{ old('area_id') }}">{{ old('area->name') }}</option>
+                                    @foreach($areas as $area)
+                                    <option value="{{ $area->id }}">{{ $area->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('area_id'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('area_id') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-md-12 col-form-label">State Holiday*</label>
+                            <div class="col-md-12">
+                                <select class="form-control{{ $errors->has('state_holiday') ? ' is-invalid' : '' }}" name="state_holiday" id="state_holiday" >
+                                    <option value="{{ old('state_holiday') }}">{{ old('state_holiday') }}</option>
+                                    @foreach(MalaysianStates::$all as $state_holiday)
+                                    <option value="{{ $state_holiday }}">{{ $state_holiday }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('state_holiday'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('state_holiday') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
-                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
+                <a role="button" class="btn btn-secondary" href="{{ route('admin.settings.branches') }}">Cancel</a>
             </div>
         </div>
     </form>

@@ -1,6 +1,6 @@
 @extends('layouts.admin-base')
 @section('content') 
-<div class="container">
+<div class="main-content">
     <div id="alert-container"></div>     
     <div class="card">
         <form method="POST" action="{{ route('admin.settings.branches.edit.post', ['id' => $branch->id])  }}">
@@ -18,7 +18,9 @@
                                     </span> @endif
                             </div>
                         </div>
-                        <div class="col-4">
+                    </div>
+                    <div class="form-group row w-100">
+                        <div class="col-md-4">
                             <label class="col-md-12 col-form-label">Contact (Primary)*</label>
                             <div class="col-md-12">
                                 <input id="contact_no_primary" type="text" class="form-control{{ $errors->has('contact_no_primary') ? ' is-invalid' : '' }}"
@@ -28,7 +30,7 @@
                                     </span> @endif
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-md-4">
                             <label class="col-md-12 col-form-label">Contact (Secondary)</label>
                             <div class="col-md-12">
                                 <input id="contact_no_secondary" type="text" class="form-control{{ $errors->has('contact_no_secondary') ? ' is-invalid' : '' }}"
@@ -38,7 +40,7 @@
                                     </span> @endif
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-md-4">
                             <label class="col-md-12 col-form-label">Contact (Fax)</label>
                             <div class="col-md-12">
                                 <input id="fax_no" type="text" class="form-control{{ $errors->has('fax_no') ? ' is-invalid' : '' }}" name="fax_no" value="{{ $branch->fax_no }}"
@@ -59,6 +61,8 @@
                                     </span> @endif
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group row w-100">
                         <div class="col-12">
                             <label class="col-md-12 col-form-label">Address Line 2</label>
                             <div class="col-md-12">
@@ -69,6 +73,8 @@
                                     </span> @endif
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group row w-100">
                         <div class="col-12">
                             <label class="col-md-12 col-form-label">Address Line 3</label>
                             <div class="col-md-12">
@@ -108,7 +114,7 @@
                             <div class="col-md-12">
                                 <select class="form-control{{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state">
                                     <option value="{{ $branch->state }}">{{ $branch->state }}</option>
-                                    @foreach(App\Constants\MalaysianStates::$all as $state)
+                                    @foreach(MalaysianStates::$all as $state)
                                         <option value="{{ $state }}">{{ $state }}</option value="">
                                     @endforeach
                                 </select>
@@ -120,11 +126,69 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group row w-100">
+                        <div class="col-md-3">
+                            <label class="col-md-12 col-form-label">Latitude*</label>
+                            <div class="col-md-12">
+                                <input id="latitude" type="numeric" class="form-control{{ $errors->has('latitude') ? ' is-invalid' : '' }}" name="latitude"
+                                    value="{{ $branch->latitude }}" >
+                                    @if ($errors->has('latitude'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('latitude') }}</strong>
+                                    </span>
+                                    @endif
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-md-12 col-form-label">Longitude*</label>
+                            <div class="col-md-12">
+                                <input id="longitude" type="numeric" class="form-control{{ $errors->has('longitude') ? ' is-invalid' : '' }}" name="longitude"
+                                    value="{{ $branch->longitude }}" >
+                                    @if ($errors->has('longitude'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('longitude') }}</strong>
+                                    </span>
+                                    @endif
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-md-12 col-form-label">Area*</label>
+                            <div class="col-md-12">
+                                <select class="form-control{{ $errors->has('area_id') ? ' is-invalid' : '' }}" name="area_id" id="area_id">
+                                	<option value="{{ $branch->area_id }}">{{ $branch->area()->first()->name }}</option>
+                                    @foreach($areas as $area)
+                                    <option value="{{ $area->id }}">{{ $area->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('area_id'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('area_id') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-md-12 col-form-label">State Holiday*</label>
+                            <div class="col-md-12">
+                                <select class="form-control{{ $errors->has('state_holiday') ? ' is-invalid' : '' }}" name="state_holiday" id="state_holiday" >
+                                    <option value="{{ $branch->state_holiday }}">{{ $branch->state_holiday }}</option>
+                                    @foreach(MalaysianStates::$all as $state_holiday)
+                                    <option value="{{ $state_holiday }}">{{ $state_holiday }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('state_holiday'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('state_holiday') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
-                <a role="button" class="btn btn-secondary" href="{{ URL::previous() }}">Cancel</a>
+                <a role="button" class="btn btn-secondary" href="{{ route('admin.settings.branches') }}">Cancel</a>
             </div>
         </form>
     </div>

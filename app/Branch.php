@@ -23,7 +23,16 @@ class Branch extends Model implements Auditable
         'country_code',
         'state',
         'city',
-        'zip_code'
+        'zip_code',
+        'area_id',
+        'state_holiday',
+        'longitude',
+        'latitude'
     ];
     protected $dates = ['deleted_at'];
+    
+    public function area()
+    {
+        return $this->belongsTo('App\Area', 'area_id');
+    }
 }

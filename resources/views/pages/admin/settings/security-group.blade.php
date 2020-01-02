@@ -1,7 +1,7 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="main-content">
-    <div id="alert-container"></div>    
+    <div id="alert-container"></div>   
     @if (session('status'))
     <div class="alert alert-primary fade show" role="alert">
         {{ session('status') }}
@@ -10,56 +10,41 @@
         </button>
     </div>
     @endif
-    @can(PermissionConstant::ADD_BRANCH) 
+    @can(PermissionConstant::ADD_SECURITY_GROUP) 
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <a role="button" class="btn btn-primary" href="{{ route('admin.settings.branches.add') }}">
-                    Add Branch
-                </a>
+            <a role="button" class="btn btn-primary" href="{{ route('admin.settings.security-group.add') }}">
+                Add Security Group
+            </a>
         </div>
     </div>
     @endcan
     <div class="row">
         <div class="col-md-12">
             <div class="float-right tableTools-container"></div>
-            <table class="hrms-data-table compact w-100 t-2" id="branches-table">
+            <table class="hrms-data-table compact w-100 t-2" id="security-groups-table">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Name</th>
-                        <th>Contact</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>Area</th>
-                        <th>State Holiday</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($branches as $branch)
+                    @foreach($securityGroups as $securityGroup)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{$branch['name']}}</td>
-                        <td>{{$branch['contact_no_primary']}}</td>
-                        <td>{{$branch['city']}}</td>
-                        <td>{{$branch['state']}}</td>
+                        <td>{{$securityGroup['name']}}</td>
+                        <td>{{$securityGroup['description']}}</td>
                         <td>
-                        	@if($branch->area()->first() != null)
-                        		{{ $branch->area()->first()->name }}
-                        	@endif
-                       	</td>
-                        <td>{{$branch['state_holiday']}}</td>
-                        <td>
-                        	@can(PermissionConstant::VIEW_BRANCH)
-                        		<button onclick="window.location='{{ route('admin.settings.branches.show', ['id' => $branch->id]) }}';" class="btn btn-default btn-smt fas fa-eye"></button>
-                            @endcan
-                        	@can(PermissionConstant::UPDATE_BRANCH) 
-                            	<button onclick="window.location='{{ route('admin.settings.branches.edit', ['id' => $branch->id]) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
-                            @endcan
-                            @can(PermissionConstant::DELETE_BRANCH)
-                            	<button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $branch->name }}' data-link='{{ route('admin.settings.branches.delete', ['id ' => $branch->id]) }}' class="btn btn-danger btn-smt fas fa-trash-alt"></button>
-                            @endcan
+                        @can(PermissionConstant::UPDATE_SECURITY_GROUP)
+                        <button onclick="window.location='{{ route('admin.settings.security-group.edit.post', ['id' => $securityGroup->id]) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
+                        @endcan
+                        @can(PermissionConstant::DELETE_SECURITY_GROUP)
+                        <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $securityGroup->name }}' data-link='{{ route('admin.settings.security-group.delete', ['id ' => $securityGroup->id]) }}' class="btn btn-danger btn-smt fas fa-trash"></button>
+                        @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -68,7 +53,8 @@
         </div>
     </div>
 </div>
-@can(PermissionConstant::DELETE_BRANCH)
+
+@can(PermissionConstant::DELETE_SECTION)
 <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -94,7 +80,7 @@
 @section('scripts')
 <script>
 $(function(){
-    var t = $('#branches-table').DataTable({
+    var t = $('#security-groups-table').DataTable({
         responsive: true,
         stateSave: true,
         dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
@@ -129,7 +115,7 @@ $(function(){
         "columnDefs": [ {
             "searchable": false,
             "orderable": false,
-            "targets": [0, 7]
+            "targets": [0, 2]
         } ],
 
     });

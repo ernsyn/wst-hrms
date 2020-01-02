@@ -21,6 +21,22 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
+                            <label for="industry"><strong>Industry*</strong></label>
+                            <input name="industry" type="text" class="form-control" placeholder="" value="">
+                            <div id="industry-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="contact"><strong>Contact Person/Tel*</strong></label>
+                            <input name="contact" type="text" class="form-control" placeholder="" value="">
+                            <div id="contact-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
                             <label for="position"><strong>Position*</strong></label>
                             <input name="position" type="text" class="form-control" placeholder="" value="">
                             <div id="position-error" class="invalid-feedback">
@@ -240,6 +256,22 @@
                             <label for="position"><strong>Position*</strong></label>
                             <input name="position" type="text" class="form-control" placeholder="" value="">
                             <div id="position-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="industry"><strong>Industry*</strong></label>
+                            <input name="industry" type="text" class="form-control" placeholder="" value="">
+                            <div id="industry-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="contact"><strong>Contact Person/Tel*</strong></label>
+                            <input name="contact" type="text" class="form-control" placeholder="" value="">
+                            <div id="contact-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -512,6 +544,8 @@
                 <th>No</th>
                 <th>Company</th>
                 <th>Position</th>
+                <th>Industry</th>
+                <th>Contact Person/Tel</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Note</th>
@@ -577,7 +611,7 @@
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.experiences', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": 6,
+            "targets": 8,
             "orderable": false
         } ],
         "columns": [{
@@ -590,6 +624,12 @@
             },
             {
                 "data": "position"
+            },
+            {
+                "data": "industry"
+            },
+            {
+                "data": "contact"
             },
             {
                 "data": "start_date"
@@ -799,6 +839,8 @@
                     // Form Data
                     company: $('#add-experience-form input[name=company]').val(),
                     position: $('#add-experience-form input[name=position]').val(),
+                    industry: $('#add-experience-form input[name=industry]').val(),
+                    contact: $('#add-experience-form input[name=contact]').val(),
                     start_date: $('#add-experience-form #start-date-experience').val(),
                     end_date: $('#add-experience-form #end-date-experience').val(),
                     notes: $('#add-experience-form input[name=notes]').val()
@@ -824,6 +866,14 @@
                                     case 'position':
                                         $('#add-experience-form input[name=position]').addClass('is-invalid');
                                         $('#add-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'industry':
+                                        $('#add-experience-form input[name=industry]').addClass('is-invalid');
+                                        $('#add-experience-form #industry-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'contact':
+                                        $('#add-experience-form input[name=contact]').addClass('is-invalid');
+                                        $('#add-experience-form #contact-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
                                         $('#add-experience-form #start-date-experience').addClass('is-invalid');
@@ -858,6 +908,8 @@
 
             $('#edit-experience-form input[name=company]').val(currentData.company);
             $('#edit-experience-form input[name=position]').val(currentData.position);
+            $('#edit-experience-form input[name=industry]').val(currentData.industry);
+            $('#edit-experience-form input[name=contact]').val(currentData.contact);
             $('#edit-experience-form #start-date-experience-edit').val(currentData.start_date);
             $('#edit-experience-form #end-date-experience-edit').val(currentData.end_date);
             $('#edit-experience-form input[name=notes]').val(currentData.notes);
@@ -875,6 +927,8 @@
                     _token: '{{ csrf_token() }}',
                     company: $('#edit-experience-form input[name=company]').val(),
                     position: $('#edit-experience-form input[name=position]').val(),
+                    industry: $('#edit-experience-form input[name=industry]').val(),
+                    contact: $('#edit-experience-form input[name=contact]').val(),
                     start_date: $('#edit-experience-form #start-date-experience-edit').val(),
                     end_date: $('#edit-experience-form #end-date-experience-edit').val(),
                     notes: $('#edit-experience-form input[name=notes]').val()
@@ -900,6 +954,14 @@
                                     case 'position':
                                         $('#edit-experience-form input[name=position]').addClass('is-invalid');
                                         $('#edit-experience-form #position-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'industry':
+                                        $('#edit-experience-form input[name=industry]').addClass('is-invalid');
+                                        $('#edit-experience-form #industry-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'contact':
+                                        $('#edit-experience-form input[name=contact]').addClass('is-invalid');
+                                        $('#edit-experience-form #contact-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'start_date':
                                         $('#edit-experience-form #start-date-experience-edit').addClass('is-invalid');
@@ -964,12 +1026,16 @@
     function clearExperiencesModal(htmlId) {
         $(htmlId + ' input[name=company]').val('');
         $(htmlId + ' input[name=position]').val('');
+        $(htmlId + ' input[name=industry]').val('');
+        $(htmlId + ' input[name=contact]').val('');
         $(htmlId + ' #start-date-experience').val('');
         $(htmlId + ' #end-date-experience').val('');
         $(htmlId + ' input[name=notes]').val('');
 
         $(htmlId + ' input[name=company]').removeClass('is-invalid');
         $(htmlId + ' input[name=position]').removeClass('is-invalid');
+        $(htmlId + ' input[name=industry]').removeClass('is-invalid');
+        $(htmlId + ' input[name=contact]').removeClass('is-invalid');
         $(htmlId + ' #start-date-experience').removeClass('is-invalid');
         $(htmlId + ' #end-date-experience').removeClass('is-invalid');
         $(htmlId + ' input[name=notes]').removeClass('is-invalid');
@@ -977,6 +1043,8 @@
     function clearExperiencesError(htmlId) {
         $(htmlId + ' input[name=company]').removeClass('is-invalid');
         $(htmlId + ' input[name=position]').removeClass('is-invalid');
+        $(htmlId + ' input[name=industry]').removeClass('is-invalid');
+        $(htmlId + ' input[name=contact]').removeClass('is-invalid');
         $(htmlId + ' #start-date-experience').removeClass('is-invalid');
         $(htmlId + ' #end-date-experience').removeClass('is-invalid');
         $(htmlId + ' input[name=notes]').removeClass('is-invalid');

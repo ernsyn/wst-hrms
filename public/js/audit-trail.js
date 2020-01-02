@@ -617,6 +617,14 @@ var AuditTrail = (function() {
             	'item_name': 'Item Name',
             },
         },
+        
+        'App\\BankCode': {
+            name: 'Bank Code',
+            fields: {
+            	'name': 'Bank Name',
+            	'bic_code': 'BIC Code',
+            },
+        },
     };
 
     return {

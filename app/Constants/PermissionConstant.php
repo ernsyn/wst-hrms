@@ -65,6 +65,18 @@ class PermissionConstant
     const ADD_COMPANY_ASSET = 'Add Company Asset';
     const UPDATE_COMPANY_ASSET = 'Update Company Asset';
     const DELETE_COMPANY_ASSET = 'Delete Company Asset';
+    const VIEW_SECURITY_GROUP = 'View Security Group';
+    const ADD_SECURITY_GROUP = 'Add Security Group';
+    const UPDATE_SECURITY_GROUP = 'Update Security Group';
+    const DELETE_SECURITY_GROUP = 'Delete Security Group';
+    const VIEW_BANK_CODE = 'View Bank Code';
+    const ADD_BANK_CODE = 'Add Bank Code';
+    const UPDATE_BANK_CODE = 'Update Bank Code';
+    const DELETE_BANK_CODE = 'Delete Bank Code';
+    const VIEW_DEPARTMENT = 'View Department';
+    const ADD_DEPARTMENT = 'Add Department';
+    const UPDATE_DEPARTMENT = 'Update Department';
+    const DELETE_DEPARTMENT = 'Delete Department';
 }
 
 
