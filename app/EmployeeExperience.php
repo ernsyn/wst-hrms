@@ -14,6 +14,8 @@ class EmployeeExperience extends Model implements Auditable
     protected $fillable = [
         'company',
         'position',
+        'industry',
+        'contact',
         'start_date',
         'end_date',
         'notes',

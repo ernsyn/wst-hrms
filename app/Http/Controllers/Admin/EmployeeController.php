@@ -713,6 +713,8 @@ else {
         $experienceData = $request->validate([
             'company' => 'required',
             'position' => 'required',
+            'industry' => 'required',
+            'contact' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
             'notes'=>''
@@ -1088,6 +1090,8 @@ else {
         $experienceUpdatedData = $request->validate([
             'company' => 'required',
             'position' => 'required',
+            'industry' => 'required',
+            'contact' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
             'notes' => ''

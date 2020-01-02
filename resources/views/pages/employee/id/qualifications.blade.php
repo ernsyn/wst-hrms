@@ -5,6 +5,8 @@
             <tr>
                 <th>No</th>
                 <th>Company</th>
+                <th>Industry</th>
+                <th>Contact Person/Tel</th>               
                 <th>Position</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -57,6 +59,12 @@
                 },
                 {
                     "data": "position"
+                },
+                {
+                    "data": "industry"
+                },
+                {
+                    "data": "contact"
                 },
                 {
                     "data": "start_date"
