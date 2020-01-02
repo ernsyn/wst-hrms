@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Enums\EpfCategoryEnum;
 use App\Enums\PCBGroupEnum;
+use App\Enums\PaymentViaEnum;
+use App\Enums\PaymentRateEnum;
 use App\Enums\SocsoCategoryEnum;
 use App\Helpers\AccessControllHelper;
 use App\Http\Controllers\Controller;
@@ -65,8 +67,10 @@ class EmployeeController extends Controller
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
+        $paymentviaGroup = PaymentViaEnum::choices();
+        $paymentrateGroup = PaymentRateEnum::choices();
         
-        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory'));    
+        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory','paymentviaGroup','paymentrateGroup'));    
     }
 
     public function display($id)
@@ -94,7 +98,9 @@ class EmployeeController extends Controller
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	    
+        $paymentviaGroup = PaymentViaEnum::choices();
+        $paymentrateGroup = PaymentRateEnum::choices();
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup]);   	    
     }
     
     public function securityGroupDisplay($id)
@@ -196,6 +202,13 @@ class EmployeeController extends Controller
             'main_security_group_id'=>'required',
             'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
             'nationality' => 'required',
+            'personal_email' => 'required|email|unique:employees,personal_email,'.$id.',id',
+            'spouse_name' => 'nullable',
+            'spouse_ic' => 'nullable',
+            'spouse_tax_no' => 'nullable',
+            'payment_via' =>'required',
+            'payment_rate' =>'required',
+            
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
@@ -474,6 +487,12 @@ class EmployeeController extends Controller
             'driver_license_no' => 'nullable',
             'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'main_security_group_id'=>'required',
+            'personal_email' => 'required|unique:employees|email',
+            'spouse_name' =>  'nullable|min:5',
+            'spouse_ic' =>'nullable|unique:employees,spouse_ic|numeric',
+            'spouse_tax_no' => 'nullable|unique:employees,spouse_tax_no',
+            'payment_via' => 'required',
+            'payment_rate' => 'required',
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
@@ -522,6 +541,12 @@ class EmployeeController extends Controller
                 $validatedEmployeeData['driver_license_expiry_date'] = null;
             }
             $validatedEmployeeData['main_security_group_id'] = $validated['main_security_group_id'];
+            $validatedEmployeeData['personal_email'] = $validated['personal_email'];
+            $validatedEmployeeData['spouse_name'] = $validated['spouse_name'];
+            $validatedEmployeeData['spouse_ic'] = $validated['spouse_ic'];
+            $validatedEmployeeData['spouse_tax_no'] = $validated['spouse_tax_no'];
+            $validatedEmployeeData['payment_via'] = $validated['payment_via'];
+            $validatedEmployeeData['payment_rate'] = $validated['payment_rate'];
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
             $validatedEmployeeData['user_id'] = $user->id;
@@ -539,6 +564,7 @@ class EmployeeController extends Controller
                 $employee->profile_media()->associate($profileMedia);
                 $employee->save();
             }
+            
         });
         return redirect()->route('admin.employees')->with('status', 'Employee was successfully added!');
     }
@@ -1335,7 +1361,12 @@ else {
                 'eis_no' => $row['eis_no'],
                 'pcb_group' => $pcbGroup,
                 'main_security_group_id' => 1,
-                
+                'personal_email' => $row['personal_email'],
+                'spouse_name' => $row['spouse_name'],
+                'spouse_ic' => $row['spouse_ic'],
+                'spouse_tax_no' => $row['spouse_tax_no'],
+                'payment_via' => $paymentviaGroup,
+                'payment_rate' => $paymentrateGroup,
             ]);
             $emailData = array();
             $emailData['name'] = $row['name'];

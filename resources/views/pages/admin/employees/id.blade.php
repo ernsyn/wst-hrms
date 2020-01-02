@@ -107,6 +107,10 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{{$employee->contact_no}}</span>
                                                 </div>
+                                                <span class="col-lg-5 p-3">Personal Email</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{{$employee->personal_email}}</span>
+                                                </div>
                                                 <span class="col-lg-5 p-3">Address</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <div class="field pb-1">
@@ -133,6 +137,18 @@
                                                 <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{{$employee->marital_status}}</span>
                                                 </div>
+                                                <span class="col-lg-5 p-3">Spouse Name</span>
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                    <span class="field-value">{{$employee->spouse_name}}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Spouse IC</span>
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                <span class="field-value">{{$employee->spouse_ic}}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Spouse Tax No</span>
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                    <span class="field-value">{{$employee->spouse_tax_no}}</span>
+                                                </div>
                                                 <span class="col-lg-5 p-3">Number of Children</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!! $employee->total_children ? $employee->total_children:'<strong>(not set)</strong>' !!}</span>
@@ -148,10 +164,6 @@
                                                 <span class="col-lg-5 p-3">Tax No</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!!$employee->tax_no ? $employee->tax_no : '<strong>(not set)</strong>'!!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">PCB Group</span>
-                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
-                                                    <span class="field-value">{!!$employee->pcb_group ? PCBGroupEnum::getDescription($employee->pcb_group) : '<strong>(not set)</strong>'!!}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -201,6 +213,18 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                 	<span class="field-value">{!! isset($employee->resignation_date ) ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
                                                 </div>
+                                                <span class="col-lg-5 p-3">PCB Group</span>
+                                                <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
+                                                    <span class="field-value">{!!$employee->pcb_group ? PCBGroupEnum::getDescription($employee->pcb_group) : '<strong>(not set)</strong>'!!}</span>
+                                                </div> 
+                                                <span class="col-lg-5 p-3">Payment Via</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!!$employee->payment_via ? PaymentViaEnum::getDescription($employee->payment_via) : '<strong>(not set)</strong>'!!}</span>
+                                                </div>   
+                                                <span class="col-lg-5 p-3">Payment Rate</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!!$employee->payment_rate ? PaymentRateEnum::getDescription($employee->payment_rate) : '<strong>(not set)</strong>'!!}</span>
+                                                </div>                                  
                                             </div>
                                         </div>
                                     </div>
@@ -309,6 +333,11 @@
                                     <div id="email-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
+                                    <label for="personal-email"><strong>Personal Email*</strong></label>
+                                    <input id="personal-email" type="text" class="form-control" placeholder="" value="">
+                                    <div id="personal-email-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
                                     <label for="ic-no"><strong>IC No*</strong></label>
                                     <input id="ic-no" type="text" class="form-control" placeholder="" value="">
                                     <div id="ic-no-error" class="invalid-feedback"></div>
@@ -350,12 +379,27 @@
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="marital-status-no"><strong>Marital Status*</strong></label>
-                                    <select name="marital-status" id="marital-status" class="form-control">
+                                    <select  name="marital-status" id="marital-status" class="form-control">
                                         <option value="">Select Marital Status</option>
                                         <option value="single">Single</option>
                                         <option value="married">Married</option>
                                     </select>
                                     <div id="marital-status-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="spouse-name"><strong>Spouse Name</strong></label>
+                                    <input id="spouse-name" name="spouse-name" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="spouse-name-error" class="invalid-feedback"></div>
+                                </div>
+                                 <div class="col-md-12 mb-3">
+                                    <label for="spouse-ic"><strong>Spouse IC</strong></label>
+                                    <input id="spouse-ic" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="spouse-ic-error" class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="spouse-tax-no"><strong>Spouse Tax No</strong></label>
+                                    <input id="spouse-tax-no" type="text" class="form-control" placeholder="" value="" >
+                                    <div id="spouse-tax-no-error" class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="total-children"><strong>Number of Children*</strong></label>
@@ -382,16 +426,6 @@
                                     <label for="tax-no"><strong>Tax No</strong></label>
                                     <input id="tax-no" type="text" class="form-control" placeholder="" value="" >
                                     <div id="tax-no-error" class="invalid-feedback"></div>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                	<label for="pcb_group"><strong>PCB Group</strong></label>
-                                    <select class="form-control{{ $errors->has('pcb_group') ? ' is-invalid' : '' }}" name="pcb_group" id="pcb_group">
-                                        <option value="">Select PCB Group</option>
-                                        <option value="1" {{ old('pcb_group') == 1 ? 'selected' : ''}}>Single Person</option>
-                                        <option value="2" {{ old('pcb_group') == 2 ? 'selected' : ''}}>Spouse not working</option>
-                                        <option value="3" {{ old('pcb_group') == 3 ? 'selected' : ''}}>Spouse working</option>
-                                    </select>
-                                    <div id="pcb_group-error" class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
@@ -481,6 +515,38 @@
                                     </select>
                                     <div id="main-security-group-id-error" class="invalid-feedback"></div>
                                 </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="pcb_group"><strong>PCB Group</strong></label>
+                                    <select class="form-control{{ $errors->has('pcb_group') ? ' is-invalid' : '' }}" name="pcb_group" id="pcb_group">
+                                        <option value="">Select PCB Group</option>
+                                        <option value="1" {{ old('pcb_group') == 1 ? 'selected' : ''}}>Single Person</option>
+                                        <option value="2" {{ old('pcb_group') == 2 ? 'selected' : ''}}>Spouse not working</option>
+                                        <option value="3" {{ old('pcb_group') == 3 ? 'selected' : ''}}>Spouse working</option>
+                                    </select>
+                                    <div id="pcb_group-error" class="invalid-feedback"></div>
+                                </div> 
+                                <div class="col-md-12 mb-3">
+                                    <label for="payment_via"><strong>Payment Via</strong></label>
+                                    <select class="form-control{{ $errors->has('payment_via') ? ' is-invalid' : '' }}" name="payment_via" id="payment_via">
+                                        <option value="">Select Payment</option>
+                                        <option value="1" {{ old('payment_via') == 1 ? 'selected' : ''}}>Cash</option>
+                                        <option value="2" {{ old('payment_via') == 2 ? 'selected' : ''}}>Bank</option>
+                                        <option value="3" {{ old('payment_via') == 3 ? 'selected' : ''}}>Cheque</option>
+                                        <option value="4" {{ old('payment_via') == 4 ? 'selected' : ''}}>Withheld</option>
+                                        <option value="5" {{ old('payment_via') == 5 ? 'selected' : ''}}>Credit Note</option>
+                                    </select>
+                                    <div id="payment_via-error" class="invalid-feedback"></div>
+                                </div> 
+                                <div class="col-md-12 mb-3">
+                                    <label for="payment_rate"><strong>Payment Rate</strong></label>
+                                    <select class="form-control{{ $errors->has('payment_rate') ? ' is-invalid' : '' }}" name="payment_rate" id="payment_rate">
+                                        <option value="">Select Rate</option>
+                                        <option value="1" {{ old('payment_rate') == 1 ? 'selected' : ''}}>Monthly</option>
+                                        <option value="2" {{ old('payment_rate') == 2 ? 'selected' : ''}}>Weekly</option>
+                                        <option value="3" {{ old('payment_rate') == 3 ? 'selected' : ''}}>Monthly</option>
+                                    </select>
+                                    <div id="payment_rate-error" class="invalid-feedback"></div>
+                                </div> 
                             </div>
                         </div>
                     </div>
@@ -690,6 +756,12 @@
             } else {
                 $('#edit-profile-form #driver-license-expiry-date').val();
             }
+            $('#edit-profile-form #personal-email').val(currentData.personal_email);
+            $('#edit-profile-form #spouse-name').val(currentData.spouse_name);
+            $('#edit-profile-form #spouse-ic').val(currentData.spouse_ic);
+            $('#edit-profile-form #spouse-tax-no').val(currentData.spouse_tax_no);
+            $('#edit-profile-form #payment_via').val(currentData.payment_via);
+            $('#edit-profile-form #payment_rate').val(currentData.payment_rate);
 
         });
 
@@ -727,7 +799,13 @@
                     eis_no: $('#edit-profile-form #eis-no').val(),
                     socso_no: $('#edit-profile-form #socso-no').val(),
                     socso_category: $('#edit-profile-form #socso-category').val(),
-                    main_security_group_id: $('#edit-profile-form #main-security-group-id').val()
+                    main_security_group_id: $('#edit-profile-form #main-security-group-id').val(),
+                    personal_email: $('#edit-profile-form #personal-email').val(),
+                    spouse_name: $('#edit-profile-form #spouse-name').val(),
+                    spouse_ic: $('#edit-profile-form #spouse-ic').val(),
+                    spouse_tax_no: $('#edit-profile-form #spouse-tax-no').val(),
+                    payment_via: $('#edit-profile-form #payment_via').val(),
+                    payment_rate: $('#edit-profile-form #payment_rate').val(),
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -845,6 +923,32 @@
                                         $('#edit-profile-form #main-security-group-id').addClass('is-invalid');
                                         $('#edit-profile-form #main-security-group-id-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'personal_email':
+                                        $('#edit-profile-form #personal-email').addClass('is-invalid');
+                                        $('#edit-profile-form #personal-email-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'spouse_name':
+                                        $('#edit-profile-form #spouse-name').addClass('is-invalid');
+                                        $('#edit-profile-form #spouse-name-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'spouse_ic':
+                                        $('#edit-profile-form #spouse-ic').addClass('is-invalid');
+                                        $('#edit-profile-form #spouse-ic-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'spouse_tax_no':
+                                        $('#edit-profile-form #spouse-tax-no').addClass('is-invalid');
+                                        $('#edit-profile-form #spouse-tax-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'payment_via':
+                                        $('#edit-profile-form #payment_via-no').addClass('is-invalid');
+                                        $('#edit-profile-form #payment_via-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'payment_rate':
+                                        $('#edit-profile-form #payment_rate').addClass('is-invalid');
+                                        $('#edit-profile-form #payment_rate-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+
+
                                 }
                             }
                         }
@@ -881,6 +985,12 @@
         $(htmlId + ' #socso-no').val('');
         $(htmlId + ' #socso-category').val('');
         $(htmlId + ' #pcb_group').val('');
+        $(htmlId + ' #personal-email').val('');
+        $(htmlId + ' #spouse-name').val('');
+        $(htmlId + ' #spouse-ic').val('');
+        $(htmlId + ' #spouse-tax-no').val('');
+        $(htmlId + ' #payment_via').val('');
+        $(htmlId + ' #payment_rate').val('');
 
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #email').removeClass('is-invalid');
@@ -906,6 +1016,12 @@
         $(htmlId + ' #eis-no').removeClass('is-invalid');
         $(htmlId + ' #socso-no').removeClass('is-invalid');
         $(htmlId + ' #socso-category').removeClass('is-invalid');
+        $(htmlId + ' #personal-email').removeClass('is-invalid');
+        $(htmlId + ' #spouse-name').removeClass('is-invalid');
+        $(htmlId + ' #spouse-ic').removeClass('is-invalid');
+        $(htmlId + ' #spouse-tax-no').removeClass('is-invalid');
+        $(htmlId + ' #payment_via').removeClass('is-invalid');
+        $(htmlId + ' #payment_rate').removeClass('is-invalid');
     }
     
     function clearProfilesError(htmlId) {
@@ -933,6 +1049,12 @@
         $(htmlId + ' #eis-no').removeClass('is-invalid');
         $(htmlId + ' #socso-no').removeClass('is-invalid');
         $(htmlId + ' #socso-category').removeClass('is-invalid');
+        $(htmlId + ' #personal-email').removeClass('is-invalid');
+        $(htmlId + ' #spouse-name').removeClass('is-invalid');
+        $(htmlId + ' #spouse-ic').removeClass('is-invalid');
+        $(htmlId + ' #spouse-tax-no').removeClass('is-invalid');
+        $(htmlId + ' #payment_via').removeClass('is-invalid');
+        $(htmlId + ' #payment_rate').removeClass('is-invalid');
     }
 
     function showAlert(message) {
@@ -1143,5 +1265,22 @@
             </div>`)
     }
 
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("#marital-status").change(function () {
+            
+            if ($(this).val() == "married") {
+                $("#spouse-name").removeAttr("readonly");
+                $("#spouse-ic").removeAttr("readonly");
+                $("#spouse-tax-no").removeAttr("readonly");
+                 $("#spouse-name").focus();
+            } else {
+                $("#spouse-name").attr("readonly", "readonly");
+                $("#spouse-ic").attr("readonly", "readonly");
+                $("#spouse-tax-no").attr("readonly", "readonly");
+            }
+        });
+    });
 </script>
 @append

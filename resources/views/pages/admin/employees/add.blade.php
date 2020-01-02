@@ -58,6 +58,17 @@
 								@endif
                             </div>
                         </div>
+                         <div class="form-group row">
+                            <label class="col-lg-3 col-form-label text-lg-right">Personal Email*</label>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control{{ $errors->has('personal_email') ? ' is-invalid' : '' }}" name="personal_email" value="{{ old('personal_email') }}" placeholder="name@example.com">
+                                @if ($errors->has('personal_email'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('personal_email') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-lg-right">Password*</label>
                             <div class="col-lg-6">
@@ -214,7 +225,7 @@
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label text-lg-right">Marital Status*</label>
                             <div class="col-lg-6">
-                                <select class="form-control{{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status" id="marital_status">
+                                <select   class="form-control{{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status" id="marital_status"  >
                                     <option value="">Select Marital Status</option>
                                     <option value="Single" {{ old('marital_status') == 'Single' ? 'selected' : ''}}>Single</option>
                                     <option value="Married" {{ old('marital_status') == 'Married' ? 'selected' : ''}}>Married</option>
@@ -224,6 +235,41 @@
                                     <strong>{{ $errors->first('marital_status') }}</strong>
                                 </span>
 								@endif
+                            </div>
+                        </div>
+                        <div class="form-group row"  >
+                            <label class="col-lg-4 col-form-label text-lg-right">Spouse Name</label>
+                            <div class="col-lg-6" >
+                                <input  type="text" class="form-control{{ $errors->has('spouse_name') ? ' is-invalid' : '' }}" name="spouse_name" id="spouse_name"  
+                                    value="{{ old('spouse_name') }}">
+                                @if ($errors->has('spouse_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('spouse_name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                         <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">Spouse IC No</label>
+                            <div class="col-lg-6">
+                                <input   type="text" class="form-control{{ $errors->has('spouse_ic') ? ' is-invalid' : '' }}" name="spouse_ic" id="spouse_ic" value="{{ old('spouse_ic') }}" >
+                                @if ($errors->has('spouse_ic'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('spouse_ic') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">Spouse Tax No</label>
+                            <div class="col-lg-6">
+                                <input  type="text" class="form-control{{ $errors->has('spouse_tax_no') ? ' is-invalid' : '' }}" name="spouse_tax_no" id="spouse_tax_no"
+                                    value="{{ old('spouse_tax_no') }}" >
+                                @if ($errors->has('spouse_tax_no'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('spouse_tax_no') }}</strong>
+                                </span>
+                                @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -265,6 +311,46 @@
                                     </span>
                                     @endif
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">Payment Via*</label>
+                            <div class="col-lg-6">
+                                <select class="form-control{{ $errors->has('payment_via') ? ' is-invalid' : '' }}" name="payment_via" id="payment_via">
+                                    <option value="">Select Payment</option>
+                                    @foreach ($paymentviaGroup as $k=>$v )
+                                        @if (old('payment_via') == $k)
+                                            <option value="{{ $k }}" selected>{{ $v }}</option>
+                                        @else
+                                            <option value="{{ $k }}">{{ $v }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('payment_via'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('payment_via') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">Payment Rate*</label>
+                            <div class="col-lg-6">
+                                <select class="form-control{{ $errors->has('payment_rate') ? ' is-invalid' : '' }}" name="payment_rate" id="payment_rate">
+                                    <option value="">Select Rate</option>
+                                    @foreach ($paymentrateGroup as $k=>$v )
+                                        @if (old('payment_rate') == $k)
+                                            <option value="{{ $k }}" selected>{{ $v }}</option>
+                                        @else
+                                            <option value="{{ $k }}">{{ $v }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('payment_rate'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('payment_rate') }}</strong>
+                                </span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -518,7 +604,23 @@
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
+       
     });
 
+    $(function () {
+        $("#marital_status").change(function () {
+            if ($(this).val() == "Married") {
+                $("#spouse_name").removeAttr("readonly");
+                $("#spouse_ic").removeAttr("readonly");
+                $("#spouse_tax_no").removeAttr("readonly");
+                 $("#spouse_name").focus();
+            } else {
+                $("#spouse_name").attr("readonly", "readonly");
+                $("#spouse_ic").attr("readonly", "readonly");
+                $("#spouse_tax_no").attr("readonly", "readonly");
+            }
+        });
+    });
 </script>
+
 @append

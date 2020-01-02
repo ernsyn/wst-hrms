@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Employee;
 use Illuminate\Http\Request;
 use App\Enums\EpfCategoryEnum;
 use App\Enums\PCBGroupEnum;
+use App\Enums\PaymentViaEnum;
+use App\Enums\PaymentRateEnum;
 use App\Enums\SocsoCategoryEnum;
 use App\Http\Controllers\Controller;
 use Hash;
@@ -120,7 +122,14 @@ class EmployeeController extends Controller
             'driver_license_expiry_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'main_security_group_id'=>'',
             'contact_no' => 'required|regex:/^01?[0-9]\-*\d{7,8}$/',
-            'nationality' => 'required'
+            'nationality' => 'required',
+            'personal_email' => 'required|email|unique:employees,personal_email,'.$id.',id',
+            'payment_via' => 'required',
+            'payment_rate' =>'required',
+            'spouse_name' => 'nullable',
+            'spouse_ic' => 'nullable',
+            'spouse_tax_no' => 'nullable',
+
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'

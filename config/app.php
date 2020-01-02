@@ -237,6 +237,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'PermissionConstant' => App\Constants\PermissionConstant::class,
         'MalaysianStates' => App\Constants\MalaysianStates::class,
+        'PaymentRateEnum' => App\Enums\PaymentRateEnum::class,
+        'PaymentViaEnum' => App\Enums\PaymentViaEnum::class,
 
     ],
 

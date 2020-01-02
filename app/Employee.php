@@ -38,7 +38,13 @@ class Employee extends Model implements Auditable
         'created_by',
         'main_security_group_id',
         'code',
-        'resignation_date'
+        'resignation_date',
+        'personal_email',
+        'spouse_name',
+        'spouse_ic',
+        'spouse_tax_no',
+        'payment_via',
+        'payment_rate'
     ];
 
     protected $dates = [
