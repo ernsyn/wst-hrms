@@ -17,6 +17,8 @@ class EmployeeJob extends Model implements Auditable
         'team_id',
         'cost_centre_id',
         'emp_grade_id',
+        'section_id',
+        'job_comp_id',
         'start_date',
         'end_date',
         'basic_salary',
@@ -49,6 +51,16 @@ class EmployeeJob extends Model implements Auditable
     public function grade()
     {
         return $this->belongsTo('App\EmployeeGrade', 'emp_grade_id');
+    }
+    
+    public function section()
+    {
+        return $this->belongsTo('App\Section', 'section_id');
+    }
+    
+    public function jobcompany()
+    {
+        return $this->belongsTo('App\JobCompany', 'job_comp_id');
     }
 
     public function branch()

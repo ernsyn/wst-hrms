@@ -10,6 +10,7 @@
                 <th>Team</th>
                 <th>Cost Centre</th>
                 <th>Grade</th>
+                <th>Section</th>
                 <th>Basic Salary</th>
                 <th>Status</th>
             </tr>
