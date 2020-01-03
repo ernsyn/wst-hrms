@@ -27,7 +27,8 @@ class AddIndustryAndContactPersonTelToEmployeeExperiencesTable extends Migration
     public function down()
     {
         Schema::table('employee_experiences', function (Blueprint $table) {
-            //
+            $table->dropColumn('industry');
+            $table->dropColumn('contact');
         });
     }
 }
