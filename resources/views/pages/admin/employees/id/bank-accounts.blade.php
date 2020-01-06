@@ -33,18 +33,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label><strong>Account Status*</strong></label>
-                            <select name="acc-status" class="form-control">
-                                <option value="">Select Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                            <div id="acc-status-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="add-bank-accounts-submit" type="submit" class="btn btn-primary">
