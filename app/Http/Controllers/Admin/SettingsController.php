@@ -35,6 +35,7 @@ use Crypt;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 use DateTime;
 use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\AccessControllHelper;
@@ -232,29 +233,99 @@ class SettingsController extends Controller
         return view('pages.admin.settings.pcb');
     }
 
-    public function getPcbData()
+    public function getPcbData(Request $request)
     {
+//         Log::debug($request);
         $user = Auth::user();
-        $pcbs = Pcb::query(); // Pcb::select(['id', 'category', 'salary', 'total_children', 'amount'])->get();
-        
-        if($user->can(PermissionConstant::UPDATE_PCB) && $user->can(PermissionConstant::DELETE_PCB)) {
-            return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
-                return '<button onclick="window.location=\'' . url('/admin/settings/pcb/' . $pcbs->id . '/edit') . '\'" class="btn btn-success btn-smt fas fa-edit"></button>
-                    <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="' . $pcbs->category . '" data-link="' . url('/admin/settings/pcb/' . $pcbs->id . '/delete') . '" class="btn btn-danger btn-smt fas fa-trash-alt"></button>';
-            })->make(true);
-        } else if($user->can(PermissionConstant::UPDATE_PCB)) {
-            return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
-                return '<button onclick="window.location=\'' . url('/admin/settings/pcb/' . $pcbs->id . '/edit') . '\'" class="btn btn-success btn-smt fas fa-edit"></button>';
-            })->make(true);
-        } else if($user->can(PermissionConstant::DELETE_PCB)) {
-            return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
-                return '<button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="' . $pcbs->category . '" data-link="' . url('/admin/settings/pcb/' . $pcbs->id . '/delete') . '" class="btn btn-danger btn-smt fas fa-trash-alt"></button>';
-            })->make(true);
-        } else {
-            return Datatables::of($pcbs)->addColumn('action', function ($pcbs) {
-                return '';
-            })->make(true);
+//         $pcbs = Pcb::query(); // Pcb::select(['id', 'category', 'salary', 'total_children', 'amount'])->get();
+        $filterDropdown = array();
+        $filterInput = array();
+        if($request->category != null){
+            $filterDropdown['category']  = $request->category;
         }
+        if($request->salary != null){
+            $filterInput['salary']  = $request->salary;
+        }
+        if($request->numberOfChildren != null){
+            $filterDropdown['total_children']  = $request->numberOfChildren;
+        }
+        if($request->amount != null){
+            $filterInput['amount']  = $request->amount;
+        }
+        
+        $pcbs = DB::table('pcbs');
+        
+        if(count($filterDropdown) > 0){
+            foreach($filterDropdown as $key => $value){
+                $pcbs->where($key, $value);
+            }
+        }
+        
+        if(count($filterInput) > 0){
+            foreach($filterInput as $key => $value){
+                $pcbs->where($key, 'like', "{$value}%");
+            }
+        }
+        
+        $count = $pcbs->count();
+
+        $column = 'category';
+        switch ($request->order[0]['column']) {
+            case 1:
+                $column = 'category';
+                break;
+            case 2:
+                $column = 'salary';
+                break;
+            case 3:
+                $column = 'total_children';
+                break;
+            case 4:
+                $column = 'amount';
+                break;
+        }
+        
+        $dir = 'asc';
+        if(isset($request->order[0]['dir'])) {
+            $dir = $request->order[0]['dir'];
+        }
+        
+        $pcbs = $pcbs
+            ->orderBy($column, $dir)
+            ->offset($request->start)
+            ->limit($request->length)
+            ->get();
+        
+//         Log::debug($pcbs);
+        
+        $data = array();
+        foreach($pcbs as $pcb) {
+            $subdata = array();
+            $subdata[] = $pcb->id;
+            $subdata[] = $pcb->category;
+            $subdata[] = $pcb->salary;
+            $subdata[] = $pcb->total_children;
+            $subdata[] = $pcb->amount;
+            
+            $button = '';
+            if($user->can(PermissionConstant::UPDATE_PCB) && $user->can(PermissionConstant::DELETE_PCB)) {
+                $button = '<button onclick="window.location=\'' . url('/admin/settings/pcb/' . $pcb->id . '/edit') . '\'" class="btn btn-success btn-smt fas fa-edit"></button>
+                    <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="' . $pcb->category . '" data-link="' . url('/admin/settings/pcb/' . $pcb->id . '/delete') . '" class="btn btn-danger btn-smt fas fa-trash-alt"></button>';
+            } else if($user->can(PermissionConstant::UPDATE_PCB)) {
+                $button = '<button onclick="window.location=\'' . url('/admin/settings/pcb/' . $pcb->id . '/edit') . '\'" class="btn btn-success btn-smt fas fa-edit"></button>';
+            } else if($user->can(PermissionConstant::DELETE_PCB)) {
+                $button = '<button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title="' . $pcbs->category . '" data-link="' . url('/admin/settings/pcb/' . $pcbs->id . '/delete') . '" class="btn btn-danger btn-smt fas fa-trash-alt"></button>';
+            }
+            
+            $subdata[] = $button;
+            $data[] = $subdata;
+        }
+        
+        return Datatables::of($pcbs)->with([
+            'recordsTotal' => $count,
+            'recordsFiltered' => $count,
+            'data' => $data
+        ])->make(true);
     }
 
     // SECTION: Add
@@ -633,8 +704,6 @@ class SettingsController extends Controller
         } else {
             return redirect()->route('admin.settings.pcb')->with('status', 'Data already exists.');
         }
-
-        
     }
 
     public function postAddWorkingDay(Request $request)
@@ -1879,15 +1948,12 @@ class SettingsController extends Controller
         $employee_pcb_group = Employee::where('pcb_group','=',$id)->count();
 
         if ($employee_pcb_group == 0) {
-        Pcb::find($id)->delete();
-
-        return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been deleted.');
-    }
-        else
-        {
-        return redirect()->route('admin.settings.pcb')->with('status', 'You Cannot Delete This Record');
+            Pcb::find($id)->delete();
+    
+            return redirect()->route('admin.settings.pcb')->with('status', 'PCB has successfully been deleted.');
+        } else {
+            return redirect()->route('admin.settings.pcb')->with('status', 'You cannot delete this record');
         }
-
     }
     
     public function showBranch($id)
@@ -1982,5 +2048,17 @@ class SettingsController extends Controller
         }
 
         return "Total " . count($pcbs) . " records";
+    }
+    
+    public function getPcbCategory()
+    {
+        $pcbCategory = Pcb::distinct()->orderBy('category')->get(['category']);
+        return response()->json($pcbCategory);
+    }
+    
+    public function getPcbNumberOfChildren()
+    {
+        $pcbNumberOfChildren = Pcb::distinct()->orderBy('total_children')->get(['total_children']);
+        return response()->json($pcbNumberOfChildren);
     }
 }
