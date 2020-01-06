@@ -361,7 +361,7 @@ class EmployeeController extends Controller
     public function getDataTableJobs($id)
     {
         $jobs = EmployeeJob::with('main_position','department', 'team', 
-        'cost_centre', 'grade', 'branch')->where('emp_id', $id)->get();
+        'cost_centre', 'grade', 'branch', 'section', 'jobcompany')->where('emp_id', $id)->get();
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
             if ($job->start_date !== null)
@@ -595,7 +595,7 @@ else {
     {
         $dependentData = $request->validate([
             'name' => 'required',
-            'ic_no' => 'nullable',
+            'ic_no' => 'nullable|numeric|unique:employee_dependents,ic_no,'.$id.',id',
             'occupation' => 'nullable',
             'relationship' => 'required',
             'dob' => 'required',
@@ -656,13 +656,16 @@ else {
         $jobData = $request->validate([
             'basic_salary' => 'required|numeric',
             'emp_mainposition_id' => '',
+            'department_id' => '',
             'team_id' => 'required',
             'emp_grade_id' => 'required',
-            'remarks' => '',           
+            'section_id' => '',
+            'job_comp_id' => 'required',
+            'remarks' => '',
             'branch_id' => 'required',
             'start_date' => 'required',
             'status' => 'required',
-        ]);
+            ]);
         
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
         $jobData['created_by'] = auth()->user()->id;
@@ -1026,7 +1029,7 @@ else {
     {
         $dependentUpdatedData = $request->validate([
             'name' => 'required',
-            'ic_no' => 'nullable',
+            'ic_no' => 'nullable|numeric|unique:employee_dependents,ic_no,'.$id.',id',
             'occupation' => 'nullable',
             'relationship' => 'required',
             'dob' => 'required',
@@ -1076,8 +1079,11 @@ else {
         $jobData = $request->validate([
             'branch_id' => 'required',
             'emp_mainposition_id' => '',
+            'department_id' => '',
             'team_id' => 'required',
             'emp_grade_id' => 'required',
+            'section_id' => '',
+            'job_comp_id' => 'required',
             'start_date' => 'required',
             'basic_salary' => 'required',
             'remarks' => '',

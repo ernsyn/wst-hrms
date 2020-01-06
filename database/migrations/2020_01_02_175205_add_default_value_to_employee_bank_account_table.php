@@ -14,7 +14,7 @@ class AddDefaultValueToEmployeeBankAccountTable extends Migration
     public function up()
     {
         Schema::table('employee_bank_accounts', function (Blueprint $table) {
-             $table->string('acc_status')->default('Active');
+             $table->string('acc_status')->default('Active')->change();
         });
     }
 

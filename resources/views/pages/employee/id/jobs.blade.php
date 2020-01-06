@@ -10,6 +10,8 @@
                 <th>Team</th>
                 <th>Cost Centre</th>
                 <th>Grade</th>
+                <th>Section</th>
+                <th>Company</th>
                 <th>Basic Salary</th>
                 <th>Status</th>
             </tr>
@@ -33,19 +35,40 @@
                 "data": "start_date"
             },
             {
-                "data": "main_position.name"
+                "data": "main_position.name",
+                render: function(data) {
+                    return data ? data : null;
+                }
             },
             {
-                "data": "department.name"
+                "data": "department.name",
+                render: function(data) {
+                    return data ? data : null;
+                }
             },
             {
                 "data": "team.name"
             },
             {
-                "data": "cost_centre.name"
+                "data": "cost_centre.name",
+                render: function(data) {
+                    return data ? data : null;
+                }
             },
             {
                 "data": "grade.name"
+            },
+            {
+                "data": "section.name",
+                render: function(data) {
+                    return data ? data : null;
+                }
+            },
+            {
+                "data": "jobcompany.company_name",
+                render: function(data) {
+                    return data ? data : null;
+                }
             },
             {
                 "data": "basic_salary"

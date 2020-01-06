@@ -312,7 +312,9 @@ class EmployeeController extends Controller
     public function postDependent(Request $request)
     {
         $dependentData = $request->validate([
-            'name' => 'required',
+            'name' => 'required',            
+            'ic_no' => 'nullable',
+            'occupation' => 'nullable',
             'relationship' => 'required',
             'dob' => 'required'
         ]);
@@ -407,6 +409,8 @@ class EmployeeController extends Controller
     {
         $dependentUpdatedData = $request->validate([
             'name' => 'required',
+            'ic_no' => 'nullable',
+            'occupation' => 'nullable',
             'relationship' => 'required',
             'dob' => 'required'
         ]);

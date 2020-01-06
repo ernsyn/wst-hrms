@@ -410,6 +410,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     // PCB
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_PCB]], function () {
         Route::get('settings/pcb', 'Admin\SettingsController@displayPcb')->name('admin.settings.pcb');
+        Route::get('get-pcb-data-datatables', ['as'=>'get.pcb.data','uses'=>'Admin\SettingsController@getPcbData']);
+        Route::get('settings/pcb/get-category', 'Admin\SettingsController@getPcbCategory')->name('admin.settings.pcb.get-category');
+        Route::get('settings/pcb/get-number-of-children', 'Admin\SettingsController@getPcbNumberOfChildren')->name('admin.settings.pcb.get-number-of-children');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_PCB]], function () {
         Route::get('settings/pcb/add','Admin\SettingsController@addPcb')->name('admin.settings.pcb.add');
@@ -668,7 +671,5 @@ Route::resource('payroll-setup', 'Payroll\PayrollSetupController');
 Route::get('payroll-setup/{id}/delete','Payroll\PayrollSetupController@destroy')->name('payroll-setup.destroy')->where('id', '[0-9]+');
 
 Route::get('settings/pcb/import', 'Admin\SettingsController@importPcb')->name('admin.settings.pcb.import');
-
-Route::get('get-pcb-data-datatables', ['as'=>'get.pcb.data','uses'=>'Admin\SettingsController@getPcbData']);
 
 Route::get('/login-activity', 'LoginActivityController@index')->middleware('auth')->name('login-activity');
