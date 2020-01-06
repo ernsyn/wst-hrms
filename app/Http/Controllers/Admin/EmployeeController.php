@@ -725,14 +725,21 @@ else {
     {
         $bankAccountData = $request->validate([
             'bank_code' => 'required',
-            'acc_no' => 'required|numeric',
-            'acc_status' => 'required'
+            'acc_no' => 'required|numeric'
+            
         ]);
         $bankAccountData['created_by'] = auth()->user()->id;
         $bankAccount = new EmployeeBankAccount($bankAccountData);
 
         $employee = Employee::find($id);
+         DB::table('employee_bank_accounts')
+            ->where('emp_id', $id)
+            ->update([
+                'acc_status'  => "Inactive"
+            ]);
         $employee->employee_bank_accounts()->save($bankAccount);
+
+       
 
         return response()->json(['success'=>'Bank Account was successfully added']);
     }
