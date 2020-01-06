@@ -235,15 +235,15 @@
         $('#dob-dependent').datetimepicker({
             format: 'DD/MM/YYYY'
         });
-        //disable keyboard input & hide caret
-        $('#dob-dependent').keydown(false);
+        //enable keyboard input & hide caret
+        //$('#dob-dependent').keydown(false);
         $('#dob-dependent').css('caret-color', 'transparent');
 
         $('#dob-dependent-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
-        //disable keyboard input & hide caret
-        $('#dob-dependent-edit').keydown(false);
+        //enable keyboard input & hide caret
+        //$('#dob-dependent-edit').keydown(false);
         $('#dob-dependent-edit').css('caret-color', 'transparent');
 
         // ADD
