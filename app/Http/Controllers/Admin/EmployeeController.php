@@ -595,7 +595,7 @@ else {
     {
         $dependentData = $request->validate([
             'name' => 'required',
-            'ic_no' => 'nullable',
+            'ic_no' => 'nullable|numeric|unique:employee_dependents,ic_no,'.$id.',id',
             'occupation' => 'nullable',
             'relationship' => 'required',
             'dob' => 'required',
@@ -1029,7 +1029,7 @@ else {
     {
         $dependentUpdatedData = $request->validate([
             'name' => 'required',
-            'ic_no' => 'nullable',
+            'ic_no' => 'nullable|numeric|unique:employee_dependents,ic_no,'.$id.',id',
             'occupation' => 'nullable',
             'relationship' => 'required',
             'dob' => 'required',
