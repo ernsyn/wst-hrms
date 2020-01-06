@@ -12,15 +12,15 @@ class EmploymentStatusTableSeeder extends Seeder
      */
     public function run()
     {
-        EmploymentStatus::create(['code' => 'NEWLY_JOINED', 'name' => 'Newly Joined', 'canDelete' => 0, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'CONFIRMATION', 'name' => 'Confirmation', 'canDelete' => 0, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'EXTEND_PROBATION', 'name' => 'Extend Probation', 'canDelete' => 0, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'INCREMENT', 'name' => 'Increment ', 'canDelete' => 0, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'SALARY_ADJUSTMENT', 'name' => 'Salary Adjustment', 'canDelete' => 0, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'DEMOTION', 'name' => 'Demotion', 'canDelete' => 1, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'REASSIGNMENT', 'name' => 'Reassignment', 'canDelete' => 1, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'PROMOTION', 'name' => 'Promotion', 'canDelete' => 1, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'TRANSFER', 'name' => 'Transfer ', 'canDelete' => 1, 'company_id' => 1]);
-        EmploymentStatus::create(['code' => 'RESIGN', 'name' => 'Resign', 'canDelete' => 0, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'NEWLY_JOINED', 'name' => 'Newly Joined', 'can_delete' => 0, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'CONFIRMATION', 'name' => 'Confirmation', 'can_delete' => 0, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'EXTEND_PROBATION', 'name' => 'Extend Probation', 'can_delete' => 0, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'INCREMENT', 'name' => 'Increment ', 'can_delete' => 0, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'SALARY_ADJUSTMENT', 'name' => 'Salary Adjustment', 'can_delete' => 0, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'DEMOTION', 'name' => 'Demotion', 'can_delete' => 1, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'REASSIGNMENT', 'name' => 'Reassignment', 'can_delete' => 1, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'PROMOTION', 'name' => 'Promotion', 'can_delete' => 1, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'TRANSFER', 'name' => 'Transfer ', 'can_delete' => 1, 'company_id' => 1]);
+        EmploymentStatus::create(['code' => 'RESIGN', 'name' => 'Resign', 'can_delete' => 0, 'company_id' => 1]);
     }
 }

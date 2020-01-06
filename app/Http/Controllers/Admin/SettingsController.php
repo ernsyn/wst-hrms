@@ -1297,9 +1297,10 @@ class SettingsController extends Controller
             'name' => 'required'
         ]);
         
-        
         $employmentStatus = EmploymentStatus::find($id);
-        $employmentStatus->code = $request['code'];
+        if($employmentStatus->can_delete == 1) {
+            $employmentStatus->code = $request['code'];
+        }
         $employmentStatus->name = $request['name'];
         $employmentStatus->save();
         
@@ -1812,7 +1813,7 @@ class SettingsController extends Controller
     {
         $employmentStatus = EmploymentStatus::find($id);
         
-        if($employmentStatus->canDelete == 1) {
+        if($employmentStatus->can_delete == 1) {
             $code = $employmentStatus->code;
             $employmentStatus->delete();
             
