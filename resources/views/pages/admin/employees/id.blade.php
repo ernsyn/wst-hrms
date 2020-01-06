@@ -541,7 +541,7 @@
                                     <label for="payment_rate"><strong>Payment Rate</strong></label>
                                     <select class="form-control{{ $errors->has('payment_rate') ? ' is-invalid' : '' }}" name="payment_rate" id="payment_rate">
                                         <option value="">Select Rate</option>
-                                        <option value="1" {{ old('payment_rate') == 1 ? 'selected' : ''}}>Daily</option>
+                                        <option value="1" {{ old('payment_rate') == 1 ? 'selected' : ''}}>Dailyy</option>
                                         <option value="2" {{ old('payment_rate') == 2 ? 'selected' : ''}}>Weekly</option>
                                         <option value="3" {{ old('payment_rate') == 3 ? 'selected' : ''}}>Monthly</option>
                                     </select>
