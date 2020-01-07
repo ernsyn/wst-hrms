@@ -206,17 +206,13 @@ class PayrollController extends Controller
             ->get();
             
             $basicSalary = 0;
-            $seniorityPay = 0;
             $remuneration = 0;
             foreach($employeeJobs as $job){
                 $costCentre = CostCentre::where('id', $job->cost_centre_id)->get();
 
                 if($payroll->period == PayrollPeriodEnum::END_MONTH) {
                     $basicSalary += PayrollHelper::calculateSalary($job, $payroll);
-                    if($seniorityPay == 0){
-                        $seniorityPay = PayrollHelper::calculateSeniorityPay($employee, $validated['year_month'], $costCentre);
-                    }
-                    $remuneration += $basicSalary + $seniorityPay;
+                    $remuneration += $basicSalary;
                 }
             }
 //             if($employee->id == 10){
@@ -245,7 +241,6 @@ class PayrollController extends Controller
             $payrollTrxData['employer_epf'] = 0;
             $payrollTrxData['employer_eis'] =  0;
             $payrollTrxData['employer_socso'] = 0;
-            $payrollTrxData['seniority_pay'] = $seniorityPay;
             $payrollTrxData['basic_salary'] = $basicSalary;
             $payrollTrxData['take_home_pay'] = 0;
             $payrollTrxData['gross_pay'] = 0;
@@ -301,8 +296,8 @@ class PayrollController extends Controller
                 $storeData['employer_socso'] = isset($socso->employer) ? $socso->employer : 0;
                 $storeData['total_addition'] = $contributionData['addition'];
                 $storeData['total_deduction'] = $dedcution;
-                $storeData['gross_pay'] = $basicSalary + $seniorityPay;
-                $storeData['take_home_pay'] = $basicSalary + $seniorityPay + $contributionData['addition'] - $dedcution - $storeData['employee_epf'] - $storeData['employee_eis'] - $storeData['employee_socso'] - $storeData['employee_pcb'];
+                $storeData['gross_pay'] = $basicSalary;
+                $storeData['take_home_pay'] = $basicSalary + $contributionData['addition'] - $dedcution - $storeData['employee_epf'] - $storeData['employee_eis'] - $storeData['employee_socso'] - $storeData['employee_pcb'];
                 PayrollTrx::where('id', $payrollTrxId)->update($storeData);
             }
         }
@@ -357,10 +352,10 @@ class PayrollController extends Controller
             })
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
             ->leftjoin('employee_report_to as ert', 'ert.emp_id', '=', 'e.id')
-            ->select('payroll_trx.*', 'pm.company_id as company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
+            ->select('payroll_trx.*', 'pm.company_id as company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.note as remark', DB::raw('
                     (SELECT start_date FROM employee_jobs WHERE emp_id = ej.emp_id ORDER BY id ASC LIMIT 1) as joined_date,
-                    (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
-                    (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
+                    (payroll_trx.basic_salary) as cb,
+                    (payroll_trx.basic_salary) as contract_base,
                     payroll_trx.take_home_pay as thp,
                     ROUND((payroll_trx.kpi * payroll_trx.bonus),2) as total_bonus,
                     YEAR(CURDATE()) - YEAR(e.dob) as age
@@ -913,7 +908,6 @@ class PayrollController extends Controller
                         </tr>
                         <tr>
                             <td></td>
-                            <td class="text-center">'.$info->total_seniority_pay.'</td>
                             <td class="text-center">'.$info->total_default_addition.'</td>
                             <td class="text-center">'.$info->total_shift.'</td>
                             <td></td>
@@ -1015,7 +1009,6 @@ class PayrollController extends Controller
                             </tr>
                             <tr>
                                 <td class="black-bottom-border "></td>
-                                <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_seniority_pay'),2,'.','').'</td>
                                 <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_default_addition'),2,'.','').'</td>
                                 <td class="black-bottom-border text-center bold">'.number_format($list->sum('total_shift'),2,'.','').'</td>
                                 <td class="black-bottom-border "></td>
@@ -1479,7 +1472,6 @@ class PayrollController extends Controller
                         <tr>
                             <td></td>
                             <td></td>
-                            <td class="text-center">'.$info->total_seniority_pay.'</td>
                             <td class="text-center">'.$info->total_default_addition.'</td>
                             <td class="text-center">'.$info->total_shift.'</td>
                             <td></td>
@@ -1522,7 +1514,6 @@ class PayrollController extends Controller
                             <tr>
                                 <td class="black-bottom-border bold "></td>
                                 <td class="black-bottom-border bold "></td>
-                                <td class="black-bottom-border bold text-center">'.number_format($list->slice($unreset_count)->take($key+1)->sum('total_seniority_pay'),2,'.','').'</td>
                                 <td class="black-bottom-border bold text-center">'.number_format($list->slice($unreset_count)->take($key+1)->sum('total_default_addition'),2,'.','').'</td>
                                 <td class="black-bottom-border bold text-center">'.number_format($list->slice($unreset_count)->take($key+1)->sum('total_shift'),2,'.','').'</td>
                                 <td class="black-bottom-border bold "></td>
@@ -1571,7 +1562,6 @@ class PayrollController extends Controller
                     <tr>
                         <td class="black-bottom-border bold "></td>
                         <td class="black-bottom-border bold "></td>
-                        <td class="black-bottom-border bold text-center">'.number_format($list->sum('total_seniority_pay'),2,'.','').'</td>
                         <td class="black-bottom-border bold text-center">'.number_format($list->sum('total_default_addition'),2,'.','').'</td>
                         <td class="black-bottom-border bold text-center">'.number_format($list->sum('total_shift'),2,'.','').'</td>
                         <td class="black-bottom-border bold "></td>
@@ -1708,13 +1698,7 @@ class PayrollController extends Controller
                 'amount' => number_format($payslip->basic_salary, 2),
                 'amount_numeric' => $payslip->basic_salary
             ];
-            
-            $earnings[] = [
-                'name' => 'SENIORITY PAY',
-                'amount' => number_format($payslip->seniority_pay, 2),
-                'amount_numeric' => $payslip->seniority_pay
-            ];
-            
+                        
             $earnings[] = [
                 'name' => 'BONUS',
                 'amount' => number_format($payslip->bonus * $payslip->kpi, 2),

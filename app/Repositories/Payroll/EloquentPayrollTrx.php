@@ -33,19 +33,15 @@ class EloquentPayrollTrx implements PayrollTrxRepository
         }) */
         ->select('payroll_trx.*', 'U.id as user_id', 
             //'C.citizenship', 
-            'PM.company_id as company_id', 'PM.year_month', 'PM.period', 'PM.status', 'EM.id as employee_id', 'EM.code as employee_code', 'U.name', 'EM.total_children', 'EM.pcb_group', 'JM.name as position', 'PayrollTrx.basic_salary as bs', 'PayrollTrx.seniority_pay as is', 'PayrollTrx.note as remark', 'EB.account_number',
+            'PM.company_id as company_id', 'PM.year_month', 'PM.period', 'PM.status', 'EM.id as employee_id', 'EM.code as employee_code', 'U.name', 'EM.total_children', 'EM.pcb_group', 'JM.name as position', 'PayrollTrx.basic_salary as bs', 'PayrollTrx.note as remark', 'EB.account_number',
             'EM.main_security_group_id', 'EM.dob', 'EM.eis_no', 'EM.socso_no', 'EM.nationality',
             DB::raw('
                 (SELECT start_date FROM employee_jobs WHERE id_EmployeeMaster = EM.id ORDER BY id ASC LIMIT 1) as joined_date,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
+                (payroll_trx.basic_salary) as cb,
+                (payroll_trx.basic_salary) as contract_base,
                 (SELECT SUM(amount) FROM payroll_trx_addition WHERE id_PayrollTrx = payroll_trx.id) as total_addition,
                 (SELECT SUM(amount) FROM payroll_trx_deduction WHERE id_PayrollTrx = payroll_trx.id) as total_deduction,
                 PayrollTrx.take_home_pay as thp,
-                (SELECT JM2.seniority_pay FROM
-                    employee_jobs AS EJ2 JOIN cost_centres as JM2 ON EJ2.id_JobMaster_category = JM2.id
-                    WHERE EJ2.id_EmployeeMaster = EM.id AND JM2.status = "Active" AND EJ2.default = 1
-                ) as seniority_pay_type,
                 ROUND((PayrollTrx.kpi * PayrollTrx.bonus),2) as total_bonus,
                 YEAR(CURDATE()) - YEAR(U.birthday) as age,
                 CASE
@@ -97,12 +93,12 @@ class EloquentPayrollTrx implements PayrollTrxRepository
             ->join('users as u', 'u.id', '=', 'e.user_id')
             ->join('employee_jobs as ej', 'ej.emp_id', '=', 'e.id') 
             ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
-            ->select('payroll_trx.*', 'pm.company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', 
+            ->select('payroll_trx.*', 'pm.company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.note as remark', 
                 'e.main_security_group_id', 'e.dob', 'e.nationality', 'e.pcb_group', 'e.total_children', 'e.confirmed_date',
                 DB::raw('
                 (SELECT start_date FROM employee_jobs WHERE emp_id = e.id ORDER BY id ASC LIMIT 1) as joined_date,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
+                (payroll_trx.basic_salary) as cb,
+                (payroll_trx.basic_salary) as contract_base,
                 payroll_trx.take_home_pay as thp
             '))
             ->where('payroll_trx.id', $id)->get();
@@ -110,7 +106,7 @@ class EloquentPayrollTrx implements PayrollTrxRepository
     
     public function updateKPI($id, $request_data){
         
-        $payroll_keys = ['id_PayrollMaster', 'id_EmployeeMaster', 'employee_epf', 'employee_eis', 'employee_socso', 'employee_pcb', 'employer_epf', 'employer_eis', 'employer_socso', 'seniority_pay', 'basic_salary', 'final_payment', 'note'];
+        $payroll_keys = ['id_PayrollMaster', 'id_EmployeeMaster', 'employee_epf', 'employee_eis', 'employee_socso', 'employee_pcb', 'employer_epf', 'employer_eis', 'employer_socso', 'basic_salary', 'final_payment', 'note'];
         if($id != 'new') $payroll_keys = ['final_payment', 'note', 'kpi', 'bonus'];
         $store_data = [];
         foreach($payroll_keys as $key) {
@@ -136,10 +132,10 @@ class EloquentPayrollTrx implements PayrollTrxRepository
         ->join('users as u', 'u.id', '=', 'e.user_id')
         ->join('employee_jobs as ej', 'ej.emp_id', '=', 'e.id')
         ->join('employee_positions as ep', 'ep.id', '=', 'ej.emp_mainposition_id')
-        ->select('payroll_trx.*', 'pm.company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
+        ->select('payroll_trx.*', 'pm.company_id', 'pm.year_month', 'pm.period', 'pm.status', 'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.note as remark', DB::raw('
                 (SELECT start_date FROM employee_jobs WHERE emp_id = e.id ORDER BY id ASC LIMIT 1) as joined_date,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
+                (payroll_trx.basic_salary) as cb,
+                (payroll_trx.basic_salary) as contract_base,
                 payroll_trx.take_home_pay as thp
             '))
 //         ->where('payroll_trx.id', $id)
@@ -161,10 +157,10 @@ class EloquentPayrollTrx implements PayrollTrxRepository
         ->join('branches as b', 'b.id', '=', 'ej.branch_id')
         ->select('payroll_trx.*', 'c.name as company_name','pm.company_id', 'pm.year_month', 'pm.period', 'pm.status', 
                 'e.*', 'b.name as branch', 
-                'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.seniority_pay as is', 'payroll_trx.note as remark', DB::raw('
+                'e.id as employee_id', 'e.code as employee_code', 'u.name','ep.name as position', 'payroll_trx.basic_salary as bs', 'payroll_trx.note as remark', DB::raw('
                 (SELECT start_date FROM employee_jobs WHERE emp_id = e.id ORDER BY id ASC LIMIT 1) as joined_date,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as cb,
-                (payroll_trx.basic_salary + payroll_trx.seniority_pay) as contract_base,
+                (payroll_trx.basic_salary) as cb,
+                (payroll_trx.basic_salary) as contract_base,
                 payroll_trx.take_home_pay as thp
             '))
         ->where('payroll_trx.payroll_master_id', $payrollMasterId)

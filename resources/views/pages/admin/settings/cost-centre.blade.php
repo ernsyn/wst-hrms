@@ -27,8 +27,6 @@
                     <tr>
                         <th>No</th>
                         <th>Name</th>
-                        <th>Seniority Pay</th>
-                        <th>Amount</th>
                         {{-- <th>Payroll Type</th> --}}
                         <th>Action</th>
                     </tr>
@@ -38,8 +36,6 @@
                     <tr class="text-capitalize">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$cost['name']}}</td>
-                        <td>{{$cost['seniority_pay']}}</td>
-                        <td>{{$cost['amount']}}</td>
                         {{-- <td>{{$cost['payroll_type']}}</td> --}}
                         <td>
                             <button onclick="window.location='{{ route('admin.settings.cost-centres.edit', ['id' => $cost->id]) }}';" class="btn btn-success btn-smt fas fa-edit">

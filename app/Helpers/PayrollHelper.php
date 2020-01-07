@@ -112,49 +112,7 @@ class PayrollHelper
         Log::debug("Calculated Salary: ".$basicSalary);
         return $basicSalary;
     }
-    
-    public static function calculateSeniorityPay($employee, $payrollMonth, $costCentre)
-    {
-        Log::debug("Calculate Seniority Pay");
-        Log::debug("Employee: ".$employee);
-        Log::debug("Payroll Month: ".$payrollMonth);
-        Log::debug("Cost Centre: ".$costCentre);
-        // Start date of the month
-        $beginDate = date_create($payrollMonth.'-01');
-        $joinedDate = null;
-        $seniorityPay = 0.00;
-        if(isset($employee->employee_jobs()->first()->start_date)){
-            $joinedDate = date_create($employee->employee_jobs()->first()->start_date);
-            // Diff of the month/year and joined date
-            $diff = date_diff($joinedDate, $beginDate);
-            $diffYears = $diff->format('%R%y');
-            //         var_dump($jobMaster);
-            // If seniority pay is Auto,
-            // then directly set 50 via .env
-            // Else set to 0.00 and let admin to enter later
-            
-            //         dd($diffYears);
-            Log::debug("Joined date");
-//             Log::debug($joinedDate);
-            Log::debug("diff year: ".$diffYears);
-            
-            if(strcasecmp($costCentre->first()->seniority_pay, 'auto') == 0 && $diffYears > 0) {
-                $defaultSeniorityPay = PayrollSetup::where([
-                    ['key', 'SENIORITY_PAY'],
-                    ['company_id', $employee->company_id],
-                    ['status', 1]
-                ])->first();
-                
-                Log::debug("Default seniority pay: ".$defaultSeniorityPay);
-                
-                $seniorityPay = ($diffYears > 0)? $defaultSeniorityPay->value * $diffYears : $defaultSeniorityPay->value;
-            }
-        }
-        Log::debug("Calculated seniority pay: ".$seniorityPay);
-//         dd($seniorityPay);
-        return $seniorityPay;
-    }
-    
+        
     public static function getALPayback($employee, $payroll, $leaveBalance)
     {
         /*
@@ -323,15 +281,6 @@ class PayrollHelper
         }
         
         return $category;
-    }
-    
-    public static function getSeniorityPay($companyId)
-    {
-        return PayrollSetup::where([
-            ['key', 'SENIORITY_PAY'],
-            ['company_id', $companyId],
-            ['status', 1]
-        ])->first()->value;
     }
     
     public static function getEmployeeBranch($employee, $date)

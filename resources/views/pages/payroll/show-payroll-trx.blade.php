@@ -12,7 +12,6 @@
 	<input name="payroll_trx_id" type="hidden" value="{{ $id }}">
 	<input name="basic_salary" id="basic_salary" type="hidden" value="{{ $info->bs }}">
 	<input name="total_days" id="total_days" type="hidden" value="{{ $total_days }}">
-	<input name="seniority_pay" id="seniority_pay" type="hidden" value="{{ $info->is }}">
 	<input name="total_addition" id="total_addition" type="hidden" value="">
 	<input name="total_deduction" id="total_deduction" type="hidden" value="">
 	<input name="take_home_pay" id="take_home_pay" type="hidden" value="">
@@ -528,7 +527,7 @@
             }
 
             function calculateContractBase() {
-                return basic_salary + parseFloat($('#seniority_pay').val());
+                return basic_salary).val());
             }
 
             function calculateBonus() {

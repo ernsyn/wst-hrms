@@ -111,7 +111,6 @@ class EloquentReport implements ReportRepository
                 DB::raw('
                     COUNT(EM.id) as total_employee,
                     SUM(payroll_trx.basic_salary) as total_basic_salary,
-                    SUM(payroll_trx.seniority_pay) as total_seniority_pay,
                     SUM(PTD.amount) as total_unpaid_leave,
                     SUM(PTA_OT.amount) as total_overtime
                 '),
@@ -156,7 +155,7 @@ class EloquentReport implements ReportRepository
                     ),0.00) AS total_other_addition
                 '),
                 DB::raw('
-                    ROUND(SUM((payroll_trx.kpi*payroll_trx.bonus) + payroll_trx.basic_salary + payroll_trx.seniority_pay),2) as total_gross_pay,
+                    ROUND(SUM((payroll_trx.kpi*payroll_trx.bonus) + payroll_trx.basic_salary),2) as total_gross_pay,
                     SUM(payroll_trx.employee_epf) as total_employee_epf,
                     0.00 as total_employee_vol,
                     SUM(payroll_trx.employee_socso) as total_employee_socso,
@@ -212,7 +211,7 @@ class EloquentReport implements ReportRepository
             $query = $query->select('CM.name as company_name',
                 DB::raw('
                     SUM(payroll_trx.take_home_pay) as total_net_pay,
-                    ROUND(SUM((payroll_trx.kpi*payroll_trx.bonus) + payroll_trx.basic_salary + payroll_trx.seniority_pay),2) as total_gross_pay,
+                    ROUND(SUM((payroll_trx.kpi*payroll_trx.bonus) + payroll_trx.basic_salary),2) as total_gross_pay,
                     COUNT(EM.id) as total_employee
                 ')
             );
@@ -224,7 +223,6 @@ class EloquentReport implements ReportRepository
                         'EM.code',
                         'users.name',
                         'payroll_trx.basic_salary as total_basic_salary',
-                        'payroll_trx.seniority_pay as total_seniority_pay',
                         'PTD.amount as total_unpaid_leave',
                         /** Sub Query - Total default addition **/
                         DB::raw('
@@ -263,7 +261,7 @@ class EloquentReport implements ReportRepository
                                     ON SUB_JM_DEPARTMENT.id = SUB_EJ.department_id
                                 WHERE SUB_PM.year_month = "'.$date.'" AND SUB_EM.id = EM.id
                             ),0.00) AS total_other_addition,
-                            ROUND((payroll_trx.kpi*payroll_trx.bonus) + payroll_trx.basic_salary + payroll_trx.seniority_pay,2) as total_gross_pay,
+                            ROUND((payroll_trx.kpi*payroll_trx.bonus) + payroll_trx.basic_salary,2) as total_gross_pay,
                             payroll_trx.employee_epf as total_employee_epf,
                             0.00 as total_employee_vol,
                             payroll_trx.employee_socso as total_employee_socso,

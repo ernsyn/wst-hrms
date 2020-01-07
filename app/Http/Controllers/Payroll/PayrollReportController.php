@@ -626,7 +626,6 @@ class PayrollReportController extends Controller
                             </tr>
                             <tr>
                                 <td class="black-bottom-border "></td>
-                                <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_seniority_pay'),2,'.','').'</td>
                                 <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_default_addition'),2,'.','').'</td>
                                 <td class="black-bottom-border text-center bold" align="right">'.number_format($list->sum('total_shift'),2,'.','').'</td>
                                 <td class="black-bottom-border "></td>
@@ -1204,7 +1203,6 @@ class PayrollReportController extends Controller
                         <tr>
                             <td></td>
                             <td></td>
-                            <td class="text-center">'.$info->total_seniority_pay.'</td>
                             <td class="text-center">'.$info->total_default_addition.'</td>
                             <td class="text-center">'.$info->total_shift.'</td>
                             <td></td>
@@ -1247,7 +1245,6 @@ class PayrollReportController extends Controller
                             <tr>
                                 <td class="black-bottom-border bold "></td>
                                 <td class="black-bottom-border bold "></td>
-                                <td class="black-bottom-border bold text-center">'.number_format($list->slice($unreset_count)->take($key+1)->sum('total_seniority_pay'),2,'.','').'</td>
                                 <td class="black-bottom-border bold text-center">'.number_format($list->slice($unreset_count)->take($key+1)->sum('total_default_addition'),2,'.','').'</td>
                                 <td class="black-bottom-border bold text-center">'.number_format($list->slice($unreset_count)->take($key+1)->sum('total_shift'),2,'.','').'</td>
                                 <td class="black-bottom-border bold "></td>
@@ -1296,7 +1293,6 @@ class PayrollReportController extends Controller
                     <tr>
                         <td class="black-bottom-border bold "></td>
                         <td class="black-bottom-border bold "></td>
-                        <td class="black-bottom-border bold text-center">'.number_format($list->sum('total_seniority_pay'),2,'.','').'</td>
                         <td class="black-bottom-border bold text-center">'.number_format($list->sum('total_default_addition'),2,'.','').'</td>
                         <td class="black-bottom-border bold text-center">'.number_format($list->sum('total_shift'),2,'.','').'</td>
                         <td class="black-bottom-border bold "></td>
