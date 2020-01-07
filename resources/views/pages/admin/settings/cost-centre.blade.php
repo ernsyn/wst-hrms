@@ -11,6 +11,7 @@
                 </button>
     </div>
     @endif
+    @canany(PermissionConstant::ADD_COST_CENTRE)
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -19,6 +20,7 @@
                         </a>
         </div>
     </div>
+    @endcan
     <div class="row">
         <div class="col-md-12">
             <div class="float-right tableTools-container"></div>
@@ -27,8 +29,6 @@
                     <tr>
                         <th>No</th>
                         <th>Name</th>
-                        <th>Seniority Pay</th>
-                        <th>Amount</th>
                         {{-- <th>Payroll Type</th> --}}
                         <th>Action</th>
                     </tr>
@@ -38,14 +38,16 @@
                     <tr class="text-capitalize">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$cost['name']}}</td>
-                        <td>{{$cost['seniority_pay']}}</td>
-                        <td>{{$cost['amount']}}</td>
                         {{-- <td>{{$cost['payroll_type']}}</td> --}}
                         <td>
+                        	@canany(PermissionConstant::UPDATE_COST_CENTRE)
                             <button onclick="window.location='{{ route('admin.settings.cost-centres.edit', ['id' => $cost->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
+                            @endcan
+                            @canany(PermissionConstant::DELETE_COST_CENTRE)
                             <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $cost->name }}' data-link='{{ route('admin.settings.cost-centres.delete', ['id ' => $cost->id]) }}' class="btn btn-danger btn-smt far fa-trash-alt">
-                                </button>
+                            </button>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -54,6 +56,7 @@
         </div>
     </div>
 </div>
+@canany(PermissionConstant::DELETE_COST_CENTRE)
 <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -73,6 +76,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 @section('scripts')
 <script>

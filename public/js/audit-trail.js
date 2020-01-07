@@ -77,8 +77,6 @@ var AuditTrail = (function() {
             name: 'Cost Centre',
             fields: {
                 'name': 'Name',
-                'seniority_pay': 'Seniority Pay',
-                'amount': 'Amount',
                 'created_by': 'Created by',
             },
         },

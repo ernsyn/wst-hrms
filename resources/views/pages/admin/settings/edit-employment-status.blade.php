@@ -11,7 +11,7 @@
                         <label class="col-md-12 col-form-label">Code*</label>
                         <div class="col-md-4">
                             <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" placeholder="Code"
-                                name="code" value="{{ $employmentStatus->code }}" required>
+                                name="code" value="{{ $employmentStatus->code }}" required {{ $employmentStatus->can_delete == 0 ? 'readonly' : '' }}>
                             @if ($errors->has('code'))
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('code') }}</strong>

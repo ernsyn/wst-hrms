@@ -740,8 +740,8 @@
         $("#start-date-experience").on("change.datetimepicker", function (e) {
             $('#end-date-experience').datetimepicker('minDate', e.date);
         });
-        //disable keyboard input & hide caret
-        $("#start-date-experience").keydown(false);
+        //enable keyboard input & hide caret
+        //$("#start-date-experience").keydown(false);
         $("#start-date-experience").css('caret-color', 'transparent');
 
         $('#end-date-experience').datetimepicker({
@@ -751,8 +751,8 @@
         $("#end-date-experience").on("change.datetimepicker", function (e) {
             $('#start-date-experience').datetimepicker('maxDate', e.date);
         });
-        //disable keyboard input & hide caret
-        $("#end-date-experience").keydown(false);
+        //enable keyboard input & hide caret
+        //$("#end-date-experience").keydown(false);
         $("#end-date-experience").css('caret-color', 'transparent');
 
         // datepicker edit exp
@@ -762,8 +762,8 @@
         $("#start-date-experience-edit").on("change.datetimepicker", function (e) {
             $('#end-date-experience-edit').datetimepicker('minDate', e.date);
         });
-        //disable keyboard input & hide caret
-        $("#start-date-experience-edit").keydown(false);
+        //enable keyboard input & hide caret
+        //$("#start-date-experience-edit").keydown(false);
         $("#start-date-experience-edit").css('caret-color', 'transparent');
 
         $('#end-date-experience-edit').datetimepicker({
@@ -773,8 +773,8 @@
         $("#end-date-experience-edit").on("change.datetimepicker", function (e) {
             $('#start-date-experience-edit').datetimepicker('maxDate', e.date);
         });
-        //disable keyboard input & hide caret
-        $("#end-date-experience-edit").keydown(false);
+        //enable keyboard input & hide caret
+        //$("#end-date-experience-edit").keydown(false);
         $("#end-date-experience-edit").css('caret-color', 'transparent');
 
         // datepicker add edu
@@ -784,8 +784,8 @@
         $("#start-year").on("change.datetimepicker", function (e) {
             $('#end-year').datetimepicker('minDate', e.date);
         });
-        //disable keyboard input & hide caret
-        $("#start-year").keydown(false);
+        //enable keyboard input & hide caret
+        //$("#start-year").keydown(false);
         $("#start-year").css('caret-color', 'transparent');
 
         $('#end-year').datetimepicker({
@@ -795,8 +795,8 @@
         $("#end-year").on("change.datetimepicker", function (e) {
             $('#start-year').datetimepicker('maxDate', e.date);
         });
-        //disable keyboard input & hide caret
-        $("#end-year").keydown(false);
+        //enable keyboard input & hide caret
+        //$("#end-year").keydown(false);
         $("#end-year").css('caret-color', 'transparent');
 
         // datepicker edit edu
@@ -806,8 +806,8 @@
         $("#start-year-edit").on("change.datetimepicker", function (e) {
             $('#end-year-edit').datetimepicker('minDate', e.date);
         });
-        //disable keyboard input & hide caret
-        $("#start-year-edit").keydown(false);
+        //enable keyboard input & hide caret
+        //$("#start-year-edit").keydown(false);
         $("#start-year-edit").css('caret-color', 'transparent');
 
         $('#end-year-edit').datetimepicker({
@@ -816,8 +816,8 @@
         $("#end-year-edit").on("change.datetimepicker", function (e) {
             $('#start-year-edit').datetimepicker('maxDate', e.date);
         });
-        //disable keyboard input & hide caret
-        $("#end-year-edit").keydown(false);
+        //enable keyboard input & hide caret
+        //$("#end-year-edit").keydown(false);
         $("#end-year-edit").css('caret-color', 'transparent');
     });
 </script>

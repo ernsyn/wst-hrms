@@ -222,6 +222,12 @@ class BankCodeTableSeeder extends Seeder
         ] );
         
         App\BankCode::create( [
+            'name'=>'Public Bank Berhad',
+            'bic_code'=>'PBBEMYKL',
+            'status'=>'Active',
+        ] );
+        
+        App\BankCode::create( [
             'name'=>'RHB Bank Berhad',
             'bic_code'=>'RHBBMYKL',
             'status'=>'Active',

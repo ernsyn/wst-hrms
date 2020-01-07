@@ -17,14 +17,12 @@ $('#updateCostCentrePopup').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
     var id = button.data('cost-centre-id')
     var category_name = button.data('cost-centre-name')
-    var seniority_pay = button.data('cost-centre-seniority-pay')
     var payroll_type = button.data('cost-centre-payroll-type')
 
     var modal = $(this)
 
     modal.find('.modal-body #cost_id').val(id)
     modal.find('.modal-body #category_name').val(category_name)
-    modal.find('.modal-body #seniority_pay').val(seniority_pay)
     modal.find('.modal-body #payroll_type').val(payroll_type)
 })
 

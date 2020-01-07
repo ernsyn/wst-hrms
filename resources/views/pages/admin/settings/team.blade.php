@@ -11,6 +11,7 @@
                 </button>
     </div>
     @endif
+    @canany(PermissionConstant::ADD_TEAM)
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -19,6 +20,7 @@
                     </a>
         </div>
     </div>
+    @endcan
     <div class="row">
         <div class="col-md-12">
             <div class="float-right tableTools-container"></div>
@@ -37,10 +39,14 @@
                         <td>{{$team['name']}}</td>
                         <td>
                             {{-- <a class="btn btn-primary" href="{{ route('admin.settings.teams.edit', ['id' => $team->id]) }}" role="button">Edit</a> --}}
+                            @canany(PermissionConstant::UPDATE_TEAM)
                             <button onclick="window.location='{{ route('admin.settings.teams.edit', ['id' => $team->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
+                            @endcan
+                            @canany(PermissionConstant::DELETE_TEAM)
                             <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $team->name }}' data-link='{{ route('admin.settings.teams.delete', ['id ' => $team->id]) }}' class="btn btn-danger btn-smt fas fa-edit fas fa-trash-alt ">
-                                </button>
+                            </button>
+                             @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -49,6 +55,7 @@
         </div>
     </div>
 </div>
+@canany(PermissionConstant::DELETE_TEAM)
 <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -68,6 +75,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 @section('scripts')
 <script>

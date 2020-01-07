@@ -42,7 +42,7 @@
                         	@can(PermissionConstant::UPDATE_EMPLOYMENT_STATUS)
                             <button onclick="window.location='{{ route('admin.settings.employment-status.edit.post', ['id' => $status->id]) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
                             @endcan
-							@if(auth()->user()->can(PermissionConstant::DELETE_EMPLOYMENT_STATUS) && $status['canDelete'] == 1)
+							@if(auth()->user()->can(PermissionConstant::DELETE_EMPLOYMENT_STATUS) && $status['can_delete'] == 1)
                             <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $status->name }}' data-link='{{ route('admin.settings.employment-status.delete', ['id ' => $status->id]) }}' class="btn btn-danger btn-smt fas fa-trash"></button>
                             @endif
                         </td>

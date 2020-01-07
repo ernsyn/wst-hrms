@@ -21,21 +21,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-6">
-                            <label class="col-md-12 col-form-label">Seniority Pay*</label>
-                            <div class="col-md-12">
-                                <select class="form-control{{ $errors->has('seniority_pay') ? ' is-invalid' : '' }}" id="seniority_pay" name="seniority_pay" value="{{  old('seniority_pay') }}" required>
-                                    <option value="Auto">Auto</option>
-                                    <option value="Manual">Manual</option>
-                                </select>
-                                @if ($errors->has('seniority_pay'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('seniority_pay') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
+                     </div>
                 </div>
             </div>
             <div class="card-footer">

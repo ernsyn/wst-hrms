@@ -494,19 +494,9 @@ class SettingsController extends Controller
     public function postAddCostCentre(Request $request)
     {
         $costCentreData = $request->validate([
-            'name' => 'required|unique:cost_centres,name,NULL,id,deleted_at,NULL',
-            'seniority_pay' => 'required'
+            'name' => 'required|unique:cost_centres,name,NULL,id,deleted_at,NULL'
         ]);
 
-        $seniorityPay = 0;
-        if(!AccessControllHelper::hasSuperadminRole()) {
-            if ($request->seniority_pay == "Auto") {
-                $company = GenerateReportsHelper::getUserLogonCompanyInformation();
-                $seniorityPay = PayrollHelper::getSeniorityPay($company->id);
-            }
-        }
-
-        $costCentreData['amount'] = $seniorityPay;
         $costCentreData['created_by'] = auth()->user()->name;
 
         CostCentre::create($costCentreData);
@@ -1297,9 +1287,10 @@ class SettingsController extends Controller
             'name' => 'required'
         ]);
         
-        
         $employmentStatus = EmploymentStatus::find($id);
-        $employmentStatus->code = $request['code'];
+        if($employmentStatus->can_delete == 1) {
+            $employmentStatus->code = $request['code'];
+        }
         $employmentStatus->name = $request['name'];
         $employmentStatus->save();
         
@@ -1334,19 +1325,8 @@ class SettingsController extends Controller
     public function postEditCostCentre(Request $request, $id)
     {
         $costCentreData = $request->validate([
-            'name' => 'required|unique:cost_centres,name,' . $id . ',id,deleted_at,NULL',
-            'seniority_pay' => 'required'
+            'name' => 'required|unique:cost_centres,name,' . $id . ',id,deleted_at,NULL'
         ]);
-
-        $seniorityPay = 0;
-        if(!AccessControllHelper::hasSuperadminRole()) {
-            if ($request->seniority_pay == "Auto") {
-                $company = GenerateReportsHelper::getUserLogonCompanyInformation();
-                $seniorityPay = PayrollHelper::getSeniorityPay($company->id);
-            }
-        }
-
-        $costCentreData['amount'] = $seniorityPay;
 
         CostCentre::find($id)->update($costCentreData);
 
@@ -1812,7 +1792,7 @@ class SettingsController extends Controller
     {
         $employmentStatus = EmploymentStatus::find($id);
         
-        if($employmentStatus->canDelete == 1) {
+        if($employmentStatus->can_delete == 1) {
             $code = $employmentStatus->code;
             $employmentStatus->delete();
             
