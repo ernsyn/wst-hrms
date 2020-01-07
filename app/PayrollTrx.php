@@ -21,6 +21,7 @@ class PayrollTrx extends Model implements Auditable
         'employer_epf',
         'employer_eis',
         'employer_socso',
+        'seniority_pay',
         'basic_salary',
         'kpi',
         'bonus',
