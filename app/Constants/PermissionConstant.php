@@ -14,7 +14,11 @@ class PermissionConstant
     const VIEW_COMPANY = 'View Company';
     const ADD_COMPANY = 'Add Company';
     const UPDATE_COMPANY = 'Update Company';
-    const DELETE_COMPANY = 'Delete Company';
+    const DELETE_COMPANY = 'Delete Company';    
+    const VIEW_COST_CENTRE = 'View Cost Centre';
+    const ADD_COST_CENTRE = 'Add Cost Centre';
+    const UPDATE_COST_CENTRE = 'Update Cost Centre';
+    const DELETE_COST_CENTRE = 'Delete Cost Centre';
     const VIEW_COMPANY_BANK = 'View Company Bank';
     const ADD_COMPANY_BANK = 'Add Company Bank';
     const UPDATE_COMPANY_BANK = 'Update Company Bank';

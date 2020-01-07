@@ -168,9 +168,11 @@
                 @endcan
                 
                 {{-- OPTION: Cost Centres --}}
+                @canany([PermissionConstant::VIEW_COST_CENTRE, PermissionConstant::ADD_COST_CENTRE, PermissionConstant::UPDATE_COST_CENTRE, PermissionConstant::DELETE_COST_CENTRE])
                 <li class="menu-option {{ request()->is('admin/settings/cost-centres') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.cost-centres')}}">Cost Centres</a>
                 </li>
+                @endcan
                 
                 {{-- Departments --}}
                 @canany([PermissionConstant::VIEW_DEPARTMENT, PermissionConstant::ADD_DEPARTMENT, PermissionConstant::UPDATE_DEPARTMENT, PermissionConstant::DELETE_DEPARTMENT])

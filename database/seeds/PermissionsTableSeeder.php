@@ -35,6 +35,11 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);
         Permission::create(['name' => PermissionConstant::DELETE_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company', 'superadmin' => 1]);
         
+        Permission::create(['name' => PermissionConstant::VIEW_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost_Centre']);
+        Permission::create(['name' => PermissionConstant::ADD_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost_Centre']);
+        Permission::create(['name' => PermissionConstant::UPDATE_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost_Centre']);
+        Permission::create(['name' => PermissionConstant::DELETE_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost_Centre']);
+        
         Permission::create(['name' => PermissionConstant::VIEW_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         Permission::create(['name' => PermissionConstant::ADD_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         Permission::create(['name' => PermissionConstant::UPDATE_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
