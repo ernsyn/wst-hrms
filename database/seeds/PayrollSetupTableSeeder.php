@@ -11,16 +11,7 @@ class PayrollSetupTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        PayrollSetup::create([
-            'key' => 'SENIORITY_PAY',
-            'value' => '50',
-            'remark' => 'Payroll seniority pay',
-            'company_id' => 1,
-            'status' => 1,
-            'created_by' => 1
-        ]);
-        
+    {        
         PayrollSetup::create([
             'key' => 'MIN_OT_HOUR',
             'value' => '1',

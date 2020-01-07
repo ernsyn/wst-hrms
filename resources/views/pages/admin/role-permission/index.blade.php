@@ -11,7 +11,7 @@
 		</button>
 	</div>
 	@endif
-	@can(PermissionConstant::ADD_ROLE)
+	
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -20,7 +20,7 @@
             </a>
         </div>
     </div>
-    @endcan
+   
     <div class="row">
         <div class="col-md-12">
             <div class="float-right tableTools-container"></div>

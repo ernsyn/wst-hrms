@@ -32,8 +32,6 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Name</th>
-                                                <th>Seniority Pay</th>
-                                                <th>Amount</th>
                                                 <th>Payroll Type</th>
                                                 <th>Action</th>
                                             </tr>
@@ -41,8 +39,6 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{$row['name']}}</td>
-                                                <td>{{$row['seniority_pay']}}</td>
-                                                <td>{{$row['amount']}}</td>
                                                 <td>{{$row['payroll_type']}}</td>
                                                 <td>Action</td>
                                             </tr>

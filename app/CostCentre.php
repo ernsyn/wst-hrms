@@ -14,8 +14,6 @@ class CostCentre extends Model implements Auditable
 
     protected $fillable = [
         'name',
-        'seniority_pay',
-        'amount',
         'created_by'
     ];
     protected $dates = ['deleted_at'];

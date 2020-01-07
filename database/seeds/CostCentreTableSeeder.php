@@ -14,14 +14,10 @@ class CostCentreTableSeeder extends Seeder
     {
         CostCentre::create([
             'name' => 'HQ',
-            'seniority_pay' => 'Auto',
-            'amount' => '50.00'
         ]);
         
         CostCentre::create([
             'name' => 'SELANGOR',
-            'seniority_pay' => 'Auto',
-            'amount' => '50.00'
         ]);
     }
 }

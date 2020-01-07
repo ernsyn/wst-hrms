@@ -59,6 +59,11 @@ Breadcrumbs::for('admin.employees', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Employees', route('admin.employees'));
 });
+//employee asset list
+Breadcrumbs::for('admin.employees.test', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Employees List', route('admin.employees.test'));
+});
 
 //add employee
 Breadcrumbs::for('admin.employees.add', function ($trail) {
@@ -71,7 +76,11 @@ Breadcrumbs::for('admin.employees.id', function ($trail) {
     $trail->parent('admin.employees');
     $trail->push('Employee Profile', route('admin.employees.id', ''));
 });
-
+// Home > Admin > Employee List > Profile
+Breadcrumbs::for('admin.employees.assetid', function ($trail) {
+    $trail->parent('admin.employees');
+    $trail->push('Employee Asset', route('admin.employees.assetid', ''));
+});
 // SECTION: (Admin) E-Leave
 
 //E-Leave Configuration 

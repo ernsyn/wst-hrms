@@ -66,6 +66,10 @@
                 <li class="menu-option {{ request()->is('admin/employees') ? 'active' : '' }}">
                     <a href="{{ route('admin.employees') }}">Employee List</a>
                 </li>
+                 {{-- OPTION: Employee Asset --}}
+                <li class="menu-option {{ request()->is('admin/employees/test') ? 'active' : '' }}">
+                    <a href="{{ route('admin.employees.test') }}">Employee Asset</a>
+                </li>
             </ul>
         </li>
     
@@ -168,9 +172,11 @@
                 @endcan
                 
                 {{-- OPTION: Cost Centres --}}
+                @canany([PermissionConstant::VIEW_COST_CENTRE, PermissionConstant::ADD_COST_CENTRE, PermissionConstant::UPDATE_COST_CENTRE, PermissionConstant::DELETE_COST_CENTRE])
                 <li class="menu-option {{ request()->is('admin/settings/cost-centres') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.cost-centres')}}">Cost Centres</a>
                 </li>
+                @endcan
                 
                 {{-- Departments --}}
                 @canany([PermissionConstant::VIEW_DEPARTMENT, PermissionConstant::ADD_DEPARTMENT, PermissionConstant::UPDATE_DEPARTMENT, PermissionConstant::DELETE_DEPARTMENT])
@@ -187,18 +193,23 @@
                 @endcan
                 
                 {{-- OPTION: Teams --}}
+                @canany([PermissionConstant::VIEW_TEAM, PermissionConstant::ADD_TEAM, PermissionConstant::UPDATE_TEAM, PermissionConstant::DELETE_TEAM])
                 <li class="menu-option {{ request()->is('admin/settings/teams') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.teams')}}">Teams</a>
                 </li>
+                @endcan
                 {{-- OPTION: Positions --}}
+                @canany([PermissionConstant::VIEW_POSITION, PermissionConstant::ADD_POSITION, PermissionConstant::UPDATE_POSITION, PermissionConstant::DELETE_POSITION])
                 <li class="menu-option {{ request()->is('admin/settings/positions') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.positions')}}">Positions</a>
                 </li>
+                @endcan
                 {{-- OPTION: Grades --}}
+                @canany([PermissionConstant::VIEW_GRADE, PermissionConstant::ADD_GRADE, PermissionConstant::UPDATE_GRADE, PermissionConstant::DELETE_GRADE])
                 <li class="menu-option {{ request()->is('admin/settings/grades') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.grades')}}">Grades</a>
                 </li>
-                
+                @endcan
                 {{-- Sections --}}
                 @canany([PermissionConstant::VIEW_SECTION, PermissionConstant::ADD_SECTION, PermissionConstant::UPDATE_SECTION, PermissionConstant::DELETE_SECTION])
                 <li class="menu-option {{ request()->is('admin/settings/sections') ? 'active' : '' }}">
