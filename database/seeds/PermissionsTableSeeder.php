@@ -28,6 +28,9 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::DELETE_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         Permission::create(['name' => PermissionConstant::DUPLICATE_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         
+        
+        Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::ADD_EMPLOYEE, 'mode' => 'admin', 'module' => 'Employees']);
         Permission::create(['name' => PermissionConstant::ASSIGN_ROLE, 'mode' => 'admin', 'module' => 'Employees']);
         
         Permission::create(['name' => PermissionConstant::VIEW_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);

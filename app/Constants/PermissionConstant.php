@@ -10,6 +10,8 @@ class PermissionConstant
     const UPDATE_ROLE = 'Update Role';
     const DELETE_ROLE = 'Delete Role';
     const DUPLICATE_ROLE = 'Duplicate Role';
+    const VIEW_EMPLOYEE = 'View Employee';
+    const ADD_EMPLOYEE = 'Add Employee';
     const ASSIGN_ROLE = 'Assign Role';
     const VIEW_COMPANY = 'View Company';
     const ADD_COMPANY = 'Add Company';

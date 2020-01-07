@@ -114,7 +114,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     
     // SECTION: EMPLOYEE
     // > View
-    Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
+    // Employee
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EMPLOYEE]], function () {
+        Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_EMPLOYEE]], function () {
+    Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add')->where('id', '[0-9]+');
+        Route::post('employees/add','Admin\EmployeeController@postAdd')->name('admin.employees.add.post');
+    });
     Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
     Route::get('employees/{id}/security-groups','Admin\EmployeeController@securityGroupDisplay')->name('admin.employees.id.security-group')->where('id', '[0-9]+');
     
@@ -148,9 +155,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::get('employees/{id}/report-to/employee-list', 'Admin\EmployeeController@getReportToEmployeeList')->name('admin.employees.report-to.employee-list')->where('id', '[0-9]+');
 
     // > Add / Edit
-    Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add')->where('id', '[0-9]+');
-    Route::post('employees/add','Admin\EmployeeController@postAdd')->name('admin.employees.add.post');
-    Route::get('employees/id/working-days/{emp_id}', 'Admin\EmployeeController@getEmployeeWorkingDay')->name('admin.employees.id.working-day.get')->where('id', '[0-9]+');
+     Route::get('employees/id/working-days/{emp_id}', 'Admin\EmployeeController@getEmployeeWorkingDay')->name('admin.employees.id.working-day.get')->where('id', '[0-9]+');
 
     
     Route::post('employees/{emp_id}/emergency-contacts','Admin\EmployeeController@postEmergencyContact')->name('admin.employees.emergency-contacts.post')->where('id', '[0-9]+');
