@@ -310,6 +310,54 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
         Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_BRANCH]], function () {
         Route::get('settings/branches/{id}/delete','Admin\SettingsController@deleteBranch')->name('admin.settings.branches.delete')->where('id', '[0-9]+');
     });
+        
+    // Team
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_TEAM]], function () {
+        Route::get('settings/teams', 'Admin\SettingsController@displayTeams')->name('admin.settings.teams');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_TEAM]], function () {
+        Route::get('settings/teams/add','Admin\SettingsController@addTeam')->name('admin.settings.teams.add');
+        Route::post('settings/teams/add','Admin\SettingsController@postAddTeam')->name('admin.settings.teams.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_TEAM]], function () {
+        Route::get('settings/teams/{id}/edit','Admin\SettingsController@editTeam')->name('admin.settings.teams.edit')->where('id', '[0-9]+');
+        Route::post('settings/teams/{id}/edit','Admin\SettingsController@postEditTeam')->name('admin.settings.teams.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_TEAM]], function () {
+        Route::get('settings/teams/{id}/delete','Admin\SettingsController@deleteTeam')->name('admin.settings.teams.delete')->where('id', '[0-9]+');
+    });
+    
+    // Position
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_POSITION]], function () {
+        Route::get('settings/positions', 'Admin\SettingsController@displayPositions')->name('admin.settings.positions');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_POSITION]], function () {
+        Route::get('settings/positions/add','Admin\SettingsController@addPosition')->name('admin.settings.positions.add');
+        Route::post('settings/positions/add','Admin\SettingsController@postAddPosition')->name('admin.settings.positions.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_POSITION]], function () {
+        Route::get('settings/positions/{id}/edit','Admin\SettingsController@editPosition')->name('admin.settings.positions.edit')->where('id', '[0-9]+');
+        Route::post('settings/positions/{id}/edit','Admin\SettingsController@postEditPosition')->name('admin.settings.positions.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_POSITION]], function () {
+        Route::get('settings/positions/{id}/delete','Admin\SettingsController@deletePosition')->name('admin.settings.positions.delete')->where('id', '[0-9]+');
+    });
+    
+    // Grade
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_GRADE]], function () {
+        Route::get('settings/grades', 'Admin\SettingsController@displayGrades')->name('admin.settings.grades');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_GRADE]], function () {
+        Route::get('settings/grades/add','Admin\SettingsController@addGrade')->name('admin.settings.grades.add');
+        Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_GRADE]], function () {
+        Route::get('settings/grades/{id}/edit','Admin\SettingsController@editGrade')->name('admin.settings.grades.edit')->where('id', '[0-9]+');
+        Route::post('settings/grades/{id}/edit','Admin\SettingsController@postEditGrade')->name('admin.settings.grades.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_GRADE]], function () {
+        Route::get('settings/grades/{id}/delete','Admin\SettingsController@deleteGrade')->name('admin.settings.grades.delete')->where('id', '[0-9]+');
+    });
     
     // Section
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_SECTION]], function () {
@@ -491,9 +539,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     });
     
     Route::get('settings/jobs', 'Admin\SettingsController@displayJobs')->name('admin-settings-jobs');
-    Route::get('settings/teams', 'Admin\SettingsController@displayTeams')->name('admin.settings.teams');
-    Route::get('settings/positions', 'Admin\SettingsController@displayPositions')->name('admin.settings.positions');
-    Route::get('settings/grades', 'Admin\SettingsController@displayGrades')->name('admin.settings.grades');
     Route::get('settings/working-days', 'Admin\SettingsController@displayWorkingDays')->name('admin.settings.working-days');
 
     // > View - List Company Details
@@ -517,18 +562,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::post('employees/{id}/action/resign', 'Admin\EmployeeController@postResign')->name('admin.employees.id.action.resign')->where('id', '[0-9]+');
 
     // > Settings Add
-    
-    
-    Route::get('settings/positions/add','Admin\SettingsController@addPosition')->name('admin.settings.positions.add');
-    Route::post('settings/positions/add','Admin\SettingsController@postAddPosition')->name('admin.settings.positions.add.post');
-    
-    Route::get('settings/grades/add','Admin\SettingsController@addGrade')->name('admin.settings.grades.add');
-    Route::post('settings/grades/add','Admin\SettingsController@postAddGrade')->name('admin.settings.grades.add.post');
-    
-    Route::get('settings/teams/add','Admin\SettingsController@addTeam')->name('admin.settings.teams.add');
-    Route::post('settings/teams/add','Admin\SettingsController@postAddTeam')->name('admin.settings.teams.add.post');
-    
-
     Route::get('settings/working-days/add','Admin\SettingsController@addWorkingDay')->name('admin.settings.working-days.add');
     Route::post('settings/working-days/add','Admin\SettingsController@postAddWorkingDay')->name('admin.settings.working-days.add.post');
 
@@ -550,12 +583,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::post('settings/holidays/add','Admin\SettingsController@postAddHoliday')->name('admin.settings.holidays.add.post');
 
     // > Edit
-    Route::get('settings/positions/{id}/edit','Admin\SettingsController@editPosition')->name('admin.settings.positions.edit')->where('id', '[0-9]+');
-    Route::post('settings/positions/{id}/edit','Admin\SettingsController@postEditPosition')->name('admin.settings.positions.edit.post')->where('id', '[0-9]+');
-    Route::get('settings/grades/{id}/edit','Admin\SettingsController@editGrade')->name('admin.settings.grades.edit')->where('id', '[0-9]+');
-    Route::post('settings/grades/{id}/edit','Admin\SettingsController@postEditGrade')->name('admin.settings.grades.edit.post')->where('id', '[0-9]+');
-    Route::get('settings/teams/{id}/edit','Admin\SettingsController@editTeam')->name('admin.settings.teams.edit')->where('id', '[0-9]+');
-    Route::post('settings/teams/{id}/edit','Admin\SettingsController@postEditTeam')->name('admin.settings.teams.edit.post')->where('id', '[0-9]+');
     Route::get('settings/working-days/{id}/edit','Admin\SettingsController@editWorkingDay')->name('admin.settings.working-days.edit')->where('id', '[0-9]+');
     Route::post('settings/working-days/{id}/edit','Admin\SettingsController@postEditWorkingDay')->name('admin.settings.working-days.edit.post')->where('id', '[0-9]+');
     Route::post('settings/leave-balances/edit','Admin\SettingsController@editLeaveBalance')->name('admin.settings.leave-balances.edit.post');
@@ -564,9 +591,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
 
 
     // > Delete
-    Route::get('settings/positions/{id}/delete','Admin\SettingsController@deletePosition')->name('admin.settings.positions.delete')->where('id', '[0-9]+');
-    Route::get('settings/grades/{id}/delete','Admin\SettingsController@deleteGrade')->name('admin.settings.grades.delete')->where('id', '[0-9]+');
-    Route::get('settings/teams/{id}/delete','Admin\SettingsController@deleteTeam')->name('admin.settings.teams.delete')->where('id', '[0-9]+');
     Route::get('settings/working-days/{id}/delete','Admin\SettingsController@deleteWorkingDay')->name('admin.settings.working-days.delete')->where('id', '[0-9]+');
 
     // SECTION: E-Leave

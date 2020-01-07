@@ -35,10 +35,10 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);
         Permission::create(['name' => PermissionConstant::DELETE_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company', 'superadmin' => 1]);
         
-        Permission::create(['name' => PermissionConstant::VIEW_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost_Centre']);
-        Permission::create(['name' => PermissionConstant::ADD_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost_Centre']);
-        Permission::create(['name' => PermissionConstant::UPDATE_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost_Centre']);
-        Permission::create(['name' => PermissionConstant::DELETE_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost_Centre']);
+        Permission::create(['name' => PermissionConstant::VIEW_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost Centre']);
+        Permission::create(['name' => PermissionConstant::ADD_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost Centre']);
+        Permission::create(['name' => PermissionConstant::UPDATE_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost Centre']);
+        Permission::create(['name' => PermissionConstant::DELETE_COST_CENTRE, 'mode' => 'admin', 'module' => 'Settings - Cost Centre']);
         
         Permission::create(['name' => PermissionConstant::VIEW_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
         Permission::create(['name' => PermissionConstant::ADD_COMPANY_BANK, 'mode' => 'admin', 'module' => 'Settings - Company Details']);
@@ -54,6 +54,21 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::ADD_BRANCH, 'mode' => 'admin', 'module' => 'Settings - Branch']);
         Permission::create(['name' => PermissionConstant::UPDATE_BRANCH, 'mode' => 'admin', 'module' => 'Settings - Branch']);
         Permission::create(['name' => PermissionConstant::DELETE_BRANCH, 'mode' => 'admin', 'module' => 'Settings - Branch']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_TEAM, 'mode' => 'admin', 'module' => 'Settings - Team']);
+        Permission::create(['name' => PermissionConstant::ADD_TEAM, 'mode' => 'admin', 'module' => 'Settings - Team']);
+        Permission::create(['name' => PermissionConstant::UPDATE_TEAM, 'mode' => 'admin', 'module' => 'Settings - Team']);
+        Permission::create(['name' => PermissionConstant::DELETE_TEAM, 'mode' => 'admin', 'module' => 'Settings - Team']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_POSITION, 'mode' => 'admin', 'module' => 'Settings - Position']);
+        Permission::create(['name' => PermissionConstant::ADD_POSITION, 'mode' => 'admin', 'module' => 'Settings - Position']);
+        Permission::create(['name' => PermissionConstant::UPDATE_POSITION, 'mode' => 'admin', 'module' => 'Settings - Position']);
+        Permission::create(['name' => PermissionConstant::DELETE_POSITION, 'mode' => 'admin', 'module' => 'Settings - Position']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_GRADE, 'mode' => 'admin', 'module' => 'Settings - Grade']);
+        Permission::create(['name' => PermissionConstant::ADD_GRADE, 'mode' => 'admin', 'module' => 'Settings - Grade']);
+        Permission::create(['name' => PermissionConstant::UPDATE_GRADE, 'mode' => 'admin', 'module' => 'Settings - Grade']);
+        Permission::create(['name' => PermissionConstant::DELETE_GRADE, 'mode' => 'admin', 'module' => 'Settings - Grade']);
         
         Permission::create(['name' => PermissionConstant::VIEW_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);
         Permission::create(['name' => PermissionConstant::ADD_SECTION, 'mode' => 'admin', 'module' => 'Settings - Section']);

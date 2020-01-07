@@ -189,18 +189,23 @@
                 @endcan
                 
                 {{-- OPTION: Teams --}}
+                @canany([PermissionConstant::VIEW_TEAM, PermissionConstant::ADD_TEAM, PermissionConstant::UPDATE_TEAM, PermissionConstant::DELETE_TEAM])
                 <li class="menu-option {{ request()->is('admin/settings/teams') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.teams')}}">Teams</a>
                 </li>
+                @endcan
                 {{-- OPTION: Positions --}}
+                @canany([PermissionConstant::VIEW_POSITION, PermissionConstant::ADD_POSITION, PermissionConstant::UPDATE_POSITION, PermissionConstant::DELETE_POSITION])
                 <li class="menu-option {{ request()->is('admin/settings/positions') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.positions')}}">Positions</a>
                 </li>
+                @endcan
                 {{-- OPTION: Grades --}}
+                @canany([PermissionConstant::VIEW_GRADE, PermissionConstant::ADD_GRADE, PermissionConstant::UPDATE_GRADE, PermissionConstant::DELETE_GRADE])
                 <li class="menu-option {{ request()->is('admin/settings/grades') ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.grades')}}">Grades</a>
                 </li>
-                
+                @endcan
                 {{-- Sections --}}
                 @canany([PermissionConstant::VIEW_SECTION, PermissionConstant::ADD_SECTION, PermissionConstant::UPDATE_SECTION, PermissionConstant::DELETE_SECTION])
                 <li class="menu-option {{ request()->is('admin/settings/sections') ? 'active' : '' }}">
