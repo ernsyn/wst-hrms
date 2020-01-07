@@ -181,4 +181,8 @@ class Employee extends Model implements Auditable
     {
         return $this->hasMany('App\PayrollTrx');
     }
+    public function employee_assets()
+    {
+        return $this->hasMany('App\EmployeeAsset', 'emp_id');
+    }
 }
