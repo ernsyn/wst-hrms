@@ -252,11 +252,6 @@
                 </li>
                 @endcan
                 
-                {{-- OPTION: Working Days --}}
-                <li class="menu-option {{ request()->is('admin/settings/working-days') ? 'active' : '' }}">
-                    <a href="{{ route('admin.settings.working-days')}}">Working Days</a>
-                </li>
-                
                 {{-- OPTION: EPF --}}
                 @canany([PermissionConstant::VIEW_EPF, PermissionConstant::ADD_EPF, PermissionConstant::UPDATE_EPF, PermissionConstant::DELETE_EPF])
                 <li class="menu-option {{ request()->is('admin/settings/epf') ? 'active' : '' }}">

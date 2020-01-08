@@ -18490,7 +18490,7 @@ select:-webkit-autofill:focus {
   right: 0;
 }
 
-::-webkit-scrollbar {
+#sidebar::-webkit-scrollbar {
   height: 0px;
   width: 0px;
   background: transparent;
