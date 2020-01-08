@@ -117,14 +117,78 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     // Employee
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EMPLOYEE]], function () {
         Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
+        Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_EMPLOYEE]], function () {
     Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add')->where('id', '[0-9]+');
         Route::post('employees/add','Admin\EmployeeController@postAdd')->name('admin.employees.add.post');
     });
-    Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
+    Route::group(['middleware' => ['permission:'.PermissionConstant::RESET_PASSWORD]], function () {
+        Route::post('employees/{id}/reset-password','Admin\EmployeeController@postResetPassword')->name('admin.employees.reset-password.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::EDIT_PROFILE]], function () {
+        Route::post('employees/{id}/edit','Admin\EmployeeController@postEditProfile')->name('admin.employees.profile.edit.post')->where('id', '[0-9]+');
+        Route::post('employees/{emp_id}/profile-pic/edit','Admin\EmployeeController@postEditProfilePicture')->name('admin.employees.profile-pic.edit.post')->where('emp_id', '[0-9]+');
+    });
+    // Emergency_Contact
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EMERGENCY_CONTACT]], function () {
+        Route::get('employees/{id}/dt/emergency-contacts', 'Admin\EmployeeController@getDataTableEmergencyContacts')->name('admin.employees.dt.emergency-contacts')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_EMERGENCY_CONTACT]], function () {
+        Route::post('employees/{emp_id}/emergency-contacts','Admin\EmployeeController@postEmergencyContact')->name('admin.employees.emergency-contacts.post')->where('id', '[0-9]+');
+                
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_EMERGENCY_CONTACT]], function () {
+        Route::post('employees/{emp_id}/emergency-contacts/{id}/edit','Admin\EmployeeController@postEditEmergencyContact')->name('admin.employees.emergency-contacts.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_EMERGENCY_CONTACT]], function () {
+        Route::get('employees/{emp_id}/emergency-contacts/{id}/delete','Admin\EmployeeController@deleteEmergencyContact')->name('admin.settings.emergency-contacts.delete')->where('id', '[0-9]+');
+    });
+    // Dependent
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_DEPENDENT]], function () {
+        Route::get('employees/{id}/dt/dependents', 'Admin\EmployeeController@getDataTableDependents')->name('admin.employees.dt.dependents')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_DEPENDENT]], function () {
+        Route::post('employees/{emp_id}/dependents','Admin\EmployeeController@postDependent')->name('admin.employees.dependents.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_DEPENDENT]], function () {
+        Route::post('employees/{emp_id}/dependents/{id}/edit','Admin\EmployeeController@postEditDependent')->name('admin.employees.dependents.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_DEPENDENT]], function () {
+        Route::get('employees/{emp_id}/dependents/{id}/delete','Admin\EmployeeController@deleteDependent')->name('admin.settings.dependents.delete')->where('id', '[0-9]+');
+    });
+    // Immigration
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_IMMIGRATION]], function () {
+        Route::get('employees/{id}/dt/immigrations', 'Admin\EmployeeController@getDataTableImmigrations')->name('admin.employees.dt.immigrations')->where('id', '[0-9]+');
+            
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_IMMIGRATION]], function () {
+        Route::post('employees/{emp_id}/immigrations','Admin\EmployeeController@postImmigration')->name('admin.employees.immigrations.post')->where('id', '[0-9]+');
+                
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_IMMIGRATION]], function () {
+        Route::post('employees/{emp_id}/immigrations/{id}/edit','Admin\EmployeeController@postEditImmigration')->name('admin.employees.immigrations.edit.post')->where('id', '[0-9]+');
+                    
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_IMMIGRATION]], function () {
+        Route::get('employees/{emp_id}/immigrations/{id}/delete','Admin\EmployeeController@deleteImmigration')->name('admin.settings.immigrations.delete')->where('id', '[0-9]+');
+                        
+    });
+    // Visa
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_VISA]], function () {
+        Route::get('employees/{id}/dt/visas', 'Admin\EmployeeController@getDataTableVisas')->name('admin.employees.dt.visas')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_VISA]], function () {
+        Route::post('employees/{emp_id}/visas','Admin\EmployeeController@postVisa')->name('admin.employees.visas.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_VISA]], function () {
+        Route::post('employees/{emp_id}/visas/{id}/edit','Admin\EmployeeController@postEditVisa')->name('admin.employees.visas.edit.post')->where('id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_VISA]], function () {
+        Route::get('employees/{emp_id}/visas/{id}/delete','Admin\EmployeeController@deleteVisa')->name('admin.settings.visas.delete')->where('id', '[0-9]+');
+    });
+    
     Route::get('employees/{id}/security-groups','Admin\EmployeeController@securityGroupDisplay')->name('admin.employees.id.security-group')->where('id', '[0-9]+');  
-    Route::post('employees/{id}/reset-password','Admin\EmployeeController@postResetPassword')->name('admin.employees.reset-password.post')->where('id', '[0-9]+');
     Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
     Route::get('employees/assetlist', 'Admin\EmployeeController@assetlist')->name('admin.employees.assetlist');
@@ -136,31 +200,23 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
 
     // > Data Tables
     
-    Route::get('employees/{id}/dt/dependents', 'Admin\EmployeeController@getDataTableDependents')->name('admin.employees.dt.dependents')->where('id', '[0-9]+');
-    Route::get('employees/{id}/dt/immigrations', 'Admin\EmployeeController@getDataTableImmigrations')->name('admin.employees.dt.immigrations')->where('id', '[0-9]+');
-    Route::get('employees/{id}/dt/visas', 'Admin\EmployeeController@getDataTableVisas')->name('admin.employees.dt.visas')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/jobs', 'Admin\EmployeeController@getDataTableJobs')->name('admin.employees.dt.jobs')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/bank-accounts', 'Admin\EmployeeController@getDataTableBankAccounts')->name('admin.employees.dt.bank-accounts')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/experiences', 'Admin\EmployeeController@getDataTableExperiences')->name('admin.employees.dt.experiences')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/education', 'Admin\EmployeeController@getDataTableEducation')->name('admin.employees.dt.education')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/skills', 'Admin\EmployeeController@getDataTableSkills')->name('admin.employees.dt.skills')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/attachments', 'Admin\EmployeeController@getDataTableAttachments')->name('admin.employees.dt.attachments')->where('id', '[0-9]+');
-    Route::get('employees/{id}/dt/emergency-contacts', 'Admin\EmployeeController@getDataTableEmergencyContacts')->name('admin.employees.dt.emergency-contacts')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/report-tos', 'Admin\EmployeeController@getDataTableReportTo')->name('admin.employees.dt.report-tos')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/security-groups', 'Admin\EmployeeController@getDataTableSecurityGroup')->name('admin.employees.dt.security-groups')->where('id', '[0-9]+');
     Route::get('employees/{id}/dt/audit-trail', 'Admin\EmployeeController@getDataTableAuditTrails')->name('admin.employees.dt.audit-trail')->where('id', '[0-9]+');
-     Route::get('employees/{id}/dt/employee-assets', 'Admin\EmployeeController@getDataTableEmployeeAssets')->name('admin.employees.dt.employee-assets')->where('id', '[0-9]+');
+    Route::get('employees/{id}/dt/employee-assets', 'Admin\EmployeeController@getDataTableEmployeeAssets')->name('admin.employees.dt.employee-assets')->where('id', '[0-9]+');
 
     // > Ajax
     Route::get('employees/{id}/attendances', 'Admin\EmployeeController@ajaxGetAttendances')->name('admin.employees.attendances.get')->where('id', '[0-9]+');
     Route::get('employees/{id}/report-to/employee-list', 'Admin\EmployeeController@getReportToEmployeeList')->name('admin.employees.report-to.employee-list')->where('id', '[0-9]+');
 
     // > Add / Edit
-     Route::get('employees/id/working-days/{emp_id}', 'Admin\EmployeeController@getEmployeeWorkingDay')->name('admin.employees.id.working-day.get')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/emergency-contacts','Admin\EmployeeController@postEmergencyContact')->name('admin.employees.emergency-contacts.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/dependents','Admin\EmployeeController@postDependent')->name('admin.employees.dependents.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/immigrations','Admin\EmployeeController@postImmigration')->name('admin.employees.immigrations.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/visas','Admin\EmployeeController@postVisa')->name('admin.employees.visas.post')->where('id', '[0-9]+');
+    Route::get('employees/id/working-days/{emp_id}', 'Admin\EmployeeController@getEmployeeWorkingDay')->name('admin.employees.id.working-day.get')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/jobs','Admin\EmployeeController@postJob')->name('admin.employees.jobs.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/employee-assets','Admin\EmployeeController@postAddAsset')->name('admin.employees.employee-assets.post')->where('id', '[0-9]+');
     Route::post('employees/assetlist','Admin\EmployeeController@postAsset')->name('admin.employees.assetlist.post');
@@ -177,17 +233,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::post('employees/{emp_id}/attachments','Admin\EmployeeController@postAttachment')->name('admin.employees.attachments.post')->where('id', '[0-9]+');
 
     //admin edit
-    Route::post('employees/{id}/edit','Admin\EmployeeController@postEditProfile')->name('admin.employees.profile.edit.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/profile-pic/edit','Admin\EmployeeController@postEditProfilePicture')->name('admin.employees.profile-pic.edit.post')->where('emp_id', '[0-9]+');
-    Route::post('employees/{emp_id}/dependents/{id}/edit','Admin\EmployeeController@postEditDependent')->name('admin.employees.dependents.edit.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/emergency-contacts/{id}/edit','Admin\EmployeeController@postEditEmergencyContact')->name('admin.employees.emergency-contacts.edit.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/immigrations/{id}/edit','Admin\EmployeeController@postEditImmigration')->name('admin.employees.immigrations.edit.post')->where('id', '[0-9]+');
-    Route::post('employees/{emp_id}/visas/{id}/edit','Admin\EmployeeController@postEditVisa')->name('admin.employees.visas.edit.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/jobs/{id}/edit','Admin\EmployeeController@postEditJob')->name('admin.employees.jobs.edit.post')->where('id', '[0-9]+');
-
     Route::post('employees/{emp_id}/bank-accounts/{id}/edit','Admin\EmployeeController@postEditBankAccount')->name('admin.employees.bank-accounts.edit')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/bank-accounts/{id}/edit','Admin\EmployeeController@postEditBankAccount')->name('admin.employees.bank-accounts.edit.post')->where('id', '[0-9]+');
-     Route::post('employees/{emp_id}/employee-assets/{id}/edit','Admin\EmployeeController@postEditEmployeeAsset')->name('admin.employees.employee-assets.edit.post')->where('id', '[0-9]+');
+    Route::post('employees/{emp_id}/employee-assets/{id}/edit','Admin\EmployeeController@postEditEmployeeAsset')->name('admin.employees.employee-assets.edit.post')->where('id', '[0-9]+');
     
     Route::post('employees/{emp_id}/companies/{id}/edit','Admin\EmployeeController@postEditCompany')->name('admin.employees.companies.edit')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/companies/{id}/edit','Admin\EmployeeController@postEditCompany')->name('admin.employees.companies.edit.post')->where('id', '[0-9]+');
@@ -211,11 +260,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
 
 
     //admin/employee/delete
-    Route::get('employees/{emp_id}/emergency-contacts/{id}/delete','Admin\EmployeeController@deleteEmergencyContact')->name('admin.settings.emergency-contacts.delete')->where('id', '[0-9]+');
-    Route::get('employees/{emp_id}/dependents/{id}/delete','Admin\EmployeeController@deleteDependent')->name('admin.settings.dependents.delete')->where('id', '[0-9]+');
-       
-    Route::get('employees/{emp_id}/immigrations/{id}/delete','Admin\EmployeeController@deleteImmigration')->name('admin.settings.immigrations.delete')->where('id', '[0-9]+');
-    Route::get('employees/{emp_id}/visas/{id}/delete','Admin\EmployeeController@deleteVisa')->name('admin.settings.visas.delete')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/jobs/{id}/delete','Admin\EmployeeController@deleteJob')->name('admin.settings.jobs.delete')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/bank-accounts/{id}/delete','Admin\EmployeeController@deleteBankAccount')->name('admin.settings.bank-accounts.delete')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/employee-assets/{id}/delete','Admin\EmployeeController@deleteEmployeeAsset')->name('admin.settings.employee-assets.delete')->where('id', '[0-9]+');

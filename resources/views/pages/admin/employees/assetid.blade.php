@@ -7,6 +7,7 @@
         <div id="employee-profile-details" class="card-body bg-primary text-white">
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
+                    @canany(PermissionConstant::EDIT_PROFILE)
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->id}}" data-target="#edit-picture-popup">
                         @if ($employee->profile_media_id != null)
                             <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:150px; height:150px">
@@ -17,6 +18,7 @@
                     </div>
                         @endif
                     </button>
+                    @endcan
                 </div>
                 <div id="basic-profile" class="px-2 ml-3 w-100">
                     <div class="header d-flex pb-3">
@@ -53,10 +55,12 @@
                     <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
                         Assign Role
                     </button>
-                    @endcan                 
+                    @endcan     
+                    @canany(PermissionConstant::RESET_PASSWORD)            
                     <button id="emp-reset-password-btn" data-toggle="modal" data-target="#reset-password-popup" type="button" class="btn btn-sm text-white rounded">                        {{-- <i class="fas fa-pen"></i> --}}
                         Reset Password
                     </button>
+                    @endcan
                 </div>
             </div>
 
@@ -66,6 +70,7 @@
         </div>
     </div>
 {{-- Reset Password --}}
+@canany(PermissionConstant::RESET_PASSWORD)
 <div class="modal fade" id="reset-password-popup" tabindex="-1" role="dialog" aria-labelledby="reset-password-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -112,6 +117,7 @@
         </div>
     </div>
 </div>
+@endcan
 
 @can(PermissionConstant::ASSIGN_ROLE)
 {{-- Change Role --}}
@@ -163,6 +169,7 @@
 @endcan
 
 {{-- Update picture --}}
+@canany(PermissionConstant::EDIT_PROFILE)
 <div class="modal fade" id="edit-picture-popup" tabindex="-1" role="dialog" aria-labelledby="edit-picture-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -193,6 +200,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('scripts')

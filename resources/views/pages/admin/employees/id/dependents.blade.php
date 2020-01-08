@@ -1,4 +1,5 @@
 {{-- ADD --}}
+@canany(PermissionConstant::ADD_DEPENDENT)
 <div class="modal fade" id="add-dependent-popup" tabindex="-1" role="dialog" aria-labelledby="add-dependent-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -66,8 +67,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- UPDATE --}}
+@canany(PermissionConstant::UPDATE_DEPENDENT)
 <div class="modal fade" id="edit-dependent-popup" tabindex="-1" role="dialog" aria-labelledby="edit-dependent-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -135,8 +138,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- DELETE--}}
+@canany(PermissionConstant::DELETE_DEPENDENT)
 <div class="modal fade" id="confirm-delete-dependent-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-dependent-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -157,16 +162,20 @@
         </div>
     </div>
 </div>
+@endcan
 
 
 {{-- TABLE --}}
+@canany(PermissionConstant::VIEW_DEPENDENT)
 <div class="tab-pane fade show p-3" id="nav-dependent" role="tabpanel" aria-labelledby="nav-dependent-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
+        @canany(PermissionConstant::ADD_DEPENDENT)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-dependent-popup">
                 Add Dependent
             </button>
+        @endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="employee-dependents-table">
@@ -183,7 +192,7 @@
         </thead>
     </table>
 </div>
-
+@endcan
 
 @section('scripts')
 <script>
@@ -220,8 +229,15 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-dependent-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-dependent-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `
+                    @canany(PermissionConstant::UPDATE_DEPENDENT)
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-dependent-popup"><i class="far fa-edit"></i></button>
+					@endcan
+                    ` + `
+                    @canany(PermissionConstant::DELETE_DEPENDENT)
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-dependent-modal"><i class="far fa-trash-alt"></i></button>
+					@endcan
+                    `;
                 }
             }
         ]

@@ -53,10 +53,12 @@
                     <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
                         Assign Role
                     </button>
-					@endcan					
+					@endcan
+					@canany(PermissionConstant::RESET_PASSWORD)					
 					<button id="emp-reset-password-btn" data-toggle="modal" data-target="#reset-password-popup" type="button" class="btn btn-sm text-white rounded">                        {{-- <i class="fas fa-pen"></i> --}}
                         Reset Password
                     </button>
+                    @endcan
                 </div>
             </div>
 
@@ -68,13 +70,21 @@
                     <div class="nav nav-tabs font-weight-bold scrollable d-flex flex-nowrap tabbable text-nowrap" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile"
                             aria-selected="false">Profile</a>
+                        @canany(PermissionConstant::VIEW_EMERGENCY_CONTACT)    
                         <a class="nav-item nav-link" id="nav-emergency-tab" data-toggle="tab" href="#nav-emergency" role="tab" aria-controls="nav-emergency"
                             aria-selected="false">Emergency</a>
+                        	@endcan
+                        @canany(PermissionConstant::VIEW_DEPENDENT)
                         <a class="nav-item nav-link" id="nav-dependent-tab" data-toggle="tab" href="#nav-dependent" role="tab" aria-controls="nav-dependent"
                             aria-selected="true">Dependent</a>
+                        	@endcan
+                        @canany(PermissionConstant::VIEW_IMMIGRATION)
                         <a class="nav-item nav-link" id="nav-immigration-tab" data-toggle="tab" href="#nav-immigration" role="tab" aria-controls="nav-immigration"
                             aria-selected="false">Immigration</a>
+                            @endcan
+                        @canany(PermissionConstant::VIEW_VISA)
                         <a class="nav-item nav-link" id="nav-visa-tab" data-toggle="tab" href="#nav-visa" role="tab" aria-controls="nav-visa" aria-selected="true">Visa</a>
+                        @endcan
                         <a class="nav-item nav-link" id="nav-job-tab" data-toggle="tab" href="#nav-job" role="tab" aria-controls="nav-job" aria-selected="false">Job</a>
                         <a class="nav-item nav-link" id="nav-bank-tab" data-toggle="tab" href="#nav-bank" role="tab" aria-controls="nav-bank" aria-selected="true">Bank</a>
                         <a class="nav-item nav-link" id="nav-qualification-tab" data-toggle="tab" href="#nav-qualification" role="tab" aria-controls="nav-qualification"
@@ -270,8 +280,10 @@
                                     </div> --}}
                                 </div>
                                 <div class="col-md-1">
+                                	@canany(PermissionConstant::EDIT_PROFILE)
                                     <button type="button" class="btn btn-primary rounded-circle" data-toggle="modal" data-current="{{$employee}}" data-target="#edit-profile-popup"><i class="fas fa-pen"></i>
-                                        </button>
+                                    </button>
+                                    @endcan
                                 </div>
                             </div>
                     </div>
@@ -307,6 +319,7 @@
     </div>
 </div>
 <!-- UPDATE -->
+@canany(PermissionConstant::EDIT_PROFILE)
 <div class="modal fade" id="edit-profile-popup" tabindex="-1" role="dialog" aria-labelledby="edit-profile-label" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -558,7 +571,9 @@
         </div>
     </div>
 </div>
+@endcan
 {{-- Reset Password --}}
+@canany(PermissionConstant::RESET_PASSWORD)
 <div class="modal fade" id="reset-password-popup" tabindex="-1" role="dialog" aria-labelledby="reset-password-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -605,6 +620,7 @@
         </div>
     </div>
 </div>
+@endcan
 
 @can(PermissionConstant::ASSIGN_ROLE)
 {{-- Change Role --}}
@@ -656,6 +672,7 @@
 @endcan
 
 {{-- Update picture --}}
+@canany(PermissionConstant::EDIT_PROFILE)
 <div class="modal fade" id="edit-picture-popup" tabindex="-1" role="dialog" aria-labelledby="edit-picture-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -686,6 +703,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('scripts')

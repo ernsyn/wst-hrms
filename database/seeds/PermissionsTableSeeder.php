@@ -28,10 +28,31 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::DELETE_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         Permission::create(['name' => PermissionConstant::DUPLICATE_ROLE, 'mode' => 'admin', 'module' => 'Roles & Permissions']);
         
-        
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE, 'mode' => 'admin', 'module' => 'Employees']);
         Permission::create(['name' => PermissionConstant::ADD_EMPLOYEE, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::RESET_PASSWORD, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::EDIT_PROFILE, 'mode' => 'admin', 'module' => 'Employees']);
         Permission::create(['name' => PermissionConstant::ASSIGN_ROLE, 'mode' => 'admin', 'module' => 'Employees']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::ADD_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::UPDATE_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::DELETE_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::ADD_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::UPDATE_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::DELETE_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::ADD_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::UPDATE_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::DELETE_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_VISA, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::ADD_VISA, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::UPDATE_VISA, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::DELETE_VISA, 'mode' => 'admin', 'module' => 'Employees']);
         
         Permission::create(['name' => PermissionConstant::VIEW_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);
         Permission::create(['name' => PermissionConstant::ADD_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company', 'superadmin' => 1]);

@@ -1,4 +1,5 @@
 <!-- ADD -->
+@canany(PermissionConstant::ADD_IMMIGRATION)
 <div class="modal fade" id="add-immigration-popup" tabindex="-1" role="dialog" aria-labelledby="add-immigration-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -63,7 +64,9 @@
         </div>
     </div>
 </div>
+@endcan
 <!-- UPDATE -->
+@canany(PermissionConstant::UPDATE_IMMIGRATION)
 <div class="modal fade" id="edit-immigration-popup" tabindex="-1" role="dialog" aria-labelledby="edit-immigration-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -129,7 +132,9 @@
         </div>
     </div>
 </div>
+@endcan
 {{-- DELETE --}}
+@canany(PermissionConstant::DELETE_IMMIGRATION)
 <div class="modal fade" id="confirm-delete-immigration-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-immigration-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -150,14 +155,19 @@
         </div>
     </div>
 </div>
+@endcan
+
 {{-- TABLE --}}
+@canany(PermissionConstant::VIEW_IMMIGRATION)
 <div class="tab-pane fade show p-3" id="nav-immigration" role="tabpanel" aria-labelledby="nav-immigration-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
+        	@canany(PermissionConstant::ADD_IMMIGRATION)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-immigration-popup">
                 Add Immigration
             </button>
+            @endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="employeeImmigrationTable">
@@ -173,7 +183,7 @@
         </thead>
     </table>
 </div>
-
+@endcan
 
 @section('scripts')
 <script>
@@ -207,8 +217,15 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-immigration-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-immigration-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `
+                    @canany(PermissionConstant::UPDATE_IMMIGRATION)
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-immigration-popup"><i class="far fa-edit"></i></button>
+					@endcan
+                    ` + `
+                    @canany(PermissionConstant::DELETE_IMMIGRATION)
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-immigration-modal"><i class="far fa-trash-alt"></i></button>
+					@endcan
+                    `;
                 }
             }
         ]
