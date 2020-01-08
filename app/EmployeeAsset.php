@@ -11,6 +11,7 @@ class EmployeeAsset extends Model implements Auditable
     protected $table = 'employee_assets';
 
     protected $fillable = [
+        'emp_id',
         'asset_name',
         'asset_quantity',
         'asset_spec',
