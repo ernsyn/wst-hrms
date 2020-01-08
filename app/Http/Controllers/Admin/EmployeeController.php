@@ -61,7 +61,7 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.index', ['employees'=> $employees]);
     }
     
-    public function test()
+    public function assetlist()
     {
        
         $employeeAssets = EmployeeAsset::select('emp_id','id')
@@ -70,7 +70,7 @@ class EmployeeController extends Controller
                             ->load('employee');
         $employees = Employee::all();
         $items = CompanyAsset::all();
-        return view('pages.admin.employees.test', ['employeeAssets'=> $employeeAssets, 'employees' => $employees, 'items' => $items]);
+        return view('pages.admin.employees.assetlist', ['employeeAssets'=> $employeeAssets, 'employees' => $employees, 'items' => $items]);
 
     }
 
@@ -803,6 +803,27 @@ else {
         $employee->employee_assets()->save($asset);
 
         return response()->json(['success'=>'Asset was successfully added']);
+    }
+    public function postAsset(Request $request)
+    {
+        $assetData = $request->validate([
+            'emp_id' => 'required',
+            'asset_name' => 'required',
+            'asset_quantity' => 'required|numeric',
+            'asset_spec' => 'nullable',
+            'issue_date' => 'required',
+            'return_date' => 'nullable',
+            'sold_date' => 'nullable',
+            'asset_attach' => 'nullable'    
+        ]);
+        $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
+        $assetData['end_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
+        $assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['sold_date'])));
+        $asset= new EmployeeAsset($assetData);
+
+        $asset->save();
+
+        return response()->json(['success'=>'Employee Asset was successfully added']);
     }
 
     public function postExperience(Request $request, $id)

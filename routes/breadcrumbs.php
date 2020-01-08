@@ -60,9 +60,9 @@ Breadcrumbs::for('admin.employees', function ($trail) {
     $trail->push('Employees', route('admin.employees'));
 });
 //employee asset list
-Breadcrumbs::for('admin.employees.test', function ($trail) {
+Breadcrumbs::for('admin.employees.assetlist', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Employees List', route('admin.employees.test'));
+    $trail->push('Employees List', route('admin.employees.assetlist'));
 });
 
 //add employee

@@ -67,8 +67,8 @@
                     <a href="{{ route('admin.employees') }}">Employee List</a>
                 </li>
                  {{-- OPTION: Employee Asset --}}
-                <li class="menu-option {{ request()->is('admin/employees/test') ? 'active' : '' }}">
-                    <a href="{{ route('admin.employees.test') }}">Employee Asset</a>
+                <li class="menu-option {{ request()->is('admin/employees/assetlist') ? 'active' : '' }}">
+                    <a href="{{ route('admin.employees.assetlist') }}">Employee Asset</a>
                 </li>
             </ul>
         </li>
