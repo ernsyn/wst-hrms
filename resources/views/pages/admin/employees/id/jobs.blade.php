@@ -476,6 +476,7 @@
         "bDeferRender": true,
         "serverSide": true,
         "bStateSave": true,
+        "scrollX":	true,
         "ajax": "{{ route('admin.employees.dt.jobs', ['id' => $id]) }}",
         "columnDefs": [ {
             "targets": 10,
