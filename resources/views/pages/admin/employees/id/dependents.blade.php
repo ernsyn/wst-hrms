@@ -232,9 +232,7 @@
                     return `
                     @canany(PermissionConstant::UPDATE_DEPENDENT)
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-dependent-popup"><i class="far fa-edit"></i></button>
-					@endcan
-                    ` + `
-                    @canany(PermissionConstant::DELETE_DEPENDENT)
+					@endcan` + `@canany(PermissionConstant::DELETE_DEPENDENT)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-dependent-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;

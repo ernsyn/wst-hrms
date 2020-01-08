@@ -261,9 +261,7 @@
                     return `
                     @canany(PermissionConstant::UPDATE_VISA)
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-visa-popup"><i class="far fa-edit"></i></button>
-					@endcan
-                    ` + `
-                    @canany(PermissionConstant::UPDATE_VISA)
+					@endcan` + `@canany(PermissionConstant::UPDATE_VISA)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-visa-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;

@@ -34,25 +34,51 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::EDIT_PROFILE, 'mode' => 'admin', 'module' => 'Employees']);
         Permission::create(['name' => PermissionConstant::ASSIGN_ROLE, 'mode' => 'admin', 'module' => 'Employees']);
         
-        Permission::create(['name' => PermissionConstant::VIEW_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::ADD_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::UPDATE_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::DELETE_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::VIEW_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees - Emergency Contact']);
+        Permission::create(['name' => PermissionConstant::ADD_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees - Emergency Contact']);
+        Permission::create(['name' => PermissionConstant::UPDATE_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees - Emergency Contact']);
+        Permission::create(['name' => PermissionConstant::DELETE_EMERGENCY_CONTACT, 'mode' => 'admin', 'module' => 'Employees - Emergency Contact']);
         
-        Permission::create(['name' => PermissionConstant::VIEW_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::ADD_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::UPDATE_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::DELETE_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::VIEW_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees - Dependent']);
+        Permission::create(['name' => PermissionConstant::ADD_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees - Dependent']);
+        Permission::create(['name' => PermissionConstant::UPDATE_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees - Dependent']);
+        Permission::create(['name' => PermissionConstant::DELETE_DEPENDENT, 'mode' => 'admin', 'module' => 'Employees - Dependent']);
         
-        Permission::create(['name' => PermissionConstant::VIEW_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::ADD_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::UPDATE_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::DELETE_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::VIEW_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees - Immigration']);
+        Permission::create(['name' => PermissionConstant::ADD_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees - Immigration']);
+        Permission::create(['name' => PermissionConstant::UPDATE_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees - Immigration']);
+        Permission::create(['name' => PermissionConstant::DELETE_IMMIGRATION, 'mode' => 'admin', 'module' => 'Employees - Immigration']);
         
-        Permission::create(['name' => PermissionConstant::VIEW_VISA, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::ADD_VISA, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::UPDATE_VISA, 'mode' => 'admin', 'module' => 'Employees']);
-        Permission::create(['name' => PermissionConstant::DELETE_VISA, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::VIEW_VISA, 'mode' => 'admin', 'module' => 'Employees - Visa']);
+        Permission::create(['name' => PermissionConstant::ADD_VISA, 'mode' => 'admin', 'module' => 'Employees - Visa']);
+        Permission::create(['name' => PermissionConstant::UPDATE_VISA, 'mode' => 'admin', 'module' => 'Employees - Visa']);
+        Permission::create(['name' => PermissionConstant::DELETE_VISA, 'mode' => 'admin', 'module' => 'Employees - Visa']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_JOB, 'mode' => 'admin', 'module' => 'Employees - Job']);
+        Permission::create(['name' => PermissionConstant::ADD_JOB, 'mode' => 'admin', 'module' => 'Employees - Job']);
+        Permission::create(['name' => PermissionConstant::UPDATE_JOB, 'mode' => 'admin', 'module' => 'Employees - Job']);
+        Permission::create(['name' => PermissionConstant::DELETE_JOB, 'mode' => 'admin', 'module' => 'Employees - Job']);
+        Permission::create(['name' => PermissionConstant::RESIGN, 'mode' => 'admin', 'module' => 'Employees - Job']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_BANK, 'mode' => 'admin', 'module' => 'Employees - Bank']);
+        Permission::create(['name' => PermissionConstant::ADD_BANK, 'mode' => 'admin', 'module' => 'Employees - Bank']);
+        Permission::create(['name' => PermissionConstant::UPDATE_BANK, 'mode' => 'admin', 'module' => 'Employees - Bank']);
+        Permission::create(['name' => PermissionConstant::DELETE_BANK, 'mode' => 'admin', 'module' => 'Employees - Bank']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_EXPERIENCE, 'mode' => 'admin', 'module' => 'Employees - Qualification - Experience']);
+        Permission::create(['name' => PermissionConstant::ADD_EXPERIENCE, 'mode' => 'admin', 'module' => 'Employees - Qualification - Experience']);
+        Permission::create(['name' => PermissionConstant::UPDATE_EXPERIENCE, 'mode' => 'admin', 'module' => 'Employees - Qualification - Experience']);
+        Permission::create(['name' => PermissionConstant::DELETE_EXPERIENCE, 'mode' => 'admin', 'module' => 'Employees - Qualification - Experience']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_EDUCATION, 'mode' => 'admin', 'module' => 'Employees - Qualification - Education']);
+        Permission::create(['name' => PermissionConstant::ADD_EDUCATION, 'mode' => 'admin', 'module' => 'Employees - Qualification - Education']);
+        Permission::create(['name' => PermissionConstant::UPDATE_EDUCATION, 'mode' => 'admin', 'module' => 'Employees - Qualification - Education']);
+        Permission::create(['name' => PermissionConstant::DELETE_EDUCATION, 'mode' => 'admin', 'module' => 'Employees - Qualification - Education']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_SKILL, 'mode' => 'admin', 'module' => 'Employees - Qualification - Skill']);
+        Permission::create(['name' => PermissionConstant::ADD_SKILL, 'mode' => 'admin', 'module' => 'Employees - Qualification - Skill']);
+        Permission::create(['name' => PermissionConstant::UPDATE_SKILL, 'mode' => 'admin', 'module' => 'Employees - Qualification - Skill']);
+        Permission::create(['name' => PermissionConstant::DELETE_SKILL, 'mode' => 'admin', 'module' => 'Employees - Qualification - Skill']);
         
         Permission::create(['name' => PermissionConstant::VIEW_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);
         Permission::create(['name' => PermissionConstant::ADD_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company', 'superadmin' => 1]);

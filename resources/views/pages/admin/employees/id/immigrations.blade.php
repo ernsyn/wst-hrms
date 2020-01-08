@@ -220,9 +220,7 @@
                     return `
                     @canany(PermissionConstant::UPDATE_IMMIGRATION)
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-immigration-popup"><i class="far fa-edit"></i></button>
-					@endcan
-                    ` + `
-                    @canany(PermissionConstant::DELETE_IMMIGRATION)
+					@endcan` + `@canany(PermissionConstant::DELETE_IMMIGRATION)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-immigration-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;

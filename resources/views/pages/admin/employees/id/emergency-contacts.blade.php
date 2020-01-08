@@ -172,9 +172,7 @@
                 return `
                 @canany(PermissionConstant::UPDATE_EMERGENCY_CONTACT)
                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>
-                @endcan
-                ` + `
-        		@canany(PermissionConstant::DELETE_EMERGENCY_CONTACT)
+                @endcan` + `@canany(PermissionConstant::DELETE_EMERGENCY_CONTACT)
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-modal"><i class="far fa-trash-alt"></i></button>
                 @endcan
                 `;

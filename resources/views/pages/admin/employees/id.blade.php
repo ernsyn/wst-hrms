@@ -84,11 +84,17 @@
                             @endcan
                         @canany(PermissionConstant::VIEW_VISA)
                         <a class="nav-item nav-link" id="nav-visa-tab" data-toggle="tab" href="#nav-visa" role="tab" aria-controls="nav-visa" aria-selected="true">Visa</a>
-                        @endcan
+                        	@endcan
+                        @canany(PermissionConstant::VIEW_JOB)
                         <a class="nav-item nav-link" id="nav-job-tab" data-toggle="tab" href="#nav-job" role="tab" aria-controls="nav-job" aria-selected="false">Job</a>
+                        	@endcan
+                        @canany(PermissionConstant::VIEW_BANK)
                         <a class="nav-item nav-link" id="nav-bank-tab" data-toggle="tab" href="#nav-bank" role="tab" aria-controls="nav-bank" aria-selected="true">Bank</a>
+                        	@endcan
+                        @canany([PermissionConstant::VIEW_EXPERIENCE,PermissionConstant::VIEW_EDUCATION,PermissionConstant::VIEW_SKILL])
                         <a class="nav-item nav-link" id="nav-qualification-tab" data-toggle="tab" href="#nav-qualification" role="tab" aria-controls="nav-qualification"
                             aria-selected="false">Qualification</a>
+                        	@endcan
                         <a class="nav-item nav-link" id="nav-attachments-tab" data-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-attachments"
                             aria-selected="true">Attachment</a>
                         <a class="nav-item nav-link" id="nav-workdays-tab" data-toggle="tab" href="#nav-workdays" role="tab" aria-controls="nav-workdays"

@@ -1,4 +1,5 @@
 <!-- ADD EXPERIENCES -->
+@canany(PermissionConstant::ADD_EXPERIENCE)
 <div class="modal fade" id="add-experience-popup" tabindex="-1" role="dialog" aria-labelledby="add-experience-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -86,8 +87,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- ADD EDUCATION -->
+@canany(PermissionConstant::ADD_EDUCATION)
 <div class="modal fade" id="add-education-popup" tabindex="-1" role="dialog" aria-labelledby="add-education-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -175,8 +178,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- ADD SKILL -->
+@canany(PermissionConstant::ADD_SKILL)
 <div class="modal fade" id="add-skill-popup" tabindex="-1" role="dialog" aria-labelledby="add-skill-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -229,8 +234,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- UPDATE EXPERIENCES -->
+@canany(PermissionConstant::UPDATE_EXPERIENCE)
 <div class="modal fade" id="edit-experience-popup" tabindex="-1" role="dialog" aria-labelledby="edit-experience-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -318,8 +325,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- UPDATE EDUCATION -->
+@canany(PermissionConstant::UPDATE_EDUCATION)
 <div class="modal fade" id="edit-education-popup" tabindex="-1" role="dialog" aria-labelledby="edit-education-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -406,8 +415,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- UPDATE SKILLS -->
+@canany(PermissionConstant::UPDATE_SKILL)
 <div class="modal fade" id="edit-skill-popup" tabindex="-1" role="dialog" aria-labelledby="edit-skill-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -460,8 +471,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- DELETE EXP--}}
+@canany(PermissionConstant::DELETE_EXPERIENCE)
 <div class="modal fade" id="confirm-delete-experience-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-experience-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -482,8 +495,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- DELETE EDU--}}
+@canany(PermissionConstant::DELETE_EDUCATION)
 <div class="modal fade" id="confirm-delete-educations-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-educations-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -504,8 +519,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- DELETE SKILL--}}
+@canany(PermissionConstant::DELETE_SKILL)
 <div class="modal fade" id="confirm-delete-skills-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-skills-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -526,16 +543,20 @@
         </div>
     </div>
 </div>
+@endcan
 
-{{-- TABLE SKILL--}}
+{{-- TABLE --}}
 <div class="tab-pane fade show p-3" id="nav-qualification" role="tabpanel" aria-labelledby="nav-qualification-tab">
-    {{-- Experiences Table--}}
+    {{-- Experiences Table--}}    
+    @canany(PermissionConstant::VIEW_EXPERIENCE)
     <div class="row pb-3">
         <div class="col-auto mr-auto">EXPERIENCE</div>
         <div class="col-auto">
+        	@canany(PermissionConstant::ADD_EXPERIENCE)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-experience-popup">
                 Add Experience
             </button>
+            @endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="employee-companies-table">
@@ -554,13 +575,17 @@
         </thead>
     </table>
     <div class="dropdown-divider pb-3"></div>
+    @endcan
     {{-- Education Table--}}
+    @canany(PermissionConstant::VIEW_EDUCATION)
     <div class="row pb-3">
         <div class="col-auto mr-auto">EDUCATION</div>
         <div class="col-auto">
+        	@canany(PermissionConstant::ADD_EDUCATION)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-education-popup">
                         Add Education
-                    </button>
+            </button>
+            @endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="employee-education-table">
@@ -579,13 +604,17 @@
         </thead>
     </table>
     <div class="dropdown-divider pb-3"></div>
+    @endcan
     {{-- Skill Table--}}
+    @canany(PermissionConstant::VIEW_SKILL)
     <div class="row pb-3">
         <div class="col-auto mr-auto">SKILL</div>
         <div class="col-auto">
+        	@canany(PermissionConstant::ADD_SKILL)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-skill-popup">
                     Add Skill
-                </button>
+            </button>
+            @endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100 text-capitalize" id="employee-skill-table">
@@ -599,8 +628,8 @@
             </tr>
         </thead>
     </table>
+@endcan
 </div>
-
 
 @section('scripts')
 <script>
@@ -643,8 +672,13 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-experience-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-experience-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `
+                    @canany(PermissionConstant::UPDATE_EXPERIENCE)
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-experience-popup"><i class="far fa-edit"></i></button>
+					@endcan` + `@canany(PermissionConstant::DELETE_EXPERIENCE)
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-experience-modal"><i class="far fa-trash-alt"></i></button>
+					@endcan
+                    `;
                 }
             }
         ]
@@ -688,8 +722,13 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `
+                    @canany(PermissionConstant::UPDATE_EDUCATION)
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>
+					@endcan` + `@canany(PermissionConstant::DELETE_EDUCATION)
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>
+					@endcan
+                    `;
                 }
             }
         ]
@@ -721,8 +760,13 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `
+                    @canany(PermissionConstant::UPDATE_SKILL)
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>
+					@endcan` + `@canany(PermissionConstant::DELETE_SKILL)
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>
+					@endcan
+                    `;
                 }
             }
         ]
