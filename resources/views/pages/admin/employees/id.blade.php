@@ -95,12 +95,18 @@
                         <a class="nav-item nav-link" id="nav-qualification-tab" data-toggle="tab" href="#nav-qualification" role="tab" aria-controls="nav-qualification"
                             aria-selected="false">Qualification</a>
                         	@endcan
+                       	@canany(PermissionConstant::VIEW_ATTACHMENT)
                         <a class="nav-item nav-link" id="nav-attachments-tab" data-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-attachments"
                             aria-selected="true">Attachment</a>
+                            @endcan
+                        @canany(PermissionConstant::VIEW_WORK_DAYS)
                         <a class="nav-item nav-link" id="nav-workdays-tab" data-toggle="tab" href="#nav-workdays" role="tab" aria-controls="nav-workdays"
                             aria-selected="false">Work Days</a>
+                            @endcan
+                        @canany(PermissionConstant::VIEW_REPORT_TO)
                         <a class="nav-item nav-link" id="nav-reportto-tab" data-toggle="tab" href="#nav-reportto" role="tab" aria-controls="nav-reportto"
                             aria-selected="true">Report To</a>
+                            @endcan
                         <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history"
                             aria-selected="false">History</a>
                         <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"

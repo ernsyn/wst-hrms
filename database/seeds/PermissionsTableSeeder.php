@@ -80,6 +80,18 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_SKILL, 'mode' => 'admin', 'module' => 'Employees - Qualification - Skill']);
         Permission::create(['name' => PermissionConstant::DELETE_SKILL, 'mode' => 'admin', 'module' => 'Employees - Qualification - Skill']);
         
+        Permission::create(['name' => PermissionConstant::VIEW_ATTACHMENT, 'mode' => 'admin', 'module' => 'Employees - Attachment']);
+        Permission::create(['name' => PermissionConstant::ADD_ATTACHMENT, 'mode' => 'admin', 'module' => 'Employees - Attachment']);
+        Permission::create(['name' => PermissionConstant::DELETE_ATTACHMENT, 'mode' => 'admin', 'module' => 'Employees - Attachment']);
+        Permission::create(['name' => PermissionConstant::DOWNLOAD_ATTACHMENT, 'mode' => 'admin', 'module' => 'Employees - Attachment']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_WORK_DAYS, 'mode' => 'admin', 'module' => 'Employees - Work Days']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_REPORT_TO, 'mode' => 'admin', 'module' => 'Employees - Report To']);
+        Permission::create(['name' => PermissionConstant::ADD_REPORT_TO, 'mode' => 'admin', 'module' => 'Employees - Report To']);
+        Permission::create(['name' => PermissionConstant::UPDATE_REPORT_TO, 'mode' => 'admin', 'module' => 'Employees - Report To']);
+        Permission::create(['name' => PermissionConstant::DELETE_REPORT_TO, 'mode' => 'admin', 'module' => 'Employees - Report To']);
+        
         Permission::create(['name' => PermissionConstant::VIEW_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);
         Permission::create(['name' => PermissionConstant::ADD_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company', 'superadmin' => 1]);
         Permission::create(['name' => PermissionConstant::UPDATE_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);

@@ -52,6 +52,15 @@ class PermissionConstant
     const ADD_SKILL = 'Add Skill';
     const UPDATE_SKILL = 'Update Skill';
     const DELETE_SKILL = 'Delete Skill';
+    const VIEW_ATTACHMENT = 'View Attachment';
+    const ADD_ATTACHMENT = 'Add Attachment';
+    const DELETE_ATTACHMENT = 'Delete Attachment';
+    const DOWNLOAD_ATTACHMENT = 'Download Attachment';
+    const VIEW_WORK_DAYS = 'View Work Days';
+    const VIEW_REPORT_TO = 'View Report To';
+    const ADD_REPORT_TO = 'Assign Report To';
+    const UPDATE_REPORT_TO = 'Update Report To';
+    const DELETE_REPORT_TO = 'Delete Report To';
     const VIEW_COMPANY = 'View Company';
     const ADD_COMPANY = 'Add Company';
     const UPDATE_COMPANY = 'Update Company';
