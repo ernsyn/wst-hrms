@@ -20,6 +20,7 @@ class EmployeeAsset extends Model implements Auditable
         'return_date',
         'sold_date',
         'asset_attach',
+        'asset_status'
     ];
      protected $dates = [
         'issue_date',
@@ -32,4 +33,6 @@ class EmployeeAsset extends Model implements Auditable
     {
         return $this->belongsTo('App\Employee', 'emp_id');
     }
+   
+
 }
