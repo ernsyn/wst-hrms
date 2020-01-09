@@ -18,6 +18,7 @@ use Carbon\Carbon;
 
 use App\User;
 use App\Employee;
+use App\EmployeeAsset;
 use App\EmployeeDependent;
 use App\EmployeeImmigration;
 use App\EmployeeVisa;
@@ -60,7 +61,19 @@ class EmployeeController extends Controller
         $socsoCategory = SocsoCategoryEnum::choices();
         return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	
     }
-
+    public function displayAsset()
+    {
+        $id = Auth::user()->employee->id;
+        $employee = Employee::with('user')
+        ->with(['employee_confirmed' => function($query) use ($id)
+        {
+            $query->where('status','=','confirmed-employment')
+            ->where ('emp_id','=',$id);
+        }])
+        ->find($id);
+        $employeeAssets = EmployeeAsset::where('emp_id','=', $id)->get();
+        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets]);   
+    }
     public function postEditProfilePicture(Request $request) 
     {
         $pictureData = $request->validate([

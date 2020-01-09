@@ -80,7 +80,7 @@ class EmployeeController extends Controller
         ->with(['employee_confirmed' => function($query) use ($id)
         {
             $query->where('status','=','confirmed-employment')
-            ->where ('emp_id','=',$id);
+            ->where ('id','=',$id);
         }])
         ->find($id);
 
@@ -135,7 +135,8 @@ class EmployeeController extends Controller
         $socsoCategory = SocsoCategoryEnum::choices();
         $paymentviaGroup = PaymentViaEnum::choices();
         $paymentrateGroup = PaymentRateEnum::choices();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup]);   	    
+        $items = CompanyAsset::all();
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items]);   	    
     }
     
     public function securityGroupDisplay($id)
@@ -477,7 +478,6 @@ class EmployeeController extends Controller
         return DataTables::of($reportTos)->make(true);
     }
 
-
     public function getDataTableSecurityGroup($id)
     {
         $security_groups = EmployeeSecurityGroup::with('security_groups')->where('emp_id', $id)->get();
@@ -789,13 +789,14 @@ else {
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
-            'issue_date' => 'required',
-            'return_date' => 'nullable',
-            'sold_date' => 'nullable',
+            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'asset_attach' => 'nullable'    
         ]);
+        
         $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        $assetData['end_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
+        $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
         $assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['sold_date'])));
         $asset= new EmployeeAsset($assetData);
 
@@ -811,13 +812,13 @@ else {
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
-            'issue_date' => 'required',
-            'return_date' => 'nullable',
-            'sold_date' => 'nullable',
+            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'asset_attach' => 'nullable'    
         ]);
         $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        $assetData['end_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
+        $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
         $assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['sold_date'])));
         $asset= new EmployeeAsset($assetData);
 
@@ -1215,7 +1216,8 @@ else {
             'issue_date' => 'required',
             'return_date' => 'nullable',
             'sold_date' => 'nullable',
-            'asset_attach' => 'nullable'    
+            'asset_attach' => 'nullable',
+            'asset_status' => 'required'    
         ]);
         $assetUpdateData['issue_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['issue_date'])));
         $assetUpdateData['end_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['return_date'])));
@@ -1408,7 +1410,6 @@ else {
 
         return $attendances;
     }
-
     // public function postDisapproved(Request $request)
     // {
     //     $id = $request->input('id');

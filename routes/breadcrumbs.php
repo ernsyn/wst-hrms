@@ -28,6 +28,12 @@ Breadcrumbs::for('employee.profile', function ($trail) {
     $trail->push('My Profile', route('employee.profile'));
 });
 
+Breadcrumbs::for('employee.asset', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('My Asset', route('employee.asset'));
+});
+
+
 Breadcrumbs::for('super-admin.dashboard', function ($trail) {
     $trail->push('Super Admin Dashboard', route('super-admin.dashboard'));
 });
