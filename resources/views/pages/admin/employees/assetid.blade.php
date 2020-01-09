@@ -7,7 +7,7 @@
         <div id="employee-profile-details" class="card-body bg-primary text-white">
             <div class="d-flex align-items-stretch" id="reload-profile1">
                 <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
-                    @canany(PermissionConstant::EDIT_PROFILE)
+                    @can(PermissionConstant::EDIT_PROFILE)
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->id}}" data-target="#edit-picture-popup">
                         @if ($employee->profile_media_id != null)
                             <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:150px; height:150px">
@@ -56,7 +56,7 @@
                         Assign Role
                     </button>
                     @endcan     
-                    @canany(PermissionConstant::RESET_PASSWORD)            
+                    @can(PermissionConstant::RESET_PASSWORD)            
                     <button id="emp-reset-password-btn" data-toggle="modal" data-target="#reset-password-popup" type="button" class="btn btn-sm text-white rounded">                        {{-- <i class="fas fa-pen"></i> --}}
                         Reset Password
                     </button>
@@ -70,7 +70,7 @@
         </div>
     </div>
 {{-- Reset Password --}}
-@canany(PermissionConstant::RESET_PASSWORD)
+@can(PermissionConstant::RESET_PASSWORD)
 <div class="modal fade" id="reset-password-popup" tabindex="-1" role="dialog" aria-labelledby="reset-password-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -169,7 +169,7 @@
 @endcan
 
 {{-- Update picture --}}
-@canany(PermissionConstant::EDIT_PROFILE)
+@can(PermissionConstant::EDIT_PROFILE)
 <div class="modal fade" id="edit-picture-popup" tabindex="-1" role="dialog" aria-labelledby="edit-picture-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

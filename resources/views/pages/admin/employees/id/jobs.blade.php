@@ -1,16 +1,16 @@
 {{-- Table --}}
-@canany(PermissionConstant::VIEW_JOB)
+@can(PermissionConstant::VIEW_JOB)
 <div class="tab-pane fade show p-3" id="nav-job" role="tabpanel" aria-labelledby="nav-job-tab">
     <div class="row pb-3" id="employee-job">
             {{-- <div class="col-auto mr-auto"></div>
             <div class="col-auto" id="show-resign-button">
-            	@canany(PermissionConstant::ADD_JOB)
+            	@can(PermissionConstant::ADD_JOB)
                 <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
                     Add Job
                 </button>
                 @endcan
                 @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
-                @canany(PermissionConstant::RESIGN)
+                @can(PermissionConstant::RESIGN)
                 <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#add-resign-popup">
                     Resign
                 </button>
@@ -23,18 +23,18 @@
         <div class="col-auto mr-auto"></div>
         <div class="col-auto" id="show-resign-button">
             @if(App\Employee::where('id', $id)->whereNull('resignation_date')->count() > 0)
-            @canany(PermissionConstant::ADD_JOB)
+            @can(PermissionConstant::ADD_JOB)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
                 Add Job
             </button>
             @endcan
-            @canany(PermissionConstant::RESIGN)
+            @can(PermissionConstant::RESIGN)
             <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#add-resign-popup">
                     Resign
             </button>
             @endcan
             @else
-            @canany(PermissionConstant::ADD_JOB)
+            @can(PermissionConstant::ADD_JOB)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
             Re-Employ
             </button>
@@ -65,7 +65,7 @@
 </div>
 @endcan
 
-@canany(PermissionConstant::RESIGN)
+@can(PermissionConstant::RESIGN)
 <div class="modal fade" id="add-resign-popup" tabindex="-1" role="dialog" aria-labelledby="nav-job-tab" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -105,7 +105,7 @@
 @endcan
 
 <!-- ADD -->
-@canany(PermissionConstant::ADD_JOB)
+@can(PermissionConstant::ADD_JOB)
 <div class="modal fade" id="add-job-popup" tabindex="-1" role="dialog" aria-labelledby="nav-job-tab" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -298,7 +298,7 @@
 @endcan
 
 <!-- UPDATE -->
-@canany(PermissionConstant::UPDATE_JOB)
+@can(PermissionConstant::UPDATE_JOB)
 <div class="modal fade" id="edit-job-popup" tabindex="-1" role="dialog" aria-labelledby="edit-job-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -468,7 +468,7 @@
 @endcan
 
 {{-- DELETE --}}
-@canany(PermissionConstant::DELETE_JOB)
+@can(PermissionConstant::DELETE_JOB)
 <div class="modal fade" id="confirm-delete-job-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -576,9 +576,9 @@
                 "data": null, // can be null or undefined
                 render: function (data, type, row, meta) {
                     return `
-                    @canany(PermissionConstant::UPDATE_JOB)
+                    @can(PermissionConstant::UPDATE_JOB)
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-job-popup"><i class="far fa-edit"></i></button>
-                    @endcan` + `@canany(PermissionConstant::DELETE_JOB)
+                    @endcan` + `@can(PermissionConstant::DELETE_JOB)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;

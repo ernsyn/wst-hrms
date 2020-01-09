@@ -54,7 +54,7 @@
                         Assign Role
                     </button>
 					@endcan
-					@canany(PermissionConstant::RESET_PASSWORD)					
+					@can(PermissionConstant::RESET_PASSWORD)					
 					<button id="emp-reset-password-btn" data-toggle="modal" data-target="#reset-password-popup" type="button" class="btn btn-sm text-white rounded">                        {{-- <i class="fas fa-pen"></i> --}}
                         Reset Password
                     </button>
@@ -70,52 +70,52 @@
                     <div class="nav nav-tabs font-weight-bold scrollable d-flex flex-nowrap tabbable text-nowrap" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile"
                             aria-selected="false">Profile</a>
-                        @canany(PermissionConstant::VIEW_EMERGENCY_CONTACT)    
+                        @can(PermissionConstant::VIEW_EMERGENCY_CONTACT)    
                         <a class="nav-item nav-link" id="nav-emergency-tab" data-toggle="tab" href="#nav-emergency" role="tab" aria-controls="nav-emergency"
                             aria-selected="false">Emergency</a>
                         	@endcan
-                        @canany(PermissionConstant::VIEW_DEPENDENT)
+                        @can(PermissionConstant::VIEW_DEPENDENT)
                         <a class="nav-item nav-link" id="nav-dependent-tab" data-toggle="tab" href="#nav-dependent" role="tab" aria-controls="nav-dependent"
                             aria-selected="true">Dependent</a>
                         	@endcan
-                        @canany(PermissionConstant::VIEW_IMMIGRATION)
+                        @can(PermissionConstant::VIEW_IMMIGRATION)
                         <a class="nav-item nav-link" id="nav-immigration-tab" data-toggle="tab" href="#nav-immigration" role="tab" aria-controls="nav-immigration"
                             aria-selected="false">Immigration</a>
                             @endcan
-                        @canany(PermissionConstant::VIEW_VISA)
+                        @can(PermissionConstant::VIEW_VISA)
                         <a class="nav-item nav-link" id="nav-visa-tab" data-toggle="tab" href="#nav-visa" role="tab" aria-controls="nav-visa" aria-selected="true">Visa</a>
                         	@endcan
-                        @canany(PermissionConstant::VIEW_JOB)
+                        @can(PermissionConstant::VIEW_JOB)
                         <a class="nav-item nav-link" id="nav-job-tab" data-toggle="tab" href="#nav-job" role="tab" aria-controls="nav-job" aria-selected="false">Job</a>
                         	@endcan
-                        @canany(PermissionConstant::VIEW_BANK)
+                        @can(PermissionConstant::VIEW_BANK)
                         <a class="nav-item nav-link" id="nav-bank-tab" data-toggle="tab" href="#nav-bank" role="tab" aria-controls="nav-bank" aria-selected="true">Bank</a>
                         	@endcan
                         @canany([PermissionConstant::VIEW_EXPERIENCE,PermissionConstant::VIEW_EDUCATION,PermissionConstant::VIEW_SKILL])
                         <a class="nav-item nav-link" id="nav-qualification-tab" data-toggle="tab" href="#nav-qualification" role="tab" aria-controls="nav-qualification"
                             aria-selected="false">Qualification</a>
                         	@endcan
-                       	@canany(PermissionConstant::VIEW_ATTACHMENT)
+                       	@can(PermissionConstant::VIEW_ATTACHMENT)
                         <a class="nav-item nav-link" id="nav-attachments-tab" data-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-attachments"
                             aria-selected="true">Attachment</a>
                             @endcan
-                        @canany(PermissionConstant::VIEW_WORK_DAYS)
+                        @can(PermissionConstant::VIEW_WORK_DAYS)
                         <a class="nav-item nav-link" id="nav-workdays-tab" data-toggle="tab" href="#nav-workdays" role="tab" aria-controls="nav-workdays"
                             aria-selected="false">Work Days</a>
                             @endcan
-                        @canany(PermissionConstant::VIEW_REPORT_TO)
+                        @can(PermissionConstant::VIEW_REPORT_TO)
                         <a class="nav-item nav-link" id="nav-reportto-tab" data-toggle="tab" href="#nav-reportto" role="tab" aria-controls="nav-reportto"
                             aria-selected="true">Report To</a>
                             @endcan
-                        @canany(PermissionConstant::VIEW_HISTORY)
+                        @can(PermissionConstant::VIEW_HISTORY)
                         <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history"
                             aria-selected="false">History</a>
                             @endcan
-                         @canany(PermissionConstant::VIEW_EMP_SECURITY_GROUP)
+                         @can(PermissionConstant::VIEW_EMP_SECURITY_GROUP)
                         <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"
                             aria-selected="true">Security Group</a>
                             @endcan
-                        @canany(PermissionConstant::VIEW_ATTENDANCE)
+                        @can(PermissionConstant::VIEW_ATTENDANCE)
                         <a class="nav-item nav-link" id="nav-attendance-tab" data-toggle="tab" href="#nav-attendance" role="tab" aria-controls="nav-attendance"
                             aria-selected="true">Attendance</a>
                             @endcan
@@ -298,7 +298,7 @@
                                     </div> --}}
                                 </div>
                                 <div class="col-md-1">
-                                	@canany(PermissionConstant::EDIT_PROFILE)
+                                	@can(PermissionConstant::EDIT_PROFILE)
                                     <button type="button" class="btn btn-primary rounded-circle" data-toggle="modal" data-current="{{$employee}}" data-target="#edit-profile-popup"><i class="fas fa-pen"></i>
                                     </button>
                                     @endcan
@@ -337,7 +337,7 @@
     </div>
 </div>
 <!-- UPDATE -->
-@canany(PermissionConstant::EDIT_PROFILE)
+@can(PermissionConstant::EDIT_PROFILE)
 <div class="modal fade" id="edit-profile-popup" tabindex="-1" role="dialog" aria-labelledby="edit-profile-label" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -591,7 +591,7 @@
 </div>
 @endcan
 {{-- Reset Password --}}
-@canany(PermissionConstant::RESET_PASSWORD)
+@can(PermissionConstant::RESET_PASSWORD)
 <div class="modal fade" id="reset-password-popup" tabindex="-1" role="dialog" aria-labelledby="reset-password-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -690,7 +690,7 @@
 @endcan
 
 {{-- Update picture --}}
-@canany(PermissionConstant::EDIT_PROFILE)
+@can(PermissionConstant::EDIT_PROFILE)
 <div class="modal fade" id="edit-picture-popup" tabindex="-1" role="dialog" aria-labelledby="edit-picture-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

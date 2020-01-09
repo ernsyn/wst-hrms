@@ -1,5 +1,5 @@
 <!-- ADD ATTACHMENTS -->
-@canany(PermissionConstant::ADD_ATTACHMENT)
+@can(PermissionConstant::ADD_ATTACHMENT)
 <div class="modal fade" id="add-attachment-popup" tabindex="-1" role="dialog" aria-labelledby="add-attachment-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -97,7 +97,7 @@
 </div>
 
 {{-- DELETE ATTACH--}}
-@canany(PermissionConstant::DELETE_ATTACHMENT)
+@can(PermissionConstant::DELETE_ATTACHMENT)
 <div class="modal fade" id="confirm-delete-attachment-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-attachment-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -121,12 +121,12 @@
 @endcan
 
 {{-- TABLE --}}
-@canany(PermissionConstant::VIEW_ATTACHMENT)
+@can(PermissionConstant::VIEW_ATTACHMENT)
 <div class="tab-pane fade show p-3" id="nav-attachments" role="tabpanel" aria-labelledby="nav-attachments-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-        	@canany(PermissionConstant::ADD_ATTACHMENT)
+        	@can(PermissionConstant::ADD_ATTACHMENT)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-attachment-popup">
                 Add Attachment
             </button>
@@ -179,7 +179,7 @@
                         return `<img src="data:`+ data.mimetype +`;base64,` + data.data + `" height="100px"/>`;
                     else
                         return `
-                        @canany(PermissionConstant::DOWNLOAD_ATTACHMENT)
+                        @can(PermissionConstant::DOWNLOAD_ATTACHMENT)
                         <a href="data:` + data.mimetype + `;base64,` + data.data + `" height="100px" download="` + data.filename + `">Download</a>
 						@endcan
                         `;
@@ -190,7 +190,7 @@
                 render: function (data, type, row, meta) {
                     // return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attachment-popup"><i class="far fa-edit"></i></button>` +
                     return `
-                    @canany(PermissionConstant::DELETE_ATTACHMENT)
+                    @can(PermissionConstant::DELETE_ATTACHMENT)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;

@@ -1,4 +1,4 @@
-@canany(PermissionConstant::VIEW_WORK_DAYS)
+@can(PermissionConstant::VIEW_WORK_DAYS)
 <div class="tab-pane fade show p-3" id="nav-workdays" role="tabpanel" aria-labelledby="nav-work-days">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>

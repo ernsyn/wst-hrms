@@ -1,5 +1,5 @@
 <!-- ADD -->
-@canany(PermissionConstant::ADD_EMERGENCY_CONTACT)
+@can(PermissionConstant::ADD_EMERGENCY_CONTACT)
 <div class="modal fade" id="add-emergency-contact-popup" tabindex="-1" role="dialog" aria-labelledby="add-emergency-contact-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -46,7 +46,7 @@
 @endcan
 
 <!-- UPDATE -->
-@canany(PermissionConstant::UPDATE_EMERGENCY_CONTACT)
+@can(PermissionConstant::UPDATE_EMERGENCY_CONTACT)
 <div class="modal fade" id="edit-emergency-contact-popup" tabindex="-1" role="dialog" aria-labelledby="edit-emergency-contact-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -92,7 +92,7 @@
 </div>
 @endcan
  {{-- DELETE --}}
- @canany(PermissionConstant::DELETE_EMERGENCY_CONTACT)
+ @can(PermissionConstant::DELETE_EMERGENCY_CONTACT)
  <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -114,12 +114,12 @@
 </div>
 @endcan
 
-@canany(PermissionConstant::VIEW_EMERGENCY_CONTACT)
+@can(PermissionConstant::VIEW_EMERGENCY_CONTACT)
 <div class="tab-pane fade show p-3" id="nav-emergency" role="tabpanel" aria-labelledby="nav-emergency-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-        	@canany(PermissionConstant::ADD_EMERGENCY_CONTACT)
+        	@can(PermissionConstant::ADD_EMERGENCY_CONTACT)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-emergency-contact-popup">
                 Add Contact
             </button>
@@ -170,9 +170,9 @@
             "data": null, // can be null or undefined
             render: function (data, type, row, meta) {
                 return `
-                @canany(PermissionConstant::UPDATE_EMERGENCY_CONTACT)
+                @can(PermissionConstant::UPDATE_EMERGENCY_CONTACT)
                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>
-                @endcan` + `@canany(PermissionConstant::DELETE_EMERGENCY_CONTACT)
+                @endcan` + `@can(PermissionConstant::DELETE_EMERGENCY_CONTACT)
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-modal"><i class="far fa-trash-alt"></i></button>
                 @endcan
                 `;

@@ -1,5 +1,5 @@
 <!-- ADD EXPERIENCES -->
-@canany(PermissionConstant::ADD_EXPERIENCE)
+@can(PermissionConstant::ADD_EXPERIENCE)
 <div class="modal fade" id="add-experience-popup" tabindex="-1" role="dialog" aria-labelledby="add-experience-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -90,7 +90,7 @@
 @endcan
 
 <!-- ADD EDUCATION -->
-@canany(PermissionConstant::ADD_EDUCATION)
+@can(PermissionConstant::ADD_EDUCATION)
 <div class="modal fade" id="add-education-popup" tabindex="-1" role="dialog" aria-labelledby="add-education-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -181,7 +181,7 @@
 @endcan
 
 <!-- ADD SKILL -->
-@canany(PermissionConstant::ADD_SKILL)
+@can(PermissionConstant::ADD_SKILL)
 <div class="modal fade" id="add-skill-popup" tabindex="-1" role="dialog" aria-labelledby="add-skill-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -237,7 +237,7 @@
 @endcan
 
 <!-- UPDATE EXPERIENCES -->
-@canany(PermissionConstant::UPDATE_EXPERIENCE)
+@can(PermissionConstant::UPDATE_EXPERIENCE)
 <div class="modal fade" id="edit-experience-popup" tabindex="-1" role="dialog" aria-labelledby="edit-experience-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -328,7 +328,7 @@
 @endcan
 
 <!-- UPDATE EDUCATION -->
-@canany(PermissionConstant::UPDATE_EDUCATION)
+@can(PermissionConstant::UPDATE_EDUCATION)
 <div class="modal fade" id="edit-education-popup" tabindex="-1" role="dialog" aria-labelledby="edit-education-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -418,7 +418,7 @@
 @endcan
 
 <!-- UPDATE SKILLS -->
-@canany(PermissionConstant::UPDATE_SKILL)
+@can(PermissionConstant::UPDATE_SKILL)
 <div class="modal fade" id="edit-skill-popup" tabindex="-1" role="dialog" aria-labelledby="edit-skill-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -474,7 +474,7 @@
 @endcan
 
 {{-- DELETE EXP--}}
-@canany(PermissionConstant::DELETE_EXPERIENCE)
+@can(PermissionConstant::DELETE_EXPERIENCE)
 <div class="modal fade" id="confirm-delete-experience-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-experience-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -498,7 +498,7 @@
 @endcan
 
 {{-- DELETE EDU--}}
-@canany(PermissionConstant::DELETE_EDUCATION)
+@can(PermissionConstant::DELETE_EDUCATION)
 <div class="modal fade" id="confirm-delete-educations-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-educations-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -522,7 +522,7 @@
 @endcan
 
 {{-- DELETE SKILL--}}
-@canany(PermissionConstant::DELETE_SKILL)
+@can(PermissionConstant::DELETE_SKILL)
 <div class="modal fade" id="confirm-delete-skills-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-skills-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -548,11 +548,11 @@
 {{-- TABLE --}}
 <div class="tab-pane fade show p-3" id="nav-qualification" role="tabpanel" aria-labelledby="nav-qualification-tab">
     {{-- Experiences Table--}}    
-    @canany(PermissionConstant::VIEW_EXPERIENCE)
+    @can(PermissionConstant::VIEW_EXPERIENCE)
     <div class="row pb-3">
         <div class="col-auto mr-auto">EXPERIENCE</div>
         <div class="col-auto">
-        	@canany(PermissionConstant::ADD_EXPERIENCE)
+        	@can(PermissionConstant::ADD_EXPERIENCE)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-experience-popup">
                 Add Experience
             </button>
@@ -577,11 +577,11 @@
     <div class="dropdown-divider pb-3"></div>
     @endcan
     {{-- Education Table--}}
-    @canany(PermissionConstant::VIEW_EDUCATION)
+    @can(PermissionConstant::VIEW_EDUCATION)
     <div class="row pb-3">
         <div class="col-auto mr-auto">EDUCATION</div>
         <div class="col-auto">
-        	@canany(PermissionConstant::ADD_EDUCATION)
+        	@can(PermissionConstant::ADD_EDUCATION)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-education-popup">
                         Add Education
             </button>
@@ -606,11 +606,11 @@
     <div class="dropdown-divider pb-3"></div>
     @endcan
     {{-- Skill Table--}}
-    @canany(PermissionConstant::VIEW_SKILL)
+    @can(PermissionConstant::VIEW_SKILL)
     <div class="row pb-3">
         <div class="col-auto mr-auto">SKILL</div>
         <div class="col-auto">
-        	@canany(PermissionConstant::ADD_SKILL)
+        	@can(PermissionConstant::ADD_SKILL)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-skill-popup">
                     Add Skill
             </button>
@@ -673,9 +673,9 @@
                 "data": null,
                 render: function (data, type, row, meta) {
                     return `
-                    @canany(PermissionConstant::UPDATE_EXPERIENCE)
+                    @can(PermissionConstant::UPDATE_EXPERIENCE)
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-experience-popup"><i class="far fa-edit"></i></button>
-					@endcan` + `@canany(PermissionConstant::DELETE_EXPERIENCE)
+					@endcan` + `@can(PermissionConstant::DELETE_EXPERIENCE)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-experience-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;
@@ -723,9 +723,9 @@
                 "data": null,
                 render: function (data, type, row, meta) {
                     return `
-                    @canany(PermissionConstant::UPDATE_EDUCATION)
+                    @can(PermissionConstant::UPDATE_EDUCATION)
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-education-popup"><i class="far fa-edit"></i></button>
-					@endcan` + `@canany(PermissionConstant::DELETE_EDUCATION)
+					@endcan` + `@can(PermissionConstant::DELETE_EDUCATION)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-educations-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;
@@ -761,9 +761,9 @@
                 "data": null,
                 render: function (data, type, row, meta) {
                     return `
-                    @canany(PermissionConstant::UPDATE_SKILL)
+                    @can(PermissionConstant::UPDATE_SKILL)
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-skill-popup"><i class="far fa-edit"></i></button>
-					@endcan` + `@canany(PermissionConstant::DELETE_SKILL)
+					@endcan` + `@can(PermissionConstant::DELETE_SKILL)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-skills-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;

@@ -1,5 +1,5 @@
 <!-- ADD -->
-@canany(PermissionConstant::ADD_BANK)
+@can(PermissionConstant::ADD_BANK)
 <div class="modal fade" id="add-bank-accounts-popup" tabindex="-1" role="dialog" aria-labelledby="add-bank-accounts-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -47,7 +47,7 @@
 @endcan
 
 <!-- UPDATE -->
-@canany(PermissionConstant::UPDATE_BANK)
+@can(PermissionConstant::UPDATE_BANK)
 <div class="modal fade" id="edit-bank-accounts-popup" tabindex="-1" role="dialog" aria-labelledby="edit-bank-accounts-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -106,7 +106,7 @@
 @endcan
 
 {{-- DELETE --}}
-@canany(PermissionConstant::DELETE_BANK)
+@can(PermissionConstant::DELETE_BANK)
 <div class="modal fade" id="confirm-delete-bank-account-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -129,12 +129,12 @@
 @endcan
 
 {{-- TABLE --}}
-@canany(PermissionConstant::VIEW_BANK)
+@can(PermissionConstant::VIEW_BANK)
 <div class="tab-pane fade show p-3" id="nav-bank" role="tabpanel" aria-labelledby="nav-bank-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-        	@canany(PermissionConstant::ADD_BANK)
+        	@can(PermissionConstant::ADD_BANK)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-bank-accounts-popup">
                 Add Bank
             </button>
@@ -185,9 +185,9 @@
                 "data": null,
                 render: function (data, type, row, meta) {
                     return `
-                    @canany(PermissionConstant::UPDATE_BANK)
+                    @can(PermissionConstant::UPDATE_BANK)
                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-bank-accounts-popup"><i class="far fa-edit"></i></button>
-					@endcan` + `@canany(PermissionConstant::DELETE_BANK)
+					@endcan` + `@can(PermissionConstant::DELETE_BANK)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-bank-account-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;
