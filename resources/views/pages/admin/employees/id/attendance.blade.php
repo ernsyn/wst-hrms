@@ -1,3 +1,4 @@
+@can(PermissionConstant::VIEW_ATTENDANCE)
 <div class="tab-pane fade show p-3" id="nav-attendance" role="tabpanel" aria-labelledby="nav-attendance">
     <div class="card">
         <div class="card-header">
@@ -155,6 +156,7 @@
         </li>
     </div>
 </div>
+@endcan
 
 @section('scripts')
 <script>

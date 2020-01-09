@@ -11,7 +11,7 @@
                 </button>
     </div>
     @endif
-    @canany(PermissionConstant::ADD_COST_CENTRE)
+    @can(PermissionConstant::ADD_COST_CENTRE)
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -40,11 +40,11 @@
                         <td>{{$cost['name']}}</td>
                         {{-- <td>{{$cost['payroll_type']}}</td> --}}
                         <td>
-                        	@canany(PermissionConstant::UPDATE_COST_CENTRE)
+                        	@can(PermissionConstant::UPDATE_COST_CENTRE)
                             <button onclick="window.location='{{ route('admin.settings.cost-centres.edit', ['id' => $cost->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
                             @endcan
-                            @canany(PermissionConstant::DELETE_COST_CENTRE)
+                            @can(PermissionConstant::DELETE_COST_CENTRE)
                             <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $cost->name }}' data-link='{{ route('admin.settings.cost-centres.delete', ['id ' => $cost->id]) }}' class="btn btn-danger btn-smt far fa-trash-alt">
                             </button>
                             @endcan
@@ -56,7 +56,7 @@
         </div>
     </div>
 </div>
-@canany(PermissionConstant::DELETE_COST_CENTRE)
+@can(PermissionConstant::DELETE_COST_CENTRE)
 <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

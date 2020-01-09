@@ -11,7 +11,7 @@
                 </button>
     </div>
     @endif
-    @canany(PermissionConstant::ADD_GRADE)
+    @can(PermissionConstant::ADD_GRADE)
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
@@ -39,11 +39,11 @@
                         <td>{{$grade['name']}}</td>
 
                         <td>
-                        	@canany(PermissionConstant::UPDATE_GRADE)
+                        	@can(PermissionConstant::UPDATE_GRADE)
                             <button onclick="window.location='{{ route('admin.settings.grades.edit.post', ['id' => $grade->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>
                             @endcan
-                            @canany(PermissionConstant::DELETE_GRADE)
+                            @can(PermissionConstant::DELETE_GRADE)
                             <button type='submit' data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $grade->name }}' data-link='{{ route('admin.settings.grades.delete', ['id ' => $grade->id]) }}' class="btn btn-danger btn-smt fas fa-trash">
                             </button>
                             @endcan
@@ -55,7 +55,7 @@
         </div>
     </div>
 </div>
-@canany(PermissionConstant::DELETE_GRADE)
+@can(PermissionConstant::DELETE_GRADE)
 <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

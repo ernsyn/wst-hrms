@@ -1,4 +1,5 @@
 <!-- ADD VISA -->
+@can(PermissionConstant::ADD_VISA)
 <div class="modal fade" id="add-visa-popup" tabindex="-1" role="dialog" aria-labelledby="add-visa-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -79,8 +80,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- UPDATE VISA -->
+@can(PermissionConstant::UPDATE_VISA)
 <div class="modal fade" id="edit-visa-popup" tabindex="-1" role="dialog" aria-labelledby="edit-visa-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -161,7 +164,10 @@
         </div>
     </div>
 </div>
+@endcan
+
 {{-- DELETE VISA --}}
+@can(PermissionConstant::DELETE_VISA)
 <div class="modal fade" id="confirm-delete-visa-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-visa-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -182,15 +188,19 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- TABLE --}}
+@can(PermissionConstant::VIEW_VISA)
 <div class="tab-pane fade show p-3" id="nav-visa" role="tabpanel" aria-labelledby="nav-visa-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
+        	@can(PermissionConstant::ADD_VISA)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-visa-popup">
                 Add Visa
             </button>
+            @endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="employeeVisaTable">
@@ -208,9 +218,7 @@
         </thead>
     </table>
 </div>
-
-
-
+@endcan
 
 @section('scripts')
 <script>
@@ -250,8 +258,13 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-visa-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-visa-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `
+                    @can(PermissionConstant::UPDATE_VISA)
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-visa-popup"><i class="far fa-edit"></i></button>
+					@endcan` + `@can(PermissionConstant::UPDATE_VISA)
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-visa-modal"><i class="far fa-trash-alt"></i></button>
+					@endcan
+                    `;
                 }
             }
         ]

@@ -59,14 +59,18 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('admin/employees*') ? 'show' : '' }}" id="employee-setup">
                 {{-- OPTION: Add Employee --}}
+                @can(PermissionConstant::ADD_EMPLOYEE)
                 <li class="menu-option {{ request()->is('admin/employees/add') ? 'active' : '' }}">
                     <a href="{{ route('admin.employees.add') }}">Add Employee</a>
                 </li>
+                @endcan
                 {{-- OPTION: Employee List --}}
+                @can(PermissionConstant::VIEW_EMPLOYEE)
                 <li class="menu-option {{ request()->is('admin/employees') ? 'active' : '' }}">
                     <a href="{{ route('admin.employees') }}">Employee List</a>
                 </li>
-                 {{-- OPTION: Employee Asset --}}
+				@endcan
+				{{-- OPTION: Employee Asset --}}
                 <li class="menu-option {{ request()->is('admin/employees/assetlist') ? 'active' : '' }}">
                     <a href="{{ route('admin.employees.assetlist') }}">Employee Asset</a>
                 </li>

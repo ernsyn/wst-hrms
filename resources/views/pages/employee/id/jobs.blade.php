@@ -25,6 +25,7 @@
         "bDeferRender": true,
         "serverSide": true,
         "bStateSave": true,
+        "scrollX":	true,
         "ajax": "{{ route('employee.dt.jobs', ['id' => $id]) }}",
         "columns": [{
                 render: function (data, type, row, meta) {
