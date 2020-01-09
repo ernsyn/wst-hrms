@@ -107,12 +107,18 @@
                         <a class="nav-item nav-link" id="nav-reportto-tab" data-toggle="tab" href="#nav-reportto" role="tab" aria-controls="nav-reportto"
                             aria-selected="true">Report To</a>
                             @endcan
+                        @canany(PermissionConstant::VIEW_HISTORY)
                         <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history"
                             aria-selected="false">History</a>
+                            @endcan
+                         @canany(PermissionConstant::VIEW_EMP_SECURITY_GROUP)
                         <a class="nav-item nav-link" id="nav-security-tab" data-toggle="tab" href="#nav-security" role="tab" aria-controls="nav-security"
                             aria-selected="true">Security Group</a>
+                            @endcan
+                        @canany(PermissionConstant::VIEW_ATTENDANCE)
                         <a class="nav-item nav-link" id="nav-attendance-tab" data-toggle="tab" href="#nav-attendance" role="tab" aria-controls="nav-attendance"
                             aria-selected="true">Attendance</a>
+                            @endcan
                     </div>
                 </nav>
                 {{-- Tab Content --}}

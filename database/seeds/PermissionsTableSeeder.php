@@ -92,6 +92,14 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::UPDATE_REPORT_TO, 'mode' => 'admin', 'module' => 'Employees - Report To']);
         Permission::create(['name' => PermissionConstant::DELETE_REPORT_TO, 'mode' => 'admin', 'module' => 'Employees - Report To']);
         
+        Permission::create(['name' => PermissionConstant::VIEW_HISTORY, 'mode' => 'admin', 'module' => 'Employees - History']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_EMP_SECURITY_GROUP, 'mode' => 'admin', 'module' => 'Employees - Security Group']);
+        Permission::create(['name' => PermissionConstant::ADD_EMP_SECURITY_GROUP, 'mode' => 'admin', 'module' => 'Employees - Security Group']);
+        Permission::create(['name' => PermissionConstant::DELETE_EMP_SECURITY_GROUP, 'mode' => 'admin', 'module' => 'Employees - Security Group']);
+        
+        Permission::create(['name' => PermissionConstant::VIEW_ATTENDANCE, 'mode' => 'admin', 'module' => 'Employees - Attendance']);
+        
         Permission::create(['name' => PermissionConstant::VIEW_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);
         Permission::create(['name' => PermissionConstant::ADD_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company', 'superadmin' => 1]);
         Permission::create(['name' => PermissionConstant::UPDATE_COMPANY, 'mode' => 'admin', 'module' => 'Settings - Company']);

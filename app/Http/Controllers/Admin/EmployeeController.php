@@ -51,7 +51,6 @@ class EmployeeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:Super Admin|HR Admin|HR Eexec']);
     }
 
     //Employee List
@@ -1071,7 +1070,6 @@ else {
 
     public function postSecurityGroup(Request $request, $id)
     {
-        AccessControllHelper::hasAnyRoles('admin');
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
@@ -1390,8 +1388,7 @@ else {
     }
 
     public function deleteSecurityGroup(Request $request, $emp_id, $id)
-    {
-        AccessControllHelper::hasAnyRoles('admin');
+    {        
         EmployeeSecurityGroup::find($id)->delete();
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }

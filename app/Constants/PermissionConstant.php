@@ -61,6 +61,11 @@ class PermissionConstant
     const ADD_REPORT_TO = 'Assign Report To';
     const UPDATE_REPORT_TO = 'Update Report To';
     const DELETE_REPORT_TO = 'Delete Report To';
+    const VIEW_HISTORY = 'View History';
+    const VIEW_EMP_SECURITY_GROUP = 'View Employee Security Group';
+    const ADD_EMP_SECURITY_GROUP = 'Add Employee Security Group';
+    const DELETE_EMP_SECURITY_GROUP = 'Delete Employee Security Group';
+    const VIEW_ATTENDANCE = 'View Attendance';
     const VIEW_COMPANY = 'View Company';
     const ADD_COMPANY = 'Add Company';
     const UPDATE_COMPANY = 'Update Company';

@@ -1,3 +1,4 @@
+@canany(PermissionConstant::VIEW_HISTORY)
 <div class="tab-pane fade show p-3" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
     <table class="hrms-primary-data-table table w-100" id="audit-trail-table">
         <thead>
@@ -14,8 +15,10 @@
         </tbody>
     </table>
 </div>
+@endcan
 
 <!-- Modal -->
+@canany(PermissionConstant::VIEW_HISTORY)
 <div class="modal fade" id="audit-details-modal" tabindex="-1" role="dialog" aria-labelledby="audit-details-modal-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -34,6 +37,7 @@
         </div>
     </div>
 </div>
+@endcan
 
 @section('scripts')
 <script src="{{ asset('js/audit-trail.js') }}"></script>
