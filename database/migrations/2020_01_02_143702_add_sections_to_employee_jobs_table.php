@@ -27,7 +27,7 @@ class AddSectionsToEmployeeJobsTable extends Migration
     public function down()
     {
         Schema::table('employee_jobs', function (Blueprint $table) {
-            $table->dropColumn('section_id');
+            $table->dropForeign(['section_id']);
         });
     }
 }

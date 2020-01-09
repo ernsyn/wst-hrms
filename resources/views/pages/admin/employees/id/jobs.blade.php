@@ -57,6 +57,9 @@
                 <th>Grade</th>
                 <th>Section</th>
 				<th>Company</th>
+				<th>Area</th><
+				<th>Branch</th>
+                <th>Basic Salary</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -500,7 +503,7 @@
         "scrollX":	true,
         "ajax": "{{ route('admin.employees.dt.jobs', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": 10,
+            "targets": 13,
             "orderable": false
         } ],
         "columns": [{
@@ -554,7 +557,15 @@
                     return data ? data : null;
                 }
             },
-
+            {
+                "data": "area"
+            },
+            {
+                "data": "branch.name"
+            },
+            {
+                "data": "basic_salary"
+            },
             {
                 "data": "status",
                 render: function (data, type, row, meta) {

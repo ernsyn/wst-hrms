@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
+use App\Area;
 use App\Country;
 use App\Roles;
 use App\User;
@@ -396,6 +397,10 @@ class EmployeeController extends Controller
     {
         $jobs = EmployeeJob::with('main_position','department', 'team', 
         'cost_centre', 'grade', 'branch', 'section', 'jobcompany')->where('emp_id', $id)->get();
+        foreach($jobs as $job){
+            $area = Area::find($job->branch->area_id);
+            $job->area = $area->name;
+        }
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
             if ($job->start_date !== null)
