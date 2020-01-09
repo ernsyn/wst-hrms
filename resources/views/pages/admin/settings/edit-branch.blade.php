@@ -155,7 +155,7 @@
                             <label class="col-md-12 col-form-label">Area*</label>
                             <div class="col-md-12">
                                 <select class="form-control{{ $errors->has('area_id') ? ' is-invalid' : '' }}" name="area_id" id="area_id">
-                                	<option value="{{ $branch->area_id }}">{{ $branch->area()->first()->name }}</option>
+                                	<option value="{{ isset($branch->area_id) ? $branch->area_id : '' }}">{{ isset($branch->area()->first()->name) ? $branch->area()->first()->name : '' }}</option>
                                     @foreach($areas as $area)
                                     <option value="{{ $area->id }}">{{ $area->name }}</option>
                                     @endforeach
