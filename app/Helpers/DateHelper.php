@@ -8,6 +8,11 @@ class DateHelper
         return date("Y-m-t", strtotime($date));
     }
     
+    public static function dateStandardFormat($date)
+    {
+        return date('d/m/Y', strtotime($date));
+    }
+    
     public static function dateWithFormat($date, $format)
     {
         return date($format, strtotime($date));

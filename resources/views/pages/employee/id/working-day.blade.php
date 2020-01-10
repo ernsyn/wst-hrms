@@ -23,11 +23,11 @@
             <span id="start_work_time"></span>
         </div>
         <div class="col-md-4">
-            <label class="working-day"><strong>Half Day 1 - Start of Work: </strong></label>
+            <label class="working-day"><strong>Morning Half Day - Start of Work: </strong></label>
             <span id="half_1_start_work_time"></span>
         </div>
         <div class="col-md-4">
-            <label class="working-day"><strong>Half Day 2 - Start of Work: </strong></label>
+            <label class="working-day"><strong>Afternoon Half Day - Start of Work: </strong></label>
             <span id="half_2_start_work_time"></span>
         </div>
         <div class="col-md-4">
@@ -35,11 +35,11 @@
             <span id="end_work_time"></span>
         </div>
         <div class="col-md-4">
-            <label class="working-day"><strong>Half Day 1 - End of Work: </strong></label>
+            <label class="working-day"><strong>Morning Half Day - End of Work: </strong></label>
             <span id="half_1_end_work_time"></span>
         </div>
         <div class="col-md-4">
-            <label class="working-day"><strong>Half Day 2 - End of Work: </strong></label>
+            <label class="working-day"><strong>Afternoon Half Day - End of Work: </strong></label>
             <span id="half_2_end_work_time"></span>
         </div>
     </div>

@@ -117,6 +117,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     // Employee
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EMPLOYEE]], function () {
         Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
+        Route::get('get-employees-datatables', 'Admin\EmployeeController@getDataTableEmployees')->name('get.employees.data');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_EMPLOYEE]], function () {
     Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add')->where('id', '[0-9]+');

@@ -451,5 +451,24 @@ class PayrollHelper
     {
         return date_diff(date_create($startDate), date_create($endDate))->format('%R%a');
     }
+    
+    public static function calculateServiceYear($joinDate, $resignDate)
+    {
+        $serviceYear = '';
+        
+        if(isset($joinDate)) {
+            $startDate = date_create($joinDate);
+            
+            if(isset($resignDate)) {
+                $endDate = date_create($resignDate);
+            } else {
+                $endDate = date_create(date('Y-m-d'));
+            }
+            
+            $serviceYear = date_diff($startDate, $endDate)->format('%y yr %m mth');
+        }
+        
+        return $serviceYear;
+    }
 }
 
