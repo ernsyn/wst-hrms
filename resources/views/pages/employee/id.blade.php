@@ -67,6 +67,7 @@
                         <a class="nav-item nav-link" id="nav-visa-tab" data-toggle="tab" href="#nav-visa" role="tab" aria-controls="nav-visa" aria-selected="true">Visa</a>
                         <a class="nav-item nav-link" id="nav-job-tab" data-toggle="tab" href="#nav-job" role="tab" aria-controls="nav-job" aria-selected="false">Job</a>
                         <a class="nav-item nav-link" id="nav-bank-tab" data-toggle="tab" href="#nav-bank" role="tab" aria-controls="nav-bank" aria-selected="true">Bank</a>
+                        <a class="nav-item nav-link" id="nav-asset-tab" data-toggle="tab" href="#nav-asset" role="tab" aria-controls="nav-asset" aria-selected="true">Asset</a>
                         <a class="nav-item nav-link" id="nav-qualification-tab" data-toggle="tab" href="#nav-qualification" role="tab" aria-controls="nav-qualification"
                             aria-selected="false">Qualification</a>
                         <a class="nav-item nav-link" id="nav-attachments-tab" data-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-attachments"
@@ -237,6 +238,8 @@
                     @include('pages.employee.id.jobs', ['id' => $employee->id])
                     {{-- Bank --}}
                     @include('pages.employee.id.bank-accounts', ['id' => $employee->id])
+                    {{-- Asset --}}
+                    @include('pages.employee.id.employee-assets', ['id' => $employee->id])
                     {{-- Qualification --}}
                     @include('pages.employee.id.qualifications', ['id' => $employee->id])
                     {{-- Attachment --}}

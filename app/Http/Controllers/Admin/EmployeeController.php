@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
+use App\Area;
 use App\Country;
 use App\Roles;
 use App\User;
@@ -54,7 +55,6 @@ class EmployeeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:Super Admin|HR Admin|HR Eexec']);
     }
 
     //Employee List
@@ -170,7 +170,7 @@ class EmployeeController extends Controller
         ->with(['employee_confirmed' => function($query) use ($id)
         {
             $query->where('status','=','confirmed-employment')
-            ->where ('emp_id','=',$id);
+            ->where ('id','=',$id);
         }])
         ->find($id);
 
@@ -225,7 +225,8 @@ class EmployeeController extends Controller
         $socsoCategory = SocsoCategoryEnum::choices();
         $paymentviaGroup = PaymentViaEnum::choices();
         $paymentrateGroup = PaymentRateEnum::choices();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup]);   	    
+        $items = CompanyAsset::all();
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items]);   	    
     }
     
     public function securityGroupDisplay($id)
@@ -487,6 +488,10 @@ class EmployeeController extends Controller
     {
         $jobs = EmployeeJob::with('main_position','department', 'team', 
         'cost_centre', 'grade', 'branch', 'section', 'jobcompany')->where('emp_id', $id)->get();
+        foreach($jobs as $job){
+            $area = Area::find($job->branch->area_id);
+            $job->area = $area->name;
+        }
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
             if ($job->start_date !== null)
@@ -566,7 +571,6 @@ class EmployeeController extends Controller
         $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', $id)->get();
         return DataTables::of($reportTos)->make(true);
     }
-
 
     public function getDataTableSecurityGroup($id)
     {
@@ -879,13 +883,14 @@ else {
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
-            'issue_date' => 'required',
-            'return_date' => 'nullable',
-            'sold_date' => 'nullable',
+            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'asset_attach' => 'nullable'    
         ]);
+        
         $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        $assetData['end_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
+        $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
         $assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['sold_date'])));
         $asset= new EmployeeAsset($assetData);
 
@@ -901,13 +906,13 @@ else {
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
-            'issue_date' => 'required',
-            'return_date' => 'nullable',
-            'sold_date' => 'nullable',
+            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'asset_attach' => 'nullable'    
         ]);
         $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        $assetData['end_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
+        $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
         $assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['sold_date'])));
         $asset= new EmployeeAsset($assetData);
 
@@ -1161,7 +1166,6 @@ else {
 
     public function postSecurityGroup(Request $request, $id)
     {
-        AccessControllHelper::hasAnyRoles('admin');
         $securityGroupData = $request->validate([
             'security_group_id' => 'required|unique:employee_security_groups,security_group_id,NULL,id,deleted_at,NULL,emp_id,'.$id
         ]);
@@ -1305,7 +1309,8 @@ else {
             'issue_date' => 'required',
             'return_date' => 'nullable',
             'sold_date' => 'nullable',
-            'asset_attach' => 'nullable'    
+            'asset_attach' => 'nullable',
+            'asset_status' => 'required'    
         ]);
         $assetUpdateData['issue_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['issue_date'])));
         $assetUpdateData['end_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['return_date'])));
@@ -1480,8 +1485,7 @@ else {
     }
 
     public function deleteSecurityGroup(Request $request, $emp_id, $id)
-    {
-        AccessControllHelper::hasAnyRoles('admin');
+    {        
         EmployeeSecurityGroup::find($id)->delete();
         return response()->json(['success'=>'Security Group was successfully deleted.']);
     }
@@ -1498,7 +1502,6 @@ else {
 
         return $attendances;
     }
-
     // public function postDisapproved(Request $request)
     // {
     //     $id = $request->input('id');

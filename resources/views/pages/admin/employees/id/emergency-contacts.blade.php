@@ -1,4 +1,5 @@
 <!-- ADD -->
+@can(PermissionConstant::ADD_EMERGENCY_CONTACT)
 <div class="modal fade" id="add-emergency-contact-popup" tabindex="-1" role="dialog" aria-labelledby="add-emergency-contact-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -42,8 +43,10 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- UPDATE -->
+@can(PermissionConstant::UPDATE_EMERGENCY_CONTACT)
 <div class="modal fade" id="edit-emergency-contact-popup" tabindex="-1" role="dialog" aria-labelledby="edit-emergency-contact-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -87,7 +90,9 @@
         </div>
     </div>
 </div>
+@endcan
  {{-- DELETE --}}
+ @can(PermissionConstant::DELETE_EMERGENCY_CONTACT)
  <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -107,14 +112,18 @@
         </div>
     </div>
 </div>
+@endcan
 
+@can(PermissionConstant::VIEW_EMERGENCY_CONTACT)
 <div class="tab-pane fade show p-3" id="nav-emergency" role="tabpanel" aria-labelledby="nav-emergency-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
+        	@can(PermissionConstant::ADD_EMERGENCY_CONTACT)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-emergency-contact-popup">
                 Add Contact
             </button>
+            @endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="emergency-contacts-table">
@@ -129,6 +138,7 @@
         </thead>
     </table>
 </div>
+@endcan
 
 @section('scripts')
 <script>
@@ -159,8 +169,13 @@
         {
             "data": null, // can be null or undefined
             render: function (data, type, row, meta) {
-                return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>` +
-                    `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-modal"><i class="far fa-trash-alt"></i></button>`;
+                return `
+                @can(PermissionConstant::UPDATE_EMERGENCY_CONTACT)
+                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-emergency-contact-popup"><i class="far fa-edit"></i></button>
+                @endcan` + `@can(PermissionConstant::DELETE_EMERGENCY_CONTACT)
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-modal"><i class="far fa-trash-alt"></i></button>
+                @endcan
+                `;
             }
         }
     ]

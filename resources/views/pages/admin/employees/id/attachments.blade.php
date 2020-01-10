@@ -1,4 +1,5 @@
 <!-- ADD ATTACHMENTS -->
+@can(PermissionConstant::ADD_ATTACHMENT)
 <div class="modal fade" id="add-attachment-popup" tabindex="-1" role="dialog" aria-labelledby="add-attachment-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -30,7 +31,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="attachment"><strong>Attachment*</strong></label>
-                            <input type="file" name="required-attachment" class="form-control-file">
+                            <input type="file" name="required-attachment" class="form-control-file" multiple="">
                             <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -45,6 +46,7 @@
         </div>
     </div>
 </div>
+@endcan
 
 <!-- UPDATE ATTACHMENTS -->
 <div class="modal fade" id="edit-attachment-popup" tabindex="-1" role="dialog" aria-labelledby="edit-attachment-label" aria-hidden="true">
@@ -95,6 +97,7 @@
 </div>
 
 {{-- DELETE ATTACH--}}
+@can(PermissionConstant::DELETE_ATTACHMENT)
 <div class="modal fade" id="confirm-delete-attachment-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-attachment-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -115,15 +118,19 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- TABLE --}}
+@can(PermissionConstant::VIEW_ATTACHMENT)
 <div class="tab-pane fade show p-3" id="nav-attachments" role="tabpanel" aria-labelledby="nav-attachments-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
+        	@can(PermissionConstant::ADD_ATTACHMENT)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-attachment-popup">
                 Add Attachment
             </button>
+            @endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table  w-100" id="attachments-table">
@@ -138,11 +145,7 @@
         </thead>
     </table>
 </div>
-
-
-
-
-
+@endcan
 
 @section('scripts')
 <script>
@@ -175,14 +178,22 @@
                     if(data.mimetype.indexOf('image') >= 0)
                         return `<img src="data:`+ data.mimetype +`;base64,` + data.data + `" height="100px"/>`;
                     else
-                        return `<a href="data:` + data.mimetype + `;base64,` + data.data + `" height="100px" download="` + data.filename + `">Download</a>`;
+                        return `
+                        @can(PermissionConstant::DOWNLOAD_ATTACHMENT)
+                        <a href="data:` + data.mimetype + `;base64,` + data.data + `" height="100px" download="` + data.filename + `">Download</a>
+						@endcan
+                        `;
                 }
             },
             {
                 "data": null,
                 render: function (data, type, row, meta) {
                     // return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attachment-popup"><i class="far fa-edit"></i></button>` +
-                    return `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `
+                    @can(PermissionConstant::DELETE_ATTACHMENT)
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-attachment-modal"><i class="far fa-trash-alt"></i></button>
+					@endcan
+                    `;
                 }
             }
         ]

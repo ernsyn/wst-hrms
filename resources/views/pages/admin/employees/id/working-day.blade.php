@@ -1,3 +1,4 @@
+@can(PermissionConstant::VIEW_WORK_DAYS)
 <div class="tab-pane fade show p-3" id="nav-workdays" role="tabpanel" aria-labelledby="nav-work-days">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
@@ -47,6 +48,8 @@
         </div>
     </div>
 </div>
+@endcan
+
 @section('scripts')
 <script>
     $("#assign-working-day-button").hide();

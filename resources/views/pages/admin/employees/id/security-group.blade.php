@@ -1,4 +1,5 @@
 <!-- Set Security Group -->
+@can(PermissionConstant::ADD_EMP_SECURITY_GROUP)
 <div class="modal fade" id="add-security-group-popup" tabindex="-1" role="dialog" aria-labelledby="add-security-group-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -35,7 +36,10 @@
         </div>
     </div>
 </div>
+@endcan
+
 {{-- DELETE SG--}}
+@can(PermissionConstant::DELETE_EMP_SECURITY_GROUP)
 <div class="modal fade" id="confirm-delete-security-group-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-security-group-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -56,17 +60,20 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- TABLE --}}
+@can(PermissionConstant::VIEW_EMP_SECURITY_GROUP)
 <div class="tab-pane fade show p-3" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab">
 	@hasrole('HR Admin')
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
+        	@can(PermissionConstant::ADD_EMP_SECURITY_GROUP)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-security-group-popup">
                 Add Security Group
             </button>
-
+			@endcan
         </div>
     </div>
     @endhasrole
@@ -80,8 +87,7 @@
         </thead>
     </table>
 </div>
-
-
+@endcan
 
 @section('scripts')
 <script>
@@ -109,7 +115,11 @@
             render: function (data, type, row, meta) {
                 // return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-security-group-popup"><i class="far fa-edit"></i></button>` +
                 @hasrole('HR Admin')
-                return `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-security-group-modal"><i class="far fa-trash-alt"></i></button>`;
+                return `
+                @can(PermissionConstant::DELETE_EMP_SECURITY_GROUP)
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-security-group-modal"><i class="far fa-trash-alt"></i></button>
+				@endcan
+                `;
                 @endhasrole
                 return '';
             }

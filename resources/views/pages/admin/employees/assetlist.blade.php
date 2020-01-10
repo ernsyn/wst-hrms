@@ -55,18 +55,14 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="add-asset-form">
+            <form  enctype="multipart/form-data" id="add-asset-form" >
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Employee*</strong></label>
-                            <select class="form-control{{ $errors->has('emp_id') ? ' is-invalid' : '' }}" name="emp_id" id="emp_id" class="selectpicker" data-live-search="true">
-                            <option value=""></option>  
-                            @foreach($employees as $employee)
-                                 <option value="{{$employee->emp_id}}">{{$employee->code}}-{{$employee->user()->first()->name}}</option>
-                            @endforeach
-                            </select>
+                            <select name="emp_id" id="emp_id" class="form-control" placeholder="Select an employee...">
+                                    </select>
                             <div id="emp_id-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -101,10 +97,15 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label><strong>Issue Date*</strong></label>
-                            <input name="issue_date" type="date" class="form-control" placeholder="" value="" >
-                            <div id="issue_date-error" class="invalid-feedback">
+                        <div class="col-md-8 mb-3">
+                            <label for="issue_date"><strong>Issue Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="issue_date" name="issue_date" class="form-control datetimepicker-input" data-target="#issue_date" autocomplete="off"/>
+                                <div class="input-group-append" data-target="#issue_date" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="issue_date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -117,18 +118,28 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label><strong>Return Date</strong></label>
-                            <input name="return_date" type="date" class="form-control" placeholder="" value="" >
-                            <div id="return_date-error" class="invalid-feedback">
+                        <div class="col-md-8 mb-3">
+                            <label for="return_date"><strong>Return Date</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="return_date" name="return_date" class="form-control datetimepicker-input" data-target="#return_date" autocomplete="off"/>
+                                <div class="input-group-append" data-target="#return_date" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="return_date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label><strong>Sold Date</strong></label>
-                            <input name="sold_date" type="date" class="form-control" placeholder="" value="" >
-                            <div id="sold_date-error" class="invalid-feedback">
+                      <div class="form-row">
+                        <div class="col-md-8 mb-3">
+                            <label for="sold_date"><strong>Sold Date</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="sold_date"  name="sold_date" class="form-control datetimepicker-input" data-target="#sold_date" autocomplete="off"/>
+                                <div class="input-group-append" data-target="#sold_date" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="return_date-error" class="invalid-feedback">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,12 +164,33 @@
     </div>
 @endsection
 @section('scripts')
-<script>
-    $(document).ready(function() {
-    $('#asset-table').DataTable();
-} );
+<script type="text/javascript">
+    /////////date//////////
+      $('#issue_date').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    //disable keyboard input & hide caret
+    $('#issue_date').keydown(false);
+    $('#issue_date').css('caret-color', 'transparent');
+
+     $('#return_date').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    //disable keyboard input & hide caret
+    $('#return_date').keydown(false);
+    $('#return_date').css('caret-color', 'transparent');
+
+    $('#sold_date').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    //disable keyboard input & hide caret
+    $('#sold_date').keydown(false);
+    $('#sold_date').css('caret-color', 'transparent');
+
+
+    ////////date//////////
 //////////////////ADD///////////////////////////////////////////////
-    $(function(){
+
         // ADD
         $('#add-asset-popup').on('show.bs.modal', function (event) {
             clearEmployeeAssetError('#add-asset-form');
@@ -178,14 +210,15 @@
                     issue_date: $('#add-asset-form input[name=issue_date]').val(),
                     return_date: $('#add-asset-form input[name=return_date]').val(),
                     sold_date: $('#add-asset-form input[name=sold_date]').val(),
-                    asset_spec: $('#add-asset-form input[name=asset_spec]').val(),
+                    asset_spec: $('#add-asset-form textarea[name=asset_spec]').val(),
                     asset_deposit: $('#add-asset-form input[name=asset_deposit]').val(),
                     asset_attach: $('#add-asset-form input[name=asset_attach]').val()
                 },
                 success: function(data) {
                     showAlert(data.success);
-                    employeeAssetsTable.ajax.reload();
-                    $('#add-asset-popup').modal('toggle');
+                    $('#add-asset-popup').modal('toggle'); 
+                    //employeeAssetsTable.ajax.reload();
+                    $('#asset-table').load(document.URL +  ' #asset-table');
                     clearEmployeeAssetModal('#add-asset-form');
                 },
                 error: function(xhr) {
@@ -209,7 +242,7 @@
                                         $('#add-asset-form #asset_quantity-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'asset_spec':
-                                        $('#add-asset-form input[name=asset_spec]').addClass('is-invalid');
+                                        $('#add-asset-form textarea[name=asset_spec]').addClass('is-invalid');
                                         $('#add-asset-form #asset_spec-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'issue_date':
@@ -240,13 +273,12 @@
             });
         });
 
-
  // GENERAL FUNCTIONS
     function clearEmployeeAssetModal(htmlId) {
         $(htmlId + ' select[name=emp_id]')[0].selectize.clear();
-        $(htmlId + ' select[name=asset_name]')[0].selectize.clear();
+        $(htmlId + ' select[name=asset_name]').val('');
         $(htmlId + ' input[name=asset_quantity]').val('');
-        $(htmlId + ' input[name=asset_spec]').val('');
+        $(htmlId + ' textarea[name=asset_spec]').val('');
         $(htmlId + ' input[name=issue_date]').val('');
         $(htmlId + ' input[name=return_date]').val('');
         $(htmlId + ' input[name=sold_date]').val('');
@@ -256,7 +288,7 @@
         $(htmlId + ' select[name=emp_id]').removeClass('is-invalid');
         $(htmlId + ' select[name=asset_name]').removeClass('is-invalid');
         $(htmlId + ' input[name=asset_quantity]').removeClass('is-invalid');
-        $(htmlId + ' input[name=asset_spec]').removeClass('is-invalid');
+        $(htmlId + ' textarea[name=asset_spec]').removeClass('is-invalid');
         $(htmlId + ' input[name=issue_date]').removeClass('is-invalid');
         $(htmlId + ' input[name=return_date]').removeClass('is-invalid');
         $(htmlId + ' input[name=sold_date]').removeClass('is-invalid');
@@ -268,7 +300,7 @@
         $(htmlId + ' select[name=emp_id]').removeClass('is-invalid');
         $(htmlId + ' select[name=asset_name]').removeClass('is-invalid');
         $(htmlId + ' input[name=asset_quantity]').removeClass('is-invalid');
-        $(htmlId + ' input[name=asset_spec]').removeClass('is-invalid');
+        $(htmlId + ' textarea[name=asset_spec]').removeClass('is-invalid');
         $(htmlId + ' input[name=issue_date]').removeClass('is-invalid');
         $(htmlId + ' input[name=return_date]').removeClass('is-invalid');
         $(htmlId + ' input[name=sold_date]').removeClass('is-invalid');
@@ -276,8 +308,46 @@
         $(htmlId + ' input[name=asset_deposit]').removeClass('is-invalid');
     }
 
-    function showAlert(message) 
-    {
+    $(document).ready(function() {
+    $('#asset-table').DataTable();
+} );
+
+
+        var reportToSelectizeOptions = {
+            valueField: 'id',
+            labelField: 'name',
+            searchField: 'name',
+            options: [],
+            create: false,
+            render: {
+                option: function(item, escape) {
+                    return '<div class="option">' +
+                        '<span class="badge badge-warning">' + item.code +'</span>' + 
+                        '&nbsp; ' + item.name +
+                    '</div>';
+                }
+            },
+            load: function(query, callback) {
+                if (!query.length) return callback();
+                $.ajax({
+                    url: "{{ route('admin.e-leave.ajax.employees') }}",
+                    type: 'GET',
+                    data: {
+                        q: query,
+                        page_limit: 10
+                    },
+                    error: function() {
+                        callback();
+                    },
+                    success: function(res) {
+                        callback(res);
+                    }
+                });
+            }
+        };
+
+        $('#add-asset-form #emp_id').selectize(reportToSelectizeOptions);
+        function showAlert(message) {
         $('#alert-container').html(`<div class="alert alert-primary alert-dismissible fade show" role="alert">
             <span id="alert-message">${message}</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -285,6 +355,5 @@
             </button>
             </div>`)
     }
-
 </script>
 @append

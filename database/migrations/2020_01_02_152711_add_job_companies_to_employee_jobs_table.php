@@ -27,7 +27,7 @@ class AddJobCompaniesToEmployeeJobsTable extends Migration
     public function down()
     {
         Schema::table('employee_jobs', function (Blueprint $table) {
-            $table->dropColumn('job_comp_id');
+            $table->dropForeign(['job_comp_id']);
         });
     }
 }
