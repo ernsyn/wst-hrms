@@ -482,7 +482,8 @@
                         </button>
             </div>
             <div class="modal-body">
-                    <p>Are you sure want to delete?</p>
+                    <strong>Warning: *All Leave Allocations, Leave Request and Leave Request Approval under this job will be deleted*</strong>
+                    <p>Are you sure you want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -587,9 +588,7 @@
                 "data": null, // can be null or undefined
                 render: function (data, type, row, meta) {
                     return `
-                    @can(PermissionConstant::UPDATE_JOB)
-                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-job-popup"><i class="far fa-edit"></i></button>
-                    @endcan` + `@can(PermissionConstant::DELETE_JOB)
+                    @can(PermissionConstant::DELETE_JOB)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;
@@ -976,7 +975,7 @@
             deleteJobId = currentData.id;
         });
 
- 		var deleteJobRouteTemplate = "{{ route('admin.settings.jobs.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+ 		var deleteJobRouteTemplate = "{{ route('admin.employees.jobs.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#delete-job-submit').click(function(e){
             var deleteJobRoute = deleteJobRouteTemplate.replace(encodeURI('<<id>>'), deleteJobId);
             e.preventDefault();

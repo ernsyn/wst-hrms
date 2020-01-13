@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class LeaveAllocation extends Model
+class LeaveAllocation extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
     protected $table = 'leave_allocations';
 
@@ -33,4 +35,5 @@ class LeaveAllocation extends Model
         'valid_from_date' => 'date:d-m-Y',
         'valid_until_date' => 'date:d-m-Y',
     ];
+    
 }
