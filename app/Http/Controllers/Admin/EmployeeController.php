@@ -49,6 +49,7 @@ use App\Imports\UserImport;
 use App\Mail\NewUserMail;
 use App\EmployeePosition;
 use App\CompanyAsset;
+use App\LeaveAllocation;
 
 class EmployeeController extends Controller
 {
@@ -818,11 +819,11 @@ else {
                 $jobData['status']  = "probationer";
             }
             
-            if($jobData['emp_mainposition_id'] != '') {
-                $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
+            if(isset($jobData['emp_mainposition_id'])) {
+                $position = EmployeePosition::find($jobData['emp_mainposition_id'])->id;
+                Employee::where('id', $id)->update(array('position_id'=> @$position ? $position : ''));
             }
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
-            Employee::where('id', $id)->update(array('position'=> @$position ? $position : ''));
             Employee::where('id', $id)->update(array('resignation_date'=> null));
 
             $newJob = new EmployeeJob($jobData);
@@ -1439,7 +1440,13 @@ else {
     
     public function deleteJob(Request $request, $emp_id, $id)
     {
+        DB::beginTransaction();
+        $leaves = LeaveAllocation::where('emp_job_id',$id);
+        foreach ($leaves as $leave) {
+            LeaveAllocation::find($leave->id)->delete();
+        }
         EmployeeJob::find($id)->delete();
+        DB::commit();
         return response()->json(['success'=>'Job was successfully deleted.']);
     }
     

@@ -48,7 +48,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start-date"><strong>Start Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="start-date-experience" class="form-control datetimepicker-input" data-target="#start-date-experience" autocomplete="off"/>
+                                <input type="text" id="start-date-experience" class="form-control datetimepicker-input" placeholder="dd/mm/yyyy" data-target="#start-date-experience" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#start-date-experience" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -61,7 +61,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end-date"><strong>End Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="end-date-experience" class="form-control datetimepicker-input" data-target="#end-date-experience" autocomplete="off"/>
+                                <input type="text" id="end-date-experience" class="form-control datetimepicker-input" placeholder="dd/mm/yyyy" data-target="#end-date-experience" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#end-date-experience" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -353,7 +353,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="start-year"><strong>Start Year*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="start-year-edit" class="form-control datetimepicker-input" data-target="#start-year-edit"/>
+                                <input type="text" id="start-year-edit" class="form-control datetimepicker-input" placeholder="dd/mm/yyyy" data-target="#start-year-edit"/>
                                 <div class="input-group-append" data-target="#start-year-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -366,7 +366,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="end-year"><strong>End Year*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="end-year-edit" class="form-control datetimepicker-input" data-target="#end-year-edit"/>
+                                <input type="text" id="end-year-edit" class="form-control datetimepicker-input" placeholder="dd/mm/yyyy" data-target="#end-year-edit"/>
                                 <div class="input-group-append" data-target="#end-year-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>

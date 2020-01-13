@@ -48,7 +48,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="dob-dependent" class="form-control datetimepicker-input" data-target="#dob-dependent" autocomplete="off"/>
+                                <input type="text" id="dob-dependent" class="form-control datetimepicker-input" placeholder="dd/mm/yyyy" data-target="#dob-dependent" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#dob-dependent" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -119,7 +119,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date Of Birth*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="dob-dependent-edit" class="form-control datetimepicker-input" data-target="#dob-dependent-edit" autocomplete="off" />
+                                <input type="text" id="dob-dependent-edit" class="form-control datetimepicker-input" placeholder="dd/mm/yyyy" data-target="#dob-dependent-edit" autocomplete="off" />
                                 <div class="input-group-append" data-target="#dob-dependent-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>

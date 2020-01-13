@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\LeaveAllocation;
 
 class EmployeeJob extends Model implements Auditable
 {
@@ -27,7 +28,12 @@ class EmployeeJob extends Model implements Auditable
         'created_by',
         'emp_job_id',
     ];
-
+    
+    
+    public function leave_allocation(){
+        return $this->hasOne('App\leaveAllocation', 'emp_job_id');
+    }
+    
     public function main_position()
     {
         return $this->belongsTo('App\EmployeePosition', 'emp_mainposition_id');
