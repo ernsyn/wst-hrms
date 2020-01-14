@@ -371,6 +371,22 @@ var AuditTrail = (function() {
             },
         },
 
+        'App\\LeaveAllocation': {
+            name: 'Leave Allocation',
+            fields: {
+                'emp_id': 'Employee ID',
+                'leave_type_id': 'Leave Type ID',
+                'allocated_days': 'Allocated Days',
+                'spent_days': 'Spent Days',
+                'carried_forward_days': 'Carried Forward Days',
+                'is_carry_forward': 'is Cary Forward',
+                'valid_from_date': 'Valid from Date',
+                'valid_until_date': 'Valid until Date',
+                'created_by': 'Created by',
+                'emp_job_id': 'Employee job ID',
+            },
+        },
+        
         'App\\LeaveRequest': {
             name: 'Leave Request',
             fields: {

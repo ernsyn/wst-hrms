@@ -192,7 +192,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
         Route::post('employees/{emp_id}/jobs/{id}/edit','Admin\EmployeeController@postEditJob')->name('admin.employees.jobs.edit.post')->where('id', '[0-9]+');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_JOB]], function () {
-        Route::get('employees/{emp_id}/jobs/{id}/delete','Admin\EmployeeController@deleteJob')->name('admin.settings.jobs.delete')->where('id', '[0-9]+');
+        Route::get('employees/{emp_id}/jobs/{id}/delete','Admin\EmployeeController@deleteJob')->name('admin.employees.jobs.delete')->where('id', '[0-9]+');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::RESIGN]], function () {
         Route::post('employees/{id}/action/resign', 'Admin\EmployeeController@postResign')->name('admin.employees.id.action.resign')->where('id', '[0-9]+');

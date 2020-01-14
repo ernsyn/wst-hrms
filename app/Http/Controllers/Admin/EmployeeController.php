@@ -49,8 +49,11 @@ use App\Imports\UserImport;
 use App\Mail\NewUserMail;
 use App\EmployeePosition;
 use App\CompanyAsset;
+use App\LeaveAllocation;
+use App\EmploymentStatus;
+use App\LeaveRequest;
+use App\LeaveRequestApproval;
 use App\AssetAttach;
-
 class EmployeeController extends Controller
 {
     public function __construct()
@@ -229,7 +232,7 @@ class EmployeeController extends Controller
         $items = CompanyAsset::all();
         return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items]);   	    
     }
-      public function displayAttach($id)
+public function displayAttach($id)
     {    
         $id = $id; 
         $attachs = DB::table('asset_attachs')
@@ -237,9 +240,7 @@ class EmployeeController extends Controller
         ->where('asset_id', $id)
         ->get();
         return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id]);        
-    }
-    
-    
+    }    
     public function securityGroupDisplay($id)
     {           
         $securityGroup = DB::table('security_groups')
@@ -834,11 +835,11 @@ else {
                 $jobData['status']  = "probationer";
             }
             
-            if($jobData['emp_mainposition_id'] != '') {
-                $position = EmployeePosition::find($jobData['emp_mainposition_id'])->name;
+            if(isset($jobData['emp_mainposition_id'])) {
+                $position = EmployeePosition::find($jobData['emp_mainposition_id'])->id;
+                Employee::where('id', $id)->update(array('position_id'=> @$position ? $position : ''));
             }
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
-            Employee::where('id', $id)->update(array('position'=> @$position ? $position : ''));
             Employee::where('id', $id)->update(array('resignation_date'=> null));
 
             $newJob = new EmployeeJob($jobData);
@@ -1514,7 +1515,21 @@ else {
     
     public function deleteJob(Request $request, $emp_id, $id)
     {
+        DB::beginTransaction();
+        $leave_request_approvals = LeaveRequestApproval::where('leave_request_id',$id)->get();
+        foreach ($leave_request_approvals as $leave_request_approval) {
+            LeaveRequestApproval::find($leave_request_approval->id)->delete();
+        }
+        $leave_requests = LeaveRequest::where('leave_allocation_id',$id)->get();
+        foreach ($leave_requests as $leave_request) {
+            LeaveRequest::find($leave_request->id)->delete();
+        }
+        $leave_allocations = LeaveAllocation::where('emp_job_id',$id)->get();
+        foreach ($leave_allocations as $leave_allocation) {
+            LeaveAllocation::find($leave_allocation->id)->delete();
+        }
         EmployeeJob::find($id)->delete();
+        DB::commit();
         return response()->json(['success'=>'Job was successfully deleted.']);
     }
     

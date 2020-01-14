@@ -182,7 +182,7 @@
                             <label class="col-md-4 col-form-label text-right">Date of Birth*</label>
                             <div class="col-md-6">
                                 <div class="input-group date" data-target-input="nearest">
-                                    <input type="text" id="dob-date" name="dob" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" data-target="#dob-date"
+                                    <input type="text" id="dob-date" name="dob" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" placeholder="dd/mm/yyyy" data-target="#dob-date"
                                     value="{{ old('dob') }}" autocomplete="off">
                                     <div class="input-group-append" data-target="#dob-date" data-toggle="datetimepicker">
                                         <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
@@ -300,7 +300,7 @@
                             <label class="col-lg-4 col-form-label text-lg-right">License Expiry Date</label>
                             <div class="col-lg-6">
                                 <div class="input-group date" data-target-input="nearest">
-                                    <input type="text" id="license-expiry-date" name="driver_license_expiry_date" class="form-control{{ $errors->has('driver_license_expiry_date') ? 'is-invalid' : '' }}" data-target="#license-expiry-date"
+                                    <input type="text" id="license-expiry-date" name="driver_license_expiry_date" class="form-control{{ $errors->has('driver_license_expiry_date') ? 'is-invalid' : '' }}" placeholder="dd/mm/yyyy" data-target="#license-expiry-date"
                                     value="{{ old('driver_license_expiry_date') }}" autocomplete="off">
                                     <div class="input-group-append" data-target="#license-expiry-date" data-toggle="datetimepicker">
                                         <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
@@ -534,15 +534,15 @@
     $('#dob-date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#dob-date').keydown(false);
+    //enable keyboard input & hide caret
+    //$('#dob-date').keydown(false);
     $('#dob-date').css('caret-color', 'transparent');
 
     $('#license-expiry-date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#license-expiry-date').keydown(false);
+    //enable keyboard input & hide caret
+    //$('#license-expiry-date').keydown(false);
     $('#license-expiry-date').css('caret-color', 'transparent');
 
     function readURL(input, onLoad) {

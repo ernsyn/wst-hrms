@@ -85,7 +85,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="date-resign" class="form-control datetimepicker-input" data-target="#date-resign"/>
+                                <input type="text" id="date-resign" class="form-control datetimepicker-input"  placeholder="dd/mm/yyyy" data-target="#date-resign"/>
                                 <div class="input-group-append" data-target="#date-resign" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -244,7 +244,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="date-job" class="form-control datetimepicker-input" data-target="#date-job" autocomplete="off"/>
+                                <input type="text" id="date-job" class="form-control datetimepicker-input"  placeholder="dd/mm/yyyy" data-target="#date-job" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#date-job" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -426,7 +426,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="date-job-edit" class="form-control datetimepicker-input" data-target="#date-job-edit" disabled autocomplete="off"/>
+                                <input type="text" id="date-job-edit" class="form-control datetimepicker-input"  placeholder="dd/mm/yyyy" data-target="#date-job-edit" disabled autocomplete="off"/>
                                 <div class="input-group-append" data-target="#date-job-edit" data-toggle="datetimepicker" disabled>
                                     
                                 </div>
@@ -482,7 +482,8 @@
                         </button>
             </div>
             <div class="modal-body">
-                    <p>Are you sure want to delete?</p>
+                    <strong>Warning: *All Leave Allocations, Leave Request and Leave Request Approval under this job will be deleted*</strong>
+                    <p>Are you sure you want to delete?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -587,9 +588,7 @@
                 "data": null, // can be null or undefined
                 render: function (data, type, row, meta) {
                     return `
-                    @can(PermissionConstant::UPDATE_JOB)
-                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-job-popup"><i class="far fa-edit"></i></button>
-                    @endcan` + `@can(PermissionConstant::DELETE_JOB)
+                    @can(PermissionConstant::DELETE_JOB)
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>
 					@endcan
                     `;
@@ -677,15 +676,15 @@
         $('#date-job').datetimepicker({
             format: 'DD/MM/YYYY'
         });
-        //disable keyboard input & hide caret
-        $('#date-job').keydown(false);
+        //enable keyboard input & hide caret
+        //$('#date-job').keydown(false);
         $('#date-job').css('caret-color', 'transparent');
 
         $('#date-job-edit').datetimepicker({
             format: 'DD/MM/YYYY'
         });
-        //disable keyboard input & hide caret
-        $('#date-job-edit').keydown(false);
+        //enable keyboard input & hide caret
+        //$('#date-job-edit').keydown(false);
         $('#date-job-edit').css('caret-color', 'transparent');
 
         // ADD
@@ -976,7 +975,7 @@
             deleteJobId = currentData.id;
         });
 
- 		var deleteJobRouteTemplate = "{{ route('admin.settings.jobs.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
+ 		var deleteJobRouteTemplate = "{{ route('admin.employees.jobs.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#delete-job-submit').click(function(e){
             var deleteJobRoute = deleteJobRouteTemplate.replace(encodeURI('<<id>>'), deleteJobId);
             e.preventDefault();
