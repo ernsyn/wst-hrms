@@ -49,6 +49,7 @@ use App\Imports\UserImport;
 use App\Mail\NewUserMail;
 use App\EmployeePosition;
 use App\CompanyAsset;
+use App\AssetAttach;
 
 class EmployeeController extends Controller
 {
@@ -228,6 +229,16 @@ class EmployeeController extends Controller
         $items = CompanyAsset::all();
         return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items]);   	    
     }
+      public function displayAttach($id)
+    {    
+        $id = $id; 
+        $attachs = DB::table('asset_attachs')
+        ->select('asset_attach','id')
+        ->where('asset_id', $id)
+        ->get();
+        return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id]);        
+    }
+    
     
     public function securityGroupDisplay($id)
     {           
@@ -520,7 +531,12 @@ class EmployeeController extends Controller
     public function getDataTableEmployeeAssets($id)
     {
         $assets = EmployeeAsset::where('emp_id','=', $id)->get();
-        return DataTables::of($assets)->make(true);
+        return DataTables::of($assets)
+        ->addColumn('namelink', function ($assets) {
+            return '<a href="' . route('admin.employees.assetattach', ['id' =>$assets->id]) .'"><button class="btn btn-default btn-smt fas fa-eye"></button></a>'; 
+        })
+        ->rawColumns(['namelink'])
+        ->make(true);
     }
 
     public function getDataTableExperiences($id)
@@ -885,20 +901,57 @@ else {
             'asset_spec' => 'nullable',
             'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'asset_attach' => 'nullable'    
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/' 
+          
         ]);
         
         $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
-        $assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['sold_date'])));
+       if( $assetData['return_date']!=null)
+        {$assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
+        if( $assetData['sold_date']!=null)
+        {$assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
         $asset= new EmployeeAsset($assetData);
-
         $employee = Employee::find($id);
         $employee->employee_assets()->save($asset);
+        
+         if($request->hasFile('asset_attach')) 
+        {
+            $files = $request->file('asset_attach');
+            foreach($files as $file) 
+            {
+              $path = $file->getClientOriginalName();
+              $name = time() . '-' . $path;
 
-        return response()->json(['success'=>'Asset was successfully added']);
+              $attach = new AssetAttach();
+              $attach->asset_attach = $name;
+              $attach->asset_id = $asset->id;
+              $attach->save();
+              $file->storeAs('public', $name);
+              
+            }
+        }
+
+     return response()->json(['success'=>'Asset was successfully added']);
     }
+    public function postAddAttach(Request $request, $id)
+    {
+            $files = $request->file('asset_attach');
+            foreach($files as $file) 
+            {
+              $path = $file->getClientOriginalName();
+              $name = time() . '-' . $path;
+
+              $attach = new AssetAttach();
+              $attach->asset_attach = $name;
+              $attach->asset_id = $id;
+              $attach->save();
+              $file->storeAs('public', $name);
+              
+            }
+      
+     return response()->json(['success'=>'Asset was successfully added']);
+    }
+
     public function postAsset(Request $request)
     {
         $assetData = $request->validate([
@@ -908,16 +961,34 @@ else {
             'asset_spec' => 'nullable',
             'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'asset_attach' => 'nullable'    
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/' ,
+            'asset_attach' => 'nullable' 
         ]);
-        $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
-        $assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['sold_date'])));
-        $asset= new EmployeeAsset($assetData);
 
+       
+        $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
+        if( $assetData['return_date']!=null)
+        {$assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
+        if( $assetData['sold_date']!=null)
+        {$assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
+        $asset= new EmployeeAsset($assetData);
         $asset->save();
 
+        if($request->hasFile('asset_attach')) 
+        {
+            $images = $request->file('asset_attach');
+            foreach($images as $image) 
+            {
+              $path = $image->getClientOriginalName();
+              $name = time() . '-' . $path;
+
+              $attach = new AssetAttach();
+              $attach->asset_attach = $name;
+              $attach->asset_id = $asset->id;
+              $attach->save();
+              $image->storeAs('public', $name);
+            }
+        }
         return response()->json(['success'=>'Employee Asset was successfully added']);
     }
 
@@ -1306,15 +1377,19 @@ else {
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
-            'issue_date' => 'required',
-            'return_date' => 'nullable',
-            'sold_date' => 'nullable',
+            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'asset_attach' => 'nullable',
             'asset_status' => 'required'    
         ]);
         $assetUpdateData['issue_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['issue_date'])));
-        $assetUpdateData['end_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['return_date'])));
-        $assetUpdateData['sold_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['sold_date'])));
+
+       if( $assetUpdateData['return_date']!=null)
+        {$assetUpdateData['return_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['return_date'])));} 
+    
+        if( $assetUpdateData['sold_date']!=null)
+        {$assetUpdateData['sold_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['sold_date'])));} 
 
         EmployeeAsset::find($id)->update($assetUpdateData);
 
@@ -1450,8 +1525,18 @@ else {
     }
     public function deleteEmployeeAsset(Request $request, $emp_id, $id)
     {
+        DB::table('asset_attachs')
+            ->where('asset_id', $id)
+            ->delete();
         EmployeeAsset::find($id)->delete();
+        
         return response()->json(['success'=>'Asset was successfully deleted.']);
+    }
+    public function deleteAssetAttach(Request $request,$id)
+    {
+        AssetAttach::find($id)->delete();
+        return redirect()->back() ->with('status', 'Attachment Successfully Deleted!');
+
     }
 
     public function deleteExperience(Request $request, $emp_id, $id)

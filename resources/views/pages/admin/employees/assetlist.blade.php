@@ -55,7 +55,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form  enctype="multipart/form-data" id="add-asset-form" >
+            <form  enctype="multipart/form-data" id="add-asset-form" name="add-asset-form" >
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
@@ -146,7 +146,7 @@
                      <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
-                            <input name="asset_attach" type="file" class="form-control" multiple="">
+                            <input name="asset_attach[]" type="file" class="form-control" multiple>
                             <div id="asset_attach-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -197,23 +197,15 @@
         });
         $('#add-asset-form #add-asset-form-submit').click(function(e){
             e.preventDefault();
+            var form = document.forms.namedItem("add-asset-form");
+            var formdata = new FormData(form);
             clearEmployeeAssetError('#add-asset-form');
             $.ajax({
                 url: "{{ route('admin.employees.assetlist.post') }}",
                 type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    // Form Data
-                    emp_id: $('#add-asset-form select[name=emp_id]').val(),
-                    asset_name: $('#add-asset-form select[name=asset_name]').val(),
-                    asset_quantity: $('#add-asset-form input[name=asset_quantity]').val(),
-                    issue_date: $('#add-asset-form input[name=issue_date]').val(),
-                    return_date: $('#add-asset-form input[name=return_date]').val(),
-                    sold_date: $('#add-asset-form input[name=sold_date]').val(),
-                    asset_spec: $('#add-asset-form textarea[name=asset_spec]').val(),
-                    asset_deposit: $('#add-asset-form input[name=asset_deposit]').val(),
-                    asset_attach: $('#add-asset-form input[name=asset_attach]').val()
-                },
+                contentType: false,
+                processData: false,
+                data:formdata,
                 success: function(data) {
                     showAlert(data.success);
                     $('#add-asset-popup').modal('toggle'); 

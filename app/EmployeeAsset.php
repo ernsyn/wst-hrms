@@ -19,7 +19,6 @@ class EmployeeAsset extends Model implements Auditable
         'asset_deposit',
         'return_date',
         'sold_date',
-        'asset_attach',
         'asset_status'
     ];
      protected $dates = [
@@ -32,6 +31,11 @@ class EmployeeAsset extends Model implements Auditable
     public function employee()
     {
         return $this->belongsTo('App\Employee', 'emp_id');
+    }
+
+     public function employee_assets()
+    {
+        return $this->hasMany('App\AssetAttach', 'asset_id');
     }
    
 
