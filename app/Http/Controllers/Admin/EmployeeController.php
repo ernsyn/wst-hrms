@@ -50,6 +50,9 @@ use App\Mail\NewUserMail;
 use App\EmployeePosition;
 use App\CompanyAsset;
 use App\LeaveAllocation;
+use App\EmploymentStatus;
+use App\LeaveRequest;
+use App\LeaveRequestApproval;
 
 class EmployeeController extends Controller
 {
@@ -229,7 +232,6 @@ class EmployeeController extends Controller
         $items = CompanyAsset::all();
         return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items]);   	    
     }
-    
     public function securityGroupDisplay($id)
     {           
         $securityGroup = DB::table('security_groups')
@@ -1441,9 +1443,17 @@ else {
     public function deleteJob(Request $request, $emp_id, $id)
     {
         DB::beginTransaction();
-        $leaves = LeaveAllocation::where('emp_job_id',$id);
-        foreach ($leaves as $leave) {
-            LeaveAllocation::find($leave->id)->delete();
+        $leave_request_approvals = LeaveRequestApproval::where('leave_request_id',$id)->get();
+        foreach ($leave_request_approvals as $leave_request_approval) {
+            LeaveRequestApproval::find($leave_request_approval->id)->delete();
+        }
+        $leave_requests = LeaveRequest::where('leave_allocation_id',$id)->get();
+        foreach ($leave_requests as $leave_request) {
+            LeaveRequest::find($leave_request->id)->delete();
+        }
+        $leave_allocations = LeaveAllocation::where('emp_job_id',$id)->get();
+        foreach ($leave_allocations as $leave_allocation) {
+            LeaveAllocation::find($leave_allocation->id)->delete();
         }
         EmployeeJob::find($id)->delete();
         DB::commit();
