@@ -320,7 +320,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::post('employees/{id}/update-roles','Admin\EmployeeController@postEditRoles')->name('admin.employees.update-roles.admin.post')->where('id', '[0-9]+');
     });
     
-
     // > Data Tables
     Route::get('employees/{id}/dt/employee-assets', 'Admin\EmployeeController@getDataTableEmployeeAssets')->name('admin.employees.dt.employee-assets')->where('id', '[0-9]+');
 
@@ -330,8 +329,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
 
     // > Add / Edit
     Route::post('employees/{emp_id}/employee-assets','Admin\EmployeeController@postAddAsset')->name('admin.employees.employee-assets.post')->where('id', '[0-9]+');
+    Route::post('employees/{id}/assetattach','Admin\EmployeeController@postAddAttach')->name('admin.employees.assetattach.post')->where('id', '[0-9]+');
     Route::post('employees/assetlist','Admin\EmployeeController@postAsset')->name('admin.employees.assetlist.post');
-    
+    Route::get('employees/assetattach/{id}','Admin\EmployeeController@displayAttach')->name('admin.employees.assetattach')->where('id', '[0-9]+');
+    Route::get('employees/assetattach/{id}/delete','Admin\EmployeeController@deleteAssetAttach')->name('admin.employees.assetattach.delete')->where('id', '[0-9]+');
+
     Route::post('employees/{emp_id}/working-day','Admin\EmployeeController@postWorkingDay')->name('admin.employees.working-days.post')->where('id', '[0-9]+');
     
     //admin edit

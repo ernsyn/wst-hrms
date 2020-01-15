@@ -9,10 +9,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="add-asset-form">
+            <form enctype="multipart/form-data" id="add-asset-form" name="add-asset-form" >
                 <div class="modal-body">
                     @csrf
-                    <div class="form-row">
+                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Item Name*</strong></label>
                             <select class="form-control{{ $errors->has('asset_name') ? ' is-invalid' : '' }}" name="asset_name" id="asset_name">
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
+                      <div class="form-row">
                         <div class="col-md-8 mb-3">
                             <label for="sold_date"><strong>Sold Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
@@ -88,10 +88,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
+                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
-                            <input name="asset_attach" type="file" class="form-control" multiple="">
+                            <input name="asset_attach[]" name="asset_attach" type="file" class="form-control" multiple>
                             <div id="asset_attach-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -112,12 +112,12 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-asset-popup">Edit Bank</h5>
+                <h5 class="modal-title" id="edit-asset-popup">Edit Asset</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="edit-assets-form">
+            <form enctype="multipart/form-data" id="edit-assets-form" name="edit-assets-form">
                 @csrf
                 <div class="modal-body">
                     <div class="form-row">
@@ -141,7 +141,7 @@
                             </div>
                         </div>
                     </div>
-                                   <div class="form-row">
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Specification</strong></label>
                             <textarea  name="asset_spec" id="asset_spec"class="form-control" placeholder="company number, model..."value=""></textarea>
@@ -153,7 +153,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="issue_date-edit"><strong>Issued Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issue_date-edit" class="form-control datetimepicker-input" data-target="#issue_date-edit" autocomplete="off"/>
+                                <input type="text" id="issue_date-edit" name="issue_date-edit" class="form-control datetimepicker-input" data-target="#issue_date-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#issue_date-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -174,7 +174,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="return_date-edit"><strong>Return Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="return_date-edit" class="form-control datetimepicker-input" data-target="#return_date-edit" autocomplete="off"/>
+                                <input type="text" id="return_date-edit" name="return_date-edit" class="form-control datetimepicker-input" data-target="#return_date-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#return_date-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -187,7 +187,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="sold_date-edit"><strong>Sold Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="sold_date-edit" class="form-control datetimepicker-input" data-target="#sold_date-edit" autocomplete="off"/>
+                                <input type="text" id="sold_date-edit" name="sold_date-edit" class="form-control datetimepicker-input" data-target="#sold_date-edit" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#sold_date-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -198,25 +198,25 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="asset_status"><strong>Status*</strong></label>
-                            <select  name="asset_status" id="asset_status" class="form-control">
-                                <option value="">Select  Status</option>
-                                <option value="Hold">Hold</option>
-                                <option value="Return">Return</option>
-                                <option value="Sold">Sold</option>
+                            <label<strong>Status</strong></label>
+                                <select class="form-control{{ $errors->has('asset_status') ? ' is-invalid' : '' }}" name="asset_status" id="asset_status">
+                                    <option value="">Select Status</option>
+                                    <option value="1" {{ old('asset_status') == 1 ? 'selected' : ''}}>Hold</option>
+                                    <option value="2" {{ old('asset_status') == 2 ? 'selected' : ''}}>Return</option>
+                                    <option value="3" {{ old('asset_status') == 3 ? 'selected' : ''}}>Sold</option>
                                 </select>
-                            <div id="asset_status-error" class="invalid-feedback"></div>
-                        </div>
+                                <div id="asset_status-error" class="invalid-feedback"></div>
+                                </div> 
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
-                            <input name="asset_attach" type="file" class="form-control" multiple="">
+                             <input name="asset_attach[]" type="file" class="form-control" multiple>
                             <div id="asset_attach-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
-                </div>
+                 </div>
                 <div class="modal-footer">
                     <button id="edit-assets-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
                 </div>
@@ -224,6 +224,7 @@
         </div>
     </div>
 </div>
+
 {{-- DELETE ASSET --}}
 <div class="modal fade" id="confirm-delete-asset-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-asset-label"
     aria-hidden="true">
@@ -263,6 +264,7 @@
                 <th>Item Quantity</th>
                 <th>Issue Date</th>
                 <th>Status</th>
+                <th>Attachment</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -271,7 +273,7 @@
 @section('scripts')
 <script>
     /////////date//////////
-      $('#issue_date').datetimepicker({
+    $('#issue_date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
     //disable keyboard input & hide caret
@@ -292,6 +294,27 @@
     $('#sold_date').keydown(false);
     $('#sold_date').css('caret-color', 'transparent');
 
+    $('#issue_date-edit').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    //disable keyboard input & hide caret
+    $('#issue_date-edit').keydown(false);
+    $('#issue_date-edit').css('caret-color', 'transparent');
+
+     $('#return_date-edit').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    //disable keyboard input & hide caret
+    $('#return_date-edit').keydown(false);
+    $('#return_date-edit').css('caret-color', 'transparent');
+
+    $('#sold_date-edit').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    //disable keyboard input & hide caret
+    $('#sold_date-edit').keydown(false);
+    $('#sold_date-edit').css('caret-color', 'transparent');
+
 
     ////////date//////////
     var employeeAssetsTable = $('#employee-assets-table').DataTable({
@@ -309,7 +332,7 @@
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
-            {
+            {  
                 "data": "asset_name"
             },
             {
@@ -323,8 +346,21 @@
                     }  
             },
             {
-                "data": "asset_status"
+                "data": "asset_status",
+                render: function (data, type, row, meta) 
+                    {
+                       switch(data) {
+                       case '1': return 'Hold'; break;
+                       case '2' : return 'Return'; break;
+                       case '3' : return 'Sold'; break;
+                       default  : return '';
+            }
+                    } 
             },
+            {
+                data: 'namelink', name: 'namelink', orderable: false, searchable: false
+            },
+           
             {
                 "data": null,
                 render: function (data, type, row, meta) {
@@ -342,23 +378,15 @@
         });
         $('#add-asset-form #add-asset-form-submit').click(function(e){
             e.preventDefault();
+             var form = document.forms.namedItem("add-asset-form");
+            var formdata = new FormData(form);
             clearEmployeeAssetError('#add-asset-form');
             $.ajax({
                 url: "{{ route('admin.employees.employee-assets.post', ['id' => $id]) }}",
                 type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    // Form Data
-                    asset_name: $('#add-asset-form select[name=asset_name]').val(),
-                    asset_quantity: $('#add-asset-form input[name=asset_quantity]').val(),
-                    issue_date: $('#add-asset-form input[name=issue_date]').val(),
-                    return_date: $('#add-asset-form input[name=return_date]').val(),
-                    sold_date: $('#add-asset-form input[name=sold_date]').val(),
-                    asset_spec: $('#add-asset-form textarea[name=asset_spec]').val(),
-                    asset_deposit: $('#add-asset-form input[name=asset_deposit]').val(),
-                    asset_attach: $('#add-asset-form input[name=asset_attach]').val(),
-                    asset_status: $('#add-asset-form input[name=asset_status]').val()
-                },
+                contentType: false,
+                processData: false,
+                data:formdata,
                 success: function(data) {
                     showAlert(data.success);
                     employeeAssetsTable.ajax.reload();
@@ -426,14 +454,28 @@
             console.log('Data: ', currentData)
 
             editId = currentData.id;
-            $('#edit-assets-form select[name=asset_name]').val(currentData.asset_name);
             $('#edit-assets-form input[name=asset_quantity]').val(currentData.asset_quantity);
             $('#edit-assets-form input[name=asset_deposit]').val(currentData.asset_deposit);
             $('#edit-assets-form input[name=asset_attach]').val(currentData.asset_attach);
             $('#edit-assets-form textarea[name=asset_spec]').val(currentData.asset_spec);
-            $('#edit-assets-form #issue_date-edit').val(currentData.issue_date);
-            $('#edit-assets-form #return_date-edit').val(currentData.return_date);
-            $('#edit-assets-form #sold_date-edit').val(currentData.sold_date);
+            if(currentData.issue_date!=null) {
+                formatIssueDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.issue_date));
+                $('#edit-assets-form #issue_date-edit').val(formatIssueDate);
+            } else {
+                $('#edit-assets-form #issue_date-edit').val();
+            }
+            if(currentData.return_date!=null) {
+                formatReturnDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.return_date));
+                $('#edit-assets-form #return_date-edit').val(formatReturnDate);
+            } else {
+                $('#edit-assets-form #return_date-edit').val();
+            }
+           if(currentData.sold_date!=null) {
+                formatSoldDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.sold_date));
+                $('#edit-assets-form #sold_date-edit').val(formatSoldDate);
+            } else {
+                $('#edit-assets-form #sold_date-edit').val();
+            }
             $('#edit-assets-form select[name=asset_status]').val(currentData.asset_status);
 
             
@@ -552,8 +594,7 @@
             });
         });
     });
-
-
+  
     // GENERAL FUNCTIONS
     function clearEmployeeAssetModal(htmlId) {
         $(htmlId + ' input[name=asset_quantity]').val('');

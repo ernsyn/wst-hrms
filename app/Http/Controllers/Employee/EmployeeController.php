@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Employee;
 use Illuminate\Http\Request;
 use App\Enums\EpfCategoryEnum;
 use App\Enums\PCBGroupEnum;
+use App\Enums\AssetStatusEnum;
 use App\Enums\PaymentViaEnum;
 use App\Enums\PaymentRateEnum;
 use App\Enums\SocsoCategoryEnum;
@@ -72,7 +73,8 @@ class EmployeeController extends Controller
         }])
         ->find($id);
         $employeeAssets = EmployeeAsset::where('emp_id','=', $id)->get();
-        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets]);   
+        $AssetStatusEnum = AssetStatusEnum::choices();
+        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets,'AssetStatusEnum' => $AssetStatusEnum]);   
     }
     public function postEditProfilePicture(Request $request) 
     {
