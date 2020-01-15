@@ -50,6 +50,8 @@ use App\Mail\NewUserMail;
 use App\EmployeePosition;
 use App\CompanyAsset;
 use App\LeaveAllocation;
+use App\CostCentre;
+use App\Helpers\FilterHelper;
 
 class EmployeeController extends Controller
 {
@@ -63,7 +65,19 @@ class EmployeeController extends Controller
     {
 //         $employees = Employee::all();
 //         return view('pages.admin.employees.index', ['employees'=> $employees]);
-        return view('pages.admin.employees.index');
+        $costCentres = FilterHelper::getCostCentre();
+        $departments = FilterHelper::getDepartment();
+        $sections = FilterHelper::getSection();
+        $positions = FilterHelper::getPosition();
+        $teams = FilterHelper::getTeam();
+        $categories = FilterHelper::getCategory();
+        $areas = FilterHelper::getArea();
+        $grades = FilterHelper::getGrade();
+        $bankCodes = FilterHelper::getBankCode();
+        return view('pages.admin.employees.index', ['costCentres'=> $costCentres, 'departments' => $departments,
+            'sections' => $sections, 'positions' => $positions, 'teams' => $teams, 'categories' => $categories,
+            'areas' => $areas, 'grades' => $grades, 'bankCodes' => $bankCodes
+        ]);
     }
     
     public function getDataTableEmployees(Request $request)

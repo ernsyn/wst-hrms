@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\AccessControllHelper;
+use App\Helpers\FilterHelper;
 
 return [
 
@@ -239,6 +240,7 @@ return [
         'MalaysianStates' => App\Constants\MalaysianStates::class,
         'PaymentRateEnum' => App\Enums\PaymentRateEnum::class,
         'PaymentViaEnum' => App\Enums\PaymentViaEnum::class,
+        'FilterHelper' => FilterHelper::class,
 
     ],
 
