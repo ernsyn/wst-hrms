@@ -15,10 +15,6 @@ class UpdateForeignKeyEmployeeAssetsTable extends Migration
     {
         Schema::table('employee_assets', function (Blueprint $table) {
             //
-              $table->dropForeign('emp_foreign_key');
-        });
-        Schema::table('employee_assets', function (Blueprint $table) {
-            //
                $table->foreign('emp_id')->references('id')->on('employees');
         });
     }
