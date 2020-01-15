@@ -33,6 +33,11 @@ Breadcrumbs::for('employee.asset', function ($trail) {
     $trail->push('My Asset', route('employee.asset'));
 });
 
+Breadcrumbs::for('employee.assetattach', function ($trail) {
+    $trail->parent('employee.asset');
+    $trail->push('Asset Attachment', route('employee.assetattach',''));
+});
+
 
 Breadcrumbs::for('super-admin.dashboard', function ($trail) {
     $trail->push('Super Admin Dashboard', route('super-admin.dashboard'));
@@ -698,6 +703,10 @@ Breadcrumbs::for('errors.404', function ($trail) {
 Breadcrumbs::for('payroll', function ($trail) {
     $trail->parent('admin.dashboard');
     $trail->push('Payroll', route('payroll'));
+});
+Breadcrumbs::for('salarystructure', function ($trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push('Salary Structure Management', route('salarystructure'));
 });
 
 Breadcrumbs::for('payroll.create', function ($trail) {

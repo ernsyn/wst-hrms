@@ -156,12 +156,8 @@ class EmployeeController extends Controller
     }
     
     public function assetlist()
-    {
-       
-        $employeeAssets = EmployeeAsset::select('emp_id','id')
-                            ->groupBy('emp_id')
-                            ->get()
-                            ->load('employee');
+    {     
+        $employeeAssets = EmployeeAsset::all();
         $employees = Employee::all();
         $items = CompanyAsset::all();
         return view('pages.admin.employees.assetlist', ['employeeAssets'=> $employeeAssets, 'employees' => $employees, 'items' => $items]);

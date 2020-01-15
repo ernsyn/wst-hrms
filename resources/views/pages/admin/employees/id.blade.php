@@ -732,15 +732,13 @@
     $('#dob').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#dob').keydown(false);
+   
     $('#dob').css('caret-color', 'transparent');
 
     $('#driver-license-expiry-date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#driver-license-expiry-date').keydown(false);
+   
     $('#driver-license-expiry-date').css('caret-color', 'transparent');
 
     $(function(){

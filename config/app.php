@@ -239,6 +239,7 @@ return [
         'MalaysianStates' => App\Constants\MalaysianStates::class,
         'PaymentRateEnum' => App\Enums\PaymentRateEnum::class,
         'PaymentViaEnum' => App\Enums\PaymentViaEnum::class,
+        'AssetStatusEnum' => App\Enums\AssetStatusEnum::class,
 
     ],
 

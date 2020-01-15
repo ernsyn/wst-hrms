@@ -1,10 +1,11 @@
-<!-- ADD -->
+@can(PermissionConstant::ADD_ASSET)
 <div class="modal fade" id="add-asset-popup" tabindex="-1" role="dialog" aria-labelledby="add-bank-accounts-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="add-bank-accounts-label">Add Asset</h5>
+                
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -45,7 +46,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="issue_date"><strong>Issue Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issue_date" name="issue_date" class="form-control datetimepicker-input" data-target="#issue_date" autocomplete="off"/>
+                                <input type="text" id="issue_date" name="issue_date" class="form-control datetimepicker-input" data-target="#issue_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#issue_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -66,7 +67,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="return_date"><strong>Return Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="return_date" name="return_date" class="form-control datetimepicker-input" data-target="#return_date" autocomplete="off"/>
+                                <input type="text" id="return_date" name="return_date" class="form-control datetimepicker-input" data-target="#return_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#return_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -79,7 +80,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="sold_date"><strong>Sold Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="sold_date"  name="sold_date" class="form-control datetimepicker-input" data-target="#sold_date" autocomplete="off"/>
+                                <input type="text" id="sold_date"  name="sold_date" class="form-control datetimepicker-input" data-target="#sold_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#sold_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -103,10 +104,12 @@
                 </button>
                 </div>
             </form>
+            
         </div>
     </div>
 </div>
-<!-- UPDATE -->
+@endcan
+@can(PermissionConstant::UPDATE_ASSET)
 <div class="modal fade" id="edit-asset-popup" tabindex="-1" role="dialog" aria-labelledby="edit-asset-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -153,7 +156,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="issue_date-edit"><strong>Issued Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issue_date-edit" name="issue_date-edit" class="form-control datetimepicker-input" data-target="#issue_date-edit" autocomplete="off"/>
+                                <input type="text" id="issue_date-edit" name="issue_date-edit" class="form-control datetimepicker-input" data-target="#issue_date-edit" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#issue_date-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -174,7 +177,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="return_date-edit"><strong>Return Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="return_date-edit" name="return_date-edit" class="form-control datetimepicker-input" data-target="#return_date-edit" autocomplete="off"/>
+                                <input type="text" id="return_date-edit" name="return_date-edit" class="form-control datetimepicker-input" data-target="#return_date-edit" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#return_date-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -187,7 +190,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="sold_date-edit"><strong>Sold Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="sold_date-edit" name="sold_date-edit" class="form-control datetimepicker-input" data-target="#sold_date-edit" autocomplete="off"/>
+                                <input type="text" id="sold_date-edit" name="sold_date-edit" class="form-control datetimepicker-input" data-target="#sold_date-edit" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#sold_date-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -224,7 +227,8 @@
         </div>
     </div>
 </div>
-
+@endcan
+@can(PermissionConstant::DELETE_ASSET)
 {{-- DELETE ASSET --}}
 <div class="modal fade" id="confirm-delete-asset-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-asset-label"
     aria-hidden="true">
@@ -246,14 +250,15 @@
         </div>
     </div>
 </div>
+@endcan
 {{-- TABLE ASSET --}}
 <div class="tab-pane fade show p-3" id="nav-asset" role="tabpanel" aria-labelledby="nav-asset-tab">
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
-            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-asset-popup">
+            @can(PermissionConstant::ADD_ASSET)<button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-asset-popup">
                 Add Asset
-            </button>
+            </button>@endcan
         </div>
     </div>
     <table class="hrms-primary-data-table table w-100" id="employee-assets-table">
@@ -276,43 +281,37 @@
     $('#issue_date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#issue_date').keydown(false);
+   
     $('#issue_date').css('caret-color', 'transparent');
 
      $('#return_date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#return_date').keydown(false);
+   
     $('#return_date').css('caret-color', 'transparent');
 
     $('#sold_date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#sold_date').keydown(false);
+    
     $('#sold_date').css('caret-color', 'transparent');
 
     $('#issue_date-edit').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#issue_date-edit').keydown(false);
+    
     $('#issue_date-edit').css('caret-color', 'transparent');
 
      $('#return_date-edit').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#return_date-edit').keydown(false);
+    
     $('#return_date-edit').css('caret-color', 'transparent');
 
     $('#sold_date-edit').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#sold_date-edit').keydown(false);
+    
     $('#sold_date-edit').css('caret-color', 'transparent');
 
 
@@ -357,15 +356,18 @@
             }
                     } 
             },
-            {
+            { @can(PermissionConstant::VIEW_ASSET_ATTACH)
                 data: 'namelink', name: 'namelink', orderable: false, searchable: false
+                @endcan
             },
            
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-asset-popup"><i class="far fa-edit"></i></button>` +
-                        `<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-asset-modal"><i class="far fa-trash-alt"></i></button>`;
+                    return `@can(PermissionConstant::UPDATE_ASSET)
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-asset-popup"><i class="far fa-edit"></i></button>@endcan` +
+                        `@can(PermissionConstant::DELETE_ASSET)
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-asset-modal"><i class="far fa-trash-alt"></i></button>@endcan`;
                 }
             }
         ]

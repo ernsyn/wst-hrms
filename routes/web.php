@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
     Route::get('/asset','Employee\EmployeeController@displayAsset')->name('employee.asset');
     Route::post('auth/{id}/change-password','AuthController@postChangePassword')->name('auth.change-password.post')->where('id', '[0-9]+');
+     Route::get('/assetattach/{id}','Employee\EmployeeController@displayAttach')->name('employee.assetattach')->where('id', '[0-9]+');
 });
 
 // MODE: Employee
@@ -314,8 +315,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     
     Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
-    Route::get('employees/assetlist', 'Admin\EmployeeController@assetlist')->name('admin.employees.assetlist');
-    Route::get('employees/assetid/{id}','Admin\EmployeeController@assetdisplay')->name('admin.employees.assetid')->where('id', '[0-9]+');  
+    Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_ASSET]], function () {
+        Route::get('employees/assetlist', 'Admin\EmployeeController@assetlist')->name('admin.employees.assetlist');
+        Route::get('employees/assetid/{id}','Admin\EmployeeController@assetdisplay')->name('admin.employees.assetid')->where('id', '[0-9]+');  
+    });
+  
     Route::group(['middleware' => ['permission:Assign Role']], function () {
     Route::post('employees/{id}/update-roles','Admin\EmployeeController@postEditRoles')->name('admin.employees.update-roles.admin.post')->where('id', '[0-9]+');
     });
@@ -328,17 +332,25 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::get('employees/assetlist/employee-list', 'Admin\EmployeeController@ajaxGetEmployees')->name('admin.e-leave.ajax.employees');
 
     // > Add / Edit
-    Route::post('employees/{emp_id}/employee-assets','Admin\EmployeeController@postAddAsset')->name('admin.employees.employee-assets.post')->where('id', '[0-9]+');
-    Route::post('employees/{id}/assetattach','Admin\EmployeeController@postAddAttach')->name('admin.employees.assetattach.post')->where('id', '[0-9]+');
-    Route::post('employees/assetlist','Admin\EmployeeController@postAsset')->name('admin.employees.assetlist.post');
+     Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_ASSET]], function () {
+        Route::post('employees/{emp_id}/employee-assets','Admin\EmployeeController@postAddAsset')->name('admin.employees.employee-assets.post')->where('id', '[0-9]+');
+        Route::post('employees/assetlist','Admin\EmployeeController@postAsset')->name('admin.employees.assetlist.post');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_ASSET_ATTACH]], function () {
+        Route::post('employees/{id}/assetattach','Admin\EmployeeController@postAddAttach')->name('admin.employees.assetattach.post')->where('id', '[0-9]+');
+    });
     Route::get('employees/assetattach/{id}','Admin\EmployeeController@displayAttach')->name('admin.employees.assetattach')->where('id', '[0-9]+');
-    Route::get('employees/assetattach/{id}/delete','Admin\EmployeeController@deleteAssetAttach')->name('admin.employees.assetattach.delete')->where('id', '[0-9]+');
-
+    Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_ASSET_ATTACH]], function () {
+        Route::get('employees/assetattach/{id}/delete','Admin\EmployeeController@deleteAssetAttach')->name('admin.employees.assetattach.delete')->where('id', '[0-9]+');
+    });
     Route::post('employees/{emp_id}/working-day','Admin\EmployeeController@postWorkingDay')->name('admin.employees.working-days.post')->where('id', '[0-9]+');
     
     //admin edit
-    Route::post('employees/{emp_id}/employee-assets/{id}/edit','Admin\EmployeeController@postEditEmployeeAsset')->name('admin.employees.employee-assets.edit.post')->where('id', '[0-9]+');
-    
+    Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_ASSET]], function () 
+    {
+        Route::post('employees/{emp_id}/employee-assets/{id}/edit','Admin\EmployeeController@postEditEmployeeAsset')->name('admin.employees.employee-assets.edit.post')->where('id', '[0-9]+');
+    });
+
     Route::post('employees/{emp_id}/companies/{id}/edit','Admin\EmployeeController@postEditCompany')->name('admin.employees.companies.edit')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/companies/{id}/edit','Admin\EmployeeController@postEditCompany')->name('admin.employees.companies.edit.post')->where('id', '[0-9]+');
  
@@ -349,8 +361,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::post('employees/{emp_id}/working-day/edit','Admin\EmployeeController@postEditWorkingDay')->name('admin.employees.working-day.edit.post')->where('id', '[0-9]+');
 
     //admin/employee/delete
-    Route::get('employees/{emp_id}/employee-assets/{id}/delete','Admin\EmployeeController@deleteEmployeeAsset')->name('admin.settings.employee-assets.delete')->where('id', '[0-9]+');
-    
+     Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_ASSET]], function () 
+    {
+        Route::get('employees/{emp_id}/employee-assets/{id}/delete','Admin\EmployeeController@deleteEmployeeAsset')->name('admin.settings.employee-assets.delete')->where('id', '[0-9]+');
+    });
     // SECTION: SETTINGS
     // Company
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_COMPANY]], function () {
@@ -835,6 +849,8 @@ Route::get('government_report/employees', 'Payroll\GovernmentReportController@li
 
 Route::resource('payroll-setup', 'Payroll\PayrollSetupController');
 Route::get('payroll-setup/{id}/delete','Payroll\PayrollSetupController@destroy')->name('payroll-setup.destroy')->where('id', '[0-9]+');
+Route::get('salarystructure', 'Payroll\PayrollController@salarystructure')->name('salarystructure');
+Route::post('salarystructure','Payroll\PayrollController@addSalaryStructure')->name('payroll.salarystructure.post');
 
 Route::get('settings/pcb/import', 'Admin\SettingsController@importPcb')->name('admin.settings.pcb.import');
 

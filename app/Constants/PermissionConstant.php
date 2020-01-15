@@ -148,6 +148,13 @@ class PermissionConstant
     const ADD_DEPARTMENT = 'Add Department';
     const UPDATE_DEPARTMENT = 'Update Department';
     const DELETE_DEPARTMENT = 'Delete Department';
+    const ADD_ASSET = 'Add Asset';
+    const DELETE_ASSET = 'Delete Asset';
+    const VIEW_ASSET = 'View Asset';
+    const UPDATE_ASSET = 'Update Asset';
+    const ADD_ASSET_ATTACH = 'Add Asset Attach';
+    const DELETE_ASSET_ATTACH = 'Delete Asset Attach';
+    const VIEW_ASSET_ATTACH = 'View Asset Attach';
 }
 
 
