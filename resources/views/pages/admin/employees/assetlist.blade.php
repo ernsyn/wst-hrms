@@ -15,9 +15,11 @@
     <div class="row pb-3">
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
+            @can(PermissionConstant::ADD_ASSET)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-asset-popup">
                 Add Employee
             </button>
+            @endcan
         </div>
     </div>
             <table class="hrms-data-table compact w-100 t-2" id="asset-table">
@@ -36,9 +38,11 @@
                         <td class="name">
                             {{$employeeAsset->employee()->first()->user()->first()->name}}
                         </td>
+                         @can(PermissionConstant::VIEW_ASSET)
                        <td>
                             <button onclick="window.location='{{ route('admin.employees.assetid', ['id' => $employeeAsset->emp_id]) }}';" class="btn btn-default btn-smt fas fa-eye"></button>
                         </td>
+                        @endcan
                     </tr>
                     @endforeach
                 </tbody>
@@ -100,7 +104,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="issue_date"><strong>Issue Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issue_date" name="issue_date" class="form-control datetimepicker-input" data-target="#issue_date" autocomplete="off"/>
+                                <input type="text" id="issue_date" name="issue_date" class="form-control datetimepicker-input" data-target="#issue_date" autocomplete="off" placeholder="DD/MM/YYYY"/ >
                                 <div class="input-group-append" data-target="#issue_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -121,7 +125,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="return_date"><strong>Return Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="return_date" name="return_date" class="form-control datetimepicker-input" data-target="#return_date" autocomplete="off"/>
+                                <input type="text" id="return_date" name="return_date" class="form-control datetimepicker-input" data-target="#return_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#return_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -134,7 +138,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="sold_date"><strong>Sold Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="sold_date"  name="sold_date" class="form-control datetimepicker-input" data-target="#sold_date" autocomplete="off"/>
+                                <input type="text" id="sold_date"  name="sold_date" class="form-control datetimepicker-input" data-target="#sold_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#sold_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -166,25 +170,21 @@
 @section('scripts')
 <script type="text/javascript">
     /////////date//////////
-      $('#issue_date').datetimepicker({
-        format: 'DD/MM/YYYY'
+    $('#issue_date').datetimepicker({
+      format: 'DD/MM/YYYY',
     });
-    //disable keyboard input & hide caret
-    $('#issue_date').keydown(false);
     $('#issue_date').css('caret-color', 'transparent');
 
-     $('#return_date').datetimepicker({
+
+    $('#return_date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#return_date').keydown(false);
     $('#return_date').css('caret-color', 'transparent');
+
 
     $('#sold_date').datetimepicker({
         format: 'DD/MM/YYYY'
     });
-    //disable keyboard input & hide caret
-    $('#sold_date').keydown(false);
     $('#sold_date').css('caret-color', 'transparent');
 
 

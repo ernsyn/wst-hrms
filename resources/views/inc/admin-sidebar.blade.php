@@ -71,9 +71,11 @@
                 </li>
 				@endcan
 				{{-- OPTION: Employee Asset --}}
+                @can(PermissionConstant::VIEW_ASSET)
                 <li class="menu-option {{ request()->is('admin/employees/assetlist') ? 'active' : '' }}">
                     <a href="{{ route('admin.employees.assetlist') }}">Employee Asset</a>
                 </li>
+                @endcan
             </ul>
         </li>
     
@@ -97,6 +99,9 @@
                 </li>
                 <li class="menu-option {{ request()->is('payroll-setup') ? 'active' : '' }}">
                     <a href="{{ route('payroll-setup.index') }}">Payroll Setup</a>
+                </li>
+                 <li class="menu-option {{ request()->is('salary-structure-management') ? 'active' : '' }}">
+                    <a href="{{ route('salarystructure') }}">Salary Structure Management</a>
                 </li>
             </ul>
         </li>

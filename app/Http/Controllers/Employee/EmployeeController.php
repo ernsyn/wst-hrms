@@ -7,6 +7,7 @@ use App\Enums\EpfCategoryEnum;
 use App\Enums\PCBGroupEnum;
 use App\Enums\AssetStatusEnum;
 use App\Enums\PaymentViaEnum;
+use App\Enums\PaymentEnum;
 use App\Enums\PaymentRateEnum;
 use App\Enums\SocsoCategoryEnum;
 use App\Http\Controllers\Controller;
@@ -35,6 +36,7 @@ use App\EmployeeSecurityGroup;
 use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
 use App\Media;
+use App\AssetAttach;
 
 class EmployeeController extends Controller
 {
@@ -73,8 +75,17 @@ class EmployeeController extends Controller
         }])
         ->find($id);
         $employeeAssets = EmployeeAsset::where('emp_id','=', $id)->get();
-        $AssetStatusEnum = AssetStatusEnum::choices();
-        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets,'AssetStatusEnum' => $AssetStatusEnum]);   
+        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets]);   
+    }
+    public function displayAttach(Request $request, $id)
+    {
+        $id = $id; 
+        $attachs = DB::table('asset_attachs')
+        ->select('asset_attach','id')
+        ->where('asset_id', $id)
+        ->get();
+       
+        return view('pages.employee.assetattach',['attachs' => $attachs,'id' => $id]);   
     }
     public function postEditProfilePicture(Request $request) 
     {
