@@ -253,31 +253,17 @@
                             </div>
                         </div>
                     </div>
-                    @if(App\EmployeeJob::where('emp_id',$id)->whereNull('deleted_at')->count()==0)
-                    <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="employment-status"><strong>Employment Status*</strong></label>
-                                <select class="form-control" name="employment-status" >
-                                    <option value="probationer">Probationer</option>
-                                </select>
-                                <div id="employment-status-error" class="invalid-feedback"></div>
-                            </div>
-                        </div>
-                    @else
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="employment-status"><strong>Employment Status*</strong></label>
-                            <select class="form-control" name="employment-status" >
-                                <option value="">Please Select</option>
-                                <option value="confirmed-employment">Confirmed Employment</option>
-                                <option value="confirmed-promotion">Confirmed Promotion</option>
-                                <option value="transferred">Transferred</option>
-                                <option value="probationer">Probationer</option>
+                            <select multiple class="form-control" id="add-employment-status" name="employment-status[]" placeholder="Please Select">
+								@foreach(App\EmploymentStatus::all() as $status)
+                                	<option value="{{ $status->id }}">{{ $status->name }}</option>
+                                @endforeach
                             </select>
                             <div id="employment-status-error" class="invalid-feedback"></div>
                         </div>
                     </div>
-                    @endif
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="remarks"><strong>Remarks</strong></label>
@@ -293,176 +279,6 @@
                         {{ __('Submit') }}
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endcan
-
-<!-- UPDATE -->
-@can(PermissionConstant::UPDATE_JOB)
-<div class="modal fade" id="edit-job-popup" tabindex="-1" role="dialog" aria-labelledby="edit-job-label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="edit-job-label">Edit Job</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="edit-job-form">
-                <div class="modal-body">
-                    @csrf
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="basic-salary"><strong>New Basic Salary*</strong></label>
-                            <input name="basic-salary" type="number" class="form-control" placeholder="" value="" readonly>
-                            
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="cost-centre"><strong>Cost Centre</strong></label>
-                            <select class="form-control" name="cost-centre" disabled >
-                                <option value="">Please Select</option>
-                                @foreach(App\CostCentre::all() as $cost_centre)
-                                <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="cost-centre-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="department"><strong>Department</strong></label>
-                            <select class="form-control" name="department" disabled >
-                                <option value="">Please Select</option>
-                                @foreach(App\Department::all() as $department)
-                                <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="department-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="team"><strong>Team*</strong></label>
-                            <select class="form-control" name="team" disabled >
-                                <option value="">Please Select</option>
-                                @foreach(App\Team::all() as $team)
-                                <option value="{{ $team->id }}">{{ $team->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="team-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="main-position"><strong>Position</strong></label>
-                            <select class="form-control" name="main-position" disabled >
-                                <option value="">Please Select</option>
-                                @foreach(App\EmployeePosition::all() as $position)
-                                <option value="{{ $position->id }}">{{ $position->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="main-position-error" class="invalid-feedback">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="grade"><strong>Grade*</strong></label>
-                            <select class="form-control" name="grade" disabled>
-                                <option value="">Please Select</option>
-                                @foreach(App\EmployeeGrade::all() as $grade)
-                                <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="grade-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="section"><strong>Section</strong></label>
-                            <select class="form-control" name="section" disabled>
-                                <option value="">Please Select</option>
-                                @foreach(App\section::all() as $section)
-                                <option value="{{ $section->id }}">{{ $section->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="section-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="jobcompany"><strong>Company*</strong></label>
-                            <select class="form-control" name="jobcompany" disabled>
-                                <option value="">Please Select</option>
-                                @foreach(App\JobCompany::all() as $jobcompany)
-                                <option value="{{ $jobcompany->id }}">{{ $jobcompany->company_name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="jobcompany-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="branch"><strong>Branch*</strong></label>
-                            <select class="form-control" name="branch" disabled>
-                                <option value="">Please Select</option>
-                                @foreach(App\Branch::all() as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                @endforeach
-                            </select>
-                            <div id="branch-error" class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
-                        <div class="col-md-7">
-                            <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="date-job-edit" class="form-control datetimepicker-input"  placeholder="dd/mm/yyyy" data-target="#date-job-edit" disabled autocomplete="off"/>
-                                <div class="input-group-append" data-target="#date-job-edit" data-toggle="datetimepicker" disabled>
-                                    
-                                </div>
-                                <div id="date-job-error" class="invalid-feedback">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="employment-status"><strong>Employment Status*</strong></label>
-                            <select class="form-control" name="employment-status">
-                                <option value="">Please Select</option>
-                                <option value="confirmed-employment">Confirmed Employment</option>
-                                <option value="confirmed-promotion">Confirmed Promotion</option>
-                                <option value="transferred">Transferred</option>
-                                <option value="probationer">Probationer</option>
-                            </select>
-                            <div id="employment-status-error" class="invalid-feedback">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label for="remarks"><strong>Remarks</strong></label>
-                            <textarea name="remarks" type="number" class="form-control" placeholder="" value=""></textarea>
-                            <div id="remarks-error" class="invalid-feedback">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="edit-job-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
                 </div>
             </form>
         </div>
@@ -504,7 +320,7 @@
         "scrollX":	true,
         "ajax": "{{ route('admin.employees.dt.jobs', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": 13,
+            "targets": [13,14],
             "orderable": false
         } ],
         "columns": [{
@@ -553,10 +369,7 @@
                 }
             },
             {
-                "data": "jobcompany.company_name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "jobcompany.company_name"
             },
             {
                 "data": "area"
@@ -568,21 +381,7 @@
                 "data": "basic_salary"
             },
             {
-                "data": "status",
-                render: function (data, type, row, meta) {
-                    switch (data) {
-                        case 'transferred':
-                            return "{!! App\Constants\EmploymentStatusNaming::get('transferred') !!}";
-                        case 'confirmed-employment':
-                            return "{!! App\Constants\EmploymentStatusNaming::get('confirmed-employment') !!}";
-                        case 'confirmed-promotion':
-                            return "{!! App\Constants\EmploymentStatusNaming::get('confirmed-promotion') !!}";
-                        case 'probationer':
-                            return "{!! App\Constants\EmploymentStatusNaming::get('probationer') !!}";
-                    }
-
-                    return data;
-                }
+                "data": "status[, ]"
             },
             {
                 "data": null, // can be null or undefined
@@ -604,88 +403,66 @@
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-        var editCostCentre = $('#edit-job-form select[name=cost-centre]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
+
         $('#add-job-form select[name=department]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-        var editDepartment = $('#edit-job-form select[name=department]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
+
         $('#add-job-form select[name=team]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-        var editTeam = $('#edit-job-form select[name=team]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
+
         $('#add-job-form select[name=main-position]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-        var editMainPosition = $('#edit-job-form select[name=main-position]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
+
         $('#add-job-form select[name=grade]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-        var editGrade = $('#edit-job-form select[name=grade]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
+
         $('#add-job-form select[name=section]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-        var editSection = $('#edit-job-form select[name=section]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
+
         $('#add-job-form select[name=jobcompany]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-        var editJobCompany = $('#edit-job-form select[name=jobcompany]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
+
         $('#add-job-form select[name=branch]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
-        var editBranch = $('#edit-job-form select[name=branch]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
-        $('#add-job-form select[name=employment-status]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
-        var editEmpStatus = $('#edit-job-form select[name=employment-status]').selectize({
-            plugins: ['restore_on_backspace'],
-            sortField: 'text'
-        });
 
+        var empStatusSelectizeOptions = {
+                valueField: 'id',
+                labelField: 'name',
+                searchField: ['name'],
+                options: [],
+                create: false,
+//                 plugins: ['remove_button'],
+                render: {
+                    option: function(item, escape) {
+                        return '<div class="option">' + item.name +
+                        '</div>';
+                    }
+                },
+                
+            };
+
+            $('#add-employment-status').selectize(empStatusSelectizeOptions);
+ 
         $('#date-job').datetimepicker({
             format: 'DD/MM/YYYY'
         });
         //enable keyboard input & hide caret
         //$('#date-job').keydown(false);
         $('#date-job').css('caret-color', 'transparent');
-
-        $('#date-job-edit').datetimepicker({
-            format: 'DD/MM/YYYY'
-        });
-        //enable keyboard input & hide caret
-        //$('#date-job-edit').keydown(false);
-        $('#date-job-edit').css('caret-color', 'transparent');
 
         // ADD
         $('#add-job-popup').on('show.bs.modal', function (event) {
@@ -711,7 +488,7 @@
                     job_comp_id: $('#add-job-form select[name=jobcompany]').val(),
                     branch_id: $('#add-job-form select[name=branch]').val(),
                     start_date: $('#add-job-form #date-job').val(),
-                    status: $('#add-job-form select[name=employment-status]').val(),
+                    status: $('#add-employment-status').val(),
                     remarks: $('#add-job-form textarea[name=remarks]').val()
                 },
                 success: function (data) {
@@ -796,7 +573,7 @@
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'status':
-                                        $('#add-job-form select[name=employment-status]').addClass(
+                                        $('#add-employment-status').addClass(
                                             'is-invalid');
                                         $('#add-job-form #employment-status-error').html(
                                             '<strong>' + errors[errorField][0] +
@@ -806,155 +583,6 @@
                                         $('#add-job-form textarea[name=remarks]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #remarks-error').html(
-                                            '<strong>' + errors[errorField][0] +
-                                            '</strong>');
-                                        break;
-                                    case 'status':
-                                        $('#add-job-form #status').addClass('is-invalid');
-                                        $('#add-job-form #status-error').html('<strong>' +
-                                            errors[errorField][0] + '</strong>');
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-
-
-        // EDIT
-        var editId = null;
-        // Function: On Modal Clicked Handler
-        $('#edit-job-popup').on('show.bs.modal', function (event) {
-            clearJobError('#edit-job-form');
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var currentData = JSON.parse(decodeURI(button.data('current'))) // Extract info from data-* attributes
-            console.log('Data: ', currentData)
-
-            editId = currentData.id;
-            $('#edit-job-form input[name=basic-salary]').val(currentData.basic_salary);
-            editCostCentre[0].selectize.setValue(currentData.cost_centre_id);
-            editDepartment[0].selectize.setValue(currentData.department_id);
-            editTeam[0].selectize.setValue(currentData.team_id);
-            editMainPosition[0].selectize.setValue(currentData.emp_mainposition_id);
-            editGrade[0].selectize.setValue(currentData.emp_grade_id);
-            editSection[0].selectize.setValue(currentData.section_id);
-            editJobCompany[0].selectize.setValue(currentData.job_comp_id);
-            editBranch[0].selectize.setValue(currentData.branch_id);
-            $('#edit-job-form #date-job-edit').val(currentData.start_date);
-            editEmpStatus[0].selectize.setValue(currentData.status);
-            $('#edit-job-form textarea[name=remarks]').val(currentData.remarks);
-        });
-
-        var editRouteTemplate =
-            "{{ route('admin.employees.jobs.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
-        $('#edit-job-form #edit-job-submit').click(function (e) {
-            var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
-
-            e.preventDefault();
-            $.ajax({
-                url: editRoute,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    basic_salary: $('#edit-job-form input[name=basic-salary]').val(),
-                    cost_centre_id: $('#edit-job-form select[name=cost-centre]').val(),
-                    department_id: $('#edit-job-form select[name=department]').val(),
-                    team_id: $('#edit-job-form select[name=team]').val(),
-                    emp_mainposition_id: $('#edit-job-form select[name=main-position]').val(),
-                    emp_grade_id: $('#edit-job-form select[name=grade]').val(),
-                    section_id: $('#edit-job-form select[name=section]').val(),
-                    job_comp_id: $('#edit-job-form select[name=jobcompany]').val(),
-                    branch_id: $('#edit-job-form select[name=branch]').val(),
-                    start_date: $('#edit-job-form #date-job-edit').val(),
-                    status: $('#edit-job-form select[name=employment-status]').val(),
-                    remarks: $('#edit-job-form textarea[name=remarks]').val()
-                },
-                success: function (data) {
-                    showAlert(data.success);
-                    jobsTable.ajax.reload();
-                    $('#edit-job-popup').modal('toggle');
-                    clearJobModal('#edit-job-form');
-                },
-                error: function (xhr) {
-                    if (xhr.status == 422) {
-                        var errors = xhr.responseJSON.errors;
-                        console.log("Error: ", xhr);
-                        for (var errorField in errors) {
-                            if (errors.hasOwnProperty(errorField)) {
-                                console.log("Error: ", errorField);
-                                switch (errorField) {
-                                    case 'basic_salary':
-                                        $('#edit-job-form input[name=basic-salary]').addClass(
-                                            'is-invalid');
-                                        $('#edit-job-form #basic-salary-error').html(
-                                            '<strong>' + errors[errorField][0] +
-                                            '</strong>');
-                                        break;
-                                    case 'cost_centre_id':
-                                        $('#edit-job-form select[name=cost-centre]').addClass(
-                                            'is-invalid');
-                                        $('#edit-job-form #cost-centre-error').html(
-                                            '<strong>' + errors[errorField][0] +
-                                            '</strong>');
-                                        break;
-                                    case 'department_id':
-                                        $('#edit-job-form select[name=department]').addClass(
-                                            'is-invalid');
-                                        $('#edit-job-form #department-error').html(
-                                            '<strong>' + errors[errorField][0] +
-                                            '</strong>');
-                                        break;
-                                    case 'team_id':
-                                        $('#edit-job-form select[name=team]').addClass('is-invalid');
-                                        $('#edit-job-form #team-error').html('<strong>' +
-                                            errors[errorField][0] + '</strong>');
-                                        break;
-                                    case 'emp_mainposition_id':
-                                        $('#edit-job-form select[name=main-position]').addClass(
-                                            'is-invalid');
-                                        $('#edit-job-form #main-position-error').html(
-                                            '<strong>' + errors[errorField][0] +
-                                            '</strong>');
-                                        break;
-                                    case 'emp_grade_id':
-                                        $('#edit-job-form select[name=grade]').addClass('is-invalid');
-                                        $('#edit-job-form #grade-error').html('<strong>' +
-                                            errors[errorField][0] + '</strong>');
-                                        break;
-                                    case 'section_id':
-                                        $('#edit-job-form select[name=section]').addClass('is-invalid');
-                                        $('#edit-job-form #section-error').html('<strong>' +
-                                            errors[errorField][0] + "</strong>");
-                                        break;
-                                    case 'job_comp_id':
-                                        $('#edit-job-form select[name=jobcompany]').addClass('is-invalid');
-                                        $('#edit-job-form #jobcompany-error').html('<strong>' +
-                                            errors[errorField][0] + "</strong>");
-                                        break;
-                                    case 'branch_id':
-                                        $('#edit-job-form select[name=branch]').addClass('is-invalid');
-                                        $('#edit-job-form #branch-error').html('<strong>' +
-                                            errors[errorField][0] + "</strong>");
-                                        break;
-                                    case 'start_date':
-                                        $('#edit-job-form #date-job-edit').addClass(
-                                            'is-invalid');
-                                        $('#edit-job-form #date-job-error').html('<strong>' +
-                                            errors[errorField][0] + '</strong>');
-                                        break;
-                                    case 'status':
-                                        $('#edit-job-form select[name=employment-status]').addClass(
-                                            'is-invalid');
-                                        $('#edit-job-form #employment-status-error').html(
-                                            '<strong>' + errors[errorField][0] +
-                                            '</strong>');
-                                        break;
-                                    case 'remarks':
-                                        $('#edit-job-form textarea[name=remarks]').addClass(
-                                            'is-invalid');
-                                        $('#edit-job-form #remarks-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;

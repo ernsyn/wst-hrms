@@ -55,6 +55,7 @@ use App\Helpers\FilterHelper;
 use App\EmploymentStatus;
 use App\LeaveRequest;
 use App\LeaveRequestApproval;
+use App\EmployeeJobStatus;
 use App\AssetAttach;
 
 class EmployeeController extends Controller
@@ -173,6 +174,7 @@ class EmployeeController extends Controller
     public function assetlist()
     {     
         $employeeAssets = EmployeeAsset::all();
+        
         $employees = Employee::all();
         $items = CompanyAsset::all();
         return view('pages.admin.employees.assetlist', ['employeeAssets'=> $employeeAssets, 'employees' => $employees, 'items' => $items]);
@@ -182,11 +184,6 @@ class EmployeeController extends Controller
     public function assetdisplay($id)
     {
         $employee = Employee::with('user')
-        ->with(['employee_confirmed' => function($query) use ($id)
-        {
-            $query->where('status','=','confirmed-employment')
-            ->where ('id','=',$id);
-        }])
         ->find($id);
 
         $userMedia = DB::table('employees')
@@ -216,11 +213,11 @@ class EmployeeController extends Controller
     public function display($id)
     {
         $employee = Employee::with('user')
-        ->with(['employee_confirmed' => function($query) use ($id)
-        {
-            $query->where('status','=','confirmed-employment')
-            ->where ('emp_id','=',$id);
-        }])
+//         ->with(['employee_confirmed' => function($query) use ($id)
+//         {
+//             $query->where('status','=','confirmed-employment')
+//             ->where ('emp_id','=',$id);
+//         }])
         ->find($id);
 
         $userMedia = DB::table('employees')
@@ -250,7 +247,13 @@ public function displayAttach($id)
         ->select('asset_attach','id')
         ->where('asset_id', $id)
         ->get();
-        return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id]);        
+        $employees = DB::table('employee_assets')
+        ->select('emp_id')
+        ->where('id', $id)
+        ->get();
+
+
+        return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id, 'employees' => $employees]);        
     }    
     public function securityGroupDisplay($id)
     {           
@@ -511,10 +514,21 @@ public function displayAttach($id)
     {
         $jobs = EmployeeJob::with('main_position','department', 'team', 
         'cost_centre', 'grade', 'branch', 'section', 'jobcompany')->where('emp_id', $id)->get();
+        $jobs->load('job_status');
+        
         foreach($jobs as $job){
             $area = Area::find($job->branch->area_id);
             $job->area = $area->name;
+            $statusArray = array();
+            foreach($job->job_status as $status) {
+                Log::debug($status->status_id);
+                array_push($statusArray, EmploymentStatus::find($status->status_id)->name);
+            }
+            $job->status = $statusArray;
+            
         }
+        
+ 
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
             if ($job->start_date !== null)
@@ -831,20 +845,9 @@ else {
         
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
         $jobData['created_by'] = auth()->user()->id;
-        DB::transaction(function() use ($jobData, $id) {
+        DB::transaction(function() use ($jobData, $id, $request) {
             $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
-            if(!empty($currentJob)) {
-                if ($jobData['status']  == "confirmed-employment") {
-                    Employee::where('id', $id)
-                    ->update(array('confirmed_date'=> ($jobData['start_date'])));
-                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date'].' -1days'))]);
-                } else {
-                    $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date'].' -1days'))]);
-                }
-                LeaveService::onJobEnd($id, date("Y-m-d", strtotime($jobData['start_date'].' -1days')), $currentJob->id);
-            } else {
-                $jobData['status']  = "probationer";
-            }
+            
             
             if(isset($jobData['emp_mainposition_id'])) {
                 $position = EmployeePosition::find($jobData['emp_mainposition_id'])->id;
@@ -854,9 +857,18 @@ else {
             Employee::where('id', $id)->update(array('resignation_date'=> null));
 
             $newJob = new EmployeeJob($jobData);
-
+            unset($newJob->status);
             $employee = Employee::find($id);
-            $employee->employee_jobs()->save($newJob);
+            $newJob = $employee->employee_jobs()->save($newJob);
+//             Log::debug(">>>>>>>>>>>>>>>>>>>>>>>");
+//             Log::debug($newJob);
+            
+            foreach($request->status as $statusId) {
+                $employeejobStatus = new EmployeeJobStatus();
+                $employeejobStatus->emp_job_id = $newJob->id;
+                $employeejobStatus->status_id = $statusId;
+                $employeejobStatus->save();
+            }
 
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id'], $newJob->id);
         });
@@ -938,7 +950,7 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $asset->id;
               $attach->save();
-              $file->storeAs('public', $name);
+              $file->storeAs('public/emp_id_'. $id.'/asset', $name);
               
             }
         }
@@ -947,6 +959,13 @@ else {
     }
     public function postAddAttach(Request $request, $id)
     {
+        $employees = DB::table('employee_assets')
+        ->select('emp_id')
+        ->where('id', $id)
+        ->get();
+        foreach($employees as $employee) 
+        {
+            $emp_id= $employee->emp_id;
             $files = $request->file('asset_attach');
             foreach($files as $file) 
             {
@@ -957,11 +976,12 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $id;
               $attach->save();
-              $file->storeAs('public', $name);
+              $file->storeAs('public/emp_id_'. $emp_id.'/asset', $name);
               
             }
+        }
       
-     return response()->json(['success'=>'Asset was successfully added']);
+     return response()->json(['success'=>'Attachment was successfully added']);
     }
 
     public function postAsset(Request $request)
@@ -979,8 +999,9 @@ else {
 
        
         $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        if( $assetData['return_date']!=null)
-        {$assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
+        if( $assetData['return_date']!=null){
+            $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
+        } 
         if( $assetData['sold_date']!=null)
         {$assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
         $asset= new EmployeeAsset($assetData);
@@ -998,7 +1019,7 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $asset->id;
               $attach->save();
-              $image->storeAs('public', $name);
+              $image->storeAs('public/emp_id_'. $assetData['emp_id'].'/asset', $name);
             }
         }
         return response()->json(['success'=>'Employee Asset was successfully added']);

@@ -27,7 +27,12 @@
         "bStateSave": true,
         "scrollX":	true,
         "ajax": "{{ route('employee.dt.jobs', ['id' => $id]) }}",
+        "columnDefs": [ {
+            "targets": 13,
+            "orderable": false
+        } ],
         "columns": [{
+            
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
@@ -66,31 +71,20 @@
                 }
             },
             {
-                "data": "jobcompany.company_name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "jobcompany.company_name"
+            {
+                "data": "area"
+            },
+            {
+                "data": "branch.name"
+            },
             },
             {
                 "data": "basic_salary"
             },
             {
-                "data": "status",
-                render: function (data, type, row, meta) {
-                    switch (data) {
-                        case 'transferred':
-                            return "{!! App\Constants\EmploymentStatusNaming::get('transferred') !!}";
-                        case 'confirmed-employment':
-                            return "{!! App\Constants\EmploymentStatusNaming::get('confirmed-employment') !!}";
-                        case 'confirmed-promotion':
-                            return "{!! App\Constants\EmploymentStatusNaming::get('confirmed-promotion') !!}";
-                        case 'probationer':
-                            return "{!! App\Constants\EmploymentStatusNaming::get('probationer') !!}";
-                    }
-
-                    return data;
-                }
-            }
+                "data": "status[, ]"
+            },
         ]
     });
 </script>

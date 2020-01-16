@@ -709,6 +709,12 @@ Breadcrumbs::for('salarystructure', function ($trail) {
     $trail->push('Salary Structure Management', route('salarystructure'));
 });
 
+Breadcrumbs::for('payroll.salarystructure.edit', function ($trail) {
+    $trail->parent('salarystructure');
+    $trail->push('Edit Salary Structure Management', route('payroll.salarystructure.edit',''));
+});
+
+
 Breadcrumbs::for('payroll.create', function ($trail) {
     $trail->parent('payroll');
     $trail->push('Payroll', route('payroll.create'));

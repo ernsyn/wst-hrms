@@ -16,4 +16,9 @@ class Team extends Model implements Auditable
         'created_by'
     ];
     protected $dates = ['deleted_at'];
+
+    public function team()
+    {
+        return $this->hasMany('App\SalaryStructure', 'team_id');
+    }
 }
