@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\AccessControllHelper;
+use App\Helpers\FilterHelper;
 
 return [
 
@@ -240,6 +241,7 @@ return [
         'PaymentRateEnum' => App\Enums\PaymentRateEnum::class,
         'PaymentViaEnum' => App\Enums\PaymentViaEnum::class,
         'AssetStatusEnum' => App\Enums\AssetStatusEnum::class,
+        'FilterHelper' => FilterHelper::class,
 
     ],
 

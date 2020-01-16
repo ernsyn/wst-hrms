@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateForeignKeyEmployeeAssetsTable extends Migration
+class DropStatusFromEmployeeJobsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class UpdateForeignKeyEmployeeAssetsTable extends Migration
      */
     public function up()
     {
-        Schema::table('employee_assets', function (Blueprint $table) {
-            //
-               $table->foreign('emp_id')->references('id')->on('employees');
+        Schema::table('employee_jobs', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 
@@ -26,8 +25,8 @@ class UpdateForeignKeyEmployeeAssetsTable extends Migration
      */
     public function down()
     {
-        Schema::table('employee_assets', function (Blueprint $table) {
-            //
+        Schema::table('employee_jobs', function (Blueprint $table) {
+            $table->string('status', 30);
         });
     }
 }

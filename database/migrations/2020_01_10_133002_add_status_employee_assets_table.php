@@ -13,6 +13,12 @@ class AddStatusEmployeeAssetsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasColumn('employee_assets', 'asset_status')) {
+            Schema::table('employee_assets', function (Blueprint $table) {
+                $table->dropColumn('asset_status');
+            });
+        }
+        
         Schema::table('employee_assets', function (Blueprint $table) {
              $table->integer('asset_status')->default(1);
         });
