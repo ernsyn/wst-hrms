@@ -155,6 +155,10 @@ class PermissionConstant
     const ADD_ASSET_ATTACH = 'Add Asset Attach';
     const DELETE_ASSET_ATTACH = 'Delete Asset Attach';
     const VIEW_ASSET_ATTACH = 'View Asset Attach';
+    const ADD_SALARY_STRUCTURE = 'Add Salary Structure';
+    const DELETE_SALARY_STRUCTURE = 'Delete Salary Structure';
+    const VIEW_SALARY_STRUCTURE = 'View Salary Structure';
+    const UPDATE_SALARY_STRUCTURE = 'Update Salary Structure';
 }
 
 

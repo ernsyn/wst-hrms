@@ -100,9 +100,11 @@
                 <li class="menu-option {{ request()->is('payroll-setup') ? 'active' : '' }}">
                     <a href="{{ route('payroll-setup.index') }}">Payroll Setup</a>
                 </li>
+                @can(PermissionConstant::VIEW_SALARY_STRUCTURE)
                  <li class="menu-option {{ request()->is('salary-structure-management') ? 'active' : '' }}">
                     <a href="{{ route('salarystructure') }}">Salary Structure Management</a>
                 </li>
+                @endcan
             </ul>
         </li>
            

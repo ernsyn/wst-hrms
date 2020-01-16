@@ -167,11 +167,6 @@ class EmployeeController extends Controller
     public function assetdisplay($id)
     {
         $employee = Employee::with('user')
-        ->with(['employee_confirmed' => function($query) use ($id)
-        {
-            $query->where('status','=','confirmed-employment')
-            ->where ('id','=',$id);
-        }])
         ->find($id);
 
         $userMedia = DB::table('employees')
@@ -235,7 +230,13 @@ public function displayAttach($id)
         ->select('asset_attach','id')
         ->where('asset_id', $id)
         ->get();
-        return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id]);        
+        $employees = DB::table('employee_assets')
+        ->select('emp_id')
+        ->where('id', $id)
+        ->get();
+
+
+        return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id, 'employees' => $employees]);        
     }    
     public function securityGroupDisplay($id)
     {           
@@ -923,7 +924,7 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $asset->id;
               $attach->save();
-              $file->storeAs('public', $name);
+              $file->storeAs('public/emp_id_'. $id.'/asset', $name);
               
             }
         }
@@ -932,6 +933,13 @@ else {
     }
     public function postAddAttach(Request $request, $id)
     {
+        $employees = DB::table('employee_assets')
+        ->select('emp_id')
+        ->where('id', $id)
+        ->get();
+        foreach($employees as $employee) 
+        {
+            $emp_id= $employee->emp_id;
             $files = $request->file('asset_attach');
             foreach($files as $file) 
             {
@@ -942,11 +950,12 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $id;
               $attach->save();
-              $file->storeAs('public', $name);
+              $file->storeAs('public/emp_id_'. $emp_id.'/asset', $name);
               
             }
+        }
       
-     return response()->json(['success'=>'Asset was successfully added']);
+     return response()->json(['success'=>'Attachment was successfully added']);
     }
 
     public function postAsset(Request $request)
@@ -964,8 +973,9 @@ else {
 
        
         $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        if( $assetData['return_date']!=null)
-        {$assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
+        if( $assetData['return_date']!=null){
+            $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
+        } 
         if( $assetData['sold_date']!=null)
         {$assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
         $asset= new EmployeeAsset($assetData);
@@ -983,7 +993,7 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $asset->id;
               $attach->save();
-              $image->storeAs('public', $name);
+              $image->storeAs('public/emp_id_'. $assetData['emp_id'].'/asset', $name);
             }
         }
         return response()->json(['success'=>'Employee Asset was successfully added']);

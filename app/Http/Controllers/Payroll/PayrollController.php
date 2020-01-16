@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Payroll;
 use App\Company;
 use App\CostCentre;
 use App\Employee;
+use App\Category;
+use App\Team;
+use App\SalaryStructure;
+use App\EmployeeGrade;
 use App\EmployeeReportTo;
 use App\LeaveAllocation;
 use App\PayrollMaster;
@@ -119,6 +123,58 @@ class PayrollController extends Controller
         return view('pages.payroll.index', compact('payroll', 'period'));
     }
 
+    public function salarystructure()
+    {
+        $teams = Team::all(['id', 'name']);
+        $grades = EmployeeGrade::all(['id', 'name']);
+        $categories = Category::all(['id', 'name']);
+        $salarystructures = SalaryStructure::all();
+        return view('pages.payroll.salarystructure', ['teams' => $teams, 'grades' => $grades, 'categories' => $categories,'salarystructures' => $salarystructures]);
+    }
+
+    public function addSalaryStructure(Request $request)
+    {
+        $salaryStructureData = $request->validate([
+            'team_id' => 'required',
+            'grade_id' => 'required',
+            'categories_id' => 'required',
+            'basic_salary' => 'required|numeric',
+            'KPI' => 'required|numeric'
+        ]);
+        $salaryStructure= new SalaryStructure($salaryStructureData);
+        $salaryStructure->save();
+        return response()->json(['success'=>'Salary Structure was successfully added']);
+    }
+    public function editSalaryStructure($id)
+    {
+        $salaryStructures = SalaryStructure::find($id);
+        $teams = Team::all();
+        $grades = EmployeeGrade::all();
+        $categories = Category::all();
+        return view('pages.payroll.salarystructure.edit',['salaryStructures' => $salaryStructures,'teams' => $teams, 'grades' => $grades, 'categories' => $categories]);
+    }
+
+    public function updateSalaryStructure(Request $request, $id)
+    {   
+        $salaryStructures = SalaryStructure::find($id);        
+        $salaryStructureUpdatedData = $request->validate([
+            'team_id'=>'required',
+            'grade_id'=> 'required',
+            'categories_id' => 'required',
+            'basic_salary' => 'required|numeric',
+            'KPI' => 'required|numeric'
+          
+        ]);
+        SalaryStructure::find($id)->update($salaryStructureUpdatedData);
+        return redirect('/salarystructure')->with('success', 'Salary Structure has been updated');
+    }
+
+     public function deleteSalaryStructure($id)
+    {   
+        $salaryStructures = SalaryStructure::find($id);        
+        $salaryStructures->delete();
+        return redirect('/salarystructure')->with('success', 'Salary Structure has been deleted');
+    }
     // Add payroll form
     public function create()
     {

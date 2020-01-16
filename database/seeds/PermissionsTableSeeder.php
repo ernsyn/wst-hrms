@@ -208,6 +208,12 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::ADD_DEPARTMENT, 'mode' => 'admin', 'module' => 'Settings - Department']);
         Permission::create(['name' => PermissionConstant::UPDATE_DEPARTMENT, 'mode' => 'admin', 'module' => 'Settings - Department']);
         Permission::create(['name' => PermissionConstant::DELETE_DEPARTMENT, 'mode' => 'admin', 'module' => 'Settings - Department']);
+
+        Permission::create(['name' => PermissionConstant::ADD_SALARY_STRUCTURE, 'mode' => 'admin', 'module' => 'Salary Structure Management']);
+        Permission::create(['name' => PermissionConstant::DELETE_SALARY_STRUCTURE, 'mode' => 'admin', 'module' => 'Salary Structure Management']);
+        Permission::create(['name' => PermissionConstant::VIEW_SALARY_STRUCTURE, 'mode' => 'admin', 'module' => 'Salary Structure Management']);
+        Permission::create(['name' => PermissionConstant::UPDATE_SALARY_STRUCTURE, 'mode' => 'admin', 'module' => 'Salary Structure Management']);
+       
         
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);
