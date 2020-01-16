@@ -172,7 +172,7 @@ class EmployeeController extends Controller
         ])->make(true);
     }
     
-    public function assetist()
+    public function assetList()
     {     
         $employeeAssets = EmployeeAsset::all();
         
@@ -182,7 +182,7 @@ class EmployeeController extends Controller
 
     }
 
-    public function assetdisplay($id)
+    public function assetDisplay($id)
     {
         $employee = Employee::with('user')
         ->find($id);

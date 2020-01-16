@@ -316,8 +316,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_ASSET]], function () {
-        Route::get('employees/assetlist', 'Admin\EmployeeController@assetlist')->name('admin.employees.assetlist');
-        Route::get('employees/assetid/{id}','Admin\EmployeeController@assetdisplay')->name('admin.employees.assetid')->where('id', '[0-9]+');  
+        Route::get('employees/assetlist', 'Admin\EmployeeController@assetList')->name('admin.employees.assetlist');
+        Route::get('employees/assetid/{id}','Admin\EmployeeController@assetDisplay')->name('admin.employees.assetid')->where('id', '[0-9]+');  
     });
   
     Route::group(['middleware' => ['permission:Assign Role']], function () {
