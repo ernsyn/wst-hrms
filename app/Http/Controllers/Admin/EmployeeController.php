@@ -57,6 +57,7 @@ use App\LeaveRequest;
 use App\LeaveRequestApproval;
 use App\EmployeeJobStatus;
 use App\AssetAttach;
+use App\Category;
 
 class EmployeeController extends Controller
 {
@@ -171,7 +172,7 @@ class EmployeeController extends Controller
         ])->make(true);
     }
     
-    public function assetlist()
+    public function assetist()
     {     
         $employeeAssets = EmployeeAsset::all();
         
@@ -206,8 +207,9 @@ class EmployeeController extends Controller
         $socsoCategory = SocsoCategoryEnum::choices();
         $paymentviaGroup = PaymentViaEnum::choices();
         $paymentrateGroup = PaymentRateEnum::choices();
+        $categories = Category::all();
         
-        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory','paymentviaGroup','paymentrateGroup'));    
+        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory','paymentviaGroup','paymentrateGroup','categories'));    
     }
 
     public function display($id)
@@ -238,7 +240,8 @@ class EmployeeController extends Controller
         $paymentviaGroup = PaymentViaEnum::choices();
         $paymentrateGroup = PaymentRateEnum::choices();
         $items = CompanyAsset::all();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items]);   	    
+        $categories = Category::all();
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories]);   	    
     }
 public function displayAttach($id)
     {    
@@ -360,6 +363,7 @@ public function displayAttach($id)
             'spouse_tax_no' => 'nullable',
             'payment_via' =>'required',
             'payment_rate' =>'required',
+            'category_id' => 'required',
             
         ],
         [
@@ -669,6 +673,7 @@ public function displayAttach($id)
             'spouse_tax_no' => 'nullable|unique:employees,spouse_tax_no',
             'payment_via' => 'required',
             'payment_rate' => 'required',
+            'category_id' => 'required',
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
@@ -723,6 +728,7 @@ public function displayAttach($id)
             $validatedEmployeeData['spouse_tax_no'] = $validated['spouse_tax_no'];
             $validatedEmployeeData['payment_via'] = $validated['payment_via'];
             $validatedEmployeeData['payment_rate'] = $validated['payment_rate'];
+            $validatedEmployeeData['category_id'] = $validated['category_id'];
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
             $validatedEmployeeData['user_id'] = $user->id;

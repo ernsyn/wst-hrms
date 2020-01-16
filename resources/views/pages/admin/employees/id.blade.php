@@ -194,6 +194,10 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!!$employee->tax_no ? $employee->tax_no : '<strong>(not set)</strong>'!!}</span>
                                                 </div>
+                                                <span class="col-lg-5 p-3">Category</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!!$employee->category_id ? $employee->employee_category()->first()->name : '<strong>(not set)</strong>'!!}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -581,6 +585,16 @@
                                     </select>
                                     <div id="payment_rate-error" class="invalid-feedback"></div>
                                 </div> 
+                                <div class="col-md-12 mb-3">
+                                    <label for="main-security-group-id"><strong>Category*</strong></label>
+                                    <select class="form-control{{ $errors->has('category_id') ? ' is-invalid' : '' }}" name="category_id" id="category_id">
+                                        <option value="">Select Category</option>
+                                        @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="category_id-error" class="invalid-feedback"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -799,6 +813,7 @@
             $('#edit-profile-form #spouse-tax-no').val(currentData.spouse_tax_no);
             $('#edit-profile-form #payment_via').val(currentData.payment_via);
             $('#edit-profile-form #payment_rate').val(currentData.payment_rate);
+            $('#edit-profile-form #category_id').val(currentData.category_id);
 
         });
 
@@ -843,6 +858,7 @@
                     spouse_tax_no: $('#edit-profile-form #spouse-tax-no').val(),
                     payment_via: $('#edit-profile-form #payment_via').val(),
                     payment_rate: $('#edit-profile-form #payment_rate').val(),
+                    category_id: $('#edit-profile-form #category_id').val(),
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -984,6 +1000,10 @@
                                         $('#edit-profile-form #payment_rate').addClass('is-invalid');
                                         $('#edit-profile-form #payment_rate-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
+                                    case 'category_id':
+                                        $('#edit-profile-form #category_id').addClass('is-invalid');
+                                        $('#edit-profile-form #category_id-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
 
 
                                 }
@@ -1028,6 +1048,7 @@
         $(htmlId + ' #spouse-tax-no').val('');
         $(htmlId + ' #payment_via').val('');
         $(htmlId + ' #payment_rate').val('');
+        $(htmlId + ' #category_id').val('');
 
         $(htmlId + ' #name').removeClass('is-invalid');
         $(htmlId + ' #email').removeClass('is-invalid');
@@ -1059,6 +1080,7 @@
         $(htmlId + ' #spouse-tax-no').removeClass('is-invalid');
         $(htmlId + ' #payment_via').removeClass('is-invalid');
         $(htmlId + ' #payment_rate').removeClass('is-invalid');
+        $(htmlId + ' #category_id').removeClass('is-invalid');
     }
     
     function clearProfilesError(htmlId) {
@@ -1092,6 +1114,7 @@
         $(htmlId + ' #spouse-tax-no').removeClass('is-invalid');
         $(htmlId + ' #payment_via').removeClass('is-invalid');
         $(htmlId + ' #payment_rate').removeClass('is-invalid');
+        $(htmlId + ' #category_id').removeClass('is-invalid');
     }
 
     function showAlert(message) {

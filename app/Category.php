@@ -17,4 +17,8 @@ class Category extends Model implements Auditable
     {
         return $this->hasMany('App\SalaryStructure', 'categories_id');
     }
+    public function employee_category()
+    {
+        return $this->hasMany('App\Employee', 'category_id');
+    }
 }
