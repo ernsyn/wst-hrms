@@ -57,6 +57,10 @@ use App\LeaveRequest;
 use App\LeaveRequestApproval;
 use App\EmployeeJobStatus;
 use App\AssetAttach;
+use App\Category;
+use App\DisciplineAttach;
+use App\EmployeeDisciplinary;
+use Illuminate\Support\Facades\Storage;
 use App\EmpReportToPP;
 use App\PayrollPeriod;
 
@@ -173,7 +177,7 @@ class EmployeeController extends Controller
         ])->make(true);
     }
     
-    public function assetlist()
+    public function assetList()
     {     
         $employeeAssets = EmployeeAsset::all();
         
@@ -183,14 +187,9 @@ class EmployeeController extends Controller
 
     }
 
-    public function assetdisplay($id)
+    public function assetDisplay($id)
     {
         $employee = Employee::with('user')
-        ->with(['employee_confirmed' => function($query) use ($id)
-        {
-            $query->where('status','=','confirmed-employment')
-            ->where ('id','=',$id);
-        }])
         ->find($id);
 
         $userMedia = DB::table('employees')
@@ -213,8 +212,9 @@ class EmployeeController extends Controller
         $socsoCategory = SocsoCategoryEnum::choices();
         $paymentviaGroup = PaymentViaEnum::choices();
         $paymentrateGroup = PaymentRateEnum::choices();
+        $categories = Category::all();
         
-        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory','paymentviaGroup','paymentrateGroup'));    
+        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory','paymentviaGroup','paymentrateGroup','categories'));    
     }
 
     public function display($id)
@@ -245,7 +245,8 @@ class EmployeeController extends Controller
         $paymentviaGroup = PaymentViaEnum::choices();
         $paymentrateGroup = PaymentRateEnum::choices();
         $items = CompanyAsset::all();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items]);   	    
+        $categories = Category::all();
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories]);   	    
     }
 public function displayAttach($id)
     {    
@@ -254,7 +255,13 @@ public function displayAttach($id)
         ->select('asset_attach','id')
         ->where('asset_id', $id)
         ->get();
-        return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id]);        
+        $employees = DB::table('employee_assets')
+        ->select('emp_id')
+        ->where('id', $id)
+        ->get();
+
+
+        return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id, 'employees' => $employees]);        
     }    
     public function securityGroupDisplay($id)
     {           
@@ -361,6 +368,7 @@ public function displayAttach($id)
             'spouse_tax_no' => 'nullable',
             'payment_via' =>'required',
             'payment_rate' =>'required',
+            'category_id' => 'required',
             
         ],
         [
@@ -679,6 +687,7 @@ public function displayAttach($id)
             'spouse_tax_no' => 'nullable|unique:employees,spouse_tax_no',
             'payment_via' => 'required',
             'payment_rate' => 'required',
+            'category_id' => 'required',
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
@@ -733,6 +742,7 @@ public function displayAttach($id)
             $validatedEmployeeData['spouse_tax_no'] = $validated['spouse_tax_no'];
             $validatedEmployeeData['payment_via'] = $validated['payment_via'];
             $validatedEmployeeData['payment_rate'] = $validated['payment_rate'];
+            $validatedEmployeeData['category_id'] = $validated['category_id'];
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
             $validatedEmployeeData['user_id'] = $user->id;
@@ -958,7 +968,7 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $asset->id;
               $attach->save();
-              $file->storeAs('public', $name);
+              $file->storeAs('public/emp_id_'. $id.'/asset', $name);
               
             }
         }
@@ -967,6 +977,13 @@ else {
     }
     public function postAddAttach(Request $request, $id)
     {
+        $employees = DB::table('employee_assets')
+        ->select('emp_id')
+        ->where('id', $id)
+        ->get();
+        foreach($employees as $employee) 
+        {
+            $emp_id= $employee->emp_id;
             $files = $request->file('asset_attach');
             foreach($files as $file) 
             {
@@ -977,11 +994,12 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $id;
               $attach->save();
-              $file->storeAs('public', $name);
+              $file->storeAs('public/emp_id_'. $emp_id.'/asset', $name);
               
             }
+        }
       
-     return response()->json(['success'=>'Asset was successfully added']);
+     return response()->json(['success'=>'Attachment was successfully added']);
     }
 
     public function postAsset(Request $request)
@@ -999,8 +1017,9 @@ else {
 
        
         $assetData['issue_date'] = implode("-", array_reverse(explode("/", $assetData['issue_date'])));
-        if( $assetData['return_date']!=null)
-        {$assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
+        if( $assetData['return_date']!=null){
+            $assetData['return_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));
+        } 
         if( $assetData['sold_date']!=null)
         {$assetData['sold_date'] = implode("-", array_reverse(explode("/", $assetData['return_date'])));} 
         $asset= new EmployeeAsset($assetData);
@@ -1018,12 +1037,47 @@ else {
               $attach->asset_attach = $name;
               $attach->asset_id = $asset->id;
               $attach->save();
-              $image->storeAs('public', $name);
+              $image->storeAs('public/emp_id_'. $assetData['emp_id'].'/asset', $name);
             }
         }
         return response()->json(['success'=>'Employee Asset was successfully added']);
     }
 
+    public function postAddDiscipline(Request $request, $id)
+    {
+        $disciplineData = $request->validate([
+            'discipline_title' => 'required',
+            'discipline_desc' => 'required',
+            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'discipline_attach' => 'nullable' 
+        ]);
+        
+        $disciplineData['discipline_date'] = implode("-", array_reverse(explode("/", $disciplineData['discipline_date'])));
+        $disciplineData['created_by'] = auth()->user()->id;
+        $discipline= new EmployeeDisciplinary($disciplineData);
+        $employee = Employee::find($id);
+        $employee->emp()->save($discipline);
+        dd($discipline);
+        
+         if($request->hasFile('discipline_attach')) 
+        {
+            $files = $request->file('discipline_attach');
+            foreach($files as $file) 
+            {
+              $path = $file->getClientOriginalName();
+              $name = time() . '-' . $path;
+
+              $attach = new DisciplineAttach();
+              $attach->discipline_attach = $name;
+              $attach->discipline_id = $discipline->id;
+              $attach->save();
+              $file->storeAs('public/emp_id_'. $id.'/discipline', $name);
+              
+            }
+        }
+
+     return response()->json(['success'=>'Asset was successfully added']);
+    }
     public function postExperience(Request $request, $id)
     {
         $experienceData = $request->validate([
@@ -1643,18 +1697,37 @@ else {
     }
     public function deleteEmployeeAsset(Request $request, $emp_id, $id)
     {
+        
+       $employees = DB::table('asset_attachs')
+        ->select('asset_attach')
+        ->where('asset_id', $id)
+        ->get();
+       foreach ($employees as $employee) {
+            $emp=$employee->asset_attach;;
+            Storage::delete('public/emp_id_'.$emp_id.'/asset/'.$emp);
+        } 
         DB::table('asset_attachs')
             ->where('asset_id', $id)
             ->delete();
         EmployeeAsset::find($id)->delete();
-        
+
         return response()->json(['success'=>'Asset was successfully deleted.']);
     }
     public function deleteAssetAttach(Request $request,$id)
     {
+        $employees = DB::table('employee_assets')
+        ->join('asset_attachs', 'employee_assets.id', '=', 'asset_attachs.asset_id')
+        ->select('employee_assets.emp_id as emp','asset_attachs.asset_attach as asset_attach')
+        ->where('asset_attachs.id', $id)
+        ->get();
+        foreach ($employees as $employee) {
+            $emp=$employee->emp;
+            $asset_attach=$employee->asset_attach;
+            Storage::delete('public/emp_id_'.$emp.'/asset/'.$asset_attach);
+        }            
+        
         AssetAttach::find($id)->delete();
         return redirect()->back() ->with('status', 'Attachment Successfully Deleted!');
-
     }
 
     public function deleteExperience(Request $request, $emp_id, $id)

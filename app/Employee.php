@@ -44,7 +44,8 @@ class Employee extends Model implements Auditable
         'spouse_ic',
         'spouse_tax_no',
         'payment_via',
-        'payment_rate'
+        'payment_rate',
+        'category_id'
     ];
 
     protected $dates = [
@@ -184,5 +185,9 @@ class Employee extends Model implements Auditable
     public function employee_assets()
     {
         return $this->hasMany('App\EmployeeAsset', 'emp_id');
+    }
+    public function employee_category()
+    {
+        return $this->belongsTo('App\Category', 'category_id');
     }
 }

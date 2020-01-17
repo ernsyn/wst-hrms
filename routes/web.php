@@ -316,8 +316,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::post('employees/{id}/roles/admin','Admin\EmployeeController@postToggleRoleAdmin')->name('admin.employees.roles.admin.post')->where('id', '[0-9]+');
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_ASSET]], function () {
-        Route::get('employees/assetlist', 'Admin\EmployeeController@assetlist')->name('admin.employees.assetlist');
-        Route::get('employees/assetid/{id}','Admin\EmployeeController@assetdisplay')->name('admin.employees.assetid')->where('id', '[0-9]+');  
+        Route::get('employees/assetlist', 'Admin\EmployeeController@assetList')->name('admin.employees.assetlist');
+        Route::get('employees/assetid/{id}','Admin\EmployeeController@assetDisplay')->name('admin.employees.assetid')->where('id', '[0-9]+');  
     });
   
     Route::group(['middleware' => ['permission:Assign Role']], function () {
@@ -849,8 +849,20 @@ Route::get('government_report/employees', 'Payroll\GovernmentReportController@li
 
 Route::resource('payroll-setup', 'Payroll\PayrollSetupController');
 Route::get('payroll-setup/{id}/delete','Payroll\PayrollSetupController@destroy')->name('payroll-setup.destroy')->where('id', '[0-9]+');
-Route::get('salarystructure', 'Payroll\PayrollController@salarystructure')->name('salarystructure');
-Route::post('salarystructure','Payroll\PayrollController@addSalaryStructure')->name('payroll.salarystructure.post');
+Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_SALARY_STRUCTURE]], function () {
+    Route::get('salarystructure', 'Payroll\PayrollController@salarystructure')->name('salarystructure');
+    });
+Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_SALARY_STRUCTURE]], function () {
+    Route::post('salarystructure','Payroll\PayrollController@addSalaryStructure')->name('payroll.salarystructure.post');
+    });
+Route::group(['middleware' => ['permission:'.PermissionConstant::UPDATE_SALARY_STRUCTURE]], function () {
+    Route::get('salarystructure/{id}/edit','Payroll\PayrollController@editSalaryStructure')->name('payroll.salarystructure.edit')->where('id', '[0-9]+');
+    Route::post('salarystructure/{id}/edit','Payroll\PayrollController@updateSalaryStructure')->name('payroll.salarystructure.update.post')->where('id', '[0-9]+');
+    });
+Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_SALARY_STRUCTURE]], function () {
+    Route::get('salarystructure/{id}/delete','Payroll\PayrollController@deleteSalaryStructure')->name('payroll.salarystructure.delete')->where('id', '[0-9]+');
+    });
+
 
 Route::get('settings/pcb/import', 'Admin\SettingsController@importPcb')->name('admin.settings.pcb.import');
 

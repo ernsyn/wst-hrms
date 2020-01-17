@@ -17,4 +17,9 @@ class EmployeeGrade extends Model implements Auditable
         'created_by'
     ];
     protected $dates = ['deleted_at'];
+
+    public function grade()
+    {
+        return $this->hasMany('App\SalaryStructure', 'grade_id');
+    }
 }
