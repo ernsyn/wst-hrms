@@ -58,6 +58,9 @@ use App\LeaveRequestApproval;
 use App\EmployeeJobStatus;
 use App\AssetAttach;
 use App\Category;
+use App\DisciplineAttach;
+use App\EmployeeDisciplinary;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -1031,6 +1034,41 @@ else {
         return response()->json(['success'=>'Employee Asset was successfully added']);
     }
 
+    public function postAddDiscipline(Request $request, $id)
+    {
+        $disciplineData = $request->validate([
+            'discipline_title' => 'required',
+            'discipline_desc' => 'required',
+            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'discipline_attach' => 'nullable' 
+        ]);
+        
+        $disciplineData['discipline_date'] = implode("-", array_reverse(explode("/", $disciplineData['discipline_date'])));
+        $disciplineData['created_by'] = auth()->user()->id;
+        $discipline= new EmployeeDisciplinary($disciplineData);
+        $employee = Employee::find($id);
+        $employee->emp()->save($discipline);
+        dd($discipline);
+        
+         if($request->hasFile('discipline_attach')) 
+        {
+            $files = $request->file('discipline_attach');
+            foreach($files as $file) 
+            {
+              $path = $file->getClientOriginalName();
+              $name = time() . '-' . $path;
+
+              $attach = new DisciplineAttach();
+              $attach->discipline_attach = $name;
+              $attach->discipline_id = $discipline->id;
+              $attach->save();
+              $file->storeAs('public/emp_id_'. $id.'/discipline', $name);
+              
+            }
+        }
+
+     return response()->json(['success'=>'Asset was successfully added']);
+    }
     public function postExperience(Request $request, $id)
     {
         $experienceData = $request->validate([
@@ -1578,18 +1616,37 @@ else {
     }
     public function deleteEmployeeAsset(Request $request, $emp_id, $id)
     {
+        
+       $employees = DB::table('asset_attachs')
+        ->select('asset_attach')
+        ->where('asset_id', $id)
+        ->get();
+       foreach ($employees as $employee) {
+            $emp=$employee->asset_attach;;
+            Storage::delete('public/emp_id_'.$emp_id.'/asset/'.$emp);
+        } 
         DB::table('asset_attachs')
             ->where('asset_id', $id)
             ->delete();
         EmployeeAsset::find($id)->delete();
-        
+
         return response()->json(['success'=>'Asset was successfully deleted.']);
     }
     public function deleteAssetAttach(Request $request,$id)
     {
+        $employees = DB::table('employee_assets')
+        ->join('asset_attachs', 'employee_assets.id', '=', 'asset_attachs.asset_id')
+        ->select('employee_assets.emp_id as emp','asset_attachs.asset_attach as asset_attach')
+        ->where('asset_attachs.id', $id)
+        ->get();
+        foreach ($employees as $employee) {
+            $emp=$employee->emp;
+            $asset_attach=$employee->asset_attach;
+            Storage::delete('public/emp_id_'.$emp.'/asset/'.$asset_attach);
+        }            
+        
         AssetAttach::find($id)->delete();
         return redirect()->back() ->with('status', 'Attachment Successfully Deleted!');
-
     }
 
     public function deleteExperience(Request $request, $emp_id, $id)
