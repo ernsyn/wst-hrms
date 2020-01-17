@@ -17,8 +17,9 @@
                 <th>No</th>
                 <th>Full Name</th>
                 <th>Type</th>
-                <th>KPI Proposer</th>
                 <th>Report To Level</th>
+                <th>KPI Proposer</th>
+                <th>Payroll Period</th>
                 <th>Notes</th>
                 <th>Action</th>
             </tr>
@@ -71,6 +72,12 @@
                                 <option value="">Select Level</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
                             </select>
                             <div id="report-to-level-error" class="invalid-feedback">
 
@@ -81,7 +88,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                            <select class="form-control" name="kpi-proposer">
+                            <select class="form-control" id="add-kpi-proposer" name="kpi-proposer">
                             <option value="">Select KPI Proposer</option>
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
@@ -91,6 +98,20 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div id="add-report-to-pp-div" class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="payroll-period"><strong>Payroll Period</strong></label>
+                                <select multiple class="form-control" id="add-report-to-pp" name="payroll-period[]" placeholder="Select Payroll Period">
+                                    @foreach(App\PayrollPeriod::all() as $payrollPeriod)
+                                	<option value="{{ $payrollPeriod->id }}">{{ $payrollPeriod->name }}</option>
+                                	@endforeach
+                                </select>
+                                <div id="payroll-period-error" class="invalid-feedback">
+
+                                </div>
+                            </div>
+                        </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="notes"><strong>Notes</strong></label>
@@ -155,6 +176,12 @@
                                     <option value="">Select Level</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
                                 </select>
                                 <div id="report-to-level-error" class="invalid-feedback">
 
@@ -165,12 +192,25 @@
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="kpi-proposer"><strong>KPI Proposer*</strong></label>
-                                <select class="form-control" name="kpi-proposer">
+                                <select class="form-control" id="edit-kpi-proposer" name="kpi-proposer">
                                 <option value="">Select KPI Proposer</option>
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </select>
                                 <div id="kpi-proposer-error" class="invalid-feedback">
+
+                                </div>
+                            </div>
+                        </div>
+                    	<div id="edit-report-to-pp-div" class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="payroll-period"><strong>Payroll Period</strong></label>
+                                <select multiple class="form-control" id="edit-report-to-pp" name="payroll-period[]" placeholder="Select Payroll Period">
+									@foreach(App\PayrollPeriod::all() as $payrollPeriod)
+                                	<option value="{{ $payrollPeriod->id }}">{{ $payrollPeriod->name }}</option>
+                                	@endforeach
+                                </select>
+                                <div id="payroll-period-error" class="invalid-feedback">
 
                                 </div>
                             </div>
@@ -219,6 +259,19 @@
 @endcan
 
 @section('scripts')
+<script type="text/javascript">
+$(function () {
+    $("#add-kpi-proposer").change(function () {
+        
+        if ($(this).val() == 1) {
+            $("#add-report-to-pp").removeAttr("disabled");
+            $("#add-report-to-pp").focus();
+        } else {
+            $("#add-report-to-pp").attr('disabled', 'disabled');
+        }
+    });
+});
+</script>
 <script>
     var reportTosTable = $('#report-to-table').DataTable({
         "bInfo": true,
@@ -227,7 +280,7 @@
         "bStateSave": true,
         "ajax": "{{ route('admin.employees.dt.report-tos', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": 5,
+            "targets": [5,6,7],
             "orderable": false
         } ],
         "columns": [{
@@ -243,6 +296,9 @@
                 "data": "type"
             },
             {
+                "data": "report_to_level",
+            },
+            {
                 "data": "kpi_proposer",
 
                 render: function(data) {
@@ -256,9 +312,9 @@
 
                   },
                   defaultContent: ''
-                },
+                },            
             {
-                "data": "report_to_level",
+                "data": "payroll_period[<br>]",
             },
             {
                 "data": "notes",
@@ -347,6 +403,29 @@
             sortField: 'text'
         });
 
+        var reportToPPSelectizeOptions = {
+                valueField: 'id',
+                labelField: 'name',
+                searchField: ['name'],
+                options: [],
+                create: false,
+//                 plugins: ['remove_button'],
+                render: {
+                    option: function(item, escape) {
+                        return '<div class="option">' + item.name +
+                        '</div>';
+                    }
+                },
+                
+            };
+
+            $('#add-report-to-pp').selectize(reportToPPSelectizeOptions);
+
+            var editPayrollPeriod = $('#edit-report-to-pp').selectize({
+                plugins: ['restore_on_backspace'],
+                sortField: 'text'
+            });
+
         // ADD
         $('#add-report-to-popup').on('show.bs.modal', function (event) {
             clearReportToError('#add-report-to-form');
@@ -363,6 +442,7 @@
                     type: $('#add-report-to-form select[name=type]').val(),
                     report_to_level: $('#add-report-to-form select[name=report-to-level]').val(),
                     kpi_proposer: $('#add-report-to-form select[name=kpi-proposer]').val(),
+                    payroll_period: $('#add-report-to-pp').val(),
                     notes: $('#add-report-to-form input[name=notes]').val()
                 },
                 success: function(data) {
@@ -423,6 +503,7 @@
             editType[0].selectize.setValue(currentData.type);
             editLevel[0].selectize.setValue(currentData.report_to_level);
             editKpiProposer[0].selectize.setValue(currentData.kpi_proposer);
+            editPayrollPeriod[0].selectize.setValue(currentData.payroll_period);
             $('#edit-report-to-form input[name=notes]').val(currentData.notes);
         });
 
@@ -440,7 +521,8 @@
                     type: $('#edit-report-to-form select[name=type]').val(),
                     kpi_proposer: $('#edit-report-to-form select[name=kpi-proposer]').val(),
                     notes: $('#edit-report-to-form input[name=notes]').val(),
-                    report_to_level: $('#edit-report-to-form select[name=report-to-level]').val()
+                    report_to_level: $('#edit-report-to-form select[name=report-to-level]').val(),
+                    payroll_period: $('#edit-report-to-pp').val()
                 },
                 success: function(data) {
                     if(data.success) showAlert(data.success);
@@ -560,9 +642,28 @@
     }
 
 </script>
-<script>
-$(function () {
+<script type="text/javascript">
 
-});
+    $(function () {
+        $("#add-kpi-proposer").change(function () {
+        	$("#add-report-to-pp-div").hide();
+            if ($(this).val() == "1") {
+                $("#add-report-to-pp-div").show();
+            } else {
+                $("#add-report-to-pp-div").hide();
+            }
+        });
+    });
+    
+    $(function () {
+        $("#edit-kpi-proposer").change(function () {
+        	$("#edit-report-to-pp-div").hide();
+            if ($(this).val() == "1") {
+                $("#edit-report-to-pp-div").show();
+            } else {
+                $("#edit-report-to-pp-div").hide();
+            }
+        });
+    });
 </script>
 @append

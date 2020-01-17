@@ -57,6 +57,8 @@ use App\LeaveRequest;
 use App\LeaveRequestApproval;
 use App\EmployeeJobStatus;
 use App\AssetAttach;
+use App\EmpReportToPP;
+use App\PayrollPeriod;
 
 class EmployeeController extends Controller
 {
@@ -520,7 +522,6 @@ public function displayAttach($id)
             $job->area = $area->name;
             $statusArray = array();
             foreach($job->job_status as $status) {
-                Log::debug($status->status_id);
                 array_push($statusArray, EmploymentStatus::find($status->status_id)->name);
             }
             $job->status = $statusArray;
@@ -609,7 +610,17 @@ public function displayAttach($id)
 
     public function getDataTableReportTo($id)
     {
-        $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', $id)->get();
+        $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', $id)->get();        
+        $reportTos->load('report_to_pp');
+        
+        foreach($reportTos as $reportTo){
+            $payrollPeriodArray = array();
+            foreach($reportTo->report_to_pp as $payrollPeriod) {
+                array_push($payrollPeriodArray, PayrollPeriod::find($payrollPeriod->payroll_period_id)->name);
+            }
+            $reportTo->payroll_period = $payrollPeriodArray;
+        }
+            
         return DataTables::of($reportTos)->make(true);
     }
 
@@ -839,7 +850,7 @@ else {
             'remarks' => '',
             'branch_id' => 'required',
             'start_date' => 'required',
-            'status' => 'required',
+            'status' => 'required'
             ]);
         
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
@@ -859,8 +870,6 @@ else {
             unset($newJob->status);
             $employee = Employee::find($id);
             $newJob = $employee->employee_jobs()->save($newJob);
-//             Log::debug(">>>>>>>>>>>>>>>>>>>>>>>");
-//             Log::debug($newJob);
             
             foreach($request->status as $statusId) {
                 $employeejobStatus = new EmployeeJobStatus();
@@ -1219,6 +1228,7 @@ else {
             'report_to_level' =>'required|unique:employee_report_to,report_to_level,NULL,id,deleted_at,NULL,emp_id,'.$id,
                 'kpi_proposer' => 'required',
             'notes' => 'nullable',
+            'payroll_period' => 'nullable'
         ]);
 
         if($request->get('kpi_proposer') == null){
@@ -1227,7 +1237,6 @@ else {
             $reportToData['kpi_proposer'] = request('kpi_proposer');
         }
 
-    
         $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
@@ -1235,26 +1244,49 @@ else {
     
             $employee_report_to = EmployeeReportTo::where('report_to_emp_id','=',$id)
             ->where('deleted_at','=',null)->count();
-    
-    
+  
         if ($request->kpi_proposer == 0) {
-    
+            DB::beginTransaction();
             $reportToData['created_by'] = auth()->user()->id;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
-                return response()->json(['success'=>'Report To was successfully updated.']);
+            
+            if(isset($request->payroll_period)) {
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
+            DB::commit();
+                return response()->json(['success'=>'Report To was successfully added.']);
 
         } else if($employee_kpi_proposer == 0){
+            DB::beginTransaction();
             $reportToData['created_by'] = auth()->user()->id;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
-                return response()->json(['success'=>'Report To was successfully updated.']);
+            
+            if(isset($request->payroll_period)) {
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
+            DB::commit();
+                return response()->json(['success'=>'Report To was successfully added.']);
 
         } else {
             return response()->json(['fail'=>'KPI Proposer already exist']);
         }
+        
+               
+        
 
     }
 
@@ -1476,8 +1508,9 @@ else {
             'report_to_level' =>'required|unique:employee_report_to,report_to_level,'.$id.',id,deleted_at,NULL,emp_id,'.$emp_id,
             'kpi_proposer' => 'nullable',
             'notes' => 'nullable',
+            'payroll_period' => 'nullable'
         ]);
-
+        
         if($request->get('kpi_proposer') == null){
             $reportToUpdatedData['kpi_proposer'] = 0;
         } else {
@@ -1486,14 +1519,61 @@ else {
 
         $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$emp_id)
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
+        
+        $kpi_proposer = EmployeeReportTo::where('id','=',$id)->where('kpi_proposer',1)->count();
 
         if($request->kpi_proposer == 0){
+            DB::beginTransaction();
+            EmpReportToPP::where('emp_report_to_id', $id)->delete();
+            $reportTo = EmployeeReportTo::find($id);
+            $reportTo->save();
+            if(isset($request->payroll_period)){
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
             EmployeeReportTo::find($id)->update($reportToUpdatedData);
+            DB::commit();
             return response()->json(['success'=>'Report To was successfully updated.']);
-        } else if($employee_kpi_proposer == 0){
+        } else 
+            if($employee_kpi_proposer == 0){
+            DB::beginTransaction();
+            EmpReportToPP::where('emp_report_to_id', $id)->delete();
+            $reportTo = EmployeeReportTo::find($id);
+            $reportTo->save();
+            if(isset($request->payroll_period)){
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
             EmployeeReportTo::find($id)->update($reportToUpdatedData);
+            DB::commit();
             return response()->json(['success'=>'Report To was successfully updated.']);
-        } else {
+        } else 
+            if($kpi_proposer == 1){
+            DB::beginTransaction();
+            EmpReportToPP::where('emp_report_to_id', $id)->delete();
+            $reportTo = EmployeeReportTo::find($id);
+            $reportTo->save();
+            if(isset($request->payroll_period)){
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
+            EmployeeReportTo::find($id)->update($reportToUpdatedData);
+            DB::commit();
+            return response()->json(['success'=>'Report To was successfully updated.']);
+        } else
+        {
             return response()->json(['fail'=>'KPI Proposer already exist']);
         }
     }
@@ -1551,6 +1631,7 @@ else {
             LeaveAllocation::find($leave_allocation->id)->delete();
         }
         EmployeeJob::find($id)->delete();
+        EmployeeJobStatus::where('emp_job_id', $id)->delete();
         DB::commit();
         return response()->json(['success'=>'Job was successfully deleted.']);
     }
@@ -1603,6 +1684,7 @@ else {
     public function deleteReportTo(Request $request, $emp_id, $id)
     {
         EmployeeReportTo::find($id)->delete();
+        EmpReportToPP::where('emp_report_to_id', $id)->delete();
         return response()->json(['success'=>'Report To was successfully deleted.']);
     }
 

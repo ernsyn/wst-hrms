@@ -6,9 +6,10 @@
                 <th>No</th>
                 <th>Full Name</th>
                 <th>Type</th>
-                <th>Note</th>
-                <th>KPI Proposer</th>
                 <th>Report To Level</th>
+                <th>KPI Proposer</th>
+                <th>Payroll Period</th>
+                <th>Note</th>
             </tr>
         </thead>
     </table>
@@ -34,8 +35,8 @@
                     "data": "type"
                 },
                 {
-                    "data": "notes",
-                },
+                	"data": "report_to_level",
+                }
                 {
                     "data": "kpi_proposer",
 
@@ -52,8 +53,11 @@
                     defaultContent: ''
                 },
                 {
-                "data": "report_to_level",
-                }
+                    "data": "payroll_period[<br>]",
+                },
+                {
+                    "data": "notes",
+                },
             ]
         });
 </script>

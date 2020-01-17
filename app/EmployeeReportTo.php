@@ -24,7 +24,11 @@ class EmployeeReportTo extends Model implements Auditable
 
     protected $dates = ['deleted_at'];
 
-
+    public function report_to_pp()
+    {
+        return $this->hasMany('App\EmpReportToPP', 'emp_report_to_id');
+    }
+    
     public function report_to()
     {
         return $this->belongsTo('App\Employee', 'emp_id'); 
