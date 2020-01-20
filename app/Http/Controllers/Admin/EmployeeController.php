@@ -178,14 +178,13 @@ class EmployeeController extends Controller
     public function assetList()
     {     
         $employeeAssets = EmployeeAsset::all();
-        
         $employees = Employee::all();
         $items = CompanyAsset::all();
         return view('pages.admin.employees.assetlist', ['employeeAssets'=> $employeeAssets, 'employees' => $employees, 'items' => $items]);
 
     }
 
-    public function assetDisplay($id)
+      public function assetDisplay($id)
     {
         $employee = Employee::with('user')
         ->find($id);
@@ -235,7 +234,9 @@ class EmployeeController extends Controller
         ->join('employees','security_groups.company_id','=','employees.company_id')
         ->select('security_groups.*')
         ->where('employees.id',$id)
-        ->get();		
+        ->get();
+
+        
 		$roles = AccessControllHelper::getRoles();
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
@@ -246,7 +247,7 @@ class EmployeeController extends Controller
         $categories = Category::all();
         return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories]);   	    
     }
-public function displayAttach($id)
+    public function displayAttach($id)
     {    
         $id = $id; 
         $attachs = DB::table('asset_attachs')
@@ -260,7 +261,8 @@ public function displayAttach($id)
 
 
         return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id, 'employees' => $employees]);        
-    }    
+    }
+  
     public function securityGroupDisplay($id)
     {           
         $securityGroup = DB::table('security_groups')
@@ -271,6 +273,43 @@ public function displayAttach($id)
 
         return view('pages.admin.employees.id.security-group', ['securityGroup' => $securityGroup]);
     }
+
+        public function postAddDiscipline(Request $request, $id)
+    {
+        $disciplineData = $request->validate([
+            'discipline_title' => 'required',
+            'discipline_desc' => 'required',
+            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'discipline_attach' => 'nullable' 
+        ]);
+        
+        $disciplineData['discipline_date'] = implode("-", array_reverse(explode("/", $disciplineData['discipline_date'])));
+        $disciplineData['created_by'] = auth()->user()->id;
+        $discipline= new EmployeeDisciplinary($disciplineData);
+        $employee = Employee::find($id);
+        $employee->emp()->save($discipline);
+        
+        
+         if($request->hasFile('discipline_attach')) 
+        {
+            $files = $request->file('discipline_attach');
+            foreach($files as $file) 
+            {
+              $path = $file->getClientOriginalName();
+              $name = time() . '-' . $path;
+
+              $attach = new DisciplineAttach();
+              $attach->discipline_attach = $name;
+              $attach->discipline_id = $discipline->id;
+              $attach->save();
+              $file->storeAs('public/emp_id_'. $id.'/discipline', $name);
+              
+            }
+        }
+
+     return response()->json(['success'=>'Disciplinary Issue was successfully added']);
+    }
+
 
     public function postToggleRoleAdmin(Request $request, $id)
     {
@@ -561,6 +600,17 @@ public function displayAttach($id)
         $banks = EmployeeBankAccount::where('emp_id', $id)->get();
         return DataTables::of($banks)->make(true);
     }
+    public function getDataTableDiscipline($id)
+    {
+        
+        $employees = DB::table('employee_disciplines')
+        ->select('employee_disciplines.*')
+        ->where('emp_id', $id)
+        ->get();
+        return DataTables::of($employees)->make(true);
+        
+    }
+    
     public function getDataTableEmployeeAssets($id)
     {
         $assets = EmployeeAsset::where('emp_id','=', $id)->get();
@@ -572,6 +622,7 @@ public function displayAttach($id)
         ->make(true);
     }
 
+    
     public function getDataTableExperiences($id)
     {
         $experiences = EmployeeExperience::where('emp_id', $id)->get();
@@ -1034,41 +1085,7 @@ else {
         return response()->json(['success'=>'Employee Asset was successfully added']);
     }
 
-    public function postAddDiscipline(Request $request, $id)
-    {
-        $disciplineData = $request->validate([
-            'discipline_title' => 'required',
-            'discipline_desc' => 'required',
-            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'discipline_attach' => 'nullable' 
-        ]);
-        
-        $disciplineData['discipline_date'] = implode("-", array_reverse(explode("/", $disciplineData['discipline_date'])));
-        $disciplineData['created_by'] = auth()->user()->id;
-        $discipline= new EmployeeDisciplinary($disciplineData);
-        $employee = Employee::find($id);
-        $employee->emp()->save($discipline);
-        dd($discipline);
-        
-         if($request->hasFile('discipline_attach')) 
-        {
-            $files = $request->file('discipline_attach');
-            foreach($files as $file) 
-            {
-              $path = $file->getClientOriginalName();
-              $name = time() . '-' . $path;
 
-              $attach = new DisciplineAttach();
-              $attach->discipline_attach = $name;
-              $attach->discipline_id = $discipline->id;
-              $attach->save();
-              $file->storeAs('public/emp_id_'. $id.'/discipline', $name);
-              
-            }
-        }
-
-     return response()->json(['success'=>'Asset was successfully added']);
-    }
     public function postExperience(Request $request, $id)
     {
         $experienceData = $request->validate([
@@ -1448,6 +1465,20 @@ else {
         return response()->json(['success'=>'Bank Account was successfully updated.']);
     }
 
+    public function postEditDiscipline(Request $request, $emp_id, $id)
+    {
+        $DisciplineUpdateData = $request->validate([
+            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'discipline_desc' => 'required',
+            'discipline_title' => 'required'
+        ]);
+
+         $DisciplineUpdateData['discipline_date'] = implode("-", array_reverse(explode("/", $DisciplineUpdateData['discipline_date'])));
+        EmployeeDisciplinary::find($id)->update($DisciplineUpdateData);
+
+        return response()->json(['success'=>'Disciplinary Issue was successfully updated.']);
+    }
+
     public function postEditEmployeeAsset(Request $request, $emp_id, $id)
     {
         $assetUpdateData = $request->validate([
@@ -1616,7 +1647,7 @@ else {
     }
     public function deleteEmployeeAsset(Request $request, $emp_id, $id)
     {
-        
+
        $employees = DB::table('asset_attachs')
         ->select('asset_attach')
         ->where('asset_id', $id)
@@ -1631,6 +1662,25 @@ else {
         EmployeeAsset::find($id)->delete();
 
         return response()->json(['success'=>'Asset was successfully deleted.']);
+    }
+
+    public function deleteDisciplinary(Request $request, $emp_id, $id)
+    {
+
+       $employees = DB::table('discipline_attachs')
+        ->select('discipline_attach')
+        ->where('discipline_id', $id)
+        ->get();
+       foreach ($employees as $employee) {
+            $emp=$employee->discipline_attach;;
+            Storage::delete('public/emp_id_'.$emp_id.'/discipline/'.$emp);
+        } 
+        DB::table('discipline_attachs')
+            ->where('discipline_id', $id)
+            ->delete();
+        EmployeeDisciplinary::find($id)->delete();
+
+        return response()->json(['success'=>'Disciplinary Issue was successfully deleted.']);
     }
     public function deleteAssetAttach(Request $request,$id)
     {

@@ -190,4 +190,9 @@ class Employee extends Model implements Auditable
     {
         return $this->belongsTo('App\Category', 'category_id');
     }
+    public function emp()
+    {
+        return $this->hasMany('App\EmployeeDisciplinary', 'emp_id');
+    }
+    
 }
