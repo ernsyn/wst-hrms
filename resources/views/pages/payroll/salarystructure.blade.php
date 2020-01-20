@@ -200,9 +200,25 @@
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
-                                    case 'asset_attach':
-                                        $('#add-salary-structure-form input[name=asset_attach]').addClass('is-invalid');
-                                        $('#add-salary-structure-form #asset_attach-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    case 'team_id':
+                                        $('#add-salary-structure-form select[name=team_id]').addClass('is-invalid');
+                                        $('#add-salary-structure-form #team_id-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'grade_id':
+                                        $('#add-salary-structure-form select[name=grade_id]').addClass('is-invalid');
+                                        $('#add-salary-structure-form #grade_id-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'categories_id':
+                                        $('#add-salary-structure-form select[name=categories_id]').addClass('is-invalid');
+                                        $('#add-salary-structure-form #categories_id-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'basic_salary':
+                                        $('#add-salary-structure-form input[name=basic_salary]').addClass('is-invalid');
+                                        $('#add-salary-structure-form #basic_salary-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                    case 'KPI':
+                                        $('#add-salary-structure-form input[name=KPI]').addClass('is-invalid');
+                                        $('#add-salary-structure-form #KPI-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                 }
                             }
