@@ -48,6 +48,11 @@ class User extends Authenticatable implements Auditable
         return $this->hasOne('App\Employee');
     }
 
+    public function employee_discipline()
+    {
+        return $this->hasMany('App\EmployeeDisciplinary', 'created_by');
+    }
+
 
     // SECTION: Auditing
     protected $auditExclude = ['remember_token'];

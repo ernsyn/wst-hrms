@@ -203,6 +203,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_BANK]], function () {
         Route::get('employees/{id}/dt/bank-accounts', 'Admin\EmployeeController@getDataTableBankAccounts')->name('admin.employees.dt.bank-accounts')->where('id', '[0-9]+');
     });
+
+     Route::get('employees/{id}/dt/overview', 'Admin\EmployeeController@getDataTableDiscipline')->name('admin.employees.dt.overview')->where('id', '[0-9]+');
+
     Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_BANK]], function () {
         Route::post('employees/{emp_id}/bank-accounts','Admin\EmployeeController@postBankAccount')->name('admin.employees.bank-accounts.post')->where('id', '[0-9]+');
     });
@@ -350,6 +353,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     {
         Route::post('employees/{emp_id}/employee-assets/{id}/edit','Admin\EmployeeController@postEditEmployeeAsset')->name('admin.employees.employee-assets.edit.post')->where('id', '[0-9]+');
     });
+
+    Route::post('employees/{emp_id}/overview','Admin\EmployeeController@postAddDiscipline')->name('admin.employees.overview.post')->where('id', '[0-9]+');
+    Route::post('employees/{emp_id}/overview/{id}/edit','Admin\EmployeeController@postEditDiscipline')->name('admin.employees.overview.edit.post')->where('id', '[0-9]+');
+     Route::get('employees/{emp_id}/overview/{id}/delete','Admin\EmployeeController@deleteDisciplinary')->name('admin.settings.overview.delete')->where('id', '[0-9]+');
 
     Route::post('employees/{emp_id}/companies/{id}/edit','Admin\EmployeeController@postEditCompany')->name('admin.employees.companies.edit')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/companies/{id}/edit','Admin\EmployeeController@postEditCompany')->name('admin.employees.companies.edit.post')->where('id', '[0-9]+');

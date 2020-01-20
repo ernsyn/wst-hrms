@@ -89,7 +89,7 @@
                             </div>
                         </div>
                     </div>
-                     <div class="form-row">
+                    <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
                             <input name="asset_attach[]" name="asset_attach" type="file" class="form-control" multiple>
@@ -125,15 +125,14 @@
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label><strong>Item Name*</strong></label>
-                            <select class="form-control{{ $errors->has('asset_name') ? ' is-invalid' : '' }}" name="asset_name">
-                                    <option value=""></option>
-                                    @foreach ($items as $item)
-                                    <option value="{{ $item->item_name }}">{{ $item->item_name }}</option>
-                                    @endforeach
-                            </select>
-                            <div id="asset_name-error" class="invalid-feedback">
-                            </div>
+                            <label for="asset_name"><strong>Item Name*</strong></label>
+                            <select class="form-control{{ $errors->has('asset_name') ? ' is-invalid' : '' }}" name="asset_name" id="asset_name">
+                                <option value="">Select Security Group</option>
+                                @foreach($items as $item)
+                                <option value="{{ $item->item_name }}">{{ $item->item_name }}</option>
+                                @endforeach
+                                </select>
+                        <div id="asset_name-error" class="invalid-feedback"></div>
                         </div>
                     </div>
                      <div class="form-row">
@@ -457,6 +456,7 @@
 
             editId = currentData.id;
             $('#edit-assets-form input[name=asset_quantity]').val(currentData.asset_quantity);
+            $('#edit-assets-form #asset_name').val(currentData.asset_name);
             $('#edit-assets-form input[name=asset_deposit]').val(currentData.asset_deposit);
             $('#edit-assets-form input[name=asset_attach]').val(currentData.asset_attach);
             $('#edit-assets-form textarea[name=asset_spec]').val(currentData.asset_spec);
