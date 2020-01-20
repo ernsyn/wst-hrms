@@ -220,6 +220,7 @@
                                         $('#add-salary-structure-form input[name=KPI]').addClass('is-invalid');
                                         $('#add-salary-structure-form #KPI-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
+                                    
                                 }
                             }
                         }
