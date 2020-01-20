@@ -1,6 +1,6 @@
 {{-- Table --}}
 <div class="tab-pane fade show p-3" id="nav-job" role="tabpanel" aria-labelledby="nav-job-tab">
-    <table class="hrms-primary-data-table table" id="employee-jobs-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-jobs-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -28,7 +28,7 @@
         "scrollX":	true,
         "ajax": "{{ route('employee.dt.jobs', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": 13,
+            "targets": -1,
             "orderable": false
         } ],
         "columns": [{
@@ -41,34 +41,22 @@
                 "data": "start_date"
             },
             {
-                "data": "main_position.name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "main_position_name"
             },
             {
-                "data": "department.name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "department_name"
             },
             {
                 "data": "team.name"
             },
             {
-                "data": "cost_centre.name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "cost_centre_name"
             },
             {
                 "data": "grade.name"
             },
             {
-                "data": "section.name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "section_name"
             },
             {
                 "data": "jobcompany.company_name"

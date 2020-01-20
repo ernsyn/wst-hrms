@@ -37,14 +37,13 @@
             @can(PermissionConstant::ADD_JOB)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
             Re-Employ
-            </button>
-            @endcan
+			</button>
+			@endcan
             <h5><span class="badge badge-danger">Resigned</span></h5>
-            @endif
-
-        </div>
+			@endif
+		</div>
     </div>
-    <table class="hrms-primary-data-table table" id="employee-jobs-table">
+    <table class="hrms-primary-data-table table w-100" id="employee-jobs-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -335,35 +334,22 @@
                 "data": "end_date"
             },
             {
-                "data": "main_position.name",
-                render: function(data) {
-                    return data ? data : null;
-                }
-                
+                "data": "main_position_name"                
             },
             {
-                "data": "department.name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "department_name"
             },
             {
                 "data": "team.name"
             },
             {
-                "data": "cost_centre.name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "cost_centre_name"
             },
             {
                 "data": "grade.name"
             },
             {
-                "data": "section.name",
-                render: function(data) {
-                    return data ? data : null;
-                }
+                "data": "section_name"
             },
             {
                 "data": "jobcompany.company_name"
@@ -639,7 +625,7 @@
         $(htmlId + ' select[name=branch]')[0].selectize.clear();
         $(htmlId + ' #date-job').val('');
         $(htmlId + ' #date-job-edit').val('');
-        $(htmlId + ' select[name=employment-status]')[0].selectize.clear();
+//         $(htmlId + ' select[name=employment-status]')[0].selectize.clear();
         $(htmlId + ' textarea[name=remarks]').val('');
 
         $(htmlId + ' input[name=basic-salary]').removeClass('is-invalid');
@@ -653,7 +639,7 @@
         $(htmlId + ' select[name=branch]').removeClass('is-invalid');
         $(htmlId + ' #date-job').removeClass('is-invalid');
         $(htmlId + ' #date-job-edit').removeClass('is-invalid');
-        $(htmlId + ' select[name=employment-status]').removeClass('is-invalid');
+//         $(htmlId + ' select[name=employment-status]').removeClass('is-invalid');
         $(htmlId + ' textarea[name=remarks]').removeClass('is-invalid');
     }
 
@@ -669,7 +655,7 @@
         $(htmlId + ' select[name=branch]').removeClass('is-invalid');
         $(htmlId + ' #date-job').removeClass('is-invalid');
         $(htmlId + ' #date-job-edit').removeClass('is-invalid');
-        $(htmlId + ' select[name=employment-status]').removeClass('is-invalid');
+//         $(htmlId + ' select[name=employment-status]').removeClass('is-invalid');
         $(htmlId + ' textarea[name=remarks]').removeClass('is-invalid');
     }
 

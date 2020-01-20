@@ -22,7 +22,10 @@ use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use App\Area;
+use App\CostCentre;
 use App\Country;
+use App\Department;
+use App\EmploymentStatus;
 use App\Roles;
 use App\User;
 use App\Employee;
@@ -483,6 +486,30 @@ class EmployeeController extends Controller
         $jobs->load('job_status');
         
         foreach($jobs as $job){
+            $mainPosition = EmployeePosition::find($job->emp_mainposition_id);
+            if (isset($mainPosition)) {
+                $job->main_position_name = $mainPosition->name;
+            } else {
+                $job->main_position_name = null;
+            }
+            $department = Department::find($job->department_id);
+            if (isset($department)) {
+                $job->department_name = $department->name;
+            } else {
+                $job->department_name = null;
+            }
+            $costCentre = CostCentre::find($job->cost_centre_id);
+            if (isset($costCentre)) {
+                $job->cost_centre_name = $costCentre->name;
+            } else {
+                $job->cost_centre_name = null;
+            }
+            $section = Section::find($job->section_id);
+            if (isset($section)) {
+                $job->section_name = $section->name;
+            } else {
+                $job->section_name = null;
+            }
             $area = Area::find($job->branch->area_id);
             $job->area = $area->name;
             $statusArray = array();
@@ -822,6 +849,7 @@ else {
             'emp_mainposition_id' => '',
             'department_id' => '',
             'team_id' => 'required',
+            'cost_centre_id' => '',
             'emp_grade_id' => 'required',
             'section_id' => '',
             'job_comp_id' => 'required',
