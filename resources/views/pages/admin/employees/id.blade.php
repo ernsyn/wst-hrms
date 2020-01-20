@@ -68,7 +68,9 @@
                 {{-- Tab List --}}
                 <nav class="col-sm-12">
                     <div class="nav nav-tabs font-weight-bold scrollable d-flex flex-nowrap tabbable text-nowrap" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile"
+                        <a class="nav-item nav-link active " id="nav-overview-tab" data-toggle="tab" href="#nav-overview" role="tab" aria-controls="nav-overview"
+                            aria-selected="false">Overview</a>
+                        <a class="nav-item nav-link  " id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile"
                             aria-selected="false">Profile</a>
                         @can(PermissionConstant::VIEW_EMERGENCY_CONTACT)    
                         <a class="nav-item nav-link" id="nav-emergency-tab" data-toggle="tab" href="#nav-emergency" role="tab" aria-controls="nav-emergency"
@@ -125,7 +127,7 @@
                 {{-- Tab Content --}}
                 <div class="tab-content col-sm-12 text-justify" id="nav-tabContent">
                     {{-- Profile --}}
-                    <div class="tab-pane fade show active p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    <div class="tab-pane fade show  p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row" id="reload-profile2">
                                 <div class="col-md-11">
                                     {{-- <div class="col-md-12 font-weight-bold">PERSONAL</div> --}}
@@ -310,6 +312,8 @@
                                 </div>
                             </div>
                     </div>
+                     {{-- Overview --}}
+                    @include('pages.admin.employees.id.overview', ['id' => $employee->id])
                     {{-- Emergency --}}
                     @include('pages.admin.employees.id.emergency-contacts', ['id' => $employee->id])
                     {{-- Dependent --}}
