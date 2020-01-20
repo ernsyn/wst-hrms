@@ -31,7 +31,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="attachment"><strong>Attachment*</strong></label>
-                            <input type="file" name="required-attachment" class="form-control-file" multiple="">
+                            <input type="file" name="required-attachment" class="form-control-file">
                             <div id="attachment-error" class="invalid-feedback">
                             </div>
                         </div>

@@ -44,7 +44,7 @@
 
         </div>
     </div>
-    <table class="hrms-primary-data-table table w-100" id="employee-jobs-table">
+    <table class="hrms-primary-data-table table" id="employee-jobs-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -320,7 +320,7 @@
         "scrollX":	true,
         "ajax": "{{ route('admin.employees.dt.jobs', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": [13,14],
+            "targets": [-1,-2],
             "orderable": false
         } ],
         "columns": [{
@@ -332,17 +332,14 @@
                 "data": "start_date"
             },
             {
-                "data": "end_date",
-                render: function(data) {
-                    return data ? data : null;
-                }
-
+                "data": "end_date"
             },
             {
                 "data": "main_position.name",
                 render: function(data) {
                     return data ? data : null;
                 }
+                
             },
             {
                 "data": "department.name",

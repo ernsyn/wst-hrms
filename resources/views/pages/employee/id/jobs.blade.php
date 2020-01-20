@@ -1,6 +1,6 @@
 {{-- Table --}}
 <div class="tab-pane fade show p-3" id="nav-job" role="tabpanel" aria-labelledby="nav-job-tab">
-    <table class="hrms-primary-data-table table w-100" id="employee-jobs-table">
+    <table class="hrms-primary-data-table table" id="employee-jobs-table">
         <thead>
             <tr>
                 <th>No</th>
