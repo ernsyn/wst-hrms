@@ -61,6 +61,7 @@ use App\EmployeeDisciplinary;
 use Illuminate\Support\Facades\Storage;
 use App\EmpReportToPP;
 use App\PayrollPeriod;
+use App\Section;
 
 class EmployeeController extends Controller
 {
@@ -834,7 +835,10 @@ else {
         $jobData['created_by'] = auth()->user()->id;
         DB::transaction(function() use ($jobData, $id, $request) {
             $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
-            
+            if(!empty($currentJob)) {
+               $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date'].' -1days'))]);
+               LeaveService::onJobEnd($id, date("Y-m-d", strtotime($jobData['start_date'].' -1days')), $currentJob->id);
+            }
             
             if(isset($jobData['emp_mainposition_id'])) {
                 $position = EmployeePosition::find($jobData['emp_mainposition_id'])->id;
