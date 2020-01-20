@@ -57,6 +57,12 @@ use App\LeaveRequest;
 use App\LeaveRequestApproval;
 use App\EmployeeJobStatus;
 use App\AssetAttach;
+use App\Category;
+use App\DisciplineAttach;
+use App\EmployeeDisciplinary;
+use Illuminate\Support\Facades\Storage;
+use App\EmpReportToPP;
+use App\PayrollPeriod;
 
 class EmployeeController extends Controller
 {
@@ -171,7 +177,7 @@ class EmployeeController extends Controller
         ])->make(true);
     }
     
-    public function assetlist()
+    public function assetList()
     {     
         $employeeAssets = EmployeeAsset::all();
         
@@ -181,7 +187,7 @@ class EmployeeController extends Controller
 
     }
 
-    public function assetdisplay($id)
+    public function assetDisplay($id)
     {
         $employee = Employee::with('user')
         ->find($id);
@@ -206,8 +212,9 @@ class EmployeeController extends Controller
         $socsoCategory = SocsoCategoryEnum::choices();
         $paymentviaGroup = PaymentViaEnum::choices();
         $paymentrateGroup = PaymentRateEnum::choices();
+        $categories = Category::all();
         
-        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory','paymentviaGroup','paymentrateGroup'));    
+        return view('pages.admin.employees.add', compact('countries','roles','epfCategory','pcbGroup','socsoCategory','paymentviaGroup','paymentrateGroup','categories'));    
     }
 
     public function display($id)
@@ -238,7 +245,8 @@ class EmployeeController extends Controller
         $paymentviaGroup = PaymentViaEnum::choices();
         $paymentrateGroup = PaymentRateEnum::choices();
         $items = CompanyAsset::all();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items]);   	    
+        $categories = Category::all();
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories]);   	    
     }
 public function displayAttach($id)
     {    
@@ -360,6 +368,7 @@ public function displayAttach($id)
             'spouse_tax_no' => 'nullable',
             'payment_via' =>'required',
             'payment_rate' =>'required',
+            'category_id' => 'required',
             
         ],
         [
@@ -521,7 +530,6 @@ public function displayAttach($id)
             $job->area = $area->name;
             $statusArray = array();
             foreach($job->job_status as $status) {
-                Log::debug($status->status_id);
                 array_push($statusArray, EmploymentStatus::find($status->status_id)->name);
             }
             $job->status = $statusArray;
@@ -610,7 +618,17 @@ public function displayAttach($id)
 
     public function getDataTableReportTo($id)
     {
-        $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', $id)->get();
+        $reportTos = EmployeeReportTo::with('employee_report_to.user')->where('emp_id', $id)->get();        
+        $reportTos->load('report_to_pp');
+        
+        foreach($reportTos as $reportTo){
+            $payrollPeriodArray = array();
+            foreach($reportTo->report_to_pp as $payrollPeriod) {
+                array_push($payrollPeriodArray, PayrollPeriod::find($payrollPeriod->payroll_period_id)->name);
+            }
+            $reportTo->payroll_period = $payrollPeriodArray;
+        }
+            
         return DataTables::of($reportTos)->make(true);
     }
 
@@ -669,6 +687,7 @@ public function displayAttach($id)
             'spouse_tax_no' => 'nullable|unique:employees,spouse_tax_no',
             'payment_via' => 'required',
             'payment_rate' => 'required',
+            'category_id' => 'required',
         ],
         [
             'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.',
@@ -723,6 +742,7 @@ public function displayAttach($id)
             $validatedEmployeeData['spouse_tax_no'] = $validated['spouse_tax_no'];
             $validatedEmployeeData['payment_via'] = $validated['payment_via'];
             $validatedEmployeeData['payment_rate'] = $validated['payment_rate'];
+            $validatedEmployeeData['category_id'] = $validated['category_id'];
             $user = User::create($validatedUserData);
             $user->assignRole('employee');
             $validatedEmployeeData['user_id'] = $user->id;
@@ -840,7 +860,7 @@ else {
             'remarks' => '',
             'branch_id' => 'required',
             'start_date' => 'required',
-            'status' => 'required',
+            'status' => 'required'
             ]);
         
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
@@ -860,8 +880,6 @@ else {
             unset($newJob->status);
             $employee = Employee::find($id);
             $newJob = $employee->employee_jobs()->save($newJob);
-//             Log::debug(">>>>>>>>>>>>>>>>>>>>>>>");
-//             Log::debug($newJob);
             
             foreach($request->status as $statusId) {
                 $employeejobStatus = new EmployeeJobStatus();
@@ -1025,6 +1043,41 @@ else {
         return response()->json(['success'=>'Employee Asset was successfully added']);
     }
 
+    public function postAddDiscipline(Request $request, $id)
+    {
+        $disciplineData = $request->validate([
+            'discipline_title' => 'required',
+            'discipline_desc' => 'required',
+            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'discipline_attach' => 'nullable' 
+        ]);
+        
+        $disciplineData['discipline_date'] = implode("-", array_reverse(explode("/", $disciplineData['discipline_date'])));
+        $disciplineData['created_by'] = auth()->user()->id;
+        $discipline= new EmployeeDisciplinary($disciplineData);
+        $employee = Employee::find($id);
+        $employee->emp()->save($discipline);
+        dd($discipline);
+        
+         if($request->hasFile('discipline_attach')) 
+        {
+            $files = $request->file('discipline_attach');
+            foreach($files as $file) 
+            {
+              $path = $file->getClientOriginalName();
+              $name = time() . '-' . $path;
+
+              $attach = new DisciplineAttach();
+              $attach->discipline_attach = $name;
+              $attach->discipline_id = $discipline->id;
+              $attach->save();
+              $file->storeAs('public/emp_id_'. $id.'/discipline', $name);
+              
+            }
+        }
+
+     return response()->json(['success'=>'Asset was successfully added']);
+    }
     public function postExperience(Request $request, $id)
     {
         $experienceData = $request->validate([
@@ -1229,6 +1282,7 @@ else {
             'report_to_level' =>'required|unique:employee_report_to,report_to_level,NULL,id,deleted_at,NULL,emp_id,'.$id,
                 'kpi_proposer' => 'required',
             'notes' => 'nullable',
+            'payroll_period' => 'nullable'
         ]);
 
         if($request->get('kpi_proposer') == null){
@@ -1237,7 +1291,6 @@ else {
             $reportToData['kpi_proposer'] = request('kpi_proposer');
         }
 
-    
         $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$id)
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
 
@@ -1245,26 +1298,49 @@ else {
     
             $employee_report_to = EmployeeReportTo::where('report_to_emp_id','=',$id)
             ->where('deleted_at','=',null)->count();
-    
-    
+  
         if ($request->kpi_proposer == 0) {
-    
+            DB::beginTransaction();
             $reportToData['created_by'] = auth()->user()->id;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
-                return response()->json(['success'=>'Report To was successfully updated.']);
+            
+            if(isset($request->payroll_period)) {
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
+            DB::commit();
+                return response()->json(['success'=>'Report To was successfully added.']);
 
         } else if($employee_kpi_proposer == 0){
+            DB::beginTransaction();
             $reportToData['created_by'] = auth()->user()->id;
             $reportTo = new EmployeeReportTo($reportToData);
             $employee = Employee::find($id);
             $employee->report_tos()->save($reportTo);
-                return response()->json(['success'=>'Report To was successfully updated.']);
+            
+            if(isset($request->payroll_period)) {
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
+            DB::commit();
+                return response()->json(['success'=>'Report To was successfully added.']);
 
         } else {
             return response()->json(['fail'=>'KPI Proposer already exist']);
         }
+        
+               
+        
 
     }
 
@@ -1486,8 +1562,9 @@ else {
             'report_to_level' =>'required|unique:employee_report_to,report_to_level,'.$id.',id,deleted_at,NULL,emp_id,'.$emp_id,
             'kpi_proposer' => 'nullable',
             'notes' => 'nullable',
+            'payroll_period' => 'nullable'
         ]);
-
+        
         if($request->get('kpi_proposer') == null){
             $reportToUpdatedData['kpi_proposer'] = 0;
         } else {
@@ -1496,14 +1573,61 @@ else {
 
         $employee_kpi_proposer = EmployeeReportTo::where('emp_id','=',$emp_id)
         ->where('kpi_proposer', 1)->where('deleted_at','=',null)->count();
+        
+        $kpi_proposer = EmployeeReportTo::where('id','=',$id)->where('kpi_proposer',1)->count();
 
         if($request->kpi_proposer == 0){
+            DB::beginTransaction();
+            EmpReportToPP::where('emp_report_to_id', $id)->delete();
+            $reportTo = EmployeeReportTo::find($id);
+            $reportTo->save();
+            if(isset($request->payroll_period)){
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
             EmployeeReportTo::find($id)->update($reportToUpdatedData);
+            DB::commit();
             return response()->json(['success'=>'Report To was successfully updated.']);
-        } else if($employee_kpi_proposer == 0){
+        } else 
+            if($employee_kpi_proposer == 0){
+            DB::beginTransaction();
+            EmpReportToPP::where('emp_report_to_id', $id)->delete();
+            $reportTo = EmployeeReportTo::find($id);
+            $reportTo->save();
+            if(isset($request->payroll_period)){
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
             EmployeeReportTo::find($id)->update($reportToUpdatedData);
+            DB::commit();
             return response()->json(['success'=>'Report To was successfully updated.']);
-        } else {
+        } else 
+            if($kpi_proposer == 1){
+            DB::beginTransaction();
+            EmpReportToPP::where('emp_report_to_id', $id)->delete();
+            $reportTo = EmployeeReportTo::find($id);
+            $reportTo->save();
+            if(isset($request->payroll_period)){
+                foreach($request->payroll_period as $payrollPeriodId) {
+                    $reportToPP = new EmpReportToPP();
+                    $reportToPP->emp_report_to_id = $reportTo->id;
+                    $reportToPP->payroll_period_id = $payrollPeriodId;
+                    $reportToPP->save();
+                }
+            }
+            EmployeeReportTo::find($id)->update($reportToUpdatedData);
+            DB::commit();
+            return response()->json(['success'=>'Report To was successfully updated.']);
+        } else
+        {
             return response()->json(['fail'=>'KPI Proposer already exist']);
         }
     }
@@ -1561,6 +1685,7 @@ else {
             LeaveAllocation::find($leave_allocation->id)->delete();
         }
         EmployeeJob::find($id)->delete();
+        EmployeeJobStatus::where('emp_job_id', $id)->delete();
         DB::commit();
         return response()->json(['success'=>'Job was successfully deleted.']);
     }
@@ -1572,18 +1697,37 @@ else {
     }
     public function deleteEmployeeAsset(Request $request, $emp_id, $id)
     {
+        
+       $employees = DB::table('asset_attachs')
+        ->select('asset_attach')
+        ->where('asset_id', $id)
+        ->get();
+       foreach ($employees as $employee) {
+            $emp=$employee->asset_attach;;
+            Storage::delete('public/emp_id_'.$emp_id.'/asset/'.$emp);
+        } 
         DB::table('asset_attachs')
             ->where('asset_id', $id)
             ->delete();
         EmployeeAsset::find($id)->delete();
-        
+
         return response()->json(['success'=>'Asset was successfully deleted.']);
     }
     public function deleteAssetAttach(Request $request,$id)
     {
+        $employees = DB::table('employee_assets')
+        ->join('asset_attachs', 'employee_assets.id', '=', 'asset_attachs.asset_id')
+        ->select('employee_assets.emp_id as emp','asset_attachs.asset_attach as asset_attach')
+        ->where('asset_attachs.id', $id)
+        ->get();
+        foreach ($employees as $employee) {
+            $emp=$employee->emp;
+            $asset_attach=$employee->asset_attach;
+            Storage::delete('public/emp_id_'.$emp.'/asset/'.$asset_attach);
+        }            
+        
         AssetAttach::find($id)->delete();
         return redirect()->back() ->with('status', 'Attachment Successfully Deleted!');
-
     }
 
     public function deleteExperience(Request $request, $emp_id, $id)
@@ -1613,6 +1757,7 @@ else {
     public function deleteReportTo(Request $request, $emp_id, $id)
     {
         EmployeeReportTo::find($id)->delete();
+        EmpReportToPP::where('emp_report_to_id', $id)->delete();
         return response()->json(['success'=>'Report To was successfully deleted.']);
     }
 

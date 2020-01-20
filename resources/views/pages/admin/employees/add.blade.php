@@ -353,6 +353,19 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label text-lg-right">Category*</label>
+                            <div class="col-lg-6">
+                            <select name="category_id" id="category_id" class="form-control{{ $errors->has('category_id') ? ' is-invalid' : '' }}" >
+                                <option value ="" >Select Category</option>
+                                 @foreach($categories as $category)
+                                 <option value="{{$category->id}}">{{$category->name}}</option>
+                                 @endforeach
+                                    </select>
+                            <div id="category_id-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
                 {{-- Company --}}

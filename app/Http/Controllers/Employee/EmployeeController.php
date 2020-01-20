@@ -37,6 +37,7 @@ use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
 use App\Media;
 use App\AssetAttach;
+use App\Category;
 
 class EmployeeController extends Controller
 {
@@ -62,7 +63,8 @@ class EmployeeController extends Controller
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
-        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory]);   	
+        $categories = Category::all();
+        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory,'categories' => $categories]);   	
     }
     public function displayAsset()
     {
@@ -155,6 +157,7 @@ class EmployeeController extends Controller
             'spouse_name' => 'nullable',
             'spouse_ic' => 'nullable',
             'spouse_tax_no' => 'nullable',
+            'category_id' => 'required',
 
         ],
         [
