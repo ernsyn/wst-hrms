@@ -775,7 +775,7 @@
 
                     $(e.target).removeAttr('disabled');
                     showAlert(data.success);
-                    $("#show-resign-button").load("# show-resign-button");
+                    $("#show-resign-button").load(" #show-resign-button");
                     jobsTable.ajax.reload();
                     $('#add-resign-popup').modal('toggle');
                     clearResignModal('#add-resign-form');
