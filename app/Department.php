@@ -22,4 +22,8 @@ class Department extends Model implements Auditable
     {
         return $this->hasMany('App\DepartmentHod', 'department_id');
     }
+    public function department()
+    {
+        return $this->hasMany('App\EmployeeJob', 'department_id');
+    }
 }

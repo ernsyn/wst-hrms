@@ -64,6 +64,9 @@ use Illuminate\Support\Facades\Storage;
 use App\EmpReportToPP;
 use App\PayrollPeriod;
 use App\Section;
+use App\Department;
+use App\Branch;
+use App\Team;
 
 class EmployeeController extends Controller
 {
@@ -180,12 +183,17 @@ class EmployeeController extends Controller
     
     public function assetList()
     {     
-        $employeeAssets = EmployeeAsset::all();
-        $employees = Employee::all();
+        $employeeAssets = DB::table('users')
+        ->join('employees','users.id', '=', 'employees.user_id')
+        ->join('employee_assets','employees.id', '=', 'employee_assets.emp_id')
+        ->select('users.name as name', 'employee_assets.emp_id as emp_id')
+        ->groupby('employee_assets.emp_id')
+        ->get();
         $items = CompanyAsset::all();
-        return view('pages.admin.employees.assetlist', ['employeeAssets'=> $employeeAssets, 'employees' => $employees, 'items' => $items]);
+        return view('pages.admin.employees.assetlist', ['employeeAssets'=> $employeeAssets, 'items' => $items]);
 
     }
+    
 
       public function assetDisplay($id)
     {
@@ -239,7 +247,16 @@ class EmployeeController extends Controller
         ->where('employees.id',$id)
         ->get();
 
-        
+        $jobs = DB::table('employee_jobs')
+        ->join('departments','employee_jobs.department_id','=','departments.id')
+        ->join('employee_positions','employee_jobs.emp_mainposition_id','=','employee_positions.id')
+        ->join('sections','employee_jobs.section_id','=','sections.id')
+        ->join('branches','employee_jobs.branch_id','=','branches.id')
+        ->select('employee_jobs.start_date as start_date', 'departments.name as department_name','employee_positions.name as position_name','sections.name as section_name','branches.name as branch_name')
+        ->where('employee_jobs.emp_id',$id)
+        ->get();
+
+        $departments = Department::all();
 		$roles = AccessControllHelper::getRoles();
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
@@ -248,7 +265,7 @@ class EmployeeController extends Controller
         $paymentrateGroup = PaymentRateEnum::choices();
         $items = CompanyAsset::all();
         $categories = Category::all();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories]);   	    
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories,'jobs'=> $jobs,'departments' => $departments]);   	    
     }
     public function displayAttach($id)
     {    
@@ -265,6 +282,7 @@ class EmployeeController extends Controller
 
         return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id, 'employees' => $employees]);        
     }
+
   
     public function securityGroupDisplay($id)
     {           
@@ -609,6 +627,7 @@ class EmployeeController extends Controller
         ->select('employee_disciplines.*')
         ->where('emp_id', $id)
         ->get();
+
         return DataTables::of($employees)->make(true);
         
     }
