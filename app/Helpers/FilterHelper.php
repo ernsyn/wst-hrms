@@ -4,6 +4,7 @@ namespace App\Helpers;
 use App\Area;
 use App\CostCentre;
 use App\Department;
+use App\Employee;
 use App\Section;
 use App\EmployeePosition;
 use App\Team;
@@ -158,6 +159,8 @@ class FilterHelper
         Log::debug("Get Empoyees: request");
         Log::debug($request);
         $user = Auth::user();
+        $currentUser = Employee::where('user_id',Auth::id())->first();
+        $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
         
         //         $bankAccount = DB::table('employee_bank_accounts')
         //                         ->where('acc_status', 'Active');
@@ -182,7 +185,10 @@ class FilterHelper
                 DB::raw("CONCAT(TIMESTAMPDIFF( YEAR, employees.join_company_date, case when employees.resignation_date is null then now() else employees.resignation_date end),'yr ',
                                     TIMESTAMPDIFF( MONTH, employees.join_company_date, case when employees.resignation_date is null then now() else employees.resignation_date end) % 12,'mth') as serviceYear")
                                     //                             'bankAcc.*'
-                );
+                )
+            ->where(function($query) use($currentUser, $securityGroupAccess){
+                $query->whereIn('employees.main_security_group_id', $securityGroupAccess);
+            });
         
         $searchOption = self::getSearchKey($request);
         $multiValue = array('employees.cost_centre_id', 'employees.department_id', 'employees.section_id', 'employees.position_id', 'employees.team_id',
