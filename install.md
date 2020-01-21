@@ -26,6 +26,7 @@ Memory: 64GB DDR3 (1600MHz)
     * yum install -y xorg-x11-fonts-75dpi
     * wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
     * rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+9. Run 'php artisan storage:link'
 
 # Others #
 For mobile app,

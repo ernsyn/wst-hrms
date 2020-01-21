@@ -33,7 +33,7 @@
                                 data-jc-id="{{$jc['id']}}" data-jc-company-name="{{$jc['company_name']}}"
                                 data-target="#edit-job-company-popup"><i class="fas fa-edit"></i></button>
                             @endcan
-                            @can(PermissionConstant::DELETE_JOB_COMPANY)
+                            @if(auth()->user()->can(PermissionConstant::DELETE_JOB_COMPANY) && $jc['id'] > 1)
                         	<button type="submit" class="btn btn-danger btn-smt" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $jc['company_name'] }}' data-link='{{ route('admin.settings.job-company.delete', ['id ' => $jc['id']]) }}' ><i class=" far fa-trash-alt"></i></button>
                             @endcan
                         </td>

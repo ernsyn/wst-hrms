@@ -47,15 +47,10 @@ class AccessControllHelper
     public static function getSecurityGroupAccess()
     {
         $securityGroupId = array();
-        
-        if(self::hasHrAdminRole()){
-            $securityGroupAccess = SecurityGroup::where('company_id',GenerateReportsHelper::getUserLogonCompanyInformation()->id)->select('id')->get();
-        }else{
-            $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',Employee::where('user_id',Auth::id())->first()->id)->select('security_group_id')->get();
-        }
+        $securityGroupAccess = EmployeeSecurityGroup::where('emp_id',Employee::where('user_id',Auth::id())->first()->id)->select('security_group_id')->get();
         
         foreach($securityGroupAccess as $s){
-            array_push($securityGroupId, $s->id);
+            array_push($securityGroupId, $s->security_group_id);
         }
         
         return $securityGroupId;

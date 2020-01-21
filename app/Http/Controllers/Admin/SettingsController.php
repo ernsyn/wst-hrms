@@ -1837,14 +1837,22 @@ class SettingsController extends Controller
     
     public function deleteJobCompany($id)
     {
+        // cannot delete default company, id = 1
         $jobCompany = JobCompany::find($id);
         $companyId = $jobCompany->company_id;
         $companyName = $jobCompany->company_name;
-        $jobCompany->delete();
         
-        return redirect()->route('admin.settings.company.company-details', [
-            'id' => $companyId
-        ])->with('status', $companyName.' is deleted.');
+        if ($id > 1) {
+            $jobCompany->delete();
+            
+            return redirect()->route('admin.settings.company.company-details', [
+                'id' => $companyId
+            ])->with('status', $companyName.' is deleted.');
+        } else {
+            return redirect()->route('admin.settings.company.company-details', [
+                'id' => $companyId
+            ])->with('status', 'Cannot delete '.$companyName);
+        }
     }
 
     public function deleteTeam(Request $request, $id)

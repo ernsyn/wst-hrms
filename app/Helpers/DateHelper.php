@@ -18,6 +18,11 @@ class DateHelper
         return date($format, strtotime($date));
     }
     
+    public static function toMysqlDateFormat($date)
+    {
+        return implode("-", array_reverse(explode("/", $date)));
+    }
+    
     public static function getPastNMonthDate($date, $month)
     {
         return date("Y-m-d", strtotime( date($date)." -".$month." months") );

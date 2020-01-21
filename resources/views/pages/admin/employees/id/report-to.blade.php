@@ -651,6 +651,7 @@ $(function () {
                 $("#add-report-to-pp-div").show();
             } else {
                 $("#add-report-to-pp-div").hide();
+                $("#add-report-to-pp").val("");
             }
         });
     });
@@ -662,6 +663,7 @@ $(function () {
                 $("#edit-report-to-pp-div").show();
             } else {
                 $("#edit-report-to-pp-div").hide();
+                $("#edit-report-to-pp").val("");
             }
         });
     });

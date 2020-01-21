@@ -22,7 +22,10 @@ use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use App\Area;
+use App\CostCentre;
 use App\Country;
+use App\Department;
+use App\EmploymentStatus;
 use App\Roles;
 use App\User;
 use App\Employee;
@@ -50,9 +53,7 @@ use App\Mail\NewUserMail;
 use App\EmployeePosition;
 use App\CompanyAsset;
 use App\LeaveAllocation;
-use App\CostCentre;
 use App\Helpers\FilterHelper;
-use App\EmploymentStatus;
 use App\LeaveRequest;
 use App\LeaveRequestApproval;
 use App\EmployeeJobStatus;
@@ -64,7 +65,6 @@ use Illuminate\Support\Facades\Storage;
 use App\EmpReportToPP;
 use App\PayrollPeriod;
 use App\Section;
-use App\Department;
 use App\Branch;
 use App\Team;
 
@@ -183,6 +183,8 @@ class EmployeeController extends Controller
     
     public function assetList()
     {     
+        
+       
         $employeeAssets = DB::table('users')
         ->join('employees','users.id', '=', 'employees.user_id')
         ->join('employee_assets','employees.id', '=', 'employee_assets.emp_id')
@@ -190,6 +192,7 @@ class EmployeeController extends Controller
         ->groupby('employee_assets.emp_id')
         ->get();
         $items = CompanyAsset::all();
+       
         return view('pages.admin.employees.assetlist', ['employeeAssets'=> $employeeAssets, 'items' => $items]);
 
     }
@@ -228,11 +231,6 @@ class EmployeeController extends Controller
     public function display($id)
     {
         $employee = Employee::with('user')
-//         ->with(['employee_confirmed' => function($query) use ($id)
-//         {
-//             $query->where('status','=','confirmed-employment')
-//             ->where ('emp_id','=',$id);
-//         }])
         ->find($id);
 
         $userMedia = DB::table('employees')
@@ -246,7 +244,6 @@ class EmployeeController extends Controller
         ->select('security_groups.*')
         ->where('employees.id',$id)
         ->get();
-
         $jobs = DB::table('employee_jobs')
         ->join('departments','employee_jobs.department_id','=','departments.id')
         ->join('employee_positions','employee_jobs.emp_mainposition_id','=','employee_positions.id')
@@ -256,7 +253,7 @@ class EmployeeController extends Controller
         ->where('employee_jobs.emp_id',$id)
         ->get();
 
-        $departments = Department::all();
+        
 		$roles = AccessControllHelper::getRoles();
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
@@ -265,8 +262,10 @@ class EmployeeController extends Controller
         $paymentrateGroup = PaymentRateEnum::choices();
         $items = CompanyAsset::all();
         $categories = Category::all();
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories,'jobs'=> $jobs,'departments' => $departments]);   	    
+          	    
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories,'jobs'=> $jobs]);   	    
     }
+
     public function displayAttach($id)
     {    
         $id = $id; 
@@ -584,6 +583,30 @@ class EmployeeController extends Controller
         $jobs->load('job_status');
         
         foreach($jobs as $job){
+            $mainPosition = EmployeePosition::find($job->emp_mainposition_id);
+            if (isset($mainPosition)) {
+                $job->main_position_name = $mainPosition->name;
+            } else {
+                $job->main_position_name = null;
+            }
+            $department = Department::find($job->department_id);
+            if (isset($department)) {
+                $job->department_name = $department->name;
+            } else {
+                $job->department_name = null;
+            }
+            $costCentre = CostCentre::find($job->cost_centre_id);
+            if (isset($costCentre)) {
+                $job->cost_centre_name = $costCentre->name;
+            } else {
+                $job->cost_centre_name = null;
+            }
+            $section = Section::find($job->section_id);
+            if (isset($section)) {
+                $job->section_name = $section->name;
+            } else {
+                $job->section_name = null;
+            }
             $area = Area::find($job->branch->area_id);
             $job->area = $area->name;
             $statusArray = array();
@@ -643,7 +666,6 @@ class EmployeeController extends Controller
         ->make(true);
     }
 
-    
     public function getDataTableExperiences($id)
     {
         $experiences = EmployeeExperience::where('emp_id', $id)->get();
@@ -925,6 +947,7 @@ else {
             'emp_mainposition_id' => '',
             'department_id' => '',
             'team_id' => 'required',
+            'cost_centre_id' => '',
             'emp_grade_id' => 'required',
             'section_id' => '',
             'job_comp_id' => 'required',
