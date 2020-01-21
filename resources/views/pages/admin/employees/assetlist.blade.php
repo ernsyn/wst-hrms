@@ -36,7 +36,7 @@
                     <tr>
                         <td class="id">{{$loop->iteration}}</td>
                         <td class="name">
-                            {{$employeeAsset->employee()->first()->user()->first()->name}}
+                            {{$employeeAsset->name}}
                         </td>
                          @can(PermissionConstant::VIEW_ASSET)
                        <td>

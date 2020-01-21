@@ -148,7 +148,7 @@ class PermissionConstant
     const ADD_DEPARTMENT = 'Add Department';
     const UPDATE_DEPARTMENT = 'Update Department';
     const DELETE_DEPARTMENT = 'Delete Department';
-    const ADD_ASSET = 'Add Asset';
+	const ADD_ASSET = 'Add Asset';
     const DELETE_ASSET = 'Delete Asset';
     const VIEW_ASSET = 'View Asset';
     const UPDATE_ASSET = 'Update Asset';
