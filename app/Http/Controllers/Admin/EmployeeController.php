@@ -873,7 +873,11 @@ else {
                 Employee::where('id', $id)->update(array('position_id'=> @$position ? $position : ''));
             }
             Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
-            Employee::where('id', $id)->update(array('resignation_date'=> null));
+            Employee::where('id', $id)->update(array(
+                    'resignation_date'=> null,
+                    'blacklisted' => 0,
+                    'reason' => ""
+                ));
 
             $newJob = new EmployeeJob($jobData);
             unset($newJob->status);
@@ -898,13 +902,27 @@ else {
         $jobData = $request->validate([
 
                 'resignation_date' => 'required',
+                'blacklisted' => 'required',
+                'reason' => 'required'
         ]);
+        
 
         $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
         $jobData['resignation_date'] = implode("-", array_reverse(explode("/", $jobData['resignation_date'])));
+        
+        if($request->get('blacklisted') == null){
+            $jobData['blacklisted'] = 0;
+        } else {
+            $jobData['blacklisted'] = request('blacklisted');
+        }
+        
         LeaveService::onJobEnd($id, $jobData['resignation_date'], $currentJob->id, true);
 
-        Employee::where('id', $id)->update(array('resignation_date'=> ($jobData['resignation_date'])));
+        Employee::where('id', $id)->update(array(
+            'resignation_date'=> ($jobData['resignation_date']),
+            'blacklisted' => ($jobData['blacklisted']),
+            'reason' => ($jobData['reason'])
+        ));
         $currentJob->update(array(
             'end_date'=> ($jobData['resignation_date']),
             'status'=> 'Resigned'
