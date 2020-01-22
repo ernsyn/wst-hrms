@@ -201,7 +201,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
-                            
+                           
                             <div id="discipline_attach-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -251,11 +251,13 @@
         <div class="timeline">
             @foreach($jobs as $job)
           <div class="entry">
-           {{$job->start_date}}
-            <br>{{$job->position_name}}
-            <br>{{$job->department_name}}
-            <br>{{$job->section_name}}
+           <h6><u><b>{{ Carbon\Carbon::parse($job->start_date)->format('d/m/Y') }}</b></u></h6>
+            <br>{!!$job->position_name ? $job->position_name : '<strong>(not set)</strong>'!!}</span>
+            {{$job->position_name}}
+            <br>{!!$job->department_name ? $job->department_name : '<strong>(not set)</strong>'!!}</span>
+            <br>{!!$job->section_name ? $job->section_name : '<strong>(not set)</strong>'!!}</span>
             <br>{{$job->branch_name}}
+            <br>{!!$job->cost ? $job->cost : '<strong>(not set)</strong>'!!}</span>
           </div>
           @endforeach
         </div>
@@ -405,9 +407,8 @@
             console.log('Data: ', currentData)
 
             editId = currentData.id;
-            //name = currentData.created_by.user.name
             $('#view-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
-            $('#view-discipline-form input[name=created_by-edit]').val(currentData.created_by);
+            $('#view-discipline-form input[name=created_by-edit]').val(currentData.name);
             $('#view-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);
             if(currentData.discipline_date!=null){
                 formatDisciplineDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.discipline_date));
@@ -428,7 +429,7 @@
             editId = currentData.id;
             //name = currentData.created_by.user.name
             $('#edit-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
-            $('#edit-discipline-form input[name=created_by-edit]').val(currentData.created_by);
+            $('#edit-discipline-form input[name=created_by-edit]').val(currentData.name);
             $('#edit-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);
             if(currentData.discipline_date!=null){
                 formatDisciplineDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.discipline_date));
@@ -567,46 +568,29 @@
   font-size: 12px;
   text-align: center;
   position: relative;
-  border-top: 4px solid #06182E;
+  //border-top: 4px solid #06182E;
   border-radius: 3px;
   min-width: 200px;
   max-width: 500px;
 }
 
-.entry img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 10px;
-}
 
 .entry:after {
   content: '';
   display: block;
   background: #eee;
-  width: 7px;
-  height: 7px;
+  width: 14px;
+  height: 14px;
   border-radius: 6px;
-  border: 3px solid #06182E;
+  //border: 3px solid #06182E;
   position: absolute;
   left: 50%;
-  top: -30px;
+  top: -25px;
   margin-left: -6px;
 }
 
-.entry:before {
-  content: '';
-  display: block;
-  background: #06182E;
-  width: 5px;
-  height: 20px;
-  position: absolute;
-  left: 50%;
-  top: -20px;
-  margin-left: -2px;
-}
 .bar {
-  height: 4px;
+  height: 1px;
   background: #eee;
   width: 100%;
   position: relative;

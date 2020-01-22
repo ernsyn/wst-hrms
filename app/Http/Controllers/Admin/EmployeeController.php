@@ -183,8 +183,6 @@ class EmployeeController extends Controller
     
     public function assetList()
     {     
-        
-       
         $employeeAssets = DB::table('users')
         ->join('employees','users.id', '=', 'employees.user_id')
         ->join('employee_assets','employees.id', '=', 'employee_assets.emp_id')
@@ -244,16 +242,30 @@ class EmployeeController extends Controller
         ->select('security_groups.*')
         ->where('employees.id',$id)
         ->get();
-        $jobs = DB::table('employee_jobs')
-        ->join('departments','employee_jobs.department_id','=','departments.id')
-        ->join('employee_positions','employee_jobs.emp_mainposition_id','=','employee_positions.id')
-        ->join('sections','employee_jobs.section_id','=','sections.id')
-        ->join('branches','employee_jobs.branch_id','=','branches.id')
-        ->select('employee_jobs.start_date as start_date', 'departments.name as department_name','employee_positions.name as position_name','sections.name as section_name','branches.name as branch_name')
-        ->where('employee_jobs.emp_id',$id)
-        ->get();
+
+        $details = DB::table('employees')
+        ->leftjoin('sections','employees.section_id','=','sections.id')
+        ->leftjoin('departments','employees.department_id','=','departments.id')
+        ->leftjoin('employee_positions','employees.position_id','=','employee_positions.id')
+        ->leftjoin('areas','employees.area_id','=','areas.id')
+        ->leftjoin('branches','employees.branch_id','=','branches.id')
+        ->leftjoin('cost_centres','employees.cost_centre_id','=','cost_centres.id')
+        ->select('sections.name as section','departments.name as department','employee_positions.name as position','areas.name as area','branches.name as branch','cost_centres.name as cost_centre')
+        ->where('employees.id',$id)
+        ->first();
 
         
+        $jobs = DB::table('employee_jobs')
+        ->leftjoin('departments','employee_jobs.department_id','=','departments.id')
+        ->leftjoin('employee_positions','employee_jobs.emp_mainposition_id','=','employee_positions.id')
+        ->leftjoin('sections','employee_jobs.section_id','=','sections.id')
+        ->leftjoin('branches','employee_jobs.branch_id','=','branches.id')
+        ->leftjoin('cost_centres','employee_jobs.cost_centre_id','=','cost_centres.id')
+        ->select('employee_jobs.start_date as start_date', 'departments.name as department_name','employee_positions.name as position_name','sections.name as section_name','branches.name as branch_name','cost_centres.name as cost')
+        ->where('employee_jobs.emp_id',$id)
+        ->orderBy('employee_jobs.start_date')
+        ->get();
+
 		$roles = AccessControllHelper::getRoles();
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
@@ -263,7 +275,7 @@ class EmployeeController extends Controller
         $items = CompanyAsset::all();
         $categories = Category::all();
           	    
-        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories,'jobs'=> $jobs]);   	    
+        return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories,'jobs'=> $jobs,'details' => $details]);   	    
     }
 
     public function displayAttach($id)
@@ -646,12 +658,13 @@ class EmployeeController extends Controller
     public function getDataTableDiscipline($id)
     {
         
-        $employees = DB::table('employee_disciplines')
-        ->select('employee_disciplines.*')
-        ->where('emp_id', $id)
-        ->get();
-
-        return DataTables::of($employees)->make(true);
+        $employees = DB::table('users')
+        ->leftjoin('employees','users.id', '=', 'employees.user_id')
+        ->leftjoin('employee_disciplines','employees.id', '=', 'employee_disciplines.emp_id')
+        ->select('users.name as name', 'employee_disciplines.emp_id as emp_id','employee_disciplines.*')
+        ->where('employee_disciplines.emp_id', $id)
+        ->get();    
+        return DataTables::of($employees)->make(true);  
         
     }
     
