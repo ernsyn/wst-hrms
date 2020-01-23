@@ -67,6 +67,7 @@ use App\PayrollPeriod;
 use App\Section;
 use App\Branch;
 use App\Team;
+use App\JobAttach;
 
 class EmployeeController extends Controller
 {
@@ -580,7 +581,7 @@ class EmployeeController extends Controller
     {
         $jobs = EmployeeJob::with('main_position','department', 'team', 
         'cost_centre', 'grade', 'branch', 'section', 'jobcompany')->where('emp_id', $id)->get();
-        $jobs->load('job_status');
+        $jobs->load('job_status','job_attachs');
         
         foreach($jobs as $job){
             $mainPosition = EmployeePosition::find($job->emp_mainposition_id);
@@ -609,14 +610,23 @@ class EmployeeController extends Controller
             }
             $area = Area::find($job->branch->area_id);
             $job->area = $area->name;
+            
             $statusArray = array();
             foreach($job->job_status as $status) {
                 array_push($statusArray, EmploymentStatus::find($status->status_id)->name);
             }
             $job->status = $statusArray;
             
+            $attachArray = array();
+            foreach($job->job_attachs as $attach) {
+                $attachment = JobAttach::find($attach->id)->job_attach;
+                $attachlink = $attachment;
+//                 $attachlink = ("/storage/emp_id_".$job['emp_id']."/job/".$attachment);
+                array_push($attachArray, $attachlink);
+            }
+            $job->attach = $attachArray;
+            
         }
-        
  
         return DataTables::of($jobs)
         ->editColumn('start_date', function ($job) {
@@ -939,6 +949,33 @@ else {
         return response()->json(['success'=>'Visa was successfully added']);
     }
 
+    public function postJobAttach(Request $request, $id)
+    {
+        $employees = DB::table('employee_jobs')
+        ->select('emp_id')
+        ->where('id', $id)
+        ->get();
+        foreach($employees as $employee)
+        {
+            $emp_id= $employee->emp_id;
+            $files = $request->file('job_attach');
+            foreach($files as $file)
+            {
+                $path = $file->getClientOriginalName();
+                $name = time() . '-' . $path;
+                
+                $attach = new AssetAttach();
+                $attach->job_attach = $name;
+                $attach->emp_job_id = $id;
+                $attach->save();
+                $file->storeAs('public/emp_id_'. $emp_id.'/job', $name);
+                
+            }
+        }
+        
+        return response()->json(['success'=>'Attachment was successfully added']);
+    }
+    
     public function postJob(Request $request, $id)
     {
         // Add a new job
@@ -954,7 +991,8 @@ else {
             'remarks' => '',
             'branch_id' => 'required',
             'start_date' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'job_attach' => 'nullable'
             ]);
         
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
@@ -979,14 +1017,31 @@ else {
 
             $newJob = new EmployeeJob($jobData);
             unset($newJob->status);
-            $employee = Employee::find($id);
-            $newJob = $employee->employee_jobs()->save($newJob);
+            $employees = Employee::find($id);
+            $newJob = $employees->employee_jobs()->save($newJob);
             
             foreach($request->status as $statusId) {
                 $employeejobStatus = new EmployeeJobStatus();
                 $employeejobStatus->emp_job_id = $newJob->id;
                 $employeejobStatus->status_id = $statusId;
                 $employeejobStatus->save();
+            }
+            
+            if($request->hasFile('job_attach'))
+            {
+                $files = $request->file('job_attach');
+                foreach($files as $file)
+                {
+                    $path = $file->getClientOriginalName();
+                    $name = time() . '-' . $path;
+                    
+                    $attach = new JobAttach();
+                    $attach->job_attach = $name;
+                    $attach->emp_job_id = $newJob->id;
+                    $attach->save();
+                    $file->storeAs('public/emp_id_'. $id.'/job', $name);
+                    
+                }
             }
 
             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id'], $newJob->id);
@@ -1779,8 +1834,15 @@ else {
         foreach ($leave_allocations as $leave_allocation) {
             LeaveAllocation::find($leave_allocation->id)->delete();
         }
+        $empJobs = EmployeeJob::where('id', $id);
         EmployeeJob::find($id)->delete();
         EmployeeJobStatus::where('emp_job_id', $id)->delete();
+        JobAttach::where('emp_job_id',$id)->delete();
+        foreach ($empJobs as $empJob) {
+            $emp=$empJob->emp;
+            $job_attach=$empJob->job_attach;
+            Storage::delete('public/emp_id_'.$emp.'/job/'.$job_attach);
+        }
         DB::commit();
         return response()->json(['success'=>'Job was successfully deleted.']);
     }

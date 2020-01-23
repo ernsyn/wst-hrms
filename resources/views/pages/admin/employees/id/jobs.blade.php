@@ -43,10 +43,9 @@
 			<button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#view-resign-popup">
 					Resigned Details
 			</button>
-			<br>
 			@endif
 			@if(App\EmployeeAsset::where('emp_id',$id)->where('asset_status','1')->count() > 0)
-			<a href="{{ route('admin.employees.assetid', ['id' => $id]) }}" style="float: right">Asset on Hold</a>
+			<a href="{{ route('admin.employees.assetid', ['id' => $id]) }}" class="btn btn-warning waves-effect" style="color:white">Asset on Hold</a>
            	@endif			
 			@endcan
 		</div>
@@ -69,6 +68,7 @@
 				<th>Branch</th>
                 <th>Basic Salary</th>
                 <th>Status</th>
+                <th>Attachment</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -117,7 +117,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="reason"><strong>Reason for leaving*</strong></label>
-                            <input name="reason" type="text" class="form-control" placeholder="" value="" >
+                            <textarea name="reason" class="form-control" placeholder="" value=""></textarea>
 
                         </div>
                     </div>
@@ -146,23 +146,20 @@
             </div>
                 <div class="modal-body">
                     <div class="row form-group">
-                        <label class="col-md-12 col-form-label"><strong>Date:</strong>
-                        <span style="float:right">{{date('d/m/Y', strtotime($employee->resignation_date))}}</span>
-                        </label>
+                        <label class="col-md-12 col-form-label"><strong>Date:</strong></label>
+                        <span class="col-md-12 col-form-label">{{date('d/m/Y', strtotime($employee->resignation_date))}}</span>
                     </div>
                     <div class="row form-group">
-                        <label class="col-md-12 col-form-label"><strong>Blacklisted:</strong>
+                        <label class="col-md-12 col-form-label"><strong>Blacklisted:</strong></label>
                         @if(App\Employee::where('id', $id)->where('blacklisted','1')->count() > 0)
-                        <span style="float:right">Yes</span>
+                        <span class="col-md-12 col-form-label">Yes</span>
                         @else
-                        <span style="float:right">No</span>
+                        <span class="col-md-12 col-form-label">No</span>
                         @endif
-                        </label>
                     </div>
                     <div class="row form-group">
-                        <label class="col-md-12 col-form-label"><strong>Reason for leaving:</strong>
-                        <span style="float:right">{{$employee->reason}}</span>
-                        </label>
+                        <label class="col-md-12 col-form-label"><strong>Reason for leaving:</strong></label>
+                        <span class="col-md-12 col-form-label">{{$employee->reason}}</span>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -183,13 +180,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="add-job-form">
+            <form enctype="multipart/form-data" id="add-job-form" name="add-job-form">
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="basic-salary"><strong>New Basic Salary*</strong></label>
-                            <input name="basic-salary" type="number" class="form-control" placeholder="" value="" >
+                            <input name="basic_salary" type="number" class="form-control" placeholder="" value="" >
                             <div id="basic-salary-error" class="invalid-feedback">
 
                             </div>
@@ -198,7 +195,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="cost-centre"><strong>Cost Centre</strong></label>
-                            <select class="form-control" name="cost-centre" >
+                            <select class="form-control" name="cost_centre_id" >
                                 <option value="">Please Select</option>
                                 @foreach(App\CostCentre::all() as $cost_centre)
                                 <option value="{{ $cost_centre->id }}">{{ $cost_centre->name }}</option>
@@ -211,7 +208,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="department"><strong>Department</strong></label>
-                            <select class="form-control" name="department" >
+                            <select class="form-control" name="department_id" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Department::all() as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -224,7 +221,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="team"><strong>Team*</strong></label>
-                            <select class="form-control" name="team" >
+                            <select class="form-control" name="team_id" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Team::all() as $team)
                                 <option value="{{ $team->id }}">{{ $team->name }}</option>
@@ -238,7 +235,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="main-position"><strong>Position</strong></label>
-                            <select class="form-control" name="main-position" >
+                            <select class="form-control" name="main_position_id" >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeePosition::all() as $position)
                                 <option value="{{ $position->id }}">{{ $position->name }}</option>
@@ -252,7 +249,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="grade"><strong>Grade*</strong></label>
-                            <select class="form-control" name="grade" >
+                            <select class="form-control" name="emp_grade_id" >
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeeGrade::all() as $grade)
                                 <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -266,7 +263,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="section"><strong>Section</strong></label>
-                            <select class="form-control" name="section" >
+                            <select class="form-control" name="section_id" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Section::all() as $section)
                                 <option value="{{ $section->id }}">{{ $section->name }}</option>
@@ -280,7 +277,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="jobcompany"><strong>Company*</strong></label>
-                            <select class="form-control" name="jobcompany" >
+                            <select class="form-control" name="job_comp_id" >
                                 <option value="">Please Select</option>
                                 @foreach(App\JobCompany::all() as $jobcompany)
                                 <option value="{{ $jobcompany->id }}">{{ $jobcompany->company_name }}</option>
@@ -294,7 +291,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="branch"><strong>Branch*</strong></label>
-                            <select class="form-control" name="branch" >
+                            <select class="form-control" name="branch_id" >
                                 <option value="">Please Select</option>
                                 @foreach(App\Branch::all() as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -309,7 +306,7 @@
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="date-job" class="form-control datetimepicker-input"  placeholder="dd/mm/yyyy" data-target="#date-job" autocomplete="off"/>
+                                <input type="text" id="date-job" name="start_date" class="form-control datetimepicker-input"  placeholder="dd/mm/yyyy" data-target="#date-job" autocomplete="off"/>
                                 <div class="input-group-append" data-target="#date-job" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -321,12 +318,13 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="employment-status"><strong>Employment Status*</strong></label>
-                            <select multiple class="form-control" id="add-employment-status" name="employment-status[]" placeholder="Please Select">
+                            <select multiple class="form-control" id="add-employment-status" name="status[]" placeholder="Please Select">
 								@foreach(App\EmploymentStatus::all() as $status)
                                 	<option value="{{ $status->id }}">{{ $status->name }}</option>
                                 @endforeach
                             </select>
-                            <div id="employment-status-error" class="invalid-feedback"></div>
+                            <div id="employment-status-error" class="invalid-feedback">
+                            </div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -334,7 +332,14 @@
                             <label for="remarks"><strong>Remarks</strong></label>
                             <textarea name="remarks" type="number" class="form-control" placeholder="" value=""></textarea>
                             <div id="remarks-error" class="invalid-feedback">
-
+							</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label><strong>Attachment</strong></label>
+                            <input name="job_attach[]" id="add-job-attach" type="file" class="form-control" multiple>
+                            <div id="job-attach-error" class="invalid-feedback">
                             </div>
                         </div>
                     </div>
@@ -383,9 +388,10 @@
         "serverSide": true,
         "bStateSave": true,
         "scrollX":	true,
+        "order": [[ 0, "desc" ]],
         "ajax": "{{ route('admin.employees.dt.jobs', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": [-1,-2],
+            "targets": [-1,-2,-3],
             "orderable": false
         } ],
         "columns": [{
@@ -430,7 +436,19 @@
                 "data": "basic_salary"
             },
             {
-                "data": "status[, ]"
+                "data": "status[<br>]"
+            },
+            {
+                "data": "attach[]",
+                "render": function(data, type, row, meta){
+                    var attach = '';
+                    if(type === 'display'){
+                        for(var i=0; i< data.length; i++) {
+                        	attach += '<a href="/storage/emp_id_' + row.emp_id + '/job/' + data[i] + '">' + data[i] + '</a><br>';
+                        }
+                    }
+                    return attach;
+                 }
             },
             {
                 "data": null, // can be null or undefined
@@ -448,42 +466,42 @@
 </script>
 <script type="text/javascript">
     $(function () {
-        $('#add-job-form select[name=cost-centre]').selectize({
+        $('#add-job-form select[name=cost_centre_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
 
-        $('#add-job-form select[name=department]').selectize({
+        $('#add-job-form select[name=department_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
 
-        $('#add-job-form select[name=team]').selectize({
+        $('#add-job-form select[name=team_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
 
-        $('#add-job-form select[name=main-position]').selectize({
+        $('#add-job-form select[name=main_position_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
 
-        $('#add-job-form select[name=grade]').selectize({
+        $('#add-job-form select[name=emp_grade_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
 
-        $('#add-job-form select[name=section]').selectize({
+        $('#add-job-form select[name=section_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
 
-        $('#add-job-form select[name=jobcompany]').selectize({
+        $('#add-job-form select[name=job_comp_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
 
-        $('#add-job-form select[name=branch]').selectize({
+        $('#add-job-form select[name=branch_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
         });
@@ -521,25 +539,31 @@
         $('#add-job-form #add-job-submit').click(function (e) {
             $(e.target).attr('disabled', 'disabled');
             e.preventDefault();
+            var form = document.forms.namedItem("add-job-form");
+            var formdata = new FormData(form);
             clearJobError('#add-job-form');
             $.ajax({
                 url: "{{ route('admin.employees.jobs.post', ['id' => $id]) }}",
                 type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    basic_salary: $('#add-job-form input[name=basic-salary]').val(),
-                    cost_centre_id: $('#add-job-form select[name=cost-centre]').val(),
-                    department_id: $('#add-job-form select[name=department]').val(),
-                    team_id: $('#add-job-form select[name=team]').val(),
-                    emp_mainposition_id: $('#add-job-form select[name=main-position]').val(),
-                    emp_grade_id: $('#add-job-form select[name=grade]').val(),
-                    section_id: $('#add-job-form select[name=section]').val(),
-                    job_comp_id: $('#add-job-form select[name=jobcompany]').val(),
-                    branch_id: $('#add-job-form select[name=branch]').val(),
-                    start_date: $('#add-job-form #date-job').val(),
-                    status: $('#add-employment-status').val(),
-                    remarks: $('#add-job-form textarea[name=remarks]').val()
-                },
+                contentType: false,
+                processData: false,
+                data:formdata,
+//                 data: {
+//                     _token: '{{ csrf_token() }}',
+//                     basic_salary: $('#add-job-form input[name=basic-salary]').val(),
+//                     cost_centre_id: $('#add-job-form select[name=cost-centre]').val(),
+//                     department_id: $('#add-job-form select[name=department]').val(),
+//                     team_id: $('#add-job-form select[name=team]').val(),
+//                     emp_mainposition_id: $('#add-job-form select[name=main-position]').val(),
+//                     emp_grade_id: $('#add-job-form select[name=grade]').val(),
+//                     section_id: $('#add-job-form select[name=section]').val(),
+//                     job_comp_id: $('#add-job-form select[name=jobcompany]').val(),
+//                     branch_id: $('#add-job-form select[name=branch]').val(),
+//                     start_date: $('#add-job-form #date-job').val(),
+//                     status: $('#add-employment-status').val(),
+//                     remarks: $('#add-job-form textarea[name=remarks]').val(),
+//                     job_attach: $('#add-job-attach').val()
+//                 },
                 success: function (data) {
 
                     $(e.target).removeAttr('disabled');
@@ -552,6 +576,7 @@
                     // $('#nav-job').load(' #employee-jobs-table');
                     $('#add-job-popup').modal('toggle');
                     clearJobModal('#add-job-form');
+                    location.reload();
                 },
                 error: function (xhr) {
                     $(e.target).removeAttr('disabled');
@@ -564,55 +589,55 @@
                                 console.log("Error: ", errorField);
                                 switch (errorField) {
                                     case 'basic_salary':
-                                        $('#add-job-form input[name=basic-salary]').addClass(
+                                        $('#add-job-form input[name=basic_salary]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #basic-salary-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'cost_centre_id':
-                                        $('#add-job-form select[name=cost-centre]').addClass(
+                                        $('#add-job-form select[name=cost_centre_id]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #cost-centre-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'department_id':
-                                        $('#add-job-form select[name=department]').addClass(
+                                        $('#add-job-form select[name=department_id]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #department-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'team_id':
-                                        $('#add-job-form select[name=team]').addClass('is-invalid');
+                                        $('#add-job-form select[name=team_id]').addClass('is-invalid');
                                         $('#add-job-form #team-error').html('<strong>' +
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'emp_mainposition_id':
-                                        $('#add-job-form select[name=main-position]').addClass(
+                                        $('#add-job-form select[name=main_position_id]').addClass(
                                             'is-invalid');
                                         $('#add-job-form #main-position-error').html(
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
                                     case 'emp_grade_id':
-                                        $('#add-job-form select[name=grade]').addClass('is-invalid');
+                                        $('#add-job-form select[name=emp_grade_id]').addClass('is-invalid');
                                         $('#add-job-form #grade-error').html('<strong>' +
                                             errors[errorField][0] + '</strong>');
                                         break;
                                     case 'section_id':
-                                        $('#add-job-form select[name=section]').addClass('is-invalid');
+                                        $('#add-job-form select[name=section_id]').addClass('is-invalid');
                                         $('#add-job-form #section-error').html('<strong>' +
                                             errors[errorField][0] + "</strong>");
                                         break;
                                     case 'job_comp_id':
-                                        $('#add-job-form select[name=jobcompany]').addClass('is-invalid');
+                                        $('#add-job-form select[name=job_comp_id]').addClass('is-invalid');
                                         $('#add-job-form #jobcompany-error').html('<strong>' +
                                             errors[errorField][0] + "</strong>");
                                         break;
                                     case 'branch_id':
-                                        $('#add-job-form select[name=branch]').addClass('is-invalid');
+                                        $('#add-job-form select[name=branch_id]').addClass('is-invalid');
                                         $('#add-job-form #branch-error').html('<strong>' +
                                             errors[errorField][0] + "</strong>");
                                         break;
@@ -635,6 +660,10 @@
                                             '<strong>' + errors[errorField][0] +
                                             '</strong>');
                                         break;
+                                    case 'job_attach':
+                                        $('#add-job-attach]').addClass('is-invalid');
+                                        $('#add-job-form #job_attach-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    	break;
                                 }
                             }
                         }
@@ -680,49 +709,52 @@
 
     // GENERAL FUNCTIONS
     function clearJobModal(htmlId) {
-        $(htmlId + ' input[name=basic-salary]').val('');
-        $(htmlId + ' select[name=cost-centre]')[0].selectize.clear();
-        $(htmlId + ' select[name=department]')[0].selectize.clear();
-        $(htmlId + ' select[name=team]')[0].selectize.clear();
-        $(htmlId + ' select[name=main-position]')[0].selectize.clear();
-        $(htmlId + ' select[name=grade]')[0].selectize.clear();
-        $(htmlId + ' select[name=section]')[0].selectize.clear();
-        $(htmlId + ' select[name=jobcompany]')[0].selectize.clear();
-        $(htmlId + ' select[name=branch]')[0].selectize.clear();
+        $(htmlId + ' input[name=basic_salary]').val('');
+        $(htmlId + ' select[name=cost_centre_id]')[0].selectize.clear();
+        $(htmlId + ' select[name=department_id]')[0].selectize.clear();
+        $(htmlId + ' select[name=team_id]')[0].selectize.clear();
+        $(htmlId + ' select[name=main_position_id]')[0].selectize.clear();
+        $(htmlId + ' select[name=emp_grade_id]')[0].selectize.clear();
+        $(htmlId + ' select[name=section_id]')[0].selectize.clear();
+        $(htmlId + ' select[name=job_comp_id]')[0].selectize.clear();
+        $(htmlId + ' select[name=branch_id]')[0].selectize.clear();
         $(htmlId + ' #date-job').val('');
         $(htmlId + ' #date-job-edit').val('');
-//         $(htmlId + ' select[name=employment-status]')[0].selectize.clear();
+        $(htmlId + ' select[name=-status]').selectize.clear();
         $(htmlId + ' textarea[name=remarks]').val('');
+        $(htmlId + ' input[name=job_attach]').val('');
 
-        $(htmlId + ' input[name=basic-salary]').removeClass('is-invalid');
-        $(htmlId + ' select[name=cost-centre]').removeClass('is-invalid');
-        $(htmlId + ' select[name=department]').removeClass('is-invalid');
-        $(htmlId + ' select[name=team]').removeClass('is-invalid');
-        $(htmlId + ' select[name=main-position]').removeClass('is-invalid');
-        $(htmlId + ' select[name=grade]').removeClass('is-invalid');
-        $(htmlId + ' select[name=section]').removeClass('is-invalid');
-        $(htmlId + ' select[name=jobcompany]').removeClass('is-invalid');
-        $(htmlId + ' select[name=branch]').removeClass('is-invalid');
+        $(htmlId + ' input[name=basic_salary]').removeClass('is-invalid');
+        $(htmlId + ' select[name=cost_centre_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=department_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=team_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=main_position_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=emp_grade_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=section_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=job_comp_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=branch_id]').removeClass('is-invalid');
         $(htmlId + ' #date-job').removeClass('is-invalid');
         $(htmlId + ' #date-job-edit').removeClass('is-invalid');
-//         $(htmlId + ' select[name=employment-status]').removeClass('is-invalid');
+        $(htmlId + ' select[name=status]').removeClass('is-invalid');
         $(htmlId + ' textarea[name=remarks]').removeClass('is-invalid');
+        $(htmlId + ' input[name=job_attach]').removeClass('is-invalid');
     }
 
     function clearJobError(htmlId) {
-        $(htmlId + ' input[name=basic-salary]').removeClass('is-invalid');
-        $(htmlId + ' select[name=cost-centre]').removeClass('is-invalid');
-        $(htmlId + ' select[name=department]').removeClass('is-invalid');
-        $(htmlId + ' select[name=team]').removeClass('is-invalid');
-        $(htmlId + ' select[name=main-position]').removeClass('is-invalid');
-        $(htmlId + ' select[name=grade]').removeClass('is-invalid');
-        $(htmlId + ' select[name=section]').removeClass('is-invalid');
-        $(htmlId + ' select[name=jobcompany]').removeClass('is-invalid');
-        $(htmlId + ' select[name=branch]').removeClass('is-invalid');
+    	$(htmlId + ' input[name=basic_salary]').removeClass('is-invalid');
+        $(htmlId + ' select[name=cost_centre_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=department_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=team_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=main_position_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=emp_grade_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=section_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=job_comp_id]').removeClass('is-invalid');
+        $(htmlId + ' select[name=branch_id]').removeClass('is-invalid');
         $(htmlId + ' #date-job').removeClass('is-invalid');
         $(htmlId + ' #date-job-edit').removeClass('is-invalid');
-//         $(htmlId + ' select[name=employment-status]').removeClass('is-invalid');
+        $(htmlId + ' select[name=status]').removeClass('is-invalid');
         $(htmlId + ' textarea[name=remarks]').removeClass('is-invalid');
+        $(htmlId + ' input[name=job_attach]').removeClass('is-invalid');
     }
 
     function showAlert(message) {
@@ -769,7 +801,7 @@
                     _token: '{{ csrf_token() }}',
                     resignation_date: $('#add-resign-form #date-resign').val(),
                     blacklisted: $('#add-resign-form select[name=blacklisted]').val(),
-                    reason: $('#add-resign-form input[name=reason]').val()
+                    reason: $('#add-resign-form textarea[name=reason]').val()
                 },
                 success: function (data) {
 
