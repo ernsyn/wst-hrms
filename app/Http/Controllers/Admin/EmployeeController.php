@@ -1015,8 +1015,15 @@ class EmployeeController extends Controller
         ));
         $currentJob->update(array(
             'end_date'=> ($jobData['resignation_date']),
-            'status'=> 'Resigned'
+//             'status'=> 'Resigned'
         ));
+                
+        EmployeeJobStatus::where('emp_job_id', $id)->delete();
+        $employeejobStatus = new EmployeeJobStatus();
+        $employeejobStatus->emp_job_id = $currentJob->id;
+        $employeejobStatus->status_id = 10;
+        $employeejobStatus->save();
+            
         return response()->json(['success'=>'Employee and job status has successfully been updated']);
     }
     
@@ -1771,15 +1778,16 @@ class EmployeeController extends Controller
         foreach ($leave_allocations as $leave_allocation) {
             LeaveAllocation::find($leave_allocation->id)->delete();
         }
-        $empJobs = EmployeeJob::where('id', $id);
+//         $empJobs = EmployeeJob::where('id', $id);
+        $emp = $emp_id;
+        $jobs = JobAttach::where('emp_job_id',$id)->get();
+        foreach ($jobs as $job) {
+            $job_attach=$job->job_attach;
+            Storage::delete('public/emp_id_'.$emp.'/job/'.$job_attach);
+        }
         EmployeeJob::find($id)->delete();
         EmployeeJobStatus::where('emp_job_id', $id)->delete();
         JobAttach::where('emp_job_id',$id)->delete();
-        foreach ($empJobs as $empJob) {
-            $emp=$empJob->emp;
-            $job_attach=$empJob->job_attach;
-            Storage::delete('public/emp_id_'.$emp.'/job/'.$job_attach);
-        }
         DB::commit();
         return response()->json(['success'=>'Job was successfully deleted.']);
     }

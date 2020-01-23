@@ -17,11 +17,9 @@ class CreateJobAttachsTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('job_attach');
-            $table->integer('emp_job_id')->unsigned();
-        });
-
-        Schema::table('job_attachs', function($table) {
-            $table->foreign('emp_job_id')->references('id')->on('employee_jobs');
+            $table->foreign('emp_job_id')->unsigned()
+            ->references('id')->on('employee_jobs');
+            ->onDelete('cascade');;
         });
     }
 
