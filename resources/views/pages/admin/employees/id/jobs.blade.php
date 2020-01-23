@@ -39,10 +39,19 @@
             Re-Employ
 			</button>
 			@endcan
-            <h5><span class="badge badge-danger">Resigned</span></h5>
+			@can(PermissionConstant::RESIGN)
+			<button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#view-resign-popup">
+					Resigned Details
+			</button>
+			<br>
 			@endif
+			@if(App\EmployeeAsset::where('emp_id',$id)->where('asset_status','1')->count() > 0)
+			<a href="{{ route('admin.employees.assetid', ['id' => $id]) }}" style="float: right">Asset on Hold</a>
+           	@endif			
+			@endcan
 		</div>
     </div>
+    
     <table class="hrms-primary-data-table table w-100" id="employee-jobs-table">
         <thead>
             <tr>
@@ -56,7 +65,7 @@
                 <th>Grade</th>
                 <th>Section</th>
 				<th>Company</th>
-				<th>Area</th><
+				<th>Area</th>
 				<th>Branch</th>
                 <th>Basic Salary</th>
                 <th>Status</th>
@@ -93,6 +102,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="blacklisted"><strong>Blacklisted*</strong></label>
+                            <select class="form-control" id="add-blacklisted" name="blacklisted">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                            <div id="blacklisted-error" class="invalid-feedback">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="reason"><strong>Reason for leaving*</strong></label>
+                            <input name="reason" type="text" class="form-control" placeholder="" value="" >
+
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="add-resign-submit" type="submit" class="btn btn-primary">
@@ -101,6 +129,44 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+@endcan
+
+@can(PermissionConstant::RESIGN)
+<div class="modal fade" id="view-resign-popup" tabindex="-1" role="dialog" aria-labelledby="nav-job-tab" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nav-job-tab">Resignation Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <div class="modal-body">
+                    <div class="row form-group">
+                        <label class="col-md-12 col-form-label"><strong>Date:</strong>
+                        <span style="float:right">{{date('d/m/Y', strtotime($employee->resignation_date))}}</span>
+                        </label>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-12 col-form-label"><strong>Blacklisted:</strong>
+                        @if(App\Employee::where('id', $id)->where('blacklisted','1')->count() > 0)
+                        <span style="float:right">Yes</span>
+                        @else
+                        <span style="float:right">No</span>
+                        @endif
+                        </label>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-12 col-form-label"><strong>Reason for leaving:</strong>
+                        <span style="float:right">{{$employee->reason}}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
         </div>
     </div>
 </div>
@@ -683,10 +749,14 @@
         });
 
         // ADD
-        $('#add-resign-popup').on('show.bs.modal', function (event) {
+        $('#add-resign-form').on('show.bs.modal', function (event) {
             clearResignError('#add-resign-form');
         });
 
+        $('#add-resign-form select[name=blacklisted]').selectize({
+            plugins: ['restore_on_backspace'],
+            sortField: 'text'
+        });
 
         $('#add-resign-form #add-resign-submit').click(function (e) {
             $(e.target).attr('disabled', 'disabled');
@@ -697,7 +767,9 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    resignation_date: $('#add-resign-form #date-resign').val()
+                    resignation_date: $('#add-resign-form #date-resign').val(),
+                    blacklisted: $('#add-resign-form select[name=blacklisted]').val(),
+                    reason: $('#add-resign-form input[name=reason]').val()
                 },
                 success: function (data) {
 
@@ -707,6 +779,7 @@
                     jobsTable.ajax.reload();
                     $('#add-resign-popup').modal('toggle');
                     clearResignModal('#add-resign-form');
+                    location.reload();
                 },
                 error: function (xhr) {
                     $(e.target).removeAttr('disabled');
@@ -721,7 +794,11 @@
                                         $('#add-resign-form #date-resign').addClass('is-invalid');
                                         $('#add-resign-form #date-resign-error').html('<strong>' +
                                             errors[errorField][0] + '</strong>');
-                                        break;
+                                    break;
+                                    case 'kpi_proposer':
+                                        $('#add-resign-form select[name=blacklistedd]').addClass('is-invalid');
+                                        $('#add-resign-form #blacklisted-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
                                 }
                             }
                         }
@@ -733,10 +810,14 @@
         function clearResignModal(htmlId) {
         $(htmlId + ' #date-resign').val('');
         $(htmlId + ' #date-resign').removeClass('is-invalid');
+        $(htmlId + ' select[name=blacklisted]')[0].selectize.clear();
+        $(htmlId + ' input[name=reason]').val('');
     }
 
     function clearResignError(htmlId) {
         $(htmlId + ' #date-resign').removeClass('is-invalid');
+        $(htmlId + ' select[name=blacklisted]').removeClass('is-invalid');
+        $(htmlId + ' input[name=reason]').removeClass('is-invalid');
     }
 
     function showAlert(message) {

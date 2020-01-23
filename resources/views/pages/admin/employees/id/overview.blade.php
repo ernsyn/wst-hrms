@@ -1,3 +1,4 @@
+
 <!-- ADD -->
 <div class="modal fade" id="add-discipline-popup" tabindex="-1" role="dialog" aria-labelledby="add-discipline-label"
     aria-hidden="true">
@@ -99,7 +100,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Title*</strong></label>
-                            <input name="discipline_title" type="text" class="form-control" placeholder="" value="" >
+                            <input name="discipline_title-edit" id="discipline_title-edit" type="text" class="form-control" placeholder="" value="" >
                             <div id="discipline_title-error" class="invalid-feedback">
 
                             </div>
@@ -108,7 +109,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Description*</strong></label>
-                            <textarea  name="discipline_desc" id="discipline_desc"class="form-control" value="" rows="8"></textarea>
+                            <textarea  name="discipline_desc-edit" id="discipline_desc-edit "class="form-control" value="" rows="8"></textarea>
                             <div id="discipline_desc-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -116,7 +117,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Investigated By*</strong></label>
-                            <input name="created_by" type="text" class="form-control" placeholder="" value="" readonly="">
+                            <input name="created_by-edit" id="created_by-edit" type="text" class="form-control" placeholder="" value="" readonly="">
                             <div id="created_by-error" class="invalid-feedback">
 
                             </div>
@@ -144,6 +145,81 @@
     </div>
 </div>
 <!-- END UPDATE -->
+<!-- VIEW -->
+<div class="modal fade" id="view-discipline-popup" tabindex="-1" role="dialog" aria-labelledby="view-discipline-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-discipline-label">View Disciplinary Issue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <form id="view-discipline-form">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="discipline_date-edit"><strong>Date*</strong></label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="text" id="discipline_date-edit" name="discipline_date-edit" class="form-control datetimepicker-input" data-target="#discipline_date-edit" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
+                                <div class="input-group-append" data-target="#discipline_date-edit" data-toggle="datetimepicker">
+                                    <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <div id="discipline_date-error" class="invalid-feedback">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label><strong>Title*</strong></label>
+                            <input name="discipline_title-edit" id="discipline_title-edit" type="text" class="form-control" placeholder="" value="" readonly >
+                            <div id="discipline_title-error" class="invalid-feedback">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label><strong>Description*</strong></label>
+                            <textarea  name="discipline_desc-edit" id="discipline_desc-edit "class="form-control" value="" rows="8" readonly></textarea>
+                            <div id="discipline_desc-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label><strong>Investigated By*</strong></label>
+                            <input name="created_by-edit" id="created_by-edit" type="text" class="form-control" placeholder="" value="" readonly="">
+                            <div id="created_by-error" class="invalid-feedback">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label><strong>Attachment</strong></label>
+                           
+                            <div id="discipline_attach-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- END VIEW -->
 <!-- DELETE -->
 {{-- DELETE ASSET --}}
 <div class="modal fade" id="confirm-delete-discipline-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-discipline-label"
@@ -166,13 +242,27 @@
         </div>
     </div>
 </div>
-<!-- END DELET -->
+<!-- END DELETE -->
 <div class="tab-pane fade show active p-3" id="nav-overview" role="tabpanel" aria-labelledby="nav-overview-tab">
 	<div class="card">
 		<div class="card-body">
 		<h5><strong>Personal Career Development</strong></h5>
-		</div>
+        <div class="bar"></div>
+        <div class="timeline">
+            @foreach($jobs as $job)
+          <div class="entry">
+           <h6><u><b>{{ Carbon\Carbon::parse($job->start_date)->format('d/m/Y') }}</b></u></h6>
+            <br>{!!$job->position_name ? $job->position_name : '<strong>(not set)</strong>'!!}</span>
+            {{$job->position_name}}
+            <br>{!!$job->department_name ? $job->department_name : '<strong>(not set)</strong>'!!}</span>
+            <br>{!!$job->section_name ? $job->section_name : '<strong>(not set)</strong>'!!}</span>
+            <br>{{$job->branch_name}}
+            <br>{!!$job->cost ? $job->cost : '<strong>(not set)</strong>'!!}</span>
+          </div>
+          @endforeach
+        </div>
 	</div>
+</div>
 	<br>
 	<div class="card">
 		<div class="card-body">
@@ -200,13 +290,9 @@
 	</div>
 </div>
 <br>
-<div class="card">
-		<div class="card-body">
-		<h5><strong>Sales Performance</strong></h5>
-		</div>
-	</div>
 </div>
 @section('scripts')
+
 <script>
 	 $('#discipline_date').datetimepicker({
         format: 'DD/MM/YYYY'
@@ -248,9 +334,8 @@
             {
                 "data": null,
                 render: function (data, type, row, meta) {
-                    return `
-                    
-                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-discipline-popup"><i class="far fa-edit"></i></button>
+                    return `<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#view-discipline-popup"><i class="fa fa-eye"></i></button>
+                    ` + `<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-discipline-popup"><i class="far fa-edit"></i></button>
 					` + `
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-discipline-modal"><i class="far fa-trash-alt"></i></button>
 					
@@ -313,6 +398,25 @@
                 }
             });
         });
+        //VIEW
+                var editId = null;
+        $('#view-discipline-popup').on('show.bs.modal', function (event) {
+            clearBankAccountError('#view-discipline-form');
+            var button = $(event.relatedTarget)
+            var currentData = JSON.parse(decodeURI(button.data('current')))
+            console.log('Data: ', currentData)
+
+            editId = currentData.id;
+            $('#view-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
+            $('#view-discipline-form input[name=created_by-edit]').val(currentData.name);
+            $('#view-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);
+            if(currentData.discipline_date!=null){
+                formatDisciplineDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.discipline_date));
+                $('#view-discipline-form #discipline_date-edit').val(formatDisciplineDate);
+            } else {
+                $('#view-discipline-form #discipline_date-edit').val();
+            }
+        });
 
         // EDIT
         var editId = null;
@@ -324,9 +428,9 @@
 
             editId = currentData.id;
             //name = currentData.created_by.user.name
-            $('#edit-discipline-form input[name=discipline_title]').val(currentData.discipline_title);
-            $('#edit-discipline-form input[name=created_by]').val(currentData.created_by);
-            $('#edit-discipline-form textarea[name=discipline_desc]').val(currentData.discipline_desc);
+            $('#edit-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
+            $('#edit-discipline-form input[name=created_by-edit]').val(currentData.name);
+            $('#edit-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);
             if(currentData.discipline_date!=null){
                 formatDisciplineDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.discipline_date));
                 $('#edit-discipline-form #discipline_date-edit').val(formatDisciplineDate);
@@ -345,10 +449,10 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    discipline_title: $('#edit-discipline-form input[name=discipline_title]').val(),
-                    discipline_desc: $('#edit-discipline-form textarea[name=discipline_desc]').val(),
+                    discipline_title: $('#edit-discipline-form input[name=discipline_title-edit]').val(),
+                    discipline_desc: $('#edit-discipline-form textarea[name=discipline_desc-edit]').val(),
                     discipline_date: $('#edit-discipline-form #discipline_date-edit').val(),
-                    created_by: $('#edit-discipline-form input[name=created_by]').val(),
+                    created_by: $('#edit-discipline-form input[name=created_by-edit]').val(),
                 },
                 success: function(data) {
                     showAlert(data.success);
@@ -365,11 +469,11 @@
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
                                     case 'discipline_title':
-                                        $('#edit-discipline-form input[name=discipline_title]').addClass('is-invalid');
+                                        $('#edit-discipline-form input[name=discipline_title-edit]').addClass('is-invalid');
                                         $('#edit-discipline-form #discipline_title-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'discipline_desc':
-                                        $('#edit-discipline-form textarea[name=discipline_desc]').addClass('is-invalid');
+                                        $('#edit-discipline-form textarea[name=discipline_desc-edit]').addClass('is-invalid');
                                         $('#edit-discipline-form #discipline_desc-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'discipline_date':
@@ -447,4 +551,51 @@
             </div>`)
     }
 </script>
+<style type="text/css">
+.timeline {
+  white-space: nowrap;
+  overflow-x: scroll;
+  padding: 30px 0 10px 0;
+  position: relative;
+}
+
+.entry {
+  display: inline-block;
+  vertical-align: top;
+  background: #ffffff;
+  color: #000000;
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+  position: relative;
+  //border-top: 4px solid #06182E;
+  border-radius: 3px;
+  min-width: 200px;
+  max-width: 500px;
+}
+
+
+.entry:after {
+  content: '';
+  display: block;
+  background: #eee;
+  width: 14px;
+  height: 14px;
+  border-radius: 6px;
+  //border: 3px solid #06182E;
+  position: absolute;
+  left: 50%;
+  top: -25px;
+  margin-left: -6px;
+}
+
+.bar {
+  height: 1px;
+  background: #eee;
+  width: 100%;
+  position: relative;
+  top: 13px;
+  left: 0;
+}
+</style>
 @append
