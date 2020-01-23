@@ -444,7 +444,7 @@
                     var attach = '';
                     if(type === 'display'){
                         for(var i=0; i< data.length; i++) {
-                        	attach += '<a href="/storage/emp_id_' + row.emp_id + '/job/' + data[i] + '">' + data[i] + '</a><br>';
+                        	attach += '<a target="_blank" href="/storage/emp_id_' + row.emp_id + '/job/' + data[i] + '">' + data[i] + '</a><br>';
                         }
                     }
                     return attach;
