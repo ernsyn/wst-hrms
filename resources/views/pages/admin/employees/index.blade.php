@@ -294,7 +294,7 @@
                         <th>Confirm Date</th>
                         <th>Resign Date</th>
                         <th>Service Year</th>
-                        <th>I/C Number</th>
+                        <th>IC Number</th>
                         <th>Gender</th>
                         <th>Basic</th>
                         <th>Bank Account</th>
@@ -395,30 +395,33 @@ $(document).ready(function() {
             dom: `<'row d-flex'<'col'l><'col d-flex justify-content-end'f><'col-auto d-flex justify-content-end'B>>" +
             <'row'<'col-md-6'><'col-md-6'>>
             <'row'<'col-md-12't>><'row'<'col-md-12'ip>>`,
-            buttons: [{
-                    extend: 'copy',
-                    text: '<i class="fas fa-copy "></i>',
-                    className: 'btn-segment',
-                    titleAttr: 'Copy'
-                },
+            buttons: [
                 {
                     extend: 'colvis',
                     text: '<i class="fas fa-search "></i>',
                     className: 'btn-segment',
                     titleAttr: 'Show/Hide Column'
                 },
+                @can(PermissionConstant::EXPORT_EMPLOYEE) 
                 {
-                    extend: 'csv',
-                    text: '<i class="fas fa-file-alt "></i>',
+                    text: '<i class="far fa-file-pdf"></i>',
                     className: 'btn-segment',
-                    titleAttr: 'Export CSV'
+                    titleAttr: 'Export PDF',
+                    action: function ( e, dt, node, config ) {
+                        console.log( e );
+                        exportFile('pdf');
+                    }
                 },
                 {
-                    extend: 'print',
-                    text: '<i class="fas fa-print "></i>',
+                    text: '<i class="far fa-file-excel"></i>',
                     className: 'btn-segment',
-                    titleAttr: 'Print'
+                    titleAttr: 'Export Excel',
+                    action: function ( e, dt, node, config ) {
+                    	console.log( e );
+                        exportFile('xlsx');
+                    }
                 },
+                @endcan
             ]
     
         });
@@ -429,9 +432,79 @@ $(document).ready(function() {
     	            cell.innerHTML = i + 1 + PageInfo.start;
     	        });
         });
+
 	}
 
+
 });
+
+function exportFile(fileType) {
+	console.log(fileType);
+
+	var table = $('#employees-table').DataTable();
+   	var allColumns = table.columns().visible();
+	var visibleColumns = [];
+	for (var i = 0; i < allColumns.length; i++) {
+		if (allColumns[i] === true) {
+			visibleColumns.push(i);
+		}
+	}
+	console.log(visibleColumns);
+	
+	$.ajax({
+        url: "{{ route('export.employees') }}",
+        type: 'GET',
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data: {
+        	costCentres: $('.costCentres').val(), 
+			departments: $('.departments').val(),
+			sections: $('.sections').val(), 
+			positions: $('.positions').val(),
+			teams: $('.teams').val(), 
+			categories: $('.categories').val(),
+			areas: $('.areas').val(), 
+			grades: $('.grades').val(),
+			employeeId: $('#employeeId').val(),
+			name:  $('#name').val(),
+			icNumber: $('#icNumber').val(),
+			gender: $('#gender').val(),
+			bankAccount: $('#bankAccount').val(),
+			bankCodes: $('.bankCodes').val(),
+			epfNumber: $('#epfNumber').val(),
+			socsoNumber: $('#socsoNumber').val(),
+			joinGroupDateFrom: $('#joinGroupDateFrom').val(),
+			joinGroupDateTo: $('#joinGroupDateTo').val(),
+			joinCompanyDateFrom: $('#joinCompanyDateFrom').val(), 
+			joinCompanyDateTo: $('#joinCompanyDateTo').val(),
+			confirmDateFrom: $('#confirmDateFrom').val(),
+			confirmDateTo: $('#confirmDateTo').val(),
+			resignDateFrom: $('#resignDateFrom').val(),
+			resignDateTo: $('#resignDateTo').val(),
+			serviceYearFrom: $('#serviceYearFrom').val(),
+			serviceYearTo: $('#serviceYearTo').val(),
+			basicFrom: $('#basicFrom').val(),
+			basicTo: $('#basicTo').val(),
+			visibleColumns: visibleColumns,
+			fileType: fileType,
+        },
+        error: function() {
+            callback();
+        },
+        success: function(res) {
+            console.log(res);
+        	var a = document.createElement('a');
+            var url = window.URL.createObjectURL(res);
+            a.href = url;
+            a.download = 'Employees.'+fileType;
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        }
+    });
+}
 
 function resetForm() {
 	document.getElementById("searchForm").reset();

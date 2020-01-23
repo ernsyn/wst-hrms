@@ -46,7 +46,6 @@ use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
 use App\Media;
 use App\SecurityGroup;
-use App\EmployeeClockInOutRecord;
 use App\Http\Services\LeaveService;
 use App\Imports\UserImport;
 use App\Mail\NewUserMail;
@@ -65,6 +64,10 @@ use Illuminate\Support\Facades\Storage;
 use App\EmpReportToPP;
 use App\PayrollPeriod;
 use App\Section;
+use PDF;
+use App\Enums\EmployeeTableHeaderEnum;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class EmployeeController extends Controller
 {
@@ -1883,5 +1886,125 @@ else {
             ->send(new NewUserMail($emailData));
         }
         return "Total ".count($collection[0])." records";
+    }
+    
+    public function exportEmployees(Request $request)
+    { 
+        Log::debug("Export Employee");
+        Log::debug($request);
+        
+        $header = array();
+        $rows = [];
+        
+        if (isset($request->visibleColumns)) {
+            Log::debug('***************');
+            Log::debug(EmployeeTableHeaderEnum::consts());
+            $tableHeaderEnum = EmployeeTableHeaderEnum::consts();
+            Log::debug('#################');
+            foreach($request->visibleColumns as $index) {
+                if($index > 0 && $index < 23) {
+                    $enumIndex = $index-1;
+                    $headerTitle = str_replace("_", " ", $tableHeaderEnum[$enumIndex]);
+                    Log::debug($index);
+                    Log::debug($headerTitle);
+                    array_push($header, $headerTitle);
+                }
+            }
+            
+            Log::debug($header);
+            Log::debug('>>>>>>>>>>>>>>>');
+            
+        }
+        //header and data
+        
+        $result = FilterHelper::getEmployees($request);
+        $employees = $result[2];
+        Log::debug($employees);
+        
+        foreach($employees as $employee) {
+            Log::debug($employee);
+            $row = array();
+            foreach($request->visibleColumns as $index) {
+                if($index > 0 && $index < 23) {
+                    Log::debug($index);
+                    Log::debug($employee[$index]);
+                    array_push($row, $employee[$index]);
+                }
+            }
+            $rows[] = $row;
+        }
+        
+        Log::debug($rows);
+        
+        if($request->fileType == 'pdf') {
+            $pdf = PDF::loadView('pages/admin/employees/export-employees', ['header' => $header, 'rows' => $rows])->setOrientation('landscape');
+            $pdf->setTemporaryFolder(storage_path("temp"));
+            return $pdf->download('employees.pdf');
+        } else if($request->fileType == 'xlsx') {
+            //first row style
+            $headerStyleArray = [
+                'font' => [
+                    'bold' => true,
+                    'name' => 'Arial',
+                    'size' => '10'
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                    
+                ],
+            ];
+            
+            $fontArray = [
+                'font' => [
+                    'name' => 'Arial',
+                    'size' => '10'
+                ],
+            ];
+            
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->getStyle('A:U')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+            $sheet->getStyle('A:U')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+//             $sheet->getStyle('A:U')->getAlignment()->setWrapText(true);
+            $sheet->getStyle('A1:U1')->applyFromArray($headerStyleArray);
+            $sheet->getStyle('A:U')->applyFromArray($fontArray);
+            
+            $i=0;
+            Log::debug("Count Header". count($header));
+            Log::debug($header);
+            foreach (range('A', 'U') as $char) {
+                Log::debug($i);
+                $sheet->getCell($char.'1')->setValue($header[$i]);
+                if($i >= count($header)-1) {
+                    break;
+                }
+                $i++;
+            }
+            
+            $rowNumber = 2;
+            foreach($rows as $row) {
+                $i = 0;
+                foreach (range('A', 'U') as $char) {
+                    Log::debug($i);
+                    if($i <= count($row)-1) {
+                        $sheet->getCell($char.$rowNumber)->setValue($row[$i]);
+                    }
+                    $i++;
+                }
+                $rowNumber++;
+            }
+            
+            $writer = new Xlsx($spreadsheet);
+            $filename = 'Employees';
+            
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');
+            header('Cache-Control: max-age=0');
+            
+            $writer->save('php://output'); // download file
+            return;
+            
+        }
+        
     }
 }

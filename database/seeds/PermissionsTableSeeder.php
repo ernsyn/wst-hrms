@@ -33,6 +33,8 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::RESET_PASSWORD, 'mode' => 'admin', 'module' => 'Employees']);
         Permission::create(['name' => PermissionConstant::EDIT_PROFILE, 'mode' => 'admin', 'module' => 'Employees']);
         Permission::create(['name' => PermissionConstant::ASSIGN_ROLE, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::IMPORT_EMPLOYEE, 'mode' => 'admin', 'module' => 'Employees']);
+        Permission::create(['name' => PermissionConstant::EXPORT_EMPLOYEE, 'mode' => 'admin', 'module' => 'Employees']);
 
         Permission::create(['name' => PermissionConstant::VIEW_ASSET, 'mode' => 'admin', 'module' => 'Assets']);
         Permission::create(['name' => PermissionConstant::ADD_ASSET, 'mode' => 'admin', 'module' => 'Assets']);

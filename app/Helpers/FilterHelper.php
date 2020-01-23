@@ -332,11 +332,17 @@ class FilterHelper
             $dir = $request->order[0]['dir'];
         }
         
-        $employees = $employees
-        ->orderBy($column, $dir)
-        ->offset($request->start)
-        ->limit($request->length)
-        ->get();
+        $employees->orderBy($column, $dir);
+        
+        if(isset($request->start)) {
+            $employees->offset($request->start);
+        }
+        
+        if(isset($request->length)) {
+            $employees->limit($request->length);
+        }
+         
+        $employees = $employees->get();
         
         //         Log::debug($employees);
         
