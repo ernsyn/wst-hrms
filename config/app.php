@@ -2,6 +2,7 @@
 
 use App\Helpers\AccessControllHelper;
 use App\Helpers\FilterHelper;
+use App\Enums\EmployeeTableHeaderEnum;
 
 return [
 
@@ -242,7 +243,7 @@ return [
         'PaymentViaEnum' => App\Enums\PaymentViaEnum::class,
         'AssetStatusEnum' => App\Enums\AssetStatusEnum::class,
         'FilterHelper' => FilterHelper::class,
-
+        'EmployeeTableHeaderEnum' => EmployeeTableHeaderEnum::class,
     ],
 
 

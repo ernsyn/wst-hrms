@@ -23,30 +23,63 @@
                         <h3 id="emp-name">{{$employee->user->name}}</h3>
                         <h3 id="emp-email">{{$employee->user->email}}</h3>
                     </div>
-                        <div class="details">
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">IC No</span>
-                                <span class="field-value">{{$employee->ic_no}}</span>
-                            </div>
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">DOB</span>
-                                <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
-                            </div>
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">Gender</span>
-                                <span class="field-value">{{ ucfirst($employee->gender) }}</span>
-                            </div>
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">Nationality</span>
-                                <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
-                                </span>
-                            </div>
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">Role</span>
-                                <span class="field-value">{{ $employee->user->roles->pluck('name')->first() }}
-                                </span>
-                            </div>
-                        </div>
+                    <div class="row mx-md-n5">
+                      <div class="col px-md-3"><div class="p-1 ">Name</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$employee->user->name}}</div></div>
+                      <div></div>
+                      <div class="col px-md-3"><div class="p-1 ">Cost Centre</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$details->cost_centre}}</div></div>
+                    </div>
+                    <div class="row mx-md-n5">
+                      <div class="col px-md-3"><div class="p-1 ">Employee ID</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$employee->code}}</div></div>
+                      <div></div>
+                      <div class="col px-md-3"><div class="p-1 ">Section</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$details->section}}</div></div>
+                    </div>
+                    <div class="row mx-md-n5">
+                      <div class="col px-md-3"><div class="p-1 ">IC No</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$employee->ic_no}}</div></div>
+                      <div></div>
+                      <div class="col px-md-3"><div class="p-1 ">Department</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$details->department}}</div></div>
+                    </div>
+                    <div class="row mx-md-n5">
+                      <div class="col px-md-3"><div class="p-1 ">DOB</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$employee->dob->format('d/m/Y')}}</div></div>
+                      <div></div>
+                      <div class="col px-md-3"><div class="p-1 ">Position</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$details->position}}</div></div>
+                    </div>
+                    <div class="row mx-md-n5">
+                      <div class="col px-md-3"><div class="p-1 ">Gender</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$employee->gender}}</div></div>
+                      <div></div>
+                      <div class="col px-md-3"><div class="p-1 ">Area</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$details->area}}</div></div>
+                    </div>
+                    <div class="row mx-md-n5">
+                      <div class="col px-md-3"><div class="p-1 ">Join Company Date</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{!! isset($employee->join_company_date)  ? \Carbon\Carbon::parse($employee->join_company_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</div></div>
+                      <div></div>
+                      <div class="col px-md-3"><div class="p-1 ">Branch</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{{$details->branch}}</div></div>
+                    </div>
+                    <div class="row mx-md-n5">
+                      <div class="col px-md-3"><div class="p-1 ">Join Group Date</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{!! isset($employee->join_group_date)  ? \Carbon\Carbon::parse($employee->join_group_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</div></div>
+                      <div></div>
+                      <div class="col px-md-3"><div class="p-1 ">Confirmed Date</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{!! isset($employee->confirmed_date)  ? \Carbon\Carbon::parse($employee->confirmed_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</div></div>
+                    </div>
+                    <div class="row mx-md-n5">
+                      <div class="col px-md-3"><div class="p-1 ">Service Year</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{!! isset($employee->join_company_date)  ? \Carbon\Carbon::parse($employee->join_company_date)->diffForHumans(null,true,false,2)  : '<strong>(not set)</strong>' !!}</div></div>
+                      <div></div>
+                      <div class="col px-md-3"><div class="p-1 ">Resigned Date</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{!! isset($employee->resignation_date)  ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</div></div>
+                    </div>
+
                     </div>
                 <div id="end-btn-group">
                 	@can(PermissionConstant::ASSIGN_ROLE)
@@ -196,10 +229,6 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!!$employee->tax_no ? $employee->tax_no : '<strong>(not set)</strong>'!!}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Category</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                    <span class="field-value">{!!$employee->category_id ? $employee->employee_category()->first()->name : '<strong>(not set)</strong>'!!}</span>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -236,18 +265,6 @@
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!! $employee->basic_salary ? $employee->basic_salary :'<strong>(not set)</strong>' !!}</span>
                                                 </div>
-                                                <span class="col-lg-5 p-3">Joined Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                	<span class="field-value">{!! isset($employee->employee_jobs()->first()->start_date)  ? \Carbon\Carbon::parse($employee->employee_jobs()->first()->start_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Confirmation Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                	<span class="field-value">{!! isset($employee->confirmed_date) ?  \Carbon\Carbon::parse($employee->confirmed_date)->format('d/m/Y') :'<strong>(not set)</strong>' !!}</span>
-                                                </div>
-                                                <span class="col-lg-5 p-3">Resignation Date</span>
-                                                <div class="col-lg-7 font-weight-bold p-3">
-                                                	<span class="field-value">{!! isset($employee->resignation_date ) ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</span>
-                                                </div>
                                                 <span class="col-lg-5 p-3">PCB Group</span>
                                                 <div class="col-lg-7 font-weight-bold p-3 text-capitalize">
                                                     <span class="field-value">{!!$employee->pcb_group ? PCBGroupEnum::getDescription($employee->pcb_group) : '<strong>(not set)</strong>'!!}</span>
@@ -259,6 +276,10 @@
                                                 <span class="col-lg-5 p-3">Payment Rate</span>
                                                 <div class="col-lg-7 font-weight-bold p-3">
                                                     <span class="field-value">{!!$employee->payment_rate ? PaymentRateEnum::getDescription($employee->payment_rate) : '<strong>(not set)</strong>'!!}</span>
+                                                </div>
+                                                <span class="col-lg-5 p-3">Category</span>
+                                                <div class="col-lg-7 font-weight-bold p-3">
+                                                    <span class="field-value">{!!$employee->category_id ? $employee->employee_category()->first()->name : '<strong>(not set)</strong>'!!}</span>
                                                 </div>                                  
                                             </div>
                                         </div>
