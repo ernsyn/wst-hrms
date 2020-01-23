@@ -453,11 +453,17 @@
             {
                 "data": null, // can be null or undefined
                 render: function (data, type, row, meta) {
-                    return `
-                    @can(PermissionConstant::DELETE_JOB)
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>
-					@endcan
-                    `;
+                    var button = null;
+                    if(row.end_date == null){
+                        button = null;
+                    }else{
+                        button = `
+                        @can(PermissionConstant::DELETE_JOB)
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>
+    					@endcan
+                        `;
+                    }                        
+                    return button;
                 }
             }
         ]
@@ -572,11 +578,11 @@
                     jobsTable.ajax.reload();
                     $('#employee-profile-details').load(' #reload-profile1');
                     $('#nav-profile').load(' #reload-profile2');
-                    // $('#nav-job').load(' #employee-job');
-                    // $('#nav-job').load(' #employee-jobs-table');
+                    location.reload(true);
+                    $('#nav-job').load(' #employee-job');
+                    $('#nav-job').load(' #employee-jobs-table');
                     $('#add-job-popup').modal('toggle');
                     clearJobModal('#add-job-form');
-                    location.reload();
                 },
                 error: function (xhr) {
                     $(e.target).removeAttr('disabled');
@@ -811,7 +817,9 @@
                     jobsTable.ajax.reload();
                     $('#add-resign-popup').modal('toggle');
                     clearResignModal('#add-resign-form');
-                    location.reload();
+                    location.reload(true);
+                    $('#nav-job').load(' #employee-job');
+                    $('#nav-job').load(' #employee-jobs-table');
                 },
                 error: function (xhr) {
                     $(e.target).removeAttr('disabled');
@@ -865,6 +873,5 @@
     });
 
          // DELETE
-
 </script>
 @append

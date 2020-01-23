@@ -1015,8 +1015,15 @@ class EmployeeController extends Controller
         ));
         $currentJob->update(array(
             'end_date'=> ($jobData['resignation_date']),
-            'status'=> 'Resigned'
+//             'status'=> 'Resigned'
         ));
+                
+        EmployeeJobStatus::where('emp_job_id', $id)->delete();
+        $employeejobStatus = new EmployeeJobStatus();
+        $employeejobStatus->emp_job_id = $currentJob->id;
+        $employeejobStatus->status_id = 10;
+        $employeejobStatus->save();
+            
         return response()->json(['success'=>'Employee and job status has successfully been updated']);
     }
     
