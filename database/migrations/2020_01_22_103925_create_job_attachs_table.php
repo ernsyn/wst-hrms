@@ -18,8 +18,8 @@ class CreateJobAttachsTable extends Migration
             $table->timestamps();
             $table->string('job_attach');
             $table->foreign('emp_job_id')->unsigned()
-            ->references('id')->on('employee_jobs');
-            ->onDelete('cascade');;
+            ->references('id')->on('employee_jobs')
+            ->onDelete('cascade');
         });
     }
 
