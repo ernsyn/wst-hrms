@@ -376,11 +376,11 @@ class FilterHelper
             
             $button = '';
             if($user->can(PermissionConstant::VIEW_EMPLOYEE)) {
-                $button .= ' <button onclick="window.location=\'' .route('admin.employees.id', ['id' => $employee->id]) .'\';" class="btn btn-default btn-smt fas fa-eye"></button> ';
+                $button .= ' <button onclick="window.location=\'' .route('admin.employees.id', ['id' => $employee->id]) .'\';" class="btn btn-default btn-smt fas fa-eye" title="View"></button> ';
             }
             
             if($user->can(PermissionConstant::VIEW_ASSET)) {
-                $button .= ' <button onclick="window.location=\'' .route('admin.employees.assetid', ['id' => $employee->id]).'\';" class="btn btn-default btn-smt fas fa-hand-holding-usd"></button> ';
+                $button .= ' <button onclick="window.location=\'' .route('admin.employees.assetid', ['id' => $employee->id]).'\';" class="btn btn-default btn-smt fas fa-hand-holding-usd" title="Asset"></button> ';
             }
 
             $subdata[] = $button;
