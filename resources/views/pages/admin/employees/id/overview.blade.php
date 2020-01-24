@@ -133,8 +133,11 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
+                            <label><strong>Attachment</strong></label>
+                             <div id="attach">
 
-                     	</div>
+                             </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -208,7 +211,10 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
+                            <label><strong>Attachment</strong></label>
+                             <div id="attach_view">
 
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -404,9 +410,25 @@
             clearBankAccountError('#view-discipline-form');
             var button = $(event.relatedTarget)
             var currentData = JSON.parse(decodeURI(button.data('current')))
-            console.log('Data: ', currentData)
+            //console.log('Data: ', currentData)
 
             editId = currentData.id;
+            $.ajax({
+                url: "{{ route('admin.employees.disciplineAttach') }}",
+                type: 'GET',
+                data: {
+                    id: editId
+                },
+                error: function(xhr) {
+                    console.log("Error: ", xhr);
+                },
+                success: function(data) {
+                    //console.log(data);
+                    for(i=0; i<data.length; i++) {
+                        $('#attach_view').append('<a href="/storage/emp_id_'+{{$id}}+'/discipline/'+data[i]['discipline_attach']+'" target="_blank">'+data[i]['discipline_attach']+'</a>|<a href=""><i class="fas fa-times"></i></a><br>');
+                    }
+                }
+            });
             $('#view-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
             $('#view-discipline-form input[name=created_by-edit]').val(currentData.name);
             $('#view-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);
@@ -424,10 +446,25 @@
             clearBankAccountError('#edit-discipline-form');
             var button = $(event.relatedTarget)
             var currentData = JSON.parse(decodeURI(button.data('current')))
-            console.log('Data: ', currentData)
+            //console.log('Data: ', currentData)
 
             editId = currentData.id;
-            //name = currentData.created_by.user.name
+           $.ajax({
+                url: "{{ route('admin.employees.disciplineAttach') }}",
+                type: 'GET',
+                data: {
+                    id: editId
+                },
+                error: function(xhr) {
+                    console.log("Error: ", xhr);
+                },
+                success: function(data) {
+                    //console.log(data);
+                    for(i=0; i<data.length; i++) {
+                        $('#attach').append('<a href="/storage/emp_id_'+{{$id}}+'/discipline/'+data[i]['discipline_attach']+'" target="_blank">'+data[i]['discipline_attach']+'</a>|<a href=""><i class="fas fa-times"></i></a><br>');
+                    }
+                }
+            });
             $('#edit-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
             $('#edit-discipline-form input[name=created_by-edit]').val(currentData.name);
             $('#edit-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);

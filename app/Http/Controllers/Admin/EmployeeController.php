@@ -198,8 +198,21 @@ class EmployeeController extends Controller
 
       public function assetDisplay($id)
     {
+        //Log::debug("Asset display");
+        //Log::debug($id);
         $employee = Employee::with('user')
         ->find($id);
+
+        $details = DB::table('employees')
+        ->leftjoin('sections','employees.section_id','=','sections.id')
+        ->leftjoin('departments','employees.department_id','=','departments.id')
+        ->leftjoin('employee_positions','employees.position_id','=','employee_positions.id')
+        ->leftjoin('areas','employees.area_id','=','areas.id')
+        ->leftjoin('branches','employees.branch_id','=','branches.id')
+        ->leftjoin('cost_centres','employees.cost_centre_id','=','cost_centres.id')
+        ->select('sections.name as section','departments.name as department','employee_positions.name as position','areas.name as area','branches.name as branch','cost_centres.name as cost_centre')
+        ->where('employees.id',$id)
+        ->first();
 
         $userMedia = DB::table('employees')
         ->join('medias', 'employees.profile_media_id', '=', 'medias.id')
@@ -208,7 +221,7 @@ class EmployeeController extends Controller
         ->first();
         $roles = AccessControllHelper::getRoles();
         $items = CompanyAsset::all();
-        return view('pages.admin.employees.assetid', ['employee' => $employee, 'userMedia' => $userMedia, 'roles' => $roles, 'items' => $items]);          
+        return view('pages.admin.employees.assetid', ['employee' => $employee, 'userMedia' => $userMedia, 'roles' => $roles, 'items' => $items,'details' => $details]);          
     }
 
     //Add Employee
@@ -278,20 +291,25 @@ class EmployeeController extends Controller
         return view('pages.admin.employees.id', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories,'jobs'=> $jobs,'details' => $details]);   	    
     }
 
-    public function displayAttach($id)
+    public function displayAttach(Request $request)
     {    
-        $id = $id; 
+        $id = $request->id; 
         $attachs = DB::table('asset_attachs')
         ->select('asset_attach','id')
         ->where('asset_id', $id)
         ->get();
-        $employees = DB::table('employee_assets')
-        ->select('emp_id')
-        ->where('id', $id)
+
+        return $attachs;
+    }
+
+    public function displayDisciplineAttach(Request $request)
+    {    
+        $id = $request->id; 
+        $attachs = DB::table('discipline_attachs')
+        ->select('discipline_attach','id')
+        ->where('discipline_id', $id)
         ->get();
-
-
-        return view('pages.admin.employees.assetattach', ['attachs' => $attachs,'id' => $id, 'employees' => $employees]);        
+        return $attachs;
     }
 
   
@@ -658,24 +676,68 @@ class EmployeeController extends Controller
     public function getDataTableDiscipline($id)
     {
         
-        $employees = DB::table('users')
-        ->leftjoin('employees','users.id', '=', 'employees.user_id')
-        ->leftjoin('employee_disciplines','employees.id', '=', 'employee_disciplines.emp_id')
-        ->select('users.name as name', 'employee_disciplines.emp_id as emp_id','employee_disciplines.*')
-        ->where('employee_disciplines.emp_id', $id)
-        ->get();    
-        return DataTables::of($employees)->make(true);  
+       $assets = EmployeeDisciplinary::where('emp_id','=', $id)->get();
+        //Log::debug($assets);
+        $data = array();
+        foreach($assets as $asset) {
+            $attachments = DisciplineAttach::where('discipline_id', $asset->id)->get();
+            //Log::debug("Attachments");
+            //Log::debug($attachments);
+            $attach = array();
+            foreach($attachments as $attachment) {
+                array_push($attach, $attachment->discipline_attach);
+            }
+
+            $subdata = new EmployeeDisciplinary();
+            $subdata = $asset;
+
+            // $subdata['asset_name'] = $asset->asset_name;
+            // $subdata['asset_quantity'] = $asset->asset_quantity;
+            // $subdata['issue_date'] = DateHelper::dateStandardFormat($asset->issue_date);
+            // $subdata['asset_status'] = $asset->asset_status;
+            $subdata['attach'] = $attach;
+
+            $data[] = $subdata;
+        }
+        //Log::debug("Employee Asset");
+        //Log::debug($data);
+
+        return DataTables::of($data)
+        
+        ->make(true);
         
     }
     
     public function getDataTableEmployeeAssets($id)
     {
         $assets = EmployeeAsset::where('emp_id','=', $id)->get();
-        return DataTables::of($assets)
-        ->addColumn('namelink', function ($assets) {
-            return '<a href="' . route('admin.employees.assetattach', ['id' =>$assets->id]) .'"><button class="btn btn-default btn-smt fas fa-eye"></button></a>'; 
-        })
-        ->rawColumns(['namelink'])
+        //Log::debug($assets);
+        $data = array();
+        foreach($assets as $asset) {
+            $attachments = AssetAttach::where('asset_id', $asset->id)->get();
+            //Log::debug("Attachments");
+            //Log::debug($attachments);
+            $attach = array();
+            foreach($attachments as $attachment) {
+                array_push($attach, $attachment->asset_attach);
+            }
+
+            $subdata = new EmployeeAsset();
+            $subdata = $asset;
+
+            // $subdata['asset_name'] = $asset->asset_name;
+            // $subdata['asset_quantity'] = $asset->asset_quantity;
+            // $subdata['issue_date'] = DateHelper::dateStandardFormat($asset->issue_date);
+            // $subdata['asset_status'] = $asset->asset_status;
+            $subdata['attach'] = $attach;
+
+            $data[] = $subdata;
+        }
+        //Log::debug("Employee Asset");
+        //Log::debug($data);
+
+        return DataTables::of($data)
+        
         ->make(true);
     }
 
@@ -1090,7 +1152,7 @@ else {
             foreach($files as $file) 
             {
               $path = $file->getClientOriginalName();
-              $name = time() . '-' . $path;
+              $name = date('d-m-Y_hia') . '-' . $path;
 
               $attach = new AssetAttach();
               $attach->asset_attach = $name;
@@ -1590,6 +1652,9 @@ else {
 
     public function postEditEmployeeAsset(Request $request, $emp_id, $id)
     {
+        //Log::debug('Post Edit Asset');
+        //Log::debug($request);
+        //Log::debug($id);
         $assetUpdateData = $request->validate([
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
@@ -1597,7 +1662,6 @@ else {
             'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'asset_attach' => 'nullable',
             'asset_status' => 'required'    
         ]);
         $assetUpdateData['issue_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['issue_date'])));

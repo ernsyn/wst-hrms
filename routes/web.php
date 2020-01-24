@@ -320,7 +320,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_ASSET]], function () {
         Route::get('employees/assetlist', 'Admin\EmployeeController@assetList')->name('admin.employees.assetlist');
-        Route::get('employees/assetid/{id}','Admin\EmployeeController@assetDisplay')->name('admin.employees.assetid')->where('id', '[0-9]+');  
+        Route::get('employees/assetid/{id}','Admin\EmployeeController@assetDisplay')->name('admin.employees.assetid')->where('id', '[0-9]+'); 
     });
   
     Route::group(['middleware' => ['permission:Assign Role']], function () {
@@ -342,7 +342,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_ASSET_ATTACH]], function () {
         Route::post('employees/{id}/assetattach','Admin\EmployeeController@postAddAttach')->name('admin.employees.assetattach.post')->where('id', '[0-9]+');
     });
-    Route::get('employees/assetattach/{id}','Admin\EmployeeController@displayAttach')->name('admin.employees.assetattach')->where('id', '[0-9]+');
+    Route::get('employees/assetattach','Admin\EmployeeController@displayAttach')->name('admin.employees.assetattach');
+    Route::get('employees/disciplineAttach','Admin\EmployeeController@displayDisciplineAttach')->name('admin.employees.disciplineAttach');
     Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_ASSET_ATTACH]], function () {
         Route::get('employees/assetattach/{id}/delete','Admin\EmployeeController@deleteAssetAttach')->name('admin.employees.assetattach.delete')->where('id', '[0-9]+');
     });

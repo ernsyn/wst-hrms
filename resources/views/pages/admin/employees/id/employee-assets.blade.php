@@ -17,7 +17,7 @@
                         <div class="col-md-12 mb-3">
                             <label><strong>Item Name*</strong></label>
                             <select class="form-control{{ $errors->has('asset_name') ? ' is-invalid' : '' }}" name="asset_name" id="asset_name">
-                            <option value=""></option>  
+                            <option value="">Select Item</option>  
                             @foreach ($items as $item)
                                  <option value="{{ $item->item_name }}">{{ $item->item_name }}</option>
                             @endforeach
@@ -109,6 +109,7 @@
     </div>
 </div>
 @endcan
+
 @can(PermissionConstant::UPDATE_ASSET)
 <div class="modal fade" id="edit-asset-popup" tabindex="-1" role="dialog" aria-labelledby="edit-asset-label"
     aria-hidden="true">
@@ -127,7 +128,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="asset_name"><strong>Item Name*</strong></label>
                             <select class="form-control{{ $errors->has('asset_name') ? ' is-invalid' : '' }}" name="asset_name" id="asset_name">
-                                <option value="">Select Security Group</option>
+                                <option value="">Select Item</option>
                                 @foreach($items as $item)
                                 <option value="{{ $item->item_name }}">{{ $item->item_name }}</option>
                                 @endforeach
@@ -216,6 +217,14 @@
                              <input name="asset_attach[]" type="file" class="form-control" multiple>
                             <div id="asset_attach-error" class="invalid-feedback">
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label><strong>Attachment</strong></label>
+                             <div id="attach">
+
+                             </div>
                         </div>
                     </div>
                  </div>
@@ -337,11 +346,7 @@
                 "data": "asset_quantity"
             },
             {
-                "data": "issue_date",
-                 render: function (data, type, row, meta) 
-                    {
-                        return moment(data).format('DD/MM/YYYY');
-                    }  
+                "data": "issue_date", 
             },
             {
                 "data": "asset_status",
@@ -355,10 +360,24 @@
             }
                     } 
             },
-            { @can(PermissionConstant::VIEW_ASSET_ATTACH)
-                data: 'namelink', name: 'namelink', orderable: false, searchable: false
-                @endcan
+            {
+                "data": "attach[]",
+                render: function (data, type, row, meta) 
+                    {
+                        //console.log(data);
+                        var attach = '';
+                        for(i=0; i<data.length; i++) {
+                            attach += '<a href="/storage/emp_id_'+{{$id}}+'/asset/'+data[i]+'" target="_blank">'+data[i]+'</a><br>';
+                        }
+                        return attach;
+                    }  
             },
+            // { "data": null,
+            //     render: function (data, type, row, meta) {
+            //         return `@can(PermissionConstant::UPDATE_ASSET)
+            //         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#edit-attach-popup" id="attach"><i class="fa fa-eye"></i></button>@endcan`;
+            //     }
+            // },
            
             {
                 "data": null,
@@ -373,6 +392,7 @@
     });
 
     $(function(){
+
         // ADD
         $('#add-asset-popup').on('show.bs.modal', function (event) {
             clearEmployeeAssetError('#add-asset-form');
@@ -452,13 +472,29 @@
             clearEmployeeAssetError('#edit-assets-form');
             var button = $(event.relatedTarget)
             var currentData = JSON.parse(decodeURI(button.data('current')))
-            console.log('Data: ', currentData)
+            //console.log('>>>>>>>>>>Data: ', currentData)
 
             editId = currentData.id;
+            $.ajax({
+                url: "{{ route('admin.employees.assetattach') }}",
+                type: 'GET',
+                data: {
+                    id: editId
+                },
+                error: function(xhr) {
+                    console.log("Error: ", xhr);
+                },
+                success: function(data) {
+                    //console.log(data);
+                    for(i=0; i<data.length; i++) {
+                        $('#attach').append('<a href="/storage/emp_id_'+{{$id}}+'/asset/'+data[i]['asset_attach']+'" target="_blank">'+data[i]['asset_attach']+'</a>|<a href=""><i class="fas fa-times"></i></a><br>');
+                    }
+                }
+            });
+
             $('#edit-assets-form input[name=asset_quantity]').val(currentData.asset_quantity);
             $('#edit-assets-form #asset_name').val(currentData.asset_name);
             $('#edit-assets-form input[name=asset_deposit]').val(currentData.asset_deposit);
-            $('#edit-assets-form input[name=asset_attach]').val(currentData.asset_attach);
             $('#edit-assets-form textarea[name=asset_spec]').val(currentData.asset_spec);
             if(currentData.issue_date!=null) {
                 formatIssueDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.issue_date));
@@ -485,6 +521,7 @@
 
         var editRouteTemplate = "{{ route('admin.employees.employee-assets.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-assets-submit').click(function(e){
+            
             var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
             clearEmployeeAssetError('#edit-assets-form');
             e.preventDefault();

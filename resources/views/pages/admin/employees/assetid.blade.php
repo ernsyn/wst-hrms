@@ -4,67 +4,8 @@
     <div id="alert-container">
         </div>   
     <div id="employee-profile-card" class="card shadow-sm">
-        <div id="employee-profile-details" class="card-body bg-primary text-white">
-            <div class="d-flex align-items-stretch" id="reload-profile1">
-                <div id="profile-pic-container" class="p-2 flex-grow-0 d-flex flex-column align-items-center">
-                    @can(PermissionConstant::EDIT_PROFILE)
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-current="{{$employee->id}}" data-target="#edit-picture-popup">
-                        @if ($employee->profile_media_id != null)
-                            <img class="img-thumbnail rounded-circle" src="data:{{$userMedia->mimetype}};base64, {{$userMedia->data}}"  style="object-fit:cover; width:150px; height:150px">
-                        @else
-                        <i class="fas fa-user-circle fa-8x"></i>
-                    <div class="pt-2 mt-auto">
-                        <h6><strong>Profile Image</strong></h6>
-                    </div>
-                        @endif
-                    </button>
-                    @endcan
-                </div>
-                <div id="basic-profile" class="px-2 ml-3 w-100">
-                    <div class="header d-flex pb-3">
-                        <h3 id="emp-name">{{$employee->user->name}}</h3>
-                        <h3 id="emp-email">{{$employee->user->email}}</h3>
-                    </div>
-                        <div class="details">
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">IC No</span>
-                                <span class="field-value">{{$employee->ic_no}}</span>
-                            </div>
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">DOB</span>
-                                <span class="field-value">{!! $employee->dob ? $employee->dob->format('d/m/Y'):'<strong>(not set)</strong>' !!}</span>
-                            </div>
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">Gender</span>
-                                <span class="field-value">{{ ucfirst($employee->gender) }}</span>
-                            </div>
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">Nationality</span>
-                                <span class="field-value">{!! isset($employee->employee_countries->citizenship) ? $employee->employee_countries->citizenship : '<strong>(not set)</strong>' !!}
-                                </span>
-                            </div>
-                            <div class="field pb-1">
-                                <span class="field-name mr-2">Role</span>
-                                <span class="field-value">{{ $employee->user->roles->pluck('name')->first() }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                <div id="end-btn-group">
-                    @can(PermissionConstant::ASSIGN_ROLE)
-                    <button id="emp-roles-btn" data-toggle="modal" data-target="#roles-popup"  type="button" class="btn btn-sm text-white rounded">
-                        Assign Role
-                    </button>
-                    @endcan     
-                    @can(PermissionConstant::RESET_PASSWORD)            
-                    <button id="emp-reset-password-btn" data-toggle="modal" data-target="#reset-password-popup" type="button" class="btn btn-sm text-white rounded">                        {{-- <i class="fas fa-pen"></i> --}}
-                        Reset Password
-                    </button>
-                    @endcan
-                </div>
-            </div>
-
-        </div>
+            {{-- Profile --}}
+            @include('pages.admin.employees.profilecard', ['id' => $employee->id])
             {{-- Asset --}}
             @include('pages.admin.employees.id.employee-assets', ['id' => $employee->id])
         </div>
