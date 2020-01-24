@@ -112,10 +112,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EMPLOYEE]], function () {
         Route::get('employees', 'Admin\EmployeeController@index')->name('admin.employees');
         Route::get('get-employees-datatables', 'Admin\EmployeeController@getDataTableEmployees')->name('get.employees.data');
-        Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+');
+        Route::get('employees/{id}','Admin\EmployeeController@display')->name('admin.employees.id')->where('id', '[0-9]+')->middleware('securityGroup');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::ADD_EMPLOYEE]], function () {
-    Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add')->where('id', '[0-9]+');
+        Route::get('employees/add', 'Admin\EmployeeController@add')->name('admin.employees.add')->where('id', '[0-9]+');
         Route::post('employees/add','Admin\EmployeeController@postAdd')->name('admin.employees.add.post');
     });
     Route::group(['middleware' => ['permission:'.PermissionConstant::RESET_PASSWORD]], function () {
@@ -124,6 +124,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:'.PermissionConstant::EDIT_PROFILE]], function () {
         Route::post('employees/{id}/edit','Admin\EmployeeController@postEditProfile')->name('admin.employees.profile.edit.post')->where('id', '[0-9]+');
         Route::post('employees/{emp_id}/profile-pic/edit','Admin\EmployeeController@postEditProfilePicture')->name('admin.employees.profile-pic.edit.post')->where('emp_id', '[0-9]+');
+    });
+    Route::group(['middleware' => ['permission:'.PermissionConstant::EXPORT_EMPLOYEE]], function () {
+        Route::get('export-employees', 'Admin\EmployeeController@exportEmployees')->name('export.employees');
     });
     
     // Emergency_Contact

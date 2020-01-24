@@ -28,7 +28,7 @@
         "scrollX":	true,
         "ajax": "{{ route('employee.dt.jobs', ['id' => $id]) }}",
         "columnDefs": [ {
-            "targets": -1,
+            "targets": [-1,-2]
             "orderable": false
         } ],
         "columns": [{
@@ -60,6 +60,7 @@
             },
             {
                 "data": "jobcompany.company_name"
+            },
             {
                 "data": "area"
             },
@@ -71,7 +72,19 @@
                 "data": "basic_salary"
             },
             {
-                "data": "status[, ]"
+                "data": "status[<br]"
+            },
+            {
+                "data": "attach[]",
+                "render": function(data, type, row, meta){
+                    var attach = '';
+                    if(type === 'display'){
+                        for(var i=0; i< data.length; i++) {
+                        	attach += '<a target="_blank" href="/storage/emp_id_' + row.emp_id + '/job/' + data[i] + '">' + data[i] + '</a><br>';
+                        }
+                    }
+                    return attach;
+                 }
             },
         ]
     });

@@ -32,6 +32,11 @@ class EmployeeJob extends Model implements Auditable
         return $this->hasMany('App\EmployeeJobStatus', 'emp_job_id');
     }
     
+    public function job_attachs()
+    {
+        return $this->hasMany('App\JobAttach', 'emp_job_id');
+    }
+    
     public function leave_allocation(){
         return $this->hasOne('App\leaveAllocation', 'emp_job_id');
     }
@@ -75,5 +80,11 @@ class EmployeeJob extends Model implements Auditable
     {
         return $this->belongsTo('App\Branch', 'branch_id');
     }
+    
+    public function employee_jobs()
+    {
+        return $this->hasMany('App\JobAttach', 'emp_job_id');
+    }
+    
 
 }

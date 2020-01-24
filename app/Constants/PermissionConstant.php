@@ -11,6 +11,8 @@ class PermissionConstant
     const DELETE_ROLE = 'Delete Role';
     const DUPLICATE_ROLE = 'Duplicate Role';
     const VIEW_EMPLOYEE = 'View Employee';
+    const EXPORT_EMPLOYEE = 'Export Employee';
+    const IMPORT_EMPLOYEE = 'Import Employee';
     const ADD_EMPLOYEE = 'Add Employee';
     const ASSIGN_ROLE = 'Assign Role';
     const RESET_PASSWORD = 'Reset Password';

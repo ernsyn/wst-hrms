@@ -1,8 +1,7 @@
 @extends('layouts.admin-base')
 @section('content')
-<div class="container">
-    <div id="alert-container">
-        </div>   
+<div class="main-content">
+    <div id="alert-container"></div>   
     <div id="employee-profile-card" class="card shadow-sm">
           {{-- Profile --}}
             @include('pages.admin.employees.profilecard', ['id' => $employee->id])
