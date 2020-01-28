@@ -99,11 +99,87 @@ class EmployeeController extends Controller
     
     public function getDataTableEmployees(Request $request)
     {
-        $result = FilterHelper::getEmployees($request);
-        return Datatables::of($result[0])->with([
-            'recordsTotal' => $result[1],
-            'recordsFiltered' => $result[1],
-            'data' => $result[2]
+        //         Log::debug($request);
+        $user = Auth::user();
+        
+        $employees = DB::table('employees')
+                        ->join('users', 'users.id', '=', 'employees.user_id')
+                        ->leftjoin('cost_centres', 'cost_centres.id', '=', 'employees.cost_centre_id')
+                        ->leftjoin('departments', 'departments.id', '=', 'employees.department_id')
+                        ->leftjoin('sections', 'sections.id', '=', 'employees.section_id')
+                        ->leftjoin('employee_positions', 'employee_positions.id', '=', 'employees.position_id')
+                        ->leftjoin('teams', 'teams.id', '=', 'employees.team_id')
+                        ->leftjoin('categories', 'categories.id', '=', 'employees.category_id')
+                        ->leftjoin('branches', 'branches.id', '=', 'employees.branch_id')
+                        ->leftjoin('areas', 'areas.id', '=', 'employees.area_id')
+                        ->leftjoin('employee_grades', 'employee_grades.id', '=', 'employees.grade_id')
+                        ->select('employees.*','users.name', 'cost_centres.name as costCentre', 'departments.name as department', 'sections.name as section',
+                            'employee_positions.name as position', 'teams.name as team', 'areas.name as area', 'employee_grades.name as grade', 'categories.name as category'
+                        );
+        
+//         if(count($filterDropdown) > 0){
+//             foreach($filterDropdown as $key => $value){
+//                 $employees->where($key, $value);
+//             }
+//         }
+        
+//         if(count($filterInput) > 0){
+//             foreach($filterInput as $key => $value){
+//                 $employees->where($key, 'like', "{$value}%");
+//             }
+//         }
+        
+        $count = $employees->count();
+        
+        
+        $employees = $employees
+            ->offset($request->start)
+            ->limit($request->length)
+            ->get();
+        
+//         Log::debug($employees);
+        
+        $data = array();
+        foreach($employees as $employee) {
+//             Log::debug($employee);
+            $subdata = array();
+            $subdata[] = $employee->id;
+            $subdata[] = $employee->costCentre;
+            $subdata[] = $employee->code;
+            $subdata[] = $employee->name;
+            $subdata[] = $employee->department;
+            $subdata[] = $employee->section;
+            $subdata[] = $employee->position;
+            $subdata[] = $employee->team;
+            $subdata[] = $employee->category;
+            $subdata[] = $employee->area;
+            $subdata[] = $employee->grade;
+            $subdata[] = isset($employee->join_group_date) ? DateHelper::dateStandardFormat($employee->join_group_date) : '';
+            $subdata[] = isset($employee->join_company_date) ? DateHelper::dateStandardFormat($employee->join_company_date) : '';
+            $subdata[] = isset($employee->confirmed_date) ? DateHelper::dateStandardFormat($employee->confirmed_date) : '';
+            $subdata[] = isset($employee->resignation_date) ? DateHelper::dateStandardFormat($employee->confirmed_date) : '';
+            $subdata[] = null !== PayrollHelper::calculateServiceYear($employee->join_group_date, $employee->resignation_date) ? DateHelper::dateStandardFormat(PayrollHelper::calculateServiceYear($employee->join_group_date, $employee->resignation_date)) : '';
+            $subdata[] = $employee->ic_no;
+            $subdata[] = ucfirst($employee->gender);
+            $subdata[] = $employee->basic_salary;
+            $subdata[] = null !== PayrollHelper::getEmployeeBankAcc($employee) ? PayrollHelper::getEmployeeBankAcc($employee)->acc_no : '';
+            $subdata[] = null !== PayrollHelper::getEmployeeBankAcc($employee) ? PayrollHelper::getEmployeeBankAcc($employee)->bank_code : '';
+            $subdata[] = $employee->epf_no;
+            $subdata[] = $employee->socso_no;
+            
+            $button = '';
+            if($user->can(PermissionConstant::VIEW_EMPLOYEE)) {
+                $button = '<button onclick="window.location=\'' .route('admin.employees.id', ['id' => $employee->id]) .'\';" class="btn btn-default btn-smt fas fa-eye"></button>';
+            } 
+            
+            $subdata[] = $button;
+            $data[] = $subdata;
+        }
+        
+        return Datatables::of($employees)->with([
+            'recordsTotal' => $count,
+            'recordsFiltered' => $count,
+            'data' => $data
         ])->make(true);
     }
     
@@ -219,6 +295,8 @@ class EmployeeController extends Controller
     
     
     public function displayAttach(Request $request)
+    {
+        $id=$request->id;
         $attachs = DB::table('asset_attachs')
         ->select('asset_attach','id')
         ->where('asset_id', $id)
@@ -1148,8 +1226,6 @@ class EmployeeController extends Controller
         return response()->json(['success'=>'Asset was successfully added']);
     }
         
-        return response()->json(['success'=>'Asset was successfully added']);
-    }
     public function postAddAttach(Request $request, $id)
     {
         $employees = DB::table('employee_assets')

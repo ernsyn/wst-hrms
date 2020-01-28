@@ -485,10 +485,16 @@
                     console.log("Error: ", xhr);
                 },
                 success: function(data) {
-                    //console.log(data);
+                    console.log(data);
                     for(i=0; i<data.length; i++) {
-                        $('#attach').append('<a href="/storage/emp_id_'+{{$id}}+'/asset/'+data[i]['asset_attach']+'" target="_blank">'+data[i]['asset_attach']+'</a>|<a href=""><i class="fas fa-times"></i></a><br>');
+                        var attachmentId = data[i]['id'];
+                        var url = '{!! route('admin.employees.assetattach.delete', ":id") !!}';
+                        url = url.replace(':id', attachmentId);
+                      
+                        $('#attach').append('<a href="/storage/emp_id_'+{{$id}}+'/asset/'+data[i]['asset_attach']+'" target="_blank">'+data[i]['asset_attach']+'</a> <a href="'+url+'"><i class="fa fa-times" aria-hidden="true"></i><br>');
+
                     }
+
                 }
             });
 
@@ -678,6 +684,8 @@
             </button>
             </div>`)
     }
+   
+
 
 </script>
 @append
