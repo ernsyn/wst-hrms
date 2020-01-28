@@ -294,8 +294,10 @@ class EmployeeController extends Controller
     }
     
     
-    public function displayAttach(Request $request)
+    
+    public function displayAttach(Request $request) 
     {
+    
         $id=$request->id;
         $attachs = DB::table('asset_attachs')
         ->select('asset_attach','id')
@@ -1225,7 +1227,7 @@ class EmployeeController extends Controller
         
         return response()->json(['success'=>'Asset was successfully added']);
     }
-        
+
     public function postAddAttach(Request $request, $id)
     {
         $employees = DB::table('employee_assets')

@@ -21,32 +21,26 @@
             </div>         --}}    
             {{-- old code  --}}
         <div class="col-auto mr-auto"></div>
-        <div class="col-auto" id="show-resign-button">
-            @if(App\Employee::where('id', $id)->whereNull('resignation_date')->count() > 0)
+        <div class="col-auto" id="show-resign-button">            
             @can(PermissionConstant::ADD_JOB)
             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
                 Add Job
             </button>
             @endcan
             @can(PermissionConstant::RESIGN)
+            @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
             <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#add-resign-popup">
                     Resign
             </button>
-            @endcan
-            @else
-            @can(PermissionConstant::ADD_JOB)
-            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-job-popup">
-            Re-Employ
-			</button>
-			@endcan
-			@can(PermissionConstant::RESIGN)
-			<button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#view-resign-popup">
+            @endif
+            @if(App\Employee::where('id', $id)->whereNull('resignation_date')->count() == 0)
+            <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#view-resign-popup">
 					Resigned Details
 			</button>
-			@endif
 			@if(App\EmployeeAsset::where('emp_id',$id)->where('asset_status','1')->count() > 0)
 			<a href="{{ route('admin.employees.assetid', ['id' => $id]) }}" class="btn btn-warning waves-effect" style="color:white">Asset on Hold</a>
-           	@endif			
+           	@endif
+           	@endif
 			@endcan
 		</div>
     </div>
@@ -453,16 +447,16 @@
             {
                 "data": null, // can be null or undefined
                 render: function (data, type, row, meta) {
-                    var button = null;
-                    if(row.end_date == null){
-                        button = null;
-                    }else{
+//                     var button = null;
+//                     if(row.end_date == null){
+//                         button = null;
+//                     }else{
                         button = `
                         @can(PermissionConstant::DELETE_JOB)
                         <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>
     					@endcan
                         `;
-                    }                        
+//                     }                        
                     return button;
                 }
             }
@@ -572,13 +566,13 @@
 //                 },
                 success: function (data) {
 
+                    location.reload(true);
                     $(e.target).removeAttr('disabled');
                     showAlert(data.success);
                     $("#show-job-button").load(" #show-job-button");
                     jobsTable.ajax.reload();
                     $('#employee-profile-details').load(' #reload-profile1');
                     $('#nav-profile').load(' #reload-profile2');
-                    location.reload(true);
                     $('#nav-job').load(' #employee-job');
                     $('#nav-job').load(' #employee-jobs-table');
                     $('#add-job-popup').modal('toggle');
@@ -699,6 +693,7 @@
                     id: deleteJobId
                 },
                 success: function(data) {
+                    location.reload(true);
                     showAlert(data.success);
                     jobsTable.ajax.reload();
                     $('#confirm-delete-job-modal').modal('toggle');
@@ -810,14 +805,14 @@
                     reason: $('#add-resign-form textarea[name=reason]').val()
                 },
                 success: function (data) {
-
+                    
+                    location.reload(true);
                     $(e.target).removeAttr('disabled');
                     showAlert(data.success);
                     $("#show-resign-button").load(" #show-resign-button");
                     jobsTable.ajax.reload();
                     $('#add-resign-popup').modal('toggle');
                     clearResignModal('#add-resign-form');
-                    location.reload(true);
                     $('#nav-job').load(' #employee-job');
                     $('#nav-job').load(' #employee-jobs-table');
                 },
