@@ -27,19 +27,20 @@
                 Add Job
             </button>
             @endcan
-            @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
             @can(PermissionConstant::RESIGN)
+            @if(App\EmployeeJob::where('emp_id', $id)->whereNull('end_date')->count() > 0)
             <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#add-resign-popup">
                     Resign
             </button>
-            @else
+            @endif
+            @if(App\Employee::where('id', $id)->whereNull('resignation_date')->count() < 1)
             <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#view-resign-popup">
 					Resigned Details
 			</button>
-			@endif
 			@if(App\EmployeeAsset::where('emp_id',$id)->where('asset_status','1')->count() > 0)
 			<a href="{{ route('admin.employees.assetid', ['id' => $id]) }}" class="btn btn-warning waves-effect" style="color:white">Asset on Hold</a>
-           	@endif			
+           	@endif
+           	@endif
 			@endcan
 		</div>
     </div>
