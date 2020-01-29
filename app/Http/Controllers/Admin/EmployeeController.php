@@ -583,22 +583,22 @@ class EmployeeController extends Controller
         }
         
         return DataTables::of($jobs)
-        ->editColumn('start_date', function ($job) {
-            if ($job->start_date !== null)
-                return date('d/m/Y', strtotime($job->start_date) );
-        })
-        ->editColumn('alt_start_date', function ($job) {
-            if ($job->start_date !== null)
-                return date('Y-m-d', strtotime($job->start_date) );
-        })
-        ->editColumn('end_date', function ($job) {
-            if ($job->end_date !== null)
-                return date('d/m/Y', strtotime($job->end_date) );
-        })
-        ->editColumn('alt_end_date', function ($job) {
-            if ($job->end_date !== null)
-                return date('Y-m-d', strtotime($job->end_date) );
-        })
+//         ->editColumn('start_date', function ($job) {
+//             if ($job->start_date !== null)
+//                 return date('d/m/Y', strtotime($job->start_date) );
+//         })
+//         ->editColumn('alt_start_date', function ($job) {
+//             if ($job->start_date !== null)
+//                 return date('Y-m-d', strtotime($job->start_date) );
+//         })
+//         ->editColumn('end_date', function ($job) {
+//             if ($job->end_date !== null)
+//                 return date('d/m/Y', strtotime($job->end_date) );
+//         })
+//         ->editColumn('alt_end_date', function ($job) {
+//             if ($job->end_date !== null)
+//                 return date('Y-m-d', strtotime($job->end_date) );
+//         })
         ->make(true);
     }
     
@@ -1051,8 +1051,8 @@ class EmployeeController extends Controller
         $jobData = $request->validate([
             
             'resignation_date' => 'required',
-            'blacklisted' => 'required',
-            'reason' => 'required'
+            'reason' => 'required',
+            'blacklisted' => 'required'
         ]);
         
         

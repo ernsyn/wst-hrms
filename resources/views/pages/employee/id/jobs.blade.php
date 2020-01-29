@@ -12,8 +12,11 @@
                 <th>Grade</th>
                 <th>Section</th>
                 <th>Company</th>
+				<th>Area</th>
+				<th>Branch</th>
                 <th>Basic Salary</th>
                 <th>Status</th>
+                <th>Attachment</th>
             </tr>
         </thead>
     </table>
@@ -39,7 +42,14 @@
                 }
             },
             {
-                "data": "start_date"
+                "data": "start_date",
+                render: function (data, type, row) {
+                    if(data!=null){
+                		return moment(data).format('DD/MM/YYYY');
+                    } else {
+                        return null;
+                    }
+                }
             },
             {
                 "data": "main_position_name"
