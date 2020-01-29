@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Constants\PermissionConstant;
 use App\Enums\EpfCategoryEnum;
 use App\Enums\PCBGroupEnum;
 use App\Enums\PaymentViaEnum;
 use App\Enums\PaymentRateEnum;
 use App\Enums\SocsoCategoryEnum;
 use App\Helpers\AccessControllHelper;
-use App\Helpers\DateHelper;
-use App\Helpers\PayrollHelper;
 use App\Http\Controllers\Controller;
 use Hash;
 use Session;
@@ -69,6 +66,7 @@ use App\Enums\EmployeeTableHeaderEnum;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\JobAttach;
+use App\Branch;
 
 class EmployeeController extends Controller
 {
@@ -977,7 +975,7 @@ class EmployeeController extends Controller
         // Add a new job
         $jobData = $request->validate([
             'basic_salary' => 'required|numeric',
-            'emp_mainposition_id' => '',
+            'main_position_id' => '',
             'department_id' => '',
             'team_id' => 'required',
             'cost_centre_id' => '',
@@ -994,17 +992,88 @@ class EmployeeController extends Controller
         $jobData['start_date'] = implode("-", array_reverse(explode("/", $jobData['start_date'])));
         $jobData['created_by'] = auth()->user()->id;
         DB::transaction(function() use ($jobData, $id, $request) {
+            Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
+            
+            if(isset($jobData['cost_centre_id'])) {
+                Employee::where('id', $id)->update(array('cost_centre_id'=> $jobData['cost_centre_id']));
+            } else {
+                Employee::where('id', $id)->update(array('cost_centre_id'=> null));
+            }
+            
+            if(isset($jobData['department_id'])) {
+                Employee::where('id', $id)->update(array('department_id'=> $jobData['department_id']));
+            } else {
+                Employee::where('id', $id)->update(array('department_id'=> null));
+            }
+            
+            if(isset($jobData['team_id'])) {
+                Employee::where('id', $id)->update(array('team_id'=> $jobData['team_id']));
+            } else {
+                Employee::where('id', $id)->update(array('team_id'=> null));
+            }
+            
+            if(isset($jobData['main_position_id'])) {
+                Employee::where('id', $id)->update(array('position_id'=> $jobData['main_position_id']));
+            } else {
+                Employee::where('id', $id)->update(array('position_id'=> null));
+            }
+            
+            if(isset($jobData['emp_grade_id'])) {
+                Employee::where('id', $id)->update(array('grade_id'=> $jobData['emp_grade_id']));
+            } else {
+                Employee::where('id', $id)->update(array('grade_id'=> null));
+            }
+            
+            if(isset($jobData['section_id'])) {
+                Employee::where('id', $id)->update(array('section_id'=> $jobData['section_id']));
+            } else {
+                Employee::where('id', $id)->update(array('section_id'=> null));
+            }
+            
+            if(isset($jobData['branch_id'])) {
+                $branch = Branch::find($jobData['branch_id']);
+                Employee::where('id', $id)->update(array('branch_id'=> $jobData['branch_id'],
+                    'area_id' => $branch->area_id
+                ));
+            } else {
+                Employee::where('id', $id)->update(array('branch_id'=> null,
+                    'area_id' => null
+                ));
+            }
+            
+            if(isset($jobData['start_date'])) {
+                $employeeJobs = EmployeeJob::where('emp_id', $id)->get();
+                Log::debug("Isset start date");
+                Log::debug($employeeJobs);
+                Log::debug(count($employeeJobs));
+                if(count($employeeJobs) == 0) {
+                    Employee::where('id', $id)->update(array('join_group_date'=> ($jobData['start_date'])));
+                    
+                    if($jobData['job_comp_id'] == 1) {
+                        Employee::where('id', $id)->update(array('join_company_date'=> ($jobData['start_date'])));
+                    }
+                } else {
+                    $employeeJobsOppo = EmployeeJob::where([['emp_id', $id], ['job_comp_id', 1]])->whereNull('end_date')->get();
+                    if(count($employeeJobsOppo) == 0 && $jobData['job_comp_id'] == 1) {
+                        Employee::where('id', $id)->update(array('join_company_date'=> ($jobData['start_date'])));
+                    }
+                }
+            }
+            
             $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
             if(!empty($currentJob)) {
                 $currentJob->update(['end_date'=> date("Y-m-d", strtotime($jobData['start_date'].' -1days'))]);
-                LeaveService::onJobEnd($id, date("Y-m-d", strtotime($jobData['start_date'].' -1days')), $currentJob->id);
+                //                 LeaveService::onJobEnd($id, date("Y-m-d", strtotime($jobData['start_date'].' -1days')), $currentJob->id);
             }
             
-            if(isset($jobData['emp_mainposition_id'])) {
-                $position = EmployeePosition::find($jobData['emp_mainposition_id'])->id;
-                Employee::where('id', $id)->update(array('position_id'=> @$position ? $position : ''));
+            if(isset($jobData['status']) && in_array(2, $jobData['status']) && $jobData['job_comp_id'] == 1) {
+                Employee::where('id', $id)->update(array('confirmed_date'=> $jobData['start_date']));
             }
-            Employee::where('id', $id)->update(array('basic_salary'=> ($jobData['basic_salary'])));
+            
+            if(isset($jobData['status']) && in_array(10, $jobData['status']) && $jobData['job_comp_id'] == 1) {
+                Employee::where('id', $id)->update(array('resignation_date'=> $jobData['start_date']));
+            }
+            
             Employee::where('id', $id)->update(array(
                 'resignation_date'=> null,
                 'blacklisted' => 0,
@@ -1012,6 +1081,7 @@ class EmployeeController extends Controller
             ));
             
             $newJob = new EmployeeJob($jobData);
+            $newJob->emp_mainposition_id = $jobData['main_position_id'];
             unset($newJob->status);
             $employees = Employee::find($id);
             $newJob = $employees->employee_jobs()->save($newJob);
@@ -1023,11 +1093,9 @@ class EmployeeController extends Controller
                 $employeejobStatus->save();
             }
             
-            if($request->hasFile('job_attach'))
-            {
+            if($request->hasFile('job_attach')) {
                 $files = $request->file('job_attach');
-                foreach($files as $file)
-                {
+                foreach($files as $file) {
                     $path = $file->getClientOriginalName();
                     $name = time() . '-' . $path;
                     
@@ -1036,39 +1104,36 @@ class EmployeeController extends Controller
                     $attach->emp_job_id = $newJob->id;
                     $attach->save();
                     $file->storeAs('public/emp_id_'. $id.'/job', $name);
-                    
                 }
             }
 
-            LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id'], $newJob->id);
+//             LeaveService::onJobStart($id, $jobData['start_date'], (int)$jobData['emp_grade_id'], $newJob->id);
         });
             
-            return response()->json(['success'=>'Job was successfully added']);
+        return response()->json(['success'=>'Job was successfully added']);
     }
     
     public function postResign(Request $request, $id)
     {
         $jobData = $request->validate([
-            
             'resignation_date' => 'required',
             'blacklisted' => 'required',
             'reason' => 'required'
         ]);
         
-        
         $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
         $jobData['resignation_date'] = implode("-", array_reverse(explode("/", $jobData['resignation_date'])));
         
-        if($request->get('blacklisted') == null){
+        if($request->get('blacklisted') == null) {
             $jobData['blacklisted'] = 0;
         } else {
             $jobData['blacklisted'] = request('blacklisted');
         }
         
-        LeaveService::onJobEnd($id, $jobData['resignation_date'], $currentJob->id, true);
+//         LeaveService::onJobEnd($id, $jobData['resignation_date'], $currentJob->id, true);
         
         Employee::where('id', $id)->update(array(
-            'resignation_date'=> ($jobData['resignation_date']),
+            'resignation_date' => ($jobData['resignation_date']),
             'blacklisted' => ($jobData['blacklisted']),
             'reason' => ($jobData['reason'])
         ));
@@ -1104,10 +1169,9 @@ class EmployeeController extends Controller
         ]);
         $employee->employee_bank_accounts()->save($bankAccount);
         
-        
-        
         return response()->json(['success'=>'Bank Account was successfully added']);
     }
+    
     public function postAddAsset(Request $request, $id)
     {
         $assetData = $request->validate([
@@ -1827,6 +1891,11 @@ public function postAsset(Request $request)
     
     public function deleteJob(Request $request, $emp_id, $id)
     {
+        Log::debug("**** delete job*******");
+        Log::debug($request);
+        Log::debug($emp_id);
+        Log::debug($id);
+        return;
         DB::beginTransaction();
         $leave_request_approvals = LeaveRequestApproval::where('leave_request_id',$id)->get();
         foreach ($leave_request_approvals as $leave_request_approval) {
@@ -1850,6 +1919,10 @@ public function postAsset(Request $request)
         EmployeeJob::find($id)->delete();
         EmployeeJobStatus::where('emp_job_id', $id)->delete();
         JobAttach::where('emp_job_id',$id)->delete();
+        
+        // Update Employees Table
+        
+        
         DB::commit();
         return response()->json(['success'=>'Job was successfully deleted.']);
     }
