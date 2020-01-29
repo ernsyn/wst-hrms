@@ -1,7 +1,15 @@
 @extends('layouts.admin-base')
 @section('content')
 <div class="main-content">
-    <div id="alert-container"></div>   
+    <div id="alert-container"></div>  
+     @if (session('status'))
+    <div class="alert alert-primary fade show" role="alert">
+        {{ session('status') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+    </div>
+    @endif 
     <div id="employee-profile-card" class="card shadow-sm">
           {{-- Profile --}}
             @include('pages.admin.employees.profilecard', ['id' => $employee->id])

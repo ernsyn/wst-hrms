@@ -346,7 +346,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
         Route::post('employees/{id}/assetattach','Admin\EmployeeController@postAddAttach')->name('admin.employees.assetattach.post')->where('id', '[0-9]+');
     });
     Route::get('employees/assetattach','Admin\EmployeeController@displayAttach')->name('admin.employees.assetattach');
-    Route::get('employees/disciplineAttach','Admin\EmployeeController@displayDisciplineAttach')->name('admin.employees.disciplineAttach');
     Route::group(['middleware' => ['permission:'.PermissionConstant::DELETE_ASSET_ATTACH]], function () {
         Route::get('employees/assetattach/{id}/delete','Admin\EmployeeController@deleteAssetAttach')->name('admin.employees.assetattach.delete')->where('id', '[0-9]+');
     });
@@ -361,6 +360,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::post('employees/{emp_id}/overview','Admin\EmployeeController@postAddDiscipline')->name('admin.employees.overview.post')->where('id', '[0-9]+');
     Route::post('employees/{emp_id}/overview/{id}/edit','Admin\EmployeeController@postEditDiscipline')->name('admin.employees.overview.edit.post')->where('id', '[0-9]+');
     Route::get('employees/{emp_id}/overview/{id}/delete','Admin\EmployeeController@deleteDisciplinary')->name('admin.settings.overview.delete')->where('id', '[0-9]+');
+    Route::get('employees/disciplineAttach/{id}/delete','Admin\EmployeeController@deleteDisciplineAttach')->name('admin.employees.disciplineAttach.delete')->where('id', '[0-9]+');
+     Route::get('employees/disciplineAttach','Admin\EmployeeController@displayDisciplineAttach')->name('admin.employees.disciplineAttach');
  
 
 
