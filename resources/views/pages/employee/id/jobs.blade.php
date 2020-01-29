@@ -24,7 +24,8 @@
         "bInfo": true,
         "bDeferRender": true,
         "serverSide": true,
-        "bStateSave": true,
+        "order": [[ 1, "desc" ]], //defaut sort desc by start date
+        "bStateSave": false, //to prevent improper column resize
         "scrollX":	true,
         "ajax": "{{ route('employee.dt.jobs', ['id' => $id]) }}",
         "columnDefs": [ {

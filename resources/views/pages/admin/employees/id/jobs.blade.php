@@ -380,14 +380,16 @@
         "bInfo": true,
         "bDeferRender": true,
         "serverSide": true,
-        "bStateSave": true,
+        "order": [[ 1, "desc" ]], //defaut sort desc by start date
+        "bStateSave": false, //to prevent improper column resize
         "scrollX":	true,
-        "order": [[ 0, "desc" ]],
         "ajax": "{{ route('admin.employees.dt.jobs', ['id' => $id]) }}",
-        "columnDefs": [ {
-            "targets": [-1,-2,-3],
-            "orderable": false
-        } ],
+        "columnDefs": [ 
+            {
+                "targets": [-1,-2,-3],
+                "orderable": false
+        	},
+        ],
         "columns": [{
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
