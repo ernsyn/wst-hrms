@@ -506,7 +506,7 @@
                                     <div id="pcb_group-error" class="invalid-feedback"></div>
                                 </div> 
                                 <div class="col-md-12 mb-3">
-                                    <label for="payment_via"><strong>Payment Via</strong></label>
+                                    <label for="payment_via"><strong>Payment Via*</strong></label>
                                     <select class="form-control{{ $errors->has('payment_via') ? ' is-invalid' : '' }}" name="payment_via" id="payment_via">
                                         <option value="">Select Payment</option>
                                         <option value="1" {{ old('payment_via') == 1 ? 'selected' : ''}}>Cash</option>
@@ -518,7 +518,7 @@
                                     <div id="payment_via-error" class="invalid-feedback"></div>
                                 </div> 
                                 <div class="col-md-12 mb-3">
-                                    <label for="payment_rate"><strong>Payment Rate</strong></label>
+                                    <label for="payment_rate"><strong>Payment Rate*</strong></label>
                                     <select class="form-control{{ $errors->has('payment_rate') ? ' is-invalid' : '' }}" name="payment_rate" id="payment_rate">
                                         <option value="">Select Rate</option>
                                         <option value="1" {{ old('payment_rate') == 1 ? 'selected' : ''}}>Daily</option>
@@ -935,12 +935,12 @@
                                         $('#edit-profile-form #spouse-tax-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'payment_via':
-                                        $('#edit-profile-form #payment_via-no').addClass('is-invalid');
+                                        $('#edit-profile-form #payment_via').addClass('is-invalid');
                                         $('#edit-profile-form #payment_via-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'payment_rate':
                                         $('#edit-profile-form #payment_rate').addClass('is-invalid');
-                                        $('#edit-profile-form #payment_rate-no-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                        $('#edit-profile-form #payment_rate-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'category_id':
                                         $('#edit-profile-form #category_id').addClass('is-invalid');

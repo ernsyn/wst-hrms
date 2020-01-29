@@ -403,11 +403,10 @@ class EmployeeController extends Controller
             'payment_via' =>'required',
             'payment_rate' =>'required',
             'category_id' => 'required',
-            
         ],
-            [
-                'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
-            ]);
+        [
+            'address2.required_with' => 'Address Line 2 field is required when Address Line 3 is present.'
+        ]);
         $profileUpdatedData['dob'] = implode("-", array_reverse(explode("/", $profileUpdatedData['dob'])));
         
         $profileUpdatedData['driver_license_expiry_date'] = implode("-", array_reverse(explode("/", $profileUpdatedData['driver_license_expiry_date'])));
