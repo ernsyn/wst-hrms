@@ -470,7 +470,7 @@
 //                     }else{
                         button = `
                         @can(PermissionConstant::DELETE_JOB)
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="${encodeURI(JSON.stringify(row))}" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-current="`+data.id+`" data-target="#confirm-delete-job-modal"><i class="far fa-trash-alt"></i></button>
     					@endcan
                         `;
 //                     }                        
@@ -694,8 +694,8 @@
         $('#confirm-delete-job-modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var currentData = JSON.parse(decodeURI(button.data('current')))
-            console.log('Data: ', currentData)
-            deleteJobId = currentData.id;
+            //console.log('Job Data: ', currentData)
+            deleteJobId = currentData;
         });
 
  		var deleteJobRouteTemplate = "{{ route('admin.employees.jobs.delete', ['emp_id' => $id, 'id' => '<<id>>']) }}";

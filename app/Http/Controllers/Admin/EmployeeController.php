@@ -43,7 +43,6 @@ use App\EmployeeWorkingDay;
 use App\EmployeeAttendance;
 use App\Media;
 use App\SecurityGroup;
-use App\Http\Services\LeaveService;
 use App\Imports\UserImport;
 use App\Mail\NewUserMail;
 use App\EmployeePosition;
@@ -116,7 +115,6 @@ class EmployeeController extends Controller
         $items = CompanyAsset::all();
         
         return view('pages.admin.employees.assetlist', ['employeeAssets'=> $employeeAssets, 'items' => $items]);
-        
     }
     
     
@@ -168,6 +166,12 @@ class EmployeeController extends Controller
         $employee = Employee::with('user')
         ->find($id);
         
+        if(isset($employee->join_company_date) && isset($employee->resignation_date)) {
+            $employee->serviceYear = \Carbon\Carbon::parse($employee->join_company_date)->diff($employee->resignation_date)->format('%y yr, %m mth');
+        } else if (isset($employee->join_company_date) && !isset($employee->resignation_date)) {
+            $employee->serviceYear = \Carbon\Carbon::parse($employee->join_company_date)->diff(\Carbon\Carbon::now())->format('%y yr %m mth');
+        }
+        
         $userMedia = DB::table('employees')
         ->join('medias', 'employees.profile_media_id', '=', 'medias.id')
         ->select('medias.*')
@@ -191,17 +195,31 @@ class EmployeeController extends Controller
         ->where('employees.id',$id)
         ->first();
         
-        
         $jobs = DB::table('employee_jobs')
         ->leftjoin('departments','employee_jobs.department_id','=','departments.id')
         ->leftjoin('employee_positions','employee_jobs.emp_mainposition_id','=','employee_positions.id')
         ->leftjoin('sections','employee_jobs.section_id','=','sections.id')
         ->leftjoin('branches','employee_jobs.branch_id','=','branches.id')
         ->leftjoin('cost_centres','employee_jobs.cost_centre_id','=','cost_centres.id')
-        ->select('employee_jobs.start_date as start_date', 'departments.name as department_name','employee_positions.name as position_name','sections.name as section_name','branches.name as branch_name','cost_centres.name as cost')
+        ->leftjoin('employee_job_status', 'employee_jobs.id', 'employee_job_status.emp_job_id')
+        ->select('employee_jobs.id as id','employee_jobs.start_date as start_date', 'departments.name as department_name','employee_positions.name as position_name','sections.name as section_name','branches.name as branch_name','cost_centres.name as cost')
         ->where('employee_jobs.emp_id',$id)
         ->orderBy('employee_jobs.start_date')
         ->get();
+        
+        foreach($jobs as $job) {
+            $statuses = '';
+            $jobStatus = EmployeeJobStatus::where('emp_job_id', $job->id)->get();
+            $i = 0;
+            foreach($jobStatus as $status) {
+                $statuses .= EmploymentStatus::find($status->status_id)->name;
+                if($i < count($jobStatus)-1){
+                    $statuses .= ', ';
+                }
+                $i++;
+            }
+            $job->status = $statuses;
+        }
         
         $roles = AccessControllHelper::getRoles();
         $epfCategory = EpfCategoryEnum::choices();
@@ -605,7 +623,8 @@ class EmployeeController extends Controller
         $banks = EmployeeBankAccount::where('emp_id', $id)->get();
         return DataTables::of($banks)->make(true);
     }
-      public function getDataTableDiscipline($id)
+      
+    public function getDataTableDiscipline($id)
     {
        $assets = EmployeeDisciplinary::where('emp_id','=', $id)->get();
         //Log::debug($assets);
@@ -638,7 +657,7 @@ class EmployeeController extends Controller
         
     }
     
-       public function getDataTableEmployeeAssets($id)
+    public function getDataTableEmployeeAssets($id)
     {
         $assets = EmployeeAsset::where('emp_id','=', $id)->get();
         //Log::debug($assets);
@@ -1891,11 +1910,6 @@ public function postAsset(Request $request)
     
     public function deleteJob(Request $request, $emp_id, $id)
     {
-        Log::debug("**** delete job*******");
-        Log::debug($request);
-        Log::debug($emp_id);
-        Log::debug($id);
-        return;
         DB::beginTransaction();
         $leave_request_approvals = LeaveRequestApproval::where('leave_request_id',$id)->get();
         foreach ($leave_request_approvals as $leave_request_approval) {

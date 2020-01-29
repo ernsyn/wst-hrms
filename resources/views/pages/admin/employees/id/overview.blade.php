@@ -255,17 +255,17 @@
 		<h5><strong>Personal Career Development</strong></h5>
         <div class="bar"></div>
         <div class="timeline">
-            @foreach($jobs as $job)
-          <div class="entry">
-           <h6><u><b>{{ Carbon\Carbon::parse($job->start_date)->format('d/m/Y') }}</b></u></h6>
-            <br>{!!$job->position_name ? $job->position_name : '<strong>(not set)</strong>'!!}</span>
-            {{$job->position_name}}
-            <br>{!!$job->department_name ? $job->department_name : '<strong>(not set)</strong>'!!}</span>
-            <br>{!!$job->section_name ? $job->section_name : '<strong>(not set)</strong>'!!}</span>
-            <br>{{$job->branch_name}}
-            <br>{!!$job->cost ? $job->cost : '<strong>(not set)</strong>'!!}</span>
-          </div>
-          @endforeach
+        	@foreach($jobs as $job)
+          	<div class="entry">
+           		<h6><u><b>{{ Carbon\Carbon::parse($job->start_date)->format('d/m/Y') }}</b></u></h6>
+            	<br>{!!$job->position_name ? $job->position_name : '<strong>(not set)</strong>'!!}</span>
+                <br>{!!$job->department_name ? $job->department_name : '<strong>(not set)</strong>'!!}</span>
+                <br>{!!$job->section_name ? $job->section_name : '<strong>(not set)</strong>'!!}</span>
+                <br>{{$job->branch_name}}
+                <br>{!!$job->cost ? $job->cost : '<strong>(not set)</strong>'!!}</span>
+                <br>{!!$job->status ? $job->status : '<strong>(not set)</strong>'!!}</span>
+          	</div>
+          	@endforeach
         </div>
 	</div>
 </div>

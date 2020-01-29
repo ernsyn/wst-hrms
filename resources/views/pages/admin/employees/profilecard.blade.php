@@ -47,7 +47,7 @@
                     </div>
                     <div class="row mx-md-n5">
                       <div class="col px-md-3"><div class="p-1 ">Gender</div></div>
-                      <div class="col px-md-1"><div class="p-1 ">{{$employee->gender}}</div></div>
+                      <div class="col px-md-1"><div class="p-1 text-capitalize">{{$employee->gender}}</div></div>
                       <div></div>
                       <div class="col px-md-3"><div class="p-1 ">Area</div></div>
                       <div class="col px-md-1"><div class="p-1 ">{{$details->area}}</div></div>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="row mx-md-n5">
                       <div class="col px-md-3"><div class="p-1 ">Service Year</div></div>
-                      <div class="col px-md-1"><div class="p-1 ">{!! isset($employee->join_company_date)  ? \Carbon\Carbon::parse($employee->join_company_date)->diffForHumans(null,true,false,2)  : '<strong>(not set)</strong>' !!}</div></div>
+                      <div class="col px-md-1"><div class="p-1 ">{!! isset($employee->serviceYear)  ? $employee->serviceYear : '<strong>(not set)</strong>' !!}</div></div>
                       <div></div>
                       <div class="col px-md-3"><div class="p-1 ">Resigned Date</div></div>
                       <div class="col px-md-1"><div class="p-1 ">{!! isset($employee->resignation_date)  ? \Carbon\Carbon::parse($employee->resignation_date)->format('d/m/Y')  : '<strong>(not set)</strong>' !!}</div></div>
