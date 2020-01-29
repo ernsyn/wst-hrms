@@ -688,11 +688,12 @@ class EmployeeController extends Controller
     }
       public function getDataTableDiscipline($id)
     {
-       $assets = EmployeeDisciplinary::where('emp_id','=', $id)->get();
+
+       $disciplines = EmployeeDisciplinary::where('emp_id','=', $id)->get();
         //Log::debug($assets);
         $data = array();
-        foreach($assets as $asset) {
-            $attachments = DisciplineAttach::where('discipline_id', $asset->id)->get();
+        foreach($disciplines as $discipline) {
+            $attachments = DisciplineAttach::where('discipline_id', $discipline->id)->get();
             //Log::debug("Attachments");
             //Log::debug($attachments);
             $attach = array();
@@ -701,13 +702,18 @@ class EmployeeController extends Controller
             }
 
             $subdata = new EmployeeDisciplinary();
-            $subdata = $asset;
+            $subdata = $discipline;
 
             // $subdata['asset_name'] = $asset->asset_name;
             // $subdata['asset_quantity'] = $asset->asset_quantity;
             // $subdata['issue_date'] = DateHelper::dateStandardFormat($asset->issue_date);
             // $subdata['asset_status'] = $asset->asset_status;
             $subdata['attach'] = $attach;
+            //Log::debug("*******************");
+            //Log::debug($discipline->created_by);
+            $investigateBy = User::find($discipline->created_by);
+            //Log::debug($investigateBy);
+            $subdata['investigateBy'] = $investigateBy->name;
 
             $data[] = $subdata;
         }
@@ -1195,7 +1201,7 @@ class EmployeeController extends Controller
             'asset_spec' => 'nullable',
             'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/'
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             
         ]);
         
@@ -1701,42 +1707,73 @@ public function postAsset(Request $request)
     }
     
     public function postEditDiscipline(Request $request, $emp_id, $id)
-    {
+    { 
+        //dd($request->all());
         $DisciplineUpdateData = $request->validate([
-            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'discipline_desc' => 'required',
-            'discipline_title' => 'required'
+            'discipline_date-edit' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'discipline_desc-edit' => 'required',
+            'discipline_title-edit' => 'required'
+            
         ]);
         
-        $DisciplineUpdateData['discipline_date'] = implode("-", array_reverse(explode("/", $DisciplineUpdateData['discipline_date'])));
-        EmployeeDisciplinary::find($id)->update($DisciplineUpdateData);
+        $DisciplineUpdateData['discipline_date-edit'] = implode("-", array_reverse(explode("/", $DisciplineUpdateData['discipline_date-edit'])));
         
+        EmployeeDisciplinary::find($id)->update($DisciplineUpdateData);
+        if($request->hasFile('discipline_attach'))
+        {
+            $files = $request->file('discipline_attach');
+            foreach($files as $file)
+            {
+              $path = $file->getClientOriginalName();
+              $name = date('d-m-Y_hia') . '-' . $path;
+
+              $attach = new DisciplineAttach();
+              $attach->discipline_attach = $name;
+              $attach->discipline_id = $id;
+              $attach->save();
+              $file->storeAs('public/emp_id_'. $emp_id.'/discipline', $name);
+              
+            }
+        }
         return response()->json(['success'=>'Disciplinary Issue was successfully updated.']);
     }
     
     public function postEditEmployeeAsset(Request $request, $emp_id, $id)
     {
-        //Log::debug('Post Edit Asset');
-        //Log::debug($request);
-        //Log::debug($id);
         $assetUpdateData = $request->validate([
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
-            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'asset_status' => 'required'
+            'issue_date_edit' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'return_date_edit' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'sold_date_edit' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'asset_status' => 'required'            
         ]);
-        $assetUpdateData['issue_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['issue_date'])));
+                $assetUpdateData['issue_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['issue_date_edit'])));
         
-        if( $assetUpdateData['return_date']!=null)
-        {$assetUpdateData['return_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['return_date'])));}
+        if( $assetUpdateData['return_date_edit']!=null)
+        {$assetUpdateData['return_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['return_date_edit'])));}
         
-        if( $assetUpdateData['sold_date']!=null)
-        {$assetUpdateData['sold_date'] = implode("-", array_reverse(explode("/", $assetUpdateData['sold_date'])));}
-        
+        if( $assetUpdateData['sold_date_edit']!=null)
+        {$assetUpdateData['sold_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['sold_date_edit'])));}
         EmployeeAsset::find($id)->update($assetUpdateData);
+        
+        if($request->hasFile('asset_attach'))
+        {
+            $files = $request->file('asset_attach');
+            foreach($files as $file)
+            {
+              $path = $file->getClientOriginalName();
+              $name = date('d-m-Y_hia') . '-' . $path;
+
+              $attach = new AssetAttach();
+              $attach->asset_attach = $name;
+              $attach->asset_id = $id;
+              $attach->save();
+              $file->storeAs('public/emp_id_'. $emp_id.'/asset', $name);
+              
+            }
+        }
         
         return response()->json(['success'=>'Asset was successfully updated.']);
     }
@@ -1991,6 +2028,24 @@ public function postAsset(Request $request)
         
         AssetAttach::find($id)->delete();
         return redirect()->back() ->with('status', 'Attachment Successfully Deleted!');
+    }
+
+     public function deleteDisciplineAttach(Request $request,$id)
+    {
+        $employees = DB::table('employee_disciplines')
+        ->join('discipline_attachs', 'employee_disciplines.id', '=', 'discipline_attachs.discipline_id')
+        ->select('employee_disciplines.emp_id as emp','discipline_attachs.discipline_attach as discipline_attach')
+        ->where('discipline_attachs.id', $id)
+        ->get();
+        foreach ($employees as $employee) {
+            $emp=$employee->emp;
+            $discipline_attach=$employee->discipline_attach;
+            Storage::delete('public/emp_id_'.$emp.'/discipline/'.$discipline_attach);
+        }
+        
+        DisciplineAttach::find($id)->delete();
+        return redirect()->back() ->with('status', 'Attachment Successfully Deleted!');
+
     }
     
     public function deleteExperience(Request $request, $emp_id, $id)

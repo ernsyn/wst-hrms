@@ -1,4 +1,3 @@
-
 <!-- ADD -->
 <div class="modal fade" id="add-discipline-popup" tabindex="-1" role="dialog" aria-labelledby="add-discipline-label"
     aria-hidden="true">
@@ -81,7 +80,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form id="edit-discipline-form">
+            <form enctype="multipart/form-data" name="edit-discipline-form" id="edit-discipline-form">
                 @csrf
                 <div class="modal-body">
                 	<div class="form-row">
@@ -204,14 +203,6 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
-                           
-                            <div id="discipline_attach-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
-                            <label><strong>Attachment</strong></label>
                              <div id="attach_view">
 
                              </div>
@@ -249,6 +240,26 @@
     </div>
 </div>
 <!-- END DELETE -->
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                 <div class="modal-header">
+                <h5 class="modal-title" id="confirm-delete-discipline-label">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                </button>
+                 </div>
+                <div class="modal-body">
+                    <p>Are you sure want to delete?</p>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-danger btn-ok">Delete</a>
+                </div>
+            </div>
+        </div>
+</div>
 <div class="tab-pane fade show active p-3" id="nav-overview" role="tabpanel" aria-labelledby="nav-overview-tab">
 	<div class="card">
 		<div class="card-body">
@@ -424,13 +435,17 @@
                 },
                 success: function(data) {
                     //console.log(data);
+                    jQuery('#attach_view').html('');
                     for(i=0; i<data.length; i++) {
-                        $('#attach_view').append('<a href="/storage/emp_id_'+{{$id}}+'/discipline/'+data[i]['discipline_attach']+'" target="_blank">'+data[i]['discipline_attach']+'</a>|<a href=""><i class="fas fa-times"></i></a><br>');
+                        var attachmentId = data[i]['id'];
+                        var url = '{!! route('admin.employees.disciplineAttach.delete', ":id") !!}';
+                        url = url.replace(':id', attachmentId);  
+                        $('#attach_view').append('<a href="/storage/emp_id_'+{{$id}}+'/discipline/'+data[i]['discipline_attach']+'" target="_blank">'+data[i]['discipline_attach']+'</a> <br>');
                     }
                 }
             });
             $('#view-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
-            $('#view-discipline-form input[name=created_by-edit]').val(currentData.name);
+            $('#view-discipline-form input[name=created_by-edit]').val(currentData.investigateBy);
             $('#view-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);
             if(currentData.discipline_date!=null){
                 formatDisciplineDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.discipline_date));
@@ -460,13 +475,17 @@
                 },
                 success: function(data) {
                     //console.log(data);
+                    jQuery('#attach').html('');
                     for(i=0; i<data.length; i++) {
-                        $('#attach').append('<a href="/storage/emp_id_'+{{$id}}+'/discipline/'+data[i]['discipline_attach']+'" target="_blank">'+data[i]['discipline_attach']+'</a>|<a href=""><i class="fas fa-times"></i></a><br>');
+                        var attachmentId = data[i]['id'];
+                        var url = '{!! route('admin.employees.disciplineAttach.delete', ":id") !!}';
+                        url = url.replace(':id', attachmentId);   
+                        $('#attach').append('<a href="/storage/emp_id_'+{{$id}}+'/discipline/'+data[i]['discipline_attach']+'" target="_blank">'+data[i]['discipline_attach']+'</a> <a data-href="'+url+'" href="#" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-times" aria-hidden="true"></i></a><br>');
                     }
                 }
             });
             $('#edit-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
-            $('#edit-discipline-form input[name=created_by-edit]').val(currentData.name);
+            $('#edit-discipline-form input[name=created_by-edit]').val(currentData.investigateBy);
             $('#edit-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);
             if(currentData.discipline_date!=null){
                 formatDisciplineDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.discipline_date));
@@ -479,18 +498,16 @@
         var editRouteTemplate = "{{ route('admin.employees.overview.edit.post', ['emp_id' => $id, 'id' => '<<id>>']) }}";
         $('#edit-discipline-submit').click(function(e){
             var editRoute = editRouteTemplate.replace(encodeURI('<<id>>'), editId);
-            clearBankAccountError('#edit-discipline-form');
-            e.preventDefault();
+             e.preventDefault();
+             var form = document.forms.namedItem("edit-discipline-form");
+            var formdata = new FormData(form);
+            clearEmployeeAssetError('#edit-assets-form');
             $.ajax({
                 url: editRoute,
                 type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    discipline_title: $('#edit-discipline-form input[name=discipline_title-edit]').val(),
-                    discipline_desc: $('#edit-discipline-form textarea[name=discipline_desc-edit]').val(),
-                    discipline_date: $('#edit-discipline-form #discipline_date-edit').val(),
-                    created_by: $('#edit-discipline-form input[name=created_by-edit]').val(),
-                },
+                data: formdata,
+                contentType: false,
+                processData: false,
                 success: function(data) {
                     showAlert(data.success);
                     overviewDisciplineTable.ajax.reload();
@@ -516,6 +533,10 @@
                                     case 'discipline_date':
                                         $('#edit-discipline-form #discipline_date-edit').addClass('is-invalid');
                                         $('#edit-discipline-form #discipline_date-error').html('<strong>' + errors[errorField][0] + "</strong>");
+                                    break;
+                                    case 'discipline_attach':
+                                        $('#edit-discipline-form #discipline_attach').addClass('is-invalid');
+                                        $('#edit-discipline-form #discipline_attach-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
                             }
@@ -587,7 +608,13 @@
             </button>
             </div>`)
     }
-</script>
+
+        $('#confirm-delete').on('show.bs.modal', function(e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+            
+            $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
+        });
+    </script>
 <style type="text/css">
 .timeline {
   white-space: nowrap;
