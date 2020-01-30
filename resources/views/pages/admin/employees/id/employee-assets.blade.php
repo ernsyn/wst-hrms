@@ -237,17 +237,17 @@
 </div>
 @endcan
 
-<div class="modal fade" id="view-asset-popup" tabindex="-1" role="dialog" aria-labelledby="edit-asset-label"
+<div class="modal fade" id="view-asset-popup" tabindex="-1" role="dialog" aria-labelledby="view-asset-label"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit-asset-popup">Edit Asset</h5>
+                <h5 class="modal-title" id="view-asset-popup">View Asset</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
-            <form ENCTYPE="multipart/form-data" id="edit-assets-form" name="edit-assets-form">
+            <form ENCTYPE="multipart/form-data" id="view-assets-form" name="view-assets-form">
                 @csrf
                 <div class="modal-body">
                     <div class="form-row">
@@ -347,7 +347,7 @@
                     </div>
                  </div>
                 <div class="modal-footer">
-                    <button id="edit-assets-submit" type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+                    
                 </div>
             </form>
         </div>
@@ -762,9 +762,7 @@
                     //console.log(data);
                      jQuery('#attach_view').html('');
                     for(i=0; i<data.length; i++) {
-                        var attachmentId = data[i]['id'];
-                        var url = '{!! route('admin.employees.assetattach.delete', ":id") !!}';
-                        url = url.replace(':id', attachmentId);   
+                       
                         $('#attach_view').append('<a href="/storage/emp_id_'+{{$id}}+'/asset/'+data[i]['asset_attach']+'" target="_blank">'+data[i]['asset_attach']+'</a><br>');    
                     }
                    
@@ -772,29 +770,29 @@
                 }
             });
 
-            $('#edit-assets-form input[name=asset_quantity]').val(currentData.asset_quantity);
-            $('#edit-assets-form #asset_name').val(currentData.asset_name);
-            $('#edit-assets-form input[name=asset_deposit]').val(currentData.asset_deposit);
-            $('#edit-assets-form textarea[name=asset_spec]').val(currentData.asset_spec);
+            $('#view-assets-form input[name=asset_quantity]').val(currentData.asset_quantity);
+            $('#view-assets-form #asset_name').val(currentData.asset_name);
+            $('#view-assets-form input[name=asset_deposit]').val(currentData.asset_deposit);
+            $('#view-assets-form textarea[name=asset_spec]').val(currentData.asset_spec);
             if(currentData.issue_date!=null) {
                 formatIssueDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.issue_date));
-                $('#edit-assets-form #issue_date_edit').val(formatIssueDate);
+                $('#view-assets-form #issue_date_edit').val(formatIssueDate);
             } else {
-                $('#edit-assets-form #issue_date_edit').val();
+                $('#view-assets-form #issue_date_edit').val();
             }
             if(currentData.return_date!=null) {
                 formatReturnDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.return_date));
-                $('#edit-assets-form #return_date_edit').val(formatReturnDate);
+                $('#view-assets-form #return_date_edit').val(formatReturnDate);
             } else {
-                $('#edit-assets-form #return_date_edit').val();
+                $('#view-assets-form #return_date_edit').val();
             }
            if(currentData.sold_date!=null) {
                 formatSoldDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.sold_date));
-                $('#edit-assets-form #sold_date_edit').val(formatSoldDate);
+                $('#view-assets-form #sold_date_edit').val(formatSoldDate);
             } else {
-                $('#edit-assets-form #sold_date_edit').val();
+                $('#view-assets-form #sold_date_edit').val();
             }
-            $('#edit-assets-form select[name=asset_status]').val(currentData.asset_status);
+            $('#view-assets-form select[name=asset_status]').val(currentData.asset_status);
 
             
         });

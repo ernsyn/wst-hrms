@@ -56,6 +56,9 @@
                 <li class="menu-option {{ request()->is('employee/asset') ? 'active' : '' }}">
                     <a href="{{ route('employee.asset') }}">View Asset</a>
                 </li>
+                 <li class="menu-option {{ request()->is('employee/index') ? 'active' : '' }}">
+                    <a href="{{ route('employee.index') }}">Employee List</a>
+                </li>
             </ul>
         </li>
         <li class="menu-section {{ request()->is('employee/e-leave*') ? 'active' : '' }}">

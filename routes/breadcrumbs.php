@@ -32,6 +32,20 @@ Breadcrumbs::for('employee.asset', function ($trail) {
     // $trail->parent('profile');
     $trail->push('My Asset', route('employee.asset'));
 });
+Breadcrumbs::for('employee.index', function ($trail) {
+    // $trail->parent('profile');
+    $trail->push('Employee List', route('employee.index'));
+});
+
+Breadcrumbs::for('employee.employeelist', function ($trail) {
+    $trail->parent('employee.index');
+    $trail->push('Employee Profile', route('employee.employeelist',''));
+});
+
+Breadcrumbs::for('employee.assetid', function ($trail) {
+    $trail->parent('employee.index');
+    $trail->push('Employee Asset', route('employee.assetid',''));
+});
 
 Breadcrumbs::for('employee.assetattach', function ($trail) {
     $trail->parent('employee.asset');
