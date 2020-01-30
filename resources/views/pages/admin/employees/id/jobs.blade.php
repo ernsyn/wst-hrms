@@ -748,7 +748,7 @@ $('#resign-details-modal').on('show.bs.modal', function (event) {
         $(htmlId + ' select[name=branch_id]')[0].selectize.clear();
         $(htmlId + ' #date-job').val('');
         $(htmlId + ' #date-job-edit').val('');
-        $(htmlId + ' select[name=-status]').selectize.clear();
+        $(htmlId + ' select[name=status]').selectize.clear();
         $(htmlId + ' textarea[name=remarks]').val('');
         $(htmlId + ' input[name=job_attach]').val('');
 

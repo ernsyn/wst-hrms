@@ -62,6 +62,21 @@
                             @endif
                         </div>
                     </div>
+                    <div class="form-group row w-100">
+                        <label class="col-md-5 col-form-label">Type*</label>
+                        <div class="col-md-7">
+                            <select class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" id="type" name="type">
+                                <option value="">Please Select</option>
+                                <option value="Paid Public Holiday" {{ old('type') == 'Paid Public Holiday' ? 'selected' : ''}}>Paid Public Holiday</option>
+                                <option value="Replacement Leave" {{ old('type') == 'Replacement Leave' ? 'selected' : ''}}>Replacement Leave</option>
+                            </select>
+                            @if ($errors->has('type'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('type') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
 
                     <div class="form-group row w-100">
                         <label class="col-md-5 col-form-label">State*</label>

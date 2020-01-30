@@ -20,7 +20,8 @@ class Holiday extends Model implements Auditable
     'repeat_annually',
     'total_days',
     'state',
-    'created_by'
+    'created_by',
+    'type'
 
 
     ];
