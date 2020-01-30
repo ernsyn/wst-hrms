@@ -25,6 +25,9 @@ class EmployeeJob extends Model implements Auditable
         'basic_salary',
         'remarks',
         'created_by',
+        'resignation_date',
+        'blacklisted',
+        'reason'
     ];
     
     public function job_status()
