@@ -232,6 +232,7 @@ class ELeaveController extends Controller
             'repeat_annually'=>'required',
             'state'=>'required',
             'note' => 'nullable',
+            'type' => 'required'
         ]);
         $publicHolidayData['created_by'] = auth()->user()->name;
 
@@ -283,7 +284,8 @@ class ELeaveController extends Controller
             'repeat_annually' => 'required',
             'status' =>'required',
             'note'=>'nullable',
-            'state'=>'required'
+            'state'=>'required',
+            'type' => 'required'
         ]);
 
         if ($request->state != null) {
@@ -381,6 +383,7 @@ class ELeaveController extends Controller
                 $holidayData['end_date'] = $end_next;
                 $holidayData['note'] = $row->note;
                 $holidayData['status'] = $row->status;
+                $holidayData['type'] = $row->type;
                 $holidayData['repeat_annually'] = $row->repeat_annually;
                 $holidayData['total_days'] = $row->total_days;
                 $holidayData['state'] = $row->state;

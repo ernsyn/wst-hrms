@@ -168,9 +168,8 @@ class EmployeeController extends Controller
     {
         $employee = Employee::with('user')
         ->find($id);
-        
         if(isset($employee->join_company_date) && isset($employee->resignation_date)) {
-            $employee->serviceYear = \Carbon\Carbon::parse($employee->join_company_date)->diff($employee->resignation_date)->format('%y yr, %m mth');
+            $employee->serviceYear = \Carbon\Carbon::parse($employee->join_company_date)->diff(\Carbon\Carbon::parse($employee->resignation_date))->format('%y yr, %m mth');
         } else if (isset($employee->join_company_date) && !isset($employee->resignation_date)) {
             $employee->serviceYear = \Carbon\Carbon::parse($employee->join_company_date)->diff(\Carbon\Carbon::now())->format('%y yr %m mth');
         }
@@ -1015,7 +1014,6 @@ class EmployeeController extends Controller
             'remarks' => '',
             'branch_id' => 'required',
             'start_date' => 'required',
-            'status' => 'required',
             'job_attach' => 'nullable'
         ]);
         
@@ -1147,8 +1145,8 @@ class EmployeeController extends Controller
     {
         $jobData = $request->validate([
             'resignation_date' => 'required',
-            'reason' => 'required',
-            'blacklisted' => 'required'
+            'blacklisted' => 'required',
+            'reason' => 'required'
         ]);
         
         $currentJob = EmployeeJob::where('emp_id', $id)->whereNull('end_date')->first();
@@ -1169,7 +1167,9 @@ class EmployeeController extends Controller
         ));
         $currentJob->update(array(
             'end_date'=> ($jobData['resignation_date']),
-//             'status'=> 'Resigned'
+            'resignation_date'=> ($jobData['resignation_date']),
+            'blacklisted' => ($jobData['blacklisted']),
+            'reason' => ($jobData['reason'])
         ));
                 
         EmployeeJobStatus::where('emp_job_id', $id)->delete();
