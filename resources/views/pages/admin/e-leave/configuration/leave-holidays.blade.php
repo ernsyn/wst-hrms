@@ -47,7 +47,7 @@
                         <td>{{ \Carbon\Carbon::parse($holidays['end_date'])->format('d/m/Y') }}</td>
                         <td>{{$holidays['total_days']}}</td>
                         <td>{{$holidays['status']}}</td>
-                        <td>{{$holidays['type']}}</td>
+                        <td>{{HolidayTypeEnum::getDescription($holidays['type'])}}</td>
                         <td>
                             <button onclick="window.location='{{ route('admin.e-leave.configuration.leave-holidays.edit', ['id' => $holidays->id]) }}';" class="btn btn-success btn-smt fas fa-edit">
                             </button>

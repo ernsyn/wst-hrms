@@ -244,6 +244,7 @@ return [
         'AssetStatusEnum' => App\Enums\AssetStatusEnum::class,
         'FilterHelper' => FilterHelper::class,
         'EmployeeTableHeaderEnum' => EmployeeTableHeaderEnum::class,
+        'HolidayTypeEnum' => App\Enums\HolidayTypeEnum::class,
     ],
 
 

@@ -79,8 +79,9 @@
                         <div class="col-md-7">
                             <select class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" id="type" name="type">
                                 <option value="">Please Select</option>
-                                <option value="Paid Public Holiday" {{ $holidays->type == 'Paid Public Holiday' ? 'selected' : ''}}>Paid Public Holiday</option>
-                                <option value="Replacement Leave" {{ $holidays->type == 'Replacement Leave' ? 'selected' : ''}}>Replacement Leave</option>
+                                	@foreach ($type as $k=>$v )
+									<option value="{{ $k }}">{{ $v }}</option>
+									@endforeach
                             </select>
                             @if ($errors->has('type'))
                             <span class="invalid-feedback" role="alert">
