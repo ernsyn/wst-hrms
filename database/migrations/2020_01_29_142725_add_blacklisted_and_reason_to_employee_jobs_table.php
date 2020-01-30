@@ -16,7 +16,7 @@ class AddBlacklistedAndReasonToEmployeeJobsTable extends Migration
         Schema::table('employee_jobs', function (Blueprint $table) {
         	$table->datetime('resignation_date')->nullable();
             $table->boolean('blacklisted')->default('0');
-            $table->string('reason',200)->default('');
+            $table->text('reason')->nullable();
         });
     }
 
