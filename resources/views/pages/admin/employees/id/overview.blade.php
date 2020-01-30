@@ -43,14 +43,6 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label><strong>Investigated By*</strong></label>
-                            <input name="created_by" id="created_by" type="text" class="form-control" placeholder="" value="" readonly="">
-                            <div id="created_by-error" class="invalid-feedback">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
                             <input name="discipline_attach[]" id="discipline_attach" type="file" class="form-control" multiple>
                             <div id="discipline_attach-error" class="invalid-feedback">
@@ -397,7 +389,7 @@
                                         $('#add-discipline-form #discipline_title-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'discipline_desc':
-                                        $('#add-discipline-form input[name=discipline_desc]').addClass('is-invalid');
+                                        $('#add-discipline-form textarea[name=discipline_desc]').addClass('is-invalid');
                                         $('#add-discipline-form #discipline_desc-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
                                     case 'discipline_date':

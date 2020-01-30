@@ -15,6 +15,7 @@ use Hash;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 
@@ -38,20 +39,128 @@ use App\EmployeeAttendance;
 use App\Media;
 use App\AssetAttach;
 use App\Category;
+use App\Helpers\FilterHelper;
+use App\Helpers\AccessControllHelper;
+use App\CompanyAsset;
 
 class EmployeeController extends Controller
 {
-    //
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+     public function index()
+    {
+        //         $employees = Employee::all();
+        //         return view('pages.admin.employees.index', ['employees'=> $employees]);
+        $costCentres = FilterHelper::getCostCentre();
+        $departments = FilterHelper::getDepartment();
+        $sections = FilterHelper::getSection();
+        $positions = FilterHelper::getPosition();
+        $teams = FilterHelper::getTeam();
+        $categories = FilterHelper::getCategory();
+        $areas = FilterHelper::getArea();
+        $grades = FilterHelper::getGrade();
+        $bankCodes = FilterHelper::getBankCode();
+        return view('pages.employee.index', ['costCentres'=> $costCentres, 'departments' => $departments,
+            'sections' => $sections, 'positions' => $positions, 'teams' => $teams, 'categories' => $categories,
+            'areas' => $areas, 'grades' => $grades, 'bankCodes' => $bankCodes
+        ]);
+    }
+
+    public function getDataTableEmployees(Request $request)
+    {
+        $result = FilterHelper::getEmp($request);
+        return Datatables::of($result[0])->with([
+            'recordsTotal' => $result[1],
+            'recordsFiltered' => $result[1],
+            'data' => $result[2]
+        ])->make(true);
+    }
+
+    public function display($id)
+    {
+        $employee = Employee::with('user')
+        ->find($id);
+        
+        if(isset($employee->join_company_date) && isset($employee->resignation_date)) {
+            $employee->serviceYear = \Carbon\Carbon::parse($employee->join_company_date)->diff($employee->resignation_date)->format('%y yr, %m mth');
+        } else if (isset($employee->join_company_date) && !isset($employee->resignation_date)) {
+            $employee->serviceYear = \Carbon\Carbon::parse($employee->join_company_date)->diff(\Carbon\Carbon::now())->format('%y yr %m mth');
+        }
+        
+        $userMedia = DB::table('employees')
+        ->join('medias', 'employees.profile_media_id', '=', 'medias.id')
+        ->select('medias.*')
+        ->where('employees.id', $id)
+        ->first();
+        
+        $securityGroup = DB::table('security_groups')
+        ->join('employees','security_groups.company_id','=','employees.company_id')
+        ->select('security_groups.*')
+        ->where('employees.id',$id)
+        ->get();
+        
+        $details = DB::table('employees')
+        ->leftjoin('sections','employees.section_id','=','sections.id')
+        ->leftjoin('departments','employees.department_id','=','departments.id')
+        ->leftjoin('employee_positions','employees.position_id','=','employee_positions.id')
+        ->leftjoin('areas','employees.area_id','=','areas.id')
+        ->leftjoin('branches','employees.branch_id','=','branches.id')
+        ->leftjoin('cost_centres','employees.cost_centre_id','=','cost_centres.id')
+        ->select('sections.name as section','departments.name as department','employee_positions.name as position','areas.name as area','branches.name as branch','cost_centres.name as cost_centre')
+        ->where('employees.id',$id)
+        ->first();
+        
+        $jobs = DB::table('employee_jobs')
+        ->leftjoin('departments','employee_jobs.department_id','=','departments.id')
+        ->leftjoin('employee_positions','employee_jobs.emp_mainposition_id','=','employee_positions.id')
+        ->leftjoin('sections','employee_jobs.section_id','=','sections.id')
+        ->leftjoin('branches','employee_jobs.branch_id','=','branches.id')
+        ->leftjoin('cost_centres','employee_jobs.cost_centre_id','=','cost_centres.id')
+        ->leftjoin('employee_job_status', 'employee_jobs.id', 'employee_job_status.emp_job_id')
+        ->select('employee_jobs.id as id','employee_jobs.start_date as start_date', 'departments.name as department_name','employee_positions.name as position_name','sections.name as section_name','branches.name as branch_name','cost_centres.name as cost')
+        ->where('employee_jobs.emp_id',$id)
+        ->orderBy('employee_jobs.start_date')
+        ->get();
+        
+        foreach($jobs as $job) {
+            $statuses = '';
+            $jobStatus = EmployeeJobStatus::where('emp_job_id', $job->id)->get();
+            $i = 0;
+            foreach($jobStatus as $status) {
+                $statuses .= EmploymentStatus::find($status->status_id)->name;
+                if($i < count($jobStatus)-1){
+                    $statuses .= ', ';
+                }
+                $i++;
+            }
+            $job->status = $statuses;
+        }
+        
+        $roles = AccessControllHelper::getRoles();
+        $epfCategory = EpfCategoryEnum::choices();
+        $pcbGroup = PCBGroupEnum::choices();
+        $socsoCategory = SocsoCategoryEnum::choices();
+        $paymentviaGroup = PaymentViaEnum::choices();
+        $paymentrateGroup = PaymentRateEnum::choices();
+        $items = CompanyAsset::all();
+        $categories = Category::all();
+        
+        return view('pages.employee.employeelist', ['employee' => $employee, 'userMedia' => $userMedia, 'securityGroup' => $securityGroup, 'roles' => $roles, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory, 'paymentviaGroup' => $paymentviaGroup,'paymentrateGroup' => $paymentrateGroup,'items' => $items,'categories' => $categories,'jobs'=> $jobs,'details' => $details]);
+    }
+    
 
     public function displayProfile()
     {
         $id = Auth::user()->employee->id;
         $employee = Employee::with('user')
-        ->with(['employee_confirmed' => function($query) use ($id)
+        /*->with(['employee_confirmed' => function($query) use ($id)
         {
             $query->where('status','=','confirmed-employment')
             ->where ('emp_id','=',$id);
-        }])
+        }])*/
         ->find($id);
 
         $userMedia = DB::table('employees')
@@ -60,24 +169,35 @@ class EmployeeController extends Controller
         ->where('employees.id', $id)
         ->first();
         
+        $details = DB::table('employees')
+        ->leftjoin('sections','employees.section_id','=','sections.id')
+        ->leftjoin('departments','employees.department_id','=','departments.id')
+        ->leftjoin('employee_positions','employees.position_id','=','employee_positions.id')
+        ->leftjoin('areas','employees.area_id','=','areas.id')
+        ->leftjoin('branches','employees.branch_id','=','branches.id')
+        ->leftjoin('cost_centres','employees.cost_centre_id','=','cost_centres.id')
+        ->select('sections.name as section','departments.name as department','employee_positions.name as position','areas.name as area','branches.name as branch','cost_centres.name as cost_centre')
+        ->where('employees.id',$id)
+        ->first();
+
         $epfCategory = EpfCategoryEnum::choices();
         $pcbGroup = PCBGroupEnum::choices();
         $socsoCategory = SocsoCategoryEnum::choices();
         $categories = Category::all();
-        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory,'categories' => $categories]);   	
+        return view('pages.employee.id', ['employee' => $employee,'userMedia' => $userMedia, 'epfCategory' => $epfCategory, 'pcbGroup' => $pcbGroup, 'socsoCategory' => $socsoCategory,'categories' => $categories,'details'=>$details]);   	
     }
     public function displayAsset()
     {
         $id = Auth::user()->employee->id;
         $employee = Employee::with('user')
-        ->with(['employee_confirmed' => function($query) use ($id)
+        /*->with(['employee_confirmed' => function($query) use ($id)
         {
             $query->where('status','=','confirmed-employment')
             ->where ('emp_id','=',$id);
-        }])
+        }])*/
         ->find($id);
         $employeeAssets = EmployeeAsset::where('emp_id','=', $id)->get();
-        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets]);   
+        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets]);
     }
     public function displayAttach(Request $request, $id)
     {
@@ -88,6 +208,33 @@ class EmployeeController extends Controller
         ->get();
        
         return view('pages.employee.assetattach',['attachs' => $attachs,'id' => $id]);   
+    }
+    public function assetDisplay($id)
+    {
+        //Log::debug("Asset display");
+        //Log::debug($id);
+        $employee = Employee::with('user')
+        ->find($id);
+        
+        $details = DB::table('employees')
+        ->leftjoin('sections','employees.section_id','=','sections.id')
+        ->leftjoin('departments','employees.department_id','=','departments.id')
+        ->leftjoin('employee_positions','employees.position_id','=','employee_positions.id')
+        ->leftjoin('areas','employees.area_id','=','areas.id')
+        ->leftjoin('branches','employees.branch_id','=','branches.id')
+        ->leftjoin('cost_centres','employees.cost_centre_id','=','cost_centres.id')
+        ->select('sections.name as section','departments.name as department','employee_positions.name as position','areas.name as area','branches.name as branch','cost_centres.name as cost_centre')
+        ->where('employees.id',$id)
+        ->first();
+
+        $userMedia = DB::table('employees')
+        ->join('medias', 'employees.profile_media_id', '=', 'medias.id')
+        ->select('medias.*')
+        ->where('employees.id', $id)
+        ->first();
+        $roles = AccessControllHelper::getRoles();
+        $items = CompanyAsset::all();
+        return view('pages.employee.assetid', ['employee' => $employee, 'userMedia' => $userMedia, 'roles' => $roles, 'items' => $items,'details' => $details]);          
     }
     public function postEditProfilePicture(Request $request) 
     {

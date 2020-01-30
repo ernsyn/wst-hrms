@@ -24,8 +24,9 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/profile','Employee\EmployeeController@displayProfile')->name('employee.profile');
     Route::get('/asset','Employee\EmployeeController@displayAsset')->name('employee.asset');
+    Route::get('/index','Employee\EmployeeController@index')->name('employee.index');
     Route::post('auth/{id}/change-password','AuthController@postChangePassword')->name('auth.change-password.post')->where('id', '[0-9]+');
-     Route::get('/assetattach/{id}','Employee\EmployeeController@displayAttach')->name('employee.assetattach')->where('id', '[0-9]+');
+    Route::get('/assetattach/{id}','Employee\EmployeeController@displayAttach')->name('employee.assetattach');
 });
 
 // MODE: Employee
@@ -48,8 +49,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('e-leave/days/{start_date}/{end_date}', 'Employee\ELeaveController@ajaxCalculateActualLeaveDays')
     ->name('employee.e-leave.days.ajax.get')->where(['start_date' => '[A-Za-z0-9\-\/]+', 'end_date' => '[A-Za-z0-9\-\/]+']);
     Route::post('e-leave/working-day','Employee\ELeaveController@postLeaveRequest')->name('employee.e-leave.leave-request.post')->where('id', '[0-9]+');
-
-    // Data Tables
+       // Data Tables
     Route::get('employee/dt/emergency-contacts', 'Employee\EmployeeController@getDataTableEmergencyContacts')->name('employee.dt.emergency-contacts');
     Route::get('employee/dt/dependents', 'Employee\EmployeeController@getDataTableDependents')->name('employee.dt.dependents');
     Route::get('employee/dt/immigrations', 'Employee\EmployeeController@getDataTableImmigrations')->name('employee.dt.immigrations');
@@ -67,6 +67,11 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('employee/attendances', 'Employee\EmployeeController@ajaxGetAttendances')->name('employee.attendances.get');
     Route::post('employee/dependents','Employee\EmployeeController@postDependent')->name('employee.dependents.post');
+    Route::get('get-employees-datatables', 'Employee\EmployeeController@getDataTableEmployees')->name('get.employee.data');
+
+    Route::get('employee/employeelist/{id}','Employee\EmployeeController@display')->name('employee.employeelist')->where('id', '[0-9]+')->middleware('securityGroup');
+    Route::get('employee/assetid/{id}','Admin\EmployeeController@assetDisplay')->name('employee.assetid')->where('id', '[0-9]+'); 
+     
 
     //employee edit profile
     Route::post('employees/profile-pic','Employee\EmployeeController@postEditProfilePicture')->name('employees.profile-pic.edit.post');
@@ -323,7 +328,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::get('changepassword', 'Admin\EmployeeController@changepassword')->name('admin.changepassword');
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_ASSET]], function () {
         Route::get('employees/assetlist', 'Admin\EmployeeController@assetList')->name('admin.employees.assetlist');
-        Route::get('employees/assetid/{id}','Admin\EmployeeController@assetDisplay')->name('admin.employees.assetid')->where('id', '[0-9]+'); 
+    Route::get('employees/assetid/{id}','Admin\EmployeeController@assetDisplay')->name('admin.employees.assetid')->where('id', '[0-9]+'); 
     });
   
     Route::group(['middleware' => ['permission:Assign Role']], function () {
