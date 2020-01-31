@@ -53,8 +53,8 @@
                 <li class="menu-option {{ request()->is('employee/profile') ? 'active' : '' }}">
                     <a href="{{ route('employee.profile') }}">View My Profile</a>
                 </li>
-                <li class="menu-option {{ request()->is('employee/asset') ? 'active' : '' }}">
-                    <a href="{{ route('employee.asset') }}">View Asset</a>
+                <li class="menu-option {{ request()->is('employee/assetid') ? 'active' : '' }}">
+                    <a href="{{ route('employee.assetid', ['id' => $employee->id]) }}">View Asset</a>
                 </li>
                  <li class="menu-option {{ request()->is('employee/index') ? 'active' : '' }}">
                     <a href="{{ route('employee.index') }}">Employee List</a>

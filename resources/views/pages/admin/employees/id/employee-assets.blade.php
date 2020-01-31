@@ -92,7 +92,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
-                            <input name="asset_attach[]" name="asset_attach" type="file" class="form-control" multiple>
+                            <input name="asset_attach[]" id="asset_attach" type="file" class="form-control" multiple>
                             <div id="asset_attach-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -154,7 +154,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="issue_date-edit"><strong>Issued Date*</strong></label>
+                            <label for="issue_date_edit"><strong>Issued Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
                                 <input type="text" id="issue_date_edit" name="issue_date_edit" class="form-control datetimepicker-input" data-target="#issue_date_edit" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#issue_date_edit" data-toggle="datetimepicker">
@@ -214,7 +214,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
-                             <input name="asset_attach[]" type="file" class="form-control" multiple>
+                             <input name="asset_attach[]" id="asset_attach_edit" type="file" class="form-control" multiple>
                             <div id="asset_attach-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -280,10 +280,10 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="issue_date-edit"><strong>Issued Date*</strong></label>
+                            <label for="issue_date-view"><strong>Issued Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issue_date_edit" name="issue_date_edit" class="form-control datetimepicker-input" data-target="#issue_date_edit" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
-                                <div class="input-group-append" data-target="#issue_date_edit" data-toggle="datetimepicker">
+                                <input type="text"  name="issue_date_view" id="issue_date_view" class="form-control datetimepicker-input" data-target="#issue_date_view" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
+                                <div class="input-group-append" data-target="#issue_date_view" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
                                 <div id="issue_date-error" class="invalid-feedback">
@@ -301,10 +301,10 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="return_date_edit"><strong>Return Date</strong></label>
+                            <label for="return_date_view"><strong>Return Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="return_date_edit" name="return_date_edit" class="form-control datetimepicker-input" data-target="#return_date_edit" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
-                                <div class="input-group-append" data-target="#return_date_edit" data-toggle="datetimepicker">
+                                <input type="text"  name="return_date_view" id="return_date_view" class="form-control datetimepicker-input" data-target="#return_date_view" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
+                                <div class="input-group-append" data-target="#return_date_view" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
                                 <div id="return_date-error" class="invalid-feedback">
@@ -314,10 +314,10 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="sold_date_edit"><strong>Sold Date</strong></label>
+                            <label for="sold_date_view"><strong>Sold Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="sold_date_edit" name="sold_date_edit" class="form-control datetimepicker-input" data-target="#sold_date_edit" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
-                                <div class="input-group-append" data-target="#sold_date_edit" data-toggle="datetimepicker">
+                                <input type="text" name="sold_date_view" id="sold_date_view" class="form-control datetimepicker-input" data-target="#sold_date_view" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
+                                <div class="input-group-append" data-target="#sold_date_view" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
                                 <div id="sold_date-error" class="invalid-feedback">
@@ -686,7 +686,7 @@
                     showAlert(data.success);
                     employeeAssetsTable.ajax.reload();
                     $('#edit-asset-popup').modal('toggle');
-                    //clearEmployeeAssetModal('#edit-assets-form');
+                    clearEmployeeAssetModal('#edit-assets-form');
                 },
                 error: function(xhr) {
                     if(xhr.status == 422) {
@@ -708,15 +708,15 @@
                                         $('#edit-assets-form textarea[name=asset_spec]').addClass('is-invalid');
                                         $('#edit-assets-form #asset_spec-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'issue_date':
+                                    case 'issue_date_edit':
                                         $('#edit-assets-form #issue_date_edit').addClass('is-invalid');
                                         $('#edit-assets-form #issue_date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'return_date':
+                                    case 'return_date_edit':
                                         $('#edit-assets-form #return_date_edit').addClass('is-invalid');
                                         $('#edit-assets-form #return_date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
-                                    case 'sold_date':
+                                    case 'sold_date_edit':
                                         $('#edit-assets-form #sold_date_edit').addClass('is-invalid');
                                         $('#edit-assets-form #sold_date-error').html('<strong>' + errors[errorField][0] + '</strong>');
                                     break;
@@ -774,24 +774,28 @@
             $('#view-assets-form #asset_name').val(currentData.asset_name);
             $('#view-assets-form input[name=asset_deposit]').val(currentData.asset_deposit);
             $('#view-assets-form textarea[name=asset_spec]').val(currentData.asset_spec);
+
             if(currentData.issue_date!=null) {
                 formatIssueDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.issue_date));
-                $('#view-assets-form #issue_date_edit').val(formatIssueDate);
+                $('#view-assets-form #issue_date_view').val(formatIssueDate);
             } else {
-                $('#view-assets-form #issue_date_edit').val();
+                $('#view-assets-form #issue_date_view').val();
             }
+
             if(currentData.return_date!=null) {
                 formatReturnDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.return_date));
-                $('#view-assets-form #return_date_edit').val(formatReturnDate);
+                $('#view-assets-form #return_date_view').val(formatReturnDate);
             } else {
-                $('#view-assets-form #return_date_edit').val();
+                $('#view-assets-form #return_date_view').val();
             }
+
            if(currentData.sold_date!=null) {
                 formatSoldDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.sold_date));
-                $('#view-assets-form #sold_date_edit').val(formatSoldDate);
+                $('#view-assets-form #sold_date_view').val(formatSoldDate);
             } else {
-                $('#view-assets-form #sold_date_edit').val();
+                $('#view-assets-form #sold_date_view').val();
             }
+
             $('#view-assets-form select[name=asset_status]').val(currentData.asset_status);
 
             
@@ -842,7 +846,8 @@
         $(htmlId + ' input[name=issue_date]').val('');
         $(htmlId + ' input[name=return_date]').val('');
         $(htmlId + ' input[name=sold_date]').val('');
-        $(htmlId + ' input[name=asset_attach]').val('');
+        $("#asset_attach").val(null);
+        $("#asset_attach_edit").val(null);
         $(htmlId + ' input[name=asset_deposit]').val('');
        $
 

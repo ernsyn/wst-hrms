@@ -1,15 +1,15 @@
 <!-- ADD -->
-<div class="modal fade" id="add-discipline-popup" tabindex="-1" role="dialog" aria-labelledby="add-discipline-label"
+<div class="modal fade" id="add-discipline" tabindex="-1" role="dialog" aria-labelledby="add-discipline"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="add-discipline-label">Add Disciplinary Issue</h5>
+                <h5 class="modal-title" id="add-discipline">Add Disciplinary Issue</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="add-discipline-form">
+             <form id="add-discipline-form">
                 <div class="modal-body">
                     @csrf
                     <div class="form-row">
@@ -56,6 +56,7 @@
                 </button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
@@ -117,7 +118,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Attachment</strong></label>
-                            <input name="discipline_attach[]" id="discipline_attach" type="file" class="form-control" multiple>
+                            <input name="discipline_attach[]" id="discipline_attach_edit"  type="file" class="form-control" multiple>
                             <div id="discipline_attach-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -155,10 +156,10 @@
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="discipline_date-edit"><strong>Date*</strong></label>
+                            <label for="discipline_date-view"><strong>Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="discipline_date-edit" name="discipline_date-edit" class="form-control datetimepicker-input" data-target="#discipline_date-edit" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
-                                <div class="input-group-append" data-target="#discipline_date-edit" data-toggle="datetimepicker">
+                                <input type="text" id="discipline_date-view" name="discipline_date-view" class="form-control datetimepicker-input" data-target="#discipline_date-view" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
+                                <div class="input-group-append" data-target="#discipline_date-view" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
                                 <div id="discipline_date-error" class="invalid-feedback">
@@ -169,7 +170,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Title*</strong></label>
-                            <input name="discipline_title-edit" id="discipline_title-edit" type="text" class="form-control" placeholder="" value="" readonly >
+                            <input name="discipline_title-view" id="discipline_title-view" type="text" class="form-control" placeholder="" value="" readonly >
                             <div id="discipline_title-error" class="invalid-feedback">
 
                             </div>
@@ -178,7 +179,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Description*</strong></label>
-                            <textarea  name="discipline_desc-edit" id="discipline_desc-edit "class="form-control" value="" rows="8" readonly></textarea>
+                            <textarea  name="discipline_desc-view" id="discipline_desc-edit "class="form-control" value="" rows="8" readonly></textarea>
                             <div id="discipline_desc-error" class="invalid-feedback">
                             </div>
                         </div>
@@ -186,7 +187,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label><strong>Investigated By*</strong></label>
-                            <input name="created_by-edit" id="created_by-edit" type="text" class="form-control" placeholder="" value="" readonly="">
+                            <input name="created_by-view" id="created_by-view" type="text" class="form-control" placeholder="" value="" readonly="">
                             <div id="created_by-error" class="invalid-feedback">
 
                             </div>
@@ -280,7 +281,9 @@
         <div class="col-auto mr-auto"></div>
         <div class="col-auto">
         	
-            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-discipline-popup">
+            
+           
+            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#add-discipline">
                 Add 
             </button>
             
@@ -363,7 +366,7 @@
             e.preventDefault();
              var form = document.forms.namedItem("add-discipline-form");
             var formdata = new FormData(form);
-            clearEmployeeAssetError('#add-discipline-form');
+            clearDisciplineError('#add-discipline-form');
             $.ajax({
                 url: "{{ route('admin.employees.overview.post', ['id' => $id]) }}",
                 type: 'POST',
@@ -373,7 +376,7 @@
                 success: function(data) {
                     showAlert(data.success);
                     overviewDisciplineTable.ajax.reload();
-                    $('#add-discipline-popup').modal('toggle');
+                    $('#add-discipline').modal('toggle');
                     clearDisciplineModal('#add-discipline-form')
                 },
                 error: function(xhr) {
@@ -410,7 +413,7 @@
         //VIEW
                 var editId = null;
         $('#view-discipline-popup').on('show.bs.modal', function (event) {
-            clearBankAccountError('#view-discipline-form');
+            clearDisciplineError('#view-discipline-form');
             var button = $(event.relatedTarget)
             var currentData = JSON.parse(decodeURI(button.data('current')))
             //console.log('Data: ', currentData)
@@ -436,21 +439,21 @@
                     }
                 }
             });
-            $('#view-discipline-form input[name=discipline_title-edit]').val(currentData.discipline_title);
-            $('#view-discipline-form input[name=created_by-edit]').val(currentData.investigateBy);
-            $('#view-discipline-form textarea[name=discipline_desc-edit]').val(currentData.discipline_desc);
+            $('#view-discipline-form input[name=discipline_title-view]').val(currentData.discipline_title);
+            $('#view-discipline-form input[name=created_by-view]').val(currentData.investigateBy);
+            $('#view-discipline-form textarea[name=discipline_desc-view]').val(currentData.discipline_desc);
             if(currentData.discipline_date!=null){
                 formatDisciplineDate= $.datepicker.formatDate("d/mm/yy", new Date(currentData.discipline_date));
-                $('#view-discipline-form #discipline_date-edit').val(formatDisciplineDate);
+                $('#view-discipline-form #discipline_date-view').val(formatDisciplineDate);
             } else {
-                $('#view-discipline-form #discipline_date-edit').val();
+                $('#view-discipline-form #discipline_date-view').val();
             }
         });
 
         // EDIT
         var editId = null;
         $('#edit-discipline-popup').on('show.bs.modal', function (event) {
-            clearBankAccountError('#edit-discipline-form');
+            clearDisciplineError('#edit-discipline-form');
             var button = $(event.relatedTarget)
             var currentData = JSON.parse(decodeURI(button.data('current')))
             //console.log('Data: ', currentData)
@@ -493,7 +496,7 @@
              e.preventDefault();
              var form = document.forms.namedItem("edit-discipline-form");
             var formdata = new FormData(form);
-            clearEmployeeAssetError('#edit-assets-form');
+            clearDisciplineError('#edit-assets-form');
             $.ajax({
                 url: editRoute,
                 type: 'POST',
@@ -514,20 +517,20 @@
                             if (errors.hasOwnProperty(errorField)) {
                                 console.log("Error: ", errorField);
                                 switch(errorField) {
-                                    case 'discipline_title':
+                                    case 'discipline_title-edit':
                                         $('#edit-discipline-form input[name=discipline_title-edit]').addClass('is-invalid');
                                         $('#edit-discipline-form #discipline_title-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'discipline_desc':
+                                    case 'discipline_desc-edit':
                                         $('#edit-discipline-form textarea[name=discipline_desc-edit]').addClass('is-invalid');
                                         $('#edit-discipline-form #discipline_desc-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
-                                    case 'discipline_date':
+                                    case 'discipline_date-edit':
                                         $('#edit-discipline-form #discipline_date-edit').addClass('is-invalid');
                                         $('#edit-discipline-form #discipline_date-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                     case 'discipline_attach':
-                                        $('#edit-discipline-form #discipline_attach').addClass('is-invalid');
+                                        $('#edit-discipline-form input[name=discipline_attach]').addClass('is-invalid');
                                         $('#edit-discipline-form #discipline_attach-error').html('<strong>' + errors[errorField][0] + "</strong>");
                                     break;
                                 }
@@ -575,19 +578,20 @@
         });
         function clearDisciplineModal(htmlId) {
 	        $(htmlId + ' input[name=discipline_title]').val('');
-	        $(htmlId + ' input[name=discipline_desc]').val('');
-	        $(htmlId + ' input[name=acc-status]').val('');
-	        $(htmlId + ' input[name=discipline_attach]').val('');
+	        $(htmlId + ' textarea[name=discipline_desc]').val('');
+	        $(htmlId + ' input[name=discipline_date]').val('');
+	        $("#discipline_attach").val(null);
+            $("#discipline_attach_edit").val(null);
 
 	        $(htmlId + ' input[name=discipline_title]').removeClass('is-invalid');
-	        $(htmlId + ' input[name=discipline_desc]').removeClass('is-invalid');
+	        $(htmlId + ' textarea[name=discipline_desc]').removeClass('is-invalid');
 	        $(htmlId + ' input[name=discipline_date]').removeClass('is-invalid');
 	        $(htmlId + ' input[name=discipline_attach]').removeClass('is-invalid');
     	}
 
     	function clearDisciplineError(htmlId) {
 	        $(htmlId + ' input[name=discipline_title]').removeClass('is-invalid');
-	        $(htmlId + ' input[name=discipline_desc]').removeClass('is-invalid');
+	        $(htmlId + ' textarea[name=discipline_desc]').removeClass('is-invalid');
 	        $(htmlId + ' input[name=discipline_date]').removeClass('is-invalid');
 	        $(htmlId + ' input[name=discipline_attach]').removeClass('is-invalid');
     	}
