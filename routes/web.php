@@ -70,7 +70,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('get-employees-datatables', 'Employee\EmployeeController@getDataTableEmployees')->name('get.employee.data');
 
     Route::get('employee/employeelist/{id}','Employee\EmployeeController@display')->name('employee.employeelist')->where('id', '[0-9]+')->middleware('securityGroup');
-    Route::get('employee/assetid/{id}','Admin\EmployeeController@assetDisplay')->name('employee.assetid')->where('id', '[0-9]+'); 
+    Route::get('employee/assetid/{id}','Employee\EmployeeController@assetDisplay')->name('employee.assetid')->where('id', '[0-9]+'); 
      
 
     //employee edit profile

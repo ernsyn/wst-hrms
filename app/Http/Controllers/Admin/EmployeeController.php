@@ -1277,6 +1277,7 @@ public function postAsset(Request $request)
             'emp_id' => 'required',
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
+            'asset_deposit' => 'nullable',
             'asset_spec' => 'nullable',
             'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
