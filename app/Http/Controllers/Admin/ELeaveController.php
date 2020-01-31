@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use App\User;
 use Artisan;
 use App\EmployeeJob;
+use App\Enums\HolidayTypeEnum;
 
 class ELeaveController extends Controller
 {
@@ -214,13 +215,16 @@ class ELeaveController extends Controller
                 $show_button = true;
             }
         }
+        $type = HolidayTypeEnum::choices();
 
-        return view('pages.admin.e-leave.configuration.leave-holidays', ['holiday' => $holiday, 'next_year' => $add_year, 'disable_button' => $check_next_year, 'show_button' => $show_button]);
+        return view('pages.admin.e-leave.configuration.leave-holidays', ['holiday' => $holiday, 'next_year' => $add_year, 'disable_button' => $check_next_year, 'show_button' => $show_button, 'type' => $type]);
     }
 
     public function addPublicHoliday()
     {
-        return view('pages.admin.e-leave.configuration.add-leave-holidays');
+        $type = HolidayTypeEnum::choices();
+        
+        return view('pages.admin.e-leave.configuration.add-leave-holidays', ['type' => $type]);
     }
 
     public function postAddPublicHoliday(Request $request)
@@ -260,6 +264,7 @@ class ELeaveController extends Controller
 
         $publicHolidayData['status'] =  'active';
         Holiday::create($publicHolidayData);
+        
 
         return redirect()->route('admin.e-leave.configuration.leave-holidays')->with('status', 'Holiday has successfully been added.');
         }
@@ -272,7 +277,10 @@ class ELeaveController extends Controller
     public function editHoliday(Request $request, $id)
     {
         $holidays = Holiday::find($id);
-        return view('pages.admin.e-leave.configuration.edit-leave-holidays', ['holidays' => $holidays]);
+        
+        $type = HolidayTypeEnum::choices();
+        
+        return view('pages.admin.e-leave.configuration.edit-leave-holidays', ['holidays' => $holidays, 'type' => $type]);
     }
 
     public function postEditHoliday(Request $request, $id)

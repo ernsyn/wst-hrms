@@ -14,7 +14,7 @@ class AddTypeToHolidaysTable extends Migration
     public function up()
     {
         Schema::table('holidays', function (Blueprint $table) {
-            $table->string('type')->nullable()->after('status');
+            $table->Integer('type')->nullable()->after('status');
         });
     }
 
