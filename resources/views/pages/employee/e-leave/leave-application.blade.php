@@ -4,19 +4,19 @@
 <div id="page-leave-application" class="container p-4">
         <div id="alert-container">
             </div>
-    <div class="row">
-        <div class="col-xl-8">      
-            <div class="card-body-leave" >
-                <div class="container-fluid">
-                    <div id='calendar-leave' class="calendar-leave">
-                        <div class="progress m-3">
+<!--     <div class="row"> -->
+<!--         <div class="col-xl-8">       -->
+<!--             <div class="card-body-leave" > -->
+<!--                 <div class="container-fluid"> -->
+<!--                     <div id='calendar-leave' class="calendar-leave"> -->
+<!--                         <div class="progress m-3"> -->
                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="alert alert-danger" id="error-message-alert" role="alert" hidden></div>
-                </div>               
-            </div>
-        </div>
+<!--                         </div> -->
+<!--                     </div> -->
+<!--                     <div class="alert alert-danger" id="error-message-alert" role="alert" hidden></div> -->
+<!--                 </div>                -->
+<!--             </div> -->
+<!--         </div> -->
         <div class="col-xl-4">
             <div class="card calendar-leave">
                 <div class="card-body-leave">
