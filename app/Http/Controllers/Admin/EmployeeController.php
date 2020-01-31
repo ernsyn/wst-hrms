@@ -1208,6 +1208,7 @@ class EmployeeController extends Controller
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
+            'asset_deposit' => 'nullable',
             'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
@@ -1718,16 +1719,18 @@ public function postAsset(Request $request)
     public function postEditDiscipline(Request $request, $emp_id, $id)
     { 
         //dd($request->all());
-        $DisciplineUpdateData = $request->validate([
+        $disciplineUpdateData = $request->validate([
             'discipline_date-edit' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'discipline_desc-edit' => 'required',
-            'discipline_title-edit' => 'required'
-            
+            'discipline_title-edit' => 'required'   
         ]);
         
-        $DisciplineUpdateData['discipline_date-edit'] = implode("-", array_reverse(explode("/", $DisciplineUpdateData['discipline_date-edit'])));
-        
-        EmployeeDisciplinary::find($id)->update($DisciplineUpdateData);
+        $disciplineData = EmployeeDisciplinary::find($id);
+        $disciplineData->discipline_date = $disciplineUpdateData['discipline_date-edit'] = implode("-", array_reverse(explode("/", $disciplineUpdateData['discipline_date-edit'])));
+        $disciplineData->discipline_title = $disciplineUpdateData['discipline_title-edit'];
+        $disciplineData->discipline_desc = $disciplineUpdateData['discipline_desc-edit'];
+        $disciplineData->save();
+       
         if($request->hasFile('discipline_attach'))
         {
             $files = $request->file('discipline_attach');
@@ -1758,15 +1761,25 @@ public function postAsset(Request $request)
             'sold_date_edit' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
             'asset_status' => 'required'            
         ]);
-                $assetUpdateData['issue_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['issue_date_edit'])));
+
+        $assetData = EmployeeAsset::find($id);
+        $assetData->issue_date = $assetUpdateData['issue_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['issue_date_edit'])));
         
-        if( $assetUpdateData['return_date_edit']!=null)
-        {$assetUpdateData['return_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['return_date_edit'])));}
+        if( $assetUpdateData['return_date_edit']!=null){
+
+            $assetData->return_date = $assetUpdateData['return_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['return_date_edit'])));
+        }
         
-        if( $assetUpdateData['sold_date_edit']!=null)
-        {$assetUpdateData['sold_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['sold_date_edit'])));}
-        EmployeeAsset::find($id)->update($assetUpdateData);
+        if( $assetUpdateData['sold_date_edit']!=null){
+
+            $assetData->sold_date = $assetUpdateData['sold_date_edit'] = implode("-", array_reverse(explode("/", $assetUpdateData['sold_date_edit'])));
+        }
         
+        $assetData->asset_name = $assetUpdateData['asset_name'];
+        $assetData->asset_quantity = $assetUpdateData['asset_quantity'];
+        $assetData->asset_spec = $assetUpdateData['asset_spec'];
+        $assetData->asset_status = $assetUpdateData['asset_status'];
+        $assetData->save();
         if($request->hasFile('asset_attach'))
         {
             $files = $request->file('asset_attach');

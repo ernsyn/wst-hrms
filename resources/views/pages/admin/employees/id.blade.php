@@ -42,7 +42,6 @@
                         	@endcan
                         @can(PermissionConstant::VIEW_BANK)
                         <a class="nav-item nav-link" id="nav-bank-tab" data-toggle="tab" href="#nav-bank" role="tab" aria-controls="nav-bank" aria-selected="true">Bank</a>
-						<a class="nav-item nav-link" id="nav-asset-tab" data-toggle="tab" href="#nav-asset" role="tab" aria-controls="nav-asset" aria-selected="true">Asset</a>
 							@endcan
                         @canany([PermissionConstant::VIEW_EXPERIENCE,PermissionConstant::VIEW_EDUCATION,PermissionConstant::VIEW_SKILL])
                         <a class="nav-item nav-link" id="nav-qualification-tab" data-toggle="tab" href="#nav-qualification" role="tab" aria-controls="nav-qualification"
@@ -262,8 +261,6 @@
                     @include('pages.admin.employees.id.visas', ['id' => $employee->id])
                     {{-- Job --}}
                     @include('pages.admin.employees.id.jobs', ['id' => $employee->id])
-                    {{-- Asset --}}
-                    @include('pages.admin.employees.id.employee-assets', ['id' => $employee->id])
                     {{-- Bank --}}
                     @include('pages.admin.employees.id.bank-accounts', ['id' => $employee->id])
                     {{-- Qualification --}}
