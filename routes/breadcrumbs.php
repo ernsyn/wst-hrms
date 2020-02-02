@@ -30,7 +30,7 @@ Breadcrumbs::for('employee.profile', function ($trail) {
 
 Breadcrumbs::for('employee.asset', function ($trail) {
     // $trail->parent('profile');
-    $trail->push('My Asset', route('employee.asset'));
+    $trail->push('Holding Asset', route('employee.asset'));
 });
 Breadcrumbs::for('employee.index', function ($trail) {
     // $trail->parent('profile');
@@ -44,7 +44,7 @@ Breadcrumbs::for('employee.employeelist', function ($trail) {
 
 Breadcrumbs::for('employee.assetid', function ($trail) {
     $trail->parent('employee.index');
-    $trail->push('Employee Asset', route('employee.assetid',''));
+    $trail->push('Employee Holds Company Asset', route('employee.assetid',''));
 });
 
 Breadcrumbs::for('employee.assetattach', function ($trail) {
@@ -87,7 +87,7 @@ Breadcrumbs::for('admin.employees', function ($trail) {
 //employee asset list
 Breadcrumbs::for('admin.employees.assetlist', function ($trail) {
     $trail->parent('admin.dashboard');
-    $trail->push('Employees List', route('admin.employees.assetlist'));
+    $trail->push('Employees Hold Company Asset List', route('admin.employees.assetlist'));
 });
 //asset attach list
 Breadcrumbs::for('admin.employees.assetattach', function ($trail) {
@@ -109,7 +109,7 @@ Breadcrumbs::for('admin.employees.id', function ($trail) {
 // Home > Admin > Employee List > Profile
 Breadcrumbs::for('admin.employees.assetid', function ($trail) {
     $trail->parent('admin.employees');
-    $trail->push('Employee Asset', route('admin.employees.assetid', ''));
+    $trail->push('Employee Hold Company Asset', route('admin.employees.assetid', ''));
 });
 // SECTION: (Admin) E-Leave
 

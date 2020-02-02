@@ -73,7 +73,7 @@
 				{{-- OPTION: Employee Asset --}}
                 @can(PermissionConstant::VIEW_ASSET)
                 <li class="menu-option {{ request()->is('admin/employees/assetlist') ? 'active' : '' }}">
-                    <a href="{{ route('admin.employees.assetlist') }}">Employee Asset</a>
+                    <a href="{{ route('admin.employees.assetlist') }}">Employee Holds Company Asset</a>
                 </li>
                 @endcan
             </ul>

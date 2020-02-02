@@ -69,6 +69,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\JobAttach;
 use App\Branch;
+use App\SalaryStructure;
 
 class EmployeeController extends Controller
 {
@@ -2337,5 +2338,27 @@ public function postAsset(Request $request)
             $writer->save('php://output'); // download file
             return;
         }
+    }
+    
+    public function getSalary(Request $request)
+    {
+        // Log::debug("Get Salary");
+        // Log::debug($request);
+        
+        $salary = '';
+        $employee = Employee::find($request->employeeId);
+        if(isset($request->team) && isset($request->grade)) {
+            $salaryStructure = SalaryStructure::where([
+                ['categories_id', $employee->category_id],
+                ['team_id', $request->team],
+                ['grade_id', $request->grade]
+            ])->first();
+            // Log::debug($salaryStructure);
+            if(isset($salaryStructure)) {
+                $salary = $salaryStructure['basic_salary'] + $salaryStructure['KPI'];
+            }
+        }
+        // Log::debug($salary);
+        return $salary;
     }
 }

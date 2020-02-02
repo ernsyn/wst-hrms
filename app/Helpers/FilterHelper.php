@@ -398,7 +398,7 @@ class FilterHelper
         Log::debug($request);
         $user = Auth::user();
         $currentUser = Employee::where('user_id',Auth::id())->first();
-        $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
+//         $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
         
         //         $bankAccount = DB::table('employee_bank_accounts')
         //                         ->where('acc_status', 'Active');
@@ -425,10 +425,10 @@ class FilterHelper
                                     TIMESTAMPDIFF( MONTH, employees.join_company_date, case when employees.resignation_date is null then now() else employees.resignation_date end) % 12,'mth') as serviceYear")
                                     //                             'bankAcc.*'
                 )
-            ->where('employee_report_to.report_to_emp_id', $currentUser->id)
-            ->where(function($query) use($currentUser, $securityGroupAccess){
-                $query->whereIn('employees.main_security_group_id', $securityGroupAccess);
-            });
+            ->where('employee_report_to.report_to_emp_id', $currentUser->id);
+//             ->where(function($query) use($currentUser, $securityGroupAccess){
+//                 $query->whereIn('employees.main_security_group_id', $securityGroupAccess);
+//             });
 
         
         $searchOption = self::getSearchKey($request);

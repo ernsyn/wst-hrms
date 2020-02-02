@@ -144,15 +144,6 @@
                     @csrf
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label for="basic-salary"><strong>New Basic Salary*</strong></label>
-                            <input name="basic_salary" type="number" class="form-control" placeholder="" value="" >
-                            <div id="basic-salary-error" class="invalid-feedback">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12 mb-3">
                             <label for="cost-centre"><strong>Cost Centre</strong></label>
                             <select class="form-control" name="cost_centre_id" >
                                 <option value="">Please Select</option>
@@ -180,7 +171,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="team"><strong>Team*</strong></label>
-                            <select class="form-control" name="team_id" >
+                            <select class="form-control" name="team_id" onchange="getSalary()">
                                 <option value="">Please Select</option>
                                 @foreach(App\Team::all() as $team)
                                 <option value="{{ $team->id }}">{{ $team->name }}</option>
@@ -208,7 +199,7 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="grade"><strong>Grade*</strong></label>
-                            <select class="form-control" name="emp_grade_id" >
+                            <select class="form-control" name="emp_grade_id" onchange="getSalary()">
                                 <option value="">Please Select</option>
                                 @foreach(App\EmployeeGrade::all() as $grade)
                                 <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -260,7 +251,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="basic-salary"><strong>New Basic Salary*</strong></label>
+                            <input name="basic_salary" type="number" class="form-control" placeholder="" value="" >
+                            <div id="basic-salary-error" class="invalid-feedback">
 
+                            </div>
+                        </div>
+                    </div>
                     <div class="row form-group">
                         <label class="col-md-12 col-form-label"><strong>Date*</strong></label>
                         <div class="col-md-7">
@@ -372,7 +371,7 @@ $('#resign-details-modal').on('show.bs.modal', function (event) {
     var modal = $(this);
     modal.find('.modal-title').html('Resign Details:');
     modal.find('.modal-body').html('Resign Date:<br>' + date + '<br>Blacklisted:<br>' + blacklisted + '<br>Reason:<br>' + reason);
-})
+});
 
     var jobsTable = $('#employee-jobs-table').DataTable({
         "bInfo": true,
@@ -476,7 +475,7 @@ $('#resign-details-modal').on('show.bs.modal', function (event) {
                             element.attr('data-date', date);
                             element.attr('data-blacklisted', list); 
                             element.attr('data-reason', row.reason);
-                            console.log("Data: ", element.prop('outerHTML'));
+//                             console.log("Data: ", element.prop('outerHTML'));
                             button += element.prop('outerHTML');
                         }
                  	}
@@ -491,9 +490,28 @@ $('#resign-details-modal').on('show.bs.modal', function (event) {
         ]
     });
 
-</script>
-<script type="text/javascript">
+    
     $(function () {
+    	getSalary = function getSalary() {
+        	$.ajax({
+                url: "{{ route('admin.employees.jobs.get-salary') }}",
+                type: 'GET',
+                data: {
+					employeeId: {{ $id }},
+					team: $('#add-job-form select[name=team_id]').val(),
+					grade: $('#add-job-form select[name=emp_grade_id]').val()
+                },
+                error: function(xhr) {
+                    console.log("Error: ", xhr);
+                },
+                success: function(res) {
+                    console.log('*********');
+                    console.log(res);
+                    $('#add-job-form input[name=basic_salary]').val(res);
+                }
+            });
+        }
+        
         $('#add-job-form select[name=cost_centre_id]').selectize({
             plugins: ['restore_on_backspace'],
             sortField: 'text'
@@ -610,10 +628,10 @@ $('#resign-details-modal').on('show.bs.modal', function (event) {
 
                     if (xhr.status == 422) {
                         var errors = xhr.responseJSON.errors;
-                        console.log("Error: ", xhr);
+//                         console.log("Error: ", xhr);
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
-                                console.log("Error: ", errorField);
+//                                 console.log("Error: ", errorField);
                                 switch (errorField) {
                                     case 'basic_salary':
                                         $('#add-job-form input[name=basic_salary]').addClass(
@@ -728,9 +746,9 @@ $('#resign-details-modal').on('show.bs.modal', function (event) {
                 error: function(xhr) {
                     if(xhr.status == 422) {
                         var errors = xhr.responseJSON.errors;
-                        console.log("Error 422: ", xhr);
+//                         console.log("Error 422: ", xhr);
                     }
-                    console.log("Error: ", xhr);
+//                     console.log("Error: ", xhr);
                 }
             });
         });
@@ -845,10 +863,10 @@ $('#resign-details-modal').on('show.bs.modal', function (event) {
                     $(e.target).removeAttr('disabled');
                     if (xhr.status == 422) {
                         var errors = xhr.responseJSON.errors;
-                        console.log("Error: ", xhr);
+//                         console.log("Error: ", xhr);
                         for (var errorField in errors) {
                             if (errors.hasOwnProperty(errorField)) {
-                                console.log("Error: ", errorField);
+//                                 console.log("Error: ", errorField);
                                 switch (errorField) {
                                     case 'resignation_date':
                                         $('#add-resign-form #date-resign').addClass('is-invalid');
