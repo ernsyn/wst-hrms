@@ -327,7 +327,7 @@
                                 <div class="col-md-12 mb-3">
                                     <label for="dob"><strong>Date of Birth*</strong></label>
                                         <div class="input-group date" data-target-input="nearest">
-                                            <input type="text" id="dob" class="form-control datetimepicker-input" data-target="#dob">
+                                            <input type="text" id="dob" class="form-control" data-target="#dob" placeholder="dd/mm/yyyy">
                                             <div class="input-group-append" data-target="#dob" data-toggle="datetimepicker">
                                             	<div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 			</div>
@@ -395,7 +395,7 @@
                                 <div class="col-md-12 mb-3">
                                     <label for="driver-license-expiry-date"><strong>License Expiry Date</strong></label>
                                     <div class="input-group date" data-target-input="nearest">
-                                        <input type="text" id="driver-license-expiry-date" class="form-control datetimepicker-input" data-target="#driver-license-expiry-date"/>
+                                        <input type="text" id="driver-license-expiry-date" class="form-control" data-target="#driver-license-expiry-date" placeholder="dd/mm/yyyy"/>
                                         <div class="input-group-append" data-target="#driver-license-expiry-date" data-toggle="datetimepicker">
                                             <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 		</div>
@@ -677,14 +677,14 @@
             $('#edit-profile-form #main-security-group-id').val(currentData.main_security_group_id);
 
             if(currentData.dob!=null) {
-                formatDob = $.datepicker.formatDate("d/mm/yy", new Date(currentData.dob));
+                formatDob = $.datepicker.formatDate("dd/mm/yy", new Date(currentData.dob));
                 $('#edit-profile-form #dob').val(formatDob);
             } else {
                 $('#edit-profile-form #dob').val();
             }
             
             if(currentData.driver_license_expiry_date!=null) {
-                formatLicenseExpiry = $.datepicker.formatDate("d/mm/yy", new Date(currentData.driver_license_expiry_date));
+                formatLicenseExpiry = $.datepicker.formatDate("dd/mm/yy", new Date(currentData.driver_license_expiry_date));
                 $('#edit-profile-form #driver-license-expiry-date').val(formatLicenseExpiry);
             } else {
                 $('#edit-profile-form #driver-license-expiry-date').val();
