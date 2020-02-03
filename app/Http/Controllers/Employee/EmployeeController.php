@@ -197,7 +197,26 @@ class EmployeeController extends Controller
         }])*/
         ->find($id);
         $employeeAssets = EmployeeAsset::where('emp_id','=', $id)->get();
-        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets]);
+
+        $details = DB::table('employees')
+        ->leftjoin('sections','employees.section_id','=','sections.id')
+        ->leftjoin('departments','employees.department_id','=','departments.id')
+        ->leftjoin('employee_positions','employees.position_id','=','employee_positions.id')
+        ->leftjoin('areas','employees.area_id','=','areas.id')
+        ->leftjoin('branches','employees.branch_id','=','branches.id')
+        ->leftjoin('cost_centres','employees.cost_centre_id','=','cost_centres.id')
+        ->select('sections.name as section','departments.name as department','employee_positions.name as position','areas.name as area','branches.name as branch','cost_centres.name as cost_centre')
+        ->where('employees.id',$id)
+        ->first();
+
+        $userMedia = DB::table('employees')
+        ->join('medias', 'employees.profile_media_id', '=', 'medias.id')
+        ->select('medias.*')
+        ->where('employees.id', $id)
+        ->first();
+        $roles = AccessControllHelper::getRoles();
+        $items = CompanyAsset::all();
+        return view('pages.employee.asset', ['employee' => $employee,'employeeAssets' => $employeeAssets,'details'=> $details,'userMedia'=> $userMedia,'roles'=>$roles,'items'=>$items]);
     }
     public function displayAttach(Request $request, $id)
     {
@@ -211,6 +230,7 @@ class EmployeeController extends Controller
     }
     public function assetDisplay($id)
     {
+         //$id = Auth::user()->employee->id;
         //Log::debug("Asset display");
         //Log::debug($id);
         $employee = Employee::with('user')

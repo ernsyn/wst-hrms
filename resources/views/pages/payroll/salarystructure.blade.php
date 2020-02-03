@@ -56,7 +56,7 @@
                         <td>{{$salarystructure->KPI}}</td>
                         <td>
                         @can(PermissionConstant::UPDATE_SALARY_STRUCTURE)
-                        <button onclick="window.location='{{ route('payroll.salarystructure.edit',$salarystructure->id) }}';" class="round-btn btn btn-default fas fa-edit btn-segment"></button>
+                        <button onclick="window.location='{{ route('payroll.salarystructure.edit',$salarystructure->id) }}';" class="btn btn-success btn-smt fas fa-edit"></button>
                         @endcan
                         @can(PermissionConstant::DELETE_SALARY_STRUCTURE)
                         <button type="submit" data-toggle="modal" data-target="#confirm-delete-modal" data-entry-title='{{ $salarystructure->id }}' data-link='{{ route('payroll.salarystructure.delete', ['id ' => $salarystructure->id]) }}' class="btn btn-danger btn-smt fas fa-trash"></button>

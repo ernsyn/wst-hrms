@@ -206,6 +206,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:'.PermissionConstant::RESIGN]], function () {
         Route::post('employees/{id}/action/resign', 'Admin\EmployeeController@postResign')->name('admin.employees.id.action.resign')->where('id', '[0-9]+');
     });
+    Route::get('employees/jobs/get-salary', 'Admin\EmployeeController@getSalary')->name('admin.employees.jobs.get-salary');
     
     // Bank
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_BANK]], function () {
