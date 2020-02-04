@@ -1104,9 +1104,7 @@ class EmployeeController extends Controller
             }
             
             Employee::where('id', $id)->update(array(
-                'resignation_date'=> null,
-                'blacklisted' => 0,
-                'reason' => ""
+                'resignation_date'=> null
             ));
             
             $newJob = new EmployeeJob($jobData);
@@ -1162,9 +1160,7 @@ class EmployeeController extends Controller
 //         LeaveService::onJobEnd($id, $jobData['resignation_date'], $currentJob->id, true);
         
         Employee::where('id', $id)->update(array(
-            'resignation_date' => ($jobData['resignation_date']),
-            'blacklisted' => ($jobData['blacklisted']),
-            'reason' => ($jobData['reason'])
+            'resignation_date' => ($jobData['resignation_date'])
         ));
         $currentJob->update(array(
             'end_date'=> ($jobData['resignation_date']),
