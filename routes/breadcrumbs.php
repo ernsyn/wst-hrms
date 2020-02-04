@@ -8,6 +8,14 @@ Breadcrumbs::for('login', function ($trail) {
     $trail->push('Login', route('login'));
 });
 
+Breadcrumbs::for('password.request', function ($trail) {
+    $trail->push('Forgot Password', route('password.request'));
+});
+
+Breadcrumbs::for('password.reset', function ($trail, $token) {
+    $trail->push('Reset Password', route('password.reset', $token));
+});
+
 // SECTION: Employee
 // Home
 Breadcrumbs::for('employee.dashboard', function ($trail) {

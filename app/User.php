@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use App\Notifications\PasswordReset;
 
 class User extends Authenticatable implements Auditable
 {
@@ -37,7 +39,11 @@ class User extends Authenticatable implements Auditable
         'password', 'remember_token',
     ];
     
-
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordReset($token));
+    }
+    
     public function getId()
     {
         return $this->id;

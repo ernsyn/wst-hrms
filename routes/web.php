@@ -1,6 +1,7 @@
 <?php
 
 use App\Constants\PermissionConstant;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
