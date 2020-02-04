@@ -16,7 +16,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="discipline_date"><strong>Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="discipline_date" name="discipline_date" class="form-control datetimepicker-input" data-target="#discipline_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
+                                <input type="text" id="discipline_date" name="discipline_date" class="form-control" data-target="#discipline_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#discipline_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -35,7 +35,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
-                            <label><strong>Description</strong></label>
+                            <label><strong>Description*</strong></label>
                             <textarea name="discipline_desc" id="discipline_desc" class="form-control" rows="8" value=""></textarea>
                             <div id="discipline_desc-error" class="invalid-feedback">
                             </div>
@@ -80,7 +80,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="discipline_date-edit"><strong>Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="discipline_date-edit" name="discipline_date-edit" class="form-control datetimepicker-input" data-target="#discipline_date-edit" autocomplete="off" placeholder="DD/MM/YYYY"/>
+                                <input type="text" id="discipline_date-edit" name="discipline_date-edit" class="form-control" data-target="#discipline_date-edit" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#discipline_date-edit" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -158,7 +158,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="discipline_date-view"><strong>Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="discipline_date-view" name="discipline_date-view" class="form-control datetimepicker-input" data-target="#discipline_date-view" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
+                                <input type="text" id="discipline_date-view" name="discipline_date-view" class="form-control" data-target="#discipline_date-view" autocomplete="off" placeholder="DD/MM/YYYY" readonly/>
                                 <div class="input-group-append" data-target="#discipline_date-view" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>

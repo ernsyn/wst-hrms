@@ -104,7 +104,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="issue_date"><strong>Issue Date*</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="issue_date" name="issue_date" class="form-control datetimepicker-input" data-target="#issue_date" autocomplete="off" placeholder="DD/MM/YYYY"/ >
+                                <input type="text" id="issue_date" name="issue_date" class="form-control" data-target="#issue_date" autocomplete="off" placeholder="DD/MM/YYYY"/ >
                                 <div class="input-group-append" data-target="#issue_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -125,7 +125,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="return_date"><strong>Return Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="return_date" name="return_date" class="form-control datetimepicker-input" data-target="#return_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
+                                <input type="text" id="return_date" name="return_date" class="form-control" data-target="#return_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#return_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -138,7 +138,7 @@
                         <div class="col-md-8 mb-3">
                             <label for="sold_date"><strong>Sold Date</strong></label>
                             <div class="input-group date" data-target-input="nearest">
-                                <input type="text" id="sold_date"  name="sold_date" class="form-control datetimepicker-input" data-target="#sold_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
+                                <input type="text" id="sold_date"  name="sold_date" class="form-control" data-target="#sold_date" autocomplete="off" placeholder="DD/MM/YYYY"/>
                                 <div class="input-group-append" data-target="#sold_date" data-toggle="datetimepicker">
                                     <div class="input-group-text rounded-right"><i class="far fa-calendar-alt"></i></div>
                                 </div>

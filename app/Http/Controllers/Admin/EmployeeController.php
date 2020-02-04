@@ -277,7 +277,7 @@ class EmployeeController extends Controller
         $disciplineData = $request->validate([
             'discipline_title' => 'required',
             'discipline_desc' => 'required',
-            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'discipline_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
             'discipline_attach' => 'nullable'
         ]);
         
@@ -1206,9 +1206,9 @@ class EmployeeController extends Controller
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
             'asset_deposit' => 'nullable',
-            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
             
         ]);
         
@@ -1276,9 +1276,9 @@ public function postAsset(Request $request)
             'asset_quantity' => 'required|numeric',
             'asset_deposit' => 'nullable',
             'asset_spec' => 'nullable',
-            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/' ,
+            'issue_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y|date_format:d/m/Y|date_format:d/m/Y',
+            'return_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y|date_format:d/m/Y',
+            'sold_date' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y' ,
             'asset_attach' => 'nullable'
         ]);
         
@@ -1718,7 +1718,7 @@ public function postAsset(Request $request)
     { 
         //dd($request->all());
         $disciplineUpdateData = $request->validate([
-            'discipline_date-edit' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'discipline_date-edit' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
             'discipline_desc-edit' => 'required',
             'discipline_title-edit' => 'required'   
         ]);
@@ -1754,9 +1754,9 @@ public function postAsset(Request $request)
             'asset_name' => 'required',
             'asset_quantity' => 'required|numeric',
             'asset_spec' => 'nullable',
-            'issue_date_edit' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'return_date_edit' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
-            'sold_date_edit' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/',
+            'issue_date_edit' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'return_date_edit' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'sold_date_edit' => 'nullable|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
             'asset_status' => 'required'            
         ]);
 
