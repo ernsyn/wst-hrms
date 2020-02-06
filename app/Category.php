@@ -8,6 +8,13 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Category extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+    protected $table = 'categories';
+    
+    protected $fillable = [
+        'company_id',
+        'name',
+        'created_by'
+    ];
     
     public function company()
     {
