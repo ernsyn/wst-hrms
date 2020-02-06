@@ -69,6 +69,16 @@
                                     <textarea class="form-control" name="reason" id="reason" rows="5" placeholder="Please input your reason here..." required></textarea>
                                 </div>
                             </div>
+                            <div class="form-group row" id="required-child-box">
+                                <div class="col-sm-12 px-0">
+                                    <label class="col-sm-12 info-label"><i class="fas fa-info-circle"></i> Please key in Child's name in Reason</label>                              
+                                </div>
+                            </div>
+                            <div class="form-group row" id="required-deceased-box">
+                                <div class="col-sm-12 px-0">
+                                    <label class="col-sm-12 info-label"><i class="fas fa-info-circle"></i> Please key in Deceased name and Relationship in Reason</label>                              
+                                </div>
+                            </div>
                             <div class="dropdown-divider pb-3"></div>
                             <div class="form-group row" id="required-attachment-box">
                                 <div class="col-sm-6 px-0">
@@ -199,6 +209,8 @@ var leave_type_data;
         var workingDays = [];
 
         $("#required-attachment-box").hide();
+        $("#required-child-box").hide();
+        $("#required-deceased-box").hide();
         $("#can-edit-delete").hide();
         $("#cancel-edit-leave-request").hide();
 
@@ -347,6 +359,19 @@ var leave_type_data;
                     $("#required-attachment-label").text("Attachment");
                     $("#required-attachment-box").hide();
                 }
+                if(leave_type_data.code == 'MATERNITY' | leave_type_data.code == 'PATERNITY') {
+                	$("#required-child-box").show();
+                }
+                else {
+                	$("#required-child-box").hide();
+                }
+
+                if(leave_type_data.code == 'COMPASSIONATE') {
+                	$("#required-deceased-box").show();
+                }
+                else {
+                	$("#required-deceased-box").hide();
+                }
 
                 $('#mode').val('edit');
             });
@@ -467,6 +492,19 @@ if(leave_type_data.consecutive) {
                 attachmentRequired = false;
                 $("#required-attachment-label").text("Attachment");
                 $("#required-attachment-box").hide();
+            }
+            if(leave_type_data.code == 'MATERNITY' | leave_type_data.code == 'PATERNITY') {
+            	$("#required-child-box").show();
+            }
+            else {
+            	$("#required-child-box").hide();
+            }
+
+            if(leave_type_data.code == 'COMPASSIONATE') {
+            	$("#required-deceased-box").show();
+            }
+            else {
+            	$("#required-deceased-box").hide();
             }
 
             console.log(leave_type_data);
