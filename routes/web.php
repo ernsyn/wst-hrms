@@ -784,8 +784,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
 
     Route::get('e-leave/configuration/leave-requests', 'Admin\ELeaveController@displayLeaveRequests')->name('admin.e-leave.configuration.leave-requests');
     Route::get('e-leave/{id}/attachment', 'Admin\ELeaveController@getLeaveRequestAttachment')->name('admin.e-leave.attachment')->where('id', '[0-9]+');;
-
-    Route::get('e-leave/leave-application', 'Admin\ELeaveController@displayLeaveApplication')->name('admin.e-leave.leave-application');
+    
+    Route::group(['middleware' => ['permission:'.PermissionConstant::APPLY_LEAVE_ON_BEHALF]], function () {
+        Route::get('e-leave/leave-application', 'Admin\ELeaveController@displayLeaveApplication')->name('admin.e-leave.leave-application');
+    });
     Route::get('e-leave/leave-report', 'Admin\ELeaveController@displayLeaveReports')->name('admin.e-leave.leave-report');
     Route::get('e-leave/leave-report/total-balanced-report/{emp_id}','Admin\ELeaveController@getTotalBalancedReport')->name('admin.e-leave.total-balanced-report')->where('emp_id', '[A-Za-z0-9\-\/]+');
     Route::get('e-leave/leave-report/total-transaction-report/{emp_id}','Admin\ELeaveController@getTotalTransactionReport')->name('admin.e-leave.total-transaction-report')->where('emp_id', '[A-Za-z0-9\-\/]+');

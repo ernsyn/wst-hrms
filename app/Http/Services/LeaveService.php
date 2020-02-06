@@ -754,6 +754,7 @@ Log::debug($inc_off_days);
                 array_push($leaveTypesForUser, array_merge(
                     [
                         'id' => $leaveType->id,
+                        'code' => $leaveType->code,
                         'name' => $leaveType->name,
                         'description' => $leaveType->description,
                         'available_days' => $availableDays,

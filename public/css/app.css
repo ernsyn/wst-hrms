@@ -18010,6 +18010,10 @@ select:-webkit-autofill:focus {
   padding: 2rem;
 }
 
+.info-label {
+  font-size: 80%;
+}
+
 .default-user-logo-light {
   color: white;
 }

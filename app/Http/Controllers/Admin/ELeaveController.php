@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Constants\LeaveTypeRule;
+use App\Helpers\AccessControllHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +13,7 @@ use App\LTAppliedRule;
 use App\LTEntitlementGradeGroup;
 use App\LeaveRequest;
 use App\TaskStatus;
-use Auth;
+// use Auth;
 use App\LeaveAllocation;
 use App\EmployeeReportTo;
 use App\LeaveRequestApproval;
@@ -28,6 +29,7 @@ use App\User;
 use Artisan;
 use App\EmployeeJob;
 use App\Enums\HolidayTypeEnum;
+use Illuminate\Support\Facades\Auth;
 
 class ELeaveController extends Controller
 {
@@ -873,12 +875,19 @@ class ELeaveController extends Controller
 
     public function ajaxGetEmployees(Request $request)
     {
+        $user = Auth::user();
+        $currentUser = Employee::where('user_id',Auth::id())->first();
+        $securityGroupAccess = AccessControllHelper::getSecurityGroupAccess();
+        
         $pageLimit = $request->get("page_limit");
         $nameQuery = $request->get("q");
         $employees = Employee::with('user:id,name')
             ->whereHas('user', function ($q) use ($nameQuery) {
                 $q->where('name', 'like', "%{$nameQuery}%");
             })
+            ->where(function($query) use($currentUser, $securityGroupAccess){
+                $query->whereIn('employees.main_security_group_id', $securityGroupAccess);
+            })                
             ->take($pageLimit)
             ->get(['id', 'code', 'user_id']);
 
