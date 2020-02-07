@@ -134,7 +134,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:'.PermissionConstant::EXPORT_EMPLOYEE]], function () {
         Route::get('export-employees', 'Admin\EmployeeController@exportEmployees')->name('export.employees');
     });
-    
+    Route::get('export-profile', 'Admin\EmployeeController@exportProfile')->name('export.profile');
+ 
     // Emergency_Contact
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EMERGENCY_CONTACT]], function () {
         Route::get('employees/{id}/dt/emergency-contacts', 'Admin\EmployeeController@getDataTableEmergencyContacts')->name('admin.employees.dt.emergency-contacts')->where('id', '[0-9]+');

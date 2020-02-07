@@ -1104,7 +1104,9 @@ class EmployeeController extends Controller
             }
             
             Employee::where('id', $id)->update(array(
-                'resignation_date'=> null
+                'resignation_date'=> null,
+                'blacklisted' => 0,
+                'reason' => ""
             ));
             
             $newJob = new EmployeeJob($jobData);
@@ -1160,7 +1162,9 @@ class EmployeeController extends Controller
 //         LeaveService::onJobEnd($id, $jobData['resignation_date'], $currentJob->id, true);
         
         Employee::where('id', $id)->update(array(
-            'resignation_date' => ($jobData['resignation_date'])
+            'resignation_date' => ($jobData['resignation_date']),
+            'blacklisted' => ($jobData['blacklisted']),
+            'reason' => ($jobData['reason'])
         ));
         $currentJob->update(array(
             'end_date'=> ($jobData['resignation_date']),
@@ -2318,6 +2322,22 @@ public function postAsset(Request $request)
                     Log::debug($i);
                     if($i <= count($row)-1) {
                         $sheet->getCell($char.$rowNumber)->setValue($row[$i]);
+                        if($sheet->getCell($char.'1')->setValue($header[$i])=="GENDER")
+                        {
+                            $sheet->getCell($char.$rowNumber)->getDataValidation()
+                            ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                            ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                            ->setAllowBlank(false)
+                            ->setShowInputMessage(true)
+                            ->setShowErrorMessage(true)
+                            ->setShowDropDown(true)
+                            ->setErrorTitle('Input error')
+                            ->setError('Value is not in list.')
+                            ->setPromptTitle('Pick from list')
+                            ->setPrompt('Please pick a value from the drop-down list.')
+                            ->setFormula1('"Female,Male"');
+                        }
+                       
                     }
                     $i++;
                 }
@@ -2336,6 +2356,189 @@ public function postAsset(Request $request)
         }
     }
     
+    public function exportProfile(Request $request)
+    {
+            $spreadsheet = new Spreadsheet();
+            $disciplines = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Disciplinary Issue');
+            $profiles = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Profile');
+            $emergencies = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Emergency');
+            $dependents = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Dependent');
+            $immigrations = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Immigration');
+            $visas = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Visa');
+            $jobs = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Job');
+            $banks = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Bank');
+            $qualifications = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Qualification');
+            $workdays = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Work Days');
+            $reportTo = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Report To');
+            $securityGroup = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Security Group');
+            $country = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'country');
+            $spreadsheet->addSheet($disciplines, 0);
+            $spreadsheet->addSheet($profiles, 1);
+            $spreadsheet->addSheet($emergencies, 2);
+            $spreadsheet->addSheet($dependents, 3);
+            $spreadsheet->addSheet($immigrations, 4);
+            $spreadsheet->addSheet($visas, 5);
+            $spreadsheet->addSheet($jobs, 6);
+            $spreadsheet->addSheet($banks, 7);
+            $spreadsheet->addSheet($qualifications, 8);
+            $spreadsheet->addSheet($workdays, 9);
+            $spreadsheet->addSheet($reportTo, 10);
+            $spreadsheet->addSheet($securityGroup, 11);
+            $spreadsheet->addSheet($country, 12);
+            
+            $disciplines->getCell('A1')->setValue('Date*');
+            $disciplines->getCell('B1')->setValue('Title*');
+            $disciplines->getCell('C1')->setValue('Description*');
+
+
+            $profiles->getCell('A1')->setValue('Name*');
+            $profiles->getCell('B1')->setValue('Email*');
+            $profiles->getCell('C1')->setValue('Personal Email*');
+            $profiles->getCell('D1')->setValue('Contact No*');
+            $profiles->getCell('E1')->setValue('Address Line 1*');
+            $profiles->getCell('F1')->setValue('Address Line 2');
+            $profiles->getCell('G1')->setValue('Address Line 3');
+            $profiles->getCell('H1')->setValue('Postcode*');
+            $profiles->getCell('I1')->setValue('IC No*');
+            $profiles->getCell('J1')->setValue('Gender*');
+            $profiles->getCell('K1')->setValue('Date of Birth*');
+            $profiles->getCell('L1')->setValue('Race*');
+            $profiles->getCell('M1')->setValue('Nationality*');
+            $profiles->getCell('N1')->setValue('Marital Status*');
+            $profiles->getCell('O1')->setValue('Spouse Name');
+            $profiles->getCell('P1')->setValue('Spouse IC No');
+            $profiles->getCell('Q1')->setValue('Spouse Tax No');
+            $profiles->getCell('R1')->setValue('No Of Children*');
+            $profiles->getCell('S1')->setValue('Driver License No');
+            $profiles->getCell('T1')->setValue('License Expiry Date');
+            $profiles->getCell('U1')->setValue('Payment Via*');
+            $profiles->getCell('V1')->setValue('Payment Rate*');
+            $profiles->getCell('W1')->setValue('Category');
+            $profiles->getCell('X1')->setValue('Tax No');
+            $profiles->getCell('Y1')->setValue('PCB Group');
+            $profiles->getCell('Z1')->setValue('EPF No');
+            $profiles->getCell('AA1')->setValue('EPF Category');
+            $profiles->getCell('AB1')->setValue('EIS No');
+            $profiles->getCell('AC1')->setValue('SOCSO No*');
+            $profiles->getCell('AD1')->setValue('SOCSO Category*');
+            $profiles->getCell('AE1')->setValue('Employee ID*');
+            $profiles->getCell('AF1')->setValue('Security Group*');
+            $profiles->getCell('AG1')->setValue('Role*');
+
+            $emergencies->getCell('A1')->setValue('Name*');
+            $emergencies->getCell('B1')->setValue('Relationship*');
+            $emergencies->getCell('C1')->setValue('Contact No*');
+
+            $dependents->getCell('A1')->setValue('Name*');
+            $dependents->getCell('B1')->setValue('IC No');
+            $dependents->getCell('C1')->setValue('Occupation');
+            $dependents->getCell('D1')->setValue('Relationship*');
+            $dependents->getCell('E1')->setValue('Date Of Birth*');
+
+            $immigrations->getCell('A1')->setValue('Passport No*');
+            $immigrations->getCell('B1')->setValue('Issued By*');
+            $immigrations->getCell('C1')->setValue('Issued Date*');
+            $immigrations->getCell('D1')->setValue('Expiry Date*');
+
+            $visas->getCell('A1')->setValue('Type*');
+            $visas->getCell('B1')->setValue('Visa Number*');
+            $visas->getCell('C1')->setValue('Issued By*');
+            $visas->getCell('D1')->setValue('Issued Date*');
+            $visas->getCell('E1')->setValue('Expiry Date*');
+            $visas->getCell('F1')->setValue('Relationship*');
+
+            $jobs->getCell('A1')->setValue('Date*');
+            $jobs->getCell('B1')->setValue('Employment Status');
+            $jobs->getCell('C1')->setValue('Remarks');
+            $jobs->getCell('D1')->setValue('Resignation Date');
+            $jobs->getCell('E1')->setValue('Blacklisted');
+            $jobs->getCell('F1')->setValue('Reason For Leaving');
+
+            $banks->getCell('A1')->setValue('Bank Name*');
+            $banks->getCell('B1')->setValue('Account Number*');
+
+            $qualifications->getCell('A1')->setValue('Company*');
+            $qualifications->getCell('B1')->setValue('Industry*');
+            $qualifications->getCell('C1')->setValue('Contact Person/ Tel*');
+            $qualifications->getCell('D1')->setValue('Position*');
+            $qualifications->getCell('E1')->setValue('Start Date*');
+            $qualifications->getCell('F1')->setValue('End Date*');
+            $qualifications->getCell('G1')->setValue('Notes');
+
+            $reportTo->getCell('A1')->setValue('Report To*');
+            $reportTo->getCell('B1')->setValue('Type*');
+            $reportTo->getCell('C1')->setValue('Report To Level*');
+            $reportTo->getCell('D1')->setValue('KPI Proposer*');
+            $reportTo->getCell('E1')->setValue('Payroll Period');
+            $reportTo->getCell('F1')->setValue('Note');
+
+            $securityGroup->getCell('A1')->setValue('Name*');
+
+
+            $countryName = DB::table('countries')->select('name')->get();
+            $i=1;
+            foreach($countryName as $countryNa)
+            {
+                 $country->setCellValue('A'.$i,$countryNa->name);
+
+                    $i++;
+            }
+            $row = 100;
+            //$i=2;
+           for($i = 2;$i<=$row;$i++)
+           {
+                $profiles->getCell('J'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Female,Male"');
+
+                $profiles->getCell('N'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Single,Married"');
+              
+                 $profiles->getCell('M'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('country!$A$1:$A$3');
+           }
+
+            $writer = new Xlsx($spreadsheet);
+            $filename = 'Employees';
+            
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');
+            header('Cache-Control: max-age=0');
+            
+            $writer->save('php://output'); // download file
+            return;
+           
+    }
+
     public function getSalary(Request $request)
     {
         // Log::debug("Get Salary");

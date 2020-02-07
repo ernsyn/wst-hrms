@@ -271,6 +271,9 @@
     </div>
     </form>
     <!-- end filter -->
+    <a href="{{action('Admin\EmployeeController@exportProfile')}}">Link name/Embedded Button</a>
+    
+
     <div class="row"><div class="col-12">&nbsp;</div></div>
     <div class="row">
         <div class="col-md-12">
