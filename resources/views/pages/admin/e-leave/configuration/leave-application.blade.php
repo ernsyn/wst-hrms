@@ -79,6 +79,16 @@
                                     <textarea class="form-control" name="reason" id="reason" rows="5" placeholder="Please input your reason here..." required ></textarea>
                                 </div>
                             </div>
+                            <div class="form-group row" id="required-child-box">
+                                <div class="col-sm-12 px-0">
+                                    <label class="col-sm-12 info-label"><i class="fas fa-info-circle"></i> Please key in Child's name in Reason</label>                              
+                                </div>
+                            </div>
+                            <div class="form-group row" id="required-deceased-box">
+                                <div class="col-sm-12 px-0">
+                                    <label class="col-sm-12 info-label"><i class="fas fa-info-circle"></i> Please key in Deceased name and Relationship in Reason</label>                              
+                                </div>
+                            </div>
                             <div class="dropdown-divider pb-3"></div>
                             <div class="form-group row" id="required-attachment-box">
                                 <div class="col-sm-6 px-0">
@@ -206,10 +216,10 @@
 <script type="text/javascript">
 var leave_type_data;
     $(function(){
-        var reportToSelectizeOptions = {
+        var employeeSelectizeOptions = {
             valueField: 'id',
             labelField: 'name',
-            searchField: 'name',
+            searchField: ['code', 'name'],
             options: [],
             create: false,
             render: {
@@ -249,13 +259,15 @@ var leave_type_data;
             } 
         };
 
-        $('#add-leave-request-form #select-employee').selectize(reportToSelectizeOptions);
+        $('#add-leave-request-form #select-employee').selectize(employeeSelectizeOptions);
 
         var attachmentRequired = false;
         var workingDays = [];
 
         $('#select-employee-box').modal('show');
         $("#required-attachment-box").hide();
+        $("#required-child-box").hide();
+        $("#required-deceased-box").hide();
         $("#can-edit-delete").hide();
         $("#cancel-edit-leave-request").hide();
 
@@ -430,6 +442,19 @@ var leave_type_data;
                     $("#required-attachment-label").text("Attachment");
                     $("#required-attachment-box").hide();
                 }
+                if(leave_type_data.code == 'MATERNITY' | leave_type_data.code == 'PATERNITY') {
+                	$("#required-child-box").show();
+                }
+                else {
+                	$("#required-child-box").hide();
+                }
+
+                if(leave_type_data.code == 'COMPASSIONATE') {
+                	$("#required-deceased-box").show();
+                }
+                else {
+                	$("#required-deceased-box").hide();
+                }
 
                 $('#mode').val('edit');
             });
@@ -550,6 +575,20 @@ if(leave_type_data.consecutive) {
                 attachmentRequired = false;
                 $("#required-attachment-label").text("Attachment");
                 $("#required-attachment-box").hide();
+            }
+
+            if(leave_type_data.code == 'MATERNITY' | leave_type_data.code == 'PATERNITY') {
+            	$("#required-child-box").show();
+            }
+            else {
+            	$("#required-child-box").hide();
+            }
+
+            if(leave_type_data.code == 'COMPASSIONATE') {
+            	$("#required-deceased-box").show();
+            }
+            else {
+            	$("#required-deceased-box").hide();
             }
 
             //click leave type then error reason  appear 
@@ -699,12 +738,14 @@ if(leave_type_data.consecutive) {
             var getLeaveTypes = getLeaveTypesTemplate.replace(encodeURI('<<emp_id>>'), employee_id);
 
             $.get(getLeaveTypes, function(leaveTypeData, status) {
+                console.log(leaveTypeData);
                 $('#leave-types').html('<option selected disabled>Select Leave</option>');
 
                 $.each(leaveTypeData, function(key, leaveType) {
                     var leaveTypeOption = $('#templates .leave-type-option').clone();
                     leaveTypeOption.data('leave-type', leaveType);
                     leaveTypeOption.val(leaveType.id);
+                    leaveTypeOption.text(leaveType.code);
                     leaveTypeOption.text(leaveType.name);
                     leaveTypeOption.appendTo('#leave-types');
                 });

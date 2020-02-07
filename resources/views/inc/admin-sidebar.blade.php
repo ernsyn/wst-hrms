@@ -128,9 +128,11 @@
                 <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-requests') ? 'active' : '' }}">
                     <a href="{{ route('admin.e-leave.configuration.leave-requests') }}">Leave Requests</a>
                 </li>
+                @canany(PermissionConstant::APPLY_LEAVE_ON_BEHALF)
                 <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-application') ? 'active' : '' }}">
                     <a href="{{ route('admin.e-leave.leave-application') }}">Leave Application</a>
                 </li>
+                @endcan
                 <li class="menu-option {{ request()->is('admin/e-leave/configuration/leave-report') ? 'active' : '' }}">
                 <a href="{{ route('admin.e-leave.leave-report') }}">Leave Report</a>
                 </li>

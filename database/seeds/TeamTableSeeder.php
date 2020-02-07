@@ -13,7 +13,7 @@ class TeamTableSeeder extends Seeder
     public function run()
     {
         Team::create([
-            'name' => 'Team A'
+            'name' => 'Sales'
         ]);
     }
 }

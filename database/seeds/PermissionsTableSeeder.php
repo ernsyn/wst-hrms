@@ -216,6 +216,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => PermissionConstant::VIEW_SALARY_STRUCTURE, 'mode' => 'admin', 'module' => 'Salary Structure Management']);
         Permission::create(['name' => PermissionConstant::UPDATE_SALARY_STRUCTURE, 'mode' => 'admin', 'module' => 'Salary Structure Management']);
        
+        Permission::create(['name' => PermissionConstant::APPLY_LEAVE_ON_BEHALF, 'mode' => 'admin', 'module' => 'E-Leave - Leave Application']);
         
         //Employee mode
         Permission::create(['name' => PermissionConstant::VIEW_EMPLOYEE_DASHBOARD, 'mode' => 'employee', 'module' => 'Employee Dashboard']);

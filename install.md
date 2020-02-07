@@ -38,6 +38,9 @@ Seed after create company
 - php artisan db:seed --class=PayrollSetupTableSeeder
 - php artisan db:seed --class=AdditionTableSeeder
 - php artisan db:seed --class=DeductionTableSeeder
+- php artisan db:seed --class=TeamTableSeeder
+- php artisan db:seed --class=CategoryTableSeeder
+- php artisan db:seed --class=GradeTableSeeder
 
 # Import EPF schedule from csv #
 load data local infile '/data/www/wst-hrms/database/seeds/epf.csv' into table epfs fields terminated by ',' set created_at=now(), deleted_at=null;
@@ -66,3 +69,6 @@ app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jad
 app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-601-650.xlsx',2]);
 app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-651-700.xlsx',2]);
 app()->call('App\Http\Controllers\Admin\SettingsController@importPcb', ['pcb\Jadual_PCB_2018-701-733.xlsx',2]);
+
+# Import Salary Structures from csv #
+load data local infile '/data/www/wst-hrms/database/seeds/salary.csv' into table salary_structures fields terminated by ',' set created_at=now();

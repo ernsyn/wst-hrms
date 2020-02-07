@@ -161,6 +161,7 @@ class PermissionConstant
     const DELETE_SALARY_STRUCTURE = 'Delete Salary Structure';
     const VIEW_SALARY_STRUCTURE = 'View Salary Structure';
     const UPDATE_SALARY_STRUCTURE = 'Update Salary Structure';
+    const APPLY_LEAVE_ON_BEHALF = 'Apply Leave On Behalf';
 }
 
 
