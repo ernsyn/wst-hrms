@@ -20,7 +20,7 @@
                     <div class="form-group col-md-9">
                         <label for="name"><strong>Name*</strong></label>
                         <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="eg. Annual Leave"
-                            name="name" value="{{ old('name') }}" readonly> @if ($errors->has('name'))
+                            name="name" value="{{ old('name') }}"> @if ($errors->has('name'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('name') }}</strong>
                         </span> @endif
@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group">
                     <label for="description"><strong>Description*</strong></label>
-                    <textarea class="form-control" id="description" name="description" rows="2" readonly></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="2"></textarea>
                 </div>
 
                 <div id="section-rules" class="card mb-3">

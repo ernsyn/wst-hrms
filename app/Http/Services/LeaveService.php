@@ -40,7 +40,7 @@ class LeaveService
         $yearsOfService = self::calculateEmployeeWorkingYears($emp_id);
         Log::debug("Years of service: ".$yearsOfService);
 
-        $leaveTypes = LeaveType::with('applied_rules', 'lt_conditional_entitlements', 'lt_entitlements_grade_groups.lt_conditional_entitlements', 'lt_entitlements_grade_groups.grades')->where('active', true)->get();
+        $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
         foreach($leaveTypes as $leaveType) {
             Log::debug("Leave Type");
             Log::debug($leaveType);
@@ -458,20 +458,6 @@ class LeaveService
                     $configuration = json_decode($rule->configuration);
                     $max_days_per_application = $configuration->max_days_per_application;
                     break;
-                case LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED:
-                    $configuration = json_decode($rule->configuration);
-
-                    $report_to_levels = EmployeeReportTo::where('emp_id', $employee->id)
-                    ->select('report_to_level')
-                    ->groupBy('report_to_level')
-                    ->get();
-
-                    // check if employee has multiple approcal levels
-                    if(count($report_to_levels) < 2) {
-                        $invalid = true;
-                        $invalidErrorMessage = "Multiple approval levels needed.";
-                    }
-                    break;
                 case LeaveTypeRule::UNPAID:
                     $is_unpaid_leave = true;
                     break;
@@ -851,50 +837,7 @@ Log::debug($inc_off_days);
         Log::debug("Years of service: ".$yearsOfService);
         Log::debug("Grade ID: ".$grade_id);
         $entitledDays = 0;
-        if(empty($leaveType->entitled_days)) {
-            // Entitlement By Grade
-            Log::debug("Entitlement By Grade");
-            
-            foreach($leaveType->lt_entitlements_grade_groups as $gradeGroup) {
-                Log::debug("Grade Group");
-                Log::debug($gradeGroup);
-                $gradeInGroup = false;
-                foreach($gradeGroup->grades as $grade) {
-                    if($grade_id == $grade->id) {
-                        $gradeInGroup = true;
-                        break;
-                    }
-                }
-
-                if($gradeInGroup) {
-                    $entitledDays = $gradeGroup->entitled_days;
-                    Log::debug("Grade Group entitled days: ".$gradeGroup->entitled_days);
-                    foreach($gradeGroup->lt_conditional_entitlements as $conditionalEntitlement) {
-                        if($conditionalEntitlement->min_years > $yearsOfService) {
-                            break;
-                        } else {
-                            $entitledDays = $conditionalEntitlement->entitled_days;
-                            Log::debug("Conditional Entitlement: ".$conditionalEntitlement->entitled_days);
-                        }
-                    } 
-
-                    break;
-                }
-            }
-        } else {
-            // Entitlement By Years
-            Log::debug("Entitlement By Years");
-            $entitledDays = $leaveType->entitled_days;
-            Log::debug("Leave Type entitled days: ".$leaveType->entitled_days);
-            foreach($leaveType->lt_conditional_entitlements as $conditionalEntitlement) {
-                if($conditionalEntitlement->min_years > $yearsOfService) {
-                    break;
-                } else {
-                    $entitledDays = $conditionalEntitlement->entitled_days;
-                    Log::debug("Conditional Entitlement: ".$conditionalEntitlement->entitled_days);
-                }
-            } 
-        }
+        
         Log::debug("Entitled Days: ".$entitledDays);
         return $entitledDays;
     }

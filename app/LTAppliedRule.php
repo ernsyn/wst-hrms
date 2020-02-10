@@ -12,9 +12,21 @@ class LTAppliedRule extends Model
 
     protected $fillable = [
         'rule',
-        'configuration',
+        'value',
         'created_by'
     ];
 
     protected $dates = ['deleted_at'];
+    
+    public function applied_rule_min_apply_days_before() {
+        return $this->hasMany('App\LTAppliedRuleMinApplyDaysBefore','lt_applied_rule_id');
+    }
+    
+    public function applied_rule_carry_forwards() {
+        return $this->hasMany('App\LTAppliedRuleCarryForward','lt_applied_rule_id');
+    }
+    
+    public function applied_rule_available_to_apply_on() {
+        return $this->hasMany('App\LTAppliedRuleAvailableToApplyOn','lt_applied_rule_id');
+    }
 }

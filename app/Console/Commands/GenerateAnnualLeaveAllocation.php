@@ -163,7 +163,7 @@ class GenerateAnnualLeaveAllocation extends Command
 
             Log::debug("GENERATE: Entitled Leave");
             // GENERATE: Entitled Leave
-            $leaveTypes = LeaveType::with('applied_rules', 'lt_conditional_entitlements', 'lt_entitlements_grade_groups.lt_conditional_entitlements', 'lt_entitlements_grade_groups.grades')->where('active', true)->get();
+            $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
 //             $validFromDate = Carbon::create($year, 1, 1);
 //             $validUntilDate = Carbon::create($year, 12, 31);
             foreach($employee_ids as $emp_id) {

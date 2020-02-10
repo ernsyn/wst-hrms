@@ -14,6 +14,7 @@ class LeaveAllocation extends Model implements Auditable
 
     protected $fillable = [
         'emp_id',
+        'emp_job_id',
         'leave_type_id',
         'allocated_days',
         'spent_days',
@@ -21,8 +22,8 @@ class LeaveAllocation extends Model implements Auditable
         'is_carry_forward',
         'valid_from_date',
         'valid_until_date',
-        'created_by',
-        'emp_job_id'
+        'reason',
+        'created_by'
     ];
 
     protected $dates = ['deleted_at'];
