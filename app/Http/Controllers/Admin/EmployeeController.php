@@ -2451,10 +2451,7 @@ public function postAsset(Request $request)
             $spreadsheet->getSheetByName('employee')
             ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
             $spreadsheet->getSheetByName('payroll')
-            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
-            
-            
-            
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);               
             $disciplines->getCell('A1')->setValue('Date*');
             $disciplines->getCell('B1')->setValue('Title*');
             $disciplines->getCell('C1')->setValue('Description*');
@@ -2549,7 +2546,7 @@ public function postAsset(Request $request)
 
             $securityGroup->getCell('A1')->setValue('Name*');
 
-
+        
             $countryName = DB::table('countries')->select('name')->get();
             $i=1;
             foreach($countryName as $countryNa)
@@ -2676,11 +2673,6 @@ public function postAsset(Request $request)
                 $payroll->setCellValue('A'.$i,$payrollPeriodNa->name);
                 $i++;
             }
-
-            
-
-
-
 
             $row = 20;
             //$i=2;
@@ -3371,12 +3363,13 @@ public function postAsset(Request $request)
 
 
             $profileData = DB::table('employees')
-            ->select('users.name', 'users.email','employees.personal_email','employees.contact_no','employees.address','employees.address2','employees.address3','employees.postcode','employees.ic_no','employees.gender','employees.dob','employees.race','countries.name as nationality','employees.marital_status','employees.spouse_name','employees.spouse_ic','employees.spouse_tax_no','employees.total_children','employees.driver_license_no','employees.driver_license_expiry_date','employees.payment_via','employees.payment_rate','categories.name as cateogry','employees.tax_no','employees.pcb_group','employees.epf_no','employees.epf_category',
-                'employees.eis_no','employees.socso_no','employees.socso_category','employees.code','security_groups.name as security_group')
+            ->select('users.name', 'users.email','employees.personal_email','employees.contact_no','employees.address','employees.address2','employees.address3','employees.postcode','employees.ic_no','employees.gender','employees.dob','employees.race','countries.name as nationality','employees.marital_status','employees.spouse_name','employees.spouse_ic','employees.spouse_tax_no','employees.total_children','employees.driver_license_no','employees.driver_license_expiry_date','employees.payment_via','employees.payment_rate','categories.name as cateogry','employees.tax_no','employees.pcb_group','employees.epf_no','employees.epf_category','employees.eis_no','employees.socso_no','employees.socso_category','employees.code','security_groups.name as security_group','roles.name as role')
             ->leftjoin('users','employees.user_id','=','users.id')
             ->leftjoin('countries','employees.nationality','=','countries.id')
             ->leftjoin('categories','employees.category_id','=','categories.id')
             ->leftjoin('security_groups','employees.main_security_group_id','=','security_groups.id')
+            ->leftjoin('model_has_roles','employees.user_id','=','model_has_roles.model_id')
+            ->leftjoin('roles','model_has_roles.role_id','=','roles.id')
             ->get();
             $i=2;
             foreach($profileData as $profileDa)
@@ -3513,7 +3506,8 @@ public function postAsset(Request $request)
                 ->setAutoSize(true);
                 $profiles->setCellValue('AF'.$i,$profileDa->security_group)->getColumnDimension('AF')
                 ->setAutoSize(true);
-                //$profiles->setCellValue('AG'.$i,$profileDa->cateogry);
+                $profiles->setCellValue('AG'.$i,$profileDa->role)->getColumnDimension('AG')
+                ->setAutoSize(true);;
                 
                 $profiles->getCell('J'.$i)->getDataValidation()
                 ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
@@ -3819,7 +3813,7 @@ public function postAsset(Request $request)
             }
 
             $jobData = DB::table('employee_jobs')
-            ->select('cost_centres.name as cost_centre','departments.name as department','teams.name as team','employee_positions.name as position','employee_grades.name as grade','sections.name as section','job_companies.company_name as company','branches.name as branch','basic_salary','start_date','remarks')
+            ->select('cost_centres.name as cost_centre','departments.name as department','teams.name as team','employee_positions.name as position','employee_grades.name as grade','sections.name as section','job_companies.company_name as company','branches.name as branch','basic_salary','start_date','remarks','employment_statuses.name as status')
             ->leftjoin('cost_centres','employee_jobs.cost_centre_id','=','cost_centres.id')
             ->leftjoin('departments','employee_jobs.department_id','=','departments.id')
             ->leftjoin('teams','employee_jobs.team_id','=','teams.id')
@@ -3828,6 +3822,9 @@ public function postAsset(Request $request)
             ->leftjoin('sections','employee_jobs.section_id','=','sections.id')
             ->leftjoin('job_companies','employee_jobs.job_comp_id','=','job_companies.id')
             ->leftjoin('branches','employee_jobs.branch_id','=','branches.id')
+            ->leftjoin('employee_job_status','employee_jobs.id','=','employee_job_status.emp_job_id')
+            ->leftjoin('employment_statuses','employee_job_status.status_id','=','employment_statuses.id')
+            
             ->get();
             $i=2;
             foreach($jobData as $jobDa)
@@ -3862,9 +3859,9 @@ public function postAsset(Request $request)
                 $jobs->setCellValue('J'.$i,$jobDa->start_date)
                 ->getColumnDimension('J')
                 ->setAutoSize(true);
-                //$jobs->setCellValue('K'.$i,$jobDa->remarks)
-                //->getColumnDimension('K')
-                //->setAutoSize(true);
+                $jobs->setCellValue('K'.$i,$jobDa->status)
+                ->getColumnDimension('K')
+                ->setAutoSize(true);
                 $jobs->setCellValue('L'.$i,$jobDa->remarks)
                 ->getColumnDimension('L')
                 ->setAutoSize(true);
@@ -3918,9 +3915,11 @@ public function postAsset(Request $request)
             }
 
             $reportToData = DB::table('employee_report_to')
-            ->select('users.name','type','kpi_proposer','report_to_level','notes')
+            ->select('users.name','type','kpi_proposer','report_to_level','notes','payroll_period.name as payroll')
             ->leftjoin('employees','employee_report_to.emp_id','=','employees.id')
-             ->leftjoin('users','employees.user_id','=','users.id')
+            ->leftjoin('users','employees.user_id','=','users.id')
+            ->leftjoin('emp_report_to_pp','employee_report_to.id','=','emp_report_to_pp.emp_report_to_id')
+             ->leftjoin('payroll_period','emp_report_to_pp.payroll_period_id','=','payroll_period.id')
             ->get();
             $i=2;
             foreach($reportToData as $reportToDa)
@@ -3934,8 +3933,18 @@ public function postAsset(Request $request)
                 $reportTo->setCellValue('C'.$i,$reportToDa->report_to_level)
                 ->getColumnDimension('C')
                 ->setAutoSize(true);
-                $reportTo->setCellValue('D'.$i,$reportToDa->kpi_proposer)
-                ->getColumnDimension('D')
+
+                if($reportToDa->kpi_proposer==0){
+                $reportTo->setCellValue('D'.$i,'No')->getColumnDimension('D')
+                ->setAutoSize(true);
+                }
+                else{
+                $reportTo->setCellValue('D'.$i,'Yes')->getColumnDimension('D')
+                ->setAutoSize(true);
+                }
+
+                $reportTo->setCellValue('E'.$i,$reportToDa->payroll)
+                ->getColumnDimension('E')
                 ->setAutoSize(true);
                 $reportTo->setCellValue('F'.$i,$reportToDa->notes)
                 ->getColumnDimension('F')
