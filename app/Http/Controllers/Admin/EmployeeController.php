@@ -3742,6 +3742,221 @@ public function postAsset(Request $request)
                 $i++;
             }
 
+            $dependentData = DB::table('employee_dependents')
+            ->select('name','ic_no','occupation','relationship','dob')
+            ->get();
+            $i=2;
+            foreach($dependentData as $dependentDa)
+            {  
+                $dependents->setCellValue('A'.$i,$dependentDa->name)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $dependents->setCellValue('B'.$i,$dependentDa->ic_no)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $dependents->setCellValue('C'.$i,$dependentDa->occupation)
+                ->getColumnDimension('C')
+                ->setAutoSize(true);
+                $dependents->setCellValue('D'.$i,$dependentDa->relationship)
+                ->getColumnDimension('D')
+                ->setAutoSize(true);
+                $dependents->setCellValue('E'.$i,$dependentDa->dob)
+                ->getColumnDimension('E')
+                ->setAutoSize(true);
+
+                $dependents->getStyle('B'.$i)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
+                $i++;
+            }
+
+            $immigrationData = DB::table('employee_immigrations')
+            ->select('passport_no','issued_by','issued_date','expiry_date')
+            ->get();
+            $i=2;
+            foreach($immigrationData as $immigrationDa)
+            {  
+                $immigrations->setCellValue('A'.$i,$immigrationDa->passport_no)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $immigrations->setCellValue('B'.$i,$immigrationDa->issued_by)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $immigrations->setCellValue('C'.$i,$immigrationDa->issued_date)
+                ->getColumnDimension('C')
+                ->setAutoSize(true);
+                $immigrations->setCellValue('D'.$i,$immigrationDa->expiry_date)
+                ->getColumnDimension('D')
+                ->setAutoSize(true);
+                $i++;
+            }
+
+            $visaData = DB::table('employee_visas')
+            ->select('type','visa_number','issued_by','issued_date','expiry_date','family_members')
+            ->get();
+            $i=2;
+            foreach($visaData as $visaDa)
+            {  
+                $visas->setCellValue('A'.$i,$visaDa->type)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $visas->setCellValue('B'.$i,$visaDa->visa_number)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $visas->setCellValue('C'.$i,$visaDa->issued_by)
+                ->getColumnDimension('C')
+                ->setAutoSize(true);
+                $visas->setCellValue('D'.$i,$visaDa->issued_date)
+                ->getColumnDimension('D')
+                ->setAutoSize(true);
+                $visas->setCellValue('E'.$i,$visaDa->expiry_date)
+                ->getColumnDimension('E')
+                ->setAutoSize(true);
+                $visas->setCellValue('F'.$i,$visaDa->family_members)
+                ->getColumnDimension('F')
+                ->setAutoSize(true);
+                $i++;
+            }
+
+            $jobData = DB::table('employee_jobs')
+            ->select('cost_centres.name as cost_centre','departments.name as department','teams.name as team','employee_positions.name as position','employee_grades.name as grade','sections.name as section','job_companies.company_name as company','branches.name as branch','basic_salary','start_date','remarks')
+            ->leftjoin('cost_centres','employee_jobs.cost_centre_id','=','cost_centres.id')
+            ->leftjoin('departments','employee_jobs.department_id','=','departments.id')
+            ->leftjoin('teams','employee_jobs.team_id','=','teams.id')
+            ->leftjoin('employee_positions','employee_jobs.emp_mainposition_id','=','employee_positions.id')
+            ->leftjoin('employee_grades','employee_jobs.emp_grade_id','=','employee_grades.id')
+            ->leftjoin('sections','employee_jobs.section_id','=','sections.id')
+            ->leftjoin('job_companies','employee_jobs.job_comp_id','=','job_companies.id')
+            ->leftjoin('branches','employee_jobs.branch_id','=','branches.id')
+            ->get();
+            $i=2;
+            foreach($jobData as $jobDa)
+            {  
+                $jobs->setCellValue('A'.$i,$jobDa->cost_centre)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $jobs->setCellValue('B'.$i,$jobDa->department)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $jobs->setCellValue('C'.$i,$jobDa->team)
+                ->getColumnDimension('C')
+                ->setAutoSize(true);
+                $jobs->setCellValue('D'.$i,$jobDa->position)
+                ->getColumnDimension('D')
+                ->setAutoSize(true);
+                $jobs->setCellValue('E'.$i,$jobDa->grade)
+                ->getColumnDimension('E')
+                ->setAutoSize(true);
+                $jobs->setCellValue('F'.$i,$jobDa->section)
+                ->getColumnDimension('F')
+                ->setAutoSize(true);
+                $jobs->setCellValue('G'.$i,$jobDa->company)
+                ->getColumnDimension('G')
+                ->setAutoSize(true);
+                $jobs->setCellValue('H'.$i,$jobDa->branch)
+                ->getColumnDimension('H')
+                ->setAutoSize(true);
+                $jobs->setCellValue('I'.$i,$jobDa->basic_salary)
+                ->getColumnDimension('I')
+                ->setAutoSize(true);
+                $jobs->setCellValue('J'.$i,$jobDa->start_date)
+                ->getColumnDimension('J')
+                ->setAutoSize(true);
+                //$jobs->setCellValue('K'.$i,$jobDa->remarks)
+                //->getColumnDimension('K')
+                //->setAutoSize(true);
+                $jobs->setCellValue('L'.$i,$jobDa->remarks)
+                ->getColumnDimension('L')
+                ->setAutoSize(true);
+                $i++;
+            }
+
+            $bankData = DB::table('employee_bank_accounts')
+            ->select('bank_code','acc_no')
+            ->get();
+            $i=2;
+            foreach($bankData as $bankDa)
+            {  
+                $banks->setCellValue('A'.$i,$bankDa->bank_code)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $banks->setCellValue('B'.$i,$bankDa->acc_no)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $i++;
+            }
+
+            $qualificationData = DB::table('employee_experiences')
+            ->select('company','position','industry','contact','start_date','end_date','notes')
+            ->get();
+            $i=2;
+            foreach($qualificationData as $qualificationDa)
+            {  
+                $qualifications->setCellValue('A'.$i,$qualificationDa->company)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $qualifications->setCellValue('B'.$i,$qualificationDa->industry)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $qualifications->setCellValue('C'.$i,$qualificationDa->contact)
+                ->getColumnDimension('C')
+                ->setAutoSize(true);
+                $qualifications->setCellValue('D'.$i,$qualificationDa->position)
+                ->getColumnDimension('D')
+                ->setAutoSize(true);
+                $qualifications->setCellValue('E'.$i,$qualificationDa->start_date)
+                ->getColumnDimension('E')
+                ->setAutoSize(true);
+                $qualifications->setCellValue('F'.$i,$qualificationDa->end_date)
+                ->getColumnDimension('F')
+                ->setAutoSize(true);
+                $qualifications->setCellValue('G'.$i,$qualificationDa->notes)
+                ->getColumnDimension('G')
+                ->setAutoSize(true);
+
+                $i++;
+            }
+
+            $reportToData = DB::table('employee_report_to')
+            ->select('users.name','type','kpi_proposer','report_to_level','notes')
+            ->leftjoin('employees','employee_report_to.emp_id','=','employees.id')
+             ->leftjoin('users','employees.user_id','=','users.id')
+            ->get();
+            $i=2;
+            foreach($reportToData as $reportToDa)
+            {  
+                $reportTo->setCellValue('A'.$i,$reportToDa->name)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $reportTo->setCellValue('B'.$i,$reportToDa->type)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $reportTo->setCellValue('C'.$i,$reportToDa->report_to_level)
+                ->getColumnDimension('C')
+                ->setAutoSize(true);
+                $reportTo->setCellValue('D'.$i,$reportToDa->kpi_proposer)
+                ->getColumnDimension('D')
+                ->setAutoSize(true);
+                $reportTo->setCellValue('F'.$i,$reportToDa->notes)
+                ->getColumnDimension('F')
+                ->setAutoSize(true);
+                $i++;
+            }
+
+            $securityGroupData = DB::table('employee_security_groups')
+            ->select('security_groups.name as name')
+            ->leftjoin('security_groups','employee_security_groups.security_group_id','=','security_groups.id')
+            ->get();
+            $i=2;
+            foreach($securityGroupData as $securityGroupDa)
+            {  
+                $securityGroup->setCellValue('A'.$i,$securityGroupDa->name)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+               
+                $i++;
+            }
+
             $countryName = DB::table('countries')->select('name')->get();
             $i=1;
             foreach($countryName as $countryNa)
@@ -4190,7 +4405,7 @@ public function postAsset(Request $request)
            }
 
             $writer = new Xlsx($spreadsheet);
-            $filename = 'Template';
+            $filename = 'EmployeeData';
             
             header('Content-Type: application/vnd.ms-excel');
             header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');
