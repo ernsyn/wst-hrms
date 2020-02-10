@@ -271,7 +271,6 @@
     </div>
     </form>
     <!-- end filter -->
-    <a href="{{action('Admin\EmployeeController@exportProfile')}}">Link name/Embedded Button</a>
     
 
     <div class="row"><div class="col-12">&nbsp;</div></div>
@@ -419,12 +418,20 @@ $(document).ready(function() {
                     text: '<i class="far fa-file-excel"></i>',
                     className: 'btn-segment',
                     titleAttr: 'Export Excel',
-                    action: function ( e, dt, node, config ) {
-                    	console.log( e );
-                        exportFile('xlsx');
+                   action: function ( e, dt, button, config ) {
+                       window.location = "{{ route('export.data')}}";
                     }
                 },
                 @endcan
+                {
+                    text: '<i class="fas fa-download"></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Excel Template',
+                    action: function ( e, dt, button, config ) {
+                       window.location = "{{ route('export.template')}}";
+                    }
+                    
+                }
             ]
     
         });
@@ -508,6 +515,8 @@ function exportFile(fileType) {
         }
     });
 }
+
+
 
 function resetForm() {
 	document.getElementById("searchForm").reset();

@@ -2356,7 +2356,7 @@ public function postAsset(Request $request)
         }
     }
     
-    public function exportProfile(Request $request)
+    public function excelTemplate(Request $request)
     {
             $spreadsheet = new Spreadsheet();
             $disciplines = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Disciplinary Issue');
@@ -2372,8 +2372,26 @@ public function postAsset(Request $request)
             $reportTo = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Report To');
             $securityGroup = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Security Group');
             $country = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'country');
-            $spreadsheet->addSheet($disciplines, 0);
-            $spreadsheet->addSheet($profiles, 1);
+            $category = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'category');
+            $security = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'security');
+            $cost_centre = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'costcentre');
+            $department = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'department');
+            $team = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'team');
+            $position = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'position');
+            $grade = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'grade');
+            $section = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'section');
+            $company = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'company');
+            $branch = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'branch');
+            $status = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'status');
+            $role = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'role');
+            $bank_list = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'bank_list');
+            $employee = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'employee');
+            $payroll = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'payroll');
+            
+            
+           
+            $spreadsheet->addSheet($profiles, 0);
+            $spreadsheet->addSheet($disciplines, 1);
             $spreadsheet->addSheet($emergencies, 2);
             $spreadsheet->addSheet($dependents, 3);
             $spreadsheet->addSheet($immigrations, 4);
@@ -2385,6 +2403,57 @@ public function postAsset(Request $request)
             $spreadsheet->addSheet($reportTo, 10);
             $spreadsheet->addSheet($securityGroup, 11);
             $spreadsheet->addSheet($country, 12);
+            $spreadsheet->addSheet($category, 13);
+            $spreadsheet->addSheet($security, 14);
+            $spreadsheet->addSheet($cost_centre, 15);
+            $spreadsheet->addSheet($department, 16);
+            $spreadsheet->addSheet($team, 17);
+            $spreadsheet->addSheet($position, 18);
+            $spreadsheet->addSheet($grade, 19);
+            $spreadsheet->addSheet($section, 20);
+            $spreadsheet->addSheet($company, 21);
+            $spreadsheet->addSheet($branch, 22);
+            $spreadsheet->addSheet($status, 23);
+            $spreadsheet->addSheet($role, 24);
+            $spreadsheet->addSheet($bank_list, 25);
+            $spreadsheet->addSheet($employee, 26);
+            $spreadsheet->addSheet($payroll, 27);
+           
+           
+            $spreadsheet->getSheetByName('country')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('category')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('security')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('costcentre')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('department')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('team')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('position')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('grade')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('section')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('company')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('branch')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('status')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('role')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('bank_list')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('employee')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('payroll')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            
+            
             
             $disciplines->getCell('A1')->setValue('Date*');
             $disciplines->getCell('B1')->setValue('Title*');
@@ -2447,12 +2516,18 @@ public function postAsset(Request $request)
             $visas->getCell('E1')->setValue('Expiry Date*');
             $visas->getCell('F1')->setValue('Relationship*');
 
-            $jobs->getCell('A1')->setValue('Date*');
-            $jobs->getCell('B1')->setValue('Employment Status');
-            $jobs->getCell('C1')->setValue('Remarks');
-            $jobs->getCell('D1')->setValue('Resignation Date');
-            $jobs->getCell('E1')->setValue('Blacklisted');
-            $jobs->getCell('F1')->setValue('Reason For Leaving');
+            $jobs->getCell('A1')->setValue('Cost Centre');
+            $jobs->getCell('B1')->setValue('Department');
+            $jobs->getCell('C1')->setValue('Team*');
+            $jobs->getCell('D1')->setValue('Position');
+            $jobs->getCell('E1')->setValue('Grade*');
+            $jobs->getCell('F1')->setValue('Section');
+            $jobs->getCell('G1')->setValue('Company*');
+            $jobs->getCell('H1')->setValue('Branch*');
+            $jobs->getCell('I1')->setValue('New Basic Salary*');
+            $jobs->getCell('J1')->setValue('Date*');
+            $jobs->getCell('K1')->setValue('Employment Status*');
+            $jobs->getCell('L1')->setValue('Remarks');
 
             $banks->getCell('A1')->setValue('Bank Name*');
             $banks->getCell('B1')->setValue('Account Number*');
@@ -2478,12 +2553,136 @@ public function postAsset(Request $request)
             $countryName = DB::table('countries')->select('name')->get();
             $i=1;
             foreach($countryName as $countryNa)
-            {
-                 $country->setCellValue('A'.$i,$countryNa->name);
-
-                    $i++;
+            {  
+                $country->setCellValue('A'.$i,$countryNa->name);
+                $i++;
             }
-            $row = 100;
+
+            $categoryName = DB::table('categories')->select('name')->get();
+            $i=1;
+            foreach($categoryName as $categoryNa)
+            {
+                $category->setCellValue('A'.$i,$categoryNa->name);
+                $i++;
+            }
+
+            $securityName = DB::table('security_groups')->select('name')->get();
+            $i=1;
+            foreach($securityName as $securityNa)
+            {
+                $security->setCellValue('A'.$i,$securityNa->name);
+                $i++;
+            }
+
+            $costCentreName = DB::table('cost_centres')->select('name')->get();
+            $i=1;
+            foreach($costCentreName as $costCentreNa)
+            {
+                $cost_centre->setCellValue('A'.$i,$costCentreNa->name);
+                $i++;
+            }
+
+            $departmentName = DB::table('departments')->select('name')->get();
+            $i=1;
+            foreach($departmentName as $departmentNa)
+            {
+                $department->setCellValue('A'.$i,$departmentNa->name);
+                $i++;
+            }
+
+            $teamName = DB::table('teams')->select('name')->get();
+            $i=1;
+            foreach($teamName as $teamNa)
+            {
+                $team->setCellValue('A'.$i,$teamNa->name);
+                $i++;
+            }
+            $positionName = DB::table('employee_positions')->select('name')->get();
+            $i=1;
+            foreach($positionName as $positionNa)
+            {
+                $position->setCellValue('A'.$i,$positionNa->name);
+                $i++;
+            }
+
+            $gradeName = DB::table('employee_grades')->select('name')->get();
+            $i=1;
+            foreach($gradeName as $gradeNa)
+            {
+                $grade->setCellValue('A'.$i,$gradeNa->name);
+                $i++;
+            }
+
+            $sectionName = DB::table('sections')->select('name')->get();
+            $i=1;
+            foreach($sectionName as $sectionNa)
+            {
+                $section->setCellValue('A'.$i,$sectionNa->name);
+                $i++;
+            }
+
+            $companyName = DB::table('job_companies')->select('company_name')->get();
+            $i=1;
+            foreach($companyName as $companyNa)
+            {
+                $company->setCellValue('A'.$i,$companyNa->company_name);
+                $i++;
+            }
+
+            $branchName = DB::table('branches')->select('name')->get();
+            $i=1;
+            foreach($branchName as $branchNa)
+            {
+                $branch->setCellValue('A'.$i,$branchNa->name);
+                $i++;
+            }
+
+            $statusName = DB::table('employment_statuses')->select('name')->get();
+            $i=1;
+            foreach($statusName as $statusNa)
+            {
+                $status->setCellValue('A'.$i,$statusNa->name);
+                $i++;
+            }
+
+            $roleName = DB::table('roles')->select('name')->where('name', '!=', 'Super Admin')->get();
+            $i=1;
+            foreach($roleName as $roleNa)
+            {
+                $role->setCellValue('A'.$i,$roleNa->name);
+                $i++;
+            }
+
+            $bankName = DB::table('bank_code')->select('name')->get();
+            $i=1;
+            foreach($bankName as $bankNa)
+            {
+                $bank_list->setCellValue('A'.$i,$bankNa->name);
+                $i++;
+            }
+
+            $employeeName = DB::table('users')->select('name')->get();
+            $i=1;
+            foreach($employeeName as $employeeNa)
+            {
+                $employee->setCellValue('A'.$i,$employeeNa->name);
+                $i++;
+            }
+
+            $payrollPeriodName = DB::table('payroll_period')->select('name')->get();
+            $i=1;
+            foreach($payrollPeriodName as $payrollPeriodNa)
+            {
+                $payroll->setCellValue('A'.$i,$payrollPeriodNa->name);
+                $i++;
+            }
+
+            
+
+
+
+
+            $row = 20;
             //$i=2;
            for($i = 2;$i<=$row;$i++)
            {
@@ -2513,7 +2712,7 @@ public function postAsset(Request $request)
                 ->setPrompt('Please pick a value from the drop-down list.')
                 ->setFormula1('"Single,Married"');
               
-                 $profiles->getCell('M'.$i)->getDataValidation()
+                $profiles->getCell('M'.$i)->getDataValidation()
                 ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
                 ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
                 ->setAllowBlank(false)
@@ -2524,11 +2723,1474 @@ public function postAsset(Request $request)
                 ->setError('Value is not in list.')
                 ->setPromptTitle('Pick from list')
                 ->setPrompt('Please pick a value from the drop-down list.')
-                ->setFormula1('country!$A$1:$A$3');
+                ->setFormula1('country!$A:$A');
+
+                $profiles->getCell('U'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Cash,Bank,Cheque,Withheld,Credit Note"');
+
+                $profiles->getCell('V'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Daily,Weekly,Monthly"');
+
+                $profiles->getCell('W'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('category!$A:$A');
+
+                $profiles->getCell('Y'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Single Person,Spouse Not Working,Spouse Working"');
+
+                $profiles->getCell('AA'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Category A,Category B,Category C,Category D,Category E"');
+
+                $profiles->getCell('AD'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"First Category,Second Category"');
+
+                $profiles->getCell('AG'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('role!$A:$A');
+
+                $profiles->getCell('AF'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('security!$A:$A');
+
+                $profiles->getCell('K'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $profiles->getCell('T'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $disciplines->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $dependents->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $immigrations->getCell('C'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+                $immigrations->getCell('D'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $visas->getCell('D'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+                $visas->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $jobs->getCell('J'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $jobs->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('costcentre!$A:$A');
+
+                $jobs->getCell('B'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('department!$A:$A');
+
+                $jobs->getCell('C'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('team!$A:$A');
+
+                $jobs->getCell('D'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('position!$A:$A');
+
+                $jobs->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('grade!$A:$A');
+
+                $jobs->getCell('F'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('section!$A:$A');
+
+                $jobs->getCell('G'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('company!$A:$A');
+
+                $jobs->getCell('H'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('branch!$A:$A');
+
+                $jobs->getCell('K'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('status!$A:$A');
+
+                $qualifications->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+                $qualifications->getCell('F'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $banks->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('bank_list!$A:$A');
+
+                $reportTo->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('employee!$A:$A');
+
+                $reportTo->getCell('B'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Direct,Indirect"');
+                $reportTo->getCell('C'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"1,2,3,4,5,6,7,8"');
+                $reportTo->getCell('D'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Yes,No"');
+                $reportTo->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('payroll!$A:$A');
+
+                $securityGroup->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('security!$A:$A');
+ 
            }
 
             $writer = new Xlsx($spreadsheet);
-            $filename = 'Employees';
+            $filename = 'Template';
+            
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');
+            header('Cache-Control: max-age=0');
+            
+            $writer->save('php://output'); // download file
+            return;
+           
+    }
+
+    public function excelData(Request $request)
+    {
+            $spreadsheet = new Spreadsheet();
+            $disciplines = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Disciplinary Issue');
+            $profiles = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Profile');
+            $emergencies = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Emergency');
+            $dependents = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Dependent');
+            $immigrations = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Immigration');
+            $visas = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Visa');
+            $jobs = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Job');
+            $banks = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Bank');
+            $qualifications = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Qualification');
+            $workdays = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Work Days');
+            $reportTo = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Report To');
+            $securityGroup = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Security Group');
+            $country = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'country');
+            $category = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'category');
+            $security = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'security');
+            $cost_centre = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'costcentre');
+            $department = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'department');
+            $team = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'team');
+            $position = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'position');
+            $grade = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'grade');
+            $section = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'section');
+            $company = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'company');
+            $branch = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'branch');
+            $status = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'status');
+            $role = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'role');
+            $bank_list = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'bank_list');
+            $employee = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'employee');
+            $payroll = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'payroll');
+            
+            
+            $spreadsheet->addSheet($profiles, 0);
+            $spreadsheet->addSheet($disciplines, 1);
+            $spreadsheet->addSheet($emergencies, 2);
+            $spreadsheet->addSheet($dependents, 3);
+            $spreadsheet->addSheet($immigrations, 4);
+            $spreadsheet->addSheet($visas, 5);
+            $spreadsheet->addSheet($jobs, 6);
+            $spreadsheet->addSheet($banks, 7);
+            $spreadsheet->addSheet($qualifications, 8);
+            $spreadsheet->addSheet($workdays, 9);
+            $spreadsheet->addSheet($reportTo, 10);
+            $spreadsheet->addSheet($securityGroup, 11);
+            $spreadsheet->addSheet($country, 12);
+            $spreadsheet->addSheet($category, 13);
+            $spreadsheet->addSheet($security, 14);
+            $spreadsheet->addSheet($cost_centre, 15);
+            $spreadsheet->addSheet($department, 16);
+            $spreadsheet->addSheet($team, 17);
+            $spreadsheet->addSheet($position, 18);
+            $spreadsheet->addSheet($grade, 19);
+            $spreadsheet->addSheet($section, 20);
+            $spreadsheet->addSheet($company, 21);
+            $spreadsheet->addSheet($branch, 22);
+            $spreadsheet->addSheet($status, 23);
+            $spreadsheet->addSheet($role, 24);
+            $spreadsheet->addSheet($bank_list, 25);
+            $spreadsheet->addSheet($employee, 26);
+            $spreadsheet->addSheet($payroll, 27);
+           
+           
+            $spreadsheet->getSheetByName('country')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('category')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('security')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('costcentre')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('department')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('team')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('position')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('grade')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('section')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('company')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('branch')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('status')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('role')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('bank_list')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('employee')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            $spreadsheet->getSheetByName('payroll')
+            ->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
+            
+            
+            
+            $disciplines->getCell('A1')->setValue('Date*');
+            $disciplines->getCell('B1')->setValue('Title*');
+            $disciplines->getCell('C1')->setValue('Description*');
+
+
+            $profiles->getCell('A1')->setValue('Name*');
+            $profiles->getCell('B1')->setValue('Email*');
+            $profiles->getCell('C1')->setValue('Personal Email*');
+            $profiles->getCell('D1')->setValue('Contact No*');
+            $profiles->getCell('E1')->setValue('Address Line 1*');
+            $profiles->getCell('F1')->setValue('Address Line 2');
+            $profiles->getCell('G1')->setValue('Address Line 3');
+            $profiles->getCell('H1')->setValue('Postcode*');
+            $profiles->getCell('I1')->setValue('IC No*');
+            $profiles->getCell('J1')->setValue('Gender*');
+            $profiles->getCell('K1')->setValue('Date of Birth*');
+            $profiles->getCell('L1')->setValue('Race*');
+            $profiles->getCell('M1')->setValue('Nationality*');
+            $profiles->getCell('N1')->setValue('Marital Status*');
+            $profiles->getCell('O1')->setValue('Spouse Name');
+            $profiles->getCell('P1')->setValue('Spouse IC No');
+            $profiles->getCell('Q1')->setValue('Spouse Tax No');
+            $profiles->getCell('R1')->setValue('No Of Children*');
+            $profiles->getCell('S1')->setValue('Driver License No');
+            $profiles->getCell('T1')->setValue('License Expiry Date');
+            $profiles->getCell('U1')->setValue('Payment Via*');
+            $profiles->getCell('V1')->setValue('Payment Rate*');
+            $profiles->getCell('W1')->setValue('Category');
+            $profiles->getCell('X1')->setValue('Tax No');
+            $profiles->getCell('Y1')->setValue('PCB Group');
+            $profiles->getCell('Z1')->setValue('EPF No');
+            $profiles->getCell('AA1')->setValue('EPF Category');
+            $profiles->getCell('AB1')->setValue('EIS No');
+            $profiles->getCell('AC1')->setValue('SOCSO No*');
+            $profiles->getCell('AD1')->setValue('SOCSO Category*');
+            $profiles->getCell('AE1')->setValue('Employee ID*');
+            $profiles->getCell('AF1')->setValue('Security Group*');
+            $profiles->getCell('AG1')->setValue('Role*');
+
+            $emergencies->getCell('A1')->setValue('Name*');
+            $emergencies->getCell('B1')->setValue('Relationship*');
+            $emergencies->getCell('C1')->setValue('Contact No*');
+
+            $dependents->getCell('A1')->setValue('Name*');
+            $dependents->getCell('B1')->setValue('IC No');
+            $dependents->getCell('C1')->setValue('Occupation');
+            $dependents->getCell('D1')->setValue('Relationship*');
+            $dependents->getCell('E1')->setValue('Date Of Birth*');
+
+            $immigrations->getCell('A1')->setValue('Passport No*');
+            $immigrations->getCell('B1')->setValue('Issued By*');
+            $immigrations->getCell('C1')->setValue('Issued Date*');
+            $immigrations->getCell('D1')->setValue('Expiry Date*');
+
+            $visas->getCell('A1')->setValue('Type*');
+            $visas->getCell('B1')->setValue('Visa Number*');
+            $visas->getCell('C1')->setValue('Issued By*');
+            $visas->getCell('D1')->setValue('Issued Date*');
+            $visas->getCell('E1')->setValue('Expiry Date*');
+            $visas->getCell('F1')->setValue('Relationship*');
+
+            $jobs->getCell('A1')->setValue('Cost Centre');
+            $jobs->getCell('B1')->setValue('Department');
+            $jobs->getCell('C1')->setValue('Team*');
+            $jobs->getCell('D1')->setValue('Position');
+            $jobs->getCell('E1')->setValue('Grade*');
+            $jobs->getCell('F1')->setValue('Section');
+            $jobs->getCell('G1')->setValue('Company*');
+            $jobs->getCell('H1')->setValue('Branch*');
+            $jobs->getCell('I1')->setValue('New Basic Salary*');
+            $jobs->getCell('J1')->setValue('Date*');
+            $jobs->getCell('K1')->setValue('Employment Status*');
+            $jobs->getCell('L1')->setValue('Remarks');
+
+            $banks->getCell('A1')->setValue('Bank Name*');
+            $banks->getCell('B1')->setValue('Account Number*');
+
+            $qualifications->getCell('A1')->setValue('Company*');
+            $qualifications->getCell('B1')->setValue('Industry*');
+            $qualifications->getCell('C1')->setValue('Contact Person/ Tel*');
+            $qualifications->getCell('D1')->setValue('Position*');
+            $qualifications->getCell('E1')->setValue('Start Date*');
+            $qualifications->getCell('F1')->setValue('End Date*');
+            $qualifications->getCell('G1')->setValue('Notes');
+
+            $reportTo->getCell('A1')->setValue('Report To*');
+            $reportTo->getCell('B1')->setValue('Type*');
+            $reportTo->getCell('C1')->setValue('Report To Level*');
+            $reportTo->getCell('D1')->setValue('KPI Proposer*');
+            $reportTo->getCell('E1')->setValue('Payroll Period');
+            $reportTo->getCell('F1')->setValue('Note');
+
+            $securityGroup->getCell('A1')->setValue('Name*');
+
+
+            $profileData = DB::table('employees')
+            ->select('users.name', 'users.email','employees.personal_email','employees.contact_no','employees.address','employees.address2','employees.address3','employees.postcode','employees.ic_no','employees.gender','employees.dob','employees.race','countries.name as nationality','employees.marital_status','employees.spouse_name','employees.spouse_ic','employees.spouse_tax_no','employees.total_children','employees.driver_license_no','employees.driver_license_expiry_date','employees.payment_via','employees.payment_rate','categories.name as cateogry','employees.tax_no','employees.pcb_group','employees.epf_no','employees.epf_category',
+                'employees.eis_no','employees.socso_no','employees.socso_category','employees.code','security_groups.name as security_group')
+            ->leftjoin('users','employees.user_id','=','users.id')
+            ->leftjoin('countries','employees.nationality','=','countries.id')
+            ->leftjoin('categories','employees.category_id','=','categories.id')
+            ->leftjoin('security_groups','employees.main_security_group_id','=','security_groups.id')
+            ->get();
+            $i=2;
+            foreach($profileData as $profileDa)
+            {  
+                $profiles->setCellValue('A'.$i,$profileDa->name)->getColumnDimension('A')
+                ->setAutoSize(true);
+                $profiles->setCellValue('B'.$i,$profileDa->email)->getColumnDimension('B')
+                ->setAutoSize(true);
+                $profiles->setCellValue('C'.$i,$profileDa->personal_email)->getColumnDimension('C')
+                ->setAutoSize(true);
+                $profiles->setCellValue('D'.$i,$profileDa->contact_no)->getColumnDimension('D')
+                ->setAutoSize(true);
+                $profiles->setCellValue('E'.$i,$profileDa->address)->getColumnDimension('E')
+                ->setAutoSize(true);
+                $profiles->setCellValue('F'.$i,$profileDa->address2)->getColumnDimension('F')
+                ->setAutoSize(true);
+                $profiles->setCellValue('G'.$i,$profileDa->address3)->getColumnDimension('G')
+                ->setAutoSize(true);
+                $profiles->setCellValue('H'.$i,$profileDa->postcode)->getColumnDimension('H')
+                ->setAutoSize(true);
+                $profiles->setCellValue('I'.$i,$profileDa->ic_no)->getColumnDimension('I')
+                ->setAutoSize(true);
+                $profiles->setCellValue('J'.$i,$profileDa->gender)->getColumnDimension('J')
+                ->setAutoSize(true);
+                $profiles->setCellValue('K'.$i,$profileDa->dob)->getColumnDimension('K')
+                ->setAutoSize(true);
+                $profiles->setCellValue('L'.$i,$profileDa->race)->getColumnDimension('L')
+                ->setAutoSize(true);
+                $profiles->setCellValue('M'.$i,$profileDa->nationality)->getColumnDimension('M')
+                ->setAutoSize(true);
+                $profiles->setCellValue('N'.$i,$profileDa->marital_status)->getColumnDimension('N')
+                ->setAutoSize(true);
+                $profiles->setCellValue('O'.$i,$profileDa->spouse_name)->getColumnDimension('O')
+                ->setAutoSize(true);
+                $profiles->setCellValue('P'.$i,$profileDa->spouse_ic)->getColumnDimension('P')
+                ->setAutoSize(true);
+                $profiles->setCellValue('Q'.$i,$profileDa->spouse_tax_no)->getColumnDimension('Q')
+                ->setAutoSize(true);
+                $profiles->setCellValue('R'.$i,$profileDa->total_children)->getColumnDimension('R')
+                ->setAutoSize(true);
+                $profiles->setCellValue('S'.$i,$profileDa->driver_license_no)->getColumnDimension('S')
+                ->setAutoSize(true);
+                $profiles->setCellValue('T'.$i,$profileDa->driver_license_expiry_date)->getColumnDimension('T')
+                ->setAutoSize(true);
+                if($profileDa->payment_via==1){
+                $profiles->setCellValue('U'.$i,'Cash')->getColumnDimension('U')
+                ->setAutoSize(true);
+                }
+                else if($profileDa->payment_via==2){
+                $profiles->setCellValue('U'.$i,'Bank')->getColumnDimension('U')
+                ->setAutoSize(true);
+                }
+                else if($profileDa->payment_via==3){
+                $profiles->setCellValue('U'.$i,'Cheque')->getColumnDimension('U')
+                ->setAutoSize(true);
+                }
+                else if($profileDa->payment_via==4){
+                $profiles->setCellValue('U'.$i,'Withheld')->getColumnDimension('U')
+                ->setAutoSize(true);
+                }
+                else{
+                $profiles->setCellValue('U'.$i,'Credit Note')->getColumnDimension('U')
+                ->setAutoSize(true);
+                }
+                if($profileDa->payment_via==1){
+                $profiles->setCellValue('V'.$i,'Daily')->getColumnDimension('V')
+                ->setAutoSize(true);
+                }
+                else if($profileDa->payment_via==2){
+                $profiles->setCellValue('V'.$i,'Weekly')->getColumnDimension('V')
+                ->setAutoSize(true);
+                }
+                else{
+                $profiles->setCellValue('V'.$i,'Monthly')->getColumnDimension('V')
+                ->setAutoSize(true);
+                }
+               
+                $profiles->setCellValue('W'.$i,$profileDa->cateogry)->getColumnDimension('W')
+                ->setAutoSize(true);
+                $profiles->setCellValue('X'.$i,$profileDa->tax_no)->getColumnDimension('X')
+                ->setAutoSize(true);
+
+                if($profileDa->pcb_group==1){
+                $profiles->setCellValue('Y'.$i,'Single Person')->getColumnDimension('Y')
+                ->setAutoSize(true);
+                }
+                else if($profileDa->pcb_group==2){
+                $profiles->setCellValue('Y'.$i,'Spouse not working')->getColumnDimension('Y')
+                ->setAutoSize(true);
+                }
+                else{
+                $profiles->setCellValue('Y'.$i,'Spouse working')->getColumnDimension('Y')
+                ->setAutoSize(true);
+                }
+
+                $profiles->setCellValue('Z'.$i,$profileDa->epf_no)->getColumnDimension('Z')
+                ->setAutoSize(true);
+                if($profileDa->epf_category==1){
+                $profiles->setCellValue('AA'.$i,'Category A')->getColumnDimension('AA')
+                ->setAutoSize(true);
+                }
+                else if($profileDa->epf_category==2){
+                $profiles->setCellValue('AA'.$i,'Category B')->getColumnDimension('AA')
+                ->setAutoSize(true);
+                }
+                else if($profileDa->epf_category==3){
+                $profiles->setCellValue('AA'.$i,'Category C')->getColumnDimension('AA')
+                ->setAutoSize(true);
+                }
+                else if($profileDa->epf_category==4){
+                $profiles->setCellValue('AA'.$i,'Category D')->getColumnDimension('AA')
+                ->setAutoSize(true);
+                }
+                else{
+                $profiles->setCellValue('AA'.$i,'Category E')->getColumnDimension('AA')
+                ->setAutoSize(true);
+                }
+                
+                $profiles->setCellValue('AB'.$i,$profileDa->eis_no)->getColumnDimension('AB')
+                ->setAutoSize(true);
+                $profiles->setCellValue('AC'.$i,$profileDa->socso_no)->getColumnDimension('AC')
+                ->setAutoSize(true);
+
+                if($profileDa->socso_category==1){
+                $profiles->setCellValue('AD'.$i,'First Category')->getColumnDimension('AD')
+                ->setAutoSize(true);
+                }
+                else{
+                $profiles->setCellValue('AD'.$i,'Second Category')->getColumnDimension('AD')
+                ->setAutoSize(true);
+                }
+               
+                $profiles->setCellValue('AE'.$i,$profileDa->code)->getColumnDimension('AE')
+                ->setAutoSize(true);
+                $profiles->setCellValue('AF'.$i,$profileDa->security_group)->getColumnDimension('AF')
+                ->setAutoSize(true);
+                //$profiles->setCellValue('AG'.$i,$profileDa->cateogry);
+                
+                $profiles->getCell('J'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Female,Male"');
+
+                $profiles->getStyle('I'.$i)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
+
+                $profiles->getStyle('P'.$i)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
+
+                $profiles->getStyle('AB'.$i)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
+
+                $profiles->getStyle('AC'.$i)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
+
+                $profiles->getStyle('H'.$i)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
+
+                $profiles->getCell('N'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Single,Married"');
+              
+                $profiles->getCell('M'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('country!$A:$A');
+
+                $profiles->getCell('U'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Cash,Bank,Cheque,Withheld,Credit Note"');
+
+                $profiles->getCell('V'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Daily,Weekly,Monthly"');
+
+                $profiles->getCell('W'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('category!$A:$A');
+
+                $profiles->getCell('Y'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Single Person,Spouse Not Working,Spouse Working"');
+
+                $profiles->getCell('AA'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Category A,Category B,Category C,Category D,Category E"');
+
+                $profiles->getCell('AD'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"First Category,Second Category"');
+
+                $profiles->getCell('AG'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('role!$A:$A');
+
+                $profiles->getCell('AF'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('security!$A:$A');
+
+                $profiles->getCell('K'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $profiles->getCell('T'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $i++;
+            }
+
+
+            $disciplineData = DB::table('employee_disciplines')
+            ->select('discipline_date','discipline_title','discipline_desc')
+            ->get();
+            $i=2;
+            foreach($disciplineData as $disciplineDa)
+            {  
+                $disciplines->setCellValue('A'.$i,$disciplineDa->discipline_date)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $disciplines->setCellValue('B'.$i,$disciplineDa->discipline_title)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $disciplines->setCellValue('C'.$i,$disciplineDa->discipline_desc)
+                ->getColumnDimension('C')
+                ->setAutoSize(true);
+                $i++;
+            }
+
+            $emergencyData = DB::table('employee_emergency_contacts')
+            ->select('name','relationship','contact_no')
+            ->get();
+            $i=2;
+            foreach($emergencyData as $emergencyDa)
+            {  
+                $emergencies->setCellValue('A'.$i,$emergencyDa->name)
+                ->getColumnDimension('A')
+                ->setAutoSize(true);
+                $emergencies->setCellValue('B'.$i,$emergencyDa->relationship)
+                ->getColumnDimension('B')
+                ->setAutoSize(true);
+                $emergencies->setCellValue('C'.$i,$emergencyDa->contact_no)
+                ->getColumnDimension('C')
+                ->setAutoSize(true);
+                $i++;
+            }
+
+            $countryName = DB::table('countries')->select('name')->get();
+            $i=1;
+            foreach($countryName as $countryNa)
+            {  
+                $country->setCellValue('A'.$i,$countryNa->name);
+                $i++;
+            }
+
+            $categoryName = DB::table('categories')->select('name')->get();
+            $i=1;
+            foreach($categoryName as $categoryNa)
+            {
+                $category->setCellValue('A'.$i,$categoryNa->name);
+                $i++;
+            }
+
+            $securityName = DB::table('security_groups')->select('name')->get();
+            $i=1;
+            foreach($securityName as $securityNa)
+            {
+                $security->setCellValue('A'.$i,$securityNa->name);
+                $i++;
+            }
+
+            $costCentreName = DB::table('cost_centres')->select('name')->get();
+            $i=1;
+            foreach($costCentreName as $costCentreNa)
+            {
+                $cost_centre->setCellValue('A'.$i,$costCentreNa->name);
+                $i++;
+            }
+
+            $departmentName = DB::table('departments')->select('name')->get();
+            $i=1;
+            foreach($departmentName as $departmentNa)
+            {
+                $department->setCellValue('A'.$i,$departmentNa->name);
+                $i++;
+            }
+
+            $teamName = DB::table('teams')->select('name')->get();
+            $i=1;
+            foreach($teamName as $teamNa)
+            {
+                $team->setCellValue('A'.$i,$teamNa->name);
+                $i++;
+            }
+            $positionName = DB::table('employee_positions')->select('name')->get();
+            $i=1;
+            foreach($positionName as $positionNa)
+            {
+                $position->setCellValue('A'.$i,$positionNa->name);
+                $i++;
+            }
+
+            $gradeName = DB::table('employee_grades')->select('name')->get();
+            $i=1;
+            foreach($gradeName as $gradeNa)
+            {
+                $grade->setCellValue('A'.$i,$gradeNa->name);
+                $i++;
+            }
+
+            $sectionName = DB::table('sections')->select('name')->get();
+            $i=1;
+            foreach($sectionName as $sectionNa)
+            {
+                $section->setCellValue('A'.$i,$sectionNa->name);
+                $i++;
+            }
+
+            $companyName = DB::table('job_companies')->select('company_name')->get();
+            $i=1;
+            foreach($companyName as $companyNa)
+            {
+                $company->setCellValue('A'.$i,$companyNa->company_name);
+                $i++;
+            }
+
+            $branchName = DB::table('branches')->select('name')->get();
+            $i=1;
+            foreach($branchName as $branchNa)
+            {
+                $branch->setCellValue('A'.$i,$branchNa->name);
+                $i++;
+            }
+
+            $statusName = DB::table('employment_statuses')->select('name')->get();
+            $i=1;
+            foreach($statusName as $statusNa)
+            {
+                $status->setCellValue('A'.$i,$statusNa->name);
+                $i++;
+            }
+
+            $roleName = DB::table('roles')->select('name')->where('name', '!=', 'Super Admin')->get();
+            $i=1;
+            foreach($roleName as $roleNa)
+            {
+                $role->setCellValue('A'.$i,$roleNa->name);
+                $i++;
+            }
+
+            $bankName = DB::table('bank_code')->select('name')->get();
+            $i=1;
+            foreach($bankName as $bankNa)
+            {
+                $bank_list->setCellValue('A'.$i,$bankNa->name);
+                $i++;
+            }
+
+            $employeeName = DB::table('users')->select('name')->get();
+            $i=1;
+            foreach($employeeName as $employeeNa)
+            {
+                $employee->setCellValue('A'.$i,$employeeNa->name);
+                $i++;
+            }
+
+            $payrollPeriodName = DB::table('payroll_period')->select('name')->get();
+            $i=1;
+            foreach($payrollPeriodName as $payrollPeriodNa)
+            {
+                $payroll->setCellValue('A'.$i,$payrollPeriodNa->name);
+                $i++;
+            }
+
+            
+
+            $row = 20;
+            //$i=2;
+           for($i = 2;$i<=$row;$i++)
+           {
+                
+
+                $disciplines->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $dependents->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $immigrations->getCell('C'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+                $immigrations->getCell('D'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $visas->getCell('D'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+                $visas->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $jobs->getCell('J'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $jobs->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('costcentre!$A:$A');
+
+                $jobs->getCell('B'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('department!$A:$A');
+
+                $jobs->getCell('C'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('team!$A:$A');
+
+                $jobs->getCell('D'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('position!$A:$A');
+
+                $jobs->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('grade!$A:$A');
+
+                $jobs->getCell('F'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('section!$A:$A');
+
+                $jobs->getCell('G'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('company!$A:$A');
+
+                $jobs->getCell('H'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('branch!$A:$A');
+
+                $jobs->getCell('K'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('status!$A:$A');
+
+                $qualifications->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+                $qualifications->getCell('F'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Invalid Format.')
+                ->setPromptTitle('Format:yyyy-mm-dd')
+                ->setPrompt('Example:2020-01-19');
+
+                $banks->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('bank_list!$A:$A');
+
+                $reportTo->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('employee!$A:$A');
+
+                $reportTo->getCell('B'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Direct,Indirect"');
+                $reportTo->getCell('C'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"1,2,3,4,5,6,7,8"');
+                $reportTo->getCell('D'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('"Yes,No"');
+                $reportTo->getCell('E'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('payroll!$A:$A');
+
+                $securityGroup->getCell('A'.$i)->getDataValidation()
+                ->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
+                ->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1('security!$A:$A');
+ 
+           }
+
+            $writer = new Xlsx($spreadsheet);
+            $filename = 'Template';
             
             header('Content-Type: application/vnd.ms-excel');
             header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');
