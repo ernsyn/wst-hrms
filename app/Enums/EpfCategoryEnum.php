@@ -42,4 +42,28 @@ class EpfCategoryEnum extends Enum
         
         return $desc;
     }
+    
+    public static function getValue($description)
+    {
+        $value = '';
+        switch ($description) {
+            case 'Category A':
+                $value = 1;
+                break;
+            case 'Category B':
+                $value = 2;
+                break;
+            case 'Category C':
+                $value = 3;
+                break;
+            case 'Category D':
+                $value = 4;
+                break;
+            case 'Category E':
+                $value = 5;
+                break;
+        }
+        
+        return $value;
+    }
 }

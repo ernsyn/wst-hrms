@@ -45,5 +45,23 @@ class PCBGroupEnum extends Enum
         
         return $desc;
     }
+    
+    public static function getValue($description)
+    {
+        $value = '';
+        switch ($description) {
+            case 'Single Person':
+                $value = 1;
+                break;
+            case 'Spouse not working':
+                $value = 2;
+                break;
+            case 'Spouse working':
+                $value = 3;
+                break;
+        }
+        
+        return $value;
+    }
 }
 

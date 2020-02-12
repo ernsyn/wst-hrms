@@ -46,5 +46,22 @@ class PaymentRateEnum extends Enum
         
         return $desc;
     }
+    
+    public static function getValue($description)
+    {
+        $value = '';
+        switch ($description) {
+            case 'Daily':
+                $value = 1;
+                break;
+            case 'Weekly':
+                $value = 2;
+                break;
+            case 'Monthly':
+                $value = 3;
+                break;
+        }
+        return $value;
+    }
 }
 

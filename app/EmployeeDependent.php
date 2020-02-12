@@ -18,7 +18,8 @@ class EmployeeDependent extends Model implements Auditable
         'occupation',
         'relationship',
         'dob',
-        'created_by'
+        'created_by',
+        'emp_id'
     ];
 
     protected $dates = ['deleted_at'];
