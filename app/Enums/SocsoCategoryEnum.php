@@ -27,4 +27,19 @@ class SocsoCategoryEnum extends Enum
         
         return $desc;
     }
+    
+    public static function getValue($description)
+    {
+        $value = '';
+        switch ($description) {
+            case 'First Category':
+                $value = 1;
+                break;
+            case 'Second Category':
+                $value = 2;
+                break;
+        }
+        
+        return $value;
+    }
 }

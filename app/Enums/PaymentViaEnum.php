@@ -58,5 +58,28 @@ class PaymentViaEnum extends Enum
         
         return $desc;
     }
+    
+    public static function getValue($description)
+    {
+        $value = '';
+        switch ($description) {
+            case 'Cash':
+                $value = 1;
+                break;
+            case 'Bank':
+                $value = 2;
+                break;
+            case 'Cheque':
+                $value = 3;
+                break;
+            case 'Withheld':
+                $value = 4;
+                break;
+            case 'Credit Note':
+                $value = 5;
+                break;
+        }
+        return $value;
+    }
 }
 

@@ -432,6 +432,15 @@ $(document).ready(function() {
                     }
                     
                 }
+                ,{
+                    text: '<i class="fas fa-upload"></i>',
+                    className: 'btn-segment',
+                    titleAttr: 'Import',
+                    action: function ( e, dt, button, config ) {
+                       window.location = "{{ route('import.employees')}}";
+                    }
+                    
+                }
             ]
     
         });

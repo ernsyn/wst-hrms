@@ -136,6 +136,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     });
     Route::get('export-template', 'Admin\EmployeeController@excelTemplate')->name('export.template');
     Route::get('export-data', 'Admin\EmployeeController@excelData')->name('export.data');
+    
+    //TODO: tag permission
+    Route::get('import-employees', 'Admin\ImportEmployeeController@importEmployees')->name('import.employees');
  
     // Emergency_Contact
     Route::group(['middleware' => ['permission:'.PermissionConstant::VIEW_EMERGENCY_CONTACT]], function () {
