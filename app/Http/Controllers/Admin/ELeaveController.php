@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use App\User;
 use Artisan;
 use App\EmployeeJob;
+use App\LeaveTransaction;
 use App\Enums\HolidayTypeEnum;
 use Illuminate\Support\Facades\Auth;
 
@@ -967,8 +968,17 @@ class ELeaveController extends Controller
 
     public function ajaxGetLeaveTypes($emp_id)
     {
-        $employee = Employee::where('id', $emp_id)->first();
-        $leaveTypes = LeaveService::getLeaveTypesForEmployee($employee, true);
+        //$employee = Employee::where('id', $emp_id)->first();
+        //$leaveTypes = LeaveService::getLeaveTypesForEmployee($employee, true);
+        $emp_id=$emp_id;
+        $leaveTypes = DB::table('lt_applied_rules')
+        ->leftjoin('leave_types','lt_applied_rules.leave_type_id','=','leave_types.id')
+        ->leftjoin('leave_allocations','leave_types.id','=','leave_allocations.leave_type_id')
+        ->select('leave_types.*','lt_applied_rules.leave_type_id','leave_allocations.allocated_days','leave_allocations.spent_days')
+        ->selectRaw('GROUP_CONCAT(lt_applied_rules.rule) as rule')
+        ->where('leave_allocations.emp_id',$emp_id)
+        ->groupBy('lt_applied_rules.leave_type_id')
+        ->get();
         return response()->json($leaveTypes);
     }
 
@@ -1000,84 +1010,27 @@ class ELeaveController extends Controller
 
     public function ajaxPostCreateLeaveRequest(Request $request, $emp_id)
     {
+        $emp_id=$emp_id;
         $requestData = $request->validate([
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'leave_type' => 'required',
+            'start-date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'end-date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'leave-types' => 'required',
             'am_pm' => '',
             'reason' => 'required',
             'attachment' => '',
             'edit_leave_request_id' => 'integer'
         ]);
-        
-        $leave_type_id = $request->input('leave_type');   
-        
-        $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
-        ->where('leave_type_id',$leave_type_id)
-        ->count() == 0;
-
-        // if ($multiple_approval_levels_required == false) {
-            $am_pm = null;
-            if(array_key_exists('am_pm', $requestData)) {
-                $am_pm = $requestData['am_pm'];
-            }
-    
-            $attachment_data_url = null;
-            if(array_key_exists('attachment', $requestData)) {
-                $attachment_data_url = $requestData['attachment'];
-            }
-    
-            $edit_leave_request_id = null;
-            if(array_key_exists('edit_leave_request_id', $requestData)) {
-                $edit_leave_request_id = $requestData['edit_leave_request_id'];
-            }
-    
-            $employee = Employee::where('id', $emp_id)->first();    
-             
-            $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, $edit_leave_request_id, true);
-            $leave_request = LeaveRequest::where('id', $result)->first();
-    
-        // send leave request email notification
-        self::sendLeaveRequestNotification($leave_request, $employee->id);
-
-        return response()->json($result);
-
-        // send leave request email notification
- 
-
-        //     $leave_request = LeaveRequest::where('id', $result)->first();
-
-    
-        // // send leave request email notification
-        // self::sendLeaveRequestNotification($leave_request, $emp_id);
-        // return response()->json($result);
-        // }
-
-        // else 
-        // {
-        //     $am_pm = null;
-        //     if(array_key_exists('am_pm', $requestData)) {
-        //         $am_pm = $requestData['am_pm'];
-        //     }
-    
-        //     $attachment_data_url = null;
-        //     if(array_key_exists('attachment', $requestData)) {
-        //         $attachment_data_url = $requestData['attachment'];
-        //     }
-    
-        //     $edit_leave_request_id = null;
-        //     if(array_key_exists('edit_leave_request_id', $requestData)) {
-        //         $edit_leave_request_id = $requestData['edit_leave_request_id'];
-        //     }
-    
-        //     $employee = Employee::where('id', $emp_id)->first();
-        //     $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, $edit_leave_request_id, true);
-    
-        //     $leave_request = LeaveRequest::where('id', $result)->first();
-        //     self::sendLeaveRequestNonMultipleNotification($leave_request, $emp_id);
-        //     return response()->json($result);
-
-        // }
+        $leaveData= new LeaveTransaction($requestData);
+        $leaveData->start_date = $requestData['start-date'] = implode("-", array_reverse(explode("/", $requestData['start-date'])));
+        $leaveData->end_date = $requestData['end-date'] = implode("-", array_reverse(explode("/", $requestData['end-date'])));
+        $leaveData->leave_type_id = $requestData['leave-types'];
+        $leaveData->reason = $requestData['reason'];
+        $leaveData->emp_id = $emp_id;
+        $leaveData->status = 3;
+        $leaveData->applied_days =dateDiffInDays($requestData['end-date'], $requestData['start-date']);
+        $leaveData['created_by'] = auth()->user()->id;
+        $leaveData->save();
+      
         
     }
 
