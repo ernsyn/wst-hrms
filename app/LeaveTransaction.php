@@ -40,13 +40,17 @@ class LeaveTransaction extends Model implements Auditable
         return $this->hasMany('App\EmployeeReportTo','emp_id');
     }
     
-    public function leave_type()
+    public function leave_type() 
     {
-        return $this->belongsTo('App\LeaveType','leave_type_id');
+        return $this->belongsTo('App\LeaveType','leave_type_id'); 
     }
     
     public function employee()
     {
         return $this->belongsTo('App\Employee','emp_id');
+    }
+    public function leave_request_approval()
+    {
+        return $this->hasMany('App\LeaveRequestApproval'); 
     }
 }

@@ -8,19 +8,19 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use App\LeaveAllocation;
-use App\LeaveRequest;
+use App\LeaveTransaction;
 use App\LeaveType;
 use App\LTAppliedRule;
 use App\EmployeeJob;
 use App\Employee;
 use App\Holiday;
 use App\Media;
-
+use App\LeaveAttach;
 use App\Constants\LeaveTypeRule;
 use App\EmployeeReportTo;
 use Auth;
 use App\EmployeeWorkingDay;
-
+use Illuminate\Support\Facades\Storage;
 class LeaveService
 {
     public static function onJobStart($emp_id, $start_date, $grade_id, $emp_job_id) {
@@ -174,6 +174,7 @@ class LeaveService
 
     public static function createLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $reason, $attachment_data_url, $edit_leave_request_id = null, $is_admin = false) {
         $result = self::checkLeaveRequest($employee, $leave_type_id, $start_date, $end_date, $am_pm, $edit_leave_request_id, $is_admin);
+       
         if(array_key_exists('error', $result)) {
             return $result;
         }
@@ -183,14 +184,10 @@ class LeaveService
         }
 
         $totalDays = $result['total_days'];
-
+        
         $attachment_required = false;
-        if(LTAppliedRule::where('leave_type_id', $leave_type_id)->where('rule', LeaveTypeRule::REQUIRED_ATTACHMENT)->count() > 0) {
-            $attachment_required = true;
-            if(empty($attachment_data_url)) {
-                return self::error("Attachment required for this leave type.");
-            }
-        }
+
+
 
         // if (empty($result['reason'] )){
         //     return self::error("Reason required.");
@@ -204,9 +201,20 @@ class LeaveService
         ->first();
 
         $leaveRequest = null;
-        $created_by = auth()->user()->name;
+        $created_by = auth()->user()->id;
         DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason,$created_by, $attachment_data_url, $attachment_required, &$leaveRequest) {
-            $leaveRequest = LeaveRequest::create([
+
+            if(LTAppliedRule::where('leave_type_id', $leave_type_id)
+            ->where('rule', LeaveTypeRule::REQUIRED_ATTACHMENT)
+            ->count() > 0) {
+            $attachment_required = true;
+            if(empty($attachment_data_url)) {
+               
+                return self::error("Attachment required for this leave type.");
+               
+            }
+        }
+            $leaveRequest = LeaveTransaction::create([
                 'emp_id' => $employee->id,
                 'leave_type_id' => $leave_type_id,
                 'leave_allocation_id' => $leaveAllocation->id,
@@ -215,7 +223,7 @@ class LeaveService
                 'am_pm' => $am_pm, 
                 'applied_days' =>  $totalDays,
                 'reason' => $reason,
-                'status' => 'new',
+                'status' => 0,
                 'created_by' => $created_by,
             ]);
 
@@ -223,19 +231,7 @@ class LeaveService
                 'spent_days' => $leaveAllocation->spent_days + $totalDays
             ]);
             
-            if($attachment_required) {
-                $attachmentData = self::processBase64DataUrl($attachment_data_url);
-                $attachmentMedia = Media::create([
-                    'category' => 'leave-request-attachment',
-                    'mimetype' => $attachmentData['mime_type'],
-                    'data' => $attachmentData['data'],
-                    'size' => $attachmentData['size'],
-                    'filename' => 'lr_attachmment_'.($employee->id).'_'.date('Y-m-d_H:i:s')
-                ]);
-
-                $leaveRequest->attachment()->associate($attachmentMedia);
-                $leaveRequest->save();
-            }
+            
             
         });
         
@@ -243,7 +239,7 @@ class LeaveService
     }
     
     public static function getAllLeaveRequestsForEmployee($employee) {
-        return LeaveRequest::with('leave_type')->where('emp_id', $employee->id)
+        return LeaveTransaction::with('leave_type')->where('emp_id', $employee->id)
         ->orderBy('start_date', 'DESC')
         // ->where(function($q) use ($start_date, $end_date) {
         //     $q->where('start_date', '>=', $start_date);
@@ -257,7 +253,7 @@ class LeaveService
     }
 
     public static function getLeaveRequestsForEmployee($employee, $start_date, $end_date) {
-        return LeaveRequest::where('emp_id', $employee->id)
+        return LeaveTransaction::where('emp_id', $employee->id)
         ->where(function($q) use ($start_date, $end_date) {
             $q->where('start_date', '>=', $start_date);
             $q->where('start_date', '<=', $end_date);
@@ -268,7 +264,7 @@ class LeaveService
         })
         ->get();
     }
-
+    
     public static function checkLeaveRequest(Employee $employee, $leave_type_id, $start_date, $end_date, $am_pm, $edit_leave_request_id = null, $is_admin = false) {
         Log::debug($start_date);
         Log::debug($end_date);
@@ -279,8 +275,10 @@ class LeaveService
         Log::debug($endDate);
         
         // Check if apply any leave after resigned date
-        if(EmployeeJob::where('emp_id', $employee->id)
-            ->where('status', 'Resigned')
+        if(EmployeeJob::leftjoin('employee_job_status','employee_jobs.id','=','employee_job_status.emp_job_id')
+            ->leftjoin('employment_statuses','employee_job_status.status_id','=','employment_statuses.id')
+            ->where('emp_id', $employee->id)
+            ->where('employment_statuses.name', 'Resigned')
             ->where(function($q) use ($startDate, $endDate) {
                 $q->where('end_date', '<', $startDate);
                 $q->orWhere('end_date', '<', $endDate);
@@ -293,16 +291,19 @@ class LeaveService
             return self::error("Start date is after end date.");
         }
 
+
         // Check if already has a leave on that day
-        if(LeaveRequest::where('emp_id', $employee->id)
-        ->where('status', '!=', 'rejected')
+        if(LeaveTransaction::where('emp_id', $employee->id)
+        ->where('status', '!=', 3)
             ->where(function($q) use ($startDate, $endDate) {
                 $q->whereBetween('start_date', array($startDate, $endDate));
                 $q->orWhere(function($r) use ($startDate, $endDate) {
                     $r->whereBetween('end_date', array($startDate, $endDate));
+                     
             });
         })
         ->count() > 0) {
+            
             return self::error("You already have a leave request for this day or, your leave request is overlapping with a previously applied leave.");
         }
         
@@ -352,6 +353,8 @@ class LeaveService
         $invalidErrorMessage = '';
         // Related To: Leave Calculation
         $inc_off_days = false;
+        $inc_rest_days = false;
+        $inc_ph_days = false;
         $no_limit = false;
         $consecutive = false;
 
@@ -360,6 +363,9 @@ class LeaveService
         $max_days_per_application;
         $min_apply_days_before_config;
         $inc_off_days_based_on_applied_days_config;
+        $inc_rest_days_based_on_applied_days_config;
+
+        
         
         foreach($leaveType->applied_rules as $rule) {
             Log::debug('************');
@@ -368,19 +374,39 @@ class LeaveService
             Log::debug($invalidErrorMessage);
             switch ($rule->rule) {
                 case LeaveTypeRule::GENDER:
-                    $configuration = json_decode($rule->configuration);
-                    if(strcasecmp($employee->gender, $configuration->gender) != 0) {
-                        $invalid = true;
-                        $invalidErrorMessage = "This leave does not apply to you.";
-                    }
+                    $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','gender')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                        foreach ($configuration as $gender) {
+                            if(strcasecmp($employee->gender, $gender->value) != 0) {
+                            $invalid = true;
+                            $invalidErrorMessage = "This leave does not apply to you.";
+                            
+                            }
+                            
+
+                        }
+                    
                     break;
                 // case LeaveTypeRule::CAN_CARRY_FORWARD:
                 // break;
                 // case LeaveTypeRule::MULTIPLE_APPROVAL_LEVELS_NEEDED:
                 // break;
-                // case LeaveTypeRule::REQUIRED_ATTACHMENT:
-                // break;
-                case LeaveTypeRule::MIN_APPLY_DAYS_BEFORE:
+                /*case LeaveTypeRule::REQUIRED_ATTACHMENT:
+                 $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','required_attachment')
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                        foreach ($configuration as $attach) {
+                            if($attach->value) {
+                            $invalid = false;
+                            $invalidErrorMessage = "This leave does not apply to you.";
+                            }
+                        }
+                break;*/
+                /*case LeaveTypeRule::MIN_APPLY_DAYS_BEFORE:
                     $configuration = json_decode($rule->configuration);
                     // [{"min_leave_days": 2, "min_apply_days_before": 7}, {"min_leave_days": 5, "min_apply_days_before": 30}]
                     $days_before = date_diff($now, $startDate)->days;
@@ -395,30 +421,60 @@ class LeaveService
                             }
                         }
                     }
-                    break;
-                case LeaveTypeRule::CONSECUTIVE:
-                    $consecutive = true;
-                    break;
+                    break;*/
+                //case LeaveTypeRule::CONSECUTIVE:
+                    //$consecutive = true;
+                    //break;
                 case LeaveTypeRule::MIN_EMPLOYMENT_PERIOD:
-                    $configuration = json_decode($rule->configuration);
-
                     $employedDays = self::calculateEmployeeWorkingDays($employee->id);
-                    if($employedDays < $configuration->min_days) {
-                        $invalid = true;
-                        $invalidErrorMessage = "Minimum employment period for applying is ".$configuration->min_days." days.";
-                    }
+                    $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','min_employment_period')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                        foreach ($configuration as $min) {
+                             if($employedDays < $min->value) {
+                                $invalid = true;
+                                $invalidErrorMessage = "Minimum employment period for applying is ".$min->value." days.";
+                            }
+                        }
+                    
+                   
                     break;
                 case LeaveTypeRule::MAX_NO_OF_CHILDREN:
-                    $configuration = json_decode($rule->configuration);
-                    if($employee->total_children >= $configuration->max_no_of_children) {
-                        $invalid = true;
-                        $invalidErrorMessage = "You have exceeded the maximum number of children for this leave.";
+                     $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','max_no_of_children')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                         foreach ($configuration as $max) {
+                            if($employee->total_children >= $max->value) {
+                                $invalid = true;
+                                $invalidErrorMessage = "You have exceeded the maximum number of children for this leave.";
+                            }
                     }
                     break;
                 // case LeaveTypeRule::UNPAID:
                 // break;
                 case LeaveTypeRule::INC_OFF_DAYS_BASED_ON_APPLIED_DAYS:
-                    $inc_off_days_based_on_applied_days_config = json_decode($rule->configuration);
+                     $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','inc_off_days_based_on_applied_days')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                        foreach ($configuration as $includeOff) {
+                        $inc_off_days_based_on_applied_days_config = $includeOff->value;
+                    }
+                break;
+                case LeaveTypeRule::INC_REST_DAYS_BASED_ON_APPLIED_DAYS:
+                     $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','inc_rest_days_based_on_applied_days')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                        foreach ($configuration as $includeRest) {
+                        $inc_rest_days_based_on_applied_days_config = $includeRest->value;
+                    }
                 break;
                 case LeaveTypeRule::EMPLOYEE_CANNOT_APPLY:
                     if(!$is_admin) {
@@ -426,10 +482,41 @@ class LeaveService
                         $invalidErrorMessage = "Employee cannot apply for this type of leave";
                     }
                 break;
+
                 case LeaveTypeRule::INC_OFF_DAYS:
-                    $inc_off_days = true;
-                    break;
-                case LeaveTypeRule::MAX_AFTER_APPLIED_DAYS:
+                    $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','inc_off_days')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                        foreach ($configuration as $includeOffDay) {
+                         $inc_off_days = true;
+                    }
+                   
+                break;
+                case LeaveTypeRule::INC_REST_DAYS:
+                    $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','inc_rest_days')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                        foreach ($configuration as $includeRestDay) {
+                         $inc_rest_days = true;
+                    }
+                   
+                break;
+                case LeaveTypeRule::INC_PH:
+                    $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','inc_ph')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                        foreach ($configuration as $includePHDay) {
+                         $inc_ph_days = true;
+                    }
+                   
+                break;
+                /*case LeaveTypeRule::MAX_AFTER_APPLIED_DAYS:
                     $configuration = json_decode($rule->configuration);
 
                     $days_after = date_diff($startDate, $now)->days;
@@ -437,10 +524,10 @@ class LeaveService
                         $invalid = true;
                         $invalidErrorMessage = "Unable to apply for leave because it is more than ".$configuration->max_after_applied_days." after the date.";
                     }
-                    break;
+                    break;*/
                 // case LeaveTypeRule::DEDUCT_AFTER_LEAVE_TYPES_INSUFFICIENT:
                 // break;
-                case LeaveTypeRule::MAX_APPLICATIONS:
+                /*case LeaveTypeRule::MAX_APPLICATIONS:
                     $configuration = json_decode($rule->configuration);
                     $count = LeaveRequest::where('emp_id', $employee->id)
                         ->where('leave_type_id', $leave_type_id)
@@ -450,13 +537,20 @@ class LeaveService
                         $invalid = true;
                         $invalidErrorMessage = "You have exceeded the maximum number of requests for this leave.";
                     }
-                    break;
+                    break;*/
                 case LeaveTypeRule::NO_LIMIT:
                     $no_limit = true;
                     break;
                 case LeaveTypeRule::MAX_DAYS_PER_APPLICATION:
-                    $configuration = json_decode($rule->configuration);
-                    $max_days_per_application = $configuration->max_days_per_application;
+                    $configuration = DB::table('lt_applied_rules')
+                        ->where('rule','max_days_per_application')
+                        ->where('leave_type_id',$leave_type_id)
+                        ->select('lt_applied_rules.*')
+                        ->get();
+                         foreach ($configuration as $maxApply) {
+                          $max_days_per_application = $maxApply->value;
+                    }
+                   
                     break;
                 case LeaveTypeRule::UNPAID:
                     $is_unpaid_leave = true;
@@ -470,19 +564,18 @@ class LeaveService
         }
 
         // check if employee is under probation
-        $probation = EmployeeJob::where('emp_id', $employee->id)
-        ->where('status', 'probationer')
-        ->whereNull('end_date')
-        ->first();
+       
+        
 
-        if(!$is_admin && $probation) {
+        /*if(!$is_admin && $probation) {
             $invalid = true;
             $invalidErrorMessage = "Employee is not eligable for leave application while on probation.";
+           
         }
 
         if($invalid) {
             return self::error($invalidErrorMessage);
-        }
+        }*/
 
         $additionalResponseData = array();
         if($consecutive) {
@@ -505,12 +598,8 @@ class LeaveService
         // Calculate Leave
         $totalDays = date_diff($startDate, $endDate)->days + 1;
         
-        if(!empty($inc_off_days_based_on_applied_days_config)) {
-            $inc_off_days_min_apply_days = $inc_off_days_based_on_applied_days_config->min_apply_days;
-            if($totalDays >= $inc_off_days_min_apply_days) {
-                $inc_off_days = true;
-            }
-        }
+        
+        
 Log::debug("########");
 Log::debug($inc_off_days);
         if(!$inc_off_days) {
@@ -535,13 +624,137 @@ Log::debug($inc_off_days);
                 if(!self::isWorkingDay($working_day, $cursorDate)) {
                     $nextDayIsHoliday = false;
                     if($cursorDate->dayOfWeek == Carbon::SUNDAY && self::isHoliday($holidays, $cursorDate)) {
-                        $nextDayIsHoliday = true;
+                        $nextDayIsHoliday = false;
+                    }
+
+                    $totalDays;
+                    
+                } else if(self::isHoliday($holidays, $cursorDate) || $nextDayIsHoliday) {
+                    $nextDayIsHoliday = false;
+                    $totalDays;
+                   
+                }
+
+                if($cursorDate->dayOfWeek == Carbon::SUNDAY) {
+                    $dayText = 'sunday';
+                } elseif($cursorDate->dayOfWeek == Carbon::MONDAY) {
+                    $dayText = 'monday';
+                } elseif($cursorDate->dayOfWeek == Carbon::TUESDAY) {
+                    $dayText = 'tuesday';
+                } elseif($cursorDate->dayOfWeek == Carbon::WEDNESDAY) {
+                    $dayText = 'wednesday';
+                } elseif($cursorDate->dayOfWeek == Carbon::THURSDAY) {
+                    $dayText = 'thursday';
+                } elseif($cursorDate->dayOfWeek == Carbon::FRIDAY) {
+                    $dayText = 'friday';
+                } elseif($cursorDate->dayOfWeek == Carbon::SATURDAY) {
+                    $dayText = 'saturday';
+                }
+
+                $isHalfDay = EmployeeWorkingDay::where('emp_id', $employee->id)
+                ->whereIn($dayText, array('half', 'half_2'))
+                ->count() > 0;
+
+                if($isHalfDay) {
+                    $totalDays -= 0.5;
+                }
+
+                $cursorDate->addDays(1);
+            } 
+        }
+        if(!$inc_rest_days) {
+            $nextDayIsHoliday = false;  
+            if($startDate->dayOfWeek == Carbon::MONDAY) {
+                $prevDate = $startDate->copy()->subDay(1);
+                if(!self::isWorkingDay($working_day, $prevDate) && Holiday::where('end_date', $prevDate)->count() > 0) {
+                    $nextDayIsHoliday = true;
+                }
+            }
+
+            $holidays = Holiday::where('start_date', '>=', $startDate)
+            ->where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $startDate)
+            ->where('end_date', '<=', $endDate)
+            ->where('status', 'active')->get();
+
+            $cursorDate = $startDate->copy();
+            $dayText = '';
+            
+            while($cursorDate->lessThanOrEqualTo($endDate)) {
+                if(!self::isWorkingDay($working_day, $cursorDate)) {
+                    $nextDayIsHoliday = false;
+                    if($cursorDate->dayOfWeek == Carbon::SUNDAY && self::isHoliday($holidays, $cursorDate)) {
+                        $nextDayIsHoliday = false;
                     }
 
                     $totalDays--;
+                    
                 } else if(self::isHoliday($holidays, $cursorDate) || $nextDayIsHoliday) {
                     $nextDayIsHoliday = false;
                     $totalDays--;
+                   
+
+                }
+
+                if($cursorDate->dayOfWeek == Carbon::SUNDAY) {
+                    $dayText = 'sunday';
+                } elseif($cursorDate->dayOfWeek == Carbon::MONDAY) {
+                    $dayText = 'monday';
+                } elseif($cursorDate->dayOfWeek == Carbon::TUESDAY) {
+                    $dayText = 'tuesday';
+                } elseif($cursorDate->dayOfWeek == Carbon::WEDNESDAY) {
+                    $dayText = 'wednesday';
+                } elseif($cursorDate->dayOfWeek == Carbon::THURSDAY) {
+                    $dayText = 'thursday';
+                } elseif($cursorDate->dayOfWeek == Carbon::FRIDAY) {
+                    $dayText = 'friday';
+                } elseif($cursorDate->dayOfWeek == Carbon::SATURDAY) {
+                    $dayText = 'saturday';
+                }
+
+                $isHalfDay = EmployeeWorkingDay::where('emp_id', $employee->id)
+                ->whereIn($dayText, array('half', 'half_2'))
+                ->count() > 0;
+
+                if($isHalfDay) {
+                    $totalDays -= 0.5;
+                }
+
+                $cursorDate->addDays(1);
+            } 
+        }
+          if(!$inc_ph_days) {
+            $nextDayIsHoliday = false;  
+            if($startDate->dayOfWeek == Carbon::MONDAY) {
+                $prevDate = $startDate->copy()->subDay(1);
+                if(!self::isWorkingDay($working_day, $prevDate) && Holiday::where('end_date', $prevDate)->count() > 0) {
+                    $nextDayIsHoliday = true;
+                }
+            }
+
+            $holidays = Holiday::where('start_date', '>=', $startDate)
+            ->where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $startDate)
+            ->where('end_date', '<=', $endDate)
+            ->where('status', 'active')->get();
+
+            $cursorDate = $startDate->copy();
+            $dayText = '';
+            
+            while($cursorDate->lessThanOrEqualTo($endDate)) {
+                if(!self::isWorkingDay($working_day, $cursorDate)) {
+                    $nextDayIsHoliday = false;
+                    if($cursorDate->dayOfWeek == Carbon::SUNDAY && self::isHoliday($holidays, $cursorDate)) {
+                        $nextDayIsHoliday = false;
+                    }
+
+                    $totalDays;
+                    
+                } else if(self::isHoliday($holidays, $cursorDate) || $nextDayIsHoliday) {
+                    $nextDayIsHoliday = false;
+                    $totalDays;
+                    
+
                 }
 
                 if($cursorDate->dayOfWeek == Carbon::SUNDAY) {
@@ -573,6 +786,26 @@ Log::debug($inc_off_days);
         }
         
         if(!self::isWorkingDay($working_day, $endDate) && !$inc_off_days) {
+            return self::error("End date cannot be a non-working day.");
+        } else {
+            $count = Holiday::where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $endDate)
+            ->where('status', 'active')->count();
+            if($count > 0) {
+                return self::error("End date cannot fall on a holiday.");
+            }
+        }
+        if(!self::isWorkingDay($working_day, $endDate) && !$inc_rest_days) {
+            return self::error("End date cannot be a non-working day.");
+        } else {
+            $count = Holiday::where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $endDate)
+            ->where('status', 'active')->count();
+            if($count > 0) {
+                return self::error("End date cannot fall on a holiday.");
+            }
+        }
+        if(!self::isWorkingDay($working_day, $endDate) && !$inc_ph_days) {
             return self::error("End date cannot be a non-working day.");
         } else {
             $count = Holiday::where('start_date', '<=', $endDate)
@@ -632,7 +865,7 @@ Log::debug($inc_off_days);
 
         $availableDays = self::getLeaveAllocationsAvailableDays($employee->id, $leave_type_id, $now);
         if($edit_leave_request_id != null) {
-            $existingLeaveRequest = LeaveRequest::find($edit_leave_request_id);
+            $existingLeaveRequest = LeaveTransaction::find($edit_leave_request_id);
             $availableDays += $existingLeaveRequest->applied_days;
         }
 
@@ -651,8 +884,19 @@ Log::debug($inc_off_days);
     }
 
     public static function getLeaveTypesForEmployee(Employee $employee, $is_admin = false) {
-        $leaveTypes = LeaveType::with('applied_rules')->where('active', true)->get();
-        // $employee->gender;
+        $leaveTypes = LeaveType::leftjoin('leave_allocations','leave_types.id', '=', 'leave_allocations.leave_type_id')
+        ->with('applied_rules')
+        ->where('emp_id',$employee->id)
+        ->where('active', true)->get();
+
+
+       
+        //$leaveTypes = LeaveType::
+        //with('applied_rules')
+        //->where('emp_id',$employee->id)
+        //->where('active', true)->get();
+
+        //$employee->gender;
 
         
         // Carbon::THURSDAY;
@@ -663,88 +907,23 @@ Log::debug($inc_off_days);
             $is_unpaid_leave = false;
             $additionalLeaveTypeDetails = array();
             $includeLeaveType = true;
-            foreach($leaveType->applied_rules as $rule) {
-                switch($rule->rule) {
-                    case LeaveTypeRule::GENDER:
-                        $configuration = json_decode($rule->configuration);
-                        if(strcasecmp($employee->gender, $configuration->gender) != 0) {
-                            $includeLeaveType = false;
-                        }
-                        break;
 
-                    case LeaveTypeRule::CONSECUTIVE:
-                        // $configuration = json_decode($rule->configuration);
-                        $additionalLeaveTypeDetails['consecutive'] = true;
-                        break;
-                    case LeaveTypeRule::REQUIRED_ATTACHMENT:
-                        $configuration = json_decode($rule->configuration);
-                        $additionalLeaveTypeDetails['required_attachment'] = true;
-                        $additionalLeaveTypeDetails['attachment_type'] = $configuration->attachment_type;
-
-                        break;
-                    case LeaveTypeRule::MAX_NO_OF_CHILDREN:
-                        $configuration = json_decode($rule->configuration);
-                        if($employee->total_children >= $configuration->max_no_of_children) {
-                            $includeLeaveType = false;
-                        }
-                        break;
-                    case LeaveTypeRule::EMPLOYEE_CANNOT_APPLY:
-                        if(!$is_admin) {
-                            $includeLeaveType = false;
-                        }
-                        break;
-                    case LeaveTypeRule::MAX_APPLICATIONS:
-                        $configuration = json_decode($rule->configuration);
-                        $count = LeaveRequest::where('emp_id', $employee->id)
-                            ->where('leave_type_id', $leaveType->id)
-                            ->where('status', '!=', 'rejected')
-                            ->count();
-                        if($count >= $configuration->max_applications) {
-                            $includeLeaveType = false;
-                        }
-                        break;
-                        break;
-                    case LeaveTypeRule::MIN_EMPLOYMENT_PERIOD:
-                        $configuration = json_decode($rule->configuration);
-
-                        $employedDays = self::calculateEmployeeWorkingDays($employee->id);
-                        if($employedDays < $configuration->min_days) {
-                            $includeLeaveType = false;
-                        }
-                        break;
-                    case LeaveTypeRule::NO_LIMIT:
-                        // $configuration = json_decode($rule->configuration);
-                        $additionalLeaveTypeDetails['no_limit'] = true;
-                        break;
-                    case LeaveTypeRule::MAX_DAYS_PER_APPLICATION:
-                        $configuration = json_decode($rule->configuration);
-                        $additionalLeaveTypeDetails['max_days_per_application'] = $configuration->max_days_per_application;
-                        break; 
-                    case LeaveTypeRule::UNPAID:
-                        $is_unpaid_leave = true;
-                        break;
-                }
-
-                if(!$includeLeaveType) {
-                    break;
-                }
-            }
             
             if($includeLeaveType) {
                 $availableDays = 0.0;
 
                 if(!$is_unpaid_leave) {
-                    $availableDays = self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->id);
+                    $availableDays = self::calculateLeaveTypeAvailableDaysForEmployee($employee->id, $leaveType->leave_type_id);
                 }
 
                 array_push($leaveTypesForUser, array_merge(
                     [
-                        'id' => $leaveType->id,
+                        'id' => $leaveType->leave_type_id,
                         'code' => $leaveType->code,
                         'name' => $leaveType->name,
                         'description' => $leaveType->description,
                         'available_days' => $availableDays,
-                        'valid_until' => self::getValidUntilDate($employee->id, $leaveType->id)
+                        'valid_until' => self::getValidUntilDate($employee->id, $leaveType->leave_type_id)
                     ], 
                     $additionalLeaveTypeDetails)
                 );
@@ -775,21 +954,27 @@ Log::debug($inc_off_days);
 //             ->whereYear('valid_until_date', '=', $today)
             // ->sum('allocated_days')
             // ->sum('spent_days')
-            ->orderBy('leave_allocations.id', 'desc')
+            ->orderBy('leave_allocations.leave_type_id', 'desc')
             ->get();
         Log::debug($leaveAllocations);
         $totalAllocatedDays = 0;
         $totalSpentDays = 0;
         foreach($leaveAllocations as $leaveAllocation) {
             if(self::isProrated($leave_type_id)) {
+                Log::debug($leave_type_id);
+               
                 $totalAllocatedDays += $leaveAllocation->allocated_days;
             } else {
+                Log::debug($leave_type_id);
+                
                 $totalAllocatedDays = $leaveAllocation->allocated_days;
             }
-
+            Log::debug($leave_type_id);
+            
             $totalSpentDays += $leaveAllocation->spent_days;
         }
-
+        Log::debug($leave_type_id);
+        
         return $totalAllocatedDays - $totalSpentDays;
     }
 
@@ -964,3 +1149,5 @@ Log::debug($inc_off_days);
         }
     }
 }
+
+

@@ -12,7 +12,9 @@ use App\Holiday;
 use App\LTAppliedRule;
 use App\LTEntitlementGradeGroup;
 use App\LeaveRequest;
+use App\LeaveTransaction;
 use App\TaskStatus;
+use App\LeaveAttach;
 // use Auth;
 use App\LeaveAllocation;
 use App\EmployeeReportTo;
@@ -28,9 +30,9 @@ use Carbon\Carbon;
 use App\User;
 use Artisan;
 use App\EmployeeJob;
-use App\LeaveTransaction;
 use App\Enums\HolidayTypeEnum;
 use Illuminate\Support\Facades\Auth;
+use Mail;
 
 class ELeaveController extends Controller
 {
@@ -968,30 +970,23 @@ class ELeaveController extends Controller
 
     public function ajaxGetLeaveTypes($emp_id)
     {
-        //$employee = Employee::where('id', $emp_id)->first();
-        //$leaveTypes = LeaveService::getLeaveTypesForEmployee($employee, true);
-        $emp_id=$emp_id;
-        $leaveTypes = DB::table('lt_applied_rules')
-        ->leftjoin('leave_types','lt_applied_rules.leave_type_id','=','leave_types.id')
-        ->leftjoin('leave_allocations','leave_types.id','=','leave_allocations.leave_type_id')
-        ->select('leave_types.*','lt_applied_rules.leave_type_id','leave_allocations.allocated_days','leave_allocations.spent_days')
-        ->selectRaw('GROUP_CONCAT(lt_applied_rules.rule) as rule')
-        ->where('leave_allocations.emp_id',$emp_id)
-        ->groupBy('lt_applied_rules.leave_type_id')
-        ->get();
+        $employee = Employee::where('id', $emp_id)->first();
+        $leaveTypes = LeaveService::getLeaveTypesForEmployee($employee, true);
         return response()->json($leaveTypes);
     }
 
     public function ajaxPostCheckLeaveRequest(Request $request, $emp_id)
     {
         $requestData = $request->validate([
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'start_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'end_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
             'leave_type' => 'required',
             'am_pm' => '',
+            'attachment' => '',
             'edit_leave_request_id' => 'integer'
         ]);
-
+         $requestData['start_date'] = implode("-", array_reverse(explode("/", $requestData['start_date'])));
+        $requestData['end_date'] = implode("-", array_reverse(explode("/", $requestData['end_date'])));
         $am_pm = null;
         if(array_key_exists('am_pm', $requestData)) {
             $am_pm = $requestData['am_pm'];
@@ -1010,27 +1005,156 @@ class ELeaveController extends Controller
 
     public function ajaxPostCreateLeaveRequest(Request $request, $emp_id)
     {
-        $emp_id=$emp_id;
+        
         $requestData = $request->validate([
-            'start-date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
-            'end-date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
-            'leave-types' => 'required',
+            'start_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'end_date' => 'required|regex:/\d{1,2}\/\d{1,2}\/\d{4}/|date_format:d/m/Y',
+            'leave_type' => 'required',
             'am_pm' => '',
             'reason' => 'required',
             'attachment' => '',
             'edit_leave_request_id' => 'integer'
         ]);
-        $leaveData= new LeaveTransaction($requestData);
-        $leaveData->start_date = $requestData['start-date'] = implode("-", array_reverse(explode("/", $requestData['start-date'])));
-        $leaveData->end_date = $requestData['end-date'] = implode("-", array_reverse(explode("/", $requestData['end-date'])));
-        $leaveData->leave_type_id = $requestData['leave-types'];
-        $leaveData->reason = $requestData['reason'];
-        $leaveData->emp_id = $emp_id;
-        $leaveData->status = 3;
-        $leaveData->applied_days =dateDiffInDays($requestData['end-date'], $requestData['start-date']);
-        $leaveData['created_by'] = auth()->user()->id;
-        $leaveData->save();
-      
+        
+        $requestData['start_date'] = implode("-", array_reverse(explode("/", $requestData['start_date'])));
+        $requestData['end_date'] = implode("-", array_reverse(explode("/", $requestData['end_date'])));
+        //$filename = date('Y-m-d-H:i:s')."-".$image->getClientOriginalName();
+        $leave_type_id = $request->input('leave_type');
+        $start_date = $requestData['start_date'];
+        $end_date = $requestData['end_date'];
+        $reason = $request->reason; 
+        $am_pm = $request->am_pm; 
+        $attachment = $request->attachment;    
+        
+        $multiple_approval_levels_required =LTAppliedRule::where('rule','multiple_approval_levels_needed')   //to get multiple_approval_levels_required
+        ->where('leave_type_id',$leave_type_id)
+        ->count() == 0;
+
+        // if ($multiple_approval_levels_required == false) {
+            $am_pm = null;
+            if(array_key_exists('am_pm', $requestData)) {
+                $am_pm = $requestData['am_pm'];
+            }
+    
+            $edit_leave_request_id = null;
+            if(array_key_exists('edit_leave_request_id', $requestData)) {
+                $edit_leave_request_id = $requestData['edit_leave_request_id'];
+            }
+    
+            $employee = Employee::where('id', $emp_id)->first();    
+            $result = LeaveService::checkLeaveRequest($employee, $leave_type_id,$start_date, $end_date, $am_pm, $edit_leave_request_id, false);
+           
+            if(array_key_exists('error', $result)) {
+                return $result;
+            }
+
+            if(array_key_exists('end_date', $result)) {
+                $end_date = $result['end_date'];
+            }
+
+            $totalDays = $result['total_days'];
+            
+            $attachment_required = false;
+
+            $now = Carbon::now();
+            $leaveAllocation = LeaveAllocation::where('emp_id', $employee->id)
+            ->where('leave_type_id', $leave_type_id)
+            ->where('valid_from_date', '<=', $now)
+            ->where('valid_until_date', '>=', $now)
+            ->first();
+
+            $leaveRequest = null;
+            $created_by = auth()->user()->id;
+            DB::transaction(function () use ($employee, $leave_type_id, $leaveAllocation, $start_date, $end_date, $totalDays, $am_pm, $reason,$created_by, $attachment, $attachment_required, &$leaveRequest) {
+
+            if(LTAppliedRule::where('leave_type_id', $leave_type_id)
+            ->where('rule', LeaveTypeRule::REQUIRED_ATTACHMENT)
+            ->count() > 0) {
+            $attachment_required = true;
+            if(empty($attachment)) {
+                
+                return self::error("Attachment required for this leave type.");
+               
+            }
+        }
+        $leaveRequest = LeaveTransaction::create([
+                'emp_id' => $employee->id,
+                'leave_type_id' => $leave_type_id,
+                'leave_allocation_id' => $leaveAllocation->id,
+                'start_date' => $start_date,
+                'end_date' => $end_date, 
+                'am_pm' => $am_pm, 
+                'applied_days' =>  $totalDays,
+                'reason' => $reason,
+                'status' => 0,
+                'created_by' => $created_by,
+            ]);
+            if(request()->hasFile('attachment'))
+            {   
+                $file = request()->file('attachment');
+             
+                    $path = $file->getClientOriginalName();
+                    $name = time() . '-' . $path;
+                    
+                    $attach = new LeaveAttach();
+                    $attach->attachment = $name;
+                    $attach->leave_transaction_id = $leaveRequest->id;
+                    $attach->save();
+
+                    $file->storeAs('public/emp_id_'. $employee->id.'/leave', $name);
+                
+            }
+            $leaveAllocation->update([
+                'spent_days' => $leaveAllocation->spent_days + $totalDays
+            ]);
+            });
+            //$result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $requestData['attachment'], $edit_leave_request_id, true);
+            $leave_request = LeaveTransaction::where('id', $leaveRequest->id)->first();
+            
+    
+        
+
+         // send leave request email notification
+        self::sendLeaveRequestNotification($leave_request, $employee->id);
+        
+        return $leave_request;
+
+       
+ 
+
+        //     $leave_request = LeaveRequest::where('id', $result)->first();
+
+    
+        // // send leave request email notification
+        // self::sendLeaveRequestNotification($leave_request, $emp_id);
+        // return response()->json($result);
+        // }
+
+        // else 
+        // {
+        //     $am_pm = null;
+        //     if(array_key_exists('am_pm', $requestData)) {
+        //         $am_pm = $requestData['am_pm'];
+        //     }
+    
+        //     $attachment_data_url = null;
+        //     if(array_key_exists('attachment', $requestData)) {
+        //         $attachment_data_url = $requestData['attachment'];
+        //     }
+    
+        //     $edit_leave_request_id = null;
+        //     if(array_key_exists('edit_leave_request_id', $requestData)) {
+        //         $edit_leave_request_id = $requestData['edit_leave_request_id'];
+        //     }
+    
+        //     $employee = Employee::where('id', $emp_id)->first();
+        //     $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, $edit_leave_request_id, true);
+    
+        //     $leave_request = LeaveRequest::where('id', $result)->first();
+        //     self::sendLeaveRequestNonMultipleNotification($leave_request, $emp_id);
+        //     return response()->json($result);
+
+        // }
         
     }
 
@@ -1087,10 +1211,11 @@ class ELeaveController extends Controller
         }
 
         $result = LeaveService::createLeaveRequest($employee, $requestData['leave_type'], $requestData['start_date'], $requestData['end_date'], $am_pm, $requestData['reason'], $attachment_data_url, $edit_leave_request_id, true);
-        $leave_request = LeaveRequest::where('id', $result)->first();
+        $leave_request = LeaveAllocation::where('id', $result)->first();
 
         // send leave request email notification
-        self::sendLeaveRequestNotification($leave_request, $employee->id);
+        //self::sendLeaveRequestNotification($leave_request, $employee->id);
+        
 
         return response()->json($result);
     }
@@ -1118,46 +1243,28 @@ class ELeaveController extends Controller
         return response()->json(['success'=>'Leave Request was successfully cancelled.']);
     }
 
-    public function sendLeaveRequestNotification(LeaveRequest $leave_request, $emp_id) 
+    public function sendLeaveRequestNotification(LeaveTransaction $leave_request, $emp_id) 
     {
-//         $to_recipients = array();
-//         $bcc_recipients= array();
+        
+         log::debug($leave_request);
 
         $report_to = EmployeeReportTo::where('emp_id', $emp_id)
             ->join('employees', 'employees.id', '=', 'employee_report_to.report_to_emp_id')
             ->join('users', 'users.id', '=', 'employees.user_id')
-            ->where('employee_report_to.report_to_level', '1')
-            ->select('users.email')
-            ->first();
-            dd($report_to);
-            
-        if($report_to != null) {
-//             array_push($to_recipients, $report_to);
-            \Mail::to($report_to)
-                ->cc(Auth::user()->email)
-                ->bcc(env('BCC_EMAIL'))
-                ->send(new LeaveRequestMail(Auth::user(), $leave_request));
+            ->select('users.email as email','users.name as supername')
+            ->get();
+            foreach ($report_to as $report) {
+                
+                $to_name = $report->supername;
+                $to_email = $report->email;
+                $data = array('name'=>$leave_request->employee->user->name, 'applied_days' => $leave_request->applied_days,'am_pm'=>$leave_request->am_pm,'start_date'=>$leave_request->start_date,'end_date'=>$leave_request->end_date,'reason'=>$leave_request->reason);
+                Mail::send('emails.leave-request', $data, function($message) use ($to_name, $to_email) {
+                        $message->to($to_email, $to_name)
+                        ->subject('New Leave Request Submission!');
+                        $message->from('lutfiahmardiani@gmail.com','Admin');
+                        $message->cc(Auth::user()->email);
+            });
         }
-        
-//         foreach ($report_to as $row) {
-//             $employee = DB::table('employees')
-//                 ->join('users', 'users.id', '=', 'employees.user_id')
-//                 ->select('users.name','users.email')
-//                 ->where('employees.id', $row->report_to_emp_id)
-//                 ->first();
-
-//             array_push($cc_recipients, $employee->email);
-//         }
-
-
-        // get admin users
-//         $admin_users = User::whereHas("roles", function($q){
-//             $q->where("name", "admin");
-//         })->get();
-
-//         foreach ($admin_users as $row) {
-//             array_push($bcc_recipients, $row->email);
-//         }
         
     }
 
