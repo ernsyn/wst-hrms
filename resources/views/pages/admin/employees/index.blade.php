@@ -1,5 +1,39 @@
 @extends('layouts.admin-base')
 @section('content')
+<!-- ADD -->
+<div class="modal fade" id="import-file" tabindex="-1" role="dialog" aria-labelledby="import-file"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="import-file">Import</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <form enctype="multipart/form-data" id="import-file-form" name="import-file-form">
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label><strong>Select File</strong></label>
+                            <input name="file_import" id="file_import" type="file" class="form-control" required>
+                            <div id="file-error" class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="import-file-submit" type="button" class="btn btn-primary">
+                    {{ __('Import') }}
+                </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- END ADD -->
 <div class="main-content">
     <div id="alert-container"></div>   
     @if (session('status'))
@@ -436,8 +470,9 @@ $(document).ready(function() {
                     text: '<i class="fas fa-upload"></i>',
                     className: 'btn-segment',
                     titleAttr: 'Import',
-                    action: function ( e, dt, button, config ) {
-                       window.location = "{{ route('import.employees')}}";
+                    action: function ( e, node, config ) {
+                       //window.location = "{{ route('import.employees')}}";
+                        $('#import-file').modal('show')
                     }
                     
                 }
@@ -531,5 +566,56 @@ function resetForm() {
 	document.getElementById("searchForm").reset();
 	$('.costCentres, .departments, .sections, .positions, .teams, .categories, .areas, .grades, .bankCodes').multiselect('refresh');
 }
+
+ $('#import-file').on('show.bs.modal', function (event) {
+            clearImportError('#import-file-form');
+        });
+         $('#import-file-form #import-file-submit').click(function(e){
+            e.preventDefault();
+             var form = document.forms.namedItem("import-file-form");
+            var formdata = new FormData(form);
+            clearImportError('#import-file-form');
+            $.ajax({
+                url: "{{ route('import.employees') }}",
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                data:formdata,
+                success: function(data) {
+                    //showAlert(data.success);
+                    $('#import-file').modal('toggle');
+                    clearImportModal('#import-file-form')
+                },
+                error: function(xhr) {
+                    if(xhr.status == 422) {
+                        var errors = xhr.responseJSON.errors;
+                        console.log("Error: ", xhr);
+                        for (var errorField in errors) {
+                            if (errors.hasOwnProperty(errorField)) {
+                                console.log("Error: ", errorField);
+                                switch(errorField) {
+                                    case 'file_import':
+                                        $('#import-file-form input[name=file_import]').addClass('is-invalid');
+                                        $('#import-file-form #file-error').html('<strong>' + errors[errorField][0] + '</strong>');
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+
+        function clearImportModal(htmlId) {
+
+            $("#file_import").val(null);
+         
+            $(htmlId + ' input[name=file_import]').removeClass('is-invalid');
+        }
+
+        function clearImportError(htmlId) {
+             $(htmlId + ' input[name=file_import]').removeClass('is-invalid');
+        }
 </script>
 @append

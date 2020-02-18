@@ -17,8 +17,13 @@ class ImportEmployeeController extends Controller
     
     public function importEmployees(Request $request)
     {
+        $ImportData = $request->validate([
+           'file_import'  => 'required|mimes:xls,xlsx'
+        ]);
+        
+        $fileName = $request->file('file_import')->getRealPath();
         Log::debug('Start Import Employees');
-        $fileName = 'Template.xlsx';
+        //$fileName = 'Template.xlsx';
         $import = new EmployeesImport();
         Excel::import($import, $fileName);
         
